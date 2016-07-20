@@ -1,0 +1,131 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="partner-api">
+  <template>
+    <iron-ajax
+      auto
+      url="[[url]]"
+      on-response="_handleResponse">
+  </template>
+
+  <script>
+    Polymer({
+      is: 'partner-api',
+      properties: {
+        url: {
+          type: String
+        },
+        page: {
+          type: Number,
+          notify: true,
+          value: 0,
+          observer: '_handlePageChanged',
+        },
+        size: {
+          type: Number,
+          notify: true,
+          value: 10,
+          observer: '_handleSizeChanged',
+        },
+        totalElements: {
+          type: Number,
+          notify: true,
+          value: 0,
+        },
+        totalPages: {
+          type: Number,
+          notify: true,
+          value: 0,
+        },
+        data: {
+          type: Array,
+          notify: true,
+        },
+        sortProperty: {
+          type: String,
+          observer: '_sortPropertyChanged',
+        },
+        _response: {
+          type: Array,
+        },
+      },
+      _handleResponse: function(event) {
+        this._response = _.filter(event.detail.response, function(o) {
+          return o.hasOwnProperty('name') && !_.isEmpty(o.name) && o.hasOwnProperty('rating') && !_.isEmpty(o.rating);
+        });
+
+        /*
+         * Keep only first element (this.size)
+         */
+        this.data = this._response.slice(0, this.size);
+        this.totalElements = this._response.length;
+        this.totalPages = this.totalElements / this.size;
+      },
+      _handleSizeChanged: function(size) {
+        /*
+         * Size changed so redo slice
+         */
+
+        if (this._response) {
+          if (!_.isUndefined(this.sortProperty)) {
+            var options = this.sortProperty.split(',');
+            this.data = _.orderBy(this._response, options[0], options[1]).slice(0, size);
+          } else {
+            this.data = this._response.slice(0, size);
+          }
+
+          this.totalPages = this.totalElements / size;
+        }
+      },
+      _handlePageChanged: function(page) {
+        /*
+         * Page changed so redo slice
+         */
+        if (this._response) {
+          var begin = page * this.size;
+          var end = (page * this.size) + this.size;
+
+          if (!_.isUndefined(this.sortProperty)) {
+            var options = this.sortProperty.split(',');
+            this.data = _.orderBy(this._response, options[0], options[1]).slice(begin, end);
+          } else {
+            this.data = this._response.slice(begin, end);
+          }
+        }
+      },
+      _sortPropertyChanged: function(sort) {
+        var options = sort.split(',');
+
+        if (options[0] === 'name') {
+          this.data = _.orderBy(this._response, options[0], options[1]).slice(0, this.size);
+
+        } else if (options[0] === 'rating') {
+            var ratings = {
+              'high' : { 'order' : 5 },
+              'significant' : { 'order' : 4 },
+              'moderate' : { 'order' : 3 },
+              'low' : { 'order' : 2 },
+              'non_assessed' : { 'order' : 1 }
+            };
+
+            this.data = this._response.sort(function(a, b) {
+              if (options[1] === 'desc') {
+                var c = a;
+                a = b;
+                b = c;
+              }
+
+              a = ratings[a.rating.toLowerCase().replace(/-/g,"_")].order;
+              b = ratings[b.rating.toLowerCase().replace(/-/g,"_")].order;
+
+              if (a > b) return 1;
+              if (a < b) return -1;
+              return 0;
+
+            }).slice(0, this.size);
+        }
+      },
+    });
+  </script>
+</dom-module>

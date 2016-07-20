@@ -16,6 +16,10 @@
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
 
+  <!-- build:js bower_components/lodash/lodash.min.js -->
+  <script src="bower_components/lodash/lodash.js"></script>
+  <!-- endbuild -->
+
   <link rel="import" href="elements/elements.html">
   <style is="custom-style" include="shared-styles"></style>
 </head>
@@ -134,6 +138,17 @@
                       </paper-dropdown-menu>
                     </div>
                   </div>
+                  <div>
+                    <partner-api
+                      url="https://foochris.blob.core.windows.net/etools-partnership-management/data/partner_data.json"
+                      data="{{dataFromApi}}"
+                      page="{{page}}"
+                      size="{{size}}"
+                      sort-property="[[sortProperty]]"
+                      total-elements="{{totalElements}}"
+                      total-pages="{{totalPages}}">
+                    </partner-api>
+                    <partner-list data="{{dataFromApi}}" page="{{page}}" size="{{size}}" total-elements="{{totalElements}}" total-pages="{{totalPages}}" sort-property="{{sortProperty}}"></partner-list>
                 </section>
 
                 <section data-route="partnership_management_agreements" tabindex="-1">

@@ -39,16 +39,31 @@
 
     /* paper-menu */
     --menu-link-color: #111111;
+
+    paper-datatable-api{
+      --paper-datatable-api-header: {
+        color: inherit;
+        font-size: 10px;
+        text-align: left;
+        text-transform: uppercase;
+      };
+
+      --paper-datatable-api-header-sorted: {
+        color: #0050ae;
+        font-weight: bold;
+      };
+
+      --paper-datatable-api-tr-hover-background-color {
+        background: #f5f5f5;
+      };
+
+    }
   }
 
   /* General styles */
   body {
     @apply(--layout-fullbleed);
     @apply(--layout-vertical);
-  }
-
-  paper-item {
-    min-height: 30px !important;
   }
 
   .space {

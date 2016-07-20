@@ -4,20 +4,26 @@ require('es6-promise').polyfill();
 
 var gulp = require('gulp-help')(require('gulp'));
 var $ = require('gulp-load-plugins')();
-var del = require('del');
-var runSequence = require('run-sequence');
+var _ = require('lodash');
+var async = require('async');
+var azure = require('azure-storage');
 var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var merge = require('merge-stream');
-var path = require('path');
+var bytes = require('bytes');
+var clear = require('clear');
+var colors = require('colors');
+var crypto = require('crypto');
+var del = require('del');
+var ensureFiles = require('./tasks/ensure-files.js');
 var fs = require('fs');
 var glob = require('glob-all');
 var historyApiFallback = require('connect-history-api-fallback');
+var merge = require('merge-stream');
+var moment = require('moment');
 var packageJson = require('./package.json');
-var crypto = require('crypto');
-var ensureFiles = require('./tasks/ensure-files.js');
-
-// var ghPages = require('gulp-gh-pages');
+var path = require('path');
+var recursive = require('recursive-readdir');
+var reload = browserSync.reload;
+var runSequence = require('run-sequence');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -143,6 +149,15 @@ gulp.task('fonts', function() {
     }));
 });
 
+gulp.task('data', function() {
+  return gulp.src(['app/data/**'])
+    .pipe(gulp.dest(dist('data')))
+    .pipe($.size({
+      title: 'data'
+    }));
+});
+
+
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
   return optimizeHtmlTask(
@@ -260,7 +275,7 @@ gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
     ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'html'],
+    ['images', 'fonts', 'html', 'data'],
     'vulcanize', // 'cache-config',
     cb);
 });
@@ -284,6 +299,77 @@ gulp.task('deploy-gh-pages', function() {
       branch: 'gh-pages'
     }), $.ghPages()));
 });
+
+gulp.task('deploy-dev-azure', function() {
+  clear();
+  console.log(colors.underline.bold.white('eTools Deploy: Azure File Upload'));
+
+  var requiredEnvironmentVariables = ['AZURE_STORAGE_ACCOUNT', 'AZURE_STORAGE_ACCESS_KEY'];
+  var missingEnvironmentVariables = _.difference(requiredEnvironmentVariables, _.keys(process.env));
+
+  if (missingEnvironmentVariables.length > 0) {
+    console.log(colors.bold.red('\nERROR:'));
+    console.log(colors.red('Environment variables missing:' + missingEnvironmentVariables));
+    console.log('');
+    return false;
+  }
+
+  var blobSvc = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
+  var uploadPath = './dist';
+  var containerName = 'etools-partnership-management';
+
+  async.waterfall([
+    function(callback) {
+      blobSvc.createContainerIfNotExists(containerName, { publicAccessLevel: 'blob' }, function(error, result, response){
+        if (error) {
+          console.log(error);
+          callback(error);
+        } else {
+          callback(null, true);
+        }
+      });
+    },
+
+    function(state, callback) {
+      recursive(uploadPath, function (err, files) {
+        var index = 0;
+        var totalBytes = 0;
+
+        _.each(files, function(file){
+          blobSvc.createBlockBlobFromLocalFile(containerName, _.replace(file, 'dist/', ''), file, function(error){
+            index++;
+            var stats = fs.statSync(file);
+            var fileSizeInBytes = stats["size"];
+            totalBytes = totalBytes + fileSizeInBytes;
+            console.log(getConsoleTime() + file + ',', bytes(fileSizeInBytes, { unitSeparator: ' ' }));
+
+            if (index === files.length) {
+              callback(null, { 'file_count' : files.length, 'total_bytes' : totalBytes });
+            }
+          });
+        });
+      });
+    }
+
+  ], function (err, data) {
+      if (err) {
+        console.log(getConsoleTime() + colors.red('Error: ') + err);
+      } else {
+        console.log('');
+        console.log(getConsoleTime() + colors.green('Success: ') + 'All files uploaded (' + data.file_count + ', ' + bytes(data.total_bytes, { unitSeparator: ' ' }) + ')');
+      }
+  });
+});
+
+function getConsoleTime() {
+  var output = '';
+
+  output = output + colors.white('[');
+  output = output + colors.grey(moment().format('HH:hh:ss'));
+  output = output + colors.white('] ');
+
+  return output;
+}
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
