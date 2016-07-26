@@ -10,6 +10,7 @@
             display: block;
         }
     </style>
+
     <paper-card style="width: 100%">
       <paper-datatable-api
         paginate
@@ -21,7 +22,7 @@
         total-elements="[[totalElements]]"
         total-pages="[[totalPages]]">
 
-        <paper-datatable-api-column header="partner name" property="name" type="String" align="left" sortable>
+        <paper-datatable-api-column header="partner name" property="name" type="String" align="left" sortable sorted>
           <template>
             <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">[[value]]</div>
           </template>

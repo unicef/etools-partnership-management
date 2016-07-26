@@ -83,7 +83,7 @@
         </div>
       </paper-toolbar>
       <div class="fit">
-        <paper-drawer-panel id="paperDrawerPanel">
+        <paper-drawer-panel id="paperDrawerPanel" force-narrow>
           <paper-scroll-header-panel drawer fixed id="drawerPanel">
             <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
 
@@ -122,13 +122,12 @@
 
                   <div class="container flex">
                     <div id="searchKeywordInput" style="width: 200px; margin-right: 20px;">
-                      <paper-input label="Search Keyword" always-float-label>
+                      <paper-input label="Search Keyword" always-float-label value="{{keywordSearch}}" auto-validate allowed-pattern="[a-zA-Z0-9\s]" maxlength="50">
                         <div prefix><iron-icon icon="icons:zoom-in"></iron-icon></div>
                       </paper-input>
                     </div>
-
                     <div>
-                      <paper-dropdown-menu label="Partner Type" always-float-label>
+                      <paper-dropdown-menu label="Partner Type" always-float-label value="{{partnerTypeSearch}}">
                         <paper-listbox class="dropdown-content">
                           <paper-item>Bilateral / Multilateral</paper-item>
                           <paper-item>Civil Society Organization</paper-item>
@@ -137,18 +136,31 @@
                         </paper-listbox>
                       </paper-dropdown-menu>
                     </div>
+                    <div style="margin-left: 20px; margin-top: 12px;">
+                      <paper-button raised onclick="_reset(event)">Reset</paper-button>
+                    </div>
+                    <script>
+                      function _reset(event) {
+                        var element = Polymer.dom(event).localTarget.parentElement.parentElement;
+                        element.querySelector('paper-input').value = '';
+                        element.querySelector('paper-dropdown-menu')._setSelectedItem();
+                      }
+                    </script>
                   </div>
+
                   <div>
                     <partner-api
-                      url="https://foochris.blob.core.windows.net/etools-partnership-management/data/partner_data.json"
+                      url="/data/partner_data.json"
                       data="{{dataFromApi}}"
                       page="{{page}}"
                       size="{{size}}"
                       sort-property="[[sortProperty]]"
                       total-elements="{{totalElements}}"
-                      total-pages="{{totalPages}}">
+                      total-pages="{{totalPages}}"
+                      search='{ "name": "{{keywordSearch}}", "partner_type": "{{partnerTypeSearch}}" }'>
                     </partner-api>
                     <partner-list data="{{dataFromApi}}" page="{{page}}" size="{{size}}" total-elements="{{totalElements}}" total-pages="{{totalPages}}" sort-property="{{sortProperty}}"></partner-list>
+                  </div>
                 </section>
 
                 <section data-route="partnership_management_agreements" tabindex="-1">
