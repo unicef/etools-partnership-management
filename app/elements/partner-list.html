@@ -8,10 +8,14 @@
     <style>
         :host {
             display: block;
+
+            --paper-card: {
+              width: 100%
+            }
         }
     </style>
 
-    <paper-card style="width: 100%">
+    <paper-card>
       <paper-datatable-api
         paginate
         data="{{data}}"

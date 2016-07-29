@@ -5,9 +5,9 @@
 
   app.baseUrl = '/';
 
-  if (window.location.port === '') {
-    app.baseUrl = '/etools-partnership-management/index.html/';
-  }
+  // if (window.location.port === '') {
+  //   app.baseUrl = '/etools-partnership-management/index.html/';
+  // }
 
   // window.addEventListener('WebComponentsReady', function() {
   // });
