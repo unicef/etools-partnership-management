@@ -6,7 +6,6 @@ var gulp = require('gulp-help')(require('gulp'));
 var $ = require('gulp-load-plugins')();
 var _ = require('lodash');
 var async = require('async');
-var azure = require('azure-storage');
 var browserSync = require('browser-sync');
 var bytes = require('bytes');
 var clear = require('clear');
@@ -15,7 +14,9 @@ var crypto = require('crypto');
 var del = require('del');
 var ensureFiles = require('./tasks/ensure-files.js');
 var fs = require('fs');
+var ftp = require( 'vinyl-ftp' );
 var glob = require('glob-all');
+var gutil = require( 'gulp-util' );
 var historyApiFallback = require('connect-history-api-fallback');
 var merge = require('merge-stream');
 var moment = require('moment');
@@ -301,10 +302,11 @@ gulp.task('deploy-gh-pages', function() {
 });
 
 gulp.task('deploy-dev-azure', function() {
-  clear();
-  console.log(colors.underline.bold.white('eTools Deploy: Azure File Upload'));
 
-  var requiredEnvironmentVariables = ['AZURE_STORAGE_ACCOUNT', 'AZURE_STORAGE_ACCESS_KEY'];
+  clear();
+  console.log(colors.underline.bold.white('eTools Deploy: Azure Web App'));
+
+  var requiredEnvironmentVariables = ['AZURE_FTP_HOSTNAME', 'AZURE_FTP_DEPLOYMENT_USERNAME', 'AZURE_FTP_DEPLOYMENT_PASSWORD'];
   var missingEnvironmentVariables = _.difference(requiredEnvironmentVariables, _.keys(process.env));
 
   if (missingEnvironmentVariables.length > 0) {
@@ -314,51 +316,20 @@ gulp.task('deploy-dev-azure', function() {
     return false;
   }
 
-  var blobSvc = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
-  var uploadPath = './dist';
-  var containerName = 'etools-partnership-management';
+  var conn = ftp.create( {
+      host:     process.env.AZURE_FTP_HOSTNAME,
+      user:     process.env.AZURE_FTP_DEPLOYMENT_USERNAME,
+      password: process.env.AZURE_FTP_DEPLOYMENT_PASSWORD,
+      parallel: 10,
+      log:      gutil.log
+  } );
 
-  async.waterfall([
-    function(callback) {
-      blobSvc.createContainerIfNotExists(containerName, { publicAccessLevel: 'blob' }, function(error, result, response){
-        if (error) {
-          console.log(error);
-          callback(error);
-        } else {
-          callback(null, true);
-        }
-      });
-    },
+  var globs = [
+      'dist/**'
+  ];
 
-    function(state, callback) {
-      recursive(uploadPath, function (err, files) {
-        var index = 0;
-        var totalBytes = 0;
-
-        _.each(files, function(file){
-          blobSvc.createBlockBlobFromLocalFile(containerName, _.replace(file, 'dist/', ''), file, function(error){
-            index++;
-            var stats = fs.statSync(file);
-            var fileSizeInBytes = stats["size"];
-            totalBytes = totalBytes + fileSizeInBytes;
-            console.log(getConsoleTime() + file + ',', bytes(fileSizeInBytes, { unitSeparator: ' ' }));
-
-            if (index === files.length) {
-              callback(null, { 'file_count' : files.length, 'total_bytes' : totalBytes });
-            }
-          });
-        });
-      });
-    }
-
-  ], function (err, data) {
-      if (err) {
-        console.log(getConsoleTime() + colors.red('Error: ') + err);
-      } else {
-        console.log('');
-        console.log(getConsoleTime() + colors.green('Success: ') + 'All files uploaded (' + data.file_count + ', ' + bytes(data.total_bytes, { unitSeparator: ' ' }) + ')');
-      }
-  });
+  return gulp.src( globs, { buffer: true } )
+      .pipe( conn.dest( '/site/wwwroot' ));
 });
 
 function getConsoleTime() {
