@@ -5,24 +5,20 @@ require('es6-promise').polyfill();
 var gulp = require('gulp-help')(require('gulp'));
 var $ = require('gulp-load-plugins')();
 var _ = require('lodash');
-var async = require('async');
 var browserSync = require('browser-sync');
-var bytes = require('bytes');
 var clear = require('clear');
 var colors = require('colors');
 var crypto = require('crypto');
 var del = require('del');
 var ensureFiles = require('./tasks/ensure-files.js');
 var fs = require('fs');
-var ftp = require( 'vinyl-ftp' );
+var ftp = require('vinyl-ftp');
 var glob = require('glob-all');
-var gutil = require( 'gulp-util' );
+var gutil = require('gulp-util');
 var historyApiFallback = require('connect-history-api-fallback');
 var merge = require('merge-stream');
-var moment = require('moment');
 var packageJson = require('./package.json');
 var path = require('path');
-var recursive = require('recursive-readdir');
 var reload = browserSync.reload;
 var runSequence = require('run-sequence');
 
@@ -75,7 +71,7 @@ var optimizeHtmlTask = function(src, dest) {
     .pipe(assets)
     // Concatenate and minify JavaScript
     .pipe($.if('*.js', $.uglify({
-      preserveComments: 'some'
+      preserveComments: false
     })))
     // Concatenate and minify styles
     // In case you are still using useref build blocks
@@ -83,10 +79,12 @@ var optimizeHtmlTask = function(src, dest) {
     .pipe(assets.restore())
     .pipe($.useref())
     // Minify any HTML
-    .pipe($.if('*.html', $.minifyHtml({
-      quotes: true,
-      empty: true,
-      spare: true
+    .pipe($.if('*.html', $.htmlmin({
+      collapseWhitespace: true,
+      preserveLineBreaks: false,
+      minifyCSS: true,
+      minifyJS: true,
+      removeComments: true
     })))
     // Output files
     .pipe(gulp.dest(dest))
@@ -131,9 +129,11 @@ gulp.task('copy', function() {
 
   // Copy over only the bower_components we need
   // These are things which cannot be vulcanized
-  var bower = gulp.src([
-    'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
-  ]).pipe(gulp.dest(dist('bower_components')));
+  // var bower = gulp.src([
+  //   'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
+  // ]).pipe(gulp.dest(dist('bower_components')));
+
+  var bower = [];
 
   return merge(app, bower)
     .pipe($.size({
@@ -158,6 +158,29 @@ gulp.task('data', function() {
     }));
 });
 
+// Lint JavaScript
+gulp.task('lint', function() {
+  return gulp.src([
+      'app/scripts/**/*.js',
+      'app/elements/**/*.js',
+      'app/elements/**/*.html',
+      'gulpfile.js'
+    ])
+    .pipe(reload({
+      stream: true,
+      once: true
+    }))
+
+  // JSCS has not yet a extract option
+  .pipe($.if('*.html', $.htmlExtract({'strip': true})))
+  .pipe(gulp.dest('tmp'))
+  .pipe($.jshint())
+  .pipe($.jscs())
+  .pipe($.jscsStylish.combineWithHintResults())
+  .pipe($.jshint.reporter('jshint-stylish'))
+  .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+
+});
 
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
@@ -173,6 +196,14 @@ gulp.task('vulcanize', function() {
       stripComments: true,
       inlineCss: true,
       inlineScripts: true
+    }))
+    //.pipe($.minifyInline(options))
+    .pipe($.htmlmin({
+      collapseWhitespace: true,
+      preserveLineBreaks: false,
+      minifyCSS: false,
+      minifyJS: true,
+      removeComments: true
     }))
     .pipe(gulp.dest(dist('elements')))
     .pipe($.size({title: 'vulcanize'}));
@@ -215,7 +246,7 @@ gulp.task('cache-config', function(callback) {
 
 // Clean output directory
 gulp.task('clean', function() {
-  return del(['.tmp', dist()]);
+  return del(['.tmp', dist(), 'tmp']);
 });
 
 // Watch files for changes & reload
@@ -253,7 +284,7 @@ gulp.task('serve:dist', ['default'], function() {
   browserSync({
     port: 5001,
     notify: false,
-    logPrefix: 'PSK',
+    logPrefix: 'etools_partnership_management',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
@@ -275,6 +306,7 @@ gulp.task('serve:dist', ['default'], function() {
 gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
+    'lint',
     ['ensureFiles', 'copy', 'styles'],
     ['images', 'fonts', 'html', 'data'],
     'vulcanize', // 'cache-config',
@@ -316,31 +348,21 @@ gulp.task('deploy-dev-azure', function() {
     return false;
   }
 
-  var conn = ftp.create( {
-      host:     process.env.AZURE_FTP_HOSTNAME,
-      user:     process.env.AZURE_FTP_DEPLOYMENT_USERNAME,
-      password: process.env.AZURE_FTP_DEPLOYMENT_PASSWORD,
-      parallel: 10,
-      log:      gutil.log
-  } );
+  var conn = ftp.create({
+    host:     process.env.AZURE_FTP_HOSTNAME,
+    user:     process.env.AZURE_FTP_DEPLOYMENT_USERNAME,
+    password: process.env.AZURE_FTP_DEPLOYMENT_PASSWORD,
+    parallel: 10,
+    log: gutil.log
+  });
 
   var globs = [
-      'dist/**'
+    'dist/**'
   ];
 
-  return gulp.src( globs, { buffer: true } )
-      .pipe( conn.dest( '/site/wwwroot' ));
+  return gulp.src(globs, {buffer: true})
+      .pipe(conn.dest('/site/wwwroot'));
 });
-
-function getConsoleTime() {
-  var output = '';
-
-  output = output + colors.white('[');
-  output = output + colors.grey(moment().format('HH:hh:ss'));
-  output = output + colors.white('] ');
-
-  return output;
-}
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`

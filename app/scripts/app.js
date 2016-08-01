@@ -21,7 +21,13 @@
     app.$.paperDrawerPanel.closeDrawer();
   };
 
-  app._toggleDrawer = function(e) {
+  app._toggleDrawer = function() {
     app.$.paperDrawerPanel.togglePanel();
+  };
+
+  app.partnerResetSearch = function(event) {
+    var element = Polymer.dom(event).localTarget.parentElement.parentElement;
+    element.querySelector('paper-input').value = '';
+    element.querySelector('paper-dropdown-menu')._setSelectedItem();
   };
 })(document);

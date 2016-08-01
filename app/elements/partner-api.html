@@ -10,183 +10,182 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'partner-api',
-      properties: {
-        url: {
-          type: String
-        },
-        page: {
-          type: Number,
-          notify: true,
-          value: 0,
-          observer: '_handlePageChanged',
-        },
-        size: {
-          type: Number,
-          notify: true,
-          value: 10,
-          observer: '_handleSizeChanged',
-        },
-        totalElements: {
-          type: Number,
-          notify: true,
-          value: 0,
-        },
-        totalPages: {
-          type: Number,
-          notify: true,
-          value: 0,
-        },
-        data: {
-          type: Array,
-          notify: true,
-        },
-        search: {
-          type: String,
-          notify: true,
-          observer: '_searchChanged',
-        },
-        sortProperty: {
-          type: String,
-          observer: '_sortPropertyChanged',
-        },
-        _response: {
-          type: Array,
-        },
-        db: {
-          type: Object
-        },
-        dbView: {
-          type: Object
-        }
+  Polymer({
+    is: 'partner-api',
+    properties: {
+      url: {
+        type: String
       },
-      ready: function() {
-        var db = new loki('etools');
-        this.db = db.addCollection('partners', { indices: ['name', 'partner_type'] });
+      page: {
+        type: Number,
+        notify: true,
+        value: 0,
+        observer: '_handlePageChanged',
       },
-      _handleResponse: function(event) {
-        // partner list
-        if (this.url.indexOf('partner_data') > -1) {
-          var ratings = {
-            'high' : { 'order' : 5 },
-            'significant' : { 'order' : 4 },
-            'moderate' : { 'order' : 3 },
-            'low' : { 'order' : 2 },
-            'non_assessed' : { 'order' : 1 }
-          };
+      size: {
+        type: Number,
+        notify: true,
+        value: 10,
+        observer: '_handleSizeChanged',
+      },
+      totalElements: {
+        type: Number,
+        notify: true,
+        value: 0,
+      },
+      totalPages: {
+        type: Number,
+        notify: true,
+        value: 0,
+      },
+      data: {
+        type: Array,
+        notify: true,
+      },
+      search: {
+        type: String,
+        notify: true,
+        observer: '_searchChanged',
+      },
+      sortProperty: {
+        type: String,
+        observer: '_sortPropertyChanged',
+      },
+      _response: {
+        type: Array,
+      },
+      db: {
+        type: Object
+      },
+      dbView: {
+        type: Object
+      }
+    },
+    ready: function() {
+      var db = new loki('etools');
+      this.db = db.addCollection('partners', {indices: ['name', 'partner_type']});
+    },
+    _handleResponse: function(event) {
+      // partner list
+      if (this.url.indexOf('partner_data') > -1) {
+        var ratings = {
+          'high': {'order': 5},
+          'significant': {'order': 4},
+          'moderate': {'order': 3},
+          'low': {'order': 2},
+          'non_assessed': {'order': 1}
+        };
 
-          this._response = _.filter(event.detail.response, function(o) {
-            return o.hasOwnProperty('name') && !_.isEmpty(o.name) && o.hasOwnProperty('rating') && !_.isEmpty(o.rating);
-          });
+        this._response = _.filter(event.detail.response, function(o) {
+          return o.hasOwnProperty('name') && !_.isEmpty(o.name) && o.hasOwnProperty('rating') && !_.isEmpty(o.rating);
+        });
 
-          var newResponse = [];
+        var newResponse = [];
 
-          // add rating_value property
-          this._response.forEach(function(obj, index){
-            if (!_.isUndefined(obj.rating)) {
-              obj['rating_value'] = ratings[obj.rating.toLowerCase().replace(/-/g,"_")].order;
-              newResponse.push(obj);
-            }
-          });
+        // add rating_value property
+        this._response.forEach(function(obj) {
+          if (!_.isUndefined(obj.rating)) {
+            obj.rating_value = ratings[obj.rating.toLowerCase().replace(/-/g, '_')].order;
+            newResponse.push(obj);
+          }
+        });
 
-          this._response = newResponse;
-          this.db.insert(this._response);
-          this.sortProperty = 'name,asc';
+        this._response = newResponse;
+        this.db.insert(this._response);
+        this.sortProperty = 'name,asc';
 
+      } else {
+        this.db.insert(event.detail.response);
+      }
+
+      this._setData();
+    },
+    _setData: function(property) {
+      // create branch
+      var baseResultSet = this.db.chain()
+                            .find({'$and': this._getSearchQuery(this.search)})
+                            .simplesort(this._getSortBy(this.sortProperty), this._getSortOrder(this.sortProperty))
+                            .branch();
+
+      // get subset of data
+      if (!_.isUndefined(property)) {
+
+        if (property.type === 'offset') {
+          this.data = baseResultSet
+                    .offset(property.value)
+                    .limit(this.size)
+                    .data();
         } else {
-          this.db.insert(event.detail.response);
+          this.data = baseResultSet
+                    .limit(this.size)
+                    .data();
+        }
+      } else {
+        this.data = baseResultSet
+                    .limit(this.size)
+                    .data();
+      }
+
+      // set pagination data
+      this._setPaginationData(baseResultSet.data().length);
+    },
+    _getSearchQuery: function(value) {
+      var json = JSON.parse(value);
+
+      // get properties and remove empty values
+      var searchParameters = _(json).omitBy(_.isEmpty).value();
+      var searchQuery = [];
+
+      if (this.url.indexOf('partner_data.json') > -1) {
+        _.each(_.keys(searchParameters), function(parameter) {
+          var newSearchObject = {};
+          newSearchObject[parameter] = {'$regex': [searchParameters[parameter].toLowerCase(), 'i']};
+          searchQuery.push(newSearchObject);
+        });
+      }
+
+      return searchQuery;
+    },
+    _getSortBy: function(sortProperty) {
+      return sortProperty.split(',')[0];
+    },
+    _getSortOrder: function(sortProperty) {
+      return (sortProperty.split(',')[1] === 'asc' ? false : true);
+    },
+    _setPaginationData: function(totalElements) {
+      this.totalElements = totalElements;
+      this.totalPages = totalElements / this.size;
+    },
+    _handleSizeChanged: function() {
+      if (this.db) {
+        this._setData();
+      }
+    },
+    _handlePageChanged: function(page) {
+      if (this.db) {
+        var begin = page * this.size;
+        var properties = {'type': 'offset', 'value': begin};
+
+        this._setData(properties);
+      }
+    },
+    _sortPropertyChanged: function() {
+      if (!_.isEmpty(this.sortProperty)) {
+        if (this.url.indexOf('partner_data.json') > -1) {
+          this.sortProperty = this.sortProperty.replace('rating,', 'rating_value,');
         }
 
         this._setData();
-      },
-      _setData: function(property) {
-          // create branch
-          var baseResultSet = this.db.chain()
-                                .find({ '$and' : this._getSearchQuery(this.search) })
-                                .simplesort(this._getSortBy(this.sortProperty), this._getSortOrder(this.sortProperty))
-                                .branch();
-
-          // get subset of data
-          if (!_.isUndefined(property)) {
-
-            if (property.type === 'offset') {
-              this.data = baseResultSet
-                        .offset(property.value)
-                        .limit(this.size)
-                        .data();
-            } else {
-              this.data = baseResultSet
-                        .limit(this.size)
-                        .data();
-            }
-          } else {
-            this.data = baseResultSet
-                        .limit(this.size)
-                        .data();
-          }
-
-          // set pagination data
-          this._setPaginationData(baseResultSet.data().length);
-      },
-      _getSearchQuery: function(value) {
-        var json = JSON.parse(value);
-
-        // get properties and remove empty values
-        var searchParameters = _(json).omitBy(_.isEmpty).value();
-        var searchQuery = [];
-
-        if (this.url.indexOf('partner_data.json') > -1) {
-          _.each(_.keys(searchParameters), function(parameter){
-            var newSearchObject = {};
-            newSearchObject[parameter] = { '$regex' : [searchParameters[parameter].toLowerCase(), 'i'] };
-            searchQuery.push(newSearchObject);
-          })
-        }
-
-        return searchQuery;
-      },
-      _getSortBy: function(sortProperty) {
-        return sortProperty.split(',')[0];
-      },
-      _getSortOrder: function(sortProperty) {
-        return (sortProperty.split(',')[1] === 'asc' ? false : true);
-      },
-      _setPaginationData: function(totalElements) {
-        this.totalElements = totalElements;
-        this.totalPages = totalElements / this.size;
-      },
-      _handleSizeChanged: function(size) {
-        if (this.db) {
+      }
+    },
+    _searchChanged: function() {
+      if (this.db) {
+        this.debounce('getSearchChangedDebounce', function() {
           this._setData();
-        }
-      },
-      _handlePageChanged: function(page) {
-        if (this.db) {
-          var begin = page * this.size;
-          var properties = { 'type': 'offset', 'value': begin };
-
-          this._setData(properties);
-        }
-      },
-      _sortPropertyChanged: function(sort) {
-        if (!_.isEmpty(this.sortProperty)) {
-          if (this.url.indexOf('partner_data.json') > -1) {
-            this.sortProperty = this.sortProperty.replace('rating,', 'rating_value,');
-          }
-
-          this._setData();
-        }
-      },
-      _searchChanged: function(value) {
-        if (this.db) {
-          this.debounce('getSearchChangedDebounce', function(){
-            this._setData();
-          }, 350);
-        }
-      },
-
-    });
-  </script>
+        }, 350);
+      }
+    }
+  });
+</script>
 </dom-module>
 <script src="../bower_components/lokijs/src/lokijs.js"></script>

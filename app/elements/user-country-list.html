@@ -35,57 +35,54 @@
     </paper-dropdown-menu-light>
   </template>
   <script>
-    Polymer({
-      is: 'user-country-list',
+  Polymer({
+    is: 'user-country-list',
 
-      properties: {
-        user: {
-          type: Object,
-          value: {}
-        },
-        countries: {
-          type: Array,
-          value: []
-        },
-        userCountryData: {
-          type: Array,
-          value: []
-        }
+    properties: {
+      user: {
+        type: Object,
+        value: {}
       },
-
-      observers: [
-        '_dataChanged(user, countries)'
-      ],
-
-      _userResponse: function(event) {
-        this.user = event.detail.response;
+      countries: {
+        type: Array,
+        value: []
       },
+      userCountryData: {
+        type: Array,
+        value: []
+      }
+    },
 
-      _countriesResponse: function(event) {
-        this.countries = event.detail.response;
-      },
+    observers: [
+      '_dataChanged(user, countries)'
+    ],
 
-      _dataChanged: function(user, countries) {
-        if (this.user != {} && this.countries.length > 0) {
-          var data = this.user;
-          var userCountryData = [];
+    _userResponse: function(event) {
+      this.user = event.detail.response;
+    },
 
-          if (this.user.profile.countries_available.length > 0) {
-            var contriesAvailable = this.user.profile.countries_available;
+    _countriesResponse: function(event) {
+      this.countries = event.detail.response;
+    },
 
-            this.userCountryData = _
-              .chain(this.countries)
-              .filter(function(country) {
-                  return _.find(contriesAvailable, function(contriesAvailableId) {
-                    return contriesAvailableId === country.id;
-                  });
+    _dataChanged: function() {
+      if (this.user !== {} && this.countries.length > 0) {
+        if (this.user.profile.countries_available.length > 0) {
+          var contriesAvailable = this.user.profile.countries_available;
+
+          this.userCountryData = _
+            .chain(this.countries)
+            .filter(function(country) {
+                return _.find(contriesAvailable, function(contriesAvailableId) {
+                  return contriesAvailableId === country.id;
+                });
               })
-              .sortBy('name')
-              .value();
-          }
+            .sortBy('name')
+            .value();
         }
-      },
+      }
+    }
 
-    });
-  </script>
+  });
+</script>
 </dom-module>

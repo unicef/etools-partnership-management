@@ -107,15 +107,8 @@
                       </paper-dropdown-menu>
                     </div>
                     <div style="margin-left: 20px; margin-top: 12px;">
-                      <paper-button raised onclick="_reset(event)">Reset</paper-button>
+                      <paper-button raised onclick="app.partnerResetSearch(event)">Reset</paper-button>
                     </div>
-                    <script>
-                      function _reset(event) {
-                        var element = Polymer.dom(event).localTarget.parentElement.parentElement;
-                        element.querySelector('paper-input').value = '';
-                        element.querySelector('paper-dropdown-menu')._setSelectedItem();
-                      }
-                    </script>
                   </div>
 
                   <div>

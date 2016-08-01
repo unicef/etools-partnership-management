@@ -6,13 +6,13 @@
 <dom-module id="partner-list">
   <template>
     <style>
-        :host {
-            display: block;
+    :host {
+      display: block;
 
-            --paper-card: {
-              width: 100%
-            }
-        }
+      --paper-card: {
+        width: 100%
+      }
+    }
     </style>
 
     <paper-card>
@@ -56,80 +56,79 @@
 
   </template>
   <script>
-      Polymer({
-        is: 'partner-list',
+  Polymer({
+    is: 'partner-list',
 
-        properties: {
-          data: {
-            type: Array,
-            notify: true,
-            value: []
-          },
-          page: {
-            type: Number,
-            notify: true,
-            value: 0
-          },
-          size: {
-            type: Number,
-            notify: true,
-            value: 0
-          },
-          totalElements: {
-            type: Number,
-            notify: true,
-            value: 0
-          },
-          totalPages: {
-            type: Number,
-            notify: true,
-            value: 0
-          },
-          sortProperty: {
-            type: String,
-            notify: true,
-            value: ''
-          }
-        },
+    properties: {
+      data: {
+        type: Array,
+        notify: true,
+        value: []
+      },
+      page: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      size: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      totalElements: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      totalPages: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      sortProperty: {
+        type: String,
+        notify: true,
+        value: ''
+      }
+    },
 
-        getRatings: function() {
-          return {
-            'non_assessed' : { 'color' : 'c6bfbf', 'order' : 0 },
-            'low' : { 'color' : 'fcecc3', 'order' : 1 },
-            'medium' : { 'color' : 'ffd387', 'order' : 2 },
-            'moderate' : { 'color' : 'ffd387', 'order' : 2 },
-            'significant' : { 'color' : 'ff9b7a', 'order' : 3 },
-            'high' : { 'color' : 'fe6c76', 'order' : 4 }
-          };
-        },
+    getRatings: function() {
+      return {
+        'non_assessed': {'color': 'c6bfbf', 'order': 0},
+        'low': {'color': 'fcecc3', 'order': 1},
+        'medium': {'color': 'ffd387', 'order': 2},
+        'moderate': {'color': 'ffd387', 'order': 2},
+        'significant': {'color': 'ff9b7a', 'order': 3},
+        'high': {'color': 'fe6c76', 'order':  4}
+      };
+    },
 
-        _handleSort: function(event, object) {
-          this.sortProperty = event.detail.sort.property + ',' + event.detail.sort.direction;
-        },
+    _handleSort: function(event) {
+      this.sortProperty = event.detail.sort.property + ',' + event.detail.sort.direction;
+    },
 
-        customObjectSorter: function(a, b) {
-          return this.getRatings()[a.toLowerCase().replace(/-/g,"_")].order - this.getRatings()[b.toLowerCase().replace(/-/g,"_")].order;
-        },
+    customObjectSorter: function(a, b) {
+      return this.getRatings()[a.toLowerCase().replace(/-/g, '_')].order - this.getRatings()[b.toLowerCase().replace(/-/g, '_')].order;
+    },
 
-        getRiskRatingColor: function(value) {
-          var color = 'fff';
-          var rating = value.toLowerCase().replace(/-/g,"_");
+    getRiskRatingColor: function(value) {
+      var color = 'fff';
+      var rating = value.toLowerCase().replace(/-/g, '_');
 
-          if (_.has(this.getRatings(), rating) === true) {
-            color = this.getRatings()[rating].color;
-          }
+      if (_.has(this.getRatings(), rating) === true) {
+        color = this.getRatings()[rating].color;
+      }
 
-          return color;
-        },
+      return color;
+    },
 
-        getVisionSyncIcon: function(value) {
-          return value ? 'notification:sync' : 'notification:sync-disabled';
-        },
+    getVisionSyncIcon: function(value) {
+      return value ? 'notification:sync' : 'notification:sync-disabled';
+    },
 
-        getVisionSyncColor: function(value) {
-          return value ? '3cb570' : '747474';
-        }
-
-      });
-  </script>
+    getVisionSyncColor: function(value) {
+      return value ? '3cb570' : '747474';
+    }
+  });
+</script>
 </dom-module>
