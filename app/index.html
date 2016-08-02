@@ -80,76 +80,16 @@
               <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
                 <section data-route="partnership_management_partners" tabindex="-1">
-                  <div class="breadcrumb container flex"">
-                    <a data-route="partnership_management_partners" href="{{baseUrl}}partnership_management/partners">
-                      <span>Partnership Management</span>
-                    </a>
-                    <div class="chevron">
-                      <iron-image src="images/angle-double-right.svg" style="width:100%; height:100%;" preload sizing="contain"></iron-image>
-                    </div>
-                  </div>
-                  <div class="page-title" tabindex="-1">Partners</div>
-
-                  <div class="container flex">
-                    <div id="searchKeywordInput" style="width: 200px; margin-right: 20px;">
-                      <paper-input label="Search Keyword" always-float-label value="{{keywordSearch}}" auto-validate allowed-pattern="[a-zA-Z0-9\s]" maxlength="50">
-                        <div prefix><iron-icon icon="icons:zoom-in"></iron-icon></div>
-                      </paper-input>
-                    </div>
-                    <div>
-                      <paper-dropdown-menu label="Partner Type" always-float-label value="{{partnerTypeSearch}}">
-                        <paper-listbox class="dropdown-content">
-                          <paper-item>Bilateral / Multilateral</paper-item>
-                          <paper-item>Civil Society Organization</paper-item>
-                          <paper-item>Government</paper-item>
-                          <paper-item>UN Agency</paper-item>
-                        </paper-listbox>
-                      </paper-dropdown-menu>
-                    </div>
-                    <div style="margin-left: 20px; margin-top: 12px;">
-                      <paper-button raised onclick="app.partnerResetSearch(event)">Reset</paper-button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <partner-api
-                      url="/data/partner_data.json"
-                      data="{{dataFromApi}}"
-                      page="{{page}}"
-                      size="{{size}}"
-                      sort-property="[[sortProperty]]"
-                      total-elements="{{totalElements}}"
-                      total-pages="{{totalPages}}"
-                      search='{ "name": "{{keywordSearch}}", "partner_type": "{{partnerTypeSearch}}" }'>
-                    </partner-api>
-                    <partner-list data="{{dataFromApi}}" page="{{page}}" size="{{size}}" total-elements="{{totalElements}}" total-pages="{{totalPages}}" sort-property="{{sortProperty}}"></partner-list>
-                  </div>
+                  <partner-list></partner-list>
                 </section>
 
                 <section data-route="partnership_management_agreements" tabindex="-1">
-                  <div class="breadcrumb container flex">
-                    <a data-route="partnership_management_partners" href="{{baseUrl}}partnership_management/partners">
-                      <span>Partnership Management</span>
-                    </a>
-                    <div class="chevron">
-                      <iron-image src="images/angle-double-right.svg" style="width:100%; height:100%;" preload sizing="contain"></iron-image>
-                    </div>
-                  </div>
-                  <div class="page-title" tabindex="-1">Agreements</h1>
+                  <agreement-list></agreement-list>
                 </section>
 
                 <section data-route="partnership_management_interventions" tabindex="-1">
-                  <div class="breadcrumb container flex"">
-                    <a data-route="partnership_management_partners" href="{{baseUrl}}partnership_management/partners">
-                      <span>Partnership Management</span>
-                    </a>
-                    <div class="chevron">
-                      <iron-image src="images/angle-double-right.svg" style="width:100%; height:100%;" preload sizing="contain"></iron-image>
-                    </div>
-                  </div>
-                  <div class="page-title" tabindex="-1">Interventions</div>
+                  <intervention-list></intervention-list>
                 </section>
-
               </iron-pages>
             </div>
           </paper-scroll-header-panel>

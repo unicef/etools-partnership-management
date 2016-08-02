@@ -20,7 +20,14 @@ var merge = require('merge-stream');
 var packageJson = require('./package.json');
 var path = require('path');
 var reload = browserSync.reload;
+var replace = require('gulp-replace-task');
 var runSequence = require('run-sequence');
+
+// parse arguments
+var args = require('yargs')
+    .alias('env', 'environment')
+    .default('environment', 'prod')
+    .argv;
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -307,6 +314,7 @@ gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
     'lint',
+    'update_constants_app',
     ['ensureFiles', 'copy', 'styles'],
     ['images', 'fonts', 'html', 'data'],
     'vulcanize', // 'cache-config',
@@ -363,6 +371,30 @@ gulp.task('deploy-dev-azure', function() {
   return gulp.src(globs, {buffer: true})
       .pipe(conn.dest('/site/wwwroot'));
 });
+
+gulp.task('update_constants_app', function() {
+  var env = args.env || 'prod';
+  var filename = env + '.json';
+  var settings = JSON.parse(fs.readFileSync('./config/' + filename, 'utf8'));
+  return updateConstants(settings);
+});
+
+function updateConstants(settings) {
+  return gulp.src('app/scripts/app.constants.template.js')
+    .pipe(replace({
+      patterns: _.map(_.keys(settings), function(key) {
+            return {match: key, replacement: settings[key]};
+          })
+    }))
+    .pipe($.rename('app.constants.js'))
+    .pipe(gulp.dest('app/scripts'))
+    .on('error', handleError);
+}
+
+function handleError(err) {
+  console.log(err.toString());
+  process.exit(-1);
+}
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`

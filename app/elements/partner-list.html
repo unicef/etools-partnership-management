@@ -1,134 +1,69 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
-<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../styles/shared-styles.html">
+
+<link rel="import" href="./breadcrumb-trail.html">
+<link rel="import" href="./partner-api.html">
+<link rel="import" href="./partner-datagrid.html">
 
 <dom-module id="partner-list">
   <template>
+    <style include="shared-styles"></style>
+    <style include="iron-flex"></style>
     <style>
-    :host {
-      display: block;
-
-      --paper-card: {
-        width: 100%
-      }
-    }
+        :host {
+            display: block;
+        }
     </style>
+    <breadcrumb-trail></breadcrumb-trail>
+    <div class="page-title" tabindex="-1">Partners</div>
 
-    <paper-card>
-      <paper-datatable-api
-        paginate
-        data="{{data}}"
-        size="{{size}}"
+    <div class="layout horizontal">
+      <div id="searchKeywordInput" style="width: 200px; margin-right: 20px;">
+        <paper-input label="Search Keyword" always-float-label value="{{keywordSearch}}" auto-validate allowed-pattern="[a-zA-Z0-9\s]" maxlength="50">
+          <div prefix><iron-icon icon="icons:zoom-in"></iron-icon></div>
+        </paper-input>
+      </div>
+      <div>
+        <paper-dropdown-menu label="Partner Type" always-float-label value="{{partnerTypeSearch}}">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Bilateral / Multilateral</paper-item>
+            <paper-item>Civil Society Organization</paper-item>
+            <paper-item>Government</paper-item>
+            <paper-item>UN Agency</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <div style="margin-left: 20px; margin-top: 12px;">
+        <paper-button raised onclick="app.partnerResetSearch(event)">Reset</paper-button>
+      </div>
+    </div>
+
+    <div>
+      <partner-api
+        url="/data/partner_data.json"
+        data="{{dataFromApi}}"
         page="{{page}}"
-        available-size="[10, 25, 50, 100]"
-        on-sort="_handleSort"
-        total-elements="[[totalElements]]"
-        total-pages="[[totalPages]]">
-
-        <paper-datatable-api-column header="partner name" property="name" type="String" align="left" sortable sorted>
-          <template>
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">[[value]]</div>
-          </template>
-        </paper-datatable-api-column>
-
-        <paper-datatable-api-column header="partner type" property="partner_type">
-          <template>
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">[[value]]</div>
-          </template>
-        </paper-datatable-api-column>
-
-        <paper-datatable-api-column header="risk rating" property="rating" type="String" sortable>
-            <template>
-              <div style="white-space: nowrap; background-color: #{{ getRiskRatingColor(value) }};" align="center" class="rating_cell">[[ value ]]</div>
-            </template>
-          </paper-datatable-api-column>
-
-        <paper-datatable-api-column header="vision sync" property="vision_synced" align="center">
-          <template>
-            <div style="background-color: #{{ getVisionSyncColor(value) }};" class="vision_sync">
-              <iron-icon icon="{{ getVisionSyncIcon(value) }}"></iron-icon>
-            </div>
-          </template>
-        </paper-datatable-api-column>
-      </paper-datatable-api>
-    </paper-card>
-
+        size="{{size}}"
+        sort-property="[[sortProperty]]"
+        total-elements="{{totalElements}}"
+        total-pages="{{totalPages}}"
+        search='{ "name": "{{keywordSearch}}", "partner_type": "{{partnerTypeSearch}}" }'>
+      </partner-api>
+      <partner-datagrid data="{{dataFromApi}}" page="{{page}}" size="{{size}}" total-elements="{{totalElements}}" total-pages="{{totalPages}}" sort-property="{{sortProperty}}"></partner-datagrid>
+    </div>
   </template>
   <script>
-  Polymer({
-    is: 'partner-list',
-
-    properties: {
-      data: {
-        type: Array,
-        notify: true,
-        value: []
-      },
-      page: {
-        type: Number,
-        notify: true,
-        value: 0
-      },
-      size: {
-        type: Number,
-        notify: true,
-        value: 0
-      },
-      totalElements: {
-        type: Number,
-        notify: true,
-        value: 0
-      },
-      totalPages: {
-        type: Number,
-        notify: true,
-        value: 0
-      },
-      sortProperty: {
-        type: String,
-        notify: true,
-        value: ''
-      }
-    },
-
-    getRatings: function() {
-      return {
-        'non_assessed': {'color': 'c6bfbf', 'order': 0},
-        'low': {'color': 'fcecc3', 'order': 1},
-        'medium': {'color': 'ffd387', 'order': 2},
-        'moderate': {'color': 'ffd387', 'order': 2},
-        'significant': {'color': 'ff9b7a', 'order': 3},
-        'high': {'color': 'fe6c76', 'order':  4}
-      };
-    },
-
-    _handleSort: function(event) {
-      this.sortProperty = event.detail.sort.property + ',' + event.detail.sort.direction;
-    },
-
-    customObjectSorter: function(a, b) {
-      return this.getRatings()[a.toLowerCase().replace(/-/g, '_')].order - this.getRatings()[b.toLowerCase().replace(/-/g, '_')].order;
-    },
-
-    getRiskRatingColor: function(value) {
-      var color = 'fff';
-      var rating = value.toLowerCase().replace(/-/g, '_');
-
-      if (_.has(this.getRatings(), rating) === true) {
-        color = this.getRatings()[rating].color;
-      }
-
-      return color;
-    },
-
-    getVisionSyncIcon: function(value) {
-      return value ? 'notification:sync' : 'notification:sync-disabled';
-    },
-
-    getVisionSyncColor: function(value) {
-      return value ? '3cb570' : '747474';
-    }
-  });
-</script>
+    Polymer({
+      is: 'partner-list'
+    });
+  </script>
 </dom-module>

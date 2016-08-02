@@ -1,0 +1,136 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/notification-icons.html">
+
+<dom-module id="partner-datagrid">
+  <template>
+    <style>
+    :host {
+      display: block;
+
+      --paper-card: {
+        width: 100%
+      }
+    }
+    </style>
+
+    <paper-card>
+      <paper-datatable-api
+        paginate
+        data="{{data}}"
+        size="{{size}}"
+        page="{{page}}"
+        available-size="[10, 25, 50, 100]"
+        on-sort="_handleSort"
+        total-elements="[[totalElements]]"
+        total-pages="[[totalPages]]">
+
+        <paper-datatable-api-column header="partner name" property="name" type="String" align="left" sortable sorted>
+          <template>
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">[[value]]</div>
+          </template>
+        </paper-datatable-api-column>
+
+        <paper-datatable-api-column header="partner type" property="partner_type">
+          <template>
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">[[value]]</div>
+          </template>
+        </paper-datatable-api-column>
+
+        <paper-datatable-api-column header="risk rating" property="rating" type="String" sortable>
+            <template>
+              <div style="white-space: nowrap; background-color: #{{ getRiskRatingColor(value) }};" align="center" class="rating_cell">[[ value ]]</div>
+            </template>
+          </paper-datatable-api-column>
+
+        <paper-datatable-api-column header="vision sync" property="vision_synced" align="center">
+          <template>
+            <div style="background-color: #{{ getVisionSyncColor(value) }};" class="vision_sync">
+              <iron-icon icon="{{ getVisionSyncIcon(value) }}"></iron-icon>
+            </div>
+          </template>
+        </paper-datatable-api-column>
+      </paper-datatable-api>
+    </paper-card>
+
+  </template>
+  <script>
+  Polymer({
+    is: 'partner-datagrid',
+
+    properties: {
+      data: {
+        type: Array,
+        notify: true,
+        value: []
+      },
+      page: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      size: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      totalElements: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      totalPages: {
+        type: Number,
+        notify: true,
+        value: 0
+      },
+      sortProperty: {
+        type: String,
+        notify: true,
+        value: ''
+      }
+    },
+
+    getRatings: function() {
+      return {
+        'non_assessed': {'color': 'c6bfbf', 'order': 0},
+        'low': {'color': 'fcecc3', 'order': 1},
+        'medium': {'color': 'ffd387', 'order': 2},
+        'moderate': {'color': 'ffd387', 'order': 2},
+        'significant': {'color': 'ff9b7a', 'order': 3},
+        'high': {'color': 'fe6c76', 'order':  4}
+      };
+    },
+
+    _handleSort: function(event) {
+      this.sortProperty = event.detail.sort.property + ',' + event.detail.sort.direction;
+    },
+
+    customObjectSorter: function(a, b) {
+      return this.getRatings()[a.toLowerCase().replace(/-/g, '_')].order - this.getRatings()[b.toLowerCase().replace(/-/g, '_')].order;
+    },
+
+    getRiskRatingColor: function(value) {
+      var color = 'fff';
+      var rating = value.toLowerCase().replace(/-/g, '_');
+
+      if (_.has(this.getRatings(), rating) === true) {
+        color = this.getRatings()[rating].color;
+      }
+
+      return color;
+    },
+
+    getVisionSyncIcon: function(value) {
+      return value ? 'notification:sync' : 'notification:sync-disabled';
+    },
+
+    getVisionSyncColor: function(value) {
+      return value ? '3cb570' : '747474';
+    }
+  });
+</script>
+</dom-module>
