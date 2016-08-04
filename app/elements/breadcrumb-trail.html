@@ -38,11 +38,29 @@
     <div class="chevron">
       <iron-image src="../images/angle-double-right.svg" style="width:100%; height:100%;" preload sizing="contain"></iron-image>
     </div>
+    <template is="dom-if" if="{{dataRoute}}">
+      <div>
+        <a data-route="{{dataRoute}}" href="{{baseUrl}}{{dataHref}}">
+          <span>{{title}}</span>
+        </a>
+      </div>
+    </template>
   </div>
 </template>
 <script>
 Polymer({
-  is: 'breadcrumb-trail'
+  is: 'breadcrumb-trail',
+  properties: {
+    dataRoute: {
+      type: String
+    },
+    dataHref: {
+      type: String
+    },
+    title: {
+      type: String
+    }    
+  }
 });
 </script>
 </dom-module>

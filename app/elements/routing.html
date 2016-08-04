@@ -23,6 +23,11 @@
       setFocus(app.route);
     });
 
+    page('/partnership_management/add_partner', function() {
+      app.route = 'partnership_management_add_partner';
+      setFocus(app.route);
+    });
+
     // routes
     _.each(partnershipManagement, function(type) {
       page('/partnership_management/' + type, function() {

@@ -1,0 +1,35 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../styles/shared-styles.html">
+
+<link rel="import" href="./breadcrumb-trail.html">
+
+<dom-module id="partner-add">
+  <template>
+    <style include="shared-styles"></style>
+    <style include="iron-flex iron-flex-alignment"></style>  
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <div class="layout horizontal">
+      <div class="flex_header">
+        <breadcrumb-trail 
+          data-route="partnership_management_partners"
+          data-href="partnership_management/partners"
+          title="Partners">
+        </breadcrumb-trail>
+        <div class="page-title" tabindex="-1">Add: Partner Organization</div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'partner-add'
+    });
+  </script>
+</dom-module>
