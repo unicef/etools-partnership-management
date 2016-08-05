@@ -57,8 +57,9 @@
         type: String,
         observer: '_sortPropertyChanged',
       },
-      _response: {
+      response: {
         type: Array,
+        notify: true
       },
       db: {
         type: Object
@@ -82,22 +83,22 @@
           'non_assessed': {'order': 1}
         };
 
-        this._response = _.filter(event.detail.response, function(o) {
+        this.response = _.filter(event.detail.response, function(o) {
           return o.hasOwnProperty('name') && !_.isEmpty(o.name) && o.hasOwnProperty('rating') && !_.isEmpty(o.rating);
         });
 
         var newResponse = [];
 
         // add rating_value property
-        this._response.forEach(function(obj) {
+        this.response.forEach(function(obj) {
           if (!_.isUndefined(obj.rating)) {
             obj.rating_value = ratings[obj.rating.toLowerCase().replace(/-/g, '_')].order;
             newResponse.push(obj);
           }
         });
 
-        this._response = newResponse;
-        this.db.insert(this._response);
+        this.response = newResponse;
+        this.db.insert(this.response);
         this.sortProperty = 'name,asc';
 
       } else {

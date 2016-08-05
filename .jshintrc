@@ -24,6 +24,7 @@
     "commonBv": true,
     "_": true,
     "moment":true,
-    "loki":true
+    "loki":true,
+    "saveAs":true
   }
 }

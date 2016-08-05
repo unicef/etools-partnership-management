@@ -17,6 +17,7 @@
 <link rel="import" href="./partner-api.html">
 <link rel="import" href="./partner-datagrid.html">
 
+<script src="../bower_components/file-saver/FileSaver.min.js"></script>
 <dom-module id="partner-list">
   <template>
     <style include="shared-styles"></style>
@@ -95,7 +96,7 @@
             <paper-icon-button icon="icons:print" onclick="javascript:window.print();"></paper-icon-button>
           </div>
           <div class="icon_container">
-            <paper-icon-button icon="icons:file-download" disabled></paper-icon-button>
+            <paper-icon-button icon="icons:file-download" on-tap="download"></paper-icon-button>
           </div>
         </div>
         <div>
@@ -146,6 +147,7 @@
       <partner-api
         url="/data/partner_data.json"
         data="{{dataFromApi}}"
+        response="{{allData}}"
         page="{{page}}"
         size="{{size}}"
         sort-property="[[sortProperty]]"
@@ -158,7 +160,69 @@
   </template>
   <script>
     Polymer({
-      is: 'partner-list'
+      is: 'partner-list',
+      properties: {
+        allData: {
+          type: Array,
+          notify: true,
+          observer: '_allDataChanged'
+        },
+        csvData: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        exportColumns: {
+          type: Array,
+          value: ['name', 'partner_type', 'vendor_number', 'rating', 'vision_synced']
+        }
+      },
+
+      _allDataChanged: function() {
+        if (this.allData.length > 0) {
+          this.csvData = this._filterDataToCSV(this.allData, this.exportColumns);
+        }
+      },
+
+      _filterDataToCSV: function(data, headers) {
+        // include only fields specific in the headers
+        var dataPropertiesToOmit = _.difference(_.keys(data[0]), headers);
+        var filteredData = _.map(this.allData, function(o) {
+          var data = _.omit(o, dataPropertiesToOmit);
+
+          if (data.name.indexOf(',') > -1) {
+            data.name = '"' + data.name + '"';
+          }
+
+          return data;
+        });
+
+        return this._arrayToCSV(filteredData, headers, true);
+      },
+
+      _arrayToCSV: function(array, exportColumns, includeHeaders) {
+        includeHeaders = typeof includeHeaders !== 'undefined' ? includeHeaders : true;
+        var csvData = [];
+        if (array.length > 0 && exportColumns.length > 0) {
+          if (includeHeaders) {
+            csvData = [_.chain(array[0]).pick(exportColumns).keys().value().join(', ')];
+          }
+
+          _(array).each(function(element) {
+            csvData.push(_.chain(element).pick(exportColumns).values().value().join(', '));
+          });
+        }
+
+        return csvData.join('\n');
+      },
+
+      download: function() {
+        var blob = new Blob([this.csvData], {
+          type: 'text/csv'
+        });
+
+        saveAs(blob, 'partners_list.csv');
+      },
     });
   </script>
 </dom-module>

@@ -40,6 +40,12 @@
           </template>
         </paper-datatable-api-column>
 
+        <paper-datatable-api-column header="vendor number" property="vendor_number">
+          <template>
+            <div>[[value]]</div>
+          </template>
+        </paper-datatable-api-column>
+
         <paper-datatable-api-column header="risk rating" property="rating" type="String" sortable>
             <template>
               <div style="white-space: nowrap; background-color: #{{ getRiskRatingColor(value) }};" align="center" class="rating_cell">[[ value ]]</div>
