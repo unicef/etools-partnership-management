@@ -4,7 +4,7 @@ var ret = {
   'suites': ['app/test'],
   'webserver': {
     'pathMappings': []
-  }
+  },
 };
 
 var mapping = {};

@@ -1,20 +1,37 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
 
 <style is="custom-style">
-  :root {
-    --paper-font-common-base: {
-      font-family: 'Lato', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    };
 
+  /*
+   Polymer includes a shim for CSS Custom Properties that we can use for application theming.
+   Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
+   with changing the colors used or generate your own palette of colours at MaterialPalette.com.
+
+   See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
+   for further information on custom CSS properties.
+   */
+
+  /* Application theme */
+
+  :root {
     --primary-text-color: var(--paper-grey-900);
     --primary-background-color: #ffffff;
     --secondary-text-color: #737373;
     --disabled-text-color: #9b9b9b;
     --divider-color: #dbdbdb;
-    --primary-color: #515151;
+    --primary-color: var(--paper-indigo-500);
     --light-primary-color: var(--paper-indigo-100);
     --dark-primary-color: var(--paper-indigo-700);
     --accent-color: var(--paper-pink-a200);
@@ -22,45 +39,19 @@
     --dark-accent-color: var(--paper-pink-a400);
 
     /* Components */
-    --drawer-menu-item-height: {
-      height: 35px;
-      min-height: 35px;
-      line-height: 35px;
-    };
 
     /* paper-drawer-panel */
-    --drawer-menu-color: #ccc;
+    --drawer-menu-color: #ffffff;
     --drawer-border-color: 1px solid #ccc;
     --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
-    --paper-menu-background-color: #e9e9e9;
-    --paper-drawer-panel-left-drawer-container: {
-      background-color: #e9e9e9;
-    };
 
     /* paper-menu */
+    --paper-menu-background-color: #fff;
     --menu-link-color: #111111;
-
-    paper-datatable-api{
-      --paper-datatable-api-header: {
-        color: inherit;
-        font-size: 10px;
-        text-align: left;
-        text-transform: uppercase;
-      };
-
-      --paper-datatable-api-header-sorted: {
-        color: #0050ae;
-        font-weight: bold;
-      };
-
-      --paper-datatable-api-tr-hover-background-color {
-        background: #f5f5f5;
-      };
-
-    }
   }
 
   /* General styles */
+
   body {
     @apply(--layout-fullbleed);
     @apply(--layout-vertical);
@@ -68,20 +59,6 @@
 
   .space {
     @apply(--layout-flex);
-  }
-
-  #drawerPanel paper-menu{
-    padding: 20px;
-  }
-
-  #drawerPanel a {
-    @apply(--drawer-menu-item-height);
-  }
-
-  #drawerPanel div {
-    @apply(--drawer-menu-item-height);
-    margin: 0px;
-    font-size: 14px;
   }
 
   #drawerToolbar {
@@ -92,16 +69,6 @@
 
   #drawerToolbar .menu-name {
     @apply(--paper-font-title);
-  }
-
-  #countryDropdown {
-    padding-bottom: 15px;
-  }
-
-  #userDropdown paper-menu {
-    --paper-menu-background-color: {
-      color: #fff;
-    }
   }
 
   paper-scroll-header-panel {
@@ -129,7 +96,7 @@
 
     text-decoration: none;
     color: var(--menu-link-color);
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', 'Noto', sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-size: 14px;
@@ -141,7 +108,7 @@
 
   #mainToolbar.tall .app-name {
     font-size: 40px;
-    font-weight: 300;
+    font-weight: 400;
     /* Required for main area's paper-scroll-header-panel custom condensing transformation */
     -webkit-transform-origin: left center;
     transform-origin: left center;
@@ -172,17 +139,9 @@
     transform-origin: left center;
   }
 
-  .flex {
-    @apply(--layout-horizontal);
-  }
-
   /* Height of the scroll area */
   .content {
-    height: 900px;
-  }
-
-  .content iron-pages{
-    padding: 20px;
+    height: auto;
   }
 
   section[data-route="home"] paper-material {
@@ -212,15 +171,14 @@
   /* Breakpoints */
 
   /* Small */
-  @media (max-width: 600px) {
+  @media (max-width: 900px) {
 
     #drawer .paper-toolbar {
       margin-left: 16px;
     }
 
     #mainToolbar.tall .app-name {
-      font-size: 24px;
-      font-weight: 400;
+      font-size: 30px;
     }
 
     paper-material {
@@ -233,7 +191,7 @@
   }
 
   /* Tablet+ */
-  @media (min-width: 601px) {
+  @media (min-width: 901px) {
 
     #drawer.paper-drawer-panel > [drawer] {
       border-right: 1px solid rgba(0, 0, 0, 0.14);
@@ -251,6 +209,15 @@
     }
 
   }
+
+  /* Material Design Adaptive Breakpoints */
+  /*
+    Below you'll find CSS media queries based on the breakpoint guidance
+    published by the Material Design team. You can choose to use, customise
+    or remove these breakpoints based on your needs.
+
+    http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
+   */
 
   /* mobile-small */
   @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }

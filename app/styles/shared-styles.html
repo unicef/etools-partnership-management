@@ -6,21 +6,13 @@
   <template>
     <style>
       .page-title {
-        font-size: 20px !important;
-        font-weight: bold !important;
-        line-height: 20px !important;
-        margin-top: 15px;
+        @apply(--paper-font-display2);
       }
 
       .app-menu {
         --paper-menu-selected-item: {
-          color: var(--menu-link-color);
-          background: #f4f4f4;
-        }
-
-        --paper-menu-focused-item-after: {
-          color: var(--menu-link-color);
-          background: #f4f4f4;
+          color: #fff;
+          background: var(--light-primary-color);
         }
       }
 
@@ -28,7 +20,7 @@
         pointer-events: none;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 900px) {
         .page-title {
           font-size: 24px!important;
         }

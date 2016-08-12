@@ -1,33 +1,34 @@
+/*
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
 'use strict';
 
+// Include promise polyfill for node 0.10 compatibility
 require('es6-promise').polyfill();
 
-var gulp = require('gulp-help')(require('gulp'));
+// Include Gulp & tools we'll use
+var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var _ = require('lodash');
-var browserSync = require('browser-sync');
-var clear = require('clear');
-var colors = require('colors');
-var crypto = require('crypto');
 var del = require('del');
-var ensureFiles = require('./tasks/ensure-files.js');
-var fs = require('fs');
-var ftp = require('vinyl-ftp');
-var glob = require('glob-all');
-var gutil = require('gulp-util');
-var historyApiFallback = require('connect-history-api-fallback');
-var merge = require('merge-stream');
-var packageJson = require('./package.json');
-var path = require('path');
-var reload = browserSync.reload;
-var replace = require('gulp-replace-task');
 var runSequence = require('run-sequence');
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+var merge = require('merge-stream');
+var path = require('path');
+var fs = require('fs');
+var glob = require('glob-all');
+var historyApiFallback = require('connect-history-api-fallback');
+var packageJson = require('./package.json');
+var crypto = require('crypto');
+var ensureFiles = require('./tasks/ensure-files.js');
 
-// parse arguments
-var args = require('yargs')
-    .alias('env', 'environment')
-    .default('environment', 'prod')
-    .argv;
+// var ghPages = require('gulp-gh-pages');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -78,7 +79,7 @@ var optimizeHtmlTask = function(src, dest) {
     .pipe(assets)
     // Concatenate and minify JavaScript
     .pipe($.if('*.js', $.uglify({
-      preserveComments: false
+      preserveComments: 'some'
     })))
     // Concatenate and minify styles
     // In case you are still using useref build blocks
@@ -86,12 +87,10 @@ var optimizeHtmlTask = function(src, dest) {
     .pipe(assets.restore())
     .pipe($.useref())
     // Minify any HTML
-    .pipe($.if('*.html', $.htmlmin({
-      collapseWhitespace: true,
-      preserveLineBreaks: false,
-      minifyCSS: true,
-      minifyJS: true,
-      removeComments: true
+    .pipe($.if('*.html', $.minifyHtml({
+      quotes: true,
+      empty: true,
+      spare: true
     })))
     // Output files
     .pipe(gulp.dest(dest))
@@ -136,11 +135,9 @@ gulp.task('copy', function() {
 
   // Copy over only the bower_components we need
   // These are things which cannot be vulcanized
-  // var bower = gulp.src([
-  //   'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
-  // ]).pipe(gulp.dest(dist('bower_components')));
-
-  var bower = [];
+  var bower = gulp.src([
+    'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
+  ]).pipe(gulp.dest(dist('bower_components')));
 
   return merge(app, bower)
     .pipe($.size({
@@ -157,38 +154,6 @@ gulp.task('fonts', function() {
     }));
 });
 
-gulp.task('data', function() {
-  return gulp.src(['app/data/**'])
-    .pipe(gulp.dest(dist('data')))
-    .pipe($.size({
-      title: 'data'
-    }));
-});
-
-// Lint JavaScript
-gulp.task('lint', function() {
-  return gulp.src([
-      'app/scripts/**/*.js',
-      'app/elements/**/*.js',
-      'app/elements/**/*.html',
-      'gulpfile.js'
-    ])
-    .pipe(reload({
-      stream: true,
-      once: true
-    }))
-
-  // JSCS has not yet a extract option
-  .pipe($.if('*.html', $.htmlExtract({'strip': true})))
-  .pipe(gulp.dest('tmp'))
-  .pipe($.jshint())
-  .pipe($.jscs())
-  .pipe($.jscsStylish.combineWithHintResults())
-  .pipe($.jshint.reporter('jshint-stylish'))
-  .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
-
-});
-
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
   return optimizeHtmlTask(
@@ -203,14 +168,6 @@ gulp.task('vulcanize', function() {
       stripComments: true,
       inlineCss: true,
       inlineScripts: true
-    }))
-    //.pipe($.minifyInline(options))
-    .pipe($.htmlmin({
-      collapseWhitespace: true,
-      preserveLineBreaks: false,
-      minifyCSS: false,
-      minifyJS: true,
-      removeComments: true
     }))
     .pipe(gulp.dest(dist('elements')))
     .pipe($.size({title: 'vulcanize'}));
@@ -253,15 +210,33 @@ gulp.task('cache-config', function(callback) {
 
 // Clean output directory
 gulp.task('clean', function() {
-  return del(['.tmp', dist(), 'tmp']);
+  return del(['.tmp', dist()]);
 });
 
 // Watch files for changes & reload
 gulp.task('serve', ['styles'], function() {
+
+  //API to local data URL translations
+  var dataMiddleware = function(req, res, next) {
+    switch (req.url){
+      // common resources
+      case '/users/api/profile/':
+        req.url = '/data/users/profile.json';
+        break;
+
+      // partner management app
+      //***********************
+      case '/api/partners_list/':
+	req.url = '/data/partner_data.json';
+	break;
+    }
+    return next();
+  };
+
   browserSync({
     port: 5000,
     notify: false,
-    logPrefix: 'etools_partnership_management',
+    logPrefix: 'PSK',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
@@ -276,7 +251,10 @@ gulp.task('serve', ['styles'], function() {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [historyApiFallback()]
+      middleware: [historyApiFallback(), dataMiddleware],
+      routes: {
+        '/data': 'data'
+      }
     }
   });
 
@@ -291,7 +269,7 @@ gulp.task('serve:dist', ['default'], function() {
   browserSync({
     port: 5001,
     notify: false,
-    logPrefix: 'etools_partnership_management',
+    logPrefix: 'PSK',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
@@ -304,7 +282,12 @@ gulp.task('serve:dist', ['default'], function() {
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
-    server: dist(),
+    server: {
+      baseDir: dist(),
+      routes: {
+        '/data': 'data'
+      }
+    },
     middleware: [historyApiFallback()]
   });
 });
@@ -313,10 +296,8 @@ gulp.task('serve:dist', ['default'], function() {
 gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
-    'lint',
-    'update_constants_app',
     ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'html', 'data'],
+    ['images', 'fonts', 'html'],
     'vulcanize', // 'cache-config',
     cb);
 });
@@ -340,61 +321,6 @@ gulp.task('deploy-gh-pages', function() {
       branch: 'gh-pages'
     }), $.ghPages()));
 });
-
-gulp.task('deploy-dev-azure', function() {
-
-  clear();
-  console.log(colors.underline.bold.white('eTools Deploy: Azure Web App'));
-
-  var requiredEnvironmentVariables = ['AZURE_FTP_HOSTNAME', 'AZURE_FTP_DEPLOYMENT_USERNAME', 'AZURE_FTP_DEPLOYMENT_PASSWORD'];
-  var missingEnvironmentVariables = _.difference(requiredEnvironmentVariables, _.keys(process.env));
-
-  if (missingEnvironmentVariables.length > 0) {
-    console.log(colors.bold.red('\nERROR:'));
-    console.log(colors.red('Environment variables missing:' + missingEnvironmentVariables));
-    console.log('');
-    return false;
-  }
-
-  var conn = ftp.create({
-    host:     process.env.AZURE_FTP_HOSTNAME,
-    user:     process.env.AZURE_FTP_DEPLOYMENT_USERNAME,
-    password: process.env.AZURE_FTP_DEPLOYMENT_PASSWORD,
-    parallel: 10,
-    log: gutil.log
-  });
-
-  var globs = [
-    'dist/**'
-  ];
-
-  return gulp.src(globs, {buffer: true})
-      .pipe(conn.dest('/site/wwwroot'));
-});
-
-gulp.task('update_constants_app', function() {
-  var env = args.env || 'prod';
-  var filename = env + '.json';
-  var settings = JSON.parse(fs.readFileSync('./config/' + filename, 'utf8'));
-  return updateConstants(settings);
-});
-
-function updateConstants(settings) {
-  return gulp.src('app/scripts/app.constants.template.js')
-    .pipe(replace({
-      patterns: _.map(_.keys(settings), function(key) {
-            return {match: key, replacement: settings[key]};
-          })
-    }))
-    .pipe($.rename('app.constants.js'))
-    .pipe(gulp.dest('app/scripts'))
-    .on('error', handleError);
-}
-
-function handleError(err) {
-  console.log(err.toString());
-  process.exit(-1);
-}
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
