@@ -2,7 +2,6 @@
 <link rel="import" href="../common/etools-ajax/etools-ajax.html">
 
 <dom-module id="partner-data">
-
   <template>
     <etools-ajax
           auto
@@ -14,39 +13,37 @@
     </etools-ajax>
   </template>
 
-</dom-module>
+  <script>
+  (function() {
+      // jscs:disable
+    'use strict';
 
-<script>
-(function() {
-    // jscs:disable
-  'use strict';
-
-  Polymer({
-    is: 'partner-data',
-    observers: ['_updatePartners(partners.*)'],
-    properties: {
-      partners: {
-        type: Array,
-        notify: true,
-        value: []
+    Polymer({
+      is: 'partner-data',
+      observers: ['_updatePartners(data.*)'],
+      properties: {
+        data: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        url: {
+          type: String,
+          value: null
+        }
       },
-      url: {
-        type: String,
-        value: null
+      ready: function(){
+        this.$.ajax.endpoint = {ep: 'partners'};
+      },
+
+      handleResponse: function(rsp) {
+        this.data = rsp.detail;
+      },
+
+      _updatePartners: function() {
+        //console.log('Partners updated woo');
       }
-    },
-    ready: function(){
-      this.$.ajax.endpoint = {ep: 'partners'};
-    },
-
-    handleResponse: function(rsp) {
-      this.partners = rsp.detail;
-    },
-
-    _updatePartners: function() {
-      //console.log('Partners updated woo');
-    }
-  });
-})();
-
-</script>
+    });
+  })();
+  </script>
+</dom-module>

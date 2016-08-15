@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/iron-data-table/iron-data-table.html">
-<link rel="import" href="../../bower_components/iron-data-table/default-styles.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../partner-data/partner-data.html">
 
@@ -21,7 +20,7 @@
     </style>
 
     <paper-material elevation="1">
-      <div class="data-table">
+      <!-- <div class="data-table">
         <partner-data id="partnerData" partners={{partners}}></partner-data>
         <iron-data-table items="[[partners]]" selection-enabled>
           <data-table-column name="Partner Name" sort-by="name" filter-by="name">
@@ -48,17 +47,86 @@
             <template>[[item.vision_synced]]</template>
           </data-table-column>
         </iron-data-table>
-      </div>
+      </div> -->
+      <partner-data id="partners" on-data-changed="handleData"></partner-data>
+      <vaadin-grid id="partnerTable">
+        <table>
+          <colgroup>
+            <col name="name"/>
+            <col name="partner_type"/>
+            <col name="vendor_number"/>
+            <col name="rating"/>
+            <col name="vision_synced"/>
+          </colgroup>
+        </table>
+      </vaadin-grid>
     </paper-material>
 
   </template>
+
   <script>
     (function () {
       'use strict';
 
       Polymer({
-        is: 'partners-view'
+        is: 'partners-view',
+
+        handleData: function(e) {
+          console.log(e.detail.value);
+          this.$.partnerTable.items = function(params, callback) {
+            callback(e.detail.value, e.detail.value.length);
+          };
+        }
       });
-    })();
+  })();
   </script>
 </dom-module>
+
+
+    <!--  (function() {
+    HTMLImports.whenReady(function() {
+      var grid = document.querySelector('#simple');
+
+      getJSON('https://demo.vaadin.com/demo-data/1.0/people', function(json) {
+        grid.items = json.result;
+      });
+    });
+
+    function getJSON(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+          callback(JSON.parse(xhr.responseText));
+        }
+      };
+      xhr.open('GET', url, true);
+      xhr.send();
+    }
+
+
+
+      Polymer({
+    is: 'agreement-data',
+    observers: ['_updateAgreements(agreements.*)'],
+    properties: {
+      partners: {
+        type: Array,
+        notify: true,
+        value: []
+      },
+      url: {
+        type: String,
+        value: null
+      }
+    },
+    ready: function(){
+      this.$.ajax.endpoint = {ep: 'agreements'};
+    },
+
+    handleResponse: function(rsp) {
+      this.partners = rsp.detail;
+    },
+
+    _updatePartners: function() {
+      //console.log('Partners updated woo');
+    }-->

@@ -8,9 +8,9 @@
     "paper-elements": "PolymerElements/paper-elements#^1.0.1",
     "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
     "polymer": "Polymer/polymer#^1.2.0",
-    "iron-data-table": "^1.0.1",
     "vaadin-combo-box": "^1.1.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "vaadin-grid": "^1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
