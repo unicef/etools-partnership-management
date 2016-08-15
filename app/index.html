@@ -82,11 +82,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Drawer Content -->
         <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
+
+          <a data-route="home" href="{{baseUrl}}">
+            <iron-icon icon="home"></iron-icon>
+            <span>Home</span>
+          </a>
+
           <template is="dom-if" if='{{permissions.interventionsMenu}}'>
-            <a data-route="partners" href="{{baseUrl}}">
+            <a data-route="partners" href="{{baseUrl}}partners">
              <iron-icon icon="home"></iron-icon>
              <span>Partners</span>
             </a>
+          </template>
 
           <a data-route="agreements" href="{{baseUrl}}agreements">
             <iron-icon icon="info"></iron-icon>
@@ -124,6 +131,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
+            <section data-route="home" tabindex="-1">
+              <paper-material elevation="1">
+                <h1 class="page-title" tabindex="-1">Home</h1>
+                <p>Welcome to the partner management portal!</p>
+              </paper-material>
+            </section>
+
             <template is="dom-if" if='{{permissions.interventionsMenu}}'>
               <section data-route="partners" tabindex="-1">
                 <partners-view></partners-view>
@@ -132,13 +146,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="agreements" tabindex="-1">
               <agreements-view></agreements-view>
-            </section>
-
-            <section data-route="user-info" tabindex="-1">
-              <paper-material elevation="-1">
-                <h1 class="page-title" tabindex="-1">User: {{params.name}}</h1>
-                <div>This is {{params.name}}'s section</div>
-              </paper-material>
             </section>
 
             <section data-route="interventions" tabindex="-1">

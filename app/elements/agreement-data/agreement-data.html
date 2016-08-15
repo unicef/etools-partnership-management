@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../common/etools-ajax/etools-ajax.html">
 
-<dom-module id="partner-data">
+<dom-module id="agreement-data">
 
   <template>
     <etools-ajax
@@ -22,8 +22,8 @@
   'use strict';
 
   Polymer({
-    is: 'partner-data',
-    observers: ['_updatePartners(partners.*)'],
+    is: 'agreement-data',
+    observers: ['_updateAgreements(agreements.*)'],
     properties: {
       partners: {
         type: Array,
@@ -36,7 +36,7 @@
       }
     },
     ready: function(){
-      this.$.ajax.endpoint = {ep: 'partners'};
+      this.$.ajax.endpoint = {ep: 'agreements'};
     },
 
     handleResponse: function(rsp) {

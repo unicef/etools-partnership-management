@@ -3,5 +3,6 @@ dist
 bower_components
 .tmp
 .publish/
-tmp/
-app/scripts/app.constants.js
+.idea/
+build/
+docs/

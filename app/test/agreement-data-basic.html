@@ -10,36 +10,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <html>
-
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>Elements Test Runner</title>
-  <meta charset="UTF-8">
+  <title>agreement-d-data</title>
 
-  <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
-</head>
 
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../elements/agreement-d-data/agreement-d-data.html">
+
+</head>
 <body>
 
-  <script>
-    WCT.loadSuites([
-      'my-greeting-basic.html',
-      'my-greeting-basic.html?dom=shadow',
-      'my-list-basic.html',
-      'my-list-basic.html?dom=shadow',
-      'partners-view-basic.html',
-      'partners-view-basic.html?dom=shadow',
-      'agreements-view-basic.html',
-      'agreements-view-basic.html?dom=shadow',
-      'partner-data-basic.html',
-      'partner-data-basic.html?dom=shadow',
-      'agreement-data-basic.html',
-      'agreement-data-basic.html?dom=shadow'
-    ]);
-  </script>
+<test-fixture id="basic">
+  <template>
+    <agreement-d-data></agreement-d-data>
+  </template>
+</test-fixture>
 
+<script>
+  suite('agreement-d-data tests', function() {
+    var element;
+
+    setup(function() {
+      element = fixture('basic');
+    });
+
+    test('', function() {
+
+    });
+
+  });
+</script>
 
 </body>
-
 </html>

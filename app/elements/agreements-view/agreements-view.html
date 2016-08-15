@@ -1,19 +1,9 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/iron-data-table/iron-data-table.html">
 <link rel="import" href="../../bower_components/iron-data-table/default-styles.html">
 <link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../agreement-data/agreement-data.html">
 
 <dom-module id="agreements-view">
   <template>
@@ -21,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
       }
+
       vaadin-combo-box {
         margin-bottom: 20px;
         --paper-input-container-label: {
@@ -30,9 +21,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <paper-material elevation="1">
-      <div style="padding-top:10px">
-        <iron-ajax url="../../data/partner_data.json" last-response="{{data}}" auto></iron-ajax>
-        <iron-data-table items="[[data]]" selection-enabled>
+      <div class="data-table">
+        <agreement-data id="agreementData" agreements={{agreements}}></agreement-data>
+        <iron-data-table items="[[agreements]]" selection-enabled>
           <data-table-column name="Reference Number">
             <template>[[item.vendor_number]]</template>
           </data-table-column>
