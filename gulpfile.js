@@ -379,7 +379,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function() {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['buildFront:partner', 'buildFront:management'], function() {
+gulp.task('serve:dist', ['frontendBuild'], function() {
   // browserSync({
   //   port: 5001,
   //   notify: false,
@@ -399,7 +399,7 @@ gulp.task('serve:dist', ['buildFront:partner', 'buildFront:management'], functio
   //   server: dist(),
   //   middleware: [historyApiFallback()]
   // });
-  var reloadDist = ['buildFront:partner', 'buildFront:management'];
+  var reloadDist = ['frontendBuild'];
 
   gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], reloadDist);
   gulp.watch(['app/styles/**/*.css'], reloadDist);
@@ -465,29 +465,6 @@ gulp.task('frontendBuild', ['buildDist'], function() {
   gulp.src('dist/static/**/*')
   .pipe(gulp.dest(path.join(etoolsRoot, 'assets')));
 
-});
-
-gulp.task('buildFront:partner', function(cb) {
-  targetApp = 'partner';
-  setGlobals();
-  runSequence('frontendBuild', cb);
-});
-
-gulp.task('buildFront:management', function(cb) {
-  targetApp = 'management';
-  setGlobals();
-  runSequence('frontendBuild', cb);
-});
-
-gulp.task('serve:management', function(cb) {
-  targetApp = 'management';
-  setGlobals();
-  runSequence('serve', cb);
-});
-gulp.task('serve:partner', function(cb) {
-  targetApp = 'partner';
-  setGlobals();
-  runSequence('serve', cb);
 });
 
 // web component test (polymer unit test)
