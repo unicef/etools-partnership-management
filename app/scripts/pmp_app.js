@@ -42,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   });
 
   // custom transformation: scale header's title
-  window.addEventListener('paper-header-transform', function (e) {
+  window.addEventListener('paper-header-transform', function(e) {
     var title = Polymer.dom(document).querySelector('#mainToolbar .app-name');
     var d = e.detail;
     var m = d.height - d.condensedHeight;

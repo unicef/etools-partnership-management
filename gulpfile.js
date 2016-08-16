@@ -309,6 +309,11 @@ gulp.task('serve', ['styles', 'elements', 'images'], function() {
         req.url = '/data/users/profile.json';
         break;
 
+      // partner management app
+      case '/api/partners_list/':
+        req.url = '/data/partner_data_small.json';
+        break;
+
       // management app
       case '/management/api/stats/usercounts/':
         req.url = '/data/users/usercounts.json';

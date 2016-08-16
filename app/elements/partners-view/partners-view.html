@@ -20,113 +20,37 @@
     </style>
 
     <paper-material elevation="1">
-      <!-- <div class="data-table">
-        <partner-data id="partnerData" partners={{partners}}></partner-data>
-        <iron-data-table items="[[partners]]" selection-enabled>
-          <data-table-column name="Partner Name" sort-by="name" filter-by="name">
-            <template>[[item.name]]</template>
-          </data-table-column>
-          <data-table-column name="Partner Type" filter-by="partner_type">
-            <template is="header">
-              <vaadin-combo-box label="[[column.name]]" value="{{column.filterValue}}"
-                                items='["Government",
-                                        "Civil Society Organization",
-                                        "UN Agency",
-                                        "Bilateral / Multilateral"]'
-                                allow-custom-value></vaadin-combo-box>
-            </template>
-            <template>[[item.partner_type]]</template>
-          </data-table-column>
-          <data-table-column name="Vendor Number">
-            <template>[[item.vendor_number]]</template>
-          </data-table-column>
-          <data-table-column name="Risk Rating" filter-by="rating">
-            <template>[[item.rating]]</template>
-          </data-table-column>
-          <data-table-column name="Vision Sync" sort-by="vision_synced">
-            <template>[[item.vision_synced]]</template>
-          </data-table-column>
-        </iron-data-table>
-      </div> -->
-      <partner-data id="partners" on-data-changed="handleData"></partner-data>
-      <vaadin-grid id="partnerTable">
-        <table>
-          <colgroup>
-            <col name="name"/>
-            <col name="partner_type"/>
-            <col name="vendor_number"/>
-            <col name="rating"/>
-            <col name="vision_synced"/>
-          </colgroup>
-        </table>
-      </vaadin-grid>
+      <div class="data-table">
+        <partner-data id="partners" on-data-changed="handleData"></partner-data>
+        <vaadin-grid id="partnerTable">
+          <table>
+            <colgroup>
+              <col name="name"/>
+              <col name="partner_type"/>
+              <col name="vendor_number"/>
+              <col name="rating"/>
+              <col name="vision_synced"/>
+            </colgroup>
+          </table>
+        </vaadin-grid>
+      </div>
     </paper-material>
 
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       Polymer({
         is: 'partners-view',
 
         handleData: function(e) {
-          console.log(e.detail.value);
           this.$.partnerTable.items = function(params, callback) {
             callback(e.detail.value, e.detail.value.length);
           };
         }
       });
-  })();
+    })();
   </script>
 </dom-module>
-
-
-    <!--  (function() {
-    HTMLImports.whenReady(function() {
-      var grid = document.querySelector('#simple');
-
-      getJSON('https://demo.vaadin.com/demo-data/1.0/people', function(json) {
-        grid.items = json.result;
-      });
-    });
-
-    function getJSON(url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          callback(JSON.parse(xhr.responseText));
-        }
-      };
-      xhr.open('GET', url, true);
-      xhr.send();
-    }
-
-
-
-      Polymer({
-    is: 'agreement-data',
-    observers: ['_updateAgreements(agreements.*)'],
-    properties: {
-      partners: {
-        type: Array,
-        notify: true,
-        value: []
-      },
-      url: {
-        type: String,
-        value: null
-      }
-    },
-    ready: function(){
-      this.$.ajax.endpoint = {ep: 'agreements'};
-    },
-
-    handleResponse: function(rsp) {
-      this.partners = rsp.detail;
-    },
-
-    _updatePartners: function() {
-      //console.log('Partners updated woo');
-    }-->
