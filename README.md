@@ -1,4 +1,8 @@
-**Setup Inscructions:**
+### eTools Partnership Management Portal (PMP)
+
+Polymer frontend portal for partnership management in the UNICEF eTools application
+
+### Setup Inscructions
 
 1)  Clone the repository
 
@@ -60,7 +64,7 @@ yo polymer:el my-new-element
 ```
 
 When prompted to include an import into `elements.html`, choose not to. Our `elements.html` is called `pmp_elements.html`.
-This naming issue messes up yeoman if yes is selected. This can be done manually afterwards.
+This naming issue messes up yeoman if yes is selected. The import can be done manually afterwards.
 
 It will then prompt to create a test. Choose `TDD` and this will create a basic test for you, and you should see it run when using `gulp test`.
 
