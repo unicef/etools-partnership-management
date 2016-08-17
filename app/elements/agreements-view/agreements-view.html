@@ -19,7 +19,7 @@
       }
     </style>
 
-    <paper-material elevation="1">
+    <!--<paper-material elevation="1">
       <div class="data-table">
         <agreement-data id="agreementData" agreements={{agreements}}></agreement-data>
         <iron-data-table items="[[agreements]]" selection-enabled>
@@ -54,6 +54,24 @@
             <template><paper-icon-button icon="file-download"></paper-icon-button></template>
           </data-table-column>
         </iron-data-table>
+      </div>
+    </paper-material>-->
+
+
+    <paper-material elevation="1">
+      <div class="data-table">
+        <agreement-data id="agreements" data="{{data}}"></agreement-data>
+        <vaadin-grid id="agreementTable" items="[[data]]" visible-rows="12">
+          <table>
+            <colgroup>
+              <col name="name"/>
+              <col name="partner_type"/>
+              <col name="vendor_number"/>
+              <col name="rating"/>
+              <col name="vision_synced"/>
+            </colgroup>
+          </table>
+        </vaadin-grid>
       </div>
     </paper-material>
 

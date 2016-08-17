@@ -20,9 +20,9 @@
 
     Polymer({
       is: 'agreement-data',
-      observers: ['_updateAgreements(agreements.*)'],
+      observers: ['_updateAgreements(data.*)'],
       properties: {
-        agreements: {
+        data: {
           type: Array,
           notify: true,
           value: []
@@ -37,7 +37,7 @@
       },
 
       handleResponse: function(rsp) {
-        this.agreements = rsp.detail;
+        this.data = rsp.detail;
       },
 
       _updateAgreements: function() {

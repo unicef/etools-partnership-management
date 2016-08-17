@@ -21,13 +21,13 @@
 
     <paper-material elevation="1">
       <div class="data-table">
-        <partner-data id="partners" on-data-changed="handleData"></partner-data>
-        <vaadin-grid id="partnerTable">
+        <partner-data id="partners" data="{{data}}"></partner-data>
+        <vaadin-grid id="partnerTable" items="[[data]]" on-sort-order-changed="sortTable" visible-rows="12">
           <table>
             <colgroup>
-              <col name="name"/>
+              <col name="name" sortable/>
               <col name="partner_type"/>
-              <col name="vendor_number"/>
+              <col name="vendor_number" sortable/>
               <col name="rating"/>
               <col name="vision_synced"/>
             </colgroup>
@@ -45,11 +45,26 @@
       Polymer({
         is: 'partners-view',
 
-        handleData: function(e) {
-          this.$.partnerTable.items = function(params, callback) {
-            callback(e.detail.value, e.detail.value.length);
+
+        //todo: handle null values and handle custom order
+        //todo: implement map sorting.
+        sortTable: function(e) {
+          var riskOrder = {
+            "High": 0,
+            "Significant": 1,
+            "Moderate": 2,
+            "Low": 3,
+            "Non-Assessed": 4
           };
+
+          var grid = this.$.partnerTable;
+          var idx = grid.sortOrder[0].column;
+          var lesser = grid.sortOrder[0].direction === 'asc' ? -1 : 1;
+          this.$.partners.data.sort(function (a, b) {
+            return (a[grid.columns[idx].name] < b[grid.columns[idx].name]) ? lesser : -lesser;
+          });
         }
+
       });
     })();
   </script>
