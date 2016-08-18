@@ -22,13 +22,13 @@
     <paper-material elevation="1">
       <div class="data-table">
         <partner-data id="partners" data="{{data}}"></partner-data>
-        <vaadin-grid id="partnerTable" items="[[data]]" on-sort-order-changed="sortTable" visible-rows="12">
+        <vaadin-grid id="partnerTable" items="[[data]]" on-sort-order-changed="_sortOrderChanged" visible-rows="11">
           <table>
             <colgroup>
               <col name="name" sortable/>
               <col name="partner_type"/>
               <col name="vendor_number" sortable/>
-              <col name="rating"/>
+              <col name="rating" sortable/>
               <col name="vision_synced"/>
             </colgroup>
           </table>
@@ -45,23 +45,93 @@
       Polymer({
         is: 'partners-view',
 
+        properties: {
+          sortRules: {
+            type: Array,
+            value: [{ruleProperty: 'rating',
+                            order: ['Non-Assessed', 'Low', 'Moderate', 'Significant', 'High']}]
+          }
+        },
 
-        //todo: handle null values and handle custom order
-        //todo: implement map sorting.
-        sortTable: function(e) {
-          var riskOrder = {
-            "High": 0,
-            "Significant": 1,
-            "Moderate": 2,
-            "Low": 3,
-            "Non-Assessed": 4
-          };
+        /* _sortOrderChanged: function(e) {
+          var newSortOrder = e.detail.value[0];
 
+          console.log("newSortOrder: ");
+          console.log(e.detail.value);
+          console.log("sortOrder: ");
+          console.log(this._sortOrder);
+
+          var idx = _.findIndex(this._sortOrder, {column: newSortOrder.column});
+          if(idx !== -1) {
+            if(this._sortOrder[idx].direction === 'asc')
+              this._sortOrder[idx].direction = 'desc';
+            else
+              this._sortOrder.splice(idx, 1);
+          }
+          else {
+            this._sortOrder.push(newSortOrder);
+          }
+
+          console.log("AFTER");
+
+          console.log("newSortOrder: ");
+          console.log(e.detail.value);
+          console.log("sortOrder: ");
+          console.log(this._sortOrder);
+
+          this._sortTable();
+        },*/
+
+        _sortOrderChanged: function() {
+          this._sortTable();
+        },
+
+        _parseRule: function(rule, value) {
+          if (_(rule.order).isArray()) { return _(rule.order).indexOf(value); }
+          if (_(rule.order).isFunction()) { return rule.order(value); }
+        },
+
+        _sortTable: function() {
+          var _this = this;
           var grid = this.$.partnerTable;
-          var idx = grid.sortOrder[0].column;
-          var lesser = grid.sortOrder[0].direction === 'asc' ? -1 : 1;
-          this.$.partners.data.sort(function (a, b) {
-            return (a[grid.columns[idx].name] < b[grid.columns[idx].name]) ? lesser : -lesser;
+          var data = this.$.partners.data;
+
+          var properties = _.map(grid.sortOrder, function(item) {
+            return grid.columns[item.column].name;
+          });
+          var directions = _.map(grid.sortOrder, function(item) {
+            return item.direction === 'asc' ? 1 : -1;
+          });
+
+          var mapped = _.map(data, function(item, index) {
+            return {index: index, specificity: _.map(properties, function(property) {
+              var value = item[property];
+
+              var ruleIndex = _(_.pluck(_this.sortRules, 'ruleProperty')).indexOf(property);
+              if (ruleIndex !== -1) { value = _this._parseRule(_this.sortRules[ruleIndex], value); }
+
+              if (_(value).isString()) { value = value.toLowerCase(); }
+              return value;
+            })};
+          });
+
+          var compareValue = 0;
+          mapped.sort(function(a, b) {
+            if (a.specificity.toString() === b.specificity.toString()) {
+              return a.index - b.index;
+            }
+
+            for (var i in _.range(properties.length)) {
+              compareValue = +(a.specificity[i] > b.specificity[i]) ||
+                             +(a.specificity[i] === b.specificity[i]) - 1;
+              compareValue *= directions[i];
+              if (compareValue !== 0) { return compareValue; }
+            }
+            return compareValue;
+          });
+
+          this.$.partners.data = _.map(mapped, function(item) {
+            return data[item.index];
           });
         }
 
