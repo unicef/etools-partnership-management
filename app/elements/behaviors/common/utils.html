@@ -25,36 +25,8 @@ commonBv.utils = {
 };
 var config = {
   endpoints: {
-    logout: {
-      template: '/accounts/logout/'
-    },
-    login: {
-      template: '/login/'
-    },
     userInfo: {
       template: '/users/api/profile/'
-    },
-    partnerStaffMemberProfile: {
-      template: '/partnership/partnerstaffmember/'
-    },
-    locationsAutocomplete: {
-      template: '/locations/autocomplete/'
-    },
-    interventionDetails: {
-      template: '/api/interventions/<%=id%>/'
-    },
-    interventions: {
-      template: '/api/interventions/',
-      exp: 1000 // cache for this amount of time (in milliseconds)
-    },
-    resultChainDetails: {
-      template: '/api/interventions/<%=interventionId%>/results/<%=rcId%>/'
-    },
-    newIndicatorReport: {
-      template: '/api/interventions/<%=interventionId%>/results/<%=rcId%>/reports/'
-    },
-    bulkIndicatorReport: {
-      template: '/api/bulk_reports/'
     },
     partners: {
       template: '/api/partners_list/'

@@ -317,34 +317,6 @@ gulp.task('serve', ['styles', 'elements', 'images'], function() {
       case '/api/agreements_list/':
         req.url = '/data/partner_data.json';
         break;
-
-      // management app
-      case '/management/api/stats/usercounts/':
-        req.url = '/data/users/usercounts.json';
-        break;
-      case '/management/api/stats/trips/':
-        req.url = '/data/management/tripsstats.json';
-        break;
-      case '/management/api/stats/agreements/':
-        req.url = '/data/management/agreementsstats.json';
-        break;
-      case '/management/api/stats/interventions/':
-        req.url = '/data/management/interventionsstats.json';
-        break;
-
-      // partner app
-      case '/api/interventions/':
-        req.url = '/data/partner/interventions.json';
-        break;
-      case '/locations/autocomplete/?q=as':
-        req.url = '/data/partner/locationsautocomplete.json';
-        break;
-      case '/api/interventions/7/':
-        req.url = '/data/partner/intervention_details.json';
-        break;
-      case '/api/interventions/7/results/201/':
-        req.url = '/data/partner/resultchain_details.json';
-        break;
     }
     return next();
   };
