@@ -1,0 +1,343 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!--<link rel="import" href="../common/etools-ajax/etools-ajax.html">-->
+
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../content-panel/content-panel.html">
+<link rel="import" href="../common/etools-datepicker/etools-datepicker.html">
+<link rel="import" href="../files-upload/files-upload.html">
+
+<dom-module id="partner-details">
+  <template>
+    <style is="custom-style">
+      .flex-horizontal {
+        @apply(--layout-horizontal);
+      }
+      .flex-vertical {
+        @apply(--layout-vertical);
+      }
+      /*.flexchild {*/
+        /*@apply(--layout-flex);*/
+      /*}*/
+      .flex-bottom-alligned {
+        @apply(--layout-self-end);
+      }
+    </style>
+    <style>
+      :host {
+        /* paper-checkbox */
+        --paper-checkbox-label: {
+          font-size: 14px;
+        };
+        --paper-checkbox-size: 14px;
+        --paper-checkbox-checked-color: #4A90E2;
+        --paper-checkbox-unchecked-color: #333333;
+        --paper-checkbox-label-color: #333333;
+
+        /* paper-input style changes */
+        --paper-input-container-input-color: #333333;
+        --paper-input-container-focus-color: #333333;
+        --paper-input-container-invalid-color: #e51919;
+        --paper-input-container-label-floating: {
+          text-transform: uppercase;
+        };
+        --paper-input-prefix: {
+          display: inline-flex;
+        };
+      }
+
+      paper-checkbox {
+        margin-left: 25px;
+      }
+
+      /* applied on paper-input */
+      paper-input {
+        --paper-input-container-input: {
+          font-size: 14px;
+        };
+      }
+      paper-input:not(:first-child),
+      paper-dropdown-menu:not(:first-child),
+      div.n-input-field {
+        margin-left: 25px;
+      }
+      paper-input paper-icon-button {
+        --paper-icon-button: {
+          width: 18px;
+          height: 18px;
+          padding: 0;
+          margin-right: 5px;
+          cursor: auto;
+        };
+        --iron-icon: {
+          vertical-align: baseline;
+        }
+      }
+      paper-input etools-datepicker {
+        margin-right: 5px;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
+        --iron-icon: {
+          vertical-align: text-top;
+        }
+      }
+      .b-input-field {
+        width: 425px;
+      }
+      .n-input-field {
+        width: 200px;
+      }
+
+      .row:not(:first-child):not(.iron-collapse-closed) {
+        margin-top: 20px;
+      }
+      paper-item {
+        --paper-item: {
+          font-size: 14px;
+        }
+      }
+      paper-dropdown-menu {
+        width: 192px;
+        --paper-dropdown-menu: {
+          font-size: 14px;
+        };
+        --paper-input-container-input: {
+          font-size: 14px;
+        };
+      }
+      .show-collapsible-content {
+        color: #4a90e2;
+        cursor: pointer;
+      }
+      .show-collapsible-content iron-icon {
+        color: #9b9b9b;
+      }
+      .alternate-name-btn {
+        margin-bottom: 7px;
+        margin-left: 25px;
+      }
+      .alternate-fields {
+        background-color: #f0f3f5;
+      }
+      .alternate-fields-content {
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .alternate-fields-content .org-diff-label {
+        text-transform: uppercase;
+        color: #737373;
+        font-size: 12px;
+        width: 190px;
+        line-height: 1.4;
+        padding: 11px 0;
+      }
+      .contact-info {
+        border-top: 1px solid #dedede;
+        padding-top: 20px;
+        margin-top: 20px;
+      }
+      .custom-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.011em;
+        line-height: 20px;
+        text-transform: uppercase;
+        color: #737373;
+      }
+
+
+
+
+      .submit-btn {
+        margin-top: 20px;
+      }
+
+    </style>
+
+    <form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">
+      <paper-checkbox id="alreadyPartner" name="already_partner">Partner already exists in VISION?</paper-checkbox>
+      <content-panel title="Partner Details">
+        <div class="row flex-horizontal">
+          <paper-input name="organization_name"
+                       class="b-input-field"
+                       label="Organization's Full Name*"
+                       required auto-validate
+                       error-message="Please fill organization's full name!"></paper-input>
+          <paper-input name="short_name"
+                       class="n-input-field"
+                       label="Short Name"></paper-input>
+          <span class="show-collapsible-content alternate-name-btn flex-bottom-alligned" on-tap="toggleAlternateNameFields">
+            <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+            Alternate Name?
+          </span>
+        </div>
+        <iron-collapse id="alternateNameFields" class="row alternate-fields">
+          <div class="alternate-fields-content flex-horizontal">
+            <span class="org-diff-label">Organization's name in a different language</span>
+
+            <paper-input name="alternate_name"
+                         class="n-input-field"
+                         label="Alternate Name"></paper-input>
+            <paper-input name="alternate_id"
+                         class="n-input-field"
+                       label="Alternate ID (if any)"></paper-input>
+          </div>
+        </iron-collapse>
+        <div class="row flex-horizontal">
+          <paper-dropdown-menu id="partnerType"
+                               name="partner_type"
+                               label="Partner Type*"
+                               is="iron-input"
+                               required
+                               error-message="Please select partener type!"
+                               on-iron-select="validateDropdownValue"
+                               on-paper-dropdown-open="dropdownOnOpen">
+            <paper-listbox class="dropdown-content">
+              <paper-item>Partner Type 1</paper-item>
+              <paper-item>Partner Type 2</paper-item>
+              <paper-item>Partner Type 3</paper-item>
+              <paper-item>Partner Type 4</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <div class="n-input-field flex-vertical">
+            <div>
+              <span class="custom-label">Core values assessment*</span>
+              <files-upload target="/path/to/destination" class="flex-bottom-alligned"></files-upload>
+            </div>
+          </div>
+
+          <paper-input class="n-input-field"
+                       label="Date last accessed*"
+                       name="date_last_accessed"
+                       value="[[dateLastAccessed]]">
+            <div prefix><etools-datepicker pretty-date="{{dateLastAccessed}}" format="MM/DD/YYYY"></etools-datepicker></div>
+          </paper-input>
+
+          <paper-dropdown-menu label="Shared Partner"
+                               name="shared_partner">
+            <paper-listbox class="dropdown-content">
+              <paper-item>Shared Partner 1</paper-item>
+              <paper-item>Shared Partner 2</paper-item>
+              <paper-item>Shared Partner 3</paper-item>
+              <paper-item>Shared Partner 4</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+        </div>
+
+        <div class="contact-info">
+          <span class="show-collapsible-content" on-tap="toggleContactInfoFields">
+            <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+            Contact Info
+          </span>
+          <iron-collapse id="contactInfoFields">
+            <div class="flex-horizontal">
+              <paper-input name="address"
+                           class="b-input-field"
+                           label="Address">
+                <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
+              </paper-input>
+              <paper-input name="city"
+                           class="n-input-field"
+                           label="City">
+              </paper-input>
+            </div>
+            <div class="flex-horizontal">
+              <paper-input name="phone_number"
+                           class="n-input-field"
+                           label="Phone Number">
+                <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
+              </paper-input>
+              <paper-input name="email_address"
+                           class="n-input-field"
+                           label="E-mail address">
+                <paper-icon-button prefix icon="communication:email"></paper-icon-button>
+              </paper-input>
+            </div>
+          </iron-collapse>
+        </div>
+
+      </content-panel>
+
+      <content-panel title="Risk Rating & Assessments">
+        <div class="row flex-horizontal">
+
+        </div>
+      </content-panel>
+
+
+    </form>
+    <paper-button class="submit-btn" raised on-tap="submitFormTest">Submit</paper-button>
+
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'partner-details',
+        properties: {
+
+        },
+        listeners: {
+          'addPartnerDetailsForm.iron-form-presubmit': 'formPresubmit'
+        },
+        toggleAlternateNameFields: function (event) {
+          this.$.alternateNameFields.toggle();
+          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
+        },
+        toggleContactInfoFields: function (event) {
+          this.$.contactInfoFields.toggle();
+          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
+        },
+        toggleIcon: function(iconElement) {
+          if (iconElement.icon === 'hardware:keyboard-arrow-down') {
+            iconElement.icon = 'hardware:keyboard-arrow-up';
+          } else {
+            iconElement.icon = 'hardware:keyboard-arrow-down';
+          }
+        }
+//        validateDropdownValue: function () {
+//          console.log(this.$.partnerType.selectedItemLabel);
+//          if (this.$.partnerType.selectedItemLabel === 'Partner Type 3') {
+//            this.$.partnerType.invalid = true;
+//          }
+//        },
+//        dropdownOnOpen: function() {
+//          console.log(this.$.partnerType.selectedItemLabel);
+//        },
+//        submitFormTest: function () {
+//          console.log(this.$.addPartnerDetailsForm);
+//          this.$.addPartnerDetailsForm.submit();
+//        },
+//        formPresubmit: function (event) {
+//          event.preventDefault();
+//          console.log(event, event.target.request.params);
+//
+//        },
+//        toggleCollapse: function() {
+//          this.$.collapseContentSection.toggle();
+//        }
+      });
+
+    })();
+  </script>
+</dom-module>

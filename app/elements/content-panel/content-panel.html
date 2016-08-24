@@ -1,0 +1,64 @@
+<!--
+Content panel customization when used in other elements:
+    variables:
+        --panel-border-color
+        --panel-header-color
+        --panel-header-align
+        --panel-background-color
+
+    mixins:
+        --panel-header-background
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="content-panel">
+  <template>
+    <style>
+      .content-panel-wrapper {
+        border: 1px solid var(--panel-border-color, #dedede);
+        border-radius: 4px;
+        box-shadow: 0 4px 10px -7px #333;
+        margin-top: 20px;
+      }
+      .panel-header {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAIAAABvrngfAAAALklEQVQImWM8+nA2AwODkJAQAwwwofHfvXvHhMaHqkLmCwkJMaHxoaqQ+QwMDADJhRGDAz83qAAAAABJRU5ErkJggg==);
+        margin: 0;
+        padding: 10px 20px;
+        color: var(--panel-header-color, #687254);
+        font-size: 16px;
+        text-align: var(--panel-header-align, center);
+        text-transform: uppercase;
+        @apply(--panel-header-background);
+      }
+      .panel-content {
+        background-color: var(--panel-background-color, #ffffff);
+        box-sizing: border-box;
+        padding: 20px;
+      }
+    </style>
+    <div class="content-panel-wrapper">
+      <div class="panel-header">[[title]]</div>
+      <div class="panel-content">
+        <content></content>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'content-panel',
+        properties: {
+          title: {
+            type: String,
+            value: 'Panel title'
+          }
+        }
+      });
+
+    })();
+  </script>
+</dom-module>
