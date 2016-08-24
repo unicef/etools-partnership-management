@@ -21,7 +21,7 @@
 
     <paper-input id="filter" type="search" value="{{filterInput::keyup}}" placeholder="Search" on-search="onSearch"></paper-input>
     <paper-material elevation="1">
-      <vaadin-grid id="table" items="[[items]]" on-sort-order-changed="_sortOrderChanged">
+      <vaadin-grid id="table" items="[[items]]" on-sort-order-changed="_sortOrderChanged" visible-rows="11">
         <content></content>
       </vaadin-grid>
     </paper-material>
