@@ -63,6 +63,10 @@
       closingReason: {
         type: Object,
         observer: 'dismissDialog'
+      },
+      format: {
+        type: String,
+        value: 'LL'
       }
     },
     ready: function() {
@@ -73,7 +77,7 @@
       if (!this.currentDate){
         return;
       }
-      this.prettyDate = this.dateFormat(this.date, 'LL');
+      this.prettyDate = this.dateFormat(this.date, this.format);
       this.jsonDate = this.dateFormat(this.date, '');
     },
     dateFormat: function(date, format) {

@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/file-upload/file-upload.html">
+
+<dom-module id="files-upload">
+  <template>
+    <style>
+      :host {
+        font-size: 14px;
+        --file-upload-button: {
+          padding: 0;
+          min-width: 0;
+          margin: 0;
+          font-size: 14px;
+          text-transform: capitalize;
+        };
+        --file-upload-upload-border: {
+          width: 100%;
+          padding: 0;
+        };
+        --file-upload-commands: {
+          float: left;
+          margin-right: 5px;
+        };
+        --file-upload-error: {
+          margin: 0;
+        };
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
+      }
+      iron-icon {
+        --iron-icon: {
+          margin-right: 5px;
+        }
+      }
+      .single-upload {
+        --file-upload-file: {
+          padding: 0;
+        };
+      }
+
+    </style>
+
+    <file-upload id="uploadFileElement" target="[[target]]" files="{{selectedFiles}}" multi="[[multiple]]" class$="{{singleUploadClass}}">
+      <iron-icon icon="file-upload"></iron-icon>
+      Select File
+    </file-upload>
+
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'files-upload',
+        properties: {
+          target: {
+            // URL to submit files for upload
+            type: String,
+            value: null
+          },
+          selectedFiles: {
+            type: Array,
+            notify: true
+          },
+          multiple: {
+            type: Boolean,
+            value: false
+          }
+        },
+        observers: [
+          '_filesChanged(selectedFiles.length)'
+        ],
+        _filesChanged: function() {
+          if (this.selectedFiles.length > 0) {
+            if (this.multiple === false) {
+              Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('#button').style.display = 'none';
+            }
+          } else {
+            Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('#button').style.display = 'inline-flex';
+            // reset file element so you can re-add the same file
+            Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('input[type="file"]').value = null;
+          }
+          console.log();
+        },
+        ready: function() {
+          if (this.multiple === false) {
+            this.singleUploadClass = 'single-upload';
+          } else {
+            this.singleUploadClass = '';
+          }
+        }
+      });
+
+    })();
+  </script>
+</dom-module>
