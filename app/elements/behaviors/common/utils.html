@@ -1,0 +1,63 @@
+<!--
+Global behavior definition
+-->
+<script>
+ // jscs:disable
+'use strict';
+var commonBv = commonBv || {};
+
+commonBv.utils = {
+  dateFormat: function(date, format) {
+    return moment(date).format(format);
+  },
+  underscoreless: function(s) {
+    return s.replace('_',' ');
+  },
+  _toArray: function(obj) {
+    // transform object to array
+    return Object.keys(obj).map(function(key) {
+        return {
+            name: key,
+            value: obj[key]
+        };
+    });
+  }
+};
+var config = {
+  endpoints: {
+    userInfo: {
+      template: '/users/api/profile/'
+    },
+    partners: {
+      template: '/api/partners_list/'
+    },
+    agreements: {
+      template: '/api/agreements_list/'
+    }
+  },
+  paths: {
+    indicatorDetails: 'rcReport/<%=interventionId%>/<%=rcId%>/'
+  },
+  permissions: {
+    partnerOnlyPermissions: ['interventionsMenu'],
+    defaultPermissions: ['loggedInDefault','userInfoMenu'],
+    partnerPermissions: ['interventionsMenu'],
+    managementPermissions: ['statsMenu']
+  }
+};
+
+commonBv.globals = {
+    baseSite: window.location.origin,
+    basePath: (window.location.port === '5000') ? '/' : '/partners/',
+    getPath: function(p, data) {
+      return this.basePath + _.template(config.paths[p])(data);
+    },
+    getEp: function(ep, data) {
+      return {
+        url: this.baseSite + _.template(config.endpoints[ep].template)(data),
+        exp: config.endpoints[ep].exp
+      };
+    },
+    allPermissions: config.permissions
+};
+</script>

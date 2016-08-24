@@ -2,9 +2,6 @@
   "preset": "google",
   "disallowSpacesInAnonymousFunctionExpression": null,
   "disallowTrailingWhitespace": null,
-  "maximumLineLength": 200,
-  "excludeFiles": ["node_modules/**"],
-  "validateIndentation": 2,
-  "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
-  "requireCapitalizedConstructors": false
+  "maximumLineLength": 100,
+  "excludeFiles": ["node_modules/**"]
 }

@@ -7,7 +7,7 @@
   "eqeqeq": true,
   "immed": true,
   "indent": 2,
-  "latedef": false,
+  "latedef": true,
   "noarg": true,
   "quotmark": "single",
   "undef": true,
@@ -23,8 +23,6 @@
     "mngBv": true,
     "commonBv": true,
     "_": true,
-    "moment":true,
-    "loki":true,
-    "saveAs":true
+    "moment":true
   }
 }

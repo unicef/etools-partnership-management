@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../partner-data/partner-data.html">
+<link rel="import" href="../etools-datatable/etools-datatable.html">
+
+<dom-module id="partners-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      vaadin-combo-box {
+        margin-bottom: 20px;
+        --paper-input-container-label: {
+          font-size: inherit;
+        }
+      }
+    </style>
+
+    <div class="data-table">
+      <partner-data id="partners" data="{{data}}"></partner-data>
+      <etools-datatable id="partnerTable" items="[[data]]">
+        <table>
+          <colgroup>
+            <col name="name" sortable/>
+            <col name="partner_type"/>
+            <col name="vendor_number"/>
+            <col name="rating" sortable/>
+            <col name="vision_synced"/>
+          </colgroup>
+        </table>
+      </etools-datatable>
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partners-view'
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../common/etools-ajax/etools-ajax.html">
+
+<dom-module id="partner-data">
+  <template>
+    <etools-ajax
+          auto
+          id="ajax"
+          url="[[url]]"
+          handle-as="json"
+          on-response="handleResponse"
+          debounce-duration="300">
+    </etools-ajax>
+  </template>
+
+  <script>
+  (function() {
+      // jscs:disable
+    'use strict';
+
+    Polymer({
+      is: 'partner-data',
+      observers: ['_updatePartners(data.*)'],
+      properties: {
+        data: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        url: {
+          type: String,
+          value: null
+        }
+      },
+      ready: function(){
+        this.$.ajax.endpoint = {ep: 'partners'};
+      },
+
+      handleResponse: function(rsp) {
+        this.data = rsp.detail;
+      },
+
+      _updatePartners: function() {
+        //console.log('Partners updated woo');
+      }
+    });
+  })();
+  </script>
+</dom-module>

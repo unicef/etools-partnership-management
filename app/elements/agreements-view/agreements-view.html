@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../agreement-data/agreement-data.html">
+
+<dom-module id="agreements-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      vaadin-combo-box {
+        margin-bottom: 20px;
+        --paper-input-container-label: {
+          font-size: inherit;
+        }
+      }
+    </style>
+
+    <!--<paper-material elevation="1">
+      <div class="data-table">
+        <agreement-data id="agreementData" agreements={{agreements}}></agreement-data>
+        <iron-data-table items="[[agreements]]" selection-enabled>
+          <data-table-column name="Reference Number">
+            <template>[[item.vendor_number]]</template>
+          </data-table-column>
+          <data-table-column name="Partner Name" sort-by="name" filter-by="name">
+            <template>[[item.name]]</template>
+          </data-table-column>
+          <data-table-column name="Agreement Type" sort-by="rating" filter-by="rating">
+            <template is="header">
+              <vaadin-combo-box label="[[column.name]]" value="{{column.filterValue}}"
+                                items='["Programme Cooperation Agreement",
+                                        "Small Scale Funding Agreement",
+                                        "Memorandum of Understanding",
+                                        "Institutional Contract",
+                                        "Work Plan"]'
+                                allow-custom-value></vaadin-combo-box>
+            </template>
+            <template>[[item.rating]]</template>
+          </data-table-column>
+          <data-table-column name="Start Date" sort-by="last_assessment_date">
+            <template>[[item.last_assessment_date]]</template>
+          </data-table-column>
+          <data-table-column name="End Date" sort-by="last_assessment_date">
+            <template>[[item.last_assessment_date]]</template>
+          </data-table-column>
+          <data-table-column name="UNICEF Signed" sort-by="last_assessment_date">
+            <template>[[item.last_assessment_date]]</template>
+          </data-table-column>
+          <data-table-column name="Signed Agreement">
+            <template><paper-icon-button icon="file-download"></paper-icon-button></template>
+          </data-table-column>
+        </iron-data-table>
+      </div>
+    </paper-material>-->
+
+
+    <paper-material elevation="1">
+      <div class="data-table">
+        <agreement-data id="agreements" data="{{data}}"></agreement-data>
+        <vaadin-grid id="agreementTable" items="[[data]]" visible-rows="12">
+          <table>
+            <colgroup>
+              <col name="name"/>
+              <col name="partner_type"/>
+              <col name="vendor_number"/>
+              <col name="rating"/>
+              <col name="vision_synced"/>
+            </colgroup>
+          </table>
+        </vaadin-grid>
+      </div>
+    </paper-material>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'agreements-view'
+      });
+    })();
+  </script>
+</dom-module>

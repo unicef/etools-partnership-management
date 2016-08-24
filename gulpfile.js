@@ -1,33 +1,20 @@
 'use strict';
 
-require('es6-promise').polyfill();
-
 var gulp = require('gulp-help')(require('gulp'));
 var $ = require('gulp-load-plugins')();
-var _ = require('lodash');
-var browserSync = require('browser-sync');
-var clear = require('clear');
-var colors = require('colors');
-var crypto = require('crypto');
 var del = require('del');
-var ensureFiles = require('./tasks/ensure-files.js');
-var fs = require('fs');
-var ftp = require('vinyl-ftp');
-var glob = require('glob-all');
-var gutil = require('gulp-util');
-var historyApiFallback = require('connect-history-api-fallback');
-var merge = require('merge-stream');
-var packageJson = require('./package.json');
-var path = require('path');
-var reload = browserSync.reload;
-var replace = require('gulp-replace-task');
 var runSequence = require('run-sequence');
-
-// parse arguments
-var args = require('yargs')
-    .alias('env', 'environment')
-    .default('environment', 'prod')
-    .argv;
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+var merge = require('merge-stream');
+var path = require('path');
+var fs = require('fs');
+var glob = require('glob-all');
+var historyApiFallback = require('connect-history-api-fallback');
+var packageJson = require('./package.json');
+var crypto = require('crypto');
+var childProcess = require('child_process');
+// var ghPages = require('gulp-gh-pages');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -41,10 +28,68 @@ var AUTOPREFIXER_BROWSERS = [
   'bb >= 10'
 ];
 
+var targetApp = 'pmp';
+
 var DIST = 'dist';
 
 var dist = function(subpath) {
-  return !subpath ? DIST : path.join(DIST, subpath);
+  switch (subpath) {
+    case 'styles/' + targetApp:
+      return path.join(DIST, 'static/frontend/', targetApp,'/styles');
+
+    default:
+      return !subpath ? DIST : path.join(DIST, subpath);
+  }
+};
+var etoolsRoot = '../EquiTrack';
+//var etoolsRoot = '..';
+var etoolsAssets;
+var etoolsAssetsPath;
+var etoolsImages;
+var etoolsImagesPath;
+var etoolsTemplatesPath;
+
+var setGlobals = function() {
+  // etoolsRoot = '../code';
+  etoolsAssets = path.join(etoolsRoot, 'assets/frontend', targetApp);
+  etoolsAssetsPath = path.join('static/frontend', targetApp);
+  etoolsImages = path.join(etoolsRoot, 'assets/images');
+  etoolsImagesPath = path.join(etoolsRoot, 'static/images');
+  etoolsTemplatesPath = path.join(etoolsRoot, 'templates/frontend', targetApp);
+};
+
+setGlobals();
+
+// distribution folder structure
+var etoolsDist = function(subpath, output) {
+  switch (subpath) {
+    case 'images':
+      return etoolsImages;
+    case 'elements':
+      return !output ? path.join(etoolsAssets, 'elements') :
+       path.join(etoolsAssetsPath, 'elements');
+    case 'index':
+      return etoolsTemplatesPath;
+    case 'styles':
+      return path.join(etoolsAssets, 'styles');
+    case 'assets':
+      return !output ? etoolsAssets : etoolsAssetsPath;
+    case 'templates':
+      return etoolsTemplatesPath;
+    default:
+      return !subpath ? etoolsAssets : path.join(etoolsAssets, subpath);
+  }
+};
+
+// distribution path structure
+var appPaths = function(path, output) {
+  switch (path) {
+    case 'elements':
+      return !output ? 'elements/' + targetApp + '_elements.html' :
+       '/' + etoolsDist('elements', true) + '/' + targetApp + '_elements.vulcanized.html';
+    case 'images':
+      return output ? etoolsImagesPath : etoolsImages;
+  }
 };
 
 var styleTask = function(stylesPath, srcs) {
@@ -70,11 +115,21 @@ var imageOptimizeTask = function(src, dest) {
 };
 
 var optimizeHtmlTask = function(src, dest) {
+
   var assets = $.useref.assets({
-    searchPath: ['.tmp', 'app']
+    searchPath: ['.tmp', 'app', dist()]
   });
 
+  // images are all common (indipendent of the app)
+  var replaceImg =  function(imgStr) {
+    return '../static/' + imgStr;
+  };
+
   return gulp.src(src)
+    // Replace path for vulcanized assets
+    .pipe($.if('*.html', $.replace(appPaths('elements'), appPaths('elements', true))))
+    // Replace image links
+    .pipe($.if('*.html', $.replace('images/', replaceImg)))
     .pipe(assets)
     // Concatenate and minify JavaScript
     .pipe($.if('*.js', $.uglify({
@@ -86,12 +141,10 @@ var optimizeHtmlTask = function(src, dest) {
     .pipe(assets.restore())
     .pipe($.useref())
     // Minify any HTML
-    .pipe($.if('*.html', $.htmlmin({
-      collapseWhitespace: true,
-      preserveLineBreaks: false,
-      minifyCSS: true,
-      minifyJS: true,
-      removeComments: true
+    .pipe($.if('*.html', $.minifyHtml({
+      quotes: true,
+      empty: true,
+      spare: true
     })))
     // Output files
     .pipe(gulp.dest(dest))
@@ -102,67 +155,11 @@ var optimizeHtmlTask = function(src, dest) {
 
 // Compile and automatically prefix stylesheets
 gulp.task('styles', function() {
-  return styleTask('styles', ['**/*.css']);
+  return styleTask('styles/' + targetApp, ['**/*.css']);
 });
 
-// Ensure that we are not missing required files for the project
-// "dot" files are specifically tricky due to them being hidden on
-// some systems.
-gulp.task('ensureFiles', function(cb) {
-  var requiredFiles = ['.bowerrc'];
-
-  ensureFiles(requiredFiles.map(function(p) {
-    return path.join(__dirname, p);
-  }), cb);
-});
-
-// Optimize images
-gulp.task('images', function() {
-  return imageOptimizeTask('app/images/**/*', dist('images'));
-});
-
-// Copy all files at the root level (app)
-gulp.task('copy', function() {
-  var app = gulp.src([
-    'app/*',
-    '!app/test',
-    '!app/elements',
-    '!app/bower_components',
-    '!app/cache-config.json',
-    '!**/.DS_Store'
-  ], {
-    dot: true
-  }).pipe(gulp.dest(dist()));
-
-  // Copy over only the bower_components we need
-  // These are things which cannot be vulcanized
-  // var bower = gulp.src([
-  //   'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
-  // ]).pipe(gulp.dest(dist('bower_components')));
-
-  var bower = [];
-
-  return merge(app, bower)
-    .pipe($.size({
-      title: 'copy'
-    }));
-});
-
-// Copy web fonts to dist
-gulp.task('fonts', function() {
-  return gulp.src(['app/fonts/**'])
-    .pipe(gulp.dest(dist('fonts')))
-    .pipe($.size({
-      title: 'fonts'
-    }));
-});
-
-gulp.task('data', function() {
-  return gulp.src(['app/data/**'])
-    .pipe(gulp.dest(dist('data')))
-    .pipe($.size({
-      title: 'data'
-    }));
+gulp.task('elements', function() {
+  return styleTask('elements', ['**/*.css']);
 });
 
 // Lint JavaScript
@@ -179,40 +176,81 @@ gulp.task('lint', function() {
     }))
 
   // JSCS has not yet a extract option
-  .pipe($.if('*.html', $.htmlExtract({'strip': true})))
-  .pipe(gulp.dest('tmp'))
+  .pipe($.if('*.html', $.htmlExtract()))
   .pipe($.jshint())
   .pipe($.jscs())
   .pipe($.jscsStylish.combineWithHintResults())
   .pipe($.jshint.reporter('jshint-stylish'))
   .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
 
+// Optimize images
+gulp.task('images', function() {
+  return imageOptimizeTask('app/images/**/*', dist('images'));
+});
+
+// Copy all files at the root level (app)
+gulp.task('copy', function() {
+  var app = gulp.src([
+    'app/*',
+    '!app/test',
+    '!app/cache-config.json'
+  ], {
+    dot: true
+  }).pipe(gulp.dest(dist()));
+
+  var bower = gulp.src([
+    'bower_components/**/*'
+  ]).pipe(gulp.dest(dist('bower_components')));
+
+  var elements = gulp.src(['app/elements/**/*.html',
+      'app/elements/**/*.css',
+      'app/elements/**/*.js'
+    ])
+    .pipe(gulp.dest(dist('elements')));
+
+  var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
+    .pipe(gulp.dest(dist('elements/bootstrap')));
+
+  var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
+    .pipe(gulp.dest(dist('sw-toolbox')));
+
+  var vulcanized = gulp.src(['app/elements/' + targetApp + '_elements.html'])
+    .pipe($.rename(targetApp + '_elements.vulcanized.html'))
+    .pipe(gulp.dest(dist('elements')));
+
+  return merge(app, bower, elements, vulcanized, swBootstrap, swToolbox)
+    .pipe($.size({
+      title: 'copy'
+    }));
+});
+
+// Copy web fonts to dist
+gulp.task('fonts', function() {
+  return gulp.src(['app/fonts/**'])
+    .pipe(gulp.dest(dist('fonts')))
+    .pipe($.size({
+      title: 'fonts'
+    }));
 });
 
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
   return optimizeHtmlTask(
-    ['app/**/*.html', '!app/{elements,test,bower_components}/**/*.html'],
+    ['app/**/*.html', '!app/{elements,test}/**/*.html'],
     dist());
 });
 
 // Vulcanize granular configuration
 gulp.task('vulcanize', function() {
-  return gulp.src('app/elements/elements.html')
+  var DEST_DIR = dist(etoolsDist('elements', true));
+  return gulp.src(dist('elements/' + targetApp + '_elements.vulcanized.html'))
     .pipe($.vulcanize({
       stripComments: true,
       inlineCss: true,
       inlineScripts: true
     }))
-    //.pipe($.minifyInline(options))
-    .pipe($.htmlmin({
-      collapseWhitespace: true,
-      preserveLineBreaks: false,
-      minifyCSS: false,
-      minifyJS: true,
-      removeComments: true
-    }))
-    .pipe(gulp.dest(dist('elements')))
+    .pipe(gulp.dest(DEST_DIR))
     .pipe($.size({title: 'vulcanize'}));
 });
 
@@ -231,7 +269,7 @@ gulp.task('cache-config', function(callback) {
   };
 
   glob([
-    'index.html',
+    targetApp + '.html',
     './',
     'bower_components/webcomponentsjs/webcomponents-lite.min.js',
     '{elements,scripts,styles}/**/*.*'],
@@ -253,15 +291,40 @@ gulp.task('cache-config', function(callback) {
 
 // Clean output directory
 gulp.task('clean', function() {
-  return del(['.tmp', dist(), 'tmp']);
+  return del(['.tmp', dist()]);
 });
 
 // Watch files for changes & reload
-gulp.task('serve', ['styles'], function() {
+gulp.task('serve', ['styles', 'elements', 'images'], function() {
+
+  //TODO:  set the target app at this point
+
+  var dataMiddleware = function(req, res, next) {
+    switch (req.url){
+      // common resources
+      case '/index.html':
+        req.url = '/' + targetApp + '.html';
+        break;
+      case '/users/api/profile/':
+        req.url = '/data/users/profile.json';
+        break;
+
+      // partner management app
+      case '/api/partners_list/':
+        req.url = '/data/partner_data.json';
+        break;
+
+      case '/api/agreements_list/':
+        req.url = '/data/partner_data.json';
+        break;
+    }
+    return next();
+  };
+
   browserSync({
     port: 5000,
     notify: false,
-    logPrefix: 'etools_partnership_management',
+    logPrefix: 'PSK',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
@@ -276,47 +339,58 @@ gulp.task('serve', ['styles'], function() {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [historyApiFallback()]
+      middleware: [historyApiFallback(), dataMiddleware],
+      routes: {
+        '/bower_components': 'bower_components',
+        '/data': 'data'
+      }
     }
   });
 
-  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], reload);
-  gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['app/scripts/**/*.js'], reload);
-  gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/**/*.html']);
+  gulp.watch(['app/styles/**/*.css'], ['styles']);
+  gulp.watch(['app/elements/**/*.css'], ['elements']);
+  gulp.watch(['app/{scripts,elements}/**/{*.js,*.html}'], ['lint']);
+  gulp.watch(['app/images/**/*']);
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default'], function() {
-  browserSync({
-    port: 5001,
-    notify: false,
-    logPrefix: 'etools_partnership_management',
-    snippetOptions: {
-      rule: {
-        match: '<span id="browser-sync-binding"></span>',
-        fn: function(snippet) {
-          return snippet;
-        }
-      }
-    },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
-    server: dist(),
-    middleware: [historyApiFallback()]
-  });
+gulp.task('serve:dist', ['frontendBuild'], function() {
+  // browserSync({
+  //   port: 5001,
+  //   notify: false,
+  //   logPrefix: 'PSK',
+  //   snippetOptions: {
+  //     rule: {
+  //       match: '<span id="browser-sync-binding"></span>',
+  //       fn: function(snippet) {
+  //         return snippet;
+  //       }
+  //     }
+  //   },
+  //   // Run as an https by uncommenting 'https: true'
+  //   // Note: this uses an unsigned certificate which on first access
+  //   //       will present a certificate warning in the browser.
+  //   // https: true,
+  //   server: dist(),
+  //   middleware: [historyApiFallback()]
+  // });
+  var reloadDist = ['frontendBuild'];
+
+  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], reloadDist);
+  gulp.watch(['app/styles/**/*.css'], reloadDist);
+  gulp.watch(['app/elements/**/*.css'],  reloadDist);
+  gulp.watch(['app/scripts/**/*.js'], reloadDist);
+  gulp.watch(['app/images/**/*'], reloadDist);
 });
 
 // Build production files, the default task
 gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
-    'lint',
-    'update_constants_app',
-    ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'html', 'data'],
+    ['copy', 'styles'],
+    'elements',
+    ['lint', 'images', 'fonts', 'html'],
     'vulcanize', // 'cache-config',
     cb);
 });
@@ -332,7 +406,7 @@ gulp.task('build-deploy-gh-pages', function(cb) {
 // Deploy to GitHub pages gh-pages branch
 gulp.task('deploy-gh-pages', function() {
   return gulp.src(dist('**/*'))
-    // Check if running task from Travis CI, if so run using GH_TOKEN
+    // Check if running task from Travis Cl, if so run using GH_TOKEN
     // otherwise run using ghPages defaults.
     .pipe($.if(process.env.TRAVIS === 'true', $.ghPages({
       remoteUrl: 'https://$GH_TOKEN@github.com/polymerelements/polymer-starter-kit.git',
@@ -341,60 +415,62 @@ gulp.task('deploy-gh-pages', function() {
     }), $.ghPages()));
 });
 
-gulp.task('deploy-dev-azure', function() {
+gulp.task('movehtml', function() {
+  var DEST_DIR = dist('templates/frontend/' + targetApp);
 
-  clear();
-  console.log(colors.underline.bold.white('eTools Deploy: Azure Web App'));
+  return gulp.src('app/*.html')
+    .pipe(gulp.dest(DEST_DIR));
+});
 
-  var requiredEnvironmentVariables = ['AZURE_FTP_HOSTNAME', 'AZURE_FTP_DEPLOYMENT_USERNAME', 'AZURE_FTP_DEPLOYMENT_PASSWORD'];
-  var missingEnvironmentVariables = _.difference(requiredEnvironmentVariables, _.keys(process.env));
+gulp.task('buildDist', ['clean'], function(cb) {
+  // Uncomment 'cache-config' if you are going to use service workers.
+  runSequence(
+    ['copy', 'styles'],
+    'elements',
+    ['lint', 'images', 'fonts', 'html'],
+    'vulcanize', // 'cache-config',
+    cb);
+});
 
-  if (missingEnvironmentVariables.length > 0) {
-    console.log(colors.bold.red('\nERROR:'));
-    console.log(colors.red('Environment variables missing:' + missingEnvironmentVariables));
-    console.log('');
-    return false;
-  }
+// copy over the distribution files for app
+gulp.task('frontendBuild', ['buildDist'], function() {
+  gulp.src('dist/' + targetApp + '.html')
+  // .pipe($.rename('index.html'))
+  .pipe(gulp.dest(etoolsDist('index')));
 
-  var conn = ftp.create({
-    host:     process.env.AZURE_FTP_HOSTNAME,
-    user:     process.env.AZURE_FTP_DEPLOYMENT_USERNAME,
-    password: process.env.AZURE_FTP_DEPLOYMENT_PASSWORD,
-    parallel: 10,
-    log: gutil.log
+  gulp.src('dist/static/**/*')
+  .pipe(gulp.dest(path.join(etoolsRoot, 'assets')));
+
+});
+
+// web component test (polymer unit test)
+gulp.task('wct:browser', function() {
+  gulp.src(__filename)
+    .pipe($.open({uri: 'http://127.0.0.1:2000/components/frontend/app/test/index.html'}));
+});
+
+gulp.task('wct:livereload', function() {
+  var child = childProcess.exec('./node_modules/livereloadx/bin/livereloadx.js app/test/');
+  child.stdout.on('data', function(data) {
+    console.log(data.replace(/[\n\r]+/g, ''));
   });
-
-  var globs = [
-    'dist/**'
-  ];
-
-  return gulp.src(globs, {buffer: true})
-      .pipe(conn.dest('/site/wwwroot'));
 });
 
-gulp.task('update_constants_app', function() {
-  var env = args.env || 'prod';
-  var filename = env + '.json';
-  var settings = JSON.parse(fs.readFileSync('./config/' + filename, 'utf8'));
-  return updateConstants(settings);
+gulp.task('wct:start', function() {
+  var child = childProcess.exec('./node_modules/web-component-tester/bin/wct -p');
+  child.stdout.on('data', function(data) {
+    console.log(data.replace(/[\n\r]+/g, ''));
+  });
 });
 
-function updateConstants(settings) {
-  return gulp.src('app/scripts/app.constants.template.js')
-    .pipe(replace({
-      patterns: _.map(_.keys(settings), function(key) {
-            return {match: key, replacement: settings[key]};
-          })
-    }))
-    .pipe($.rename('app.constants.js'))
-    .pipe(gulp.dest('app/scripts'))
-    .on('error', handleError);
-}
-
-function handleError(err) {
-  console.log(err.toString());
-  process.exit(-1);
-}
+gulp.task('wct:test:local', function(cb) {
+  runSequence(
+    'wct:start',
+    'wct:browser',
+    'wct:livereload',
+    cb
+  );
+});
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
@@ -403,6 +479,4 @@ require('web-component-tester').gulp.init(gulp);
 // Load custom tasks from the `tasks` directory
 try {
   require('require-dir')('tasks');
-} catch (err) {
-  // Do nothing
-}
+} catch (err) {}

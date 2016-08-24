@@ -1,0 +1,155 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+
+<dom-module id="etools-datatable">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      vaadin-combo-box {
+        margin-bottom: 20px;
+        --paper-input-container-label: {
+          font-size: inherit;
+        }
+      }
+    </style>
+
+    <paper-input id="filter" type="search" value="{{filterInput::keyup}}" placeholder="Search" on-search="onSearch"></paper-input>
+    <paper-material elevation="1">
+      <vaadin-grid id="table" items="[[items]]" on-sort-order-changed="_sortOrderChanged">
+        <content></content>
+      </vaadin-grid>
+    </paper-material>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'etools-datatable',
+
+        properties: {
+          items: {
+            type: Object,
+            notify: true,
+            observer: '_itemsChanged'
+          },
+          copy: {
+            type: Object
+          },
+          filterInput: {
+            type: String,
+            notify: true,
+            observer: '_filterInputChanged'
+          },
+          activeFilter: {
+            type: Boolean,
+            value: false
+          },
+          sortRules: {
+            type: Array,
+            value: [{ruleProperty: 'rating',
+              order: ['Non-Assessed', 'Low', 'Moderate', 'Significant', 'High']}]
+          }
+        },
+
+        _itemsChanged: function() {
+          this.copy = this.items;
+        },
+
+        _filterInputChanged: function() {
+          this._filter();
+          this.activeFilter = (this.filterInput) ? true : false;
+        },
+
+        _filter: function() {
+          var _this = this;
+          this.$.table.items = this.copy.filter(function(value) {
+            if (_this.filterInput) {
+              return (value.name.toLowerCase()).indexOf(_this.filterInput.toLowerCase()) > -1;
+            } else {
+              return true;
+            }
+          });
+        },
+
+        _sortOrderChanged: function() {
+          var t0 = performance.now();
+          this._sortTable();
+          var t1 = performance.now();
+          console.log('Call to sortTable took ' + (t1 - t0) + ' milliseconds.');
+        },
+
+        _parseRule: function(rule, value) {
+          if (_(rule.order).isArray()) { return _(rule.order).indexOf(value); }
+          if (_(rule.order).isFunction()) { return rule.order(value); }
+        },
+
+        _sortTable: function() {
+          var _this = this;
+          var table = this.$.table;
+
+          var properties = _.map(table.sortOrder, function(item) {
+            return table.columns[item.column].name;
+          });
+          var directions = _.map(table.sortOrder, function(item) {
+            return item.direction === 'asc' ? 1 : -1;
+          });
+
+          var mapped = _.map(this.copy, function(item, index) {
+            return {index: index, specificity: _.map(properties, function(property) {
+              var value = item[property];
+
+              var ruleIndex = _(_.pluck(_this.sortRules, 'ruleProperty')).indexOf(property);
+              if (ruleIndex !== -1) {
+                value = _this._parseRule(_this.sortRules[ruleIndex], value);
+              }
+
+              if (_(value).isString()) {
+                value = value.toLowerCase();
+              }
+              return value;
+            })};
+          });
+
+          mapped.sort(function(a, b) {
+            var res;
+            if (a.specificity.toString() === b.specificity.toString()) {
+              return a.index - b.index;
+            }
+
+            for (var i in _.range(properties.length)) {
+              res = +(a.specificity[i] > b.specificity[i]) ||
+                    +(a.specificity[i] === b.specificity[i]) - 1;
+              res *= directions[i];
+              if (res !== 0) { return res; }
+            }
+            return res;
+          });
+
+          this.copy = _.map(mapped, function(item) {
+            return _this.copy[item.index];
+          });
+
+          this.items = this.copy;
+
+          if (this.activeFilter) { this._filter(); }
+        },
+
+        onSearch: function() {
+          // when a user clicks on the (x) button we need to be sure to
+          // clear the query
+          this.filterInput = this.$.filter.value;
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
