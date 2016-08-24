@@ -1,9 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../partner-data/partner-data.html">
+<link rel="import" href="../etools-datatable/etools-datatable.html">
 
 <dom-module id="partners-view">
   <template>
@@ -20,24 +18,20 @@
       }
     </style>
 
-    <paper-input id="filter" type="search" value="{{filterInput::keyup}}" placeholder="Search" on-search="onSearch"></paper-input>
-
-    <paper-material elevation="1">
-      <div class="data-table">
-        <partner-data id="partners" data="{{data}}"></partner-data>
-        <vaadin-grid id="partnerTable" items="[[data]]" on-sort-order-changed="_sortOrderChanged" visible-rows="11">
-          <table>
-            <colgroup>
-              <col name="name" sortable/>
-              <col name="partner_type"/>
-              <col name="vendor_number"/>
-              <col name="rating" sortable/>
-              <col name="vision_synced"/>
-            </colgroup>
-          </table>
-        </vaadin-grid>
-      </div>
-    </paper-material>
+    <div class="data-table">
+      <partner-data id="partners" data="{{data}}"></partner-data>
+      <etools-datatable id="partnerTable" items="[[data]]">
+        <table>
+          <colgroup>
+            <col name="name" sortable/>
+            <col name="partner_type"/>
+            <col name="vendor_number"/>
+            <col name="rating" sortable/>
+            <col name="vision_synced"/>
+          </colgroup>
+        </table>
+      </etools-datatable>
+    </div>
 
   </template>
 
@@ -46,134 +40,7 @@
       'use strict';
 
       Polymer({
-        is: 'partners-view',
-
-        properties: {
-          sortRules: {
-            type: Array,
-            value: [{ruleProperty: 'rating',
-                            order: ['Non-Assessed', 'Low', 'Moderate', 'Significant', 'High']}]
-          },
-          filterInput: {
-            type: String,
-            notify: true,
-            value: '',
-            observer: '_filterInputChanged'
-          },
-          activeFilter: {
-            type: Boolean,
-            value: false
-          }
-        },
-
-        /* _sortOrderChanged: function(e) {
-          var newSortOrder = e.detail.value[0];
-
-          console.log("newSortOrder: ");
-          console.log(e.detail.value);
-          console.log("sortOrder: ");
-          console.log(this._sortOrder);
-
-          var idx = _.findIndex(this._sortOrder, {column: newSortOrder.column});
-          if(idx !== -1) {
-            if(this._sortOrder[idx].direction === 'asc')
-              this._sortOrder[idx].direction = 'desc';
-            else
-              this._sortOrder.splice(idx, 1);
-          }
-          else {
-            this._sortOrder.push(newSortOrder);
-          }
-
-          console.log("AFTER");
-
-          console.log("newSortOrder: ");
-          console.log(e.detail.value);
-          console.log("sortOrder: ");
-          console.log(this._sortOrder);
-
-          this._sortTable();
-        },*/
-
-        _filterInputChanged: function() {
-          this._filter();
-          this.activeFilter = (this.filterInput) ? true : false;
-        },
-
-        _filter: function() {
-          var _this = this;
-          this.$.partnerTable.items = this.$.partners.data.filter(function(value) {
-            if (_this.filterInput) {
-              return (value.name.toLowerCase()).indexOf(_this.filterInput.toLowerCase()) > -1;
-            } else {
-              return true;
-            }
-          });
-        },
-
-        onSearch: function() {
-          // when a user clicks on the (x) button we need to be sure to
-          // clear the query
-          this.filterInput = this.$.filter.value;
-        },
-
-        _sortOrderChanged: function() {
-          var t0 = performance.now();
-          this._sortTable();
-          var t1 = performance.now();
-          console.log('Call to sortTable took ' + (t1 - t0) + ' milliseconds.');
-        },
-
-        _parseRule: function(rule, value) {
-          if (_(rule.order).isArray()) { return _(rule.order).indexOf(value); }
-          if (_(rule.order).isFunction()) { return rule.order(value); }
-        },
-
-        _sortTable: function() {
-          var _this = this;
-          var table = this.$.partnerTable;
-          var data  = this.$.partners.data;
-
-          var properties = _.map(table.sortOrder, function(item) {
-            return table.columns[item.column].name;
-          });
-          var directions = _.map(table.sortOrder, function(item) {
-            return item.direction === 'asc' ? 1 : -1;
-          });
-
-          var mapped = _.map(data, function(item, index) {
-            return {index: index, specificity: _.map(properties, function(property) {
-              var value = item[property];
-
-              var ruleIndex = _(_.pluck(_this.sortRules, 'ruleProperty')).indexOf(property);
-              if (ruleIndex !== -1) { value = _this._parseRule(_this.sortRules[ruleIndex], value); }
-
-              if (_(value).isString()) { value = value.toLowerCase(); }
-              return value;
-            })};
-          });
-
-          mapped.sort(function(a, b) {
-            var res;
-            if (a.specificity.toString() === b.specificity.toString()) {
-              return a.index - b.index;
-            }
-
-            for (var i in _.range(properties.length)) {
-              res = +(a.specificity[i] > b.specificity[i]) ||
-                             +(a.specificity[i] === b.specificity[i]) - 1;
-              res *= directions[i];
-              if (res !== 0) { return res; }
-            }
-            return res;
-          });
-
-          this.$.partners.data = _.map(mapped, function(item) {
-            return data[item.index];
-          });
-
-          if (this.activeFilter) { this._filter(); }
-        }
+        is: 'partners-view'
       });
     })();
   </script>
