@@ -1,0 +1,182 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../styles/pmp/form-fields-styles.html">
+
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+
+<link rel="import" href="../files-upload/files-upload.html">
+<link rel="import" href="../custom-checkbox/custom-checkbox.html">
+
+<dom-module id="assessments-items">
+  <template>
+    <style include="layout-styles"></style>
+    <style include="form-fields-styles"></style>
+    <style>
+      :host {
+
+      }
+      .assessments-header {
+        position: relative;
+        line-height: 30px;
+      }
+      .assessments-header paper-button {
+        --paper-button: {
+          width: 30px;
+          height: 30px;
+          min-width: 0;
+          padding: 0;
+          border-radius: 15px;
+          background-color: var(--assessments-add-btn-bg-color, #4a90e2);
+          color: var(--assessments-add-btn-bg-color, #ffffff);
+        };
+      }
+      .assessment {
+        margin-top: 20px;
+      }
+      .remove-assessment {
+        border-right: 1px solid #dedede;
+        width: 50px;
+      }
+      .remove-assessment paper-icon-button {
+        color: var(--assessments-remove-btn-color, #4a90e2);
+        --paper-icon-button: {
+          padding: 3px;
+          width: 24px;
+          min-width: 0;
+          height: 24px;
+        };
+      }
+      .remove-btn-container {
+        height: 73px;
+      }
+
+    </style>
+    <div class="assessments-header flex-horizontal">
+      <content-toggle-button class="flex-child" content="[[assessmentsIronCollapse]]" label="Assessments"></content-toggle-button>
+      <paper-button class="add-new-assesment" on-tap="addNewAssessmentItem">
+        <iron-icon icon="add"></iron-icon>
+      </paper-button>
+    </div>
+    <iron-collapse id="assessments">
+      <template is="dom-repeat" items="{{assessmentsData}}">
+        <div class="assessment flex-horizontal">
+          <div class="remove-assessment flex-horizontal flex-align-center-justified">
+            <template is="dom-if" if="[[displayRemoveBtn(index)]]">
+              <!-- Remove assessment btn -->
+              <div class="flex-horizontal flex-align-center remove-btn-container">
+                <paper-icon-button icon="remove-circle" on-tap="removeAssessment"  data-args$="[[index]]"></paper-icon-button>
+              </div>
+            </template>
+          </div>
+
+          <!-- Assessment type -->
+          <paper-dropdown-menu class="n-input-field"
+                               label="Assessment Type"
+                               value="{{item.assessment_type}}">
+            <paper-listbox class="dropdown-content">
+              <paper-item>Assessment type 1</paper-item>
+              <paper-item>Assessment type 2</paper-item>
+              <paper-item>Assessment type 3</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <!-- Completed by -->
+          <paper-input class="n-input-field"
+                       label="Completed By"
+                       value="{{item.completed_by}}">
+            <paper-icon-button prefix icon="event"></paper-icon-button>
+          </paper-input>
+
+          <!-- Report file -->
+          <!-- TODO: populate report file field: item.report_file -->
+          <div class="n-input-field">
+            <files-upload target="/path/to/destination" label="Report"></files-upload>
+          </div>
+
+          <!-- Basis for risk rating checkbox -->
+          <div class="custom-field-wrapper n-input-field">
+            <custom-checkbox checked="{{item.basis_for_risk_rating}}" label="Basis for risk rating"></custom-checkbox>
+          </div>
+
+        </div>
+      </template>
+    </iron-collapse>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'assessments-items',
+        properties: {
+          assessmentsData: {
+            type: Array,
+            value: [],
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        ready: function () {
+          this.assessmentsIronCollapse = this.$.assessments;
+          if (this.assessmentsData.length === 0) {
+            this.push('assessmentsData', {
+              assessment_type: null,
+              completed_by: null,
+              report_file: null,
+              basis_for_risk_rating: false
+            });
+          }
+        },
+        addNewAssessmentItem: function () {
+          if (this.assessmentsIronCollapse.opened === false) {
+            this.assessmentsIronCollapse.show();
+          }
+          var newAssessment = {
+            assessment_type: null,
+            completed_by: null,
+            report_file: null,
+            basis_for_risk_rating: false
+          };
+          if (!this._checkAssessmentDuplicate(newAssessment)) {
+            this.push('assessmentsData', newAssessment);
+          } else {
+            // TODO: notification popup or something else to let the user know he already has an untouched new ready assessment
+            console.log("Fill last added assessment to be able to add more! Thanks!");
+          }
+        },
+        removeAssessment: function (event) {
+          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+          if (index !== -1) {
+            this.splice('assessmentsData', index, 1);
+          }
+        },
+        displayRemoveBtn: function (index) {
+          if (index === 0) {
+            return false;
+          }
+          return true;
+        },
+        _checkAssessmentDuplicate: function (assessment) {
+          var duplicateFound = false;
+          for (var i = 0; i < this.assessmentsData.length; i++) {
+            if (JSON.stringify(this.assessmentsData[i]) === JSON.stringify(assessment) ) {
+              duplicateFound = true;
+              break;
+            }
+          }
+          return duplicateFound;
+        }
+      });
+
+    })();
+  </script>
+</dom-module>

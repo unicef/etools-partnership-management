@@ -37,7 +37,9 @@ Content panel customization when used in other elements:
       }
     </style>
     <div class="content-panel-wrapper">
-      <div class="panel-header">[[title]]</div>
+      <template is="dom-if" if="{{!noHeader}}">
+        <div class="panel-header">[[title]]</div>
+      </template>
       <div class="panel-content">
         <content></content>
       </div>
@@ -55,6 +57,12 @@ Content panel customization when used in other elements:
           title: {
             type: String,
             value: 'Panel title'
+          },
+          noHeader: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
           }
         }
       });

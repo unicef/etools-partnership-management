@@ -1,0 +1,205 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../styles/pmp/form-fields-styles.html">
+
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+
+<link rel="import" href="../custom-checkbox/custom-checkbox.html">
+
+<dom-module id="staff-members">
+  <template>
+    <style include="layout-styles"></style>
+    <style include="form-fields-styles"></style>
+    <style>
+      :host {
+
+      }
+      .staff-members-header {
+        position: relative;
+        line-height: 30px;
+      }
+      .staff-members-header paper-button {
+        --paper-button: {
+          width: 30px;
+          height: 30px;
+          min-width: 0;
+          padding: 0;
+          border-radius: 15px;
+          background-color: var(--staff-members-add-btn-bg-color, #4a90e2);
+          color: var(--staff-members-add-btn-bg-color, #ffffff);
+        };
+      }
+      .staff-member {
+        margin: 20px 0 15px 0;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #dedede;
+      }
+      .staff-member:last-of-type {
+        border-bottom: none;
+      }
+      .remove-staff-member {
+        border-right: 1px solid #dedede;
+        width: 50px;
+      }
+      .remove-staff-member paper-icon-button {
+        color: var(--staff-members-remove-btn-color, #4a90e2);
+        --paper-icon-button: {
+          padding: 3px;
+          width: 24px;
+          min-width: 0;
+          height: 24px;
+        };
+      }
+      .staff-member-row {
+        padding-left: 25px;
+      }
+
+    </style>
+    <div class="staff-members-header flex-horizontal">
+      <content-toggle-button class="flex-child" content="[[staffMembersIronCollapse]]" label="Staff Members"></content-toggle-button>
+      <paper-button on-tap="addNewStaffMember">
+        <iron-icon icon="add"></iron-icon>
+      </paper-button>
+    </div>
+    <iron-collapse id="staffMembers">
+      <template is="dom-repeat" items="{{staffMembersData}}">
+        <div class="staff-member flex-horizontal">
+          <div class="remove-staff-member flex-horizontal flex-align-center-justified">
+            <template is="dom-if" if="[[displayRemoveBtn(index)]]">
+              <!-- Remove staff-member btn -->
+              <div class="flex-horizontal flex-align-center remove-btn-container">
+                <paper-icon-button icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
+              </div>
+            </template>
+          </div>
+          <div class="staff-member-row flex-child">
+            <div class="flex-horizontal">
+              <!-- Position -->
+              <paper-input class="n-input-field"
+                           label="Position"
+                           value="{{item.position}}">
+              </paper-input>
+
+              <!-- First name -->
+              <paper-input class="n-input-field"
+                           label="First Name"
+                           value="{{item.first_name}}">
+              </paper-input>
+
+              <!-- Last name -->
+              <paper-input class="n-input-field"
+                           label="Last Name"
+                           value="{{item.last_name}}">
+              </paper-input>
+
+            </div>
+
+            <div class="flex-horizontal">
+              <!-- Telaphone number -->
+              <paper-input class="n-input-field"
+                           label="Phone Numer"
+                           value="{{item.phone_number}}">
+                <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
+              </paper-input>
+
+              <!-- Email address -->
+              <paper-input class="n-input-field"
+                           label="E-mail address"
+                           value="{{item.email_address}}">
+                <paper-icon-button prefix icon="communication:email"></paper-icon-button>
+              </paper-input>
+
+              <!-- User rights -->
+              <paper-dropdown-menu class="n-input-field"
+                                   label="User Rights"
+                                   value="{{item.user_rights}}">
+                <paper-listbox class="dropdown-content">
+                  <paper-item>Admin</paper-item>
+                  <paper-item>Normal user</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+
+            </div>
+          </div>
+        </div>
+      </template>
+    </iron-collapse>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'staff-members',
+        properties: {
+          staffMembersData: {
+            type: Array,
+            value: [],
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        ready: function () {
+          this.staffMembersIronCollapse = this.$.staffMembers;
+          if (this.staffMembersData.length === 0) {
+            this.push('staffMembersData', this._getStaffMemberEmptyObject());
+          }
+        },
+        _getStaffMemberEmptyObject: function () {
+          return {
+            position: null,
+            first_name: null,
+            last_name: null,
+            phone_number: null,
+            email_address: null,
+            user_rights: null
+          };
+        },
+        addNewStaffMember: function () {
+          if (this.staffMembersIronCollapse.opened === false) {
+            this.staffMembersIronCollapse.show();
+          }
+          var newStaffMember = this._getStaffMemberEmptyObject();
+          if (!this._checkStaffMemberDuplicate(newStaffMember)) {
+            this.push('staffMembersData', newStaffMember);
+          } else {
+            // TODO: notification popup or something else to let the user know he already has an untouched new ready staff-member
+            console.log("Fill last added staff-member to be able to add more! Thanks!");
+          }
+        },
+        removeStaffMember: function (event) {
+          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+          if (index !== -1) {
+            this.splice('staffMembersData', index, 1);
+          }
+        },
+        displayRemoveBtn: function (index) {
+          if (index === 0) {
+            return false;
+          }
+          return true;
+        },
+        _checkStaffMemberDuplicate: function (staffMember) {
+          var duplicateFound = false;
+          for (var i = 0; i < this.staffMembersData.length; i++) {
+            if (JSON.stringify(this.staffMembersData[i]) === JSON.stringify(staffMember) ) {
+              duplicateFound = true;
+              break;
+            }
+          }
+          return duplicateFound;
+        }
+      });
+
+    })();
+  </script>
+</dom-module>
