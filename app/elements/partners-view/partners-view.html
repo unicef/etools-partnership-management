@@ -34,20 +34,21 @@
         color: #3cb23c;
       }
       .row > div:not(.sync) {
-        @apply(--layout-flex);
         min-width: 105px;
       }
       .row > div:not(.risk) {
         margin-right: 15px;
       }
       .row .name {
-        font-weight: 500;
         @apply(--layout-flex-2);
+        font-weight: 500;
       }
       .row .type {
+        @apply(--layout-flex);
         color: #757575;
       }
       .row .risk {
+        @apply(--layout-flex);
         @apply(--layout-self-stretch);
         @apply(--layout-horizontal);
         @apply(--layout-center);
