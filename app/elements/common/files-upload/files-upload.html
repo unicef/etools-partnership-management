@@ -1,8 +1,8 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/file-upload/file-upload.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/file-upload/file-upload.html">
 
-<dom-module id="files-upload" extends="file-upload">
+<dom-module id="files-upload">
   <template>
     <style>
       :host {
@@ -54,10 +54,11 @@
       }
       .single-upload {
         --file-upload-file: {
-          padding: 3px 0 0 0;
+          padding: 0;
           position: relative;
         };
       }
+
       .upload-label {
         display: inline-block;
         width: 100%;
@@ -76,10 +77,15 @@
     </style>
     <div class="upload-element">
       <span class="upload-label">[[label]]</span>
-      <file-upload id="uploadFileElement" target="[[target]]" files="{{selectedFiles}}" multi="[[multiple]]" class$="{{singleUploadClass}}">
+
+      <file-upload id="uploadFileElement" target="[[target]]" files="{{selectedFiles}}" multi="[[multiple]]" class$="{{uploadClass}}">
         <iron-icon icon="attachment"></iron-icon>
         Attach File
       </file-upload>
+
+      <!-- TODO - create upload file element from scratch -->
+      <!--<button class="attach-files" type="button"><iron-icon icon="attachment"></iron-icon></button>-->
+      <!--<input type="file" id="fileInput" on-change="_fileChange" hidden multiple="{{multi}}" accept="{{accept}}">-->
     </div>
 
   </template>
@@ -119,13 +125,11 @@
             // reset file element so you can re-add the same file
             Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('input[type="file"]').value = null;
           }
-          console.log();
         },
         ready: function() {
+          this.uploadClass = '';
           if (this.multiple === false) {
-            this.singleUploadClass = 'single-upload';
-          } else {
-            this.singleUploadClass = '';
+            this.uploadClass = 'single-upload';
           }
         }
       });

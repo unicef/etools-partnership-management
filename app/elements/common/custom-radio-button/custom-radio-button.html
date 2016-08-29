@@ -1,8 +1,8 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../styles/pmp/layout-styles.html">
-<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../../styles/pmp/layout-styles.html">
 
-<dom-module id="custom-checkbox">
+<dom-module id="custom-radio-button">
   <template>
     <style include="layout-styles"></style>
     <style>
@@ -10,9 +10,9 @@
         --paper-checkbox-label: {
           display: none;
         };
-        --paper-checkbox-checked-color: #4A90E2;
+        --paper-radio-button-checked-color: #4A90E2;
       }
-      .custom-checkbox label {
+      .custom-radio-button label {
         display: inline-block;
         width: 100%;
         white-space: nowrap;
@@ -28,10 +28,10 @@
         color: #737373;
       }
     </style>
-    <div class="custom-checkbox">
-      <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customCheckbox">[[label]]</label>
+    <div class="custom-radio-button">
+      <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customRadioBtn">[[label]]</label>
       <div class="flex-horizontal flex-align-center-justified">
-        <paper-checkbox id="customCheckbox" checked="{{checked}}"></paper-checkbox>
+        <paper-radio-button id="customRadioBtn" checked="{{checked}}"></paper-radio-button>
       </div>
     </div>
   </template>
@@ -42,7 +42,7 @@
       'use strict';
 
       Polymer({
-        is: 'custom-checkbox',
+        is: 'custom-radio-button',
         properties: {
           checked: {
             type: Boolean,
@@ -52,9 +52,9 @@
           }
         },
         listeners: {
-          'chLabel.tap': '_updateCheckboxVal'
+          'chLabel.tap': '_updateRadioBtnVal'
         },
-        _updateCheckboxVal: function () {
+        _updateRadioBtnVal: function () {
           this.checked = !this.checked;
         }
       });

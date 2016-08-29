@@ -1,7 +1,7 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
 
 <!--<link rel="import" href="../common/etools-ajax/etools-ajax.html">-->
-<!--<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">-->
+
 <link rel="import" href="../../styles/pmp/layout-styles.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
 
@@ -16,13 +16,14 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
-<link rel="import" href="../content-panel/content-panel.html">
+<link rel="import" href="../common/content-panel/content-panel.html">
 <link rel="import" href="../common/etools-datepicker/etools-datepicker.html">
-<link rel="import" href="../files-upload/files-upload.html">
-<link rel="import" href="../content-toggle-button/content-toggle-button.html">
-<link rel="import" href="../assessments-items/assessments-items.html">
-<link rel="import" href="../staff-members/staff-members.html">
-<link rel="import" href="../custom-checkbox/custom-checkbox.html">
+<link rel="import" href="../common/files-upload/files-upload.html">
+<link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
+<link rel="import" href="../common/custom-checkbox/custom-checkbox.html">
+
+<link rel="import" href="assessments-items.html">
+<link rel="import" href="staff-members.html">
 
 <dom-module id="partner-details">
   <template>
@@ -222,12 +223,6 @@
 
       <content-panel title="Risk Rating & Assessments">
         <div class="row flex-horizontal">
-          <!-- Vendor number -->
-          <paper-input name="vendor_number"
-                       class="n-input-field"
-                       disabled="true"
-                       label="Vendor Number"></paper-input>
-
           <!-- Risk rating -->
           <paper-dropdown-menu class="n-input-field"
                                label="Risk Rating"
@@ -239,8 +234,7 @@
               <paper-item>High</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
-        </div>
-        <div class="row flex-horizontal">
+
           <!-- Type of assessment -->
           <paper-input name="assessment_type"
                        class="n-input-field"

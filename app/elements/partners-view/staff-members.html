@@ -11,7 +11,7 @@
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 
-<link rel="import" href="../custom-checkbox/custom-checkbox.html">
+<link rel="import" href="../common/custom-checkbox/custom-checkbox.html">
 
 <dom-module id="staff-members">
   <template>
@@ -173,7 +173,7 @@
             this.push('staffMembersData', newStaffMember);
           } else {
             // TODO: notification popup or something else to let the user know he already has an untouched new ready staff-member
-            console.log("Fill last added staff-member to be able to add more! Thanks!");
+            console.log('Fill last added staff-member to be able to add more! Thanks!');
           }
         },
         removeStaffMember: function (event) {
