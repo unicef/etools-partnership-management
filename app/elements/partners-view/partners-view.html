@@ -1,46 +1,145 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
+
 <link rel="import" href="../partner-data/partner-data.html">
-<link rel="import" href="../etools-datatable/etools-datatable.html">
 
 <dom-module id="partners-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
+        position: relative;
+        max-width: 920px;
+        margin: 20px auto;
+        background: #fff;
       }
-
-      vaadin-combo-box {
-        margin-bottom: 20px;
-        --paper-input-container-label: {
-          font-size: inherit;
-        }
+      .row {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px 15px;
+        font-weight: 400;
+        font-size: 13px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .row:hover {
+        background: #fafafa;
+      }
+      .row .sync {
+        color: #737373;
+      }
+      .row .sync.true {
+        color: #3cb23c;
+      }
+      .row > div:not(.sync) {
+        @apply(--layout-flex);
+        min-width: 105px;
+      }
+      .row > div:not(.risk) {
+        margin-right: 15px;
+      }
+      .row .name {
+        font-weight: 500;
+        @apply(--layout-flex-2);
+      }
+      .row .type {
+        color: #757575;
+      }
+      .row .risk {
+        @apply(--layout-self-stretch);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin: -15px 0px;
+      }
+      .row .risk .bar {
+        height: 100%;
+        min-width: 20px;
+        margin-right: 10px;
+      }
+      .row .risk.high .bar {
+        background-color: #f03a47;
+      }
+      .row .risk.significant .bar {
+        background-color: #ff8329;
+      }
+      .row .risk.medium .bar {
+        background-color: #ffca3a;
+      }
+      .row .risk.low .bar {
+        background-color: #fff277;
+      }
+      .row .risk.non-assessed .bar {
+        background-color: #dcd8d8;
+      }
+      .row .risk.no-rating .bar {
+        background-color: #000;
       }
     </style>
 
-    <div class="data-table">
-      <partner-data id="partners" data="{{data}}"></partner-data>
-      <etools-datatable id="partnerTable" items="[[data]]">
-        <table>
-          <colgroup>
-            <col name="name" sortable/>
-            <col name="partner_type"/>
-            <col name="vendor_number"/>
-            <col name="rating" sortable/>
-            <col name="vision_synced"/>
-          </colgroup>
-        </table>
-      </etools-datatable>
-    </div>
+    <partner-data data="{{partners}}"></partner-data>
+    <paper-material elevation="1">
+      <template is="dom-repeat" items="[[partners]]" initial-count="20">
+        <div class="row">
+          <div class$="sync [[item.vision_synced]]">
+            <iron-icon icon="notification:sync"></iron-icon>
+          </div>
+          <div class="name">[[item.name]]</div>
+          <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
+          <div class$="risk [[_computeRating(item.rating)]]">
+            <div class="bar"></div>
+            <div class="text">[[item.rating]]</div>
+          </div>
+        </div>
+      </template>
+    </paper-material>
+
+    <!-- Experimental iron-list version -->
+
+    <!-- <iron-list items="[[partners]]" as="item" style="height: 100vh">
+      <template>
+        <div class="row">
+          <div class$="sync [[item.vision_synced]]">
+            <iron-icon icon="notification:sync"></iron-icon>
+          </div>
+          <div class="name">[[item.name]]</div>
+          <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
+          <div class$="risk [[_computeRating(item.rating)]]">
+            <div class="bar"></div>
+            <div class="text">[[item.rating]]</div>
+          </div>
+        </div>
+      </template>
+    </iron-list> -->
 
   </template>
-
   <script>
     (function() {
       'use strict';
 
       Polymer({
-        is: 'partners-view'
+        is: 'partners-view',
+
+        properties: {
+        },
+
+        _computeType: function(csoType, partnerType) {
+          if (csoType) {
+            return 'CSO/' + csoType;
+          } else {
+            return partnerType;
+          }
+        },
+
+        _computeRating: function(rating) {
+          if (rating) {
+            return rating.toLowerCase();
+          } else {
+            return 'no-rating';
+          }
+        }
+
       });
     })();
   </script>
