@@ -134,11 +134,9 @@
             return res;
           });
 
-          this.copy = _.map(mapped, function(item) {
+          this.items = this.copy = _.map(mapped, function(item) {
             return _this.copy[item.index];
           });
-
-          this.items = this.copy;
 
           if (this.activeFilter) { this._filter(); }
         },
