@@ -2,8 +2,6 @@
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
 
-<link rel="import" href="../agreement-data/agreement-data.html">
-
 <dom-module id="agreements-view">
   <template>
     <style include="shared-styles">
@@ -78,9 +76,8 @@
       }
     </style>
 
-    <agreement-data data="{{agreements}}"></agreement-data>
     <paper-material elevation="1">
-      <template is="dom-repeat" items="[[agreements]]" initial-count="20">
+      <template is="dom-repeat" id="agreements-list" items="[[data]]" initial-count="20">
         <div class="row">
           <div class$="sync [[item.vision_synced]]">
             <iron-icon icon="notification:sync"></iron-icon>
@@ -91,6 +88,7 @@
             <div class="bar"></div>
             <div class="text">[[item.rating]]</div>
           </div>
+
         </div>
       </template>
     </paper-material>
@@ -122,6 +120,10 @@
         is: 'agreements-view',
 
         properties: {
+          data: {
+            type: Array,
+            reflectToAttribute: true
+          }
         },
 
         _computeType: function(csoType, partnerType) {
