@@ -71,6 +71,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <etools-loading id="loading"></etools-loading>
     <etools-alert id="alert"></etools-alert>
 
+    <template is="dom-if" if='{{permissions.statsMenu}}'>
+      <partner-data data="{{partnerData}}"></partner-data>
+    </template>
+
+    <template is="dom-if" if='{{permissions.statsMenu}}'>
+      <agreement-data data="{{agreementData}}"></agreement-data>
+    </template>
+
     <paper-drawer-panel id="paperDrawerPanel" responsive-width="900px">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
@@ -145,15 +153,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            <template is="dom-if" if='{{permissions.interventionsMenu}}'>
+            <template is="dom-if" if='{{permissions.statsMenu}}'>
               <section data-route="partners" tabindex="-1">
-                <partners-view></partners-view>
+                <partners-view data="{{partnerData}}"></partners-view>
               </section>
             </template>
 
-            <section data-route="agreements" tabindex="-1">
-              <agreements-view></agreements-view>
-            </section>
+            <template is="dom-if" if='{{permissions.statsMenu}}'>
+              <section data-route="agreements" tabindex="-1">
+                <agreements-view data="{{agreementData}}"></agreements-view>
+              </section>
+            </template>
 
             <section data-route="interventions" tabindex="-1">
               <paper-material elevation="1">
