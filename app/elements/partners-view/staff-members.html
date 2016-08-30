@@ -116,16 +116,6 @@
                 <paper-icon-button prefix icon="communication:email"></paper-icon-button>
               </paper-input>
 
-              <!-- User rights -->
-              <paper-dropdown-menu class="n-input-field"
-                                   label="User Rights"
-                                   value="{{item.user_rights}}">
-                <paper-listbox class="dropdown-content">
-                  <paper-item>Admin</paper-item>
-                  <paper-item>Normal user</paper-item>
-                </paper-listbox>
-              </paper-dropdown-menu>
-
             </div>
           </div>
         </div>
@@ -160,8 +150,7 @@
             first_name: null,
             last_name: null,
             phone_number: null,
-            email_address: null,
-            user_rights: null
+            email_address: null
           };
         },
         addNewStaffMember: function () {

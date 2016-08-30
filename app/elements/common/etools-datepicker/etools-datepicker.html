@@ -67,6 +67,12 @@
       format: {
         type: String,
         value: 'LL'
+      },
+      open: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: '_openDatePicker'
       }
     },
     ready: function() {
@@ -92,6 +98,13 @@
         this.updateDate();
       }
       event.stopPropagation();
+    },
+    _openDatePicker: function (openDatePicker) {
+      console.log(openDatePicker);
+      if (openDatePicker === true) {
+        this.$.dialog.open();
+        this.open = false;
+      }
     }
   });
 })();

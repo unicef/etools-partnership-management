@@ -9,7 +9,6 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 
 <link rel="import" href="../common/files-upload/files-upload.html">
 <link rel="import" href="../common/custom-radio-button/custom-radio-button.html">
@@ -78,13 +77,12 @@
 
           <!-- Assessment type -->
           <paper-dropdown-menu class="n-input-field"
-                               label="Assessment Type"
-                               value="{{item.assessment_type}}">
-            <paper-listbox class="dropdown-content">
-              <paper-item>Assessment type 1</paper-item>
-              <paper-item>Assessment type 2</paper-item>
-              <paper-item>Assessment type 3</paper-item>
-            </paper-listbox>
+                               label="Assessment Type">
+            <paper-menu class="dropdown-content" on-iron-select="setAssessmentType" data-args$="[[index]]">
+              <template is="dom-repeat" items="[[assessmentTypes]]" as="assessmentType">
+                <paper-item>{{assessmentType.label}}</paper-item>
+              </template>
+            </paper-menu>
           </paper-dropdown-menu>
 
           <!-- Completed by -->
@@ -125,29 +123,22 @@
             },
             notify: true,
             reflectToAttribute: true
+          },
+          assessmentTypes: {
+            type: Array
           }
         },
         ready: function () {
           this.assessmentsIronCollapse = this.$.assessments;
           if (this.assessmentsData.length === 0) {
-            this.push('assessmentsData', {
-              assessment_type: null,
-              completed_by: null,
-              report_file: null,
-              basis_for_risk_rating: false
-            });
+            this.push('assessmentsData', this._getNewEmptyAssessmentItem());
           }
         },
         addNewAssessmentItem: function () {
           if (this.assessmentsIronCollapse.opened === false) {
             this.assessmentsIronCollapse.show();
           }
-          var newAssessment = {
-            assessment_type: null,
-            completed_by: null,
-            report_file: null,
-            basis_for_risk_rating: false
-          };
+          var newAssessment = this._getNewEmptyAssessmentItem();
           if (!this._checkAssessmentDuplicate(newAssessment)) {
             this.push('assessmentsData', newAssessment);
           } else {
@@ -167,6 +158,18 @@
           }
           return true;
         },
+        basisForRiskRatingChanged: function (event) {
+          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+          for (var i = 0; i < this.assessmentsData.length; i++) {
+            if (i !== index) {
+              this.set('assessmentsData.' + i + '.basis_for_risk_rating', false);
+            }
+          }
+        },
+        setAssessmentType: function (event) {
+          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+          this.set('assessmentsData.' + index + '.assessment_type', this.assessmentTypes[event.target.selected].value);
+        },
         _checkAssessmentDuplicate: function (assessment) {
           var duplicateFound = false;
           for (var i = 0; i < this.assessmentsData.length; i++) {
@@ -177,14 +180,13 @@
           }
           return duplicateFound;
         },
-        basisForRiskRatingChanged: function (event) {
-          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
-          for (var i = 0; i < this.assessmentsData.length; i++) {
-            if (i !== index) {
-              this.set('assessmentsData.' + i + '.basis_for_risk_rating', false);
-            }
-          }
-
+        _getNewEmptyAssessmentItem: function () {
+          return {
+            assessment_type: null,
+            completed_by: null,
+            report_file: null,
+            basis_for_risk_rating: false
+          };
         }
       });
 
