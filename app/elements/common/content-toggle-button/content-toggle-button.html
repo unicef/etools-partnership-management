@@ -1,0 +1,54 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icons/hardware-icons.html">
+
+<dom-module id="content-toggle-button">
+  <template>
+    <style>
+      :host {
+        color: var(--content-toggle-btn-color, #4a90e2);
+        cursor: pointer;
+      }
+      iron-icon {
+        color: var(--content-toggle-btn-icon-color, #9b9b9b);
+      }
+      span {
+        display: inline-block;
+        width: 100%;
+        font-size: 14px;
+      }
+    </style>
+    <span on-tap="toggleContent">
+      <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+      [[label]]
+    </span>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'content-toggle-button',
+        properties: {
+          content: {
+            // content must be an iron-collapse element, otherwise the toggle method will not work
+            type: Object
+          }
+        },
+        toggleContent: function (event) {
+          this.content.toggle();
+          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
+        },
+        toggleIcon: function(iconElement) {
+          if (iconElement.icon === 'hardware:keyboard-arrow-down') {
+            iconElement.icon = 'hardware:keyboard-arrow-up';
+          } else {
+            iconElement.icon = 'hardware:keyboard-arrow-down';
+          }
+        }
+      });
+
+    })();
+  </script>
+</dom-module>

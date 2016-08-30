@@ -1,0 +1,93 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!-- form fields common styles to be used in the app's elements -->
+<dom-module id="form-fields-styles">
+  <template>
+    <style>
+      :root {
+        /* paper-checkbox */
+        --paper-checkbox-label: {
+          font-size: 14px;
+        };
+        --paper-checkbox-size: 14px;
+        --paper-checkbox-checked-color: #4A90E2;
+        --paper-checkbox-unchecked-color: #333333;
+        --paper-checkbox-label-color: #333333;
+
+        /* paper-input style changes */
+        --paper-input-container-input-color: #333333;
+        --paper-input-container-focus-color: #333333;
+        --paper-input-container-invalid-color: #e51919;
+        --paper-input-container-label-floating: {
+          text-transform: uppercase;
+        };
+        --paper-input-container-label: {
+          font-size: 14px;
+        };
+        --paper-input-prefix: {
+          display: inline-flex;
+        };
+      }
+      .custom-field-wrapper {
+        box-sizing: border-box;
+        min-height: 60px;
+        padding-top: 9px;
+      }
+      .n-input-field {
+        width: 200px;
+      }
+      .b-input-field {
+        width: 425px;
+      }
+      .xl-input-field {
+        width: 650px;
+      }
+      /* applied on paper-input */
+      paper-input {
+        --paper-input-container-input: {
+          font-size: 14px;
+        };
+      }
+      paper-input:not(:first-child),
+      paper-dropdown-menu:not(:first-child),
+      div.n-input-field {
+        margin-left: 25px;
+      }
+      paper-input paper-icon-button {
+        --paper-icon-button: {
+          width: 18px;
+          height: 18px;
+          padding: 0;
+          margin-right: 5px;
+          cursor: auto;
+        };
+        --iron-icon: {
+          vertical-align: baseline;
+        }
+      }
+      paper-input etools-datepicker {
+        margin-right: 5px;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
+        --iron-icon: {
+          vertical-align: text-top;
+        }
+      }
+      paper-item {
+        --paper-item: {
+          font-size: 14px;
+        }
+      }
+      paper-dropdown-menu {
+        --paper-dropdown-menu: {
+          font-size: 14px;
+        };
+        --paper-input-container-input: {
+          font-size: 14px;
+        };
+      }
+
+
+    </style>
+  </template>
+</dom-module>
