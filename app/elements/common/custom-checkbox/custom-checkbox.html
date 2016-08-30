@@ -1,0 +1,64 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../styles/pmp/layout-styles.html">
+
+<dom-module id="custom-checkbox">
+  <template>
+    <style include="layout-styles"></style>
+    <style>
+      :host {
+        --paper-checkbox-label: {
+          display: none;
+        };
+        --paper-checkbox-checked-color: #4A90E2;
+      }
+      .custom-checkbox label {
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.011em;
+        line-height: 20px;
+        text-transform: uppercase;
+        text-align: center;
+        cursor: pointer;
+        color: #737373;
+      }
+    </style>
+    <div class="custom-checkbox">
+      <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customCheckbox">[[label]]</label>
+      <div class="flex-horizontal flex-align-center-justified">
+        <paper-checkbox id="customCheckbox" checked="{{checked}}"></paper-checkbox>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'custom-checkbox',
+        properties: {
+          checked: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        listeners: {
+          'chLabel.tap': '_updateCheckboxVal'
+        },
+        _updateCheckboxVal: function () {
+          this.checked = !this.checked;
+        }
+      });
+
+    })();
+  </script>
+</dom-module>

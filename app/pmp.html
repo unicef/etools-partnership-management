@@ -113,6 +113,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Interventions</span>
           </a>
 
+          <a data-route="add-partner-organization" href="{{baseUrl}}add-partner-organization">
+            <iron-icon icon="add"></iron-icon>
+            <span>Add Partner</span>
+          </a>
+
         </paper-menu>
       </paper-scroll-header-panel>
 
@@ -170,6 +175,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <h1 class="page-title" tabindex="-1">Interventions</h1>
                 <p>This is the intervention section</p>
               </paper-material>
+            </section>
+
+            <section data-route="add-partner-organization" tabindex="-1">
+              <add-partner-view></add-partner-view>
             </section>
 
           </iron-pages>

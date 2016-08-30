@@ -1,0 +1,139 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/file-upload/file-upload.html">
+
+<dom-module id="files-upload">
+  <template>
+    <style>
+      :host {
+        font-size: 14px;
+        --file-upload-button: {
+          padding: 0;
+          min-width: 0;
+          margin: 4px 0 0 0;
+          font-size: 14px;
+          text-transform: uppercase;
+          color: var(--files-upload-button-color, #4a90e2);
+        };
+        --file-upload-upload-border: {
+          width: 100%;
+          padding: 0;
+          overflow: visible;
+        };
+        --file-upload-commands: {
+          float: left;
+          margin-right: 5px;
+          color: var(--files-upload-command-color, #4a90e2);
+        };
+        --file-upload-error: {
+          margin: 0 0 -15px 0;
+          font-size: 12px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        };
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
+
+        --paper-progress-container: {
+          margin-top: 2px;
+        };
+        --paper-progress-height: 2px;
+        --paper-progress-active-color: #e51919;
+      }
+      .upload-element {
+        box-sizing: border-box;
+        padding-top: 9px;
+        min-height: 68px;
+      }
+      iron-icon {
+        --iron-icon: {
+          margin-right: 5px;
+        }
+      }
+      .single-upload {
+        --file-upload-file: {
+          padding: 0;
+          position: relative;
+        };
+      }
+
+      .upload-label {
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.011em;
+        line-height: 20px;
+        text-transform: uppercase;
+        color: var(--files-upload-label-color, #737373);
+        @apply(--upload-label-style);
+      }
+
+    </style>
+    <div class="upload-element">
+      <span class="upload-label">[[label]]</span>
+
+      <file-upload id="uploadFileElement" target="[[target]]" files="{{selectedFiles}}" multi="[[multiple]]" class$="{{uploadClass}}">
+        <iron-icon icon="attachment"></iron-icon>
+        Attach File
+      </file-upload>
+
+      <!-- TODO - create upload file element from scratch -->
+      <!--<button class="attach-files" type="button"><iron-icon icon="attachment"></iron-icon></button>-->
+      <!--<input type="file" id="fileInput" on-change="_fileChange" hidden multiple="{{multi}}" accept="{{accept}}">-->
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'files-upload',
+        properties: {
+          target: {
+            // URL to submit files for upload
+            type: String,
+            value: null
+          },
+          selectedFiles: {
+            type: Array,
+            notify: true
+          },
+          multiple: {
+            type: Boolean,
+            value: false
+          }
+        },
+        observers: [
+          '_filesChanged(selectedFiles.length)'
+        ],
+        _filesChanged: function() {
+          if (this.selectedFiles.length > 0) {
+            if (this.multiple === false) {
+              Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('#button').style.display = 'none';
+            }
+          } else {
+            Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('#button').style.display = 'inline-flex';
+            // reset file element so you can re-add the same file
+            Polymer.dom(this.root).querySelector('#uploadFileElement').querySelector('input[type="file"]').value = null;
+          }
+        },
+        ready: function() {
+          this.uploadClass = '';
+          if (this.multiple === false) {
+            this.uploadClass = 'single-upload';
+          }
+        }
+      });
+
+    })();
+  </script>
+</dom-module>
