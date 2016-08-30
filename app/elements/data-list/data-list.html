@@ -5,7 +5,7 @@
 <!-- Uncomment for iron-list -->
 <!-- <link rel="import" href="../../bower_components/iron-list/iron-list.html"> -->
 
-<dom-module id="partners-view">
+<dom-module id="data-list">
   <template>
     <style include="shared-styles">
       :host {
@@ -137,7 +137,7 @@
           <div class$="sync [[item.vision_synced]]">
             <iron-icon icon="notification:sync"></iron-icon>
           </div>
-          <div class="name">[[_computeName(item.name, item.short_name)]]</div>
+          <div class="name">[[item.name]]</div>
           <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
           <div class$="risk [[_computeRating(item.rating)]]">
             <div class="bar"></div>
@@ -174,20 +174,12 @@
       'use strict';
 
       Polymer({
-        is: 'partners-view',
+        is: 'data-list',
 
         properties: {
           data: {
             type: Array,
             reflectToAttribute: true
-          }
-        },
-
-        _computeName: function(name, shortName) {
-          if (shortName) {
-            return shortName + ' / ' + name;
-          } else {
-            return name;
           }
         },
 
