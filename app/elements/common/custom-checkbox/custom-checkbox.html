@@ -27,11 +27,14 @@
         cursor: pointer;
         color: #737373;
       }
+      .custom-checkbox.disabled label {
+        opacity: 0.33;
+      }
     </style>
-    <div class="custom-checkbox">
+    <div class$="custom-checkbox [[disabledClass]]">
       <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customCheckbox">[[label]]</label>
       <div class="flex-horizontal flex-align-center-justified">
-        <paper-checkbox id="customCheckbox" checked="{{checked}}"></paper-checkbox>
+        <paper-checkbox id="customCheckbox" checked="{{checked}}" disabled$="[[isDisabled]]"></paper-checkbox>
       </div>
     </div>
   </template>
@@ -49,6 +52,11 @@
             value: false,
             notify: true,
             reflectToAttribute: true
+          },
+          isDisabled: {
+            type: Boolean,
+            value: false,
+            observer: '_updateDisabledClass'
           }
         },
         listeners: {
@@ -56,6 +64,13 @@
         },
         _updateCheckboxVal: function () {
           this.checked = !this.checked;
+        },
+        _updateDisabledClass: function () {
+          if (this.isDisabled === true) {
+            this.disabledClass = 'disabled';
+          } else {
+            this.disabledClass = '';
+          }
         }
       });
 

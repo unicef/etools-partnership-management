@@ -1,0 +1,75 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="custom-dropdown">
+  <template>
+    <style>
+      paper-dropdown-menu {
+        --paper-dropdown-menu: {
+          font-size: 14px;
+        };
+        --paper-input-container-input: {
+          font-size: 14px;
+        };
+      }
+      paper-item {
+        --paper-item: {
+          font-size: 14px;
+        }
+      }
+    </style>
+    <paper-dropdown-menu id="dropdown" label="[[label]]" disabled$="[[isDisabled]]">
+      <paper-menu class="dropdown-content" selected="{{optionSelectedSelectedIndex}}" on-iron-select="setDropdownValue">
+        <template is="dom-repeat" items="[[options]]" as="dropdownOption">
+          <paper-item>{{dropdownOption.label}}</paper-item>
+        </template>
+      </paper-menu>
+    </paper-dropdown-menu>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'custom-dropdown',
+        properties: {
+          dropdownValue: {
+            notify: true,
+            observer: '_dropDownValueChanged'
+          },
+          options: {
+            // the options must have be an array with objects with this format: {value: 'some value', label: 'Some label text'}
+            type: Array,
+            value: []
+          },
+          isDisabled: {
+            type: Boolean,
+            value: false
+          }
+        },
+        setDropdownValue: function () {
+          this.dropdownValue = this.options[this.optionSelectedSelectedIndex].value;
+        },
+        _dropDownValueChanged: function (newDropdownVal) {
+          if (newDropdownVal === undefined || newDropdownVal === null) {
+            // reset dropdown
+            this.optionSelectedSelectedIndex = null;
+            this.$.dropdown._setSelectedItem(null);
+          } else {
+            // init dropdown with provided value as selected
+            for (var i = 0; i < this.options; i++) {
+              if (this.options[i].value === newDropdownVal) {
+                this.optionSelectedSelectedIndex = i;
+              }
+            }
+          }
+        }
+      });
+
+    })();
+  </script>
+</dom-module>

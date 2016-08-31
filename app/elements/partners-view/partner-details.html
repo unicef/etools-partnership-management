@@ -21,6 +21,7 @@
 <link rel="import" href="../common/files-upload/files-upload.html">
 <link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
 <link rel="import" href="../common/custom-checkbox/custom-checkbox.html">
+<link rel="import" href="../common/custom-dropdown/custom-dropdown.html">
 
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
@@ -63,6 +64,9 @@
         line-height: 1.4;
         padding: 11px 0;
       }
+      .alternate-fields-content .org-diff-label.disabled {
+        opacity: 0.33;
+      }
 
       .contact-info,
       .assessments {
@@ -88,12 +92,40 @@
       .already-in-vision {
         font-size: 14px;
         padding: 10px 25px;
+        min-height: 45px;
+        box-sizing: border-box;
       }
       .already-in-vision-stripe {
         background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAXElEQVQImXXOQQrAIAxE0YkRwfsf0lUgK7HSxO5SsHb/mPl0i8w5lzsASqmUwswAANBSBWBmX0G3SMBN5GuMgMxcaw1BvbXjmZnRUj2evS3HHOqtbVMh8nL/y3kAPcpk9pdkfNAAAAAASUVORK5CYII=) repeat;;
       }
+      .already-in-vision paper-checkbox {
+        line-height: 21px;
+      }
+      .vendor-nr-label {
+        margin-left: 25px;
+      }
       .vendor-number {
-
+        border-bottom: 1px solid #333333;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        background: transparent;
+        padding: 3px 10px;
+        font-size: 14px;
+        outline: none;
+        box-sizing: border-box;
+      }
+      .vendor-number::-webkit-input-placeholder {
+        color: #e51919;
+      }
+      .vendor-number:-moz-placeholder { /* Firefox 18- */
+        color: #e51919;
+      }
+      .vendor-number::-moz-placeholder {  /* Firefox 19+ */
+        color: #e51919;
+      }
+      .vendor-number:-ms-input-placeholder {
+        color: #e51919;
       }
 
       .submit-btn {
@@ -105,13 +137,15 @@
     <form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">
       <div class$="flex-horizontal already-in-vision [[alreadyInVisionClass]]">
         <paper-checkbox id="alreadyPartner" name="already_partner" checked="{{partnerAlreadyInVision}}">Partner already exists in VISION?</paper-checkbox>
-        <span>
-          Enter
-          <input class="vendor-number" type="text" placeholder="Vendor Number" value="{{partner.vendor_number}}">
-          so eTools can sync partner information.
-        </span>
+        <template is="dom-if" if="[[partnerAlreadyInVision]]">
+          <span class="vendor-nr-label">
+            Enter
+            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number" value="{{partner.vendor_number}}">
+            so eTools can sync partner information.
+          </span>
+        </template>
       </div>
-      <content-panel title="Partner Details">
+      <content-panel title="Partner Details" is-disabled$="[[partnerAlreadyInVision]]">
         <div class="row flex-horizontal">
           <!-- Organization name -->
           <paper-input name="organization_name"
@@ -119,72 +153,71 @@
                        label="Organization's Full Name*"
                        value="{{partner.name}}"
                        required auto-validate
-                       error-message="Please fill organization's full name!"></paper-input>
+                       error-message="Please fill organization's full name!"
+                       disabled$="[[partnerAlreadyInVision]]"></paper-input>
 
           <!-- Short name -->
           <paper-input name="short_name"
                        class="n-input-field"
                        label="Short Name"
-                       value="{{partner.short_name}}"></paper-input>
+                       value="{{partner.short_name}}"
+                       disabled$="[[partnerAlreadyInVision]]"></paper-input>
 
           <!-- Alternate option -->
           <div class="alternate-name-btn flex-bottom-aligned">
             <content-toggle-button content="[[getIronCollapseElement('#alternateNameFields')]]"
-                                   label="Alternate Name?"></content-toggle-button>
+                                   label="Alternate Name?"
+                                   is-disabled$="[[partnerAlreadyInVision]]"></content-toggle-button>
           </div>
 
         </div>
         <iron-collapse id="alternateNameFields" class="row alternate-fields">
           <!-- Alternate option fields -->
           <div class="alternate-fields-content flex-horizontal">
-            <span class="org-diff-label">Organization's name in a different language</span>
+            <span class$="org-diff-label [[orgAltNameLabelDisabledClass]]">Organization's name in a different language</span>
 
             <!-- Right to left option -->
             <div class="custom-field-wrapper n-input-field">
-              <custom-checkbox checked="{{alternateNameRightToLeft}}" label="Right to left"></custom-checkbox>
+              <custom-checkbox checked="{{alternateNameRightToLeft}}"
+                               label="Right to left"
+                               is-disabled$="[[partnerAlreadyInVision]]"></custom-checkbox>
             </div>
 
             <!-- Alternate name -->
             <paper-input name="alternate_name"
                          class$="n-input-field [[rightToLeftAlignmentClass]]"
                          label="Alternate Name"
-                         value="{{partner.alternate_name}}"></paper-input>
+                         value="{{partner.alternate_name}}"
+                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
 
             <!-- Alternate ID -->
             <paper-input name="alternate_id"
                          class="n-input-field"
                          label="Alternate ID (if any)"
-                         value="{{partner.alternate_id}}"></paper-input>
+                         value="{{partner.alternate_id}}"
+                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
           </div>
         </iron-collapse>
         <div class="row flex-horizontal">
           <!-- Partner types -->
-          <paper-dropdown-menu id="partnerType"
-                               class="n-input-field"
-                               name="partner_type"
-                               label="Partner Type*">
-            <paper-menu class="dropdown-content" selected="{{partnerTypeSelectedIndex}}" on-iron-select="setPartnerType">
-              <template is="dom-repeat" items="[[partnerDetailsData.partnerTypes]]" as="partnerType">
-                <paper-item>{{partnerType.label}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
+
+          <custom-dropdown class="n-input-field"
+                           label="Partner Type*"
+                           dropdown-value="{{partner.partner_type}}"
+                           options="[[partnerDetailsData.partnerTypes]]"
+                           is-disabled$="[[partnerAlreadyInVision]]"></custom-dropdown>
 
           <!-- CSO type -->
-          <template is="dom-if" if="[[showCsoTypeField]]">
-            <paper-dropdown-menu class="n-input-field"
-                                 name="cso_type"
-                                 label="CSO Type*">
-              <paper-menu class="dropdown-content" selected="{{partnerCsoTypeSelectedIndex}}" on-iron-select="setPartnerCsoType">
-                <template is="dom-repeat" items="[[partnerDetailsData.csoTypes]]" as="partnerCsoType">
-                  <paper-item>{{partnerCsoType.label}}</paper-item>
-                </template>
-              </paper-menu>
-            </paper-dropdown-menu>
+          <template is="dom-if" if="[[showCsoTypeField(partner.partner_type)]]">
+            <custom-dropdown class="n-input-field"
+                             label="CSO Type*"
+                             dropdown-value="{{partner.cso_type}}"
+                             options="[[partnerDetailsData.csoTypes]]"
+                             is-disabled$="[[partnerAlreadyInVision]]"></custom-dropdown>
           </template>
 
 
-          <template is="dom-if" if="[[showCoreValuesAssessment]]">
+          <template is="dom-if" if="[[showCoreValuesAssessment(partner.cso_type)]]">
             <!-- Core values assessment file -->
             <div class="n-input-field">
               <files-upload target="/path/to/destination" label="Core values assessment*"></files-upload>
@@ -203,21 +236,17 @@
           </template>
 
           <!-- Shared partner -->
-          <paper-dropdown-menu class="n-input-field"
-                               label="Shared Partner"
-                               name="shared_partner">
-            <paper-menu class="dropdown-content" selected="{{sharedPartnerSelectedIndex}}" on-iron-select="setSharedPartner">
-              <template is="dom-repeat" items="[[partnerDetailsData.sharedPartners]]" as="sharedPartner">
-                <paper-item>{{sharedPartner.label}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
-
+          <custom-dropdown class="n-input-field"
+                           label="Shared Partner"
+                           dropdown-value="{{partner.shared_partner}}"
+                           options="[[partnerDetailsData.sharedPartners]]"
+                           is-disabled$="[[partnerAlreadyInVision]]"></custom-dropdown>
         </div>
 
         <div class="contact-info">
           <content-toggle-button content="[[getIronCollapseElement('#contactInfoFields')]]"
-                                 label="Contact Info"></content-toggle-button>
+                                 label="Contact Info"
+                                 is-disabled$="[[partnerAlreadyInVision]]"></content-toggle-button>
           <!-- Contact info fields -->
           <iron-collapse id="contactInfoFields">
             <div class="flex-horizontal">
@@ -225,7 +254,8 @@
               <paper-input name="address"
                            class="b-input-field"
                            label="Address"
-                           value="{{partner.address}}">
+                           value="{{partner.address}}"
+                           disabled$="[[partnerAlreadyInVision]]">
                 <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
               </paper-input>
 
@@ -233,7 +263,8 @@
               <paper-input name="city"
                            class="n-input-field"
                            label="City"
-                           value="{{partner.city}}">
+                           value="{{partner.city}}"
+                           disabled$="[[partnerAlreadyInVision]]">
               </paper-input>
             </div>
             <div class="flex-horizontal">
@@ -241,14 +272,17 @@
               <paper-input name="phone_number"
                            class="n-input-field"
                            label="Phone Number"
-                           value="{{partner.phone_number}}">
+                           value="{{partner.phone_number}}"
+                           disabled$="[[partnerAlreadyInVision]]">
                 <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
               </paper-input>
 
               <!-- Email address -->
               <paper-input name="email_address"
                            class="n-input-field"
-                           label="E-mail address" value="{{partner.email}}">
+                           label="E-mail address"
+                           value="{{partner.email}}"
+                           disabled$="[[partnerAlreadyInVision]]">
                 <paper-icon-button prefix icon="communication:email"></paper-icon-button>
               </paper-input>
             </div>
@@ -336,8 +370,8 @@
             value: {
               partnerTypes: [
                 {
-                  value: 'cso_core_values_assessment',
-                  label: 'CSO Core Values Assessment'
+                  value: 'cso',
+                  label: 'CSO'
                 },
                 {
                   value: 'type1',
@@ -413,7 +447,8 @@
               staffMembers: [],
 
               description: null
-            }
+            },
+            notify: true
           }
         },
         listeners: {
@@ -425,30 +460,28 @@
         submitAddPartnerDetailsData: function () {
           this.$.addPartnerDetailsForm.submit();
         },
-        setPartnerType: function () {
-          this.partner.partner_type = this.partnerDetailsData.partnerTypes[this.partnerTypeSelectedIndex].value;
-          if (this.partner.partner_type === 'cso_core_values_assessment') {
-            this.showCsoTypeField = true;
+        showCsoTypeField: function (partnerType) {
+          if (partnerType === 'cso') {
+            return true;
           } else {
-            this.showCsoTypeField = false;
-            this.partner.cso_type = null;
-            this.partner.last_assessment_date = null;
+            if (typeof this.partner === 'object') {
+              this.set('partner.cso_type', null);
+              this.set('partner.core_values_assessment_date', null);
+            }
+            return false;
           }
         },
-        setPartnerCsoType: function () {
-          this.partner.cso_type = this.partnerDetailsData.csoTypes[this.partnerCsoTypeSelectedIndex].value;
-          if (this.partner.cso_type !== 1) { // not international
-            this.showCoreValuesAssessment = true;
+        showCoreValuesAssessment: function (csoType) {
+          if (csoType !== undefined && csoType !== null && csoType !== 1) { // not international
+            return true;
           } else {
-            this.showCoreValuesAssessment = false;
-            this.partner.last_assessment_date = null;
+            if (typeof this.partner === 'object') {
+              this.partner.last_assessment_date = null;
+            }
+            return false;
           }
-        },
-        setSharedPartner: function () {
-          this.partner.shared_partner = this.partnerDetailsData.sharedPartners[this.sharedPartnerSelectedIndex].value;
         },
         showDatePicker: function () {
-          console.log(this.showDatePickerModal);
           this.showDatePickerModal = true;
         },
         _addPartnerDetailsDataPresubmit: function (event) {
@@ -466,10 +499,24 @@
         _partnerAlreadyInVision: function (alreadyInVision) {
           if (alreadyInVision === true) {
             this.alreadyInVisionClass = 'already-in-vision-stripe';
+            this.orgAltNameLabelDisabledClass = 'disabled';
+            this._resetPartnerData();
           } else {
             this.alreadyInVisionClass = '';
+            this.orgAltNameLabelDisabledClass = '';
           }
-        }
+        },
+        _resetPartnerData: function () {
+          this.set('partner.vision_synced', false);
+          for (var property in this.partner) {
+            if (this.partner[property] !== null && property !== 'vision_synced') {
+              if (!Array.isArray(this.partner[property])) {
+                this.set('partner.' + property, null);
+              }
+            }
+          }
+        },
+
 
       });
 

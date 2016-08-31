@@ -16,9 +16,16 @@
         width: 100%;
         font-size: 14px;
       }
+      span.disabled {
+        color: var(--content-toggle-btn-disabled-color, #737373);
+        opacity: 0.33;
+      }
+      span.disabled iron-icon {
+        color: --content-toggle-btn-disabled-color;
+      }
     </style>
-    <span on-tap="toggleContent">
-      <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+    <span on-tap="toggleContent" class$="[[disabledClass]]">
+      <iron-icon class="collapsible-content-icon" icon="hardware:keyboard-arrow-down"></iron-icon>
       [[label]]
     </span>
   </template>
@@ -34,17 +41,36 @@
           content: {
             // content must be an iron-collapse element, otherwise the toggle method will not work
             type: Object
+          },
+          isDisabled: {
+            type: Boolean,
+            value: false,
+            observer: '_updateDisabledClass'
           }
         },
         toggleContent: function (event) {
+          if (this.isDisabled) {
+            return false;
+          }
           this.content.toggle();
-          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
+          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsible-content-icon'));
         },
         toggleIcon: function(iconElement) {
           if (iconElement.icon === 'hardware:keyboard-arrow-down') {
             iconElement.icon = 'hardware:keyboard-arrow-up';
           } else {
             iconElement.icon = 'hardware:keyboard-arrow-down';
+          }
+        },
+        _updateDisabledClass: function () {
+          if (this.isDisabled === true) {
+            this.disabledClass = 'disabled';
+            if (this.content.opened === true) {
+              this.content.hide();
+              Polymer.dom(event.currentTarget).querySelector('.collapsible-content-icon').icon = 'hardware:keyboard-arrow-down';
+            }
+          } else {
+            this.disabledClass = '';
           }
         }
       });
