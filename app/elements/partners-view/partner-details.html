@@ -12,9 +12,6 @@
 
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../common/content-panel/content-panel.html">
 <link rel="import" href="../common/etools-datepicker/etools-datepicker.html">
@@ -126,6 +123,10 @@
       }
       .vendor-number:-ms-input-placeholder {
         color: #e51919;
+      }
+
+      custom-dropdown:not(:first-child) {
+        margin-left: 25px;
       }
 
       .submit-btn {
@@ -294,18 +295,11 @@
       <content-panel title="Risk Rating & Assessments">
         <div class="row flex-horizontal">
           <!-- Risk rating -->
-          <paper-dropdown-menu class="n-input-field"
-                               label="Risk Rating"
-                               disabled="true"
-                               name="risk_rating"
-                               value="{{partner.rating}}">
-            <paper-listbox class="dropdown-content">
-              <!-- TODO: populate dropdown with right data -->
-              <paper-item>Low</paper-item>
-              <paper-item>Moderate</paper-item>
-              <paper-item>High</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
+          <custom-dropdown class="n-input-field"
+                           label="Risk Rating"
+                           dropdown-value="{{partner.rating}}"
+                           options="[[partnerDetailsData.riskRatings]]"
+                           is-disabled="true"></custom-dropdown>
 
           <!-- Type of assessment -->
           <paper-input name="assessment_type"
@@ -416,6 +410,20 @@
                   label: 'Assessment Type 2'
                 }
               ],
+              riskRatings: [
+                {
+                  value: 'low',
+                  label: 'Low'
+                },
+                {
+                  value: 'moderate',
+                  label: 'Moderate'
+                },
+                {
+                  value: 'high',
+                  label: 'High'
+                }
+              ]
 //              userRights: []
             }
           },

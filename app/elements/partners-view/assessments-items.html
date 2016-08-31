@@ -7,11 +7,13 @@
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 
 <link rel="import" href="../common/files-upload/files-upload.html">
 <link rel="import" href="../common/custom-radio-button/custom-radio-button.html">
+<link rel="import" href="../common/custom-dropdown/custom-dropdown.html">
+<link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
 
 <dom-module id="assessments-items">
   <template>
@@ -42,6 +44,7 @@
       .remove-assessment {
         border-right: 1px solid #dedede;
         width: 50px;
+        margin-right: 26px;
       }
       .remove-assessment paper-icon-button {
         color: var(--assessments-remove-btn-color, #4a90e2);
@@ -76,14 +79,10 @@
           </div>
 
           <!-- Assessment type -->
-          <paper-dropdown-menu class="n-input-field"
-                               label="Assessment Type">
-            <paper-menu class="dropdown-content" on-iron-select="setAssessmentType" data-args$="[[index]]">
-              <template is="dom-repeat" items="[[assessmentTypes]]" as="assessmentType">
-                <paper-item>{{assessmentType.label}}</paper-item>
-              </template>
-            </paper-menu>
-          </paper-dropdown-menu>
+          <custom-dropdown class="n-input-field"
+                           label="Assessment Type"
+                           dropdown-value="{{item.assessment_type}}"
+                           options="[[assessmentTypes]]"></custom-dropdown>
 
           <!-- Completed by -->
           <paper-input class="n-input-field"
@@ -166,10 +165,6 @@
             }
           }
         },
-        setAssessmentType: function (event) {
-          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
-          this.set('assessmentsData.' + index + '.assessment_type', this.assessmentTypes[event.target.selected].value);
-        },
         _checkAssessmentDuplicate: function (assessment) {
           var duplicateFound = false;
           for (var i = 0; i < this.assessmentsData.length; i++) {
@@ -185,7 +180,7 @@
             assessment_type: null,
             completed_by: null,
             report_file: null,
-            basis_for_risk_rating: false
+            basis_for_risk_rating: true
           };
         }
       });
