@@ -9,6 +9,7 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../common/files-upload/files-upload.html">
 <link rel="import" href="../common/custom-radio-button/custom-radio-button.html">
@@ -17,12 +18,7 @@
 
 <dom-module id="assessments-items">
   <template>
-    <style include="layout-styles"></style>
-    <style include="form-fields-styles"></style>
-    <style>
-      :host {
-
-      }
+    <style include="layout-styles form-fields-styles">
       .assessments-header {
         position: relative;
         line-height: 30px;
@@ -105,6 +101,10 @@
         </div>
       </template>
     </iron-collapse>
+    <paper-toast id="emptyAssessmentNotification" always-on-top="true" duration="3000" vertical-align="top" horizontal-align="right">
+      <iron-icon icon="info"></iron-icon>
+      Fill last added assessment fields to be able to add more.
+    </paper-toast>
   </template>
 
   <script>
@@ -134,15 +134,18 @@
           }
         },
         addNewAssessmentItem: function () {
+          var open = false;
           if (this.assessmentsIronCollapse.opened === false) {
+            open = true;
             this.assessmentsIronCollapse.show();
           }
           var newAssessment = this._getNewEmptyAssessmentItem();
           if (!this._checkAssessmentDuplicate(newAssessment)) {
             this.push('assessmentsData', newAssessment);
           } else {
-            // TODO: notification popup or something else to let the user know he already has an untouched new ready assessment
-            console.log('Fill last added assessment to be able to add more! Thanks!');
+            if (open === false) {
+              this.$.emptyAssessmentNotification.open();
+            }
           }
         },
         removeAssessment: function (event) {

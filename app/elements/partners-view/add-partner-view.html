@@ -95,7 +95,7 @@
         </div>
         <div>
           <!-- Add Partner page content -->
-          <partner-details></partner-details>
+          <partner-details partner-details-data="[[partnerDetailsData]]"></partner-details>
         </div>
       </iron-pages>
     </paper-material>
@@ -112,6 +112,75 @@
           selectedTab: {
             type: Number,
             value: 0
+          },
+          // partnerDetailsData = just static data, will be received from server/localstorage/loki
+          partnerDetailsData: {
+            type: Object,
+            value: {
+              partnerTypes: [
+                {
+                  value: 'cso',
+                  label: 'CSO'
+                },
+                {
+                  value: 'type1',
+                  label: 'Partner Type 1'
+                },
+                {
+                  value: 'type2',
+                  label: 'Partner Type 2'
+                },
+                {
+                  value: 'type3',
+                  label: 'Partner Type 3'
+                }
+              ],
+              csoTypes: [
+                {
+                  value: 0,
+                  label: 'National'
+                },
+                {
+                  value: 1,
+                  label: 'International'
+                }
+              ],
+              sharedPartners: [
+                {
+                  value: 'shared_type_1',
+                  label: 'Partner Type 1'
+                },
+                {
+                  value: 'shared_type_2',
+                  label: 'Partner Type 2'
+                }
+              ],
+              assessmentTypes: [
+                {
+                  value: 'assess_1',
+                  label: 'Assessment Type 1'
+                },
+                {
+                  value: 'assess_2',
+                  label: 'Assessment Type 2'
+                }
+              ],
+              riskRatings: [
+                {
+                  value: 'low',
+                  label: 'Low'
+                },
+                {
+                  value: 'moderate',
+                  label: 'Moderate'
+                },
+                {
+                  value: 'high',
+                  label: 'High'
+                }
+              ]
+//              userRights: []
+            }
           }
         }
       });

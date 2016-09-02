@@ -9,18 +9,14 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../common/custom-checkbox/custom-checkbox.html">
 <link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
 
 <dom-module id="staff-members">
   <template>
-    <style include="layout-styles"></style>
-    <style include="form-fields-styles"></style>
-    <style>
-      :host {
-
-      }
+    <style include="layout-styles form-fields-styles">
       .staff-members-header {
         position: relative;
         line-height: 30px;
@@ -121,6 +117,10 @@
         </div>
       </template>
     </iron-collapse>
+    <paper-toast id="emptyStaffMemberNotification" always-on-top="true" duration="3000" vertical-align="top" horizontal-align="right">
+      <iron-icon icon="info"></iron-icon>
+      Fill last added staff member fields to be able to add more.
+    </paper-toast>
   </template>
 
   <script>
@@ -154,15 +154,18 @@
           };
         },
         addNewStaffMember: function () {
+          var open = false;
           if (this.staffMembersIronCollapse.opened === false) {
+            open = true;
             this.staffMembersIronCollapse.show();
           }
           var newStaffMember = this._getStaffMemberEmptyObject();
           if (!this._checkStaffMemberDuplicate(newStaffMember)) {
             this.push('staffMembersData', newStaffMember);
           } else {
-            // TODO: notification popup or something else to let the user know he already has an untouched new ready staff-member
-            console.log('Fill last added staff-member to be able to add more! Thanks!');
+            if (open === false) {
+              this.$.emptyStaffMemberNotification.open();
+            }
           }
         },
         removeStaffMember: function (event) {

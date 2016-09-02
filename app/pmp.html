@@ -81,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <!-- Drawer Content -->
-        <paper-menu class="app-menu" attr-for-selected="data-route" selected="[[route]]">
+        <paper-menu id="appMenu" class="app-menu" attr-for-selected="data-route" selected="[[route]]">
 
           <a data-route="home" href="{{baseUrl}}">
             <iron-icon icon="home"></iron-icon>
@@ -172,6 +172,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-toast id="toast">
       <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
     </paper-toast>
+
+    <paper-dialog id="leavePageWithUnsavedData" modal no-cancel-on-esc-key="true">
+      <p>Do you want to leave this page? Data you have entered may not be saved.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus>Stay on page</paper-button>
+        <paper-button dialog-confirm>Leave page</paper-button>
+      </div>
+    </paper-dialog>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
     <!--

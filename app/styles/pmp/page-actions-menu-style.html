@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="page-actions-menu-style">
+  <template>
+    <style>
+      .page-actions {
+        background-color: var(--page-actions-menu-bg-color, #232d32);
+        color: var(--page-actions-menu-color, #fff);
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 0 15px;
+      }
+      .page-actions paper-button,
+      .page-actions paper-icon-button {
+        height: 60px;
+      }
+      .page-actions .primary-btn {
+        border-radius: 0;
+        background-color: var(--page-actions-primary-btn-bg-color, #0087c8);
+      }
+      .page-actions .secondary-btn {
+        border-radius: 0;
+        color: var(--page-actions-secondary-btn-color, #0088c3);
+      }
+      .page-actions .divider {
+        border-left: 2px solid var(--page-actions-divider-color, #0088c3);
+        margin: 0 10px;
+      }
+    </style>
+  </template>
+</dom-module>

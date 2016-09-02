@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../styles/pmp/layout-styles.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
+<link rel="import" href="../../styles/pmp/page-actions-menu-style.html">
 
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
@@ -26,10 +27,10 @@
 
 <dom-module id="partner-details">
   <template>
-    <style include="layout-styles"></style>
-    <style include="form-fields-styles"></style>
-    <style>
+    <style include="layout-styles form-fields-styles page-actions-menu-style">
       :host {
+        padding-bottom: 70px;
+        display: block;
         --paper-input-container-input: {
           text-transform: uppercase;
         }
@@ -338,6 +339,17 @@
     </form>
     <paper-button class="submit-btn" raised on-tap="submitAddPartnerDetailsData">Submit</paper-button>
 
+    <!-- page actions -->
+    <div class="page-actions">
+      <paper-icon-button class="more-options" icon="more-vert"></paper-icon-button>
+      <paper-button class="primary-btn">Save</paper-button>
+      <paper-icon-button class="secondary-btn" icon="history"></paper-icon-button>
+      <paper-icon-button class="secondary-btn" icon="print"></paper-icon-button>
+      <paper-icon-button class="secondary-btn" icon="file-download"></paper-icon-button>
+      <span class="divider"></span>
+      <paper-icon-button class="secondary-btn help-btn" icon="help"></paper-icon-button>
+    </div>
+
   </template>
 
   <script>
@@ -357,74 +369,6 @@
             type: Boolean,
             value: false,
             observer: '_checkAlternateNameRightToLeftAlignment'
-          },
-          partnerDetailsData: {
-            type: Object,
-            value: {
-              partnerTypes: [
-                {
-                  value: 'cso',
-                  label: 'CSO'
-                },
-                {
-                  value: 'type1',
-                  label: 'Partner Type 1'
-                },
-                {
-                  value: 'type2',
-                  label: 'Partner Type 2'
-                },
-                {
-                  value: 'type3',
-                  label: 'Partner Type 3'
-                }
-              ],
-              csoTypes: [
-                {
-                  value: 0,
-                  label: 'National'
-                },
-                {
-                  value: 1,
-                  label: 'International'
-                }
-              ],
-              sharedPartners: [
-                {
-                  value: 'shared_type_1',
-                  label: 'Partner Type 1'
-                },
-                {
-                  value: 'shared_type_2',
-                  label: 'Partner Type 2'
-                }
-              ],
-              assessmentTypes: [
-                {
-                  value: 'assess_1',
-                  label: 'Assessment Type 1'
-                },
-                {
-                  value: 'assess_2',
-                  label: 'Assessment Type 2'
-                }
-              ],
-              riskRatings: [
-                {
-                  value: 'low',
-                  label: 'Low'
-                },
-                {
-                  value: 'moderate',
-                  label: 'Moderate'
-                },
-                {
-                  value: 'high',
-                  label: 'High'
-                }
-              ]
-//              userRights: []
-            }
           },
           partner: {
             type: Object,
