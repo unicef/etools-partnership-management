@@ -7,22 +7,24 @@
       :root {
         /* paper-checkbox */
         --paper-checkbox-label: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         };
-        --paper-checkbox-size: 14px;
-        --paper-checkbox-checked-color: #4A90E2;
-        --paper-checkbox-unchecked-color: #333333;
-        --paper-checkbox-label-color: #333333;
+        --paper-checkbox-size: var(--primary-font-size);
+        --paper-checkbox-checked-color: var(--third-text-color);
+        --paper-checkbox-unchecked-color: var(--primary-text-color);
+        --paper-checkbox-label-color: var(--primary-text-color);
 
         /* paper-input style changes */
-        --paper-input-container-input-color: #333333;
-        --paper-input-container-focus-color: #333333;
-        --paper-input-container-invalid-color: #e51919;
+        --paper-input-container-input-color: var(--primary-text-color);
+        --paper-input-container-focus-color: var(--primary-text-color);
+        --paper-input-container-invalid-color: var(--error-text-color);
         --paper-input-container-label-floating: {
           text-transform: uppercase;
+          transform: translateY(-78%);
+          font-size: var(--labels-secondary-font-size);
         };
         --paper-input-container-label: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         };
         --paper-input-prefix: {
           display: inline-flex;
@@ -45,7 +47,7 @@
       /* applied on paper-input */
       paper-input {
         --paper-input-container-input: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         };
       }
       paper-input:not(:first-child),
@@ -75,15 +77,15 @@
       }
       paper-item {
         --paper-item: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         }
       }
       paper-dropdown-menu {
         --paper-dropdown-menu: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         };
         --paper-input-container-input: {
-          font-size: 14px;
+          font-size: var(--primary-font-size);
         };
       }
 

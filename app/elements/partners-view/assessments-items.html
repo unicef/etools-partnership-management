@@ -34,20 +34,20 @@
           min-width: 0;
           padding: 0;
           border-radius: 15px;
-          background-color: var(--assessments-add-btn-bg-color, #4a90e2);
-          color: var(--assessments-add-btn-bg-color, #ffffff);
+          background-color: var(--assessments-add-btn-bg-color, --third-text-color);
+          color: var(--assessments-add-btn-color, #ffffff);
         };
       }
       .assessment {
         margin-top: 20px;
       }
       .remove-assessment {
-        border-right: 1px solid #dedede;
+        border-right: 1px solid var(--divider-color);
         width: 50px;
         margin-right: 26px;
       }
       .remove-assessment paper-icon-button {
-        color: var(--assessments-remove-btn-color, #4a90e2);
+        color: var(--assessments-remove-btn-color, --third-text-color);
         --paper-icon-button: {
           padding: 3px;
           width: 24px;
@@ -180,7 +180,7 @@
             assessment_type: null,
             completed_by: null,
             report_file: null,
-            basis_for_risk_rating: true
+            basis_for_risk_rating: false
           };
         }
       });

@@ -12,8 +12,8 @@
     <style>
       :host {
         /* paper-tabs */
-        --paper-tabs-selection-bar-color: #4a90e2;
-        --paper-tab-ink: #4a90e2;
+        --paper-tabs-selection-bar-color: var(--third-text-color);
+        --paper-tab-ink: var(--third-text-color);
 
         /* TODO: remove next display and size lines after page has the content elements set */
         display: inline-block;
@@ -26,7 +26,7 @@
       }
 
       .tabs-header {
-        border-bottom: 1px solid #dedede;
+        border-bottom: 1px solid var(--divider-color);
       }
 
       paper-tabs {
@@ -38,11 +38,11 @@
 
       paper-tab {
         text-transform: uppercase;
-        color: #4a90e2;
+        color: var(--third-text-color);
       }
 
       paper-tab:not(.iron-selected) {
-        color: #a3c6f0;
+        opacity: 0.55;
       }
 
       .tab-icon {
@@ -53,6 +53,7 @@
         margin-top: 20px;
       }
       .vision-button {
+        /* TODO: use variables for colors used here */
         background-color: #9b9b9b;
         color: #fff;
         font-size: 18px;

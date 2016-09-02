@@ -32,24 +32,24 @@
           min-width: 0;
           padding: 0;
           border-radius: 15px;
-          background-color: var(--staff-members-add-btn-bg-color, #4a90e2);
+          background-color: var(--staff-members-add-btn-bg-color, --third-text-color);
           color: var(--staff-members-add-btn-bg-color, #ffffff);
         };
       }
       .staff-member {
         margin: 20px 0 15px 0;
         padding-bottom: 15px;
-        border-bottom: 1px solid #dedede;
+        border-bottom: 1px solid var(--divider-color);
       }
       .staff-member:last-of-type {
         border-bottom: none;
       }
       .remove-staff-member {
-        border-right: 1px solid #dedede;
+        border-right: 1px solid var(--divider-color);
         width: 50px;
       }
       .remove-staff-member paper-icon-button {
-        color: var(--staff-members-remove-btn-color, #4a90e2);
+        color: var(--staff-members-remove-btn-color, --third-text-color);
         --paper-icon-button: {
           padding: 3px;
           width: 24px;

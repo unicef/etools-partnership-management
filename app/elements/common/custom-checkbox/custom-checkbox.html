@@ -10,7 +10,8 @@
         --paper-checkbox-label: {
           display: none;
         };
-        --paper-checkbox-checked-color: #4A90E2;
+        --paper-checkbox-checked-color: var(--third-text-color);
+        --paper-checkbox-unchecked-color: var(--secondary-text-color);
       }
       .custom-checkbox label {
         display: inline-block;
@@ -18,14 +19,14 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 12px;
+        font-size: var(--labels-secondary-font-size);
         font-weight: 400;
         letter-spacing: 0.011em;
         line-height: 20px;
         text-transform: uppercase;
         text-align: center;
         cursor: pointer;
-        color: #737373;
+        color: var(--secondary-text-color);
       }
       .custom-checkbox.disabled label {
         opacity: 0.33;

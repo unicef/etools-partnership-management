@@ -45,7 +45,7 @@
       }
 
       .alternate-fields {
-        background-color: #f0f3f5;
+        background-color: var(--secondary-background-color);
       }
 
       .alternate-fields-content {
@@ -55,8 +55,8 @@
 
       .alternate-fields-content .org-diff-label {
         text-transform: uppercase;
-        color: #737373;
-        font-size: 12px;
+        color: var(--secondary-text-color);
+        font-size: var(--labels-secondary-font-size);
         width: 210px;
         line-height: 1.4;
         padding: 11px 0;
@@ -67,7 +67,7 @@
 
       .contact-info,
       .assessments {
-        border-top: 1px solid #dedede;
+        border-top: 1px solid var(--divider-color);
         padding-top: 20px;
       }
       .contact-info {
@@ -87,7 +87,7 @@
         }
       }
       .already-in-vision {
-        font-size: 14px;
+        font-size: var(--primary-font-size);
         padding: 10px 25px;
         min-height: 45px;
         box-sizing: border-box;
@@ -102,29 +102,28 @@
         margin-left: 25px;
       }
       .vendor-number {
-        border-bottom: 1px solid #333333;
+        border-bottom: 1px solid var(--primary-text-color);
         border-top: none;
         border-left: none;
         border-right: none;
         background: transparent;
         padding: 3px 10px;
-        font-size: 14px;
+        font-size: var(--primary-font-size);
         outline: none;
         box-sizing: border-box;
       }
       .vendor-number::-webkit-input-placeholder {
-        color: #e51919;
+        color: var(--error-text-color);
       }
       .vendor-number:-moz-placeholder { /* Firefox 18- */
-        color: #e51919;
+        color: var(--error-text-color);
       }
       .vendor-number::-moz-placeholder {  /* Firefox 19+ */
-        color: #e51919;
+        color: var(--error-text-color);
       }
       .vendor-number:-ms-input-placeholder {
-        color: #e51919;
+        color: var(--error-text-color);
       }
-
       custom-dropdown:not(:first-child) {
         margin-left: 25px;
       }
@@ -141,7 +140,7 @@
         <template is="dom-if" if="[[partnerAlreadyInVision]]">
           <span class="vendor-nr-label">
             Enter
-            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number" value="{{partner.vendor_number}}">
+            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number" value="{{partner.vendor_number::input}}">
             so eTools can sync partner information.
           </span>
         </template>
@@ -510,6 +509,10 @@
             this.orgAltNameLabelDisabledClass = 'disabled';
             this._resetPartnerData();
           } else {
+            if (typeof this.partner === 'object') {
+              this.set('partner.vendor_number', null);
+              this.notifyPath('partner.vendor_number');
+            }
             this.alreadyInVisionClass = '';
             this.orgAltNameLabelDisabledClass = '';
           }
@@ -517,7 +520,7 @@
         _resetPartnerData: function () {
           this.set('partner.vision_synced', false);
           for (var property in this.partner) {
-            if (this.partner[property] !== null && property !== 'vision_synced') {
+            if (this.partner[property] !== null && property !== 'vision_synced' && property !== 'vendor_number') {
               if (!Array.isArray(this.partner[property])) {
                 this.set('partner.' + property, null);
               }
