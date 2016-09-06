@@ -98,11 +98,11 @@
 
           <!-- Alternate option -->
           <div class="alternate-name-btn flex-bottom-aligned">
-            <content-toggle-button content="[[getIronCollapseElement('#alternateNameFields')]]" label="Alternate Name?"></content-toggle-button>
+            <content-toggle-button active="{{altNameActive}}" label="Alternate Name?"></content-toggle-button>
           </div>
 
         </div>
-        <iron-collapse id="alternateNameFields" class="row alternate-fields">
+        <iron-collapse id="alternateNameFields" class="row alternate-fields" opened="{{altNameActive}}">
           <!-- Alternate option fields -->
           <div class="alternate-fields-content flex-horizontal">
             <span class="org-diff-label">Organization's name in a different language</span>
@@ -184,9 +184,9 @@
         </div>
 
         <div class="contact-info">
-          <content-toggle-button content="[[getIronCollapseElement('#contactInfoFields')]]" label="Contact Info"></content-toggle-button>
+          <content-toggle-button label="Contact Info" active="{{contactInfoActive}}"></content-toggle-button>
           <!-- Contact info fields -->
-          <iron-collapse id="contactInfoFields">
+          <iron-collapse id="contactInfoFields" opened="{{contactInfoActive}}">
             <div class="flex-horizontal">
               <!-- Address -->
               <paper-input name="address"
@@ -255,9 +255,9 @@
       </content-panel>
 
       <content-panel no-header="true">
-        <content-toggle-button content="[[getIronCollapseElement('#bankDetails')]]" label="Bank Details"></content-toggle-button>
+        <content-toggle-button label="Bank Details" active="{{bankDetailsActive}}"></content-toggle-button>
         <!-- Bank details-->
-        <iron-collapse id="bankDetails">
+        <iron-collapse id="bankDetails" opened="{{bankDetailsActive}}">
           <div class="row flex-horizontal">
             <!-- Bank name-->
             <paper-input name="bank_name"
@@ -332,9 +332,6 @@
 //        listeners: {
 //          'addPartnerDetailsForm.iron-form-presubmit': 'formPresubmit'
 //        },
-        getIronCollapseElement: function (elementId) {
-          return Polymer.dom(this.root).querySelector(elementId);
-        },
 
 //        validateDropdownValue: function () {
 //          console.log(this.$.partnerType.selectedItemLabel);

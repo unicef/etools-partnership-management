@@ -59,12 +59,12 @@
 
     </style>
     <div class="assessments-header flex-horizontal">
-      <content-toggle-button class="flex-child" content="[[assessmentsIronCollapse]]" label="Assessments"></content-toggle-button>
+      <content-toggle-button class="flex-child" label="Assessments" active="{{assessmentsActive}}"></content-toggle-button>
       <paper-button class="add-new-assesment" on-tap="addNewAssessmentItem">
         <iron-icon icon="add"></iron-icon>
       </paper-button>
     </div>
-    <iron-collapse id="assessments">
+    <iron-collapse id="assessments" opened="{{assessmentsActive}}">
       <template is="dom-repeat" items="{{assessmentsData}}">
         <div class="assessment flex-horizontal">
           <div class="remove-assessment flex-horizontal flex-align-center-justified">
