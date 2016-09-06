@@ -76,7 +76,7 @@
 
       updateURL: function() {
         if (this.partners && this.partners.length) {
-          this._filteredPartners = this.partners.filter(this.filter.bind(this));
+          this._filteredPartners = _.filter(this.partners, this.filter.bind(this));
         }
       },
 
