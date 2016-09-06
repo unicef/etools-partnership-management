@@ -1,0 +1,141 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
+<link rel="import" href="../partner-details-dropdown/partner-details-dropdown.html">
+
+<dom-module id="partner-item">
+  <template>
+    <style include="shared-styles">
+      .main > div:not(.expand) {
+        margin-right: 10px;
+      }
+
+      .main > div:not(.sync):not(.expand) {
+        min-width: 100px;
+      }
+
+      .sync {
+        color: #737373;
+      }
+
+      .sync.true {
+        color: #3cb23c;
+      }
+
+      .name {
+        @apply(--layout-flex-2);
+        font-weight: 500;
+      }
+
+      .type {
+        @apply(--layout-flex-2);
+        color: #757575;
+      }
+
+      .risk {
+        @apply(--layout-flex);
+        @apply(--layout-self-stretch);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin: -15px 0;
+      }
+
+      .risk .bar {
+        height: 100%;
+        min-width: 20px;
+        margin-right: 10px;
+      }
+
+      .risk.high .bar {
+        background-color: #f03a47;
+      }
+
+      .risk.significant .bar {
+        background-color: #ff8329;
+      }
+
+      .risk.medium .bar {
+        background-color: #ffca3a;
+      }
+
+      .risk.low .bar {
+        background-color: #fff277;
+      }
+
+      .risk.non-assessed .bar {
+        background-color: #dcd8d8;
+      }
+
+      .risk.no-rating .bar {
+        background-color: #000;
+      }
+
+      .risk.no-rating .text:after {
+        content: 'No Rating';
+      }
+    </style>
+
+    <div class="main">
+      <div class$="sync [[item.vision_synced]]">
+        <iron-icon icon="notification:sync"></iron-icon>
+      </div>
+      <div class="name">[[_computeName(item.name, item.short_name)]]</div>
+      <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
+      <div class$="risk [[_computeRating(item.rating)]]">
+        <div class="bar"></div>
+        <div class="text">[[item.rating]]</div>
+      </div>
+      <div class="expand">
+        <content-toggle-button on-tap="_toggleDetails"></content-toggle-button>
+      </div>
+    </div>
+
+    <div id="details"></div>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partner-item',
+
+        properties: {
+          item: Object,
+          _detailsDropdown: {
+            type: Object,
+            value: null
+          }
+        },
+
+        _toggleDetails: function() {
+          if (!this._detailsDropdown) {
+            this._detailsDropdown = document.createElement('partner-details-dropdown');
+            this._detailsDropdown.partner = this.item;
+            Polymer.dom(this.$.details).appendChild(this._detailsDropdown);
+          }
+          this._detailsDropdown.toggle();
+        },
+
+        _computeName: function(name, shortName) {
+          return shortName ? shortName + ' / ' + name : name;
+        },
+
+        _computeType: function(csoType, partnerType) {
+          if (!csoType) {
+            return partnerType;
+          } else if (csoType === 'Community Based Organization') {
+            return 'CSO / Community Based';
+          } else {
+            return 'CSO / ' + csoType;
+          }
+        },
+
+        _computeRating: function(rating) {
+          return rating ? rating.toLowerCase() : 'no-rating';
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
