@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/iron-icons/hardware-icons.html">
 
 <dom-module id="content-toggle-button">
   <template>
@@ -24,23 +23,28 @@
         color: --content-toggle-btn-disabled-color;
       }
     </style>
-    <span on-tap="toggleContent" class$="[[disabledClass]]">
-      <iron-icon class="collapsible-content-icon" icon="hardware:keyboard-arrow-down"></iron-icon>
+    <span class$="[[disabledClass]]" on-tap="_toggleContent">
+      <iron-icon id="expandIcon" icon="{{_icon}}"></iron-icon>
       [[label]]
     </span>
   </template>
 
   <script>
     (function() {
-      // jscs:disable
       'use strict';
 
       Polymer({
         is: 'content-toggle-button',
         properties: {
-          content: {
-            // content must be an iron-collapse element, otherwise the toggle method will not work
-            type: Object
+          active: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          _icon: {
+            type: String,
+            value: 'expand-more',
+            reflectToAttribute: true
           },
           isDisabled: {
             type: Boolean,
@@ -48,33 +52,26 @@
             observer: '_updateDisabledClass'
           }
         },
-        toggleContent: function (event) {
+        _toggleContent: function() {
           if (this.isDisabled) {
             return false;
           }
-          this.content.toggle();
-          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsible-content-icon'));
-        },
-        toggleIcon: function(iconElement) {
-          if (iconElement.icon === 'hardware:keyboard-arrow-down') {
-            iconElement.icon = 'hardware:keyboard-arrow-up';
-          } else {
-            iconElement.icon = 'hardware:keyboard-arrow-down';
-          }
+          this.active = !this.active;
+          this._icon = this.active ? 'expand-less' : 'expand-more';
         },
         _updateDisabledClass: function () {
           if (this.isDisabled === true) {
             this.disabledClass = 'disabled';
-            if (this.content.opened === true) {
-              this.content.hide();
-              Polymer.dom(event.currentTarget).querySelector('.collapsible-content-icon').icon = 'hardware:keyboard-arrow-down';
+            if (this.active === true) {
+              this.active = false;
+              this._icon = 'expand-more';
             }
           } else {
             this.disabledClass = '';
           }
         }
-      });
 
+      });
     })();
   </script>
 </dom-module>
