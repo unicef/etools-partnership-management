@@ -2,7 +2,7 @@
 
 <!--<link rel="import" href="../common/etools-ajax/etools-ajax.html">-->
 
-<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
 <link rel="import" href="../../styles/pmp/page-actions-menu-style.html">
 
@@ -27,7 +27,7 @@
 
 <dom-module id="partner-details">
   <template>
-    <style include="layout-styles form-fields-styles page-actions-menu-style">
+    <style include="iron-flex iron-flex-alignment form-fields-styles page-actions-menu-style">
       :host {
         padding-bottom: 70px;
         display: block;
@@ -136,7 +136,7 @@
     </style>
 
     <form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">
-      <div class$="flex-horizontal already-in-vision [[alreadyInVisionClass]]">
+      <div class$="layout horizontal already-in-vision [[alreadyInVisionClass]]">
         <paper-checkbox id="alreadyPartner" name="already_partner" checked="{{partnerAlreadyInVision}}">Partner already exists in VISION?</paper-checkbox>
         <template is="dom-if" if="[[partnerAlreadyInVision]]">
           <span class="vendor-nr-label">
@@ -147,7 +147,7 @@
         </template>
       </div>
       <content-panel title="Partner Details" is-disabled$="[[partnerAlreadyInVision]]">
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Organization name -->
           <paper-input name="organization_name"
                        class="b-input-field"
@@ -165,14 +165,14 @@
                        disabled$="[[partnerAlreadyInVision]]"></paper-input>
 
           <!-- Alternate option -->
-          <div class="alternate-name-btn flex-bottom-aligned">
+          <div class="self-end alternate-name-btn">
             <content-toggle-button active="{{altNameActive}}" label="Alternate Name?" is-disabled$="[[partnerAlreadyInVision]]"></content-toggle-button>
           </div>
 
         </div>
         <iron-collapse id="alternateNameFields" class="row alternate-fields" opened="{{altNameActive}}">
           <!-- Alternate option fields -->
-          <div class="alternate-fields-content flex-horizontal">
+          <div class="layout horizontal alternate-fields-content">
             <span class$="org-diff-label [[orgAltNameLabelDisabledClass]]">Organization's name in a different language</span>
 
             <!-- Right to left option -->
@@ -197,7 +197,7 @@
                          disabled$="[[partnerAlreadyInVision]]"></paper-input>
           </div>
         </iron-collapse>
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Partner types -->
 
           <custom-dropdown class="n-input-field"
@@ -246,7 +246,7 @@
           <content-toggle-button label="Contact Info" active="{{contactInfoActive}}" is-disabled$="[[partnerAlreadyInVision]]"></content-toggle-button>
           <!-- Contact info fields -->
           <iron-collapse id="contactInfoFields" opened="{{contactInfoActive}}">
-            <div class="flex-horizontal">
+            <div class="layout horizontal">
               <!-- Address -->
               <paper-input name="address"
                            class="b-input-field"
@@ -264,7 +264,7 @@
                            disabled$="[[partnerAlreadyInVision]]">
               </paper-input>
             </div>
-            <div class="flex-horizontal">
+            <div class="layout horizontal">
               <!-- Telephone number -->
               <paper-input name="phone_number"
                            class="n-input-field"
@@ -289,7 +289,7 @@
       </content-panel>
 
       <content-panel title="Risk Rating & Assessments">
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Risk rating -->
           <custom-dropdown class="n-input-field"
                            label="Risk Rating"

@@ -1,10 +1,10 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="custom-radio-button">
   <template>
-    <style include="layout-styles">
+    <style include="iron-flex">
       :host {
         --paper-checkbox-label: {
           display: none;
@@ -29,8 +29,8 @@
       }
     </style>
     <div class="custom-radio-button">
-      <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customRadioBtn">[[label]]</label>
-      <div class="flex-horizontal flex-align-center-justified">
+      <label id="chLabel" class="layout horizontal center-justified" for="customRadioBtn">[[label]]</label>
+      <div class="layout horizontal center-justified">
         <paper-radio-button id="customRadioBtn" checked="{{checked}}"></paper-radio-button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
 
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
@@ -8,7 +8,7 @@
 
 <dom-module id="bank-details">
   <template>
-    <style include="layout-styles form-fields-styles">
+    <style include="iron-flex form-fields-styles">
       .bank-details-row {
         padding-bottom: 25px;
         border-bottom: 1px solid var(--divider-color);
@@ -20,7 +20,7 @@
     </style>
     <template is="dom-repeat" items="{{bankDetails}}">
       <div class="bank-details-row">
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Bank name-->
           <paper-input name="bank_name"
                        class="b-input-field"
@@ -35,7 +35,7 @@
                        label="Contact Person"
                        value="{{item.contact_person}}"></paper-input>
         </div>
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Bank address -->
           <paper-input name="bank_address"
                        class="xl-input-field"
@@ -45,7 +45,7 @@
             <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
           </paper-input>
         </div>
-        <div class="row flex-horizontal">
+        <div class="layout horizontal row">
           <!-- Bank account title -->
           <paper-input name="bank_account_title"
                        class="n-input-field"

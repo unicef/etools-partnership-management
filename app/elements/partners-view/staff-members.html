@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
 
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
@@ -16,7 +16,7 @@
 
 <dom-module id="staff-members">
   <template>
-    <style include="layout-styles form-fields-styles">
+    <style include="iron-flex iron-flex-alignment form-fields-styles">
       .staff-members-header {
         position: relative;
         line-height: 30px;
@@ -58,25 +58,25 @@
       }
 
     </style>
-    <div class="staff-members-header flex-horizontal">
-      <content-toggle-button class="flex-child" label="Staff Members" active="{{staffActive}}"></content-toggle-button>
+    <div class="layout horizontal staff-members-header">
+      <content-toggle-button class="flex" label="Staff Members" active="{{staffActive}}"></content-toggle-button>
       <paper-button on-tap="addNewStaffMember">
         <iron-icon icon="add"></iron-icon>
       </paper-button>
     </div>
     <iron-collapse id="staffMembers" opened="{{staffActive}}">
       <template is="dom-repeat" items="{{staffMembersData}}">
-        <div class="staff-member flex-horizontal">
-          <div class="remove-staff-member flex-horizontal flex-align-center-justified">
+        <div class="layout horizontal staff-member">
+          <div class="layout horizontal center-justified remove-staff-member">
             <template is="dom-if" if="[[displayRemoveBtn(index)]]">
               <!-- Remove staff-member btn -->
-              <div class="flex-horizontal flex-align-center remove-btn-container">
-                <paper-icon-button icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
+              <div class="layout horizontal remove-btn-container">
+                <paper-icon-button class="self-center" icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
               </div>
             </template>
           </div>
-          <div class="staff-member-row flex-child">
-            <div class="flex-horizontal">
+          <div class="staff-member-row flex">
+            <div class="layout horizontal">
               <!-- Position -->
               <paper-input class="n-input-field"
                            label="Position"
@@ -97,7 +97,7 @@
 
             </div>
 
-            <div class="flex-horizontal">
+            <div class="layout horizontal">
               <!-- Telaphone number -->
               <paper-input class="n-input-field"
                            label="Phone Numer"
