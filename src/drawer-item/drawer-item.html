@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="drawer-item">
+
+  <template>
+
+    <style>
+
+      :host {
+        @apply(--layout-flex);
+        
+        display: block;
+        --default-circle-size: 46px;
+      }
+
+      #circle {
+        display: inline-block;
+        height: var(--drawer-item-circle-size, --default-circle-size);
+        width: var(--drawer-item-circle-size, --default-circle-size);
+        border-radius: 50%;
+        line-height: var(--drawer-item-circle-size, --default-circle-size);
+        text-align: center;
+        background-color: var(--drawer-item-color, #000);
+      }
+
+      iron-icon {
+        width: 60%;
+        height: 60%;
+      }
+
+      #label {
+        position: absolute;
+        color: var(--light-primary-text-color);
+        margin-left: 20px;
+      }
+
+    </style>
+
+    <div id="circle">
+      <iron-icon icon="{{icon}}"></iron-icon>
+      <span id="label">{{label}}</span>
+    </div>
+
+    <div class="title"></div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'drawer-item',
+
+      properties: {
+
+      },
+
+      attached: function() {
+        this.label = this.label ? this.label.toUpperCase() : '';
+      }
+
+    });
+
+  </script>
+
+</dom-module>

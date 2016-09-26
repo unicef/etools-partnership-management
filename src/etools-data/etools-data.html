@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="etools-data">
+
+  <template>
+
+    <iron-ajax id="ajax" method="get" handle-as="json" on-response="_handleResponse"></iron-ajax>
+
+  </template>
+
+  <script>
+
+    var _data = {};
+    var _els = [];
+
+    var _setMetaData = function(data) {
+      if (!_.isEmpty(data)) {
+        _data = data;
+      }
+      _els.forEach(function(el) { el.load(_data); });
+    };
+
+    Polymer({
+
+      is: 'meta-data',
+
+      properties: {
+
+        data: {
+          type: Object,
+          notify: true,
+          value: function() {
+            return _data;
+          }
+        }
+
+      }
+
+    });
+
+    Polymer({
+
+      is: 'etools-data',
+
+      ready: function() {
+        this.load(_data);
+      },
+
+      attached: function() {
+        this.listen(this._meta, 'data-changed', '_metaDataChanged');
+        if (_els.length === 0 && _.isEmpty(_data)) {
+          //set url
+          //generate request
+        }
+        _els.push(this);
+      },
+
+      detached: function() {
+        _els.splice(_els.indexOf(this), 1);
+      },
+
+      properties: {
+
+        _meta: {
+          value: document.createElement('meta-data')
+        },
+
+        data: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        }
+
+      },
+
+      hostAttributes: {
+        hidden: true
+      },
+
+      observers: [
+        '_dataChanged(data.*)',
+      ],
+
+      load: function(data) {
+        if (!_.isEmpty(data)) {
+          this._setData(data);
+        }
+      },
+
+      addData: function(newData) {
+        this.push('data', newData);
+      },
+
+      _dataChanged: function(info) {
+        this._meta.fire('data-changed', info, {bubbles: false});
+      },
+
+      _metaDataChanged: function(e) {
+        this.fire(e.type, e.detail);
+      },
+
+      _handleResponse: function(_, req) {
+        _setMetaData(req.response);
+      },
+
+    });
+
+  </script>
+
+</dom-module>
