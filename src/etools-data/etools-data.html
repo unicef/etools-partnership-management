@@ -18,8 +18,7 @@
       if (data) {
         _data[key] = data;
       }
-      //_els.forEach(function(el) { el.loadKey(key, _data[key]); });
-      //console.log(_els);
+
       _.each(_els, function(el) {
         el.load(_data[key], key);
       });
@@ -57,8 +56,6 @@
         if (_els.length === 0 && _.isEmpty(_data)) {
           //set url
           //generate request
-
-
         }
         _els.push(this);
       },
@@ -82,7 +79,7 @@
         _setters: {
           type: Object,
           value: {
-            countries : function(data) { this._setCountries(data); }
+            countries: function(data) { this._setCountries(data); }
           }
         }
 
