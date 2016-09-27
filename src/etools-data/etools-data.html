@@ -56,7 +56,10 @@
         this.listen(this._meta, 'countries-changed', '_metaDataChanged');
         if (_els.length === 0 && _.isEmpty(_data)) {
           //set url
+          this.$.ajax.url = '../../data/countries.json';
           //generate request
+          this.$.ajax.params = {"id" : "countries"};
+          this.$.ajax.generateRequest();
 
 
         }
@@ -73,6 +76,12 @@
           value: document.createElement('meta-data')
         },
 
+        partners: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        },
+
         countries: {
           type: Array,
           readOnly: true,
@@ -82,6 +91,7 @@
         _setters: {
           type: Object,
           value: {
+            partners  : function(data) { this._setPartners(data); },
             countries : function(data) { this._setCountries(data); }
           }
         }
@@ -93,7 +103,8 @@
       },
 
       observers: [
-        '_dataChanged(countries.*)'
+        '_dataChanged(partners.*)',
+        '_dataChanged(countries.*)',
       ],
 
       load: function(data, key) {
