@@ -57,7 +57,7 @@
           //set url
           this.$.ajax.url = '../../data/countries.json';
           //generate request
-          this.$.ajax.params = {"id" : "countries"};
+          this.$.ajax.params = {'id': 'countries'};
           this.$.ajax.generateRequest();
         }
         _els.push(this);
@@ -88,8 +88,8 @@
         _setters: {
           type: Object,
           value: {
-            partners  : function(data) { this._setPartners(data); },
-            countries : function(data) { this._setCountries(data); }
+            partners: function(data) { this._setPartners(data); },
+            countries: function(data) { this._setCountries(data); }
           }
         }
 
