@@ -10,7 +10,15 @@
 
     </style>
 
+    <etools-data id="date" countries="{{countries}}"></etools-data>
+
     <h1>Section 1 Page</h1>
+
+    <button on-tap="add">Add</button>
+
+    <template is="dom-repeat" items="[[countries]]">
+      <p>[[item.name]]</p>
+    </template>
 
   </template>
 
@@ -22,6 +30,10 @@
 
       properties: {
 
+      },
+
+      add: function() {
+        this.$.date.add({name: 'HELLO THERE'});
       }
 
     });

@@ -10,7 +10,13 @@
 
     </style>
 
+    <etools-data countries="{{countries}}"></etools-data>
+
     <h1>Section 2 Page</h1>
+
+    <template is="dom-repeat" items="[[countries]]">
+      <p>[[item.name]]</p>
+    </template>
 
   </template>
 
