@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
 
 <dom-module id="etools-data">
@@ -6,7 +7,7 @@
   <template>
 
     <iron-ajax id="ajax" method="get" handle-as="json" on-response="_handleResponse"></iron-ajax>
-
+    <!--<etools-ajax id="ajax" on-response="_handleResponse"></etools-ajax>-->
   </template>
 
   <script>
@@ -26,8 +27,10 @@
     };
 
     Polymer({
-
       is: 'etools-data',
+
+      properties: appDataConfiguration.properties,
+      observers: appDataConfiguration.observers,
 
       ready: function() {
         this.load(_data);
@@ -35,7 +38,8 @@
 
       attached: function() {
         if (_els.length === 0 && _.isEmpty(_data)) {
-          //set url
+          // get data from server
+          // set url
           this.$.ajax.url = '../../data/countries.json';
           //generate request
           this.$.ajax.params = {'id': 'countries'};
@@ -48,28 +52,9 @@
         _els.splice(_els.indexOf(this), 1);
       },
 
-      properties: {
-
-        partners: {
-          type: Array,
-          notify: true
-        },
-
-        countries: {
-          type: Array,
-          notify: true
-        }
-
-      },
-
       hostAttributes: {
         hidden: true
       },
-
-      observers: [
-        '_dataChanged(partners.*)',
-        '_dataChanged(countries.*)',
-      ],
 
       load: function(data, property) {
         if (!_.isEmpty(data)) {
@@ -83,15 +68,9 @@
         }
       },
 
-      add: function(newData) {
-        this.push('countries', newData);
-        //this.set('countries.0.name', 'New Name');
-      },
-
       _dataChanged: function(info) {
         var propertyName = info.path.split('.', 1)[0];
         var eventName = propertyName + '-changed';
-
         if (_i === 0 && !info.path.endsWith(propertyName)) {
           _.each(_els, function(el) {
             if (el !== this) {
@@ -104,7 +83,9 @@
           _i = 0;
         }
       },
-
+      _syncLocalDataWithServerData: function() {
+        // TODO: implement sync from server on load: appDataConfiguration.syncPropertiesOnLoad
+      },
       _handleResponse: function(_, req) {
         var url = req.xhr.responseURL;
         url = url.substring(url.indexOf('?id=') + 4);

@@ -1,0 +1,60 @@
+<!--
+App global configuration
+-->
+<script>
+  'use strict';
+
+  // lokijs config
+  var lokijsConfig = {
+    dbName: 'appLokiDb',
+    idbAdapterName: 'appLokiIdbAdapter'
+  };
+
+  /**
+   * App data configuration, this can e defined differently for any app.
+   * Do not use this object in polymer elements as behaviour.
+   */
+  var appDataConfiguration = {
+    properties: {
+      partners: {
+        notify: true
+      },
+      countries: {
+        type: Array,
+        notify: true
+      }
+    },
+    observers: [
+      '_dataChanged(countries.*)',
+    ],
+    syncPropertiesOnLoad: [
+      // get data from server for this properties when page loads
+//      {
+//        properties: ['partners', 'countries'],
+//        syncEndpoint: 'syncData'
+//      },
+//      {
+//        properties: ['partners'],
+//        syncEndpoint: 'partners'
+//      },
+      {
+        properties: ['countries'],
+        syncEndpoint: 'countries'
+      }
+    ]
+  };
+
+  // app endpoints
+  var endpoints = {
+    syncData: {
+      url: '../../data/server-data.json'
+    },
+    partners: {
+      url: '../../data/partners_small.json'
+    },
+    countries: {
+      url: '../../data/countries.json'
+    }
+
+  };
+</script>

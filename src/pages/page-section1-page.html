@@ -37,11 +37,13 @@
       is: 'page-section1-page',
 
       properties: {
-
+        countries: {
+          notify: true
+        }
       },
 
       add: function() {
-        this.$.data.add({name: 'HELLO THERE'});
+        this.push('countries', {name: 'HELLO THERE'});
       }
 
     });
