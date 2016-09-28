@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
 
 <dom-module id="etools-data">
@@ -7,7 +6,7 @@
   <template>
 
     <iron-ajax id="ajax" method="get" handle-as="json" on-response="_handleResponse"></iron-ajax>
-    <!--<etools-ajax id="ajax" on-response="_handleResponse"></etools-ajax>-->
+
   </template>
 
   <script>
@@ -16,6 +15,9 @@
     var _els = [];
     var _i = 0;
 
+    // When an ajax response is recieved (or when data loaded from lokijs?)
+    // sets global _data.key, and loads the new data for each instance
+    // of etools-data
     var _setMetaData = function(key, data) {
       if (data) {
         _data[key] = data;
@@ -27,28 +29,36 @@
     };
 
     Polymer({
+
       is: 'etools-data',
 
       properties: appDataConfiguration.properties,
       observers: appDataConfiguration.observers,
 
+      // Loads all data currently in global _data
       ready: function() {
         this.load(_data);
       },
 
       attached: function() {
+        // If there are no etools-data instaces attached, and no global
+        // _data, make ajax requests (or loki requests?) for first-stamp data.
+        // First stamp data should be configurable in some way
         if (_els.length === 0 && _.isEmpty(_data)) {
-          // get data from server
-          // set url
           this.$.ajax.url = '../../data/countries.json';
-          //generate request
+          // Since multiple requests will be made here, all with the same
+          // response handler, I needed some way to match a response to it's
+          // data property. This could be a function of etools-ajax.
           this.$.ajax.params = {'id': 'countries'};
           this.$.ajax.generateRequest();
         }
+        // Add this etools-data instance
         _els.push(this);
       },
 
       detached: function() {
+        // Remove this etools-data instance when detached
+        // from the document to prevent redundant loading
         _els.splice(_els.indexOf(this), 1);
       },
 
@@ -56,6 +66,8 @@
         hidden: true
       },
 
+      // Loads the given property if provided, otherwise loads
+      // all properties
       load: function(data, property) {
         if (!_.isEmpty(data)) {
           if (property) {
@@ -68,9 +80,21 @@
         }
       },
 
+      // The logic here is sound but a little rough around
+      // the edges. Basically, changing the data on one element
+      // changes it for every other element, BUT other elements aren't
+      // NOTIFIED of the change until the change event is fired on them.
+      // References to every stamped instance of etools-data are stored in _els.
+      // I loop through these and fire the event on each one.
       _dataChanged: function(info) {
         var propertyName = info.path.split('.', 1)[0];
         var eventName = propertyName + '-changed';
+
+        // _i ensures when other elements are notified of the change,
+        // they don't start their own loop and end up firing an exponential
+        // amount of events.
+        // Checking the path here ensures calls to the load function
+        // don't trigger this loop.
         if (_i === 0 && !info.path.endsWith(propertyName)) {
           _.each(_els, function(el) {
             if (el !== this) {
@@ -83,9 +107,14 @@
           _i = 0;
         }
       },
+
       _syncLocalDataWithServerData: function() {
         // TODO: implement sync from server on load: appDataConfiguration.syncPropertiesOnLoad
       },
+
+      // Extracts the property to load from the
+      // params of the response, and then calls
+      // setMetaData
       _handleResponse: function(_, req) {
         var url = req.xhr.responseURL;
         url = url.substring(url.indexOf('?id=') + 4);
