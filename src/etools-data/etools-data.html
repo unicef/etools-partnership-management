@@ -13,6 +13,7 @@
 
     var _data = {};
     var _els = [];
+    var _i = 0;
 
     var _setMetaData = function(key, data) {
       if (data) {
@@ -20,27 +21,9 @@
       }
 
       _.each(_els, function(el) {
-        el.load(_data[key], key);
+        el.load(_data, key);
       });
     };
-
-    Polymer({
-
-      is: 'meta-data',
-
-      properties: {
-
-        data: {
-          type: Object,
-          notify: true,
-          value: function() {
-            return _data;
-          }
-        }
-
-      }
-
-    });
 
     Polymer({
 
@@ -51,8 +34,6 @@
       },
 
       attached: function() {
-        //this.setListeners();
-        this.listen(this._meta, 'countries-changed', '_metaDataChanged');
         if (_els.length === 0 && _.isEmpty(_data)) {
           //set url
           this.$.ajax.url = '../../data/countries.json';
@@ -69,28 +50,14 @@
 
       properties: {
 
-        _meta: {
-          value: document.createElement('meta-data')
-        },
-
         partners: {
           type: Array,
-          readOnly: true,
           notify: true
         },
 
         countries: {
           type: Array,
-          readOnly: true,
           notify: true
-        },
-
-        _setters: {
-          type: Object,
-          value: {
-            partners: function(data) { this._setPartners(data); },
-            countries: function(data) { this._setCountries(data); }
-          }
         }
 
       },
@@ -104,13 +71,13 @@
         '_dataChanged(countries.*)',
       ],
 
-      load: function(data, key) {
+      load: function(data, property) {
         if (!_.isEmpty(data)) {
-          if (key) {
-            this._setters[key].bind(this)(data);
+          if (property) {
+            this.set(property, data[property]);
           } else {
-            _.each(this._setters, function(setter, key) {
-              setter.bind(this)(data[key]);
+            Object.keys(this.properties).forEach(function(property) {
+              this.set(property, data[property]);
             }.bind(this));
           }
         }
@@ -118,19 +85,27 @@
 
       add: function(newData) {
         this.push('countries', newData);
+        //this.set('countries.0.name', 'New Name');
       },
 
       _dataChanged: function(info) {
-        var eventName = info.path.split('.', 1)[0] + '-changed';
-        this._meta.fire(eventName, info, {bubbles: false});
-      },
+        var propertyName = info.path.split('.', 1)[0];
+        var eventName = propertyName + '-changed';
 
-      _metaDataChanged: function(e) {
-        this.fire(e.type, e.detail);
+        if (_i === 0 && !info.path.endsWith(propertyName)) {
+          _.each(_els, function(el) {
+            if (el !== this) {
+              el.fire(eventName, info);
+            }
+            _i++;
+          }.bind(this));
+        }
+        if (_i === _els.length) {
+          _i = 0;
+        }
       },
 
       _handleResponse: function(_, req) {
-        //use response header to set data
         var url = req.xhr.responseURL;
         url = url.substring(url.indexOf('?id=') + 4);
         _setMetaData(url, req.response);
