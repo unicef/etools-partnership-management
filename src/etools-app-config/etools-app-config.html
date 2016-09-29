@@ -5,7 +5,7 @@ App global configuration
   'use strict';
 
   // lokijs config
-  var lokijsConfig = {
+  var lokijsConfiguration = {
     dbName: 'appLokiDb',
     idbAdapterName: 'appLokiIdbAdapter'
   };
@@ -15,6 +15,7 @@ App global configuration
    * Do not use this object in polymer elements as behaviour.
    */
   var appDataConfiguration = {
+
     properties: {
       partners: {
         notify: true
@@ -24,36 +25,23 @@ App global configuration
         notify: true
       }
     },
+
     observers: [
       '_dataChanged(countries.*)',
     ],
-    syncPropertiesOnLoad: [
-      // get data from server for this properties when page loads
-//      {
-//        properties: ['partners', 'countries'],
-//        syncEndpoint: 'syncData'
-//      },
-//      {
-//        properties: ['partners'],
-//        syncEndpoint: 'partners'
-//      },
-      {
-        properties: ['countries'],
-        syncEndpoint: 'countries'
-      }
-    ]
+
+    // get data from server for this properties when page loads
+    syncPropertiesOnLoad: {
+      properties: ['partners', 'countries'],
+      syncEndpoint: 'syncData',
+      params: {}
+    }
   };
 
   // app endpoints
   var endpoints = {
     syncData: {
       url: '../../data/server-data.json'
-    },
-    partners: {
-      url: '../../data/partners_small.json'
-    },
-    countries: {
-      url: '../../data/countries.json'
     }
 
   };

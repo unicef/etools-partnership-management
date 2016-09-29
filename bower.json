@@ -27,7 +27,8 @@
     "etools-ajax": "^1.0.0",
     "paper-styles": "^1.1.4",
     "paper-dropdown-menu": "^1.4.1",
-    "etools-dropdown": "^1.0.0"
+    "etools-dropdown": "^1.0.0",
+    "etools-lokijs-storage": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

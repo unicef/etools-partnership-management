@@ -1,11 +1,18 @@
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../bower_components/etools-lokijs-storage/etools-lokijs-storage.html">
+
 
 <dom-module id="etools-data">
 
   <template>
 
-    <iron-ajax id="ajax" method="get" handle-as="json" on-response="_handleResponse"></iron-ajax>
+    <etools-ajax id="ajax" url="[[url]]" on-success="_handleResponse" logs="true" debounce-time="0"></etools-ajax>
+
+    <etools-lokijs-storage id="loki"
+                           db-name="[[lokiDbName]]"
+                           idb-adapter-name="[[lokiIdbAdapterName]]"
+                           on-loaded="_onLokiStorageLoaded"></etools-lokijs-storage>
 
   </template>
 
@@ -37,6 +44,11 @@
 
       // Loads all data currently in global _data
       ready: function() {
+        // init loki element
+        this.lokiDbName = lokijsConfiguration.dbName;
+        this.lokiIdbAdapterName = lokijsConfiguration.idbAdapterName;
+
+        // load global data
         this.load(_data);
       },
 
@@ -45,12 +57,7 @@
         // _data, make ajax requests (or loki requests?) for first-stamp data.
         // First stamp data should be configurable in some way
         if (_els.length === 0 && _.isEmpty(_data)) {
-          this.$.ajax.url = '../../data/countries.json';
-          // Since multiple requests will be made here, all with the same
-          // response handler, I needed some way to match a response to it's
-          // data property. This could be a function of etools-ajax.
-          this.$.ajax.params = {'id': 'countries'};
-          this.$.ajax.generateRequest();
+          this._triggerSyncLocalDataWithServerData();
         }
         // Add this etools-data instance
         _els.push(this);
@@ -108,18 +115,54 @@
         }
       },
 
-      _syncLocalDataWithServerData: function() {
-        // TODO: implement sync from server on load: appDataConfiguration.syncPropertiesOnLoad
+      _triggerSyncLocalDataWithServerData: function() {
+        /**
+         * appDataConfiguration.syncPropertiesOnLoad will determine data to load when first etools-data element is stamped.
+         * No multiple requests here, the data will be brought with a single request. If we use multiple requests,
+         * the handle response will not work as expected as etools-ajax properties can change when each request is triggered
+         */
+
+        if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad)) {
+          var params = appDataConfiguration.syncPropertiesOnLoad.params;
+          if (typeof params === 'undefined') {
+            params = {};
+          }
+          this.$.ajax.params = params;
+          this.url = endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url;
+        }
+      },
+
+      _validSyncPropertiesOnLoadObj: function(obj) {
+        if(!_.isEmpty(obj) && Array.isArray(obj.properties) && !_.isEmpty(obj.syncEndpoint) && typeof obj.syncEndpoint === 'string') {
+          return true;
+        }
+        return false;
       },
 
       // Extracts the property to load from the
       // params of the response, and then calls
       // setMetaData
-      _handleResponse: function(_, req) {
-        var url = req.xhr.responseURL;
-        url = url.substring(url.indexOf('?id=') + 4);
-        _setMetaData(url, req.response);
+      _handleResponse: function(response) {
+        if (!_.isEmpty(response.detail)) {
+
+          if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad) &&
+              endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url === this.url) {
+            appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
+
+              if (!_.isEmpty(response.detail[property])) {
+                _setMetaData(property, response.detail[property]);
+              }
+
+            });
+          }
+
+        }
       },
+
+      // action triggered after loki db was loaded
+      _onLokiStorageLoaded: function() {
+        console.log('loki is loaded...', this.$.loki.getLokiDatabaseInstance(), this.$.loki.getCollectionsList());
+      }
 
     });
 
