@@ -35,12 +35,30 @@
       });
     };
 
+    var _mergeObjects = function(firstObject, secondObject) {
+      for (var attrname in secondObject) {
+        firstObject[attrname] = secondObject[attrname];
+      }
+      return firstObject;
+    }
+
     Polymer({
 
       is: 'etools-data',
 
-      properties: appDataConfiguration.properties,
-      observers: appDataConfiguration.observers,
+      properties: _mergeObjects(appDataConfiguration.properties, {
+        loadedFromLokiTimestamp: {
+          type: Number,
+          value: 0
+        },
+        loadedFromLokiTimestamp: {
+          type: Number,
+          value: 0
+        }
+      }),
+      observers: appDataConfiguration.observers.concat([
+          '_resolveDataLoading(loadedFromLokiTimestamp, loadedFromServerTimestamp)'
+      ]),
 
       // Loads all data currently in global _data
       ready: function() {
@@ -56,7 +74,7 @@
         // If there are no etools-data instaces attached, and no global
         // _data, make ajax requests (or loki requests?) for first-stamp data.
         // First stamp data should be configurable in some way
-        if (_els.length === 0 && _.isEmpty(_data)) {
+        if (this._emptyData()) {
           this._triggerSyncLocalDataWithServerData();
         }
         // Add this etools-data instance
@@ -115,6 +133,10 @@
         }
       },
 
+      _emptyData: function () {
+          return _els.length === 0 && _.isEmpty(_data);
+      },
+
       _triggerSyncLocalDataWithServerData: function() {
         /**
          * appDataConfiguration.syncPropertiesOnLoad will determine data to load when first etools-data element is stamped.
@@ -123,6 +145,7 @@
          */
 
         if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad)) {
+          this.syncServerDataInProgress = true;
           var params = appDataConfiguration.syncPropertiesOnLoad.params;
           if (typeof params === 'undefined') {
             params = {};
@@ -139,29 +162,76 @@
         return false;
       },
 
+      _isSyncDataFromServerRequest: function() {
+        return this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad) &&
+        endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url === this.url
+      },
+
       // Extracts the property to load from the
       // params of the response, and then calls
       // setMetaData
       _handleResponse: function(response) {
         if (!_.isEmpty(response.detail)) {
-
-          if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad) &&
-              endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url === this.url) {
+          if (this._isSyncDataFromServerRequest()) {
+            var lokiEl = this.$.loki;
             appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
-
               if (!_.isEmpty(response.detail[property])) {
                 _setMetaData(property, response.detail[property]);
+                // if loki database is loaded
+                if (lokiEl.loaded) {
+                  this._refreshCollectionData(property, response.detail[property]);
+                } else {
+
+                }
               }
-
             });
+            if (lokiEl.loaded) {
+              // (do not wait for autosave) trigger save database after collection were refreshed
+              lokiEl.saveDatabase();
+            }
+            this.syncServerDataInProgress = false; // sync from server ended
+            this.loadedFromServerTimestamp = Date.now();
+          } else {
+            // not sync from server request handler...
           }
-
         }
       },
 
       // action triggered after loki db was loaded
       _onLokiStorageLoaded: function() {
-        console.log('loki is loaded...', this.$.loki.getLokiDatabaseInstance(), this.$.loki.getCollectionsList());
+        console.log('loki loaded...');
+        if (this.syncServerDataInProgress || this._emptyData()) {
+          /**
+           * If data sync from server to local is not finished or sync was not triggered or no data is found
+           * then get local data from loki database collections
+           */
+          console.log('get data from loki...');
+          this._getCollectionsData();
+          this.loadedFromLokiTimestamp = Date.now();
+        }
+      },
+
+      _getCollectionsData: function() {
+        var lokiEl = this.$.loki;
+        Object.keys(appDataConfiguration.properties).forEach(function(property) {
+          var propertyCollection = lokiEl.getCollection(property);
+          if (propertyCollection !== null) {
+            _setMetaData(property, propertyCollection.data);
+          }
+        });
+      },
+
+      _refreshCollectionData: function(collectionName, data) {
+        var lokiEl = this.$.loki;
+        lokiEl.removeCollection(collectionName);
+        var uniqueProperties = ['id']; // unique properties can be defined in app config or other way?
+        var indices = ['id']; // indices properties can be defined in app config or other way?
+        var collection = lokiEl.addCollection(collectionName, uniqueProperties, indices);
+        collection.insert(data);
+      },
+
+      _resolveDataLoading: function(loadedFromLokiTimestamp, loadedFromServerTimestamp) {
+        console.log('resolve data loading...', loadedFromLokiTimestamp, loadedFromServerTimestamp);
       }
 
     });
