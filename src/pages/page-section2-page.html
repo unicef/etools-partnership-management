@@ -13,6 +13,7 @@
     <etools-data id="data" countries="{{countries}}"></etools-data>
 
     <h1>Section 2 Page</h1>
+    <button on-tap="toggleDrawer">Open drawer item 1</button>
 
     <template is="dom-repeat" items="[[countries]]">
       <p>[[item.name]]</p>
@@ -29,6 +30,11 @@
       properties: {
 
       },
+
+      toggleDrawer: function() {
+        this.fire('toggle-drawer-item', {name: 'section1', open: true});
+        this.fire('toast', {text: 'Opened The Section 1 Drawer Item!'});
+      }
 
     });
 

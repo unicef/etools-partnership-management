@@ -28,7 +28,8 @@
     "paper-styles": "^1.1.4",
     "paper-dropdown-menu": "^1.4.1",
     "etools-dropdown": "^1.0.0",
-    "etools-dexiejs": "^1.0.0"
+    "etools-dexiejs": "^1.0.0",
+    "paper-toast": "^1.3.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
