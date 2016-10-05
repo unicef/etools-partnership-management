@@ -12,23 +12,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 
-<link rel="import" href="lodash/lodash.html">
+<link rel="import" href="etools-data/etools-data.html">
+<link rel="import" href="drawer-item/drawer-item.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
-<link rel="import" href="etools-data/etools-data.html">
-<link rel="import" href="drawer-item/drawer-item.html">
+<link rel="import" href="lodash/lodash.html">
 
 <dom-module id="app-shell">
 
@@ -48,12 +50,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-icon-button-ink-color: var(--icon-color);
       }
 
-      #logo {
-        width: 60%;
-        height: 60%;
+      app-toolbar {
+        height: 55px;
       }
 
       app-drawer {
+        --app-drawer-width: 190px;
         --app-drawer-content-container: {
             background-color: var(--secondary-background-color);
         };
@@ -63,53 +65,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--primary-background-color);
       }
 
+      #logo {
+        width: 75%;
+        height: 75%;
+      }
+
+      app-drawer .header::after {
+        position: absolute;
+        right: 0px;
+        bottom: -5px;
+        left: 0px;
+        width: 100%;
+        height: 5px;
+        content: "";
+        opacity: 1;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+      }
+
+      :host([narrow]) app-drawer .header::after {
+        opacity: 0;
+      }
+
       app-drawer .content {
         height: 100%;
-        padding-top: 40px;
-        border-top: 2px solid var(--light-divider-color);
       }
 
-      drawer-item[label="section1"] {
-        --drawer-item-color: var(--etools-palette-blue);
-      }
-
-      drawer-item[label="section2"] {
-        --drawer-item-color: var(--etools-palette-light-green);
-      }
-
-      drawer-item[label="section3"] {
-        --drawer-item-color: var(--etools-palette-light-blue);
-      }
-
-      .drawer-list a {
+      #app-title {
         @apply(--layout-horizontal);
         @apply(--layout-center);
 
-        padding: 0 16px;
-        margin-bottom: 13px;
-        text-decoration: none;
-        font-weight: bold;
+        padding: 0 30px 0 20px;
+        height: 55px;
         color: var(--light-primary-text-color);
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-      }
-      .drawer-list a.iron-selected {
-        background-color: var(--light-divider-color);
-      }
-      .drawer-list a:focus {
-        background-color: var(--light-divider-color);
+        background-color: var(--partnership-management-color);
+        border-bottom: 2px solid var(--secondary-background-color);
       }
 
-      @media (min-width: 850px) {
+      #app-title span, #app-title iron-icon {
+        padding-top: 8px;
+      }
 
-        app-drawer .content {
-          border-right: 2px solid var(--light-divider-color);
-        }
+      #app-title span {
+        line-height: 1.2;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
 
-        iron-pages {
-          padding: 48px 62px;
-        }
+      #app-title iron-icon {
+        --iron-icon-width: 60%;
+        --iron-icon-height: 60%;
+        margin-right: 10px;
+      }
 
+      :host(:not([narrow])) iron-pages {
+        padding: 48px 62px;
       }
 
     </style>
@@ -124,35 +133,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout responsive-width="850px" fullbleed>
+    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer transition-duration="350" swipe-open>
+      <app-drawer id="drawer" transition-duration="350">
+
         <app-toolbar class="header">
           <img id="logo" src="../images/etools_logo.svg" alt="etools logo">
         </app-toolbar>
+
         <div class="content">
-          <iron-selector selected="[[routeData.section]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="section1" href="/section1/page">
-              <drawer-item label="section1" icon="social:group"></drawer-item>
-            </a>
-            <a name="section2" href="/section2/page">
-              <drawer-item label="section2" icon="social:group"></drawer-item>
-            </a>
-            <a name="section3" href="/section3/page">
-              <drawer-item label="section3" icon="social:group"></drawer-item>
-            </a>
+
+          <a href="/section1/page">
+            <div id="app-title">
+              <iron-icon class="light" icon="social:group"></iron-icon>
+              <span>partnership management</span>
+            </div>
+          </a>
+
+          <iron-selector selected="[[routeData.section]]" attr-for-selected="name" role="navigation">
+
+            <drawer-item name="section1" href="/section1/page">
+              <div class="section" item>an example item</div>
+              <div class="section" dash>
+                <a class="row" href="/section2/page">
+                  <iron-icon icon="dashboard"></iron-icon>
+                  <span>overview</span>
+                </a>
+              </div>
+              <div class="section" details>
+                <a class="row" href="/section3/page">
+                  <iron-icon icon="info"></iron-icon>
+                  <span>details</span>
+                </a>
+              </div>
+            </drawer-item>
+
+            <drawer-item name="section2" href="/section2/page"></drawer-item>
+
+            <drawer-item name="section3" href="/section3/page"></drawer-item>
+
           </iron-selector>
+
         </div>
+
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout has-scrolling-region>
+      <app-header-layout id="main" has-scrolling-region>
 
-        <app-header fixed effects="waterfall">
+        <app-header fixed shadow>
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>App Title</div>
           </app-toolbar>
         </app-header>
 
@@ -184,6 +216,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged'
+        },
+
+        narrow: {
+          type: Boolean,
+          reflectToAttribute: true
+        },
+
+        _toast: {
+          type: Object,
+          value: null
+        },
+
+        _toastQueue: {
+          type: Array,
+          value: function() { return []; }
         }
 
       },
@@ -192,10 +239,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routeViewChanged(routeData)'
       ],
 
+      listeners: {
+        'toast': 'queueToast',
+        'toggle-drawer-item': 'toggleDrawerItem',
+      },
+
       attached: function() {
         if (this.route.path === '/') {
           this.set('route.path', '/section1/page');
         }
+      },
+
+      queueToast: function(e, detail) {
+        if (!this._toast) {
+          this._toast = document.createElement('paper-toast');
+          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast')
+          Polymer.dom(this.$.layout).appendChild(this._toast);
+          Polymer.dom.flush();
+        }
+        if (!this._toastQueue.length) {
+          this.push('_toastQueue', detail);
+          this._toast.show(detail);
+        } else {
+          this.push('_toastQueue', detail);
+        }
+      },
+
+      dequeueToast: function(e, detail) {
+        this.shift('_toastQueue');
+        if (this._toastQueue.length) {
+          this._toast.show(this._toastQueue[0]);
+        }
+      },
+
+      toggleDrawerItem: function(e, detail) {
+        this.$$('drawer-item[name=' + detail.name + ']').opened = detail.open;
       },
 
       _routeViewChanged: function(data) {

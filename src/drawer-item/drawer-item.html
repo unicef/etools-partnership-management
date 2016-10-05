@@ -1,5 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
 <dom-module id="drawer-item">
 
   <template>
@@ -7,41 +11,76 @@
     <style>
 
       :host {
-        @apply(--layout-flex);
-        
         display: block;
-        --default-circle-size: 46px;
+        font-size: 12px;
+        background-color: var(--light-divider-color);
+        border-bottom: 1px solid var(--secondary-background-color);
       }
 
-      #circle {
-        display: inline-block;
-        height: var(--drawer-item-circle-size, --default-circle-size);
-        width: var(--drawer-item-circle-size, --default-circle-size);
-        border-radius: 50%;
-        line-height: var(--drawer-item-circle-size, --default-circle-size);
-        text-align: center;
-        background-color: var(--drawer-item-color, #000);
+      a {
+        text-decoration: none;
       }
 
-      iron-icon {
-        width: 60%;
-        height: 60%;
-      }
-
-      #label {
-        position: absolute;
+      div#name {
+        padding: 0 20px;
+        line-height: 46px;
+        text-transform: uppercase;
         color: var(--light-primary-text-color);
-        margin-left: 20px;
+      }
+
+      .content-wrapper {
+        padding: 10px 0;
+        text-transform: capitalize;
+        color: var(--dark-secondary-text-color);
+      }
+
+      .content-wrapper ::content .section {
+        padding: 0 20px;
+        margin-bottom: 12px;
+      }
+
+      .content-wrapper ::content .row {
+      }
+
+      .content-wrapper ::content iron-icon {
+        position: relative;
+        bottom: 1px;
+        width: 18px;
+        height: 18px;
+        margin-right: 3px;
+      }
+
+      .content-wrapper ::content div[dash] {
+        font-weight: 500;
+        color: var(--accent-color);
+      }
+
+      .content-wrapper ::content div[details] {
+        font-weight: 500;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background-color: #ffffff;
+      }
+
+      .content-wrapper ::content div[details] > a {
+        color: var(--dark-secondary-text-color);
+      }
+
+      iron-collapse {
+        background-color: var(--primary-background-color);
       }
 
     </style>
 
-    <div id="circle">
-      <iron-icon icon="{{icon}}"></iron-icon>
-      <span id="label">{{label}}</span>
-    </div>
+    <a href="{{href}}">
+      <div id="name">{{name}}</div>
+    </a>
 
-    <div class="title"></div>
+    <iron-collapse id="collapse" opened="{{opened}}">
+      <div class="content-wrapper">
+        <content></content>
+      </div>
+    </iron-collapse>
 
   </template>
 
@@ -49,15 +88,7 @@
 
     Polymer({
 
-      is: 'drawer-item',
-
-      properties: {
-
-      },
-
-      attached: function() {
-        this.label = this.label ? this.label.toUpperCase() : '';
-      }
+      is: 'drawer-item'
 
     });
 
