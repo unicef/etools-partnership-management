@@ -4,10 +4,9 @@ App global configuration
 <script>
   'use strict';
 
-  // lokijs config
-  var lokijsConfiguration = {
-    dbName: 'appLokiDb',
-    idbAdapterName: 'appLokiIdbAdapter'
+  // dexiejs config
+  var dexieConfiguration = {
+    dbName: 'etoolsPartnershipManagement'
   };
 
   /**
@@ -41,7 +40,7 @@ App global configuration
   // app endpoints
   var endpoints = {
     syncData: {
-      url: '../../data/server-data.json'
+      url: 'http://silex-test-app.local/big-json-test-data/221629'
     }
 
   };

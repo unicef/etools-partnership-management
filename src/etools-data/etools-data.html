@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../bower_components/etools-lokijs-storage/etools-lokijs-storage.html">
-
+<link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
 
 <dom-module id="etools-data">
 
@@ -9,10 +8,7 @@
 
     <etools-ajax id="ajax" url="[[url]]" on-success="_handleResponse" logs="true" debounce-time="0"></etools-ajax>
 
-    <etools-lokijs-storage id="loki"
-                           db-name="[[lokiDbName]]"
-                           idb-adapter-name="[[lokiIdbAdapterName]]"
-                           on-loaded="_onLokiStorageLoaded"></etools-lokijs-storage>
+    <etools-dexiejs id="appLocalDb" db-name="[[dexieDbName]]" on-db-ready="_localDbReady"></etools-dexiejs>
 
   </template>
 
@@ -35,36 +31,45 @@
       });
     };
 
-    var _mergeObjects = function(firstObject, secondObject) {
-      for (var attrname in secondObject) {
-        firstObject[attrname] = secondObject[attrname];
+    var _extendEtoolsDataProperties = function(newProperties) {
+      if (appDataConfiguration && typeof appDataConfiguration.properties !== 'object') {
+        appDataConfiguration.properties = {};
       }
-      return firstObject;
-    }
+      for (var attrname in newProperties) {
+        appDataConfiguration.properties[attrname] = newProperties[attrname];
+      }
+      return appDataConfiguration.properties;
+    };
+
+    var _extendEtoolsDataObservers = function(newObservers) {
+      if (appDataConfiguration && !Array.isArray(appDataConfiguration.observers)) {
+        appDataConfiguration.observers = [];
+      }
+      return appDataConfiguration.observers.concat(newObservers);
+    };
 
     Polymer({
 
       is: 'etools-data',
 
-      properties: _mergeObjects(appDataConfiguration.properties, {
-        loadedFromLokiTimestamp: {
+      properties: _extendEtoolsDataProperties({
+        loadedFromServerTimestamp: {
           type: Number,
           value: 0
         },
-        loadedFromLokiTimestamp: {
+        loadedFromDexieTimestamp: {
           type: Number,
           value: 0
         }
       }),
-      observers: appDataConfiguration.observers.concat([
-          '_resolveDataLoading(loadedFromLokiTimestamp, loadedFromServerTimestamp)'
+      observers: _extendEtoolsDataObservers([
+          '_resolveDataLoading(loadedFromDexieTimestamp, loadedFromServerTimestamp)',
       ]),
 
       // Loads all data currently in global _data
       ready: function() {
-        // init loki element
-        this.lokiDbName = lokijsConfiguration.dbName;
-        this.lokiIdbAdapterName = lokijsConfiguration.idbAdapterName;
+        // init dexie element
+        this.dexieDbName = dexieConfiguration.dbName;
 
         // load global data
         this.load(_data);
@@ -77,6 +82,7 @@
         if (this._emptyData()) {
           this._triggerSyncLocalDataWithServerData();
         }
+
         // Add this etools-data instance
         _els.push(this);
       },
@@ -173,65 +179,65 @@
       _handleResponse: function(response) {
         if (!_.isEmpty(response.detail)) {
           if (this._isSyncDataFromServerRequest()) {
-            var lokiEl = this.$.loki;
+
+            // test
+            this._refreshCollectionData('hugeTestData', response.detail['big_test_data']);
+
             appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
               if (!_.isEmpty(response.detail[property])) {
                 _setMetaData(property, response.detail[property]);
-                // if loki database is loaded
-                if (lokiEl.loaded) {
-                  this._refreshCollectionData(property, response.detail[property]);
-                } else {
-                  // TODO: watch for loki loaded event and refresh collections data with this data
-                }
+                // add data to local browser db
+                // this._refreshCollectionData(property, response.detail[property])
               }
             });
-            if (lokiEl.loaded) {
-              // (do not wait for autosave) trigger save database after collection were refreshed
-              lokiEl.saveDatabase();
-            }
+
             this.syncServerDataInProgress = false; // sync from server ended
             this.loadedFromServerTimestamp = Date.now();
           } else {
             // not sync from server request handler...
+
           }
         }
       },
 
-      // action triggered after loki db was loaded
-      _onLokiStorageLoaded: function() {
-        console.log('loki loaded...');
-        if (this.syncServerDataInProgress || this._emptyData()) {
-          /**
-           * If data sync from server to local is not finished or sync was not triggered or no data is found
-           * then get local data from loki database collections
-           */
-          console.log('get data from loki...');
-          this._getCollectionsData();
-          this.loadedFromLokiTimestamp = Date.now();
-        }
+      _localDbReady: function() {
+        console.log('dexie ready...');
+        this.appLocalDb = this.$.appLocalDb.getDb();
+
+        this.appLocalDb.version(1).stores({hugeTestData: "id,index,guid,isActive,balance,picture,age,eyeColor,name,gender," +
+        "company,email,phone,address,about,registered,latitude,longitude"});
+
+        console.log(this.appLocalDb.isOpen());
+        //        query example
+        //        this.dexieDb.hugeTestData.where("name").equalsIgnoreCase("Leanna Webster").toArray(function (searchResult) {
+        //          console.log("Found: ", searchResult);
+        //        }).catch(function (error) {
+        //          console.error(error);
+        //        });
       },
 
       _getCollectionsData: function() {
-        var lokiEl = this.$.loki;
-        Object.keys(appDataConfiguration.properties).forEach(function(property) {
-          var propertyCollection = lokiEl.getCollection(property);
-          if (propertyCollection !== null) {
-            _setMetaData(property, propertyCollection.data);
-          }
-        });
+        // get data from local browser db, while sync data from server is in progress
       },
 
       _refreshCollectionData: function(collectionName, data) {
-        var lokiEl = this.$.loki;
-        lokiEl.removeCollection(collectionName);
-        var uniqueProperties = ['id']; // unique properties can be defined in app config or other way?
-        var indices = ['id']; // indices properties can be defined in app config or other way?
-        var collection = lokiEl.addCollection(collectionName, uniqueProperties, indices);
-        collection.insert(data);
+        this.appLocalDb[collectionName].clear().then(function (clearResult) {
+          console.log( "Delete objects done!");
+        });
+        this.appLocalDb[collectionName].bulkAdd(data).then(function(lastKey) {
+          console.log("Done adding " + data.length + " test objects");
+          console.log("Last object's id was: " + lastKey);
+        }).catch(Dexie.BulkError, function (e) {
+          console.error ("Some objects saves did not succeed. However, " +
+              (data.length - e.failures.length) + " objects were added successfully");
+        });
       },
 
-      _resolveDataLoading: function(loadedFromLokiTimestamp, loadedFromServerTimestamp) {
-        console.log('resolve data loading...', loadedFromLokiTimestamp, loadedFromServerTimestamp);
+      _resolveDataLoading: function(loadedFromDexieTimestamp, loadedFromServerTimestamp) {
+        console.log('resolve data loading...', loadedFromDexieTimestamp, loadedFromServerTimestamp);
+        if (loadedFromServerTimestamp > 0 && loadedFromServerTimestamp < loadedFromDexieTimestamp) {
+
+        }
       }
 
     });
