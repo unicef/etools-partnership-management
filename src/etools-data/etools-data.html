@@ -180,14 +180,14 @@
         if (!_.isEmpty(response.detail)) {
           if (this._isSyncDataFromServerRequest()) {
 
-            // test
-            this._refreshCollectionData('hugeTestData', response.detail['big_test_data']);
+            // // test
+            // this._refreshCollectionData('hugeTestData', response.detail['big_test_data']);
 
             appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
               if (!_.isEmpty(response.detail[property])) {
                 _setMetaData(property, response.detail[property]);
                 // add data to local browser db
-                // this._refreshCollectionData(property, response.detail[property])
+                this._refreshCollectionData(property, response.detail[property])
               }
             });
 
