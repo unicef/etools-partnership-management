@@ -127,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-route
         route="{{route}}"
-        pattern="/:section/:view"
+        pattern="/:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
@@ -142,37 +142,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <div class="content">
 
-          <a href="/section1/page">
+          <a href="/section1">
             <div id="app-title">
               <iron-icon class="light" icon="social:group"></iron-icon>
               <span>partnership management</span>
             </div>
           </a>
 
-          <iron-selector selected="[[routeData.section]]" attr-for-selected="name" role="navigation">
+          <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
 
-            <drawer-item name="section1" href="/section1/page">
-              <div class="section" item>an example item</div>
+            <drawer-item name="section1" href="/section1">
+              <div class="section" item>[[activeItem.name]]</div>
               <div class="section" dash>
-                <a class="row" href="/section2/page">
+                <a class="row" href="/section1/[[activeItem.id]]/overview">
                   <iron-icon icon="dashboard"></iron-icon>
                   <span>overview</span>
                 </a>
               </div>
               <div class="section" details>
-                <a class="row" href="/section3/page">
+                <a class="row" href="/section1/[[activeItem.id]]/details">
                   <iron-icon icon="info"></iron-icon>
                   <span>details</span>
                 </a>
               </div>
             </drawer-item>
 
-            <drawer-item name="section2" href="/section2/page"></drawer-item>
+            <drawer-item name="section2" href="/section2" no-drawer></drawer-item>
 
-            <drawer-item name="section3" href="/section3/page"></drawer-item>
+            <drawer-item name="section3" href="/section3" no-drawer></drawer-item>
 
           </iron-selector>
+
         </div>
+
       </app-drawer>
 
       <!-- Main content -->
@@ -188,9 +190,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     attr-for-selected="name"
                     fallback-selection="not-found"
                     role="main">
-          <page-section1-page name="section1-page"></page-section1-page>
-          <page-section2-page name="section2-page"></page-section2-page>
-          <page-section3-page name="section3-page"></page-section3-page>
+          <page-section1 name="section1" route="{{subroute}}"></page-section1>
+          <page-section2 name="section2" route="{{subroute}}"></page-section2>
+          <page-section3 name="section3" route="{{subroute}}"></page-section3>
           <page-not-found name="not-found"></page-not-found>
         </iron-pages>
 
@@ -219,6 +221,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         },
 
+        _activeItem: Object,
+
         _toast: {
           type: Object,
           value: null
@@ -232,17 +236,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       observers: [
-        '_routeViewChanged(routeData)'
+        '_routePageChanged(routeData.page)'
       ],
 
       listeners: {
         'toast': 'queueToast',
-        'toggle-drawer-item': 'toggleDrawerItem',
+        '404': '_pageNotFound',
+        'item': 'changeItem'
       },
 
       attached: function() {
         if (this.route.path === '/') {
-          this.set('route.path', '/section1/page');
+          this.set('route.path', '/section1');
         }
       },
 
@@ -268,16 +273,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      toggleDrawerItem: function(e, detail) {
-        this.$$('drawer-item[name=' + detail.name + ']').opened = detail.open;
+      changeItem: function(e, detail) {
+        this.activeItem = detail;
       },
 
-      _routeViewChanged: function(data) {
-        if (data.section) {
-          this.page = data.section + '-' + data.view;
-        } else {
-          this._pageNotFound();
-        }
+      _routePageChanged: function(page) {
+        this.page = page || 'section1';
       },
 
       _pageChanged: function(page) {
