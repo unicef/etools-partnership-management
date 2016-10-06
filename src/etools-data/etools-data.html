@@ -1,11 +1,14 @@
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
 
 <dom-module id="etools-data">
 
   <template>
 
-    <iron-ajax id="ajax" method="get" handle-as="json" on-response="_handleResponse"></iron-ajax>
+    <etools-ajax id="ajax" url="[[url]]" on-success="_handleResponse" logs="true" debounce-time="0"></etools-ajax>
+
+    <etools-dexiejs id="appLocalDb" db-name="[[dexieDbName]]" on-db-ready="_localDbReady"></etools-dexiejs>
 
   </template>
 
@@ -13,117 +16,229 @@
 
     var _data = {};
     var _els = [];
+    var _i = 0;
 
+    // When an ajax response is recieved (or when data loaded from lokijs?)
+    // sets global _data.key, and loads the new data for each instance
+    // of etools-data
     var _setMetaData = function(key, data) {
       if (data) {
         _data[key] = data;
       }
 
       _.each(_els, function(el) {
-        el.load(_data[key], key);
+        el.load(_data, key);
       });
     };
 
-    Polymer({
-
-      is: 'meta-data',
-
-      properties: {
-
-        data: {
-          type: Object,
-          notify: true,
-          value: function() {
-            return _data;
-          }
-        }
-
+    var _extendEtoolsDataProperties = function(newProperties) {
+      if (appDataConfiguration && typeof appDataConfiguration.properties !== 'object') {
+        appDataConfiguration.properties = {};
       }
+      for (var attrname in newProperties) {
+        appDataConfiguration.properties[attrname] = newProperties[attrname];
+      }
+      return appDataConfiguration.properties;
+    };
 
-    });
+    var _extendEtoolsDataObservers = function(newObservers) {
+      if (appDataConfiguration && !Array.isArray(appDataConfiguration.observers)) {
+        appDataConfiguration.observers = [];
+      }
+      return appDataConfiguration.observers.concat(newObservers);
+    };
 
     Polymer({
 
       is: 'etools-data',
 
+      properties: _extendEtoolsDataProperties({
+        loadedFromServerTimestamp: {
+          type: Number,
+          value: 0
+        },
+        loadedFromDexieTimestamp: {
+          type: Number,
+          value: 0
+        }
+      }),
+      observers: _extendEtoolsDataObservers([
+          '_resolveDataLoading(loadedFromDexieTimestamp, loadedFromServerTimestamp)',
+      ]),
+
+      // Loads all data currently in global _data
       ready: function() {
+        // init dexie element
+        this.dexieDbName = dexieConfiguration.dbName;
+
+        // load global data
         this.load(_data);
       },
 
       attached: function() {
-        //this.setListeners();
-        this.listen(this._meta, 'countries-changed', '_metaDataChanged');
-        if (_els.length === 0 && _.isEmpty(_data)) {
-          //set url
-          //generate request
+        // If there are no etools-data instaces attached, and no global
+        // _data, make ajax requests (or loki requests?) for first-stamp data.
+        // First stamp data should be configurable in some way
+        if (this._emptyData()) {
+          this._triggerSyncLocalDataWithServerData();
         }
+
+        // Add this etools-data instance
         _els.push(this);
       },
 
       detached: function() {
+        // Remove this etools-data instance when detached
+        // from the document to prevent redundant loading
         _els.splice(_els.indexOf(this), 1);
-      },
-
-      properties: {
-
-        _meta: {
-          value: document.createElement('meta-data')
-        },
-
-        countries: {
-          type: Array,
-          readOnly: true,
-          notify: true
-        },
-
-        _setters: {
-          type: Object,
-          value: {
-            countries: function(data) { this._setCountries(data); }
-          }
-        }
-
       },
 
       hostAttributes: {
         hidden: true
       },
 
-      observers: [
-        '_dataChanged(countries.*)'
-      ],
-
-      load: function(data, key) {
+      // Loads the given property if provided, otherwise loads
+      // all properties
+      load: function(data, property) {
         if (!_.isEmpty(data)) {
-          if (key) {
-            this._setters[key].bind(this)(data);
+          if (property) {
+            this.set(property, data[property]);
           } else {
-            _.each(this._setters, function(setter, key) {
-              setter.bind(this)(data[key]);
+            Object.keys(this.properties).forEach(function(property) {
+              this.set(property, data[property]);
             }.bind(this));
           }
         }
       },
 
-      add: function(newData) {
-        this.push('countries', newData);
-      },
-
+      // The logic here is sound but a little rough around
+      // the edges. Basically, changing the data on one element
+      // changes it for every other element, BUT other elements aren't
+      // NOTIFIED of the change until the change event is fired on them.
+      // References to every stamped instance of etools-data are stored in _els.
+      // I loop through these and fire the event on each one.
       _dataChanged: function(info) {
-        var eventName = info.path.split('.', 1)[0] + '-changed';
-        this._meta.fire(eventName, info, {bubbles: false});
+        var propertyName = info.path.split('.', 1)[0];
+        var eventName = propertyName + '-changed';
+
+        // _i ensures when other elements are notified of the change,
+        // they don't start their own loop and end up firing an exponential
+        // amount of events.
+        // Checking the path here ensures calls to the load function
+        // don't trigger this loop.
+        if (_i === 0 && !info.path.endsWith(propertyName)) {
+          _.each(_els, function(el) {
+            if (el !== this) {
+              el.fire(eventName, info);
+            }
+            _i++;
+          }.bind(this));
+        }
+        if (_i === _els.length) {
+          _i = 0;
+        }
       },
 
-      _metaDataChanged: function(e) {
-        this.fire(e.type, e.detail);
+      _emptyData: function () {
+          return _els.length === 0 && _.isEmpty(_data);
       },
 
-      _handleResponse: function(_, req) {
-        //use response header to set data
-        var url = req.xhr.responseURL;
-        url = url.substring(url.indexOf('?id=') + 4);
-        _setMetaData(url, req.response);
+      _triggerSyncLocalDataWithServerData: function() {
+        /**
+         * appDataConfiguration.syncPropertiesOnLoad will determine data to load when first etools-data element is stamped.
+         * No multiple requests here, the data will be brought with a single request. If we use multiple requests,
+         * the handle response will not work as expected as etools-ajax properties can change when each request is triggered
+         */
+
+        if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad)) {
+          this.syncServerDataInProgress = true;
+          var params = appDataConfiguration.syncPropertiesOnLoad.params;
+          if (typeof params === 'undefined') {
+            params = {};
+          }
+          this.$.ajax.params = params;
+          this.url = endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url;
+        }
       },
+
+      _validSyncPropertiesOnLoadObj: function(obj) {
+        if(!_.isEmpty(obj) && Array.isArray(obj.properties) && !_.isEmpty(obj.syncEndpoint) && typeof obj.syncEndpoint === 'string') {
+          return true;
+        }
+        return false;
+      },
+
+      _isSyncDataFromServerRequest: function() {
+        return this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad) &&
+        endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url === this.url
+      },
+
+      // Extracts the property to load from the
+      // params of the response, and then calls
+      // setMetaData
+      _handleResponse: function(response) {
+        if (!_.isEmpty(response.detail)) {
+          if (this._isSyncDataFromServerRequest()) {
+
+            // // test
+            // this._refreshCollectionData('hugeTestData', response.detail['big_test_data']);
+
+            appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
+              if (!_.isEmpty(response.detail[property])) {
+                _setMetaData(property, response.detail[property]);
+                // add data to local browser db
+                this._refreshCollectionData(property, response.detail[property])
+              }
+            });
+
+            this.syncServerDataInProgress = false; // sync from server ended
+            this.loadedFromServerTimestamp = Date.now();
+          } else {
+            // not sync from server request handler...
+
+          }
+        }
+      },
+
+      _localDbReady: function() {
+        console.log('dexie ready...');
+        this.appLocalDb = this.$.appLocalDb.getDb();
+
+        this.appLocalDb.version(1).stores({hugeTestData: "id,index,guid,isActive,balance,picture,age,eyeColor,name,gender," +
+        "company,email,phone,address,about,registered,latitude,longitude"});
+
+        console.log(this.appLocalDb.isOpen());
+        //        query example
+        //        this.dexieDb.hugeTestData.where("name").equalsIgnoreCase("Leanna Webster").toArray(function (searchResult) {
+        //          console.log("Found: ", searchResult);
+        //        }).catch(function (error) {
+        //          console.error(error);
+        //        });
+      },
+
+      _getCollectionsData: function() {
+        // get data from local browser db, while sync data from server is in progress
+      },
+
+      _refreshCollectionData: function(collectionName, data) {
+        this.appLocalDb[collectionName].clear().then(function (clearResult) {
+          console.log( "Delete objects done!");
+        });
+        this.appLocalDb[collectionName].bulkAdd(data).then(function(lastKey) {
+          console.log("Done adding " + data.length + " test objects");
+          console.log("Last object's id was: " + lastKey);
+        }).catch(Dexie.BulkError, function (e) {
+          console.error ("Some objects saves did not succeed. However, " +
+              (data.length - e.failures.length) + " objects were added successfully");
+        });
+      },
+
+      _resolveDataLoading: function(loadedFromDexieTimestamp, loadedFromServerTimestamp) {
+        console.log('resolve data loading...', loadedFromDexieTimestamp, loadedFromServerTimestamp);
+        if (loadedFromServerTimestamp > 0 && loadedFromServerTimestamp < loadedFromDexieTimestamp) {
+
+        }
+      }
 
     });
 

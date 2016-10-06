@@ -1,0 +1,53 @@
+<!--
+App global configuration
+-->
+<script>
+  'use strict';
+
+  // dexiejs config
+  var dexieConfiguration = {
+    dbName: 'etoolsPartnershipManagement'
+  };
+
+  /**
+   * App data configuration, this can e defined differently for any app.
+   * Do not use this object in polymer elements as behaviour.
+   */
+  var appDataConfiguration = {
+
+    properties: {
+      partners: {
+        notify: true
+      },
+      countries: {
+        type: Array,
+        notify: true
+      }
+    },
+
+    observers: [
+      '_dataChanged(countries.*)',
+    ],
+
+    // get data from server for this properties when page loads
+    syncPropertiesOnLoad: {
+      properties: ['partners', 'countries'],
+      syncEndpoint: 'syncData',
+      params: {}
+    }
+  };
+
+  // app endpoints
+  var endpoints = {
+    syncData: {
+      url: '../../data/countries.json'
+    }
+
+  };
+
+  // permissions mapping
+  var permissionsMap = {
+    'defaultPerm' : ['menuOne', 'menuTwo'],
+    'adminPerm': ['adminOne', 'adminTwo']
+  }
+</script>

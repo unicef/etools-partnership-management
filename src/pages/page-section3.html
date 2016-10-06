@@ -2,7 +2,7 @@
 
 <link rel="import" href="../../styles/shared-styles.html">
 
-<dom-module id="page-section1-page">
+<dom-module id="page-section3">
 
   <template>
 
@@ -10,7 +10,13 @@
 
     </style>
 
-    <h1>Section 1 Page</h1>
+    <etools-data id="date" countries="{{countries}}"></etools-data>
+
+    <h1>Section 3 Page</h1>
+
+    <template is="dom-repeat" items="[[countries]]">
+      <p>[[item.name]]</p>
+    </template>
 
   </template>
 
@@ -18,11 +24,11 @@
 
     Polymer({
 
-      is: 'page-section1-page',
+      is: 'page-section3',
 
       properties: {
 
-      },
+      }
 
     });
 

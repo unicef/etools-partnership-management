@@ -17,6 +17,10 @@
         border-bottom: 1px solid var(--secondary-background-color);
       }
 
+      :host([no-drawer]) iron-collapse {
+        display: none;
+      }
+
       a {
         text-decoration: none;
       }
@@ -73,7 +77,7 @@
     </style>
 
     <a href="{{href}}">
-      <div id="name">{{name}}</div>
+      <div id="name" on-tap="toggleDrawer">{{name}}</div>
     </a>
 
     <iron-collapse id="collapse" opened="{{opened}}">
@@ -88,7 +92,11 @@
 
     Polymer({
 
-      is: 'drawer-item'
+      is: 'drawer-item',
+
+      toggleDrawer: function() {
+        this.opened = this.opened ? true : true;
+      }
 
     });
 
