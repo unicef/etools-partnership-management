@@ -154,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout id="app" responsive-width="850px" narrow="{{narrow}}" fullbleed>
+    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
       <app-drawer id="drawer" transition-duration="350">
@@ -285,7 +285,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!this._toast) {
           this._toast = document.createElement('paper-toast');
           this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
-          Polymer.dom(this.$.app).appendChild(this._toast);
+          Polymer.dom(this.$.layout).appendChild(this._toast);
           Polymer.dom.flush();
         }
         if (!this._toastQueue.length) {
