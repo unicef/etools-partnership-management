@@ -1,14 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
 
 <dom-module id="etools-data">
 
   <template>
 
-    <etools-ajax id="ajax" url="[[url]]" on-success="_handleResponse" logs="true" debounce-time="0"></etools-ajax>
-
-    <etools-dexiejs id="appLocalDb" db-name="[[dexieDbName]]" on-db-ready="_localDbReady"></etools-dexiejs>
+    <etools-ajax id="ajax" endpoint="[[endpoint]]" on-success="_handleResponse" logs="true"></etools-ajax>
 
   </template>
 
@@ -31,56 +28,29 @@
       });
     };
 
-    var _extendEtoolsDataProperties = function(newProperties) {
-      if (appDataConfiguration && typeof appDataConfiguration.properties !== 'object') {
-        appDataConfiguration.properties = {};
-      }
-      for (var attrname in newProperties) {
-        appDataConfiguration.properties[attrname] = newProperties[attrname];
-      }
-      return appDataConfiguration.properties;
-    };
-
-    var _extendEtoolsDataObservers = function(newObservers) {
-      if (appDataConfiguration && !Array.isArray(appDataConfiguration.observers)) {
-        appDataConfiguration.observers = [];
-      }
-      return appDataConfiguration.observers.concat(newObservers);
-    };
-
     Polymer({
 
       is: 'etools-data',
 
-      properties: _extendEtoolsDataProperties({
-        loadedFromServerTimestamp: {
-          type: Number,
-          value: 0
-        },
-        loadedFromDexieTimestamp: {
-          type: Number,
-          value: 0
+      properties: {
+        countries: {
+          type: Array,
+          notify: true
         }
-      }),
-      observers: _extendEtoolsDataObservers([
-          '_resolveDataLoading(loadedFromDexieTimestamp, loadedFromServerTimestamp)',
-      ]),
+      },
+      observers: ['_dataChanged(countries.*)'],
 
       // Loads all data currently in global _data
       ready: function() {
-        // init dexie element
-        this.dexieDbName = dexieConfiguration.dbName;
-
         // load global data
         this.load(_data);
       },
 
       attached: function() {
         // If there are no etools-data instaces attached, and no global
-        // _data, make ajax requests (or loki requests?) for first-stamp data.
-        // First stamp data should be configurable in some way
+        // _data, make ajax requests for first-stamp data.
         if (this._emptyData()) {
-          this._triggerSyncLocalDataWithServerData();
+          this._getCountries();
         }
 
         // Add this etools-data instance
@@ -143,103 +113,24 @@
           return _els.length === 0 && _.isEmpty(_data);
       },
 
-      _triggerSyncLocalDataWithServerData: function() {
+      _getCountries: function() {
         /**
-         * appDataConfiguration.syncPropertiesOnLoad will determine data to load when first etools-data element is stamped.
-         * No multiple requests here, the data will be brought with a single request. If we use multiple requests,
-         * the handle response will not work as expected as etools-ajax properties can change when each request is triggered
+         * get countries data
          */
-
-        if (this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad)) {
-          this.syncServerDataInProgress = true;
-          var params = appDataConfiguration.syncPropertiesOnLoad.params;
-          if (typeof params === 'undefined') {
-            params = {};
-          }
-          this.$.ajax.params = params;
-          this.url = endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url;
-        }
-      },
-
-      _validSyncPropertiesOnLoadObj: function(obj) {
-        if(!_.isEmpty(obj) && Array.isArray(obj.properties) && !_.isEmpty(obj.syncEndpoint) && typeof obj.syncEndpoint === 'string') {
-          return true;
-        }
-        return false;
-      },
-
-      _isSyncDataFromServerRequest: function() {
-        return this._validSyncPropertiesOnLoadObj(appDataConfiguration.syncPropertiesOnLoad) &&
-        endpoints[appDataConfiguration.syncPropertiesOnLoad.syncEndpoint].url === this.url
+        this.$.ajax.alternateDexieDb = appDexieDb;
+        this.$.ajax.dexieDbCollection = 'countries';
+        this.endpoint = endpoints.countries;
       },
 
       // Extracts the property to load from the
       // params of the response, and then calls
       // setMetaData
       _handleResponse: function(response) {
+        console.log('response: ', response);
         if (!_.isEmpty(response.detail)) {
-          if (this._isSyncDataFromServerRequest()) {
-
-            // // test
-            // this._refreshCollectionData('hugeTestData', response.detail['big_test_data']);
-
-            appDataConfiguration.syncPropertiesOnLoad.properties.forEach(function (property) {
-              if (!_.isEmpty(response.detail[property])) {
-                _setMetaData(property, response.detail[property]);
-                // add data to local browser db
-                this._refreshCollectionData(property, response.detail[property])
-              }
-            });
-
-            this.syncServerDataInProgress = false; // sync from server ended
-            this.loadedFromServerTimestamp = Date.now();
-          } else {
-            // not sync from server request handler...
-
-          }
+          _setMetaData('countries', response.detail);
         }
       },
-
-      _localDbReady: function() {
-        console.log('dexie ready...');
-        this.appLocalDb = this.$.appLocalDb.getDb();
-
-        this.appLocalDb.version(1).stores({hugeTestData: "id,index,guid,isActive,balance,picture,age,eyeColor,name,gender," +
-        "company,email,phone,address,about,registered,latitude,longitude"});
-
-        console.log(this.appLocalDb.isOpen());
-        //        query example
-        //        this.dexieDb.hugeTestData.where("name").equalsIgnoreCase("Leanna Webster").toArray(function (searchResult) {
-        //          console.log("Found: ", searchResult);
-        //        }).catch(function (error) {
-        //          console.error(error);
-        //        });
-      },
-
-      _getCollectionsData: function() {
-        // get data from local browser db, while sync data from server is in progress
-      },
-
-      _refreshCollectionData: function(collectionName, data) {
-        this.appLocalDb[collectionName].clear().then(function (clearResult) {
-          console.log( "Delete objects done!");
-        });
-        this.appLocalDb[collectionName].bulkAdd(data).then(function(lastKey) {
-          console.log("Done adding " + data.length + " test objects");
-          console.log("Last object's id was: " + lastKey);
-        }).catch(Dexie.BulkError, function (e) {
-          console.error ("Some objects saves did not succeed. However, " +
-              (data.length - e.failures.length) + " objects were added successfully");
-        });
-      },
-
-      _resolveDataLoading: function(loadedFromDexieTimestamp, loadedFromServerTimestamp) {
-        console.log('resolve data loading...', loadedFromDexieTimestamp, loadedFromServerTimestamp);
-        if (loadedFromServerTimestamp > 0 && loadedFromServerTimestamp < loadedFromDexieTimestamp) {
-
-        }
-      }
-
     });
 
   </script>

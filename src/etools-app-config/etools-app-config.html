@@ -1,48 +1,27 @@
 <!--
 App global configuration
 -->
+<link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
+
 <script>
   'use strict';
 
   // dexiejs config
-  var dexieConfiguration = {
-    dbName: 'etoolsPartnershipManagement'
-  };
+  var appDexieDb = new Dexie('etoolsApp');
+  // for db versioning check https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
+  appDexieDb.version(1).stores({
+    collectionsList: "&name,expire",
+    countries: 'id, name'
+  });
 
-  /**
-   * App data configuration, this can e defined differently for any app.
-   * Do not use this object in polymer elements as behaviour.
-   */
-  var appDataConfiguration = {
-
-    properties: {
-      partners: {
-        notify: true
-      },
-      countries: {
-        type: Array,
-        notify: true
-      }
-    },
-
-    observers: [
-      '_dataChanged(countries.*)',
-    ],
-
-    // get data from server for this properties when page loads
-    syncPropertiesOnLoad: {
-      properties: ['partners', 'countries'],
-      syncEndpoint: 'syncData',
-      params: {}
-    }
-  };
 
   // app endpoints
   var endpoints = {
-    syncData: {
-      url: '../../data/countries.json'
+    countries: {
+      url: '../../data/countries.json',
+      exp: 30*60*1000, // 30min
+      cachingKey: 'countries'
     }
-
   };
 
   // permissions mapping

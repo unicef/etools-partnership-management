@@ -1,4 +1,4 @@
-{ "countries": [
+[
  {
    "id": 1,
    "name": "Global"
@@ -143,4 +143,4 @@
    "id": 38,
    "name": "WCARO"
  }
-]}
+]
