@@ -65,18 +65,6 @@
         }
       },
 
-      ready: function() {
-        this.listen(this.$.list, 'iron-select', 'changeMenu');
-        var item = this.$.list.selectedItem;
-        if (item) {
-          this.fire('item', {id: item.id, name: item.getAttribute('name')});
-        }
-      },
-
-      changeMenu: function(e, detail) {
-        this.fire('item', {id: detail.item.id, name: detail.item.getAttribute('name')});
-      },
-
       add: function() {
         this.push('countries', {name: 'HELLO THERE'});
       },

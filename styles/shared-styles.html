@@ -24,10 +24,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       a {
-        text-decoration: none;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        color: var(--accent-color);
+        text-decoration: inherit;
+        color: inherit;
+      }
+
+      a:focus {
+        outline: inherit;
+      }
+
+      .tab-link {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
       }
 
       iron-icon.dark {
@@ -36,6 +43,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       iron-icon.light {
         --iron-icon-fill-color: var(--light-icon-color);
+      }
+
+      paper-icon-button.dark {
+        color: var(--dark-icon-color);
+        --paper-icon-button-ink-color: var(--dark-ink-color);
+      }
+
+      paper-icon-button.light {
+        color: var(--light-icon-color);
+        --paper-icon-button-ink-color: var(--light-ink-color);
       }
 
     </style>
