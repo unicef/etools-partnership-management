@@ -17,6 +17,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
@@ -25,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="lodash/lodash.html">
 <link rel="import" href="etools-app-config/etools-app-config.html">
 <link rel="import" href="etools-data/etools-data.html">
-<link rel="import" href="drawer-item/drawer-item.html">
+<link rel="import" href="side-bar-item/side-bar-item.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
@@ -43,76 +45,99 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-header {
         background-color: var(--primary-background-color);
       }
-      app-header paper-icon-button {
-        color: var(--icon-color);
-        --paper-icon-button-ink-color: var(--icon-color);
-      }
 
       app-toolbar {
-        height: 55px;
+        height: var(--toolbar-height);
       }
 
       app-drawer {
-        --app-drawer-width: 190px;
+        --app-drawer-width: 220px;
         --app-drawer-content-container: {
-            background-color: var(--secondary-background-color);
+            background-color: var(--light-theme-content-color);
         };
       }
 
-      app-drawer .header {
-        background-color: var(--primary-background-color);
-      }
+      .side-nav-wrapper {
+        @apply(--layout-vertical);
 
-      #logo {
-        width: 75%;
-        height: 75%;
-      }
-
-      app-drawer .header::after {
-        position: absolute;
-        right: 0px;
-        bottom: -5px;
-        left: 0px;
-        width: 100%;
-        height: 5px;
-        content: "";
-        opacity: 1;
-        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-      }
-
-      :host([narrow]) app-drawer .header::after {
-        opacity: 0;
-      }
-
-      app-drawer .content {
         height: 100%;
+        overflow-y: var(--side-bar-scrolling);
+        overflow-x: hidden;
+        border-right: 1px solid var(--dark-divider-color);
       }
 
-      #app-title {
+      .side-nav-wrapper .header {
+        min-height: 60px;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      #etools-logo {
+        height: 50%;
+        width: 60%;
+      }
+
+      #unicef-logo {
+        height: 100%;
+        width: 60%;
+      }
+
+      #app-select {
+        margin-left: auto;
+        width: 47px;
+        height: 47px;
+      }
+
+      .side-nav-wrapper .nav-menu {
+        padding: 8px 0;
+      }
+
+      .side-nav-wrapper .divider {
+        margin: 8px 0;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .side-nav-wrapper .footer {
         @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply(--layout-center-center);
 
-        padding: 0 30px 0 20px;
-        height: 55px;
+        margin-top: auto;
+        min-height: 26px;
+        padding: 16px 16px;
+        border-top: 1px solid var(--dark-divider-color);
+      }
+
+      #toolbar div[main-title] {
+        position: relative;
+        bottom: 2px;
+        margin-left: 8px;
         color: var(--light-primary-text-color);
-        background-color: var(--partnership-management-color);
-        border-bottom: 2px solid var(--secondary-background-color);
       }
 
-      #app-title span, #app-title iron-icon {
-        padding-top: 8px;
+      :host(:not([narrow])) #toolbar div[main-title] {
+        margin-left: 32px;
       }
 
-      #app-title span {
-        line-height: 1.2;
-        font-weight: 500;
-        text-transform: uppercase;
+      #tabs-bar {
+        height: 48px;
       }
 
-      #app-title iron-icon {
-        --iron-icon-width: 60%;
-        --iron-icon-height: 60%;
-        margin-right: 10px;
+      #tabs-bar paper-tabs {
+        color: var(--light-primary-text-color);
+        --paper-tabs-selection-bar-color: var(--accent-color);
+        --paper-tabs: {
+          font-size: 14px;
+          font-weight: 500;
+        };
+      }
+
+      #tabs-bar paper-tabs > * {
+        --paper-tab-ink: var(--accent-color);
+        --paper-tab-content: {
+          color: var(--light-primary-text-color);
+        };
+        --paper-tab-content-unselected: {
+          color: var(--light-secondary-text-color);
+        };
       }
 
       :host(:not([narrow])) iron-pages {
@@ -120,8 +145,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
     </style>
-
-    <etools-data></etools-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -131,47 +154,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
+    <app-drawer-layout id="app" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
       <app-drawer id="drawer" transition-duration="350">
 
-        <app-toolbar class="header">
-          <img id="logo" src="../images/etools_logo.svg" alt="etools logo">
-        </app-toolbar>
+        <div class="side-nav-wrapper">
 
-        <div class="content">
+          <app-toolbar class="header">
+            <img id="etools-logo" src="../images/etools_logo.svg" alt="etools logo">
+            <paper-icon-button id="app-select" on-tap="openAppMenu" class="dark" icon="apps"></paper-icon-button>
+          </app-toolbar>
 
-          <a href="/section1">
-            <div id="app-title">
-              <iron-icon class="light" icon="social:group"></iron-icon>
-              <span>partnership management</span>
-            </div>
-          </a>
+          <div class="nav-menu">
+            <iron-selector selected="[[page]]" attr-for-selected="name" selected-attribute="iron-selected" selectable="side-bar-item" activateEvent="" role="navigation">
 
-          <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
+              <side-bar-item name="section1" icon="description" href="/section1" nested-nav>
+                <a href="/section2">some link</a>
+                <a href="/section2">another link</a>
+                <a href="/section2">yet another link</a>
+                <a href="/section2">more links here</a>
+              </side-bar-item>
+              <side-bar-item name="section2" icon="book" href="/section2"></side-bar-item>
+              <side-bar-item name="section3" icon="build" href="/section3"></side-bar-item>
+              <div class="divider"></div>
+              <side-bar-item name="settings" icon="settings" href="/settings"></side-bar-item>
+              <side-bar-item name="user support" icon="help" href="/support"></side-bar-item>
+              <side-bar-item name="discussions" icon="question-answer" href="/discussion"></side-bar-item>
+              <side-bar-item name="information" icon="info" href="/information"></side-bar-item>
 
-            <drawer-item name="section1" href="/section1">
-              <div class="section" item>[[activeItem.name]]</div>
-              <div class="section" dash>
-                <a class="row" href="/section1/[[activeItem.id]]/overview">
-                  <iron-icon icon="dashboard"></iron-icon>
-                  <span>overview</span>
-                </a>
-              </div>
-              <div class="section" details>
-                <a class="row" href="/section1/[[activeItem.id]]/details">
-                  <iron-icon icon="info"></iron-icon>
-                  <span>details</span>
-                </a>
-              </div>
-            </drawer-item>
+            </iron-selector>
+          </div>
 
-            <drawer-item name="section2" href="/section2" no-drawer></drawer-item>
-
-            <drawer-item name="section3" href="/section3" no-drawer></drawer-item>
-
-          </iron-selector>
+          <div class="footer">
+            <img id="unicef-logo" src="../images/UNICEF_logo.png" alt="UNICEF logo">
+          </div>
 
         </div>
 
@@ -180,13 +197,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout id="main" has-scrolling-region>
 
-        <app-header fixed shadow>
+        <app-header id="toolbar" fixed shadow>
           <app-toolbar>
-            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button class="light" icon="menu" drawer-toggle></paper-icon-button>
+            <div main-title>[[page]]</div>
+          </app-toolbar>
+          <app-toolbar id="tabs-bar">
+            <paper-tabs selected="0" noink bottom-item>
+              <paper-tab link>
+                <a href="/section2" class="tab-link" tabindex="-1">Overview</a>
+              </paper-tab>
+              <paper-tab link>
+                <a href="/section3" class="tab-link" tabindex="-1">Details</a>
+              </paper-tab>
+            </paper-tabs>
           </app-toolbar>
         </app-header>
 
-        <iron-pages selected="[[page]]"
+        <iron-pages id="pages"
+                    selected="[[page]]"
                     attr-for-selected="name"
                     fallback-selection="not-found"
                     role="main">
@@ -221,8 +250,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         },
 
-        _activeItem: Object,
-
         _toast: {
           type: Object,
           value: null
@@ -231,7 +258,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _toastQueue: {
           type: Array,
           value: function() { return []; }
-        }
+        },
 
       },
 
@@ -242,7 +269,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
         'toast': 'queueToast',
         '404': '_pageNotFound',
-        'item': 'changeItem'
+      },
+
+      ready: function() {
+        this.sideDrawer = this.$.drawer;
       },
 
       attached: function() {
@@ -254,8 +284,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       queueToast: function(e, detail) {
         if (!this._toast) {
           this._toast = document.createElement('paper-toast');
-          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast')
-          Polymer.dom(this.$.layout).appendChild(this._toast);
+          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
+          Polymer.dom(this.$.app).appendChild(this._toast);
           Polymer.dom.flush();
         }
         if (!this._toastQueue.length) {
@@ -266,15 +296,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      dequeueToast: function(e, detail) {
+      dequeueToast: function() {
         this.shift('_toastQueue');
         if (this._toastQueue.length) {
           this._toast.show(this._toastQueue[0]);
         }
-      },
-
-      changeItem: function(e, detail) {
-        this.activeItem = detail;
       },
 
       _routePageChanged: function(page) {
@@ -282,7 +308,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._pageNotFound, true);
       },
