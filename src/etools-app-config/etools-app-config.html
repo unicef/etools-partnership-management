@@ -4,29 +4,34 @@ App global configuration
 <link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
 
 <script>
-  'use strict';
+    'use strict';
 
-  // dexiejs config
-  var appDexieDb = new Dexie('etoolsApp');
-  // for db versioning check https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
-  appDexieDb.version(1).stores({
-    collectionsList: "&name,expire",
-    countries: 'id, name'
-  });
+    var etoolsAppConfig = {
+      // dexie js
+      appDexieDb: new Dexie('etoolsApp'),
 
+      // app endpoints
+      endpoints: {
+        countries: {
+          url: '../../data/countries.json',
+          exp: 30 * 60 * 1000, // 30min
+          cachingKey: 'countries'
+        }
+      },
 
-  // app endpoints
-  var endpoints = {
-    countries: {
-      url: '../../data/countries.json',
-      exp: 30*60*1000, // 30min
-      cachingKey: 'countries'
-    }
-  };
+      permissionsMap: {
+        defaultPerm: ['menuOne', 'menuTwo'],
+        adminPerm: ['adminOne', 'adminTwo']
+      }
+    };
 
-  // permissions mapping
-  var permissionsMap = {
-    'defaultPerm' : ['menuOne', 'menuTwo'],
-    'adminPerm': ['adminOne', 'adminTwo']
-  }
+    /**
+     * for db versioning check
+     * https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
+     */
+    etoolsAppConfig.appDexieDb.version(1).stores({
+      collectionsList: '&name,expire',
+      countries: 'id, name'
+    });
+
 </script>

@@ -109,7 +109,7 @@
         }
       },
 
-      _emptyData: function () {
+      _emptyData: function() {
           return _els.length === 0 && _.isEmpty(_data);
       },
 
@@ -117,9 +117,9 @@
         /**
          * get countries data
          */
-        this.$.ajax.alternateDexieDb = appDexieDb;
+        this.$.ajax.alternateDexieDb = etoolsAppConfig.appDexieDb;
         this.$.ajax.dexieDbCollection = 'countries';
-        this.endpoint = endpoints.countries;
+        this.endpoint = etoolsAppConfig.endpoints.countries;
       },
 
       // Extracts the property to load from the

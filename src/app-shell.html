@@ -254,7 +254,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       queueToast: function(e, detail) {
         if (!this._toast) {
           this._toast = document.createElement('paper-toast');
-          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast')
+          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
           Polymer.dom(this.$.layout).appendChild(this._toast);
           Polymer.dom.flush();
         }
@@ -266,7 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      dequeueToast: function(e, detail) {
+      dequeueToast: function() {
         this.shift('_toastQueue');
         if (this._toastQueue.length) {
           this._toast.show(this._toastQueue[0]);
