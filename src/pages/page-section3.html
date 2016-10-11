@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="page-section3">
+
+  <template>
+
+    <style include="shared-styles">
+
+    </style>
+
+    <etools-data id="date" countries="{{countries}}"></etools-data>
+
+    <h1>Section 3 Page</h1>
+
+    <template is="dom-repeat" items="[[countries]]">
+      <p>[[item.name]]</p>
+    </template>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-section3',
+
+      properties: {
+
+      }
+
+    });
+
+  </script>
+
+</dom-module>

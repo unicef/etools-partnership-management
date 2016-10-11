@@ -1,0 +1,146 @@
+[
+ {
+   "id": 1,
+   "name": "Global"
+ },
+ {
+   "id": 2,
+   "name": "UAT"
+ },
+ {
+   "id": 3,
+   "name": "China"
+ },
+ {
+   "id": 4,
+   "name": "South Sudan"
+ },
+ {
+   "id": 5,
+   "name": "Kenya"
+ },
+ {
+   "id": 6,
+   "name": "Nepal"
+ },
+ {
+   "id": 7,
+   "name": "Sierra Leone"
+ },
+ {
+   "id": 8,
+   "name": "Myanmar"
+ },
+ {
+   "id": 9,
+   "name": "Lebanon"
+ },
+ {
+   "id": 10,
+   "name": "Syria Cross Border"
+ },
+ {
+   "id": 11,
+   "name": "Syria"
+ },
+ {
+   "id": 12,
+   "name": "Sudan"
+ },
+ {
+   "id": 13,
+   "name": "Iraq"
+ },
+ {
+   "id": 14,
+   "name": "Menaro"
+ },
+ {
+   "id": 15,
+   "name": "Turkey"
+ },
+ {
+   "id": 16,
+   "name": "FRG"
+ },
+ {
+   "id": 18,
+   "name": "Jordan"
+ },
+ {
+   "id": 19,
+   "name": "Geneva PFP"
+ },
+ {
+   "id": 20,
+   "name": "Philippines"
+ },
+ {
+   "id": 21,
+   "name": "Palestine"
+ },
+ {
+   "id": 22,
+   "name": "Yemen"
+ },
+ {
+   "id": 23,
+   "name": "Nigeria"
+ },
+ {
+   "id": 24,
+   "name": "Afghanistan"
+ },
+ {
+   "id": 25,
+   "name": "Pakistan"
+ },
+ {
+   "id": 26,
+   "name": "Cambodia"
+ },
+ {
+   "id": 27,
+   "name": "Indonesia"
+ },
+ {
+   "id": 28,
+   "name": "DRC"
+ },
+ {
+   "id": 29,
+   "name": "Kazakhstan"
+ },
+ {
+   "id": 30,
+   "name": "Somalia"
+ },
+ {
+   "id": 31,
+   "name": "South Africa"
+ },
+ {
+   "id": 32,
+   "name": "Rwanda"
+ },
+ {
+   "id": 34,
+   "name": "ESARO"
+ },
+ {
+   "id": 35,
+   "name": "Ethiopia"
+ },
+ {
+   "id": 36,
+   "name": "ROSA"
+ },
+ {
+   "id": 37,
+   "name": "Liberia"
+ },
+ {
+   "id": 38,
+   "name": "WCARO"
+ }
+]
