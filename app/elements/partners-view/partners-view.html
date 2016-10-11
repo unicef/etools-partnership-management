@@ -1,47 +1,98 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../partner-data/partner-data.html">
-<link rel="import" href="../etools-datatable/etools-datatable.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../data-table/data-table.html">
+<link rel="import" href="../partner-item/partner-item.html">
 
 <dom-module id="partners-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex-factors">
       :host {
         display: block;
       }
 
-      vaadin-combo-box {
-        margin-bottom: 20px;
-        --paper-input-container-label: {
-          font-size: inherit;
-        }
+      .header {
+        padding: 0 39px 0 49px;
+      }
+
+      .header > div {
+        min-width: 100px;
+        margin-right: 10px;
       }
     </style>
 
-    <div class="data-table">
-      <partner-data id="partners" data="{{data}}"></partner-data>
-      <etools-datatable id="partnerTable" items="[[data]]">
-        <table>
-          <colgroup>
-            <col name="name" sortable/>
-            <col name="partner_type"/>
-            <col name="vendor_number"/>
-            <col name="rating" sortable/>
-            <col name="vision_synced"/>
-          </colgroup>
-        </table>
-      </etools-datatable>
-    </div>
+    <h1>Partners</h1>
+
+    <paper-input id="query"
+                 type="search"
+                 value="{{q::keyup}}"
+                 placeholder="Search"
+                 on-search="onSearch"></paper-input>
+
+    <data-table data="[[_filteredPartners]]">
+
+      <div class="header">
+        <div class="name flex-2">Name</div>
+        <div class="type flex-2">Type</div>
+        <div class="risk flex">Risk</div>
+      </div>
+
+      <template id="row-template" is="dom-template">
+        <partner-item class="row" item=[[item]]></partner-item>
+      </template>
+
+    </data-table>
 
   </template>
-
   <script>
-    (function() {
-      'use strict';
+  (function() {
+    'use strict';
 
-      Polymer({
-        is: 'partners-view'
-      });
-    })();
+    Polymer({
+      is: 'partners-view',
+
+      properties: {
+        partners: Array,
+        _filteredPartners: Array,
+        q: {
+          type: String,
+          notify: true,
+          value: '',
+          observer: '_qChanged'
+        }
+      },
+
+      observers: [
+        'updateURL(q, partners)',
+      ],
+
+      filter: function(partner) {
+        if (this.q && this.q.length &&
+            partner.name.toLowerCase().indexOf(this.q) < 0) {
+          return false;
+        }
+        return true;
+      },
+
+      updateURL: function() {
+        if (this.partners && this.partners.length) {
+          this._filteredPartners = _.filter(this.partners, this.filter.bind(this));
+        }
+      },
+
+      onSearch: function() {
+        this.q = this.$.query.value;
+      },
+
+      _qChanged: function(q) {
+        if (q) {
+          this.async(function() {
+            this.$.query.focus();
+          });
+        }
+      }
+
+    });
+  })();
   </script>
 </dom-module>

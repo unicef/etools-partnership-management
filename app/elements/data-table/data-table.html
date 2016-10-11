@@ -1,0 +1,132 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../dom-ref/dom-ref.html">
+
+<!--
+
+ The `data-list` element is a shell for the etools list pages
+ (partner, agreement, intervention, etc). The element expects
+ `<div class="table header">` for header items and
+ ```html
+ <template id="row-template" is="dom-template">`
+   <div class="table row">
+ ```
+ for row items. You can use custom and nested elements
+ in rows, but make sure at some point an element has `class="table row"`
+ and it's direct children are the row items.
+
+ All general list functionality should be placed here.
+
+Example Usage:
+
+```html
+<data-table data="[[data]]">
+
+  <div class="table header">
+    <div>Header item</div>
+    <div>Header item</div>
+    <div>Header item</div>
+  </div>
+
+  <template id="row-template" is="dom-template">
+    <div class="table row">
+      <div>Row item</div>
+      <div>Row item</div>
+      <div>Row item</div>
+    </div>
+  </template>
+
+</data-table>
+```
+
+-->
+
+<dom-module id="data-table">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        position: relative;
+        margin: 20px auto;
+        opacity: 1;
+        transition: opacity 0.4s;
+        max-width: 920px;
+        background-color: #fff;
+      }
+
+      :host(.hidden) {
+        transition: none;
+        opacity: 0;
+      }
+
+      ::content .header {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        line-height: 56px;
+        font-size: 12px;
+        font-weight: 500;
+        background-color: #f4f4f4;
+        border-bottom: 2px solid #8f8888;
+      }
+
+      ::content .row {
+        @apply(--layout-vertical);
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px 15px;
+        font-weight: 400;
+        font-size: 13px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      ::content .row:hover {
+        background: #fafafa;
+      }
+
+      ::content .row .main {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      ::content .row .details {
+        @apply(--layout-horizontal);
+      }
+    </style>
+
+    <paper-material elevation="1">
+      <content></content>
+      <template id="table" is="dom-repeat" items="[[data]]" initial-count="5">
+        <template is="dom-ref" bind="[[item]]" ref="row-template"></template>
+      </template>
+    </paper-material>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'data-table',
+
+        properties: {
+          data: {
+            type: Array,
+            observer: '_dataChanged'
+          },
+          rowDetails: {
+            type: Boolean,
+            reflectToAttribute: true
+          }
+        },
+
+        _dataChanged: function() {
+          this.classList.add('hidden');
+          this.async(function() {
+            this.classList.remove('hidden');
+          }, 1);
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

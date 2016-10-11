@@ -311,11 +311,11 @@ gulp.task('serve', ['styles', 'elements', 'images'], function() {
 
       // partner management app
       case '/api/partners_list/':
-        req.url = '/data/partner_data.json';
+        req.url = '/data/partner_data_small.json';
         break;
 
       case '/api/agreements_list/':
-        req.url = '/data/partner_data.json';
+        req.url = '/data/partner_data_small.json';
         break;
     }
     return next();

@@ -71,7 +71,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <etools-loading id="loading"></etools-loading>
     <etools-alert id="alert"></etools-alert>
 
-    <paper-drawer-panel id="paperDrawerPanel" responsive-width="900px">
+    <template is="dom-if" if='{{permissions.statsMenu}}'>
+      <partner-data data="{{partnerData}}"></partner-data>
+    </template>
+
+    <template is="dom-if" if='{{permissions.statsMenu}}'>
+      <agreement-data data="{{agreementData}}"></agreement-data>
+    </template>
+
+    <paper-drawer-panel id="paperDrawerPanel" responsive-width="700px">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
 
@@ -90,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-if" if='{{permissions.interventionsMenu}}'>
             <a data-route="partners" href="{{baseUrl}}partners">
-             <iron-icon icon="home"></iron-icon>
+             <iron-icon icon="group-work"></iron-icon>
              <span>Partners</span>
             </a>
           </template>
@@ -122,9 +130,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span class="space"></span>
 
           <!-- Toolbar icons -->
-          <paper-icon-button icon="restore" disabled></paper-icon-button>
-          <paper-icon-button icon="print"></paper-icon-button>
-          <paper-icon-button icon="file-download"></paper-icon-button>
+          <paper-dropdown-menu-light label="Country">
+            <paper-listbox class="dropdown-content">
+              <paper-item>UAT</paper-item>
+              <paper-item>China</paper-item>
+              <paper-item>Canada</paper-item>
+              <paper-item>Russia</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu-light>
+
+          <paper-icon-button icon="account-circle"></paper-icon-button>
 
           <!-- Application name -->
           <div class="bottom bottom-container">
@@ -143,15 +158,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            <template is="dom-if" if='{{permissions.interventionsMenu}}'>
+            <template is="dom-if" if='{{permissions.statsMenu}}'>
               <section data-route="partners" tabindex="-1">
-                <partners-view></partners-view>
+                <partners-view partners="[[partnerData]]"></partners-view>
               </section>
             </template>
 
-            <section data-route="agreements" tabindex="-1">
-              <agreements-view></agreements-view>
-            </section>
+            <template is="dom-if" if='{{permissions.statsMenu}}'>
+              <section data-route="agreements" tabindex="-1">
+                <agreements-view data="{{agreementData}}"></agreements-view>
+              </section>
+            </template>
 
             <section data-route="interventions" tabindex="-1">
               <paper-material elevation="1">

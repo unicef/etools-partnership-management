@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="details-item">
+  <template>
+    <style include="shared-styles iron-flex">
+      :host {
+        display: block;
+        margin-right: 30px;
+      }
+
+      .heading {
+        margin-bottom: 5px;
+      }
+
+      iron-icon {
+        margin-right: 8px;
+      }
+    </style>
+
+    <div class="heading">{{heading}}</div>
+    <div class="layout horizontal center">
+      <iron-icon id="icon" icon="{{icon}}"></iron-icon>
+      <div>{{content}}</div>
+    </div>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'details-item',
+
+        properties: {
+          heading: String,
+          icon: {
+            type: String,
+            value: '',
+            observer: 'iconChanged'
+          },
+          content: String
+        },
+
+        iconChanged: function(icon) {
+          if (!icon) {
+            this.$.icon.style.width = 0;
+            this.$.icon.style.margin = 0;
+          }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
