@@ -63,12 +63,12 @@
 
     </style>
     <div class="staff-members-header flex-horizontal">
-      <content-toggle-button class="flex-child" content="[[staffMembersIronCollapse]]" label="Staff Members"></content-toggle-button>
+      <content-toggle-button class="flex-child" label="Staff Members" active="{{staffActive}}"></content-toggle-button>
       <paper-button on-tap="addNewStaffMember">
         <iron-icon icon="add"></iron-icon>
       </paper-button>
     </div>
-    <iron-collapse id="staffMembers">
+    <iron-collapse id="staffMembers" opened="{{staffActive}}">
       <template is="dom-repeat" items="{{staffMembersData}}">
         <div class="staff-member flex-horizontal">
           <div class="remove-staff-member flex-horizontal flex-align-center-justified">

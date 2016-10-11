@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/iron-icons/hardware-icons.html">
 
 <dom-module id="content-toggle-button">
   <template>
@@ -17,38 +16,37 @@
         font-size: 14px;
       }
     </style>
-    <span on-tap="toggleContent">
-      <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+    <span on-tap="_toggleContent">
+      <iron-icon id="expandIcon" icon="{{_icon}}"></iron-icon>
       [[label]]
     </span>
   </template>
 
   <script>
     (function() {
-      // jscs:disable
       'use strict';
 
       Polymer({
         is: 'content-toggle-button',
         properties: {
-          content: {
-            // content must be an iron-collapse element, otherwise the toggle method will not work
-            type: Object
+          active: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          _icon: {
+            type: String,
+            value: 'expand-more',
+            reflectToAttribute: true
           }
         },
-        toggleContent: function (event) {
-          this.content.toggle();
-          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
-        },
-        toggleIcon: function(iconElement) {
-          if (iconElement.icon === 'hardware:keyboard-arrow-down') {
-            iconElement.icon = 'hardware:keyboard-arrow-up';
-          } else {
-            iconElement.icon = 'hardware:keyboard-arrow-down';
-          }
-        }
-      });
 
+        _toggleContent: function() {
+          this.active = !this.active;
+          this._icon = this.active ? 'expand-less' : 'expand-more';
+        }
+
+      });
     })();
   </script>
 </dom-module>
