@@ -1,79 +1,115 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-<link rel="import" href="../agreement-data/agreement-data.html">
+<link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
 
 <dom-module id="agreements-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
+        position: relative;
+        max-width: 920px;
+        margin: 20px auto;
+        background: #fff;
       }
-
-      vaadin-combo-box {
-        margin-bottom: 20px;
-        --paper-input-container-label: {
-          font-size: inherit;
-        }
+      .row {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px 15px;
+        font-weight: 400;
+        font-size: 13px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .row:hover {
+        background: #fafafa;
+      }
+      .row .sync {
+        color: #737373;
+      }
+      .row .sync.true {
+        color: #3cb23c;
+      }
+      .row > div:not(.sync) {
+        @apply(--layout-flex);
+        min-width: 105px;
+      }
+      .row > div:not(.risk) {
+        margin-right: 15px;
+      }
+      .row .name {
+        font-weight: 500;
+        @apply(--layout-flex-2);
+      }
+      .row .type {
+        color: #757575;
+      }
+      .row .risk {
+        @apply(--layout-self-stretch);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin: -15px 0px;
+      }
+      .row .risk .bar {
+        height: 100%;
+        min-width: 20px;
+        margin-right: 10px;
+      }
+      .row .risk.high .bar {
+        background-color: #f03a47;
+      }
+      .row .risk.significant .bar {
+        background-color: #ff8329;
+      }
+      .row .risk.medium .bar {
+        background-color: #ffca3a;
+      }
+      .row .risk.low .bar {
+        background-color: #fff277;
+      }
+      .row .risk.non-assessed .bar {
+        background-color: #dcd8d8;
+      }
+      .row .risk.no-rating .bar {
+        background-color: #000;
       }
     </style>
 
-    <!--<paper-material elevation="1">
-      <div class="data-table">
-        <agreement-data id="agreementData" agreements={{agreements}}></agreement-data>
-        <iron-data-table items="[[agreements]]" selection-enabled>
-          <data-table-column name="Reference Number">
-            <template>[[item.vendor_number]]</template>
-          </data-table-column>
-          <data-table-column name="Partner Name" sort-by="name" filter-by="name">
-            <template>[[item.name]]</template>
-          </data-table-column>
-          <data-table-column name="Agreement Type" sort-by="rating" filter-by="rating">
-            <template is="header">
-              <vaadin-combo-box label="[[column.name]]" value="{{column.filterValue}}"
-                                items='["Programme Cooperation Agreement",
-                                        "Small Scale Funding Agreement",
-                                        "Memorandum of Understanding",
-                                        "Institutional Contract",
-                                        "Work Plan"]'
-                                allow-custom-value></vaadin-combo-box>
-            </template>
-            <template>[[item.rating]]</template>
-          </data-table-column>
-          <data-table-column name="Start Date" sort-by="last_assessment_date">
-            <template>[[item.last_assessment_date]]</template>
-          </data-table-column>
-          <data-table-column name="End Date" sort-by="last_assessment_date">
-            <template>[[item.last_assessment_date]]</template>
-          </data-table-column>
-          <data-table-column name="UNICEF Signed" sort-by="last_assessment_date">
-            <template>[[item.last_assessment_date]]</template>
-          </data-table-column>
-          <data-table-column name="Signed Agreement">
-            <template><paper-icon-button icon="file-download"></paper-icon-button></template>
-          </data-table-column>
-        </iron-data-table>
-      </div>
-    </paper-material>-->
-
-
     <paper-material elevation="1">
-      <div class="data-table">
-        <agreement-data id="agreements" data="{{data}}"></agreement-data>
-        <vaadin-grid id="agreementTable" items="[[data]]" visible-rows="12">
-          <table>
-            <colgroup>
-              <col name="name"/>
-              <col name="partner_type"/>
-              <col name="vendor_number"/>
-              <col name="rating"/>
-              <col name="vision_synced"/>
-            </colgroup>
-          </table>
-        </vaadin-grid>
-      </div>
+      <template is="dom-repeat" id="agreements-list" items="[[data]]" initial-count="20">
+        <div class="row">
+          <div class$="sync [[item.vision_synced]]">
+            <iron-icon icon="notification:sync"></iron-icon>
+          </div>
+          <div class="name">[[item.name]]</div>
+          <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
+          <div class$="risk [[_computeRating(item.rating)]]">
+            <div class="bar"></div>
+            <div class="text">[[item.rating]]</div>
+          </div>
+
+        </div>
+      </template>
     </paper-material>
+
+    <!-- Experimental iron-list version -->
+
+    <!-- <iron-list items="[[agreements]]" as="item" style="height: 100vh">
+      <template>
+        <div class="row">
+          <div class$="sync [[item.vision_synced]]">
+            <iron-icon icon="notification:sync"></iron-icon>
+          </div>
+          <div class="name">[[item.name]]</div>
+          <div class="type">[[_computeType(item.cso_type, item.partner_type)]]</div>
+          <div class$="risk [[_computeRating(item.rating)]]">
+            <div class="bar"></div>
+            <div class="text">[[item.rating]]</div>
+          </div>
+        </div>
+      </template>
+    </iron-list> -->
 
   </template>
   <script>
@@ -81,7 +117,31 @@
       'use strict';
 
       Polymer({
-        is: 'agreements-view'
+        is: 'agreements-view',
+
+        properties: {
+          data: {
+            type: Array,
+            reflectToAttribute: true
+          }
+        },
+
+        _computeType: function(csoType, partnerType) {
+          if (csoType) {
+            return 'CSO/' + csoType;
+          } else {
+            return partnerType;
+          }
+        },
+
+        _computeRating: function(rating) {
+          if (rating) {
+            return rating.toLowerCase();
+          } else {
+            return 'no-rating';
+          }
+        }
+
       });
     })();
   </script>

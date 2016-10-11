@@ -1,0 +1,54 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../details-item/details-item.html">
+
+<dom-module id="partner-details-dropdown">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      .content {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+        padding: 30px 0 0 34px;
+      }
+    </style>
+
+    <iron-collapse id="collapse">
+      <div class="content">
+        <details-item heading="PHONE NUMBER"
+                      icon="communication:phone"
+                      hidden$="[[!partner.phone_number]]"
+                      content="[[partner.phone_number]]"></details-item>
+        <details-item heading="E-MAIL ADDRESS"
+                      icon="mail"
+                      hidden$="[[!partner.email]]"
+                      content="[[partner.email]]"></details-item>
+        <details-item heading="VENDOR NUMBER"
+                      hidden$="[[!partner.vendor_number]]"
+                      content="[[partner.vendor_number]]"></details-item>
+      </div>
+    </iron-collapse>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partner-details-dropdown',
+
+        properties: {
+          partner: Object
+        },
+
+        toggle: function() {
+          this.$.collapse.toggle();
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

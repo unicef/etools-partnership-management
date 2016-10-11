@@ -62,6 +62,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     /* paper-menu */
     --paper-menu-background-color: #fff;
     --menu-link-color: #111111;
+
+    /* paper-input */
+    --paper-input-container-focus-color: var(--paper-indigo-500);
+
+    /* paper-dropdown-light */
+    --paper-dropdown-menu-focus-color: var(--paper-indigo-500);
+    --paper-dropdown-menu-input: {
+      border-bottom: 1px solid #737373;
+    };
+
+    /* paper-toolbar */
+    --paper-toolbar-color: #35343a;
+
   }
 
   /* General styles */
@@ -96,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     --paper-menu-focused-item-after: {
       background: var(--primary-color);
-    }
+    };
   }
 
   paper-menu iron-icon {
@@ -185,7 +198,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   /* Breakpoints */
 
   /* Small */
-  @media (max-width: 900px) {
+  @media (max-width: 700px) {
 
     #drawer .paper-toolbar {
       margin-left: 16px;
@@ -212,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     iron-pages {
-      padding: 48px 62px;
+      padding: 0px 10px;
     }
 
     paper-material {

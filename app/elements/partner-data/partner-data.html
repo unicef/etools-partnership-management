@@ -6,10 +6,8 @@
     <etools-ajax
           auto
           id="ajax"
-          url="[[url]]"
           handle-as="json"
-          on-response="handleResponse"
-          debounce-duration="300">
+          on-response="handleResponse">
     </etools-ajax>
   </template>
 
@@ -25,11 +23,9 @@
         data: {
           type: Array,
           notify: true,
-          value: []
-        },
-        url: {
-          type: String,
-          value: null
+          value: function() {
+            return [];
+          }
         }
       },
       ready: function(){
