@@ -1,26 +1,22 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../styles/pmp/form-fields-styles.html">
 
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../common/custom-checkbox/custom-checkbox.html">
+<link rel="import" href="../common/content-toggle-button/content-toggle-button.html">
 
 <dom-module id="staff-members">
   <template>
-    <style include="layout-styles"></style>
-    <style include="form-fields-styles"></style>
-    <style>
-      :host {
-
-      }
+    <style include="iron-flex iron-flex-alignment form-fields-styles">
       .staff-members-header {
         position: relative;
         line-height: 30px;
@@ -32,24 +28,24 @@
           min-width: 0;
           padding: 0;
           border-radius: 15px;
-          background-color: var(--staff-members-add-btn-bg-color, #4a90e2);
+          background-color: var(--staff-members-add-btn-bg-color, --third-text-color);
           color: var(--staff-members-add-btn-bg-color, #ffffff);
         };
       }
       .staff-member {
         margin: 20px 0 15px 0;
         padding-bottom: 15px;
-        border-bottom: 1px solid #dedede;
+        border-bottom: 1px solid var(--divider-color);
       }
       .staff-member:last-of-type {
         border-bottom: none;
       }
       .remove-staff-member {
-        border-right: 1px solid #dedede;
+        border-right: 1px solid var(--divider-color);
         width: 50px;
       }
       .remove-staff-member paper-icon-button {
-        color: var(--staff-members-remove-btn-color, #4a90e2);
+        color: var(--staff-members-remove-btn-color, --third-text-color);
         --paper-icon-button: {
           padding: 3px;
           width: 24px;
@@ -62,25 +58,25 @@
       }
 
     </style>
-    <div class="staff-members-header flex-horizontal">
-      <content-toggle-button class="flex-child" content="[[staffMembersIronCollapse]]" label="Staff Members"></content-toggle-button>
+    <div class="layout horizontal staff-members-header">
+      <content-toggle-button class="flex" label="Staff Members" active="{{staffActive}}"></content-toggle-button>
       <paper-button on-tap="addNewStaffMember">
         <iron-icon icon="add"></iron-icon>
       </paper-button>
     </div>
-    <iron-collapse id="staffMembers">
+    <iron-collapse id="staffMembers" opened="{{staffActive}}">
       <template is="dom-repeat" items="{{staffMembersData}}">
-        <div class="staff-member flex-horizontal">
-          <div class="remove-staff-member flex-horizontal flex-align-center-justified">
+        <div class="layout horizontal staff-member">
+          <div class="layout horizontal center-justified remove-staff-member">
             <template is="dom-if" if="[[displayRemoveBtn(index)]]">
               <!-- Remove staff-member btn -->
-              <div class="flex-horizontal flex-align-center remove-btn-container">
-                <paper-icon-button icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
+              <div class="layout horizontal remove-btn-container">
+                <paper-icon-button class="self-center" icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
               </div>
             </template>
           </div>
-          <div class="staff-member-row flex-child">
-            <div class="flex-horizontal">
+          <div class="staff-member-row flex">
+            <div class="layout horizontal">
               <!-- Position -->
               <paper-input class="n-input-field"
                            label="Position"
@@ -101,7 +97,7 @@
 
             </div>
 
-            <div class="flex-horizontal">
+            <div class="layout horizontal">
               <!-- Telaphone number -->
               <paper-input class="n-input-field"
                            label="Phone Numer"
@@ -116,21 +112,15 @@
                 <paper-icon-button prefix icon="communication:email"></paper-icon-button>
               </paper-input>
 
-              <!-- User rights -->
-              <paper-dropdown-menu class="n-input-field"
-                                   label="User Rights"
-                                   value="{{item.user_rights}}">
-                <paper-listbox class="dropdown-content">
-                  <paper-item>Admin</paper-item>
-                  <paper-item>Normal user</paper-item>
-                </paper-listbox>
-              </paper-dropdown-menu>
-
             </div>
           </div>
         </div>
       </template>
     </iron-collapse>
+    <paper-toast id="emptyStaffMemberNotification" always-on-top="true" duration="3000" vertical-align="top" horizontal-align="right">
+      <iron-icon icon="info"></iron-icon>
+      Fill last added staff member fields to be able to add more.
+    </paper-toast>
   </template>
 
   <script>
@@ -160,20 +150,22 @@
             first_name: null,
             last_name: null,
             phone_number: null,
-            email_address: null,
-            user_rights: null
+            email_address: null
           };
         },
         addNewStaffMember: function () {
+          var open = false;
           if (this.staffMembersIronCollapse.opened === false) {
+            open = true;
             this.staffMembersIronCollapse.show();
           }
           var newStaffMember = this._getStaffMemberEmptyObject();
           if (!this._checkStaffMemberDuplicate(newStaffMember)) {
             this.push('staffMembersData', newStaffMember);
           } else {
-            // TODO: notification popup or something else to let the user know he already has an untouched new ready staff-member
-            console.log('Fill last added staff-member to be able to add more! Thanks!');
+            if (open === false) {
+              this.$.emptyStaffMemberNotification.open();
+            }
           }
         },
         removeStaffMember: function (event) {

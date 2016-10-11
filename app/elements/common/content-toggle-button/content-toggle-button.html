@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/iron-icons/hardware-icons.html">
 
 <dom-module id="content-toggle-button">
   <template>
@@ -14,41 +13,64 @@
       span {
         display: inline-block;
         width: 100%;
-        font-size: 14px;
+        font-size: var(--primary-font-size);
+      }
+      span.disabled {
+        color: var(--content-toggle-btn-disabled-color, #737373);
+        opacity: 0.33;
+      }
+      span.disabled iron-icon {
+        color: --content-toggle-btn-disabled-color;
       }
     </style>
-    <span on-tap="toggleContent">
-      <iron-icon class="collapsibleContentIcon" icon="hardware:keyboard-arrow-down"></iron-icon>
+    <span class$="[[disabledClass]]" on-tap="_toggleContent">
+      <iron-icon id="expandIcon" icon="{{_icon}}"></iron-icon>
       [[label]]
     </span>
   </template>
 
   <script>
     (function() {
-      // jscs:disable
       'use strict';
 
       Polymer({
         is: 'content-toggle-button',
         properties: {
-          content: {
-            // content must be an iron-collapse element, otherwise the toggle method will not work
-            type: Object
+          active: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          _icon: {
+            type: String,
+            value: 'expand-more',
+            reflectToAttribute: true
+          },
+          isDisabled: {
+            type: Boolean,
+            value: false,
+            observer: '_updateDisabledClass'
           }
         },
-        toggleContent: function (event) {
-          this.content.toggle();
-          this.toggleIcon(Polymer.dom(event.currentTarget).querySelector('.collapsibleContentIcon'));
+        _toggleContent: function() {
+          if (this.isDisabled) {
+            return false;
+          }
+          this.active = !this.active;
+          this._icon = this.active ? 'expand-less' : 'expand-more';
         },
-        toggleIcon: function(iconElement) {
-          if (iconElement.icon === 'hardware:keyboard-arrow-down') {
-            iconElement.icon = 'hardware:keyboard-arrow-up';
+        _updateDisabledClass: function() {
+          if (this.isDisabled === true) {
+            this.disabledClass = 'disabled';
+            if (this.active === true) {
+              this.active = false;
+              this._icon = 'expand-more';
+            }
           } else {
-            iconElement.icon = 'hardware:keyboard-arrow-down';
+            this.disabledClass = '';
           }
         }
       });
-
     })();
   </script>
 </dom-module>

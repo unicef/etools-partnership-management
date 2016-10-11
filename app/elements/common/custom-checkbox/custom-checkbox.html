@@ -1,16 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../../styles/pmp/layout-styles.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="custom-checkbox">
   <template>
-    <style include="layout-styles"></style>
-    <style>
+    <style include="iron-flex">
       :host {
         --paper-checkbox-label: {
           display: none;
         };
-        --paper-checkbox-checked-color: #4A90E2;
+        --paper-checkbox-checked-color: var(--third-text-color);
+        --paper-checkbox-unchecked-color: var(--secondary-text-color);
       }
       .custom-checkbox label {
         display: inline-block;
@@ -18,27 +18,30 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 12px;
+        font-size: var(--labels-secondary-font-size);
         font-weight: 400;
         letter-spacing: 0.011em;
         line-height: 20px;
         text-transform: uppercase;
         text-align: center;
         cursor: pointer;
-        color: #737373;
+        color: var(--secondary-text-color);
+      }
+      .custom-checkbox.disabled label {
+        opacity: 0.33;
       }
     </style>
-    <div class="custom-checkbox">
-      <label id="chLabel" class="flex-horizontal flex-align-center-justified" for="customCheckbox">[[label]]</label>
-      <div class="flex-horizontal flex-align-center-justified">
-        <paper-checkbox id="customCheckbox" checked="{{checked}}"></paper-checkbox>
+    <div class$="custom-checkbox [[disabledClass]]">
+      <label id="chLabel" class="layout horizontal center-justified" for="customCheckbox">[[label]]</label>
+      <div class="layout horizontal center-justified">
+        <paper-checkbox id="customCheckbox" checked="{{checked}}" disabled$="[[isDisabled]]"></paper-checkbox>
       </div>
     </div>
   </template>
 
   <script>
     (function() {
-      // jscs:disable
+
       'use strict';
 
       Polymer({
@@ -49,13 +52,25 @@
             value: false,
             notify: true,
             reflectToAttribute: true
+          },
+          isDisabled: {
+            type: Boolean,
+            value: false,
+            observer: '_updateDisabledClass'
           }
         },
         listeners: {
           'chLabel.tap': '_updateCheckboxVal'
         },
-        _updateCheckboxVal: function () {
+        _updateCheckboxVal: function() {
           this.checked = !this.checked;
+        },
+        _updateDisabledClass: function() {
+          if (this.isDisabled === true) {
+            this.disabledClass = 'disabled';
+          } else {
+            this.disabledClass = '';
+          }
         }
       });
 

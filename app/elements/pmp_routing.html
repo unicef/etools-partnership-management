@@ -10,63 +10,104 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script src="../bower_components/page/page.js"></script>
 <script>
-  window.addEventListener('WebComponentsReady', function() {
-
-    // Removes end / from app.baseUrl which page.base requires for production
-    if (window.location.port === '') {  // if production
-      page.base(app.baseUrl.replace(/\/$/, ''));
+var leavePageWarningResponseHandling = {
+  currentRouteName: null,
+  ctx: null,
+  next: null,
+  handleResponse: function(event) {
+    if (event.detail.confirmed === true) {
+      // leave page
+      leavePageWarningResponseHandling.next();
+    } else {
+      // remain on page
+      page(leavePageWarningResponseHandling.ctx.path);
+      app.$.appMenu.selected = leavePageWarningResponseHandling.currentRouteName;
     }
+  }
+};
+window.addEventListener('WebComponentsReady', function() {
 
-    function scrollToTop(ctx, next) {
-      app.scrollPageToTop();
-      next();
-    }
+  // Removes end / from app.baseUrl which page.base requires for production
+  if (window.location.port === '') {  // if production
+    page.base(app.baseUrl.replace(/\/$/, ''));
+  }
 
-    function closeDrawer(ctx, next) {
-      app.closeDrawer();
-      next();
-    }
+  function scrollToTop(ctx, next) {
+    app.scrollPageToTop();
+    next();
+  }
 
-    // Routes
-    page('*', scrollToTop, closeDrawer, function(ctx, next) {
-      next();
-    });
+  function closeDrawer(ctx, next) {
+    app.closeDrawer();
+    next();
+  }
 
-    page('/', function() {
-      app.route = 'home';
-    });
-
-    page(app.baseUrl, function() {
-      app.route = 'home';
-    });
-
-    page('/partners', function() {
-      app.route = 'partners';
-    });
-
-    page('/add-partner-organization', function() {
-      app.route = 'add-partner-organization';
-    });
-
-    page('/agreements', function() {
-      app.route = 'agreements';
-    });
-
-    page('/interventions', function() {
-      app.route = 'interventions';
-    });
-
-    // 404
-    page('*', function() {
-      app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
-      app.$.toast.show();
-      page.redirect(app.baseUrl);
-    });
-
-    // add #! before urls
-    page({
-      hashbang: true
-    });
-
+  // Routes
+  page('*', scrollToTop, closeDrawer, function(ctx, next) {
+    next();
   });
+
+  page('/', function() {
+    app.route = 'home';
+  });
+
+  page(app.baseUrl, function() {
+    app.route = 'home';
+  });
+
+  page('/partners', function() {
+    app.route = 'partners';
+  });
+
+  page('/add-partner-organization', function() {
+    app.route = 'add-partner-organization';
+  });
+
+  page('/agreements', function() {
+    app.route = 'agreements';
+  });
+
+  page('/interventions', function() {
+    app.route = 'interventions';
+  });
+
+  // 404
+  page('*', function() {
+    app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+    app.$.toast.show();
+    page.redirect(app.baseUrl);
+  });
+
+  // add #! before urls
+  page({
+    hashbang: true
+  });
+
+  page.exit('/add-partner-organization', function(ctx, next) {
+    var appMenu = app.$.appMenu;
+    var currentRouteName = 'add-partner-organization';
+
+    // TODO: check if page data was not saved
+    if (appMenu.selected !== currentRouteName) {
+      leavePageWarningResponseHandling.currentRouteName = currentRouteName;
+      leavePageWarningResponseHandling.ctx = ctx;
+      leavePageWarningResponseHandling.next = next;
+      app.$.leavePageWithUnsavedData.open();
+    }
+  });
+
+  app.$.leavePageWithUnsavedData.addEventListener('iron-overlay-closed',
+      leavePageWarningResponseHandling.handleResponse);
+});
+
+function beforeUnloadHandler() {
+  // TODO: check if page data was not saved
+  if (app.$.appMenu.selected === 'add-partner-organization') {
+    // return a message just to trigger browser default popup for unsaved form data
+    // the returning message of this function will never be displayed by browser
+    // (security policy issue)
+    return 'Do you want to leave this page? Data you have entered may not be saved.';
+  }
+}
+//window.onbeforeunload = beforeUnloadHandler;
 </script>
