@@ -22,10 +22,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="lodash/lodash.html">
-<link rel="import" href="etools-app-config/etools-app-config.html">
-<link rel="import" href="etools-data/etools-data.html">
-<link rel="import" href="drawer-item/drawer-item.html">
+<link rel="import" href="app-elements/lodash/lodash.html">
+<link rel="import" href="app-config/etools-app-config.html">
+<link rel="import" href="app-elements/user-data/user-data.html">
+<link rel="import" href="app-elements/etools-data/etools-data.html">
+<link rel="import" href="app-elements/drawer-item/drawer-item.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
@@ -121,7 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <etools-data></etools-data>
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 

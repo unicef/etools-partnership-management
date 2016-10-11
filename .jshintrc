@@ -18,6 +18,7 @@
     "Polymer": true,
     "_": true,
     "Dexie": true,
-    "etoolsAppConfig": true
+    "etoolsAppConfig": true,
+    "etoolsAjaxDefaultDexieDbPrefix": true
   }
 }

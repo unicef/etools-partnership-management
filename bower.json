@@ -1,9 +1,10 @@
 {
-  "name": "polymer-starter-kit",
+  "name": "Etools frontend template - based on polymer starter kit 2",
   "authors": [
-    "The Polymer Authors"
+    "The eTools team"
   ],
   "private": true,
+  "license": "https://github.com/unicef-polymer/etools-frontend-template/blob/master/LICENSE.md",
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^0.10.0",
     "app-route": "PolymerElements/app-route#^0.9.0",
