@@ -1,4 +1,4 @@
-eTools Frontend Template
+eTools Partnership Management
 ====================================
 
 Installation
@@ -24,6 +24,38 @@ Install packages:
 $ npm install
 $ bower install
 ```
+
+Update app shell from [etools-frontend-template](https://github.com/unicef-polymer/etools-frontend-template/tree/develop)
+-------------------------------------------------------------------------------------------------------------------------
+Check your local project remote repository for etools-frontend-template:
+```bash
+$ git remote -v
+etools-frontend-template	https://github.com/unicef-polymer/etools-frontend-template.git (fetch)
+etools-frontend-template	https://github.com/unicef-polymer/etools-frontend-template.git (push)
+origin	https://github.com/unicef/etools-partnership-management.git (fetch)
+origin	https://github.com/unicef/etools-partnership-management.git (push)
+```
+
+If etools-frontend-template is not listed run:
+
+```bach
+$ git remote add etools-frontend-template https://github.com/unicef-polymer/etools-frontend-template.git
+```
+
+Update your project frontend app shell:
+
+```bash
+$ git checkout develop
+
+$ git fetch etools-frontend-template
+From https://github.com/unicef-polymer/etools-frontend-template
+ * [new branch]      develop    -> etools-frontend-template/develop
+
+$ git merge --no-ff etools-frontend-template/develop
+```
+
+**IMPORTANT!!!** Be careful with frontend app shell template update. It might contain new features you do not have 
+in your app or you might have made significant changes to fit your app requirements. You may have conflicts at merge. 
 
 Build Application
 -----------------
