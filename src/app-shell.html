@@ -28,7 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/user-data/user-data.html">
 <link rel="import" href="app-elements/etools-data/etools-data.html">
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
-<link rel="import" href="app-elements/lodash/lodash.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
@@ -251,7 +250,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageNotFound: function() {
         this.page = 'not-found';
-        this.fire('toast', {text: 'Oops you hit a 404!'})
+        this.fire('toast', {text: 'Oops you hit a 404!'});
       }
 
     });
