@@ -1,0 +1,10 @@
+{
+  "preset": "google",
+  "disallowSpacesInAnonymousFunctionExpression": null,
+  "disallowTrailingWhitespace": null,
+  "maximumLineLength": 200,
+  "excludeFiles": ["node_modules/**"],
+  "validateIndentation": 2,
+  "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
+  "requireCapitalizedConstructors": false
+}

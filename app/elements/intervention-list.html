@@ -1,0 +1,20 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="breadcrumb-trail.html">
+
+<dom-module id="intervention-list">
+<template>
+  <style include="shared-styles">
+      :host {
+          display: block;
+      }
+  </style>
+  <breadcrumb-trail></breadcrumb-trail>
+  <div class="page-title" tabindex="-1">Interventions</div>
+</template>
+<script>
+  Polymer({
+    is: 'intervention-list'
+  });
+</script>
+</dom-module>
