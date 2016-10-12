@@ -24,11 +24,6 @@ App global configuration
           url: '../../data/countries.json',
           exp: 30 * 60 * 1000, // 30min
           cachingKey: 'countries'
-        },
-        testTemplateEndpointUse: {
-          template: '/api/country/<%=id%>',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'countries'
         }
       },
 
@@ -68,11 +63,5 @@ App global configuration
       collectionsList: '&name,expire',
       countries: 'id, name'
     });
-
-    /**
-     * test endpoint url generation using _.template
-     */
-    console.log(etoolsAppConfig.globals.getEndpoint('testTemplateEndpointUse', {id: 13}).url,
-        etoolsAppConfig.globals.getEndpoint('countries').url);
 
 </script>

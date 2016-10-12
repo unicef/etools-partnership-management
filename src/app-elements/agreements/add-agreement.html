@@ -1,0 +1,33 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="add-agreement">
+
+  <template>
+
+    <style include="shared-styles"></style>
+
+    <app-route
+        route="{{route}}"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+
+    add agreement page content goes here...
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'add-agreement',
+      });
+
+    })();
+  </script>
+
+</dom-module>

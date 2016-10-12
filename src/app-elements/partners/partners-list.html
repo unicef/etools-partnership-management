@@ -1,0 +1,33 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="partners-list">
+
+  <template>
+
+    <style include="shared-styles"></style>
+
+    <app-route
+        route="{{route}}"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+
+    partners list content goes here...
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partners-list',
+      });
+
+    })();
+  </script>
+
+</dom-module>

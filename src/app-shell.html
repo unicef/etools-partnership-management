@@ -152,6 +152,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation">
 
+            <drawer-item name="partners" href="/partners/list">
+              <div class="section" dash>
+                <a class="row" href="/partners/list">
+                  <iron-icon icon="list"></iron-icon>
+                  <span>List</span>
+                </a>
+              </div>
+              <div class="section" dash>
+                <a class="row" href="/partners/add">
+                  <iron-icon icon="add"></iron-icon>
+                  <span>Add</span>
+                </a>
+              </div>
+            </drawer-item>
+
+            <drawer-item name="agreements" href="/agreements/list">
+              <div class="section" dash>
+                <a class="row" href="/agreements/list">
+                  <iron-icon icon="list"></iron-icon>
+                  <span>List</span>
+                </a>
+              </div>
+              <div class="section" dash>
+                <a class="row" href="/agreements/add">
+                  <iron-icon icon="add"></iron-icon>
+                  <span>Add</span>
+                </a>
+              </div>
+            </drawer-item>
+
+            <drawer-item name="interventions" href="/interventions/list">
+              <div class="section" dash>
+                <a class="row" href="/interventions/list">
+                  <iron-icon icon="list"></iron-icon>
+                  <span>List</span>
+                </a>
+              </div>
+              <div class="section" dash>
+                <a class="row" href="/interventions/add">
+                  <iron-icon icon="add"></iron-icon>
+                  <span>Add</span>
+                </a>
+              </div>
+            </drawer-item>
+
+            <!--
+            Demo sections
+            TODO: to be removed once the app menu is complete
+            -->
             <drawer-item name="section1" href="/section1">
               <div class="section" item>[[activeItem.name]]</div>
               <div class="section" dash>
@@ -171,6 +220,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <drawer-item name="section2" href="/section2" no-drawer></drawer-item>
 
             <drawer-item name="section3" href="/section3" no-drawer></drawer-item>
+            <!-- End demo sections -->
 
           </iron-selector>
 
@@ -191,9 +241,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     attr-for-selected="name"
                     fallback-selection="not-found"
                     role="main">
+
+          <!-- partners page -->
+          <page-partners name="partners" route="{{subroute}}"></page-partners>
+
+          <!-- agreements page -->
+          <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
+
+          <!-- interventions page -->
+          <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
+
+          <!--
+          Demo sections
+          TODO: to be removed once the app menu is complete
+          -->
           <page-section1 name="section1" route="{{subroute}}"></page-section1>
           <page-section2 name="section2" route="{{subroute}}"></page-section2>
           <page-section3 name="section3" route="{{subroute}}"></page-section3>
+          <!-- End demo sections -->
+
           <page-not-found name="not-found"></page-not-found>
         </iron-pages>
 
@@ -250,6 +316,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.route.path === '/') {
           this.set('route.path', '/section1');
         }
+        this._collapsePageMenu();
       },
 
       queueToast: function(e, detail) {
@@ -290,6 +357,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageNotFound: function() {
         this.page = 'not-found';
+      },
+
+      _collapsePageMenu: function() {
+        if (this.page) {
+          var menuDrawerItem = this.$$('drawer-item[name="' + this.page + '"]');
+          if (menuDrawerItem) {
+            menuDrawerItem.opened = true;
+          }
+        }
       }
 
     });

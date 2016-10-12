@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="page-not-found.html">
+<link rel="import" href="../app-elements/interventions/interventions-list.html">
+<link rel="import" href="../app-elements/interventions/add-intervention.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="page-interventions">
+
+  <template>
+
+    <style include="shared-styles"></style>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+    <iron-pages selected="[[routeData.page]]"
+                attr-for-selected="name"
+                fallback-selection="not-found">
+
+      <!-- partners list -->
+      <interventions-list name="list" route="{{subroute}}"></interventions-list>
+
+      <!-- add partner -->
+      <add-intervention name="add" route="{{subroute}}"></add-intervention>
+
+      <page-not-found name="not-found"></page-not-found>
+    </iron-pages>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'page-interventions',
+
+      });
+
+    })();
+  </script>
+
+</dom-module>
