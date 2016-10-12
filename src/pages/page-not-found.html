@@ -20,7 +20,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       :host {
         display: block;
-        padding: 10px 20px;
       }
 
       a {
@@ -29,7 +28,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    Oops you hit a 404. <a href="/section1">Head back to home.</a>
+
+    <app-header-layout>
+
+      <app-header fixed shadow>
+
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>404</div>
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+        <paper-material elevation="1">
+          <a href="/section1/tab1">Head back home.</a>
+        </paper-material>
+      </div>
+
+    </app-header-layout>
 
   </template>
 
@@ -37,7 +54,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'page-not-found'
+      is: 'page-not-found',
+
+      openDrawer: function() {
+        this.fire('drawer');
+      },
 
     });
 

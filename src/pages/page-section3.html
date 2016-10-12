@@ -8,15 +8,30 @@
 
     <style include="shared-styles">
 
+    :host {
+      display: block;
+    }
+
     </style>
 
-    <etools-data id="date" countries="{{countries}}"></etools-data>
+    <app-header-layout>
 
-    <h1>Section 3 Page</h1>
+      <app-header fixed shadow>
 
-    <template is="dom-repeat" items="[[countries]]">
-      <p>[[item.name]]</p>
-    </template>
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>Section 3</div>
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+        <paper-material elevation="1">
+          <h1>Section3</h1>
+        </paper-material>
+      </div>
+
+    </app-header-layout>
 
   </template>
 
@@ -28,7 +43,11 @@
 
       properties: {
 
-      }
+      },
+
+      openDrawer: function() {
+        this.fire('drawer');
+      },
 
     });
 

@@ -1,8 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
-
-<link rel="import" href="../some-item/some-item.html">
 
 <dom-module id="page-section1">
 
@@ -10,46 +10,63 @@
 
     <style include="shared-styles">
 
+    :host {
+      display: block;
+    }
+
     </style>
 
     <app-route
         route="{{route}}"
-        pattern="/:id"
+        pattern="/:tab"
         data="{{routeData}}"
-        active="{{active}}"
-        tail="{{subroute}}"></app-route>
+        active="{{tabsActive}}"></app-route>
 
-    <iron-selector id="list" hidden="{{active}}" selected="[[routeData.id]]" attr-for-selected="id" role="navigation">
-      <div id="1" name="item1" class="item">
-        <a href="/section1/1">
-          Some Item 1
-        </a>
+    <app-route
+        route="{{route}}"
+        pattern="/tab1"
+        active="{{tab1Active}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/tab2"
+        active="{{tab2Active}}"></app-route>
+
+    <app-header-layout>
+
+      <app-header id="header" fixed shadow>
+
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>Section 1{{tabString}}</div>
+        </app-toolbar>
+
+        <app-toolbar id="tabs">
+
+          <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="tab 1" noink bottom-item>
+            <paper-tab name="tab1" link>
+              <a href="/section1/tab1" class="tab-link" tabindex="-1">tab 1</a>
+            </paper-tab>
+
+            <paper-tab name="tab2" link>
+              <a href="/section1/tab2" class="tab-link" tabindex="-1">tab 2</a>
+            </paper-tab>
+          </paper-tabs>
+
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+
+        <paper-material elevation="1">
+          <h1 hidden="{{!tab1Active}}">Tab 1 Content</h1>
+          <h1 hidden="{{!tab2Active}}">Tab 2 Content</h1>
+        </paper-material>
+
       </div>
 
-      <div id="2" name="item2" class="item">
-        <a href="/section1/2">
-          Some Item 2
-        </a>
-      </div>
-
-      <div id="3" name="item3" class="item">
-        <a href="/section1/3">
-          Some Item 3
-        </a>
-      </div>
-    </iron-selector>
-
-    <some-item id="[[routeData.id]]" route="{{subroute}}" hidden="{{!active}}"></some-item>
-
-    <etools-data id="data" countries="{{countries}}"></etools-data>
-
-    <h1>Data testing over here</h1>
-
-    <button on-tap="add">Add</button>
-
-    <template is="dom-repeat" items="[[countries]]">
-      <p>[[item.name]]</p>
-    </template>
+    </app-header-layout>
 
   </template>
 
@@ -60,14 +77,28 @@
       is: 'page-section1',
 
       properties: {
-        countries: {
-          notify: true
+
+        tabString: {
+          type: String
+        }
+
+      },
+
+      observers: [
+        '_tabChanged(routeData.tab)'
+      ],
+
+      _tabChanged: function(tab) {
+        if (tab) {
+          this.tabString = ' - ' + tab;
+        } else {
+          this.fire('404');
         }
       },
 
-      add: function() {
-        this.push('countries', {name: 'HELLO THERE'});
-      },
+      openDrawer: function() {
+        this.fire('drawer');
+      }
 
     });
 
