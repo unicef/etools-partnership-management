@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+<link rel="import" href="../app-elements/some-item/some-item.html">
+
+<dom-module id="page-section1">
+
+  <template>
+
+    <style include="shared-styles">
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:id"
+        data="{{routeData}}"
+        active="{{active}}"
+        tail="{{subroute}}"></app-route>
+
+    <iron-selector id="list" hidden="{{active}}" selected="[[routeData.id]]" attr-for-selected="id" role="navigation">
+      <div id="1" name="item1" class="item">
+        <a href="/section1/1">
+          Some Item 1
+        </a>
+      </div>
+
+      <div id="2" name="item2" class="item">
+        <a href="/section1/2">
+          Some Item 2
+        </a>
+      </div>
+
+      <div id="3" name="item3" class="item">
+        <a href="/section1/3">
+          Some Item 3
+        </a>
+      </div>
+    </iron-selector>
+
+    <some-item id="[[routeData.id]]" route="{{subroute}}" hidden="{{!active}}"></some-item>
+
+    <etools-data id="data" countries="{{countries}}"></etools-data>
+
+    <h1>Data testing over here</h1>
+
+    <button on-tap="add">Add</button>
+
+    <template is="dom-repeat" items="[[countries]]">
+      <p>[[item.name]]</p>
+    </template>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-section1',
+
+      properties: {
+        countries: {
+          notify: true
+        }
+      },
+
+      ready: function() {
+        this.listen(this.$.list, 'iron-select', 'changeMenu');
+        var item = this.$.list.selectedItem;
+        if (item) {
+          this.fire('item', {id: item.id, name: item.getAttribute('name')});
+        }
+      },
+
+      changeMenu: function(e, detail) {
+        this.fire('item', {id: detail.item.id, name: detail.item.getAttribute('name')});
+      },
+
+      add: function() {
+        this.push('countries', {name: 'HELLO THERE'});
+      },
+
+    });
+
+  </script>
+
+</dom-module>
