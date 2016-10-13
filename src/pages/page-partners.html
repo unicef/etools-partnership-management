@@ -1,9 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="page-not-found.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
-<link rel="import" href="../app-elements/partners/add-partner.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -11,40 +10,84 @@
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
 
     <app-route
         route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
+        pattern="/list"
+        active="{{listActive}}"></app-route>
 
-    <iron-pages selected="[[routeData.page]]"
-                attr-for-selected="name"
-                fallback-selection="not-found">
+    <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
 
-      <!-- partners list -->
-      <partners-list name="list" route="{{subroute}}"></partners-list>
+    <app-header-layout>
 
-      <!-- add partner -->
-      <add-partner name="add" route="{{subroute}}"></add-partner>
+      <app-header id="header" fixed shadow>
 
-      <page-not-found name="not-found"></page-not-found>
-    </iron-pages>
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>Partners{{partnerName}}</div>
+        </app-toolbar>
+
+        <div id="tabsWrapper" hidden$="{{!tabsActive}}">
+
+          <app-toolbar id="tabs-bar">
+
+            <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="overview" noink bottom-item>
+              <paper-tab name="overview" link>
+                <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
+              </paper-tab>
+
+              <paper-tab name="partners" link>
+                <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
+              </paper-tab>
+            </paper-tabs>
+
+          </app-toolbar>
+
+        </div>
+
+      </app-header>
+
+      <div id="pageContent">
+
+        <paper-material elevation="1">
+          <h1>Some partners here!</h1>
+        </paper-material>
+
+      </div>
+
+    </app-header-layout>
 
   </template>
 
   <script>
-    (function() {
-      'use strict';
 
-      Polymer({
-        is: 'page-partners',
+    Polymer({
 
-      });
+      is: 'page-partners',
 
-    })();
+      properties: {
+
+        partnerName: String
+
+      },
+
+      openDrawer: function() {
+        this.fire('drawer');
+      }
+
+    });
+
   </script>
 
 </dom-module>

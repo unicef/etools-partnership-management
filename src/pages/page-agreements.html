@@ -1,9 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
-<link rel="import" href="page-not-found.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
-<link rel="import" href="../app-elements/agreements/add-agreement.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -11,40 +8,64 @@
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="shared-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
 
     <app-route
         route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
+        pattern="/list"
+        active="{{listActive}}"></app-route>
 
-    <iron-pages selected="[[routeData.page]]"
-                attr-for-selected="name"
-                fallback-selection="not-found">
+    <app-route
+        route="{{route}}"
+        pattern="/:id/details"
+        active="{{detailsActive}}"
+        data="{{routeData}}"></app-route>
 
-      <!-- partners list -->
-      <agreements-list name="list" route="{{subroute}}"></agreements-list>
+    <app-header-layout>
 
-      <!-- add partner -->
-      <add-agreement name="add" route="{{subroute}}"></add-agreement>
+      <app-header id="header" fixed shadow>
 
-      <page-not-found name="not-found"></page-not-found>
-    </iron-pages>
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>Agreements</div>
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+
+        <paper-material elevation="1">
+          <h1>Some agreements here!</h1>
+        </paper-material>
+
+      </div>
+
+    </app-header-layout>
 
   </template>
 
   <script>
-    (function() {
-      'use strict';
 
-      Polymer({
-        is: 'page-agreements',
+    Polymer({
 
-      });
+      is: 'page-agreements',
 
-    })();
+      properties: {
+
+      },
+
+      openDrawer: function() {
+        this.fire('drawer');
+      }
+
+    });
+
   </script>
 
 </dom-module>
