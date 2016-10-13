@@ -132,7 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <side-bar-item name="section2" icon="book" href="/section2"></side-bar-item>
               <side-bar-item name="section3" icon="build" href="/section3"></side-bar-item>
               <div class="divider"></div>
-              <side-bar-item name="settings" icon="settings" href="/settings"></side-bar-item>
+
+              <!-- Only display settings if the user has permission -->
+              <side-bar-item hidden$="{{!permissions.default}}" name="settings" icon="settings" href="/settings"></side-bar-item>
+
               <side-bar-item name="user support" icon="help" href="/support"></side-bar-item>
               <side-bar-item name="discussions" icon="question-answer" href="/discussion"></side-bar-item>
               <side-bar-item name="information" icon="info" href="/information"></side-bar-item>

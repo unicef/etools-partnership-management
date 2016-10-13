@@ -60,8 +60,8 @@
       <div id="pageContent">
 
         <paper-material elevation="1">
-          <h1 hidden="{{!tab1Active}}">Tab 1 Content</h1>
-          <h1 hidden="{{!tab2Active}}">Tab 2 Content</h1>
+          <h1 hidden$="{{!tab1Active}}">Tab 1 Content</h1>
+          <h1 hidden$="{{!tab2Active}}">Tab 2 Content</h1>
         </paper-material>
 
       </div>
@@ -86,16 +86,16 @@
         '_tabChanged(routeData.tab)'
       ],
 
+      openDrawer: function() {
+        this.fire('drawer');
+      },
+
       _tabChanged: function(tab) {
         if (tab) {
           this.tabName = ' - ' + tab;
         } else {
           this.fire('404');
         }
-      },
-
-      openDrawer: function() {
-        this.fire('drawer');
       }
 
     });
