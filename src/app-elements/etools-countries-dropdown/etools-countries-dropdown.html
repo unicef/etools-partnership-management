@@ -1,0 +1,58 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dropdown/etools-dropdown.html">
+<link rel="import" href="../../../styles/countries-flags/countries-flags-styles.html">
+
+<link rel="import" href="../../app-behaviors/dynamic-custom-styles.html">
+<link rel="import" href="../etools-countries-data/etools-countries-data.html">
+
+<dom-module id="etools-countries-dropdown">
+  <template>
+    <style>
+      :host {
+        --paper-menu-background-color: var(--light-theme-content-color);
+        --etools-dropdown-icon: {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    </style>
+
+    <etools-countries-data countries-data="{{countriesData}}"></etools-countries-data>
+
+    <etools-dropdown id="countriesDropdown"
+                     label="Countries"
+                     dropdown-value="{{selectedCountryId}}"
+                     options="[[countriesData]]"
+                     options-label-key="name"
+                     options-value-key="id"
+                     no-label-float="true"></etools-dropdown>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-countries-dropdown',
+
+        behaviors: [DynamicCustomStyleBehavior],
+
+        properties: {
+          selectedCountryId: {
+            type: Number,
+            notify: true
+          }
+        },
+
+        ready: function() {
+          this.addCustomStyle('countries-flags-styles', this.$.countriesDropdown.root);
+        },
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

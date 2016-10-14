@@ -2,6 +2,8 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
+<link rel="import" href="../app-elements/etools-countries-dropdown/etools-countries-dropdown.html">
+
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-section1">
@@ -36,7 +38,7 @@
 
       <app-header id="header" fixed shadow>
 
-        <app-toolbar>
+        <app-toolbar class="layout horizontal">
           <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
           <div main-title>Section 1{{tabName}}</div>
         </app-toolbar>
@@ -62,6 +64,11 @@
         <paper-material elevation="1">
           <h1 hidden$="{{!tab1Active}}">Tab 1 Content</h1>
           <h1 hidden$="{{!tab2Active}}">Tab 2 Content</h1>
+
+          <!-- countries dropdown example -->
+          <div style="display: inline-block; width: 300px;">
+            <etools-countries-dropdown></etools-countries-dropdown>
+          </div>
         </paper-material>
 
       </div>

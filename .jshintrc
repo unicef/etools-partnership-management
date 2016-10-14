@@ -19,6 +19,7 @@
     "_": true,
     "Dexie": true,
     "etoolsAppConfig": true,
-    "etoolsAjaxDefaultDexieDbPrefix": true
+    "etoolsAjaxDefaultDexieDbPrefix": true,
+    "DynamicCustomStyleBehavior": true
   }
 }
