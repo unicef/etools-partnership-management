@@ -3,7 +3,7 @@
 <link rel="import" href="../../app-elements/lodash/lodash.html">
 
 
-<dom-module id="etools-countries-data">
+<dom-module id="countries-data">
   <template>
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
@@ -12,19 +12,19 @@
   </template>
 
   <script>
-    (function() {
-      'use strict';
 
       Polymer({
 
-        is: 'etools-countries-data',
+        is: 'countries-data',
 
         properties: {
-          countriesData: {
+
+          countries: {
             type: Array,
             value: null,
             notify: true
           }
+
         },
 
         ready: function() {
@@ -33,13 +33,12 @@
 
         _handleResponse: function(response) {
           if (!_.isEmpty(response.detail)) {
-            this.set('countriesData', response.detail);
+            this.set('countries', response.detail);
           }
         }
 
       });
 
-    })();
   </script>
 
 </dom-module>
