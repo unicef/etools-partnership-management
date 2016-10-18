@@ -1,0 +1,113 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="bank-details">
+  <template>
+    <style include="iron-flex form-fields-styles">
+      .bank-details-row {
+        padding-bottom: 25px;
+        border-bottom: 1px solid var(--divider-color);
+      }
+      .bank-details-row:last-of-type {
+        border-bottom: none;
+      }
+
+    </style>
+    <template is="dom-repeat" items="{{bankDetails}}">
+      <div class="bank-details-row">
+        <div class="layout horizontal row">
+          <!-- Bank name-->
+          <paper-input name="bank_name"
+                       class="b-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Bank Name"
+                       value="{{item.bank_name}}"></paper-input>
+
+          <!-- Bank contact person -->
+          <paper-input name="bank_contact_person"
+                       class="n-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Contact Person"
+                       value="{{item.contact_person}}"></paper-input>
+        </div>
+        <div class="layout horizontal row">
+          <!-- Bank address -->
+          <paper-input name="bank_address"
+                       class="xl-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Bank Address"
+                       value="{{item.bank_address}}">
+            <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
+          </paper-input>
+        </div>
+        <div class="layout horizontal row">
+          <!-- Bank account title -->
+          <paper-input name="bank_account_title"
+                       class="n-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Account Title"
+                       value="{{item.account_title}}"></paper-input>
+
+          <!-- Bank account number -->
+          <paper-input name="bank_account_number"
+                       class="n-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Account Number"
+                       value="{{item.account_number}}"></paper-input>
+
+          <!-- Bank routing number -->
+          <paper-input name="bank_routing_number"
+                       class="n-input-field"
+                       disabled$="{{disableFields()}}"
+                       label="Routing Number"
+                       value="{{item.routing_number}}"></paper-input>
+        </div>
+      </div>
+    </template>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'bank-details',
+        properties: {
+          bankDetails: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          visionSynced: {
+            type: Boolean,
+            value: false
+          }
+        },
+        ready: function () {
+          if (this.bankDetails.length === 0) {
+            this.push('bankDetails', this._getEmptyNewBankDetailsItem());
+          }
+        },
+        disableFields: function () {
+          return this.visionSynced === false;
+        },
+        _getEmptyNewBankDetailsItem: function () {
+          return {
+            bank_name: null,
+            contact_person: null,
+            bank_address: null,
+            account_title: null,
+            account_number: null,
+            routing_number: null
+          };
+        }
+      });
+
+    })();
+  </script>
+</dom-module>

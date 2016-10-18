@@ -1,0 +1,46 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../app-elements/lodash/lodash.html">
+
+
+<dom-module id="partners-data">
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 on-success="_handleResponse"
+                 caching-storage="dexie" logs="true"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'partners-data',
+
+        properties: {
+          partners: {
+            type: Array,
+            value: null,
+            notify: true
+          }
+        },
+
+        ready: function() {
+          this.endpoint = etoolsAppConfig.globals.getEndpoint('partners');
+        },
+
+        _handleResponse: function(response) {
+          console.log(response.detail);
+          if (!_.isEmpty(response.detail)) {
+            this.set('partners', response.detail);
+          }
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

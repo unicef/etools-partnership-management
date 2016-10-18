@@ -1,0 +1,473 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker.html">
+<link rel="import" href="../../../bower_components/etools-content-toggle-button/etools-content-toggle-button.html">
+<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/etools-dropdown/etools-dropdown.html">
+
+<!--<link rel="import" href="../common/files-upload/files-upload.html">-->
+
+<link rel="import" href="assessments-items.html">
+<link rel="import" href="staff-members.html">
+<link rel="import" href="bank-details.html">
+
+<dom-module id="partner-details">
+
+  <template>
+
+    <style include="iron-flex iron-flex-alignment shared-styles">
+      :host {
+        padding-bottom: 70px;
+        display: block;
+        --paper-input-container-input: {
+          text-transform: uppercase;
+        }
+      }
+
+      .row:not(:first-child):not(.iron-collapse-closed) {
+        margin-top: 20px;
+      }
+
+      .alternate-name-btn {
+        margin-bottom: 7px;
+        margin-left: 25px;
+      }
+
+      .alternate-fields {
+        /*background-color: var(--secondary-background-color);*/
+      }
+
+      .alternate-fields-content {
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      .alternate-fields-content .org-diff-label {
+        text-transform: uppercase;
+        color: var(--secondary-text-color);
+        font-size: var(--labels-secondary-font-size);
+        width: 210px;
+        line-height: 1.4;
+        padding: 11px 0;
+      }
+      .alternate-fields-content .org-diff-label.disabled {
+        opacity: 0.33;
+      }
+
+      .contact-info,
+      .assessments {
+        border-top: 1px solid var(--divider-color);
+        padding-top: 20px;
+      }
+      .contact-info {
+        margin-top: 10px;
+      }
+      .assessments {
+        margin-top: 20px;
+      }
+
+      .right-to-left {
+        text-align: right;
+      }
+      paper-input.right-to-left {
+        --paper-input-container-input: {
+          direction: rtl;
+          unicode-bidi: bidi-override;
+        }
+      }
+      .already-in-vision {
+        font-size: var(--primary-font-size);
+        padding: 10px 25px;
+        min-height: 45px;
+        box-sizing: border-box;
+      }
+      .already-in-vision-stripe {
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAIAAABv85FHAAAAXElEQVQImXXOQQrAIAxE0YkRwfsf0lUgK7HSxO5SsHb/mPl0i8w5lzsASqmUwswAANBSBWBmX0G3SMBN5GuMgMxcaw1BvbXjmZnRUj2evS3HHOqtbVMh8nL/y3kAPcpk9pdkfNAAAAAASUVORK5CYII=) repeat;;
+      }
+      .already-in-vision paper-checkbox {
+        line-height: 21px;
+      }
+      .vendor-nr-label {
+        margin-left: 25px;
+      }
+      .vendor-number {
+        border-bottom: 1px solid var(--primary-text-color);
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        background: transparent;
+        padding: 3px 10px;
+        font-size: var(--primary-font-size);
+        outline: none;
+        box-sizing: border-box;
+      }
+      .vendor-number::-webkit-input-placeholder {
+        color: var(--error-text-color);
+      }
+      .vendor-number:-moz-placeholder { /* Firefox 18- */
+        color: var(--error-text-color);
+      }
+      .vendor-number::-moz-placeholder {  /* Firefox 19+ */
+        color: var(--error-text-color);
+      }
+      .vendor-number:-ms-input-placeholder {
+        color: var(--error-text-color);
+      }
+      etools-dropdown:not(:first-child) {
+        margin-left: 25px;
+      }
+
+      .submit-btn {
+        margin-top: 20px;
+      }
+
+    </style>
+
+    <form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">
+      <div class$="layout horizontal already-in-vision [[alreadyInVisionClass]]">
+        <paper-checkbox id="alreadyPartner" name="already_partner" checked="{{partnerAlreadyInVision}}">Partner already exists in VISION?</paper-checkbox>
+        <template is="dom-if" if="[[partnerAlreadyInVision]]">
+          <span class="vendor-nr-label">
+            Enter
+            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number" value="{{partner.vendor_number::input}}">
+            so eTools can sync partner information.
+          </span>
+        </template>
+      </div>
+      <etools-content-panel title="Partner Details" is-disabled$="[[partnerAlreadyInVision]]">
+        <div class="layout horizontal row">
+          <!-- Organization name -->
+          <paper-input name="organization_name"
+                       class="b-input-field"
+                       label="Organization's Full Name*"
+                       value="{{partner.name}}"
+                       required auto-validate
+                       error-message="Please fill organization's full name!"
+                       disabled$="[[partnerAlreadyInVision]]"></paper-input>
+
+          <!-- Short name -->
+          <paper-input name="short_name"
+                       class="n-input-field"
+                       label="Short Name"
+                       value="{{partner.short_name}}"
+                       disabled$="[[partnerAlreadyInVision]]"></paper-input>
+
+          <!-- Alternate option -->
+          <div class="self-end alternate-name-btn">
+            <etools-content-toggle-button active="{{altNameActive}}" label="Alternate Name?" is-disabled$="[[partnerAlreadyInVision]]"></etools-content-toggle-button>
+          </div>
+
+        </div>
+        <iron-collapse id="alternateNameFields" class="row alternate-fields" opened="{{altNameActive}}">
+          <!-- Alternate option fields -->
+          <div class="layout horizontal alternate-fields-content">
+            <span class$="org-diff-label [[orgAltNameLabelDisabledClass]]">Organization's name in a different language</span>
+
+            <!-- Right to left option -->
+            <div class="custom-field-wrapper n-input-field">
+              <etools-checkable-input checked="{{alternateNameRightToLeft}}"
+                                      label="Right to left"
+                                      label-alignment="top"
+                                      is-disabled$="[[partnerAlreadyInVision]]"></etools-checkable-input>
+            </div>
+
+            <!-- Alternate name -->
+            <paper-input name="alternate_name"
+                         class$="n-input-field [[rightToLeftAlignmentClass]]"
+                         label="Alternate Name"
+                         value="{{partner.alternate_name}}"
+                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
+
+            <!-- Alternate ID -->
+            <paper-input name="alternate_id"
+                         class="n-input-field"
+                         label="Alternate ID (if any)"
+                         value="{{partner.alternate_id}}"
+                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
+          </div>
+        </iron-collapse>
+        <div class="layout horizontal row">
+          <!-- Partner types -->
+          <etools-dropdown class="n-input-field"
+                           label="Partner Type*"
+                           dropdown-value="{{partner.partner_type}}"
+                           options="[[partnerDetailsData.partnerTypes]]"
+                           is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
+
+          <!-- CSO type -->
+          <template is="dom-if" if="[[showCsoTypeField(partner.partner_type)]]">
+            <etools-dropdown class="n-input-field"
+                             label="CSO Type*"
+                             dropdown-value="{{partner.cso_type}}"
+                             options="[[partnerDetailsData.csoTypes]]"
+                             is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
+          </template>
+
+
+          <template is="dom-if" if="[[showCoreValuesAssessment(partner.cso_type)]]">
+            <!-- Core values assessment file -->
+            <div class="n-input-field">
+              <files-upload target="/path/to/destination" label="Core values assessment*"></files-upload>
+            </div>
+
+            <!-- Last accessed date -->
+            <paper-input class="n-input-field"
+                         label="Date last assessed*"
+                         name="date_last_assessed"
+                         readonly="true"
+                         value="{{partner.core_values_assessment_date}}" on-tap="showDatePicker">
+              <div prefix>
+                <etools-datepicker pretty-date="{{partner.core_values_assessment_date}}" format="MM/DD/YYYY" open="{{showDatePickerModal}}"></etools-datepicker>
+              </div>
+            </paper-input>
+          </template>
+
+          <!-- Shared partner -->
+          <etools-dropdown class="n-input-field"
+                           label="Shared Partner"
+                           dropdown-value="{{partner.shared_partner}}"
+                           options="[[partnerDetailsData.sharedPartners]]"
+                           is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
+        </div>
+
+        <div class="contact-info">
+          <etools-content-toggle-button label="Contact Info" active="{{contactInfoActive}}" is-disabled$="[[partnerAlreadyInVision]]"></etools-content-toggle-button>
+          <!-- Contact info fields -->
+          <iron-collapse id="contactInfoFields" opened="{{contactInfoActive}}">
+            <div class="layout horizontal">
+              <!-- Address -->
+              <paper-input name="address"
+                           class="b-input-field"
+                           label="Address"
+                           value="{{partner.address}}"
+                           disabled$="[[partnerAlreadyInVision]]">
+                <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
+              </paper-input>
+
+              <!-- City -->
+              <paper-input name="city"
+                           class="n-input-field"
+                           label="City"
+                           value="{{partner.city}}"
+                           disabled$="[[partnerAlreadyInVision]]">
+              </paper-input>
+            </div>
+            <div class="layout horizontal">
+              <!-- Telephone number -->
+              <paper-input name="phone_number"
+                           class="n-input-field"
+                           label="Phone Number"
+                           value="{{partner.phone_number}}"
+                           disabled$="[[partnerAlreadyInVision]]">
+                <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
+              </paper-input>
+
+              <!-- Email address -->
+              <paper-input name="email_address"
+                           class="n-input-field"
+                           label="E-mail address"
+                           value="{{partner.email}}"
+                           disabled$="[[partnerAlreadyInVision]]">
+                <paper-icon-button prefix icon="communication:email"></paper-icon-button>
+              </paper-input>
+            </div>
+          </iron-collapse>
+        </div>
+
+      </etools-content-panel>
+
+      <etools-content-panel title="Risk Rating & Assessments">
+        <div class="layout horizontal row">
+          <!-- Risk rating -->
+          <etools-dropdown class="n-input-field"
+                           label="Risk Rating"
+                           dropdown-value="{{partner.rating}}"
+                           options="[[partnerDetailsData.riskRatings]]"
+                           is-disabled="true"></etools-dropdown>
+
+          <!-- Type of assessment -->
+          <paper-input name="assessment_type"
+                       class="n-input-field"
+                       disabled="true"
+                       label="Type of Assessment"
+                       value="{{partner.type_of_assessment}}"></paper-input>
+
+          <!--Date last assessed-->
+          <paper-input name="date_last_assessed"
+                       class="n-input-field"
+                       disabled="true"
+                       label="Date Last Assessed"
+                       value="{{partner.last_assessment_date}}"></paper-input>
+        </div>
+
+        <!-- Assessments section -->
+        <div class="assessments">
+          <assessments-items assessments-data="{{partner.assessments}}" assessment-types="[[partnerDetailsData.assessmentTypes]]"></assessments-items>
+        </div>
+      </etools-content-panel>
+
+      <etools-content-panel no-header="true">
+        <etools-content-toggle-button label="Bank Details" active="{{bankDetailsActive}}"></etools-content-toggle-button>
+        <!-- Bank details-->
+        <iron-collapse id="bankDetails" opened="{{bankDetailsActive}}">
+          <bank-details bank-details="{{partner.bankDetails}}" vision-synced="[[partner.vision_synced]]"></bank-details>
+        </iron-collapse>
+      </etools-content-panel>
+
+      <etools-content-panel no-header="true">
+        <!-- Staff members details-->
+        <staff-members staff-members-data="{{partner.staffMembers}}"></staff-members>
+      </etools-content-panel>
+
+    </form>
+    <!--<paper-button class="submit-btn" raised on-tap="submitAddPartnerDetailsData">Submit</paper-button>-->
+
+    <!-- page actions -->
+    <div class="page-actions">
+      <paper-icon-button class="more-options" icon="more-vert"></paper-icon-button>
+      <paper-button class="primary-btn">Save</paper-button>
+      <paper-icon-button class="secondary-btn" icon="history"></paper-icon-button>
+      <paper-icon-button class="secondary-btn" icon="print"></paper-icon-button>
+      <paper-icon-button class="secondary-btn" icon="file-download"></paper-icon-button>
+      <span class="divider"></span>
+      <paper-icon-button class="secondary-btn help-btn" icon="help"></paper-icon-button>
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partner-details',
+
+        properties: {
+          partnerAlreadyInVision: {
+            type: Boolean,
+            value: false,
+            observer: '_partnerAlreadyInVision'
+          },
+          alternateNameRightToLeft: {
+            type: Boolean,
+            value: false,
+            observer: '_checkAlternateNameRightToLeftAlignment'
+          },
+          partner: {
+            type: Object,
+            value: {
+              id: null,
+              vision_synced: false,
+              vendor_number: null,
+              name: null,
+              short_name: null,
+              alternate_id: null,
+              alternate_name: null,
+              partner_type: null,
+              cso_type: null,
+              core_values_assessment_date: null,
+              core_values_assessment: null,
+              last_assessment_date: null,
+              shared_partner: null,
+              address: null,
+              city: null,
+              phone_number: null,
+              email: null,
+              rating: null,
+              type_of_assessment: null,
+
+              assessments: [],
+              bankDetails: [],
+              staffMembers: [],
+
+              description: null
+            },
+            notify: true
+          }
+        },
+        listeners: {
+          'addPartnerDetailsForm.iron-form-presubmit': '_addPartnerDetailsDataPresubmit'
+        },
+        getIronCollapseElement: function (elementId) {
+          return Polymer.dom(this.root).querySelector(elementId);
+        },
+        submitAddPartnerDetailsData: function () {
+          this.$.addPartnerDetailsForm.submit();
+        },
+        showCsoTypeField: function (partnerType) {
+          if (partnerType === 'cso') {
+            return true;
+          } else {
+            if (typeof this.partner === 'object') {
+              this.set('partner.cso_type', null);
+              this.set('partner.core_values_assessment_date', null);
+            }
+            return false;
+          }
+        },
+        showCoreValuesAssessment: function (csoType) {
+          if (csoType !== undefined && csoType !== null && csoType !== 1) { // not international
+            return true;
+          } else {
+            if (typeof this.partner === 'object') {
+              this.partner.last_assessment_date = null;
+            }
+            return false;
+          }
+        },
+        showDatePicker: function () {
+          this.showDatePickerModal = true;
+        },
+        _addPartnerDetailsDataPresubmit: function (event) {
+          event.preventDefault();
+          console.log(this.partner);
+        },
+        _checkAlternateNameRightToLeftAlignment: function (alignRightToLeft) {
+          if (alignRightToLeft === true) {
+            this.rightToLeftAlignmentClass = 'right-to-left';
+          } else {
+            this.rightToLeftAlignmentClass = '';
+          }
+          this.updateStyles();
+        },
+        _partnerAlreadyInVision: function (alreadyInVision) {
+          if (alreadyInVision === true) {
+            this.alreadyInVisionClass = 'already-in-vision-stripe';
+            this.orgAltNameLabelDisabledClass = 'disabled';
+            this._resetPartnerData();
+          } else {
+            if (typeof this.partner === 'object') {
+              this.set('partner.vendor_number', null);
+              this.notifyPath('partner.vendor_number');
+            }
+            this.alreadyInVisionClass = '';
+            this.orgAltNameLabelDisabledClass = '';
+          }
+        },
+        _resetPartnerData: function () {
+          this.set('partner.vision_synced', false);
+          for (var property in this.partner) {
+            if (this.partner[property] !== null && property !== 'vision_synced' && property !== 'vendor_number') {
+              if (!Array.isArray(this.partner[property])) {
+                this.set('partner.' + property, null);
+              }
+            }
+          }
+        }
+      });
+
+    })();
+  </script>
+
+</dom-module>

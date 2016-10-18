@@ -3,6 +3,8 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
 <link rel="import" href="../app-elements/partners/partners-list.html">
+<link rel="import" href="../app-elements/partners/partner-overview.html">
+<link rel="import" href="../app-elements/partners/partner-details.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -47,7 +49,7 @@
                 <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
               </paper-tab>
 
-              <paper-tab name="partners" link>
+              <paper-tab name="details" link>
                 <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
               </paper-tab>
             </paper-tabs>
@@ -61,7 +63,24 @@
       <div id="pageContent">
 
         <paper-material elevation="1">
-          <h1>Some partners here!</h1>
+
+          <iron-pages id="partnersPages"
+                      selected="{{partnerPage}}"
+                      attr-for-selected="name"
+                      fallback-selection="list"
+                      role="main">
+
+            <div name="list">
+              <partners-list></partners-list>
+            </div>
+            <div name="overview">
+              <partner-overview></partner-overview>
+            </div>
+            <div name="details">
+              <partner-details></partner-details>
+            </div>
+          </iron-pages>
+
         </paper-material>
 
       </div>
@@ -76,14 +95,35 @@
 
       is: 'page-partners',
 
+      observers: ['_tabChanged(routeData.tab)'],
+
       properties: {
+        partnerPage: {
+          type: String,
+        },
+        partnerName: {
+          type: String
+        }
+      },
 
-        partnerName: String
-
+      ready: function() {
+        this.set('partnerPage', this._getActivePage());
       },
 
       openDrawer: function() {
         this.fire('drawer');
+      },
+
+      _getActivePage: function() {
+        if (this.listActive) {
+          return 'list';
+        } else if (this.tabsActive) {
+          return this.routeData.tab;
+        }
+      },
+
+      _tabChanged: function(tab) {
+        this.set('partnerPage', tab);
       }
 
     });

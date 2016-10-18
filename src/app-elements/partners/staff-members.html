@@ -1,0 +1,195 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="../../../bower_components/etools-content-toggle-button/etools-content-toggle-button.html">
+
+<dom-module id="staff-members">
+  <template>
+    <style include="iron-flex iron-flex-alignment form-fields-styles">
+      .staff-members-header {
+        position: relative;
+        line-height: 30px;
+      }
+      .staff-members-header paper-button {
+        --paper-button: {
+          width: 30px;
+          height: 30px;
+          min-width: 0;
+          padding: 0;
+          border-radius: 15px;
+          background-color: var(--staff-members-add-btn-bg-color, --third-text-color);
+          color: var(--staff-members-add-btn-bg-color, #ffffff);
+        };
+      }
+      .staff-member {
+        margin: 20px 0 15px 0;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--divider-color);
+      }
+      .staff-member:last-of-type {
+        border-bottom: none;
+      }
+      .remove-staff-member {
+        border-right: 1px solid var(--divider-color);
+        width: 50px;
+      }
+      .remove-staff-member paper-icon-button {
+        color: var(--staff-members-remove-btn-color, --third-text-color);
+        --paper-icon-button: {
+          padding: 3px;
+          width: 24px;
+          min-width: 0;
+          height: 24px;
+        };
+      }
+      .staff-member-row {
+        padding-left: 25px;
+      }
+
+    </style>
+    <div class="layout horizontal staff-members-header">
+      <etools-content-toggle-button class="flex" label="Staff Members" active="{{staffActive}}"></etools-content-toggle-button>
+      <paper-button on-tap="addNewStaffMember">
+        <iron-icon icon="add"></iron-icon>
+      </paper-button>
+    </div>
+    <iron-collapse id="staffMembers" opened="{{staffActive}}">
+      <template is="dom-repeat" items="{{staffMembersData}}">
+        <div class="layout horizontal staff-member">
+          <div class="layout horizontal center-justified remove-staff-member">
+            <template is="dom-if" if="[[displayRemoveBtn(index)]]">
+              <!-- Remove staff-member btn -->
+              <div class="layout horizontal remove-btn-container">
+                <paper-icon-button class="self-center" icon="remove-circle" on-tap="removeStaffMember"  data-args$="[[index]]"></paper-icon-button>
+              </div>
+            </template>
+          </div>
+          <div class="staff-member-row flex">
+            <div class="layout horizontal">
+              <!-- Position -->
+              <paper-input class="n-input-field"
+                           label="Position"
+                           value="{{item.position}}">
+              </paper-input>
+
+              <!-- First name -->
+              <paper-input class="n-input-field"
+                           label="First Name"
+                           value="{{item.first_name}}">
+              </paper-input>
+
+              <!-- Last name -->
+              <paper-input class="n-input-field"
+                           label="Last Name"
+                           value="{{item.last_name}}">
+              </paper-input>
+
+            </div>
+
+            <div class="layout horizontal">
+              <!-- Telaphone number -->
+              <paper-input class="n-input-field"
+                           label="Phone Numer"
+                           value="{{item.phone_number}}">
+                <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
+              </paper-input>
+
+              <!-- Email address -->
+              <paper-input class="n-input-field"
+                           label="E-mail address"
+                           value="{{item.email_address}}">
+                <paper-icon-button prefix icon="communication:email"></paper-icon-button>
+              </paper-input>
+
+            </div>
+          </div>
+        </div>
+      </template>
+    </iron-collapse>
+    <paper-toast id="emptyStaffMemberNotification" always-on-top="true" duration="3000" vertical-align="top" horizontal-align="right">
+      <iron-icon icon="info"></iron-icon>
+      Fill last added staff member fields to be able to add more.
+    </paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      // jscs:disable
+      'use strict';
+
+      Polymer({
+        is: 'staff-members',
+        properties: {
+          staffMembersData: {
+            type: Array,
+            value: [],
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        ready: function () {
+          this.staffMembersIronCollapse = this.$.staffMembers;
+          if (this.staffMembersData.length === 0) {
+            this.push('staffMembersData', this._getStaffMemberEmptyObject());
+          }
+        },
+        _getStaffMemberEmptyObject: function () {
+          return {
+            position: null,
+            first_name: null,
+            last_name: null,
+            phone_number: null,
+            email_address: null
+          };
+        },
+        addNewStaffMember: function () {
+          var open = false;
+          if (this.staffMembersIronCollapse.opened === false) {
+            open = true;
+            this.staffMembersIronCollapse.show();
+          }
+          var newStaffMember = this._getStaffMemberEmptyObject();
+          if (!this._checkStaffMemberDuplicate(newStaffMember)) {
+            this.push('staffMembersData', newStaffMember);
+          } else {
+            if (open === false) {
+              this.$.emptyStaffMemberNotification.open();
+            }
+          }
+        },
+        removeStaffMember: function (event) {
+          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+          if (index !== -1) {
+            this.splice('staffMembersData', index, 1);
+          }
+        },
+        displayRemoveBtn: function (index) {
+          if (index === 0) {
+            return false;
+          }
+          return true;
+        },
+        _checkStaffMemberDuplicate: function (staffMember) {
+          var duplicateFound = false;
+          for (var i = 0; i < this.staffMembersData.length; i++) {
+            if (JSON.stringify(this.staffMembersData[i]) === JSON.stringify(staffMember) ) {
+              duplicateFound = true;
+              break;
+            }
+          }
+          return duplicateFound;
+        }
+      });
+
+    })();
+  </script>
+</dom-module>
