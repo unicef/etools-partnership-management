@@ -1,43 +1,70 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../app-elements/lodash/lodash.html">
-
 
 <dom-module id="countries-data">
+
   <template>
+
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  on-success="_handleResponse"
                  caching-storage="dexie"></etools-ajax>
+
   </template>
 
   <script>
 
-      Polymer({
+    var _data = {};
+    var _countryEls = [];
 
-        is: 'countries-data',
+    var _setCountryData = function(data) {
+      _data.countries = data || {};
+      this.load(_data);
+      _countryEls.forEach(function(el) {
+        if (el !== this) { el.load(_data); }
+      });
+    };
 
-        properties: {
+    Polymer({
 
-          countries: {
-            type: Array,
-            value: null,
-            notify: true
-          }
+      is: 'countries-data',
 
-        },
+      properties: {
 
-        ready: function() {
-          this.endpoint = etoolsAppConfig.globals.getEndpoint('countries');
-        },
-
-        _handleResponse: function(response) {
-          if (!_.isEmpty(response.detail)) {
-            this.set('countries', response.detail);
-          }
+        countries: {
+          type: Array,
+          readOnly: true,
+          notify: true
         }
 
-      });
+      },
+
+      ready: function() {
+        this.load(_data);
+      },
+
+      attached: function() {
+        if (_countryEls.length === 0 && !_data.countries) {
+          this.endpoint = etoolsAppConfig.globals.getEndpoint('countries');
+        }
+        _countryEls.push(this);
+      },
+
+      detached: function() {
+        _countryEls.splice(_countryEls.indexOf(this), 1);
+      },
+
+      load: function(data) {
+        if (data.countries) {
+          this._setCountries(data.countries);
+        }
+      },
+
+      _handleResponse: function(res) {
+        _setCountryData.bind(this)(res.detail);
+      }
+
+    });
 
   </script>
 
