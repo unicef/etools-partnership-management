@@ -3,7 +3,6 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../styles/countries-flags/country-flag-styles.html">
-<link rel="import" href="../countries-data/countries-data.html">
 
 <dom-module id="countries-dropdown">
   <template>
@@ -14,7 +13,25 @@
       }
 
       paper-dropdown-menu {
-        width: 200px;
+        width: 160px;
+
+        --paper-menu-button-dropdown-background: var(--light-theme-content-color);
+
+        --paper-input-container-color: var(--light-secondary-text-color);
+
+        --paper-input-container-focus-color: var(--light-secondary-text-color);
+
+        --paper-input-container-underline: {
+          display: none;
+        };
+
+        --paper-input-container-input: {
+          color: var(--light-primary-text-color);
+        };
+
+        --paper-dropdown-menu-icon: {
+          color: var(--light-icon-color);
+        };
       }
 
       paper-listbox {
@@ -24,29 +41,37 @@
 
       paper-item {
         font-size: 15px;
+        white-space: nowrap;
       }
 
       iron-icon {
+        bottom: 3px;
         min-width: 24px;
         min-height: 20px;
+        margin-right: 8px;
+      }
+
+      paper-item iron-icon {
         margin-right: 16px;
       }
 
     </style>
 
-    <countries-data countries="{{countries}}"></countries-data>
+    <iron-icon class$="[[country.imgClass]]" prefix></iron-icon>
 
-    <paper-dropdown-menu label="Country" noink no-label-float>
-      <paper-listbox class="dropdown-content">
+    <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
 
-        <template is="dom-repeat" items="[[countries]]">
+      <paper-listbox class="dropdown-content" on-iron-select="_countrySelected">
+
+        <template id="repeat" is="dom-repeat" items="[[countries]]">
           <paper-item>
-            <iron-icon class="flag-icon flag-icon-ca" item-icon></iron-icon>
+            <iron-icon class$="[[item.imgClass]]" item-icon></iron-icon>
             [[item.name]]
           </paper-item>
         </template>
 
       </paper-listbox>
+
     </paper-dropdown-menu>
 
   </template>
@@ -60,6 +85,10 @@
       properties: {
 
       },
+
+      _countrySelected: function(e) {
+        this.set('country', this.$.repeat.itemForElement(e.detail.item));
+      }
 
     });
 
