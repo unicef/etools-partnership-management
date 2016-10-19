@@ -1,0 +1,105 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="page-section1">
+
+  <template>
+
+    <style include="shared-styles">
+
+    :host {
+      display: block;
+    }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:tab"
+        data="{{routeData}}"
+        active="{{tabsActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/tab1"
+        active="{{tab1Active}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/tab2"
+        active="{{tab2Active}}"></app-route>
+
+    <app-header-layout>
+
+      <app-header id="header" fixed shadow>
+
+        <app-toolbar class="layout horizontal">
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>Section 1{{tabName}}</div>
+        </app-toolbar>
+
+        <app-toolbar id="tabs">
+
+          <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="tab1" noink bottom-item>
+            <paper-tab name="tab1" link>
+              <a href="/section1/tab1" class="tab-link" tabindex="-1">tab 1</a>
+            </paper-tab>
+
+            <paper-tab name="tab2" link>
+              <a href="/section1/tab2" class="tab-link" tabindex="-1">tab 2</a>
+            </paper-tab>
+          </paper-tabs>
+
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+
+        <paper-material elevation="1">
+          <h1 hidden$="{{!tab1Active}}">Tab 1 Content</h1>
+          <h1 hidden$="{{!tab2Active}}">Tab 2 Content</h1>
+        </paper-material>
+
+      </div>
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-section1',
+
+      properties: {
+
+        tabName: String
+
+      },
+
+      observers: [
+        '_tabChanged(routeData.tab)'
+      ],
+
+      openDrawer: function() {
+        this.fire('drawer');
+      },
+
+      _tabChanged: function(tab) {
+        if (tab) {
+          this.tabName = ' - ' + tab;
+        } else {
+          this.fire('404');
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>

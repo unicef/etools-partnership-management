@@ -18,16 +18,85 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
 
       h1 {
-        font-size: 30px;
+        font-size: 25px;
         margin: 16px 0;
         color: var(--primary-text-color);
       }
 
       a {
-        text-decoration: none;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        color: var(--accent-color);
+        text-decoration: inherit;
+        color: inherit;
+      }
+
+      a:focus {
+        outline: inherit;
+      }
+
+      app-header {
+        background-color: var(--primary-background-color);
+      }
+
+      app-header div[main-title] {
+        position: relative;
+        bottom: 1px;
+        margin-left: 24px;
+        text-transform: capitalize;
+        color: var(--light-primary-text-color);
+      }
+
+      app-header paper-icon-button[icon="menu"] {
+        display: block;
+      }
+
+      #pageContent {
+        padding: 48px 15px;
+      }
+
+      @media (min-width: 850px) {
+        app-header paper-icon-button[icon="menu"] {
+          display: none;
+        }
+        app-header div[main-title] {
+          margin-left: 32px;
+        }
+        #pageContent {
+          padding: 48px 62px;
+        }
+      }
+
+      app-toolbar {
+        height: var(--toolbar-height);
+      }
+
+      #tabs {
+        height: 48px;
+      }
+
+      paper-tabs {
+        color: var(--light-primary-text-color);
+        --paper-tabs-selection-bar-color: var(--accent-color);
+        --paper-tabs: {
+          font-size: 14px;
+          font-weight: 500;
+          text-transform: uppercase;
+        };
+      }
+
+      paper-tabs > * {
+        --paper-tab-ink: var(--accent-color);
+        --paper-tab-content-unselected: {
+          color: var(--light-secondary-text-color);
+        };
+      }
+
+      .tab-link {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+
+      paper-material {
+        padding: 10px 20px;
+        background-color: var(--light-theme-content-color);
       }
 
       iron-icon.dark {
@@ -36,6 +105,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       iron-icon.light {
         --iron-icon-fill-color: var(--light-icon-color);
+      }
+
+      paper-icon-button.dark {
+        color: var(--dark-icon-color);
+        --paper-icon-button-ink-color: var(--dark-ink-color);
+      }
+
+      paper-icon-button.light {
+        color: var(--light-icon-color);
+        --paper-icon-button-ink-color: var(--light-ink-color);
       }
 
     </style>

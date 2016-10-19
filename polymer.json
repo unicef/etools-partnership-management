@@ -2,15 +2,16 @@
   "entrypoint": "index.html",
   "shell": "src/app-shell.html",
   "fragments": [
-    "src/pages/page-section1-page.html",
-    "src/pages/page-section2-page.html",
-    "src/pages/page-section3-page.html",
+    "src/pages/page-section1.html",
+    "src/pages/page-section2.html",
+    "src/pages/page-section3.html",
     "src/pages/page-not-found.html"
   ],
   "sourceGlobs": [
    "src/**/*",
    "images/**/*",
    "styles/**/*",
+   "scripts/**/*",
    "data/**/*",
    "bower.json"
   ],
