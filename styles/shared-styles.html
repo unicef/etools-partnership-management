@@ -22,6 +22,10 @@
         outline: inherit;
       }
 
+      app-header-layout {
+        position: inherit;
+      }
+
       app-header {
         background-color: var(--primary-background-color);
       }
@@ -84,8 +88,12 @@
         @apply(--layout-center-center);
       }
 
+      iron-pages[hidden] {
+        display: none;
+      }
+
       paper-material {
-        padding: 10px 20px;
+        padding: 15px 20px;
         background-color: var(--light-theme-content-color);
       }
 

@@ -29,7 +29,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <app-header-layout>
+    <app-header-layout has-scrolling-region>
 
       <app-header id="header" fixed shadow>
 
@@ -39,31 +39,49 @@
         </app-toolbar>
 
         <div id="tabsWrapper" hidden$="{{!tabsActive}}">
-
           <app-toolbar id="tabs-bar">
+            <paper-tabs
+                selected="[[routeData.tab]]"
+                attr-for-selected="name"
+                fallback-selection="overview" noink bottom-item>
 
-            <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="overview" noink bottom-item>
               <paper-tab name="overview" link>
                 <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
               </paper-tab>
 
-              <paper-tab name="partners" link>
+              <paper-tab name="details" link>
                 <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
               </paper-tab>
+
             </paper-tabs>
-
           </app-toolbar>
-
         </div>
 
       </app-header>
 
       <div id="pageContent">
-
         <paper-material elevation="1">
-          <h1>Some partners here!</h1>
-        </paper-material>
 
+          <iron-ajax
+            auto
+            url="../../data/partners_small.json"
+            handle-as="json"
+            last-response="{{partners}}"></iron-ajax>
+
+          <partners-list hidden$="[[!listActive]]" partners="[[partners]]"></partners-list>
+
+          <iron-pages
+              hidden$="[[!tabsActive]]"
+              selected="[[routeData.tab]]"
+              attr-for-selected="name"
+              fallback-selection="overview">
+
+            <partner-overview name="overview" partner="[[partner]]">partner overview</partner-overview>
+            <partner-details name="details" partner="[[partner]]">partner details</partner-details>
+
+          </iron-pages>
+
+        </paper-material>
       </div>
 
     </app-header-layout>
@@ -82,8 +100,16 @@
 
       },
 
+      observers: [
+        '_resizeHeader(tabsActive)'
+      ],
+
       openDrawer: function() {
         this.fire('drawer');
+      },
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
       }
 
     });
