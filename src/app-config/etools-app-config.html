@@ -2,7 +2,7 @@
 App global configuration
 -->
 <link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
-<link rel="import" href="../app-elements/lodash/lodash.html">
+<link rel="import" href="../../scripts/lodash/lodash.html">
 
 <script>
     'use strict';
@@ -17,7 +17,7 @@ App global configuration
       // app endpoints
       endpoints: {
         userInfo: {
-          template: '/users/api/profile/',
+          url: '/users/api/profile/',
           exp: 30 * 60 * 1000, // 30min
           cachingKey: 'userData'
         },
@@ -48,6 +48,8 @@ App global configuration
 
       // permissions
       permissions: {
+        superPermissions: ['loggedInDefault', 'userInfoMenu',
+                           'interventionsMenu', 'statsMenu'], //for testing
         partnerOnlyPermissions: ['interventionsMenu'],
         defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],

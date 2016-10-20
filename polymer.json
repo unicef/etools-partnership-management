@@ -11,6 +11,7 @@
    "src/**/*",
    "images/**/*",
    "styles/**/*",
+   "scripts/**/*",
    "data/**/*",
    "bower.json"
   ],

@@ -26,8 +26,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-elements/user-data/user-data.html">
-<link rel="import" href="app-elements/etools-data/etools-data.html">
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
+
+<link rel="import" href="app-elements/countries-dropdown/countries-dropdown.html">
+<link rel="import" href="app-elements/countries-data/countries-data.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
@@ -98,9 +100,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-top: 1px solid var(--dark-divider-color);
       }
 
+      #countries {
+        position: fixed;
+        top: 9px;
+        right: 20px;
+      }
+
     </style>
 
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
+    <user-data permissions="{{permissions}}"></user-data>
+
+    <countries-data countries="{{countries}}"></countries-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -129,10 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <side-bar-item name="agreements" icon="book" href="/agreements/list"></side-bar-item>
               <side-bar-item name="interventions" icon="build" href="/interventions/list"></side-bar-item>
               <div class="divider"></div>
-
-              <!-- Only display settings if the user has permission -->
-              <side-bar-item hidden$="{{!permissions.default}}" name="settings" icon="settings" href="/settings"></side-bar-item>
-
+              <side-bar-item name="settings" icon="settings" href="/settings"></side-bar-item>
               <side-bar-item name="user support" icon="help" href="/support"></side-bar-item>
               <side-bar-item name="discussions" icon="question-answer" href="/discussion"></side-bar-item>
               <side-bar-item name="information" icon="info" href="/information"></side-bar-item>
@@ -163,6 +170,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found name="not-found"></page-not-found>
 
         </iron-pages>
+
+        <countries-dropdown id="countries" countries="[[countries]]"></countries-dropdown>
+
       </div>
 
     </app-drawer-layout>
