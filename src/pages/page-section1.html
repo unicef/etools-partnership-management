@@ -4,6 +4,8 @@
 
 <link rel="import" href="../../styles/shared-styles.html">
 
+<link rel="import" href="../../bower_components/etools-repetable-field-set/etools-repetable-field-set.html">
+
 <dom-module id="page-section1">
 
   <template>
@@ -60,7 +62,19 @@
       <div id="pageContent">
 
         <paper-material elevation="1">
-          <h1 hidden$="{{!tab1Active}}">Tab 1 Content</h1>
+          <div hidden$="{{!tab1Active}}">
+            <h1>Tab 1 Content</h1>
+
+            <etools-repetable-field-set title="Repeatable field set 2" model="{{fieldSets}}" elevation="1" hide-plus hide-vertical-divider>
+              <template is="dom-repeat" items="{{fieldSets}}">
+                <div class$="layout horizontal flex data-row-{{index}}">
+                  <paper-input label="First Name" value="{{item.firstName}}"></paper-input>
+                  <paper-input label="Last Name" value="{{item.lastName}}"></paper-input>
+                </div>
+              </template>
+            </etools-repetable-field-set>
+          </div>
+
           <h1 hidden$="{{!tab2Active}}">Tab 2 Content</h1>
         </paper-material>
 
@@ -96,6 +110,27 @@
         } else {
           this.fire('404');
         }
+      },
+
+      ready: function() {
+        this.fieldSets = [
+          {
+            firstName: 'John',
+            lastName: 'Doe'
+          },
+          {
+            firstName: 'Jane',
+            lastName: 'Doe'
+          },
+          {
+            firstName: 'Mike',
+            lastName: 'Yo'
+          },
+          {
+            firstName: 'Chris',
+            lastName: 'Morocanosu'
+          }
+        ];
       }
 
     });
