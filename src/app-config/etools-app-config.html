@@ -7,31 +7,33 @@ App global configuration
 <script>
     'use strict';
 
-    /* exported etoolsAjaxDefaultDexieDbPrefix */
-    var etoolsAjaxDefaultDexieDbPrefix = 'frontendTemplate';
-
     var etoolsAppConfig = {
       // dexie js
-      appDexieDb: new Dexie('etoolsApp'),
+      appDexieDb: new Dexie('pmpApp'),
 
       // app endpoints
       endpoints: {
-        userInfo: {
+        user: {
           url: '/users/api/profile/',
           exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'userData'
+          cachingKey: 'user'
         },
         countries: {
           url: '../../data/countries.json',
           exp: 6 * 60 * 60 * 1000, // 6h
           cachingKey: 'countries'
+        },
+        partners: {
+          url: '../../data/partners.json',
+          exp: 6 * 60 * 60 * 1000, // 6h
+          cachingKey: 'partners'
         }
       },
 
       globals: {
         // globals
         baseSite: window.location.origin,
-        basePath: (window.location.port === '8080') ? '/' : '/partners/',
+        basePath: (window.location.port === '8080') ? '/' : '/partnership-management/',
 
         getEndpoint: function(endpointName, data) {
           var endpoint = etoolsAppConfig.endpoints[endpointName];
@@ -63,8 +65,10 @@ App global configuration
      * https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
      */
     etoolsAppConfig.appDexieDb.version(1).stores({
-      collectionsList: '&name,expire',
-      countries: 'id, name'
+      collectionsList: '&name, expire',
+      countries: 'id, name',
+      partners: 'id, name',
+      user: 'id'
     });
 
 </script>

@@ -4,6 +4,8 @@
 
 <link rel="import" href="../app-elements/partners/partners-list.html">
 
+<link rel="import" href="../app-elements/partner-data/partner-data.html">
+
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-partners">
@@ -28,6 +30,8 @@
         pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
+
+    <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
 
     <app-header-layout has-scrolling-region>
 
@@ -62,13 +66,7 @@
       <div id="pageContent">
         <paper-material elevation="1">
 
-          <iron-ajax
-            auto
-            url="../../data/partners.json"
-            handle-as="json"
-            last-response="{{partners}}"></iron-ajax>
-
-          <partners-list hidden$="[[!listActive]]" partners="[[partners]]"></partners-list>
+          <partners-list hidden$="[[!listActive]]"></partners-list>
 
           <iron-pages
               hidden$="[[!tabsActive]]"
@@ -76,8 +74,14 @@
               attr-for-selected="name"
               fallback-selection="overview">
 
-            <partner-overview name="overview" partner="[[partner]]">partner overview</partner-overview>
-            <partner-details name="details" partner="[[partner]]">partner details</partner-details>
+            <partner-overview name="overview" partner-id="[[routeData.id]]">
+              <h1>Partner Overview</h1>
+              <p>[[partner.name]]</p>
+            </partner-overview>
+            <partner-details name="details" partner-id="[[routeData.id]]">
+              <h1>Partner Details</h1>
+              <p>[[partner.name]]</p>
+            </partner-details>
 
           </iron-pages>
 

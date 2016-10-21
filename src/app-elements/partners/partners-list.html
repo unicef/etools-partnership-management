@@ -4,6 +4,8 @@
 
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="../../app-elements/partners-data/partners-data.html">
+
 <link rel="import" href="partner-item.html">
 
 <dom-module id="partners-list">
@@ -28,7 +30,7 @@
         line-height: 56px;
         font-size: 12px;
         font-weight: bold;
-        background-color: var(--primary-background-color);
+        color: var(--dark-primary-text-color);
         border-bottom: 1px solid var(--dark-divider-color);
       }
 
@@ -68,6 +70,8 @@
 
     </style>
 
+    <partners-data partners="{{partners}}"></partners-data>
+
     <input id="query"
         type="search"
         autocomplete="off"
@@ -84,7 +88,7 @@
       </div>
 
       <template id="rows" is="dom-repeat" items="[[_filteredPartners]]" initial-count="5" target-framerate="60">
-        <partner-item class="row" partner="[[item]]" on-tap="do"></partner-item>
+        <partner-item class="row" partner="[[item]]"></partner-item>
       </template>
 
     </div>
@@ -121,10 +125,6 @@
         this.$.list.classList.add('hidden');
       },
 
-      do: function(e) {
-        console.log(e.model.item);
-      },
-
       filter: function(partner) {
         if (this.q && this.q.length &&
             partner.name.toLowerCase().indexOf(this.q.toLowerCase()) < 0) {
@@ -140,7 +140,7 @@
       },
 
       updateParters: function() {
-        if (this.partners && this.partners.length) {
+        if (true) {
           this._filteredPartners = _.filter(this.partners, this.filter.bind(this));
         }
       },

@@ -40,25 +40,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <style include="shared-styles">
 
-    :host {
-      display: block;
-    }
+      :host {
+        display: block;
+      }
 
       app-drawer {
+        z-index: 100;
         --app-drawer-width: 220px;
         --app-drawer-content-container: {
             background-color: var(--light-theme-content-color);
         };
       }
 
-    .side-nav-wrapper {
-      @apply(--layout-vertical);
+      .side-nav-wrapper {
+        @apply(--layout-vertical);
 
-      height: 100%;
-      overflow-y: var(--side-bar-scrolling);
-      overflow-x: hidden;
-      border-right: 1px solid var(--dark-divider-color);
-    }
+        height: 100%;
+        overflow-y: var(--side-bar-scrolling);
+        overflow-x: hidden;
+        border-right: 1px solid var(--dark-divider-color);
+      }
 
       .side-nav-wrapper .header {
         min-height: 60px;
@@ -104,6 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: fixed;
         top: 9px;
         right: 20px;
+        z-index: 1;
       }
 
     </style>

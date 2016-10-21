@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
-<dom-module id="countries-data">
+<dom-module id="partners-data">
 
   <template>
 
@@ -9,30 +9,30 @@
                  endpoint="[[endpoint]]"
                  on-success="_handleResponse"
                  caching-storage="dexie"
-                 dexie-db-collection="countries"></etools-ajax>
+                 dexie-db-collection="partners"></etools-ajax>
 
   </template>
 
   <script>
 
     var _data = {};
-    var _countryEls = [];
+    var _partnersEls = [];
 
-    var _setCountryData = function(data) {
-      _data.countries = data || {};
+    var _setPartnersData = function(data) {
+      _data.partners = data || {};
       this.load(_data);
-      _countryEls.forEach(function(el) {
+      _partnersEls.forEach(function(el) {
         if (el !== this) { el.load(_data); }
       });
     };
 
     Polymer({
 
-      is: 'countries-data',
+      is: 'partners-data',
 
       properties: {
 
-        countries: {
+        partners: {
           type: Array,
           readOnly: true,
           notify: true
@@ -46,24 +46,24 @@
       },
 
       attached: function() {
-        if (_countryEls.length === 0 && !_data.countries) {
-          this.endpoint = etoolsAppConfig.globals.getEndpoint('countries');
+        if (_partnersEls.length === 0 && !_data.partners) {
+          this.endpoint = etoolsAppConfig.globals.getEndpoint('partners');
         }
-        _countryEls.push(this);
+        _partnersEls.push(this);
       },
 
       detached: function() {
-        _countryEls.splice(_countryEls.indexOf(this), 1);
+        _partnersEls.splice(_partnersEls.indexOf(this), 1);
       },
 
       load: function(data) {
-        if (data.countries) {
-          this._setCountries(data.countries);
+        if (data.partners) {
+          this._setPartners(data.partners);
         }
       },
 
       _handleResponse: function(res) {
-        _setCountryData.bind(this)(res.detail);
+        _setPartnersData.bind(this)(res.detail);
       }
 
     });

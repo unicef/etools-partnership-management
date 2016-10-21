@@ -10,7 +10,8 @@
                  endpoint="[[endpoint]]"
                  on-success="_handleResponse"
                  on-fail="_handleError"
-                 caching-storage="dexie"></etools-ajax>
+                 caching-storage="dexie"
+                 dexie-db-collection="user"></etools-ajax>
   </template>
 
   <script>
@@ -24,7 +25,6 @@
       var permissions = this.getAllPermissions();
 
       if (!_.isEmpty(data)) {
-
         permissions.defaultPermissions.forEach(function(perm) {
           _data.permissions[perm] = true;
         });
@@ -48,7 +48,6 @@
         }
       } else {
         //for testing
-        console.log('setting super permissions');
         permissions.superPermissions.forEach(function(perm) {
           _data.permissions[perm] = true;
         });
@@ -83,12 +82,13 @@
       },
 
       ready: function() {
+        this.$.ajax.alternateDexieDb = etoolsAppConfig.appDexieDb;
         this.load(_data);
       },
 
       attached: function() {
         if (_userEls.length === 0 && !_data.user) {
-          this.endpoint = this.getEndpoint('userInfo');
+          this.endpoint = this.getEndpoint('user');
         }
         _userEls.push(this);
       },
@@ -107,7 +107,6 @@
 
       _handleResponse: function(res) {
         // TODO: check response to make sure it contains a valid user
-        console.log('resp');
         _setUserData.bind(this)(res.detail);
       },
 

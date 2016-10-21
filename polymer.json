@@ -2,9 +2,9 @@
   "entrypoint": "index.html",
   "shell": "src/app-shell.html",
   "fragments": [
-    "src/pages/page-section1.html",
-    "src/pages/page-section2.html",
-    "src/pages/page-section3.html",
+    "src/pages/page-partners.html",
+    "src/pages/page-agreements.html",
+    "src/pages/page-interventions.html",
     "src/pages/page-not-found.html"
   ],
   "sourceGlobs": [
