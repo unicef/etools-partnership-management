@@ -65,7 +65,7 @@
           <div hidden$="{{!tab1Active}}">
             <h1>Tab 1 Content</h1>
 
-            <etools-repetable-field-set title="Repeatable field set 2" model="{{fieldSets}}" elevation="1" hide-plus hide-vertical-divider>
+            <etools-repetable-field-set title="Repeatable field set 2" model="{{fieldSets}}" elevation="1" show-counter>
               <template is="dom-repeat" items="{{fieldSets}}">
                 <div class$="layout horizontal flex data-row-{{index}}">
                   <paper-input label="First Name" value="{{item.firstName}}"></paper-input>
