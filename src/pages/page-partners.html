@@ -41,7 +41,7 @@
 
         <app-toolbar>
           <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>Partners{{partnerName}}</div>
+          <div main-title>Partners {{partnerName}}</div>
         </app-toolbar>
 
         <div id="tabsWrapper" hidden$="{{!tabsActive}}">
@@ -109,11 +109,11 @@
 
       observers: [
         '_resizeHeader(tabsActive)',
-        '_tabChanged(routeData.tab)'
+        '_pageChanged(listActive, routeData.tab)',
       ],
 
       ready: function() {
-        this.set('partnerPage', this._getActivePage());
+
       },
 
       openDrawer: function() {
@@ -124,16 +124,17 @@
         this.$$('app-header-layout').notifyResize();
       },
 
-      _getActivePage: function() {
-        if (this.listActive) {
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
           return 'list';
-        } else if (this.tabsActive) {
-          return this.routeData.tab;
+        } else {
+          return tab;
         }
       },
 
-      _tabChanged: function(tab) {
-        this.set('partnerPage', tab);
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('partnerPage', activePage);
       }
 
     });
