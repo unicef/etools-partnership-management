@@ -2,36 +2,170 @@
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
-<link rel="import" href="partners-data.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../app-elements/partners-data/partners-data.html">
+
+<link rel="import" href="partner-item.html">
 
 <dom-module id="partners-list">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="shared-styles iron-flex iron-flex-factors">
 
-    <app-route
-        route="{{route}}"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
+      :host {
+        display: block;
+      }
+
+      :host([hidden]) {
+        display: none;
+      }
+
+      .header {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+
+        padding: 0 39px 0 49px;
+        line-height: 56px;
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--dark-primary-text-color);
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .header > div {
+        min-width: 100px;
+        margin-right: 10px;
+      }
+
+      #list {
+        display: block;
+        position: relative;
+        margin: 20px auto;
+        opacity: 1;
+        transition: opacity 0.4s;
+        max-width: 920px;
+        background-color: #FFFFFF;
+      }
+
+      #list.hidden {
+        transition: none;
+        opacity: 0;
+      }
+
+      .row {
+        @apply(--layout-vertical);
+
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px 15px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .row:hover {
+        background: var(--dark-hover-color);
+      }
+
+    </style>
 
     <partners-data partners="{{partners}}"></partners-data>
 
+    <input id="query"
+        type="search"
+        autocomplete="off"
+        value="{{q::keyup}}"
+        placeholder="Search"
+        on-search="onSearch"></input>
 
-    partners list content goes here...
+    <div id="list">
+
+      <div class="header">
+        <div class="name flex-2">Name</div>
+        <div class="type flex-2">Type</div>
+        <div class="risk flex">Risk</div>
+      </div>
+
+      <template id="rows" is="dom-repeat" items="[[_filteredPartners]]" initial-count="5" target-framerate="60">
+        <partner-item class="row" partner="[[item]]"></partner-item>
+      </template>
+
+    </div>
 
   </template>
 
   <script>
-    (function() {
-      'use strict';
 
-      Polymer({
-        is: 'partners-list',
-      });
+    Polymer({
 
-    })();
+      is: 'partners-list',
+
+      properties: {
+
+        _filteredPartners: {
+          type: Array,
+          observer: '_dataChanged'
+        },
+
+        q: {
+          type: String,
+          notify: true,
+          value: '',
+          observer: '_qChanged'
+        }
+
+      },
+
+      observers: [
+        'debouncedFilter(q, partners.*)'
+      ],
+
+      ready: function() {
+        this.$.list.classList.add('hidden');
+      },
+
+      filter: function(partner) {
+        if (this.q && this.q.length &&
+            partner.name.toLowerCase().indexOf(this.q.toLowerCase()) < 0) {
+          return false;
+        }
+        return true;
+      },
+
+      debouncedFilter: function() {
+        this.debounce('filter', function() {
+          this.updateParters();
+        }, 1);
+      },
+
+      updateParters: function() {
+        if (true) {
+          this._filteredPartners = _.filter(this.partners, this.filter.bind(this));
+        }
+      },
+
+      onSearch: function() {
+        this.q = this.$.query.value;
+      },
+
+      _qChanged: function(q) {
+        if (q) {
+          this.async(function() {
+            this.$.query.focus();
+          });
+        }
+      },
+
+      _dataChanged: function() {
+        this.$.list.classList.add('hidden');
+        this.async(function() {
+          this.$.list.classList.remove('hidden');
+        }, 50);
+      }
+
+    });
+
   </script>
 
 </dom-module>

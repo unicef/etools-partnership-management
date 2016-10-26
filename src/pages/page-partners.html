@@ -6,6 +6,8 @@
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
 
+<link rel="import" href="../app-elements/partner-data/partner-data.html">
+
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-partners">
@@ -31,7 +33,9 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <app-header-layout>
+    <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
+
+    <app-header-layout has-scrolling-region>
 
       <app-header id="header" fixed shadow>
 
@@ -41,10 +45,12 @@
         </app-toolbar>
 
         <div id="tabsWrapper" hidden$="{{!tabsActive}}">
-
           <app-toolbar id="tabs-bar">
+            <paper-tabs
+                selected="[[routeData.tab]]"
+                attr-for-selected="name"
+                fallback-selection="overview" noink bottom-item>
 
-            <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="overview" noink bottom-item>
               <paper-tab name="overview" link>
                 <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
               </paper-tab>
@@ -52,16 +58,14 @@
               <paper-tab name="details" link>
                 <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
               </paper-tab>
+
             </paper-tabs>
-
           </app-toolbar>
-
         </div>
 
       </app-header>
 
       <div id="pageContent">
-
         <paper-material elevation="1">
 
           <iron-pages id="partnersPages"
@@ -74,15 +78,14 @@
               <partners-list></partners-list>
             </div>
             <div name="overview">
-              <partner-overview></partner-overview>
+              <partner-overview partner-id="[[routeData.id]]"></partner-overview>
             </div>
             <div name="details">
-              <partner-details></partner-details>
+              <partner-details partner-id="[[routeData.id]]"></partner-details>
             </div>
           </iron-pages>
 
         </paper-material>
-
       </div>
 
     </app-header-layout>
@@ -95,8 +98,6 @@
 
       is: 'page-partners',
 
-      observers: ['_tabChanged(routeData.tab)'],
-
       properties: {
         partnerPage: {
           type: String,
@@ -106,12 +107,21 @@
         }
       },
 
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_tabChanged(routeData.tab)'
+      ],
+
       ready: function() {
         this.set('partnerPage', this._getActivePage());
       },
 
       openDrawer: function() {
         this.fire('drawer');
+      },
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
       },
 
       _getActivePage: function() {

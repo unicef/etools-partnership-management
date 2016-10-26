@@ -2,29 +2,21 @@
 App global configuration
 -->
 <link rel="import" href="../../bower_components/etools-dexiejs/etools-dexiejs.html">
-<link rel="import" href="../app-elements/lodash/lodash.html">
+<link rel="import" href="../../scripts/lodash/lodash.html">
 
 <script>
     'use strict';
 
-    /* exported etoolsAjaxDefaultDexieDbPrefix */
-    var etoolsAjaxDefaultDexieDbPrefix = 'frontendTemplate';
-
     var etoolsAppConfig = {
       // dexie js
-      appDexieDb: new Dexie('etoolsApp'),
+      appDexieDb: new Dexie('pmpApp'),
 
       // app endpoints
       endpoints: {
-        userInfo: {
-          template: '/users/api/profile/',
+        user: {
+          url: '/users/api/profile/',
           exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'userData'
-        },
-        partners: {
-          template: '/api/partners/',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'partnerOrganizations'
+          cachingKey: 'user'
         },
         agreements: {
           template: '/management/api/stats/agreements/',
@@ -35,12 +27,17 @@ App global configuration
           url: '../../data/countries.json',
           exp: 6 * 60 * 60 * 1000, // 6h
           cachingKey: 'countries'
+        },
+        partners: {
+          url: '../../data/partners.json',
+          exp: 6 * 60 * 60 * 1000, // 6h
+          cachingKey: 'partners'
         }
       },
 
       globals: {
         // globals
-        baseSite: 'http://localhost:8081', //window.location.origin,
+        baseSite: window.location.origin,
         basePath: (window.location.port === '8080') ? '/' : '/partnership-management/',
 
         getEndpoint: function(endpointName, data) {
@@ -58,6 +55,8 @@ App global configuration
 
       // permissions
       permissions: {
+        superPermissions: ['loggedInDefault', 'userInfoMenu',
+                           'interventionsMenu', 'statsMenu'], //for testing
         partnerOnlyPermissions: ['interventionsMenu'],
         defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],
@@ -71,8 +70,10 @@ App global configuration
      * https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
      */
     etoolsAppConfig.appDexieDb.version(1).stores({
-      collectionsList: '&name,expire',
-      countries: 'id, name'
+      collectionsList: '&name, expire',
+      countries: 'id, name',
+      partners: 'id, name',
+      user: 'id'
     });
 
 </script>
