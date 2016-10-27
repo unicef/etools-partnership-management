@@ -36,7 +36,8 @@
     "etools-checkable-input": "^1.0.0",
     "etools-content-panel": "^1.0.0",
     "paper-listbox": "^1.1.2",
-    "iron-form": "PolymerElements/iron-form#^1.1.4"
+    "iron-form": "PolymerElements/iron-form#^1.1.4",
+    "etools-page-refresh": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

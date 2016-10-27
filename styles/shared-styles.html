@@ -30,32 +30,8 @@
         background-color: var(--primary-background-color);
       }
 
-      app-header div[main-title] {
-        position: relative;
-        bottom: 1px;
-        margin-left: 24px;
-        text-transform: capitalize;
-        color: var(--light-primary-text-color);
-      }
-
-      app-header paper-icon-button[icon="menu"] {
-        display: block;
-      }
-
       #pageContent {
         padding: 48px 15px;
-      }
-
-      @media (min-width: 850px) {
-        app-header paper-icon-button[icon="menu"] {
-          display: none;
-        }
-        app-header div[main-title] {
-          margin-left: 32px;
-        }
-        #pageContent {
-          padding: 48px 62px;
-        }
       }
 
       app-toolbar {
@@ -113,6 +89,13 @@
       paper-icon-button.light {
         color: var(--light-icon-color);
         --paper-icon-button-ink-color: var(--light-ink-color);
+      }
+
+      /* responsive css rules */
+      @media (min-width: 850px) {
+        #pageContent {
+          padding: 48px 62px;
+        }
       }
 
     </style>

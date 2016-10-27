@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
+<link rel="import" href="../app-elements/header-toolbar-content/header-toolbar-content.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
@@ -39,10 +40,7 @@
 
       <app-header id="header" fixed shadow>
 
-        <app-toolbar>
-          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>Partners {{partnerName}}</div>
-        </app-toolbar>
+        <header-toolbar-content title$="Partners [[partnerName]]"></header-toolbar-content>
 
         <div id="tabsWrapper" hidden$="{{!tabsActive}}">
           <app-toolbar id="tabs-bar">
@@ -116,9 +114,7 @@
 
       },
 
-      openDrawer: function() {
-        this.fire('drawer');
-      },
+
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();

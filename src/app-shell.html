@@ -28,9 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/user-data/user-data.html">
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
 
-<link rel="import" href="app-elements/countries-dropdown/countries-dropdown.html">
-<link rel="import" href="app-elements/countries-data/countries-data.html">
-
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
@@ -101,18 +98,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-top: 1px solid var(--dark-divider-color);
       }
 
-      #countries {
-        position: fixed;
-        top: 9px;
-        right: 20px;
-        z-index: 1;
-      }
-
     </style>
 
     <user-data permissions="{{permissions}}"></user-data>
-
-    <countries-data countries="{{countries}}"></countries-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -172,8 +160,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found name="not-found"></page-not-found>
 
         </iron-pages>
-
-        <countries-dropdown id="countries" countries="[[countries]]"></countries-dropdown>
 
       </div>
 
