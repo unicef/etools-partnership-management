@@ -32,7 +32,7 @@
           db.partners.get(id).then(function(partner) {
             this.set('partner', partner);
           }.bind(this)).catch(function(error) {
-            console.error('Oops: ' + error);
+            console.error('Error getting partner: ' + error);
           });
         } else {
           console.error('You must provide a valid partner ID');

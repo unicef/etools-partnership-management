@@ -8,7 +8,6 @@
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  on-success="_handleResponse"
-                 caching-storage="dexie"
                  dexie-db-collection="partners"></etools-ajax>
 
   </template>
@@ -36,6 +35,19 @@
           type: Array,
           readOnly: true,
           notify: true
+        },
+
+        filteredPartners: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        },
+
+        _collection: {
+          type: Object,
+          value: function() {
+            return etoolsAppConfig.appDexieDb.partners;
+          }
         }
 
       },
@@ -64,6 +76,57 @@
 
       _handleResponse: function(res) {
         _setPartnersData.bind(this)(res.detail);
+      },
+
+      // Query functions
+
+      launchQuery: function() {
+        console.log('quering');
+
+        var params = this.queryParams;
+        var db = etoolsAppConfig.appDexieDb;
+        var collection = db.partners;
+        var s = params.sort ? params.sort.split('.') : ['name', 'asc'];
+        var q = params.q ? params.q.toLowerCase() : '';
+        var p = params.page ? params.page : 1;
+
+        this.debounce('search', function() {
+
+          collection = this.sort(s[0], s[1], collection);
+
+          collection = this.filter(q, collection);
+
+          this.paginate(p, 20, collection)
+            .toArray()
+            .then(function(partners) {
+              this.partners = partners;
+            }.bind(this));
+        }, this.debounceTime);
+
+      },
+
+      filter: function(query) {
+        return this.collection.filter(function(partner) {
+          return partner.name.toLowerCase().includes(query);
+        });
+      },
+
+      sort: function(field, order, collection) {
+        this.collection.orderBy(field);
+        if (order === 'desc') this.collection.reverse();
+      },
+
+      paginate: function(pageNumber, pageSize, collection) {
+        return this.collection.offset((pageNumber - 1) * pageSize).limit(pageSize);
+      },
+
+      // new
+
+      this.$.partners.sort('name', 'asc');
+
+      sort: function(_field, _order) {
+        this.queryPlan.unshift('sort');
+        this.set('sortOrder', [{field: _field, order: _order}]);
       }
 
     });

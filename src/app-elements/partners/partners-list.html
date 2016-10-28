@@ -1,12 +1,11 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-
-<link rel="import" href="../../../styles/shared-styles.html">
-
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="../../app-elements/partners-data/partners-data.html">
+<link rel="import" href="../../app-elements/partner-data/partner-data.html">
 
 <link rel="import" href="partner-item.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
 
 <dom-module id="partners-list">
 
@@ -37,6 +36,10 @@
       .header > div {
         min-width: 100px;
         margin-right: 10px;
+      }
+
+      .header > div > span {
+        cursor: pointer;
       }
 
       #list {
@@ -70,24 +73,28 @@
 
     </style>
 
-    <partners-data partners="{{partners}}"></partners-data>
+    <partners-data></partners-data>
 
     <input id="query"
         type="search"
         autocomplete="off"
         value="{{q::keyup}}"
         placeholder="Search"
-        on-search="onSearch"></input>
+        on-search="_onSearch"></input>
+
+    <button type="button" name="button" on-tap="pageLeft"> < </button>
+    <button type="button" name="button" on-tap="pageRight"> > </button>
 
     <div id="list">
 
       <div class="header">
-        <div class="name flex-2">Name</div>
-        <div class="type flex-2">Type</div>
-        <div class="risk flex">Risk</div>
+        <!-- first class of div must be name of field -->
+        <div class="name flex-2"><span on-tap="_buildSortOrder">Name</span></div>
+        <div class="partner_type flex-2">Type</div>
+        <div class="rating flex"><span on-tap="_buildSortOrder">Risk</span></div>
       </div>
 
-      <template id="rows" is="dom-repeat" items="[[_filteredPartners]]" initial-count="5" target-framerate="60">
+      <template id="rows" is="dom-repeat" items="[[partners]]" initial-count="10">
         <partner-item class="row" partner="[[item]]"></partner-item>
       </template>
 
@@ -97,55 +104,164 @@
 
   <script>
 
+    var _lastNavigated = null;
+
     Polymer({
 
       is: 'partners-list',
 
       properties: {
 
-        _filteredPartners: {
+        partners: {
           type: Array,
-          observer: '_dataChanged'
+          observer: '_partnersChanged'
         },
 
         q: {
           type: String,
           notify: true,
-          value: '',
           observer: '_qChanged'
+        },
+
+        sortOrder: {
+          type: Array,
+          notify: true,
+          observer: '_sortChanged'
+        },
+
+        page: {
+          type: Number,
+          notify: true,
+        },
+
+        debounceTime: {
+          type: Number,
+          value: 50
+        },
+
+        queryParams: {
+          type: Object
         }
 
       },
 
       observers: [
-        'debouncedFilter(q, partners.*)'
+        '_updateURL(q, page, sortOrder)'
       ],
 
       ready: function() {
         this.$.list.classList.add('hidden');
       },
 
-      filter: function(partner) {
-        if (this.q && this.q.length &&
-            partner.name.toLowerCase().indexOf(this.q.toLowerCase()) < 0) {
-          return false;
+      init: function() {
+        if (this.queryParams.q) {
+          this.set('q', this.queryParams.q);
+        } else {
+          this.set('q', '');
         }
-        return true;
-      },
 
-      debouncedFilter: function() {
-        this.debounce('filter', function() {
-          this.updateParters();
-        }, 1);
-      },
+        if (this.queryParams.page) {
+          this.set('page', this.queryParams.page);
+        } else {
+          this.set('page', 1);
+        }
 
-      updateParters: function() {
-        if (true) {
-          this._filteredPartners = _.filter(this.partners, this.filter.bind(this));
+        if (this.queryParams.sort) {
+          var s = this.queryParams.sort.split('.');
+          this.set('sortOrder', [{field: s[0], order: s[1]}]);
+        } else {
+          this.set('sortOrder', []);
         }
       },
 
-      onSearch: function() {
+      launchQuery: function() {
+        console.log('quering');
+
+        var params = this.queryParams;
+        var db = etoolsAppConfig.appDexieDb;
+        var collection = db.partners;
+        var s = params.sort ? params.sort.split('.') : ['name', 'asc'];
+        var q = params.q ? params.q.toLowerCase() : '';
+        var p = params.page ? params.page : 1;
+
+        this.debounce('search', function() {
+
+          collection = this.sort(s[0], s[1], collection);
+
+          collection = this.filter(q, collection);
+
+          this.paginate(p, 20, collection)
+            .toArray()
+            .then(function(partners) {
+              this.partners = partners;
+            }.bind(this));
+        }, this.debounceTime);
+
+      },
+
+      filter: function(query, collection) {
+        return collection.filter(function(partner) {
+          return partner.name.toLowerCase().includes(query);
+        });
+      },
+
+      sort: function(field, order, collection) {
+        collection = collection.orderBy(field);
+        if (order === 'desc') collection = collection.reverse();
+        return collection;
+      },
+
+      paginate: function(pageNumber, pageSize, collection) {
+        return collection.offset((pageNumber - 1) * pageSize).limit(pageSize);
+      },
+
+      pageLeft: function() {
+        if (this.page > 1) this.set('page', this.page - 1);
+        this.set('debounceTime', 100);
+      },
+
+      pageRight: function() {
+        if (this.page < 66) this.set('page', this.page + 1);
+        this.set('debounceTime', 100);
+      },
+
+      _updateURL: function() {
+        var qs = this._buildQueryString();
+        if (qs !== _lastNavigated) {
+          _lastNavigated = qs;
+          var currentState = window.history.state;
+          window.history.replaceState(currentState, null, 'list' + (qs.length ? '?' + qs : ''));
+          window.dispatchEvent(new CustomEvent('location-changed'));
+          this.launchQuery();
+        }
+      },
+
+      _buildSortOrder: function(e) {
+        var _field = e.path[1].classList[0];
+        var _order = 'asc';
+        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
+          _order = this.sortOrder[0].order === 'asc' ? 'desc': 'asc';
+        }
+        this.set('sortOrder', [{field: _field, order: _order}]);
+      },
+
+      _buildQueryString: function() {
+        var out = [];
+        if (this.page && this.page > 1) out.push('page=' + this.page);
+        if (this.q && this.q.length) out.push('q=' + this.q);
+        if (this.sortOrder && this.sortOrder.length) {
+          var sortQuery = [];
+          this.sortOrder.forEach(function(sort) {
+            if (sort.field && sort.order) {
+              sortQuery.push('' + sort.field + '.' + sort.order);
+            }
+          });
+          out.push('sort=' + sortQuery.join('+'));
+        }
+        return out.join("&");
+      },
+
+      _onSearch: function() {
         this.q = this.$.query.value;
       },
 
@@ -155,9 +271,15 @@
             this.$.query.focus();
           });
         }
+        this.set('page', 1);
+        this.set('debounceTime', 300);
       },
 
-      _dataChanged: function() {
+      _sortChanged: function() {
+        this.set('debounceTime', 50);
+      },
+
+      _partnersChanged: function() {
         this.$.list.classList.add('hidden');
         this.async(function() {
           this.$.list.classList.remove('hidden');

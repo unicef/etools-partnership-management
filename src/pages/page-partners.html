@@ -2,9 +2,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="../app-elements/partners/partners-list.html">
+<link rel="import" href="../app-elements/partners-data/partners-data.html">
 
-<link rel="import" href="../app-elements/partner-data/partner-data.html">
+<link rel="import" href="../app-elements/partners/partners-list.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -23,6 +23,7 @@
     <app-route
         route="{{route}}"
         pattern="/list"
+        query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
@@ -42,7 +43,7 @@
           <div main-title>Partners{{partnerName}}</div>
         </app-toolbar>
 
-        <div id="tabsWrapper" hidden$="{{!tabsActive}}">
+        <div id="tabsWrapper" hidden$="[[!tabsActive]]">
           <app-toolbar id="tabs-bar">
             <paper-tabs
                 selected="[[routeData.tab]]"
@@ -66,7 +67,7 @@
       <div id="pageContent">
         <paper-material elevation="1">
 
-          <partners-list hidden$="[[!listActive]]"></partners-list>
+          <partners-list id="list" hidden$="[[!listActive]]" query-params="[[queryParams]]"></partners-list>
 
           <iron-pages
               hidden$="[[!tabsActive]]"
@@ -80,7 +81,7 @@
             </partner-overview>
             <partner-details name="details" partner-id="[[routeData.id]]">
               <h1>Partner Details</h1>
-              <p>[[partner.name]]</p>
+              <p>[[partner.vendor_number]]</p>
             </partner-details>
 
           </iron-pages>
@@ -100,13 +101,17 @@
 
       properties: {
 
-        partnerName: String
+        partnerName: String,
 
       },
 
       observers: [
         '_resizeHeader(tabsActive)'
       ],
+
+      ready: function() {
+        this.$.list.init();
+      },
 
       openDrawer: function() {
         this.fire('drawer');
