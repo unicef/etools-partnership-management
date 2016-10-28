@@ -29,13 +29,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
 
 <link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="page-layout-styles shared-styles">
 
       :host {
         display: block;
@@ -102,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <user-data permissions="{{permissions}}"></user-data>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location route="test/{{route}}"></app-location>
 
     <app-route
         route="{{route}}"
@@ -146,22 +147,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <!-- Main content -->
-      <div id="mainContent">
+      <iron-pages id="pages"
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="not-found"
+          role="main">
 
-        <iron-pages id="pages"
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="not-found"
-            role="main">
+        <page-partners name="partners" route="{{subroute}}"></page-partners>
+        <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
+        <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
+        <page-not-found name="not-found"></page-not-found>
 
-          <page-partners name="partners" route="{{subroute}}"></page-partners>
-          <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
-          <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
-          <page-not-found name="not-found"></page-not-found>
-
-        </iron-pages>
-
-      </div>
+      </iron-pages>
 
     </app-drawer-layout>
 

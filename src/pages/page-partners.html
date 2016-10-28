@@ -2,20 +2,21 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="../app-elements/header-toolbar-content/header-toolbar-content.html">
+<link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
 
 <link rel="import" href="../app-elements/partner-data/partner-data.html">
 
+<link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-partners">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="page-layout-styles shared-styles">
 
       :host {
         display: block;
@@ -40,7 +41,7 @@
 
       <app-header id="header" fixed shadow>
 
-        <header-toolbar-content title$="Partners [[partnerName]]"></header-toolbar-content>
+        <page-header title$="Partners [[partnerName]]"></page-header>
 
         <div id="tabsWrapper" hidden$="{{!tabsActive}}">
           <app-toolbar id="tabs-bar">
@@ -63,28 +64,22 @@
 
       </app-header>
 
-      <div id="pageContent">
-        <paper-material elevation="1">
+      <iron-pages id="partnersPages"
+                  selected="{{partnerPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
 
-          <iron-pages id="partnersPages"
-                      selected="{{partnerPage}}"
-                      attr-for-selected="name"
-                      fallback-selection="list"
-                      role="main">
-
-            <div name="list">
-              <partners-list></partners-list>
-            </div>
-            <div name="overview">
-              <partner-overview partner-id="[[routeData.id]]"></partner-overview>
-            </div>
-            <div name="details">
-              <partner-details partner-id="[[routeData.id]]"></partner-details>
-            </div>
-          </iron-pages>
-
-        </paper-material>
-      </div>
+        <div class="page" name="list">
+          <partners-list></partners-list>
+        </div>
+        <div class="page" name="overview">
+          <partner-overview partner-id="[[routeData.id]]"></partner-overview>
+        </div>
+        <div class="page" name="details">
+          <partner-details partner-id="[[routeData.id]]"></partner-details>
+        </div>
+      </iron-pages>
 
     </app-header-layout>
 
@@ -113,8 +108,6 @@
       ready: function() {
 
       },
-
-
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
