@@ -2,13 +2,18 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
+<link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-elements/page-with-sidebar.html">
+<link rel="import" href="../app-elements/page-elements/simple-page.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-section1">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="page-layout-styles shared-styles">
 
     :host {
       display: block;
@@ -36,35 +41,39 @@
 
       <app-header id="header" fixed shadow>
 
-        <app-toolbar class="layout horizontal">
-          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>Section 1{{tabName}}</div>
-        </app-toolbar>
+        <page-header title$="Page section 1 - [[routeData.tab]]"></page-header>
 
-        <app-toolbar id="tabs">
+        <div id="tabsWrapper" hidden$="{{!tabsActive}}">
+          <app-toolbar id="tabs">
 
-          <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="tab1" noink bottom-item>
-            <paper-tab name="tab1" link>
-              <a href="/section1/tab1" class="tab-link" tabindex="-1">tab 1</a>
-            </paper-tab>
+            <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="tab1" noink bottom-item>
+              <paper-tab name="tab1" link>
+                <a href="/section1/tab1" class="tab-link" tabindex="-1">tab 1</a>
+              </paper-tab>
 
-            <paper-tab name="tab2" link>
-              <a href="/section1/tab2" class="tab-link" tabindex="-1">tab 2</a>
-            </paper-tab>
-          </paper-tabs>
+              <paper-tab name="tab2" link>
+                <a href="/section1/tab2" class="tab-link" tabindex="-1">tab 2</a>
+              </paper-tab>
+            </paper-tabs>
 
-        </app-toolbar>
+          </app-toolbar>
+        </div>
 
       </app-header>
 
-      <div id="pageContent">
+      <iron-pages id="categoryPages"
+                  selected="{{routeData.tab}}"
+                  attr-for-selected="name"
+                  fallback-selection="tab1"
+                  role="main">
 
-        <paper-material elevation="1">
-          <h1 hidden$="{{!tab1Active}}">Tab 1 Content</h1>
-          <h1 hidden$="{{!tab2Active}}">Tab 2 Content</h1>
-        </paper-material>
-
-      </div>
+        <div class="page" name="tab1">
+          <page-with-sidebar></page-with-sidebar>
+        </div>
+        <div class="page" name="tab2">
+          <simple-page></simple-page>
+        </div>
+      </iron-pages>
 
     </app-header-layout>
 
@@ -76,24 +85,15 @@
 
       is: 'page-section1',
 
-      properties: {
-
-        tabName: String
-
-      },
+      properties: {},
 
       observers: [
         '_tabChanged(routeData.tab)'
       ],
 
-      openDrawer: function() {
-        this.fire('drawer');
-      },
-
       _tabChanged: function(tab) {
-        if (tab) {
-          this.tabName = ' - ' + tab;
-        } else {
+        var tabs = ['tab1', 'tab2'];
+        if (tabs.indexOf(tab) == -1) {
           this.fire('404');
         }
       }

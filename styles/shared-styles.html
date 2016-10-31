@@ -1,13 +1,3 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <!-- shared styles for all views -->
@@ -30,38 +20,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       a:focus {
         outline: inherit;
-      }
-
-      app-header {
-        background-color: var(--primary-background-color);
-      }
-
-      app-header div[main-title] {
-        position: relative;
-        bottom: 1px;
-        margin-left: 24px;
-        text-transform: capitalize;
-        color: var(--light-primary-text-color);
-      }
-
-      app-header paper-icon-button[icon="menu"] {
-        display: block;
-      }
-
-      #pageContent {
-        padding: 48px 15px;
-      }
-
-      @media (min-width: 850px) {
-        app-header paper-icon-button[icon="menu"] {
-          display: none;
-        }
-        app-header div[main-title] {
-          margin-left: 32px;
-        }
-        #pageContent {
-          padding: 48px 62px;
-        }
       }
 
       app-toolbar {
@@ -94,8 +52,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-center-center);
       }
 
+      iron-pages[hidden] {
+        display: none;
+      }
+
       paper-material {
-        padding: 10px 20px;
+        padding: 15px 20px;
         background-color: var(--light-theme-content-color);
       }
 
@@ -115,6 +77,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-icon-button.light {
         color: var(--light-icon-color);
         --paper-icon-button-ink-color: var(--light-ink-color);
+      }
+
+      /* responsive css rules */
+      @media (min-width: 850px) {
+
       }
 
     </style>
