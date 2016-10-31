@@ -32,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/countries-data/countries-data.html">
 
 <link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
@@ -110,8 +111,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <user-data permissions="{{permissions}}"></user-data>
 
-    <countries-data countries="{{countries}}"></countries-data>
-
     <app-location route="{{route}}"></app-location>
 
     <app-route
@@ -159,22 +158,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <!-- Main content -->
-      <div id="mainContent">
 
-        <iron-pages id="pages"
-                    selected="[[page]]"
-                    attr-for-selected="name"
-                    fallback-selection="not-found"
-                    role="main">
-          <page-section1 name="section1" route="{{subroute}}"></page-section1>
-          <page-section2 name="section2" route="{{subroute}}"></page-section2>
-          <page-section3 name="section3" route="{{subroute}}"></page-section3>
-          <page-not-found name="not-found"></page-not-found>
-        </iron-pages>
-
-        <countries-dropdown id="countries" countries="[[countries]]"></countries-dropdown>
-
-      </div>
+      <iron-pages id="pages"
+                  selected="[[page]]"
+                  attr-for-selected="name"
+                  fallback-selection="not-found"
+                  role="main">
+        <page-section1 name="section1" route="{{subroute}}"></page-section1>
+        <page-section2 name="section2" route="{{subroute}}"></page-section2>
+        <page-section3 name="section3" route="{{subroute}}"></page-section3>
+        <page-not-found name="not-found"></page-not-found>
+      </iron-pages>
 
     </app-drawer-layout>
 
