@@ -1,0 +1,49 @@
+<!-- This file will be dedicated for 12 columns content layout -->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="grid-layout-styles">
+  <template>
+    <style>
+
+      .col {
+        @apply(--layout-horizontal);
+      }
+      .col:not(:first-of-type):not(.col-12) {
+        padding-left: 25px;
+      }
+
+      /* full width available */
+      .col-12 {
+        @apply(--layout-flex);
+      }
+
+      .col-12:not(:first-of-type) {
+        margin-top: 20px;
+      }
+
+      .col-3 {
+        @apply(--layout-flex-3);
+      }
+
+      .col-4 {
+        @apply(--layout-flex-4);
+      }
+
+      .col-9 {
+        @apply(--layout-flex-9);
+      }
+
+
+
+
+
+      /* TODO: more classes will e added if needed */
+
+      .vertical {
+        @apply(--layout-vertical);
+      }
+    </style>
+  </template>
+</dom-module>

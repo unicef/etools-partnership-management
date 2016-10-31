@@ -2,9 +2,10 @@
 
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 
-<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<!--<link rel="import" href="../../../bower_components/iron-form/iron-form.html">-->
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
@@ -25,46 +26,29 @@
 
   <template>
 
-    <style include="iron-flex iron-flex-alignment page-layout-styles shared-styles">
+    <style include="iron-flex iron-flex-alignment page-layout-styles grid-layout-styles shared-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
         padding-bottom: 70px;
 
-        --paper-input-container-input: {
-          text-transform: uppercase;
+        --etools-checkable-input-label: {
+          padding-bottom: 2px;
+        };
+
+      }
+
+      paper-input,
+      etools-dropdown {
+        width: 100%;
+      }
+
+      paper-input {
+        --paper-input-prefix: {
+          margin-top: -5px;
+          margin-right: 10px;
         }
-      }
 
-      .row:not(:first-child):not(.iron-collapse-closed) {
-        margin-top: 20px;
-      }
-
-      .alternate-name-btn {
-        margin-bottom: 7px;
-        margin-left: 25px;
-      }
-
-      .alternate-fields {
-        /*background-color: var(--secondary-background-color);*/
-      }
-
-      .alternate-fields-content {
-        padding: 10px;
-        box-sizing: border-box;
-      }
-
-      .alternate-fields-content .org-diff-label {
-        text-transform: uppercase;
-        color: var(--secondary-text-color);
-        font-size: var(--labels-secondary-font-size);
-        width: 210px;
-        line-height: 1.4;
-        padding: 11px 0;
-      }
-
-      .alternate-fields-content .org-diff-label.disabled {
-        opacity: 0.33;
       }
 
       .contact-info,
@@ -149,103 +133,77 @@
 
     </style>
 
+    <!-- main page content start -->
     <div id="pageContent">
 
-      <form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">
-        <div class$="layout horizontal already-in-vision [[alreadyInVisionClass]]">
-          <paper-checkbox id="alreadyPartner" name="already_partner" checked="{{partnerAlreadyInVision}}">Partner
-            already exists in VISION?
-          </paper-checkbox>
-          <template is="dom-if" if="[[partnerAlreadyInVision]]">
-          <span class="vendor-nr-label">
-            Enter
-            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number"
-                   value="{{partner.vendor_number::input}}">
-            so eTools can sync partner information.
-          </span>
-          </template>
-        </div>
-        <etools-content-panel title="Partner Details" is-disabled$="[[partnerAlreadyInVision]]">
-          <div class="layout horizontal row">
-            <!-- Organization name -->
-            <paper-input name="organization_name"
-                         class="b-input-field"
-                         label="Organization's Full Name*"
-                         value="{{partner.name}}"
-                         required auto-validate
-                         error-message="Please fill organization's full name!"
-                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
+      <!--<form is="iron-form" id="addPartnerDetailsForm" method="post" action="/api/testing-custom-elements">-->
 
-            <!-- Short name -->
-            <paper-input name="short_name"
-                         class="n-input-field"
-                         label="Short Name"
-                         value="{{partner.short_name}}"
-                         disabled$="[[partnerAlreadyInVision]]"></paper-input>
-
-            <!-- Alternate option -->
-            <div class="self-end alternate-name-btn">
-              <etools-content-toggle-button active="{{altNameActive}}" label="Alternate Name?"
-                                            is-disabled$="[[partnerAlreadyInVision]]"></etools-content-toggle-button>
+        <etools-content-panel title="Partner Details">
+          <div class="col col-12">
+            <div class="col col-4">
+              <!-- Organization name -->
+              <paper-input name="organization_name"
+                           label="Organization's Full Name"
+                           value="{{partner.name}}"></paper-input>
             </div>
-
-          </div>
-          <iron-collapse id="alternateNameFields" class="row alternate-fields" opened="{{altNameActive}}">
-            <!-- Alternate option fields -->
-            <div class="layout horizontal alternate-fields-content">
-              <span
-                  class$="org-diff-label [[orgAltNameLabelDisabledClass]]">Organization's name in a different language</span>
-
+            <div class="col col-4">
+              <!-- Short name -->
+              <paper-input name="short_name"
+                           label="Short Name"
+                           value="{{partner.short_name}}"
+                           disabled$="[[partnerAlreadyInVision]]"></paper-input>
+            </div>
+            <div class="col col-4">
               <!-- Right to left option -->
-              <div class="custom-field-wrapper n-input-field">
+              <div class="col col-3 custom-field-wrapper">
                 <etools-checkable-input checked="{{alternateNameRightToLeft}}"
-                                        label="Right to left"
-                                        label-alignment="top"
-                                        is-disabled$="[[partnerAlreadyInVision]]"></etools-checkable-input>
+                                        label="Right To Left"
+                                        label-alignment="top"></etools-checkable-input>
               </div>
-
+              <div class="col col-9">
               <!-- Alternate name -->
-              <paper-input name="alternate_name"
-                           class$="n-input-field [[rightToLeftAlignmentClass]]"
+              <paper-input id="alternateName"
+                           name="alternate_name"
+                           class$="[[rightToLeftAlignmentClass]]"
                            label="Alternate Name"
-                           value="{{partner.alternate_name}}"
-                           disabled$="[[partnerAlreadyInVision]]"></paper-input>
-
-              <!-- Alternate ID -->
-              <paper-input name="alternate_id"
-                           class="n-input-field"
-                           label="Alternate ID (if any)"
-                           value="{{partner.alternate_id}}"
-                           disabled$="[[partnerAlreadyInVision]]"></paper-input>
-            </div>
-          </iron-collapse>
-          <div class="layout horizontal row">
-            <!-- Partner types -->
-            <etools-dropdown class="n-input-field"
-                             label="Partner Type*"
-                             dropdown-value="{{partner.partner_type}}"
-                             options="[[partnerDetailsData.partnerTypes]]"
-                             is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
-
-            <!-- CSO type -->
-            <template is="dom-if" if="[[showCsoTypeField(partner.partner_type)]]">
-              <etools-dropdown class="n-input-field"
-                               label="CSO Type*"
-                               dropdown-value="{{partner.cso_type}}"
-                               options="[[partnerDetailsData.csoTypes]]"
-                               is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
-            </template>
-
-
-            <template is="dom-if" if="[[showCoreValuesAssessment(partner.cso_type)]]">
-              <!-- Core values assessment file -->
-              <div class="n-input-field">
-                <files-upload target="/path/to/destination" label="Core values assessment*"></files-upload>
+                           value="{{partner.alternate_name}}"></paper-input>
               </div>
+            </div>
+          </div>
 
+          <div class="col col-12">
+            <div class="col col-4">
+              <paper-input name="vendor_number"
+                           label="Vendor Number"
+                           value="{{partner.alternate_name}}"></paper-input>
+            </div>
+            <div class="col col-4">
+              <!-- Partner types -->
+              <etools-dropdown label="Partner Type"
+                               dropdown-value="{{partner.partner_type}}"
+                               options="[[partnerDetailsData.partnerTypes]]"></etools-dropdown>
+
+              <!-- CSO type -->
+              <!--<template is="dom-if" if="[[showCsoTypeField(partner.partner_type)]]">-->
+                <!--<etools-dropdown class="n-input-field"-->
+                                 <!--label="CSO Type*"-->
+                                 <!--dropdown-value="{{partner.cso_type}}"-->
+                                 <!--options="[[partnerDetailsData.csoTypes]]"-->
+                                 <!--is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>-->
+              <!--</template>-->
+            </div>
+            <div class="col col-4">
+              <!-- Shared partner -->
+              <etools-dropdown label="Shared Partner"
+                               dropdown-value="{{partner.shared_partner}}"
+                               options="[[partnerDetailsData.sharedPartners]]"></etools-dropdown>
+            </div>
+          </div>
+
+          <div class="col col-12" hidden$="[[showCoreValuesAssessment(partner.cso_type)]]">
+            <div class="col col-4">
               <!-- Last accessed date -->
-              <paper-input class="n-input-field"
-                           label="Date last assessed*"
+              <paper-input label="Date last assessed"
                            name="date_last_assessed"
                            readonly="true"
                            value="{{partner.core_values_assessment_date}}" on-tap="showDatePicker">
@@ -254,60 +212,45 @@
                                      open="{{showDatePickerModal}}"></etools-datepicker>
                 </div>
               </paper-input>
-            </template>
-
-            <!-- Shared partner -->
-            <etools-dropdown class="n-input-field"
-                             label="Shared Partner"
-                             dropdown-value="{{partner.shared_partner}}"
-                             options="[[partnerDetailsData.sharedPartners]]"
-                             is-disabled$="[[partnerAlreadyInVision]]"></etools-dropdown>
+            </div>
+            <div class="col col-4">
+              Core Values Assessment(upload file)
+            </div>
+            <div class="col col-4"></div>
           </div>
 
-          <div class="contact-info">
-            <etools-content-toggle-button label="Contact Info" active="{{contactInfoActive}}"
-                                          is-disabled$="[[partnerAlreadyInVision]]"></etools-content-toggle-button>
-            <!-- Contact info fields -->
-            <iron-collapse id="contactInfoFields" opened="{{contactInfoActive}}">
-              <div class="layout horizontal">
-                <!-- Address -->
-                <paper-input name="address"
-                             class="b-input-field"
-                             label="Address"
-                             value="{{partner.address}}"
-                             disabled$="[[partnerAlreadyInVision]]">
-                  <paper-icon-button prefix icon="communication:location-on"></paper-icon-button>
-                </paper-input>
-
-                <!-- City -->
-                <paper-input name="city"
-                             class="n-input-field"
-                             label="City"
-                             value="{{partner.city}}"
-                             disabled$="[[partnerAlreadyInVision]]">
-                </paper-input>
-              </div>
-              <div class="layout horizontal">
+          <!-- Contact info box -->
+          <etools-content-panel id="contactInfo" label="Contact Info" elevation="0" show-expand-btn>
+            <div class="col col-12">
+              <!-- Address -->
+              <paper-input name="address"
+                           label="Address"
+                           value="{{partner.address}}">
+                <iron-icon prefix icon="communication:location-on"></iron-icon>
+              </paper-input>
+            </div>
+            <div class="col col-12">
+              <div class="col col-4">
                 <!-- Telephone number -->
                 <paper-input name="phone_number"
                              class="n-input-field"
                              label="Phone Number"
                              value="{{partner.phone_number}}"
                              disabled$="[[partnerAlreadyInVision]]">
-                  <paper-icon-button prefix icon="communication:phone"></paper-icon-button>
-                </paper-input>
-
-                <!-- Email address -->
-                <paper-input name="email_address"
-                             class="n-input-field"
-                             label="E-mail address"
-                             value="{{partner.email}}"
-                             disabled$="[[partnerAlreadyInVision]]">
-                  <paper-icon-button prefix icon="communication:email"></paper-icon-button>
+                  <iron-icon prefix icon="communication:phone"></iron-icon>
                 </paper-input>
               </div>
-            </iron-collapse>
-          </div>
+              <div class="col col-4">
+                <!-- Email address -->
+                <paper-input name="email_address"
+                             label="E-mail address"
+                             value="{{partner.email}}">
+                  <iron-icon prefix icon="communication:email"></iron-icon>
+                </paper-input>
+              </div>
+              <div class="col col-4"></div>
+            </div>
+          </etools-content-panel>
 
         </etools-content-panel>
 
@@ -357,27 +300,44 @@
           <staff-members staff-members-data="{{partner.staffMembers}}"></staff-members>
         </etools-content-panel>
 
-      </form>
+
+
+      <!--</form>-->
       <!--<paper-button class="submit-btn" raised on-tap="submitAddPartnerDetailsData">Submit</paper-button>-->
 
+
       <!-- page actions -->
-      <div class="page-actions">
-        <paper-icon-button class="more-options" icon="more-vert"></paper-icon-button>
-        <paper-button class="primary-btn">Save</paper-button>
-        <paper-icon-button class="secondary-btn" icon="history"></paper-icon-button>
-        <paper-icon-button class="secondary-btn" icon="print"></paper-icon-button>
-        <paper-icon-button class="secondary-btn" icon="file-download"></paper-icon-button>
-        <span class="divider"></span>
-        <paper-icon-button class="secondary-btn help-btn" icon="help"></paper-icon-button>
-      </div>
-    </div>
+      <!--<div class="page-actions">-->
+        <!--<paper-icon-button class="more-options" icon="more-vert"></paper-icon-button>-->
+        <!--<paper-button class="primary-btn">Save</paper-button>-->
+        <!--<paper-icon-button class="secondary-btn" icon="history"></paper-icon-button>-->
+        <!--<paper-icon-button class="secondary-btn" icon="print"></paper-icon-button>-->
+        <!--<paper-icon-button class="secondary-btn" icon="file-download"></paper-icon-button>-->
+        <!--<span class="divider"></span>-->
+        <!--<paper-icon-button class="secondary-btn help-btn" icon="help"></paper-icon-button>-->
+      <!--</div>-->
 
+    </div> <!-- main page content end -->
 
+    <!-- sidebar content start -->
     <div id="sidebar">
       <etools-content-panel title="Partner status">
-        <p>Synced from VISION</p>
+        <div class$="layout horizontal already-in-vision [[alreadyInVisionClass]]">
+          <paper-checkbox id="alreadyPartner" name="already_partner" checked="{{partnerAlreadyInVision}}">Partner
+            already exists in VISION?
+          </paper-checkbox>
+          <template is="dom-if" if="[[partnerAlreadyInVision]]">
+          <span class="vendor-nr-label">
+            Enter
+            <input class="n-input-field vendor-number" type="text" placeholder="Vendor Number"
+                   value="{{partner.vendor_number::input}}">
+            so eTools can sync partner information.
+          </span>
+          </template>
+        </div>
       </etools-content-panel>
     </div>
+    <!-- sidebar content end -->
 
 
   </template>
