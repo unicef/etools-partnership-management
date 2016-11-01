@@ -67,7 +67,7 @@
       <div id="pageContent">
         <paper-material elevation="1">
 
-          <partners-list id="list" hidden$="[[!listActive]]" query-params="[[queryParams]]"></partners-list>
+          <partners-list id="list" hidden$="[[!listActive]]"></partners-list>
 
           <iron-pages
               hidden$="[[!tabsActive]]"
@@ -110,7 +110,7 @@
       ],
 
       ready: function() {
-        this.$.list.init();
+        this.$.list.init(this.queryParams);
       },
 
       openDrawer: function() {

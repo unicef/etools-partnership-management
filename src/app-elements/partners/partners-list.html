@@ -7,6 +7,11 @@
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
 <dom-module id="partners-list">
 
   <template>
@@ -73,7 +78,9 @@
 
     </style>
 
-    <partners-data></partners-data>
+    <partners-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
+
+    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
     <input id="query"
         type="search"
@@ -82,8 +89,18 @@
         placeholder="Search"
         on-search="_onSearch"></input>
 
-    <button type="button" name="button" on-tap="pageLeft"> < </button>
-    <button type="button" name="button" on-tap="pageRight"> > </button>
+    <button type="button" name="button" on-tap="_pageLeft"> < </button>
+    <button type="button" name="button" on-tap="_pageRight"> > </button>
+
+    <paper-menu-button>
+      <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
+      <paper-menu class="dropdown-content" on-iron-select="_pageSizeSelected">
+        <paper-item>5</paper-item>
+        <paper-item>10</paper-item>
+        <paper-item>25</paper-item>
+        <paper-item>50</paper-item>
+      </paper-menu>
+    </paper-menu-button>
 
     <div id="list">
 
@@ -94,7 +111,7 @@
         <div class="rating flex"><span on-tap="_buildSortOrder">Risk</span></div>
       </div>
 
-      <template id="rows" is="dom-repeat" items="[[partners]]" initial-count="10">
+      <template id="rows" is="dom-repeat" items="[[filteredPartners]]" initial-count="10">
         <partner-item class="row" partner="[[item]]"></partner-item>
       </template>
 
@@ -112,8 +129,9 @@
 
       properties: {
 
-        partners: {
+        filteredPartners: {
           type: Array,
+          notify: true,
           observer: '_partnersChanged'
         },
 
@@ -126,12 +144,29 @@
         sortOrder: {
           type: Array,
           notify: true,
-          observer: '_sortChanged'
         },
 
-        page: {
+        pageNumber: {
           type: Number,
           notify: true,
+        },
+
+        totalPages: {
+          type: Number,
+          notify: true,
+          computed: '_computeTotalPages(pageSize, totalResults)',
+          value: 20
+        },
+
+        visibleRange: {
+          type: Array,
+          computed: '_computeVisibleRange(pageNumber, pageSize, totalPages)'
+        },
+
+        pageSize: {
+          type: Number,
+          notify: true,
+          value: 10
         },
 
         debounceTime: {
@@ -139,90 +174,27 @@
           value: 50
         },
 
-        queryParams: {
-          type: Object
-        }
-
       },
 
       observers: [
-        '_updateURL(q, page, sortOrder)'
+        '_updateURL(q, pageNumber, pageSize, sortOrder)',
       ],
 
       ready: function() {
         this.$.list.classList.add('hidden');
       },
 
-      init: function() {
-        if (this.queryParams.q) {
-          this.set('q', this.queryParams.q);
-        } else {
-          this.set('q', '');
+      init: function(urlParams) {
+        if (!urlParams) return;
+        this.set('q', urlParams.q ? urlParams.q : '');
+        this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
+        this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
+        var result = [{field: 'name', order: 'asc'}];
+        if (urlParams.sort) {
+          var p = urlParams.sort.split('.');
+          result = [{field: p[0], order: p[1]}];
         }
-
-        if (this.queryParams.page) {
-          this.set('page', this.queryParams.page);
-        } else {
-          this.set('page', 1);
-        }
-
-        if (this.queryParams.sort) {
-          var s = this.queryParams.sort.split('.');
-          this.set('sortOrder', [{field: s[0], order: s[1]}]);
-        } else {
-          this.set('sortOrder', []);
-        }
-      },
-
-      launchQuery: function() {
-        console.log('quering');
-
-        var params = this.queryParams;
-        var db = etoolsAppConfig.appDexieDb;
-        var collection = db.partners;
-        var s = params.sort ? params.sort.split('.') : ['name', 'asc'];
-        var q = params.q ? params.q.toLowerCase() : '';
-        var p = params.page ? params.page : 1;
-
-        this.debounce('search', function() {
-
-          collection = this.sort(s[0], s[1], collection);
-
-          collection = this.filter(q, collection);
-
-          this.paginate(p, 20, collection)
-            .toArray()
-            .then(function(partners) {
-              this.partners = partners;
-            }.bind(this));
-        }, this.debounceTime);
-
-      },
-
-      filter: function(query, collection) {
-        return collection.filter(function(partner) {
-          return partner.name.toLowerCase().includes(query);
-        });
-      },
-
-      sort: function(field, order, collection) {
-        collection = collection.orderBy(field);
-        if (order === 'desc') collection = collection.reverse();
-        return collection;
-      },
-
-      paginate: function(pageNumber, pageSize, collection) {
-        return collection.offset((pageNumber - 1) * pageSize).limit(pageSize);
-      },
-
-      pageLeft: function() {
-        if (this.page > 1) this.set('page', this.page - 1);
-        this.set('debounceTime', 100);
-      },
-
-      pageRight: function() {
-        if (this.page < 66) this.set('page', this.page + 1);
-        this.set('debounceTime', 100);
+        this.set('sortOrder', result);
       },
 
       _updateURL: function() {
@@ -232,22 +204,24 @@
           var currentState = window.history.state;
           window.history.replaceState(currentState, null, 'list' + (qs.length ? '?' + qs : ''));
           window.dispatchEvent(new CustomEvent('location-changed'));
-          this.launchQuery();
-        }
-      },
 
-      _buildSortOrder: function(e) {
-        var _field = e.path[1].classList[0];
-        var _order = 'asc';
-        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
-          _order = this.sortOrder[0].order === 'asc' ? 'desc': 'asc';
+          this.debounce('query', function() {
+            console.log('querying');
+            this.$.partners.query(
+              this.sortOrder[0].field,
+              this.sortOrder[0].order,
+              this.q,
+              this.pageNumber,
+              this.pageSize);
+          }, this.debounceTime);
+
         }
-        this.set('sortOrder', [{field: _field, order: _order}]);
       },
 
       _buildQueryString: function() {
         var out = [];
-        if (this.page && this.page > 1) out.push('page=' + this.page);
+        if (this.pageNumber && this.pageNumber > 1) out.push('page=' + this.pageNumber);
+        if (this.pageSize) out.push('size=' + this.pageSize);
         if (this.q && this.q.length) out.push('q=' + this.q);
         if (this.sortOrder && this.sortOrder.length) {
           var sortQuery = [];
@@ -261,6 +235,26 @@
         return out.join("&");
       },
 
+      _buildSortOrder: function(e) {
+        var _field = e.path[1].classList[0];
+        var _order = 'asc';
+        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
+          _order = this.sortOrder[0].order === 'asc' ? 'desc': 'asc';
+        }
+        this.set('debounceTime', 150);
+        this.set('sortOrder', [{field: _field, order: _order}]);
+      },
+
+      _pageLeft: function() {
+        this.set('debounceTime', 20);
+        if (this.pageNumber > 1) this.set('pageNumber', this.pageNumber - 1);
+      },
+
+      _pageRight: function() {
+        this.set('debounceTime', 20);
+        if (this.pageNumber < this.totalPages) this.set('pageNumber', this.pageNumber + 1);
+      },
+
       _onSearch: function() {
         this.q = this.$.query.value;
       },
@@ -271,12 +265,30 @@
             this.$.query.focus();
           });
         }
-        this.set('page', 1);
         this.set('debounceTime', 300);
+        this.set('pageNumber', 1);
       },
 
-      _sortChanged: function() {
-        this.set('debounceTime', 50);
+      _pageSizeSelected: function(e, detail) {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+        this.set('pageSize', parseInt(detail.item.innerText));
+      },
+
+      _computeTotalPages: function(pageSize, totalResults) {
+        var result = 1;
+        if (pageSize < totalResults) result = Math.ceil(totalResults / pageSize);
+        return result;
+      },
+
+      _computeVisibleRange: function(pageNumber, pageSize, totalPages) {
+        var start = 1;
+        var end = this.totalResults;
+
+        if (pageNumber !== 1)          start = (pageNumber - 1) * pageSize + 1;
+        if (pageNumber !== totalPages) end = start + pageSize - 1;
+
+        return [start, end];
       },
 
       _partnersChanged: function() {

@@ -25,6 +25,8 @@
       });
     };
 
+    var curr = null;
+
     Polymer({
 
       is: 'partners-data',
@@ -43,10 +45,16 @@
           notify: true
         },
 
-        _collection: {
+        totalResults: {
+          type: Number,
+          readOnly: true,
+          notify: true
+        },
+
+        db: {
           type: Object,
           value: function() {
-            return etoolsAppConfig.appDexieDb.partners;
+            return etoolsAppConfig.appDexieDb;
           }
         }
 
@@ -78,55 +86,44 @@
         _setPartnersData.bind(this)(res.detail);
       },
 
-      // Query functions
+      query: function(field, order, searchString, pageNumber, pageSize) {
+        var t0 = performance.now();
+        if (curr) curr.abort();
+        this.db.transaction('r', this.db.partners, function() {
+          curr = Dexie.currentTransaction;
 
-      launchQuery: function() {
-        console.log('quering');
+          var queryResult = this.db.partners.orderBy(field); //note: null values don't appear in result set of sort
+          if (order === 'desc') queryResult = queryResult.reverse();
 
-        var params = this.queryParams;
-        var db = etoolsAppConfig.appDexieDb;
-        var collection = db.partners;
-        var s = params.sort ? params.sort.split('.') : ['name', 'asc'];
-        var q = params.q ? params.q.toLowerCase() : '';
-        var p = params.page ? params.page : 1;
+          queryResult = queryResult.filter(function(partner) {
+            return partner.name.toLowerCase().includes(searchString.toLowerCase());
+          });
 
-        this.debounce('search', function() {
+          //queryResult.count().then(function(count) {
+          //  this._setTotalResults(count);
+          //}.bind(this));
 
-          collection = this.sort(s[0], s[1], collection);
+          Dexie.ignoreTransaction(function () {
+            queryResult.count(function(count) {
+              this._setTotalResults(count);
+            }.bind(this)).catch(function(error) {
+              console.error('Error counting query: ' + error);
+            });
+          }.bind(this));
 
-          collection = this.filter(q, collection);
+          return queryResult
+            .offset((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray();
 
-          this.paginate(p, 20, collection)
-            .toArray()
-            .then(function(partners) {
-              this.partners = partners;
-            }.bind(this));
-        }, this.debounceTime);
+        }.bind(this)).then(function(result) {
+          this._setFilteredPartners(result);
 
-      },
-
-      filter: function(query) {
-        return this.collection.filter(function(partner) {
-          return partner.name.toLowerCase().includes(query);
+          var t1 = performance.now();
+          console.log('query took: ' + (t1 - t0) + 'milliseconds')
+        }.bind(this)).catch(function(error) {
+          console.error('Error querying partners: ' + error);
         });
-      },
-
-      sort: function(field, order, collection) {
-        this.collection.orderBy(field);
-        if (order === 'desc') this.collection.reverse();
-      },
-
-      paginate: function(pageNumber, pageSize, collection) {
-        return this.collection.offset((pageNumber - 1) * pageSize).limit(pageSize);
-      },
-
-      // new
-
-      this.$.partners.sort('name', 'asc');
-
-      sort: function(_field, _order) {
-        this.queryPlan.unshift('sort');
-        this.set('sortOrder', [{field: _field, order: _order}]);
       }
 
     });
