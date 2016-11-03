@@ -215,7 +215,9 @@
       },
 
       init: function(urlParams) {
-        if (!urlParams) return;
+        if (!urlParams) {
+          return;
+        }
         this.set('q', urlParams.q ? urlParams.q : '');
         this.set('partnerType', urlParams.partner_type ? urlParams.partner_type : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
@@ -238,7 +240,6 @@
           window.dispatchEvent(new CustomEvent('location-changed'));
 
           this.debounce('query', function() {
-            console.log('querying');
             this.$.partners.query(
               this.sortOrder[0].field,
               this.sortOrder[0].order,
@@ -254,10 +255,18 @@
 
       _buildQueryString: function() {
         var out = [];
-        if (this.pageNumber && this.pageNumber > 1) out.push('page=' + this.pageNumber);
-        if (this.pageSize) out.push('size=' + this.pageSize);
-        if (this.q && this.q.length) out.push('q=' + this.q);
-        if (this.partnerType && this.partnerType.length) out.push('partner_type=' + this.partnerType);
+        if (this.pageNumber && this.pageNumber > 1) {
+          out.push('page=' + this.pageNumber);
+        }
+        if (this.pageSize) {
+          out.push('size=' + this.pageSize);
+        }
+        if (this.q && this.q.length) {
+          out.push('q=' + this.q);
+        }
+        if (this.partnerType && this.partnerType.length) {
+          out.push('partner_type=' + this.partnerType);
+        }
         if (this.sortOrder && this.sortOrder.length) {
           var sortQuery = [];
           this.sortOrder.forEach(function(sort) {
@@ -267,15 +276,17 @@
           });
           out.push('sort=' + sortQuery.join('+'));
         }
-        if (this.showHidden) out.push('hidden=true');
-        return out.join("&");
+        if (this.showHidden) {
+          out.push('hidden=true');
+        }
+        return out.join('&');
       },
 
       _buildSortOrder: function(e) {
         var _field = e.path[1].classList[0];
         var _order = 'asc';
         if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
-          _order = this.sortOrder[0].order === 'asc' ? 'desc': 'asc';
+          _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
         }
         this.set('debounceTime', 150);
         this.set('sortOrder', [{field: _field, order: _order}]);
@@ -283,22 +294,30 @@
 
       _pageLeft: function() {
         this.set('debounceTime', 50);
-        if (this.pageNumber > 1) this.set('pageNumber', this.pageNumber - 1);
+        if (this.pageNumber > 1) {
+          this.set('pageNumber', this.pageNumber - 1);
+        }
       },
 
       _pageRight: function() {
         this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) this.set('pageNumber', this.pageNumber + 1);
+        if (this.pageNumber < this.totalPages) {
+          this.set('pageNumber', this.pageNumber + 1);
+        }
       },
 
       _firstPage: function() {
         this.set('debounceTime', 50);
-        if (this.pageNumber > 1) this.set('pageNumber', 1);
+        if (this.pageNumber > 1) {
+          this.set('pageNumber', 1);
+        }
       },
 
       _lastPage: function() {
         this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) this.set('pageNumber', this.totalPages);
+        if (this.pageNumber < this.totalPages) {
+          this.set('pageNumber', this.totalPages);
+        }
       },
 
       _onSearch: function() {
@@ -337,7 +356,9 @@
 
       _computeTotalPages: function(pageSize, totalResults) {
         var result = 1;
-        if (pageSize < totalResults) result = Math.ceil(totalResults / pageSize);
+        if (pageSize < totalResults) {
+          result = Math.ceil(totalResults / pageSize);
+        }
         return result;
       },
 
@@ -345,8 +366,12 @@
         var start = 1;
         var end = totalResults;
 
-        if (pageNumber !== 1)          start = (pageNumber - 1) * pageSize + 1;
-        if (pageNumber !== totalPages) end = start + pageSize - 1;
+        if (pageNumber !== 1) {
+          start = (pageNumber - 1) * pageSize + 1;
+        }
+        if (pageNumber !== totalPages) {
+          end = start + pageSize - 1;
+        }
 
         return [start, end];
       },

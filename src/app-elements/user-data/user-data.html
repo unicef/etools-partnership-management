@@ -8,9 +8,10 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="user"
                  on-success="_handleResponse"
-                 on-fail="_handleError"
-                 dexie-db-collection="user"></etools-ajax>
+                 on-fail="_handleError"></etools-ajax>
   </template>
 
   <script>
@@ -81,7 +82,6 @@
       },
 
       ready: function() {
-        this.$.ajax.alternateDexieDb = etoolsAppConfig.appDexieDb;
         this.load(_data);
       },
 

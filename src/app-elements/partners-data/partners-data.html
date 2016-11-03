@@ -7,8 +7,9 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
-                 on-success="_handleResponse"
-                 dexie-db-collection="partners"></etools-ajax>
+                 caching-storage="custom"
+                 dexie-db-collection="partners"
+                 on-success="_handleResponse"></etools-ajax>
 
   </template>
 
@@ -30,6 +31,8 @@
     Polymer({
 
       is: 'partners-data',
+
+      behaviors: [etoolsAppConfig.globals],
 
       properties: {
 
@@ -54,20 +57,19 @@
         db: {
           type: Object,
           value: function() {
-            return etoolsAppConfig.appDexieDb;
+            return etoolsAppConfig.db;
           }
         }
 
       },
 
       ready: function() {
-        this.$.ajax.alternateDexieDb = etoolsAppConfig.appDexieDb;
         this.load(_data);
       },
 
       attached: function() {
         if (_partnersEls.length === 0 && !_data.partners) {
-          this.endpoint = etoolsAppConfig.globals.getEndpoint('partners');
+          this.endpoint = this.getEndpoint('partners');
         }
         _partnersEls.push(this);
       },
@@ -87,15 +89,21 @@
       },
 
       query: function(field, order, searchString, partnerType, pageNumber, pageSize, showHidden) {
-        if (curr) curr.abort();
+        if (curr) {
+          curr.abort();
+        }
         var _this = this;
-        var t0 = performance.now();
         this.db.transaction('r', this.db.partners, function() {
           curr = Dexie.currentTransaction;
 
           var queryResult = _this.db.partners;
-          if (field) queryResult = queryResult.orderBy(field); //note: null values don't appear in result set of sort
-          if (order === 'desc') queryResult = queryResult.reverse();
+          if (field) {
+            // note: null values don't appear in result set of sort
+            queryResult = queryResult.orderBy(field);
+          }
+          if (order === 'desc') {
+            queryResult = queryResult.reverse();
+          }
 
           queryResult = queryResult.filter(function(partner) {
             if (partnerType && partner.partner_type !== partnerType) {
@@ -134,9 +142,6 @@
 
         }).then(function(result) {
           _this._setFilteredPartners(result);
-
-          var t1 = performance.now();
-          console.log('query took: ' + (t1 - t0) + 'milliseconds')
         }).catch(function(error) {
           console.error('Error querying partners: ' + error);
         });
