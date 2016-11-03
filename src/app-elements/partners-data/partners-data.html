@@ -86,42 +86,58 @@
         _setPartnersData.bind(this)(res.detail);
       },
 
-      query: function(field, order, searchString, pageNumber, pageSize) {
-        var t0 = performance.now();
+      query: function(field, order, searchString, partnerType, pageNumber, pageSize, showHidden) {
         if (curr) curr.abort();
+        var _this = this;
+        var t0 = performance.now();
         this.db.transaction('r', this.db.partners, function() {
           curr = Dexie.currentTransaction;
 
-          var queryResult = this.db.partners.orderBy(field); //note: null values don't appear in result set of sort
+          var queryResult = _this.db.partners;
+          if (field) queryResult = queryResult.orderBy(field); //note: null values don't appear in result set of sort
           if (order === 'desc') queryResult = queryResult.reverse();
 
           queryResult = queryResult.filter(function(partner) {
-            return partner.name.toLowerCase().includes(searchString.toLowerCase());
+            if (partnerType && partner.partner_type !== partnerType) {
+              return false;
+            }
+
+            if (searchString && searchString.length) {
+              var vnMatch = true;
+              if (partner.vendor_number) {
+                vnMatch = partner.vendor_number.indexOf(searchString) < 0;
+              }
+              if (partner.name.toLowerCase().indexOf(searchString) < 0 && vnMatch) {
+                return false;
+              }
+            }
+
+            if (!showHidden && partner.hidden) {
+              return false;
+            }
+
+            return true;
           });
 
-          //queryResult.count().then(function(count) {
-          //  this._setTotalResults(count);
-          //}.bind(this));
-
-          Dexie.ignoreTransaction(function () {
+          Dexie.ignoreTransaction(function() {
             queryResult.count(function(count) {
-              this._setTotalResults(count);
-            }.bind(this)).catch(function(error) {
+              _this._setTotalResults(count);
+            }).catch(function(error) {
               console.error('Error counting query: ' + error);
             });
-          }.bind(this));
+          });
 
           return queryResult
             .offset((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray();
 
-        }.bind(this)).then(function(result) {
-          this._setFilteredPartners(result);
+        }).then(function(result) {
+          _this._setFilteredPartners(result);
 
           var t1 = performance.now();
           console.log('query took: ' + (t1 - t0) + 'milliseconds')
-        }.bind(this)).catch(function(error) {
+        }).catch(function(error) {
           console.error('Error querying partners: ' + error);
         });
       }

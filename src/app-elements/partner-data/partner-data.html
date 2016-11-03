@@ -16,7 +16,14 @@
           notify: true,
         },
 
-        partnerId: Number
+        partnerId: Number,
+
+        db: {
+          type: Object,
+          value: function() {
+            return etoolsAppConfig.appDexieDb;
+          }
+        }
 
       },
 
@@ -27,9 +34,7 @@
       getPartner: function(id) {
         id = parseInt(id);
         if (id) {
-          var db = etoolsAppConfig.appDexieDb;
-
-          db.partners.get(id).then(function(partner) {
+          this.db.partners.get(id).then(function(partner) {
             this.set('partner', partner);
           }.bind(this)).catch(function(error) {
             console.error('Error getting partner: ' + error);

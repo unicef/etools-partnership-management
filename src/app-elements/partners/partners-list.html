@@ -7,10 +7,13 @@
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="partners-list">
 
@@ -82,27 +85,47 @@
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
-    <input id="query"
-        type="search"
-        autocomplete="off"
-        value="{{q::keyup}}"
-        placeholder="Search"
-        on-search="_onSearch"></input>
+    <paper-material id="listControls" elevation="1">
 
-    <button type="button" name="button" on-tap="_pageLeft"> < </button>
-    <button type="button" name="button" on-tap="_pageRight"> > </button>
+      <input id="query"
+          type="search"
+          autocomplete="off"
+          value="{{q::keyup}}"
+          placeholder="Search"
+          on-search="_onSearch"></input>
 
-    <paper-menu-button>
-      <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
-      <paper-menu class="dropdown-content" on-iron-select="_pageSizeSelected">
-        <paper-item>5</paper-item>
-        <paper-item>10</paper-item>
-        <paper-item>25</paper-item>
-        <paper-item>50</paper-item>
-      </paper-menu>
-    </paper-menu-button>
+      <paper-icon-button icon="close" on-tap="clear"></paper-icon-button>
 
-    <div id="list">
+      <!-- note: this should be loaded from object -->
+      <paper-dropdown-menu label="Partner Type" noink>
+        <paper-menu id="menu" class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_partnerTypeSelected">
+          <paper-item>Bilateral / Multilateral</paper-item>
+          <paper-item>Civil Society Organization</paper-item>
+          <paper-item>Government</paper-item>
+          <paper-item>UN Agency</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+
+      <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
+      <button type="button" name="page-left" on-tap="_pageLeft"> < </button>
+      <button type="button" name="page-right" on-tap="_pageRight"> > </button>
+      <button type="button" name="last-page" on-tap="_lastPage"> >| </button>
+
+      <paper-menu-button>
+        <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
+          <paper-item>5</paper-item>
+          <paper-item>10</paper-item>
+          <paper-item>25</paper-item>
+          <paper-item>50</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+
+      <paper-toggle-button checked="{{showHidden}}" on-change='_hiddenToggled'></paper-toggle-button>
+
+    </paper-material>
+
+    <paper-material id="list">
 
       <div class="header">
         <!-- first class of div must be name of field -->
@@ -115,7 +138,7 @@
         <partner-item class="row" partner="[[item]]"></partner-item>
       </template>
 
-    </div>
+    </paper-material>
 
   </template>
 
@@ -141,6 +164,11 @@
           observer: '_qChanged'
         },
 
+        partnerType: {
+          type: String,
+          notify: true
+        },
+
         sortOrder: {
           type: Array,
           notify: true,
@@ -155,18 +183,20 @@
           type: Number,
           notify: true,
           computed: '_computeTotalPages(pageSize, totalResults)',
-          value: 20
         },
 
         visibleRange: {
           type: Array,
-          computed: '_computeVisibleRange(pageNumber, pageSize, totalPages)'
+          computed: '_computeVisibleRange(pageNumber, pageSize, totalResults, totalPages)'
         },
 
         pageSize: {
           type: Number,
           notify: true,
-          value: 10
+        },
+
+        showHidden: {
+          type: Boolean
         },
 
         debounceTime: {
@@ -177,7 +207,7 @@
       },
 
       observers: [
-        '_updateURL(q, pageNumber, pageSize, sortOrder)',
+        '_updateURL(q, partnerType, pageNumber, pageSize, sortOrder, showHidden)',
       ],
 
       ready: function() {
@@ -187,8 +217,10 @@
       init: function(urlParams) {
         if (!urlParams) return;
         this.set('q', urlParams.q ? urlParams.q : '');
+        this.set('partnerType', urlParams.partner_type ? urlParams.partner_type : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
+        this.set('showHidden', urlParams.hidden ? true : false);
         var result = [{field: 'name', order: 'asc'}];
         if (urlParams.sort) {
           var p = urlParams.sort.split('.');
@@ -210,9 +242,11 @@
             this.$.partners.query(
               this.sortOrder[0].field,
               this.sortOrder[0].order,
-              this.q,
+              this.q.toLowerCase(),
+              this.partnerType,
               this.pageNumber,
-              this.pageSize);
+              this.pageSize,
+              this.showHidden);
           }, this.debounceTime);
 
         }
@@ -223,6 +257,7 @@
         if (this.pageNumber && this.pageNumber > 1) out.push('page=' + this.pageNumber);
         if (this.pageSize) out.push('size=' + this.pageSize);
         if (this.q && this.q.length) out.push('q=' + this.q);
+        if (this.partnerType && this.partnerType.length) out.push('partner_type=' + this.partnerType);
         if (this.sortOrder && this.sortOrder.length) {
           var sortQuery = [];
           this.sortOrder.forEach(function(sort) {
@@ -232,6 +267,7 @@
           });
           out.push('sort=' + sortQuery.join('+'));
         }
+        if (this.showHidden) out.push('hidden=true');
         return out.join("&");
       },
 
@@ -246,13 +282,23 @@
       },
 
       _pageLeft: function() {
-        this.set('debounceTime', 20);
+        this.set('debounceTime', 50);
         if (this.pageNumber > 1) this.set('pageNumber', this.pageNumber - 1);
       },
 
       _pageRight: function() {
-        this.set('debounceTime', 20);
+        this.set('debounceTime', 50);
         if (this.pageNumber < this.totalPages) this.set('pageNumber', this.pageNumber + 1);
+      },
+
+      _firstPage: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber > 1) this.set('pageNumber', 1);
+      },
+
+      _lastPage: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber < this.totalPages) this.set('pageNumber', this.totalPages);
       },
 
       _onSearch: function() {
@@ -272,7 +318,21 @@
       _pageSizeSelected: function(e, detail) {
         this.set('debounceTime', 200);
         this.set('pageNumber', 1);
-        this.set('pageSize', parseInt(detail.item.innerText));
+        this.set('pageSize', parseInt(detail.selected));
+      },
+
+      _partnerTypeSelected: function() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      },
+
+      _hiddenToggled: function() {
+        this.set('debounceTime', 50);
+        this.set('pageNumber', 1);
+      },
+
+      clear: function() {
+        this.$.menu.selected = null;
       },
 
       _computeTotalPages: function(pageSize, totalResults) {
@@ -281,9 +341,9 @@
         return result;
       },
 
-      _computeVisibleRange: function(pageNumber, pageSize, totalPages) {
+      _computeVisibleRange: function(pageNumber, pageSize, totalResults, totalPages) {
         var start = 1;
-        var end = this.totalResults;
+        var end = totalResults;
 
         if (pageNumber !== 1)          start = (pageNumber - 1) * pageSize + 1;
         if (pageNumber !== totalPages) end = start + pageSize - 1;

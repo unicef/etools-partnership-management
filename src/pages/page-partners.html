@@ -65,28 +65,26 @@
       </app-header>
 
       <div id="pageContent">
-        <paper-material elevation="1">
 
-          <partners-list id="list" hidden$="[[!listActive]]"></partners-list>
+        <partners-list id="list" hidden$="[[!listActive]]"></partners-list>
 
-          <iron-pages
-              hidden$="[[!tabsActive]]"
-              selected="[[routeData.tab]]"
-              attr-for-selected="name"
-              fallback-selection="overview">
+        <iron-pages
+            hidden$="[[!tabsActive]]"
+            selected="[[routeData.tab]]"
+            attr-for-selected="name"
+            fallback-selection="overview">
 
-            <partner-overview name="overview" partner-id="[[routeData.id]]">
-              <h1>Partner Overview</h1>
-              <p>[[partner.name]]</p>
-            </partner-overview>
-            <partner-details name="details" partner-id="[[routeData.id]]">
-              <h1>Partner Details</h1>
-              <p>[[partner.vendor_number]]</p>
-            </partner-details>
+          <partner-overview name="overview" partner-id="[[routeData.id]]">
+            <h1>Partner Overview</h1>
+            <p>[[partner.name]]</p>
+          </partner-overview>
+          <partner-details name="details" partner-id="[[routeData.id]]">
+            <h1>Partner Details</h1>
+            <p>[[partner.vendor_number]]</p>
+          </partner-details>
 
-          </iron-pages>
+        </iron-pages>
 
-        </paper-material>
       </div>
 
     </app-header-layout>
