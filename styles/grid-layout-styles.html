@@ -6,21 +6,28 @@
 <dom-module id="grid-layout-styles">
   <template>
     <style>
+      .row-h {
+        @apply(--layout-horizontal);
+      }
+      .row-v {
+        @apply(--layout-vertical);
+      }
+      .flex-c {
+        /* flex container */
+        @apply(--layout-flex);
+      }
+      .row-h + .row-h, .row-v + .row-v {
+        margin-top: 20px;
+      }
+      .row-h:first-child + .row-v {
+        margin-top: 0;
+      }
 
       .col {
         @apply(--layout-horizontal);
       }
-      .col:not(:first-of-type):not(.col-12) {
+      .col:not(:first-of-type) {
         padding-left: 25px;
-      }
-
-      /* full width available */
-      .col-12 {
-        @apply(--layout-flex);
-      }
-
-      .col-12:not(:first-of-type) {
-        margin-top: 20px;
       }
 
       .col-3 {
@@ -35,15 +42,8 @@
         @apply(--layout-flex-9);
       }
 
-
-
-
-
       /* TODO: more classes will e added if needed */
 
-      .vertical {
-        @apply(--layout-vertical);
-      }
     </style>
   </template>
 </dom-module>
