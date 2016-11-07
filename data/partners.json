@@ -200,7 +200,7 @@
       "last_assessment_date":null,
       "core_values_assessment_date":null,
       "core_values_assessment":"http://localhost:8099/media/partners/core_values/E-Saf_Watsi.pdf",
-      "vision_synced":false,
+      "vision_synced":true,
       "hidden":false,
       "deleted_flag":false,
       "total_ct_cp":null,

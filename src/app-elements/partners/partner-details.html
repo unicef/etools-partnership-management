@@ -19,6 +19,7 @@
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
+<link rel="import" href="partner-status.html">
 
 <dom-module id="partner-details">
 
@@ -69,19 +70,23 @@
           <div class="col col-4">
             <!-- Organization name -->
             <paper-input label="Organization's Full Name"
-                         value="{{partner.name}}"
+                         value="[[partner.name]]"
+                         placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!-- Short name -->
             <paper-input label="Short Name"
-                         value="{{partner.short_name}}"
+                         value="[[partner.short_name]]"
+                         placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!-- Alternate name -->
             <paper-input label="Alternate Name"
-                         value="{{partner.alternate_name}}"></paper-input>
+                         value="{{partner.alternate_name}}"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
           </div>
         </div>
 
@@ -89,25 +94,35 @@
           <div class="col col-4">
             <!-- Vendor Number -->
             <paper-input label="Vendor Number"
-                         value="{{partner.vendor_number}}"
+                         value="[[partner.vendor_number]]"
+                         placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!-- Partner type -->
             <paper-input label="Partner Type"
-                         value="{{partner.partner_type}}"
+                         value="[[_getPartnerType(partner)]]"
+                         placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!-- Shared partner -->
-            <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top">
-              <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
-                <paper-item value="UNDP">UNDP</paper-item>
-                <paper-item value="UNFPA">UNFPA</paper-item>
-                <paper-item value="UNDP and UNFPA">UNDP and UNFPA</paper-item>
-                <paper-item value="No">No</paper-item>
-              </paper-listbox>
-            </paper-dropdown-menu>
+            <template is="dom-if" if="[[!editMode]]">
+              <paper-input label="Shared Partner"
+                           value="{{partner.shared_partner}}"
+                           placeholder="&#8212;"
+                           readonly></paper-input>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top" always-float-label>
+                <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
+                  <paper-item value="UNDP">UNDP</paper-item>
+                  <paper-item value="UNFPA">UNFPA</paper-item>
+                  <paper-item value="UNDP and UNFPA">UNDP and UNFPA</paper-item>
+                  <paper-item value="No">No</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+            </template>
           </div>
         </div>
 
@@ -117,6 +132,7 @@
             <paper-input label="Date last assessed"
                          name="core_values_assessment_date"
                          value="{{partner.core_values_assessment_date}}"
+                         placeholder="&#8212;"
                          readonly>
               <div prefix>
                 <iron-icon icon="date-range"></iron-icon>
@@ -136,6 +152,7 @@
             <!-- Address -->
             <paper-input label="Address"
                          value="{{partner.address}}"
+                         placeholder="&#8212;"
                          readonly>
               <iron-icon prefix icon="communication:location-on"></iron-icon>
             </paper-input>
@@ -145,6 +162,7 @@
               <!-- Telephone number -->
               <paper-input label="Phone Number"
                            value="{{partner.phone_number}}"
+                           placeholder="&#8212;"
                            readonly>
                 <iron-icon prefix icon="communication:phone"></iron-icon>
               </paper-input>
@@ -153,6 +171,7 @@
               <!-- Email address -->
               <paper-input label="E-mail address"
                            value="{{partner.email}}"
+                           placeholder="&#8212;"
                            readonly>
                 <iron-icon prefix icon="communication:email"></iron-icon>
               </paper-input>
@@ -170,18 +189,21 @@
             <paper-input class="risk-rating-field"
                          label="Risk Rating"
                          value="{{partner.rating}}"
+                         placeholder="&#8212;"
                          readonly ></paper-input>
           </div>
           <div class="col col-4">
             <!-- Type of assessment -->
             <paper-input label="Assessment Type"
                          value="{{partner.type_of_assessment}}"
+                         placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
             <paper-input label="Date Submitted"
                          value="{{partner.last_assessment_date}}"
+                         placeholder="&#8212;"
                          readonly>
               <div prefix>
                 <iron-icon icon="date-range"></iron-icon>
@@ -192,7 +214,7 @@
 
         <!-- Assessments section -->
         <div class="assessments">
-          <assessments-items data-items="{{assessments}}"></assessments-items>
+          <assessments-items data-items="{{assessments}}" edit-mode="[[editMode]]"></assessments-items>
         </div>
       </etools-content-panel>
 
@@ -202,7 +224,7 @@
       </etools-content-panel>
 
       <!-- Staff Members section-->
-      <etools-content-panel class="partner-details-section" title$="Staff Members ([[staffMembers.length]])">
+      <etools-content-panel class="partner-details-section" title$="Staff Members ([[staffMembers.length]])" show-expand-btn>
         <staff-members data-items="{{staffMembers}}"></staff-members>
       </etools-content-panel>
 
@@ -210,9 +232,7 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <etools-content-panel title="Partner status">
-        <p>Partner status goes here...it will be a separate element (most likely)</p>
-      </etools-content-panel>
+      <partner-status partner="[[partner]]"></partner-status>
     </div>
     <!-- sidebar content end -->
 
@@ -236,6 +256,10 @@
             value: {},
             notify: true,
             observer: '_partnerChanged'
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           },
           assessments: {
             type: Array,
@@ -302,8 +326,19 @@
         },
 
         _partnerChanged: function(partner) {
-//          console.log(partner);
+          console.log(partner);
         },
+
+        _getPartnerType: function(partner) {
+          if (Object.keys(partner).length > 0) {
+            var partnerType = partner.partner_type;
+            if (partner.cso_type !== null) {
+              partnerType = partner.cso_type + '/' + partnerType;
+            }
+            return partnerType;
+          }
+          return null;
+        }
 
       });
 

@@ -21,12 +21,15 @@
       }
 
       #pageContent {
-        @apply(--layout-flex-9);
+        @apply(--layout-flex);
       }
 
       #sidebar {
-        @apply(--layout-flex-3);
+        width: 225px;
         padding-left: 25px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
       }
     </style>
   </template>
