@@ -51,11 +51,11 @@
                 fallback-selection="overview" noink bottom-item>
 
               <paper-tab name="overview" link>
-                <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
+                <a href="partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
               </paper-tab>
 
               <paper-tab name="details" link>
-                <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
+                <a href="partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
               </paper-tab>
 
             </paper-tabs>
@@ -108,7 +108,9 @@
       ],
 
       ready: function() {
-        this.$.list.init(this.queryParams);
+        if (this.listActive) {
+          this.$.list.init(this.queryParams);
+        }
       },
 
       openDrawer: function() {

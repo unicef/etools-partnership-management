@@ -1,0 +1,51 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="partner-data">
+
+  <script>
+
+    Polymer({
+
+      is: 'partner-data',
+
+      properties: {
+
+        partner: {
+          type: Object,
+          notify: true,
+        },
+
+        partnerId: Number,
+
+        db: {
+          type: Object,
+          value: function() {
+            return etoolsAppConfig.db;
+          }
+        }
+
+      },
+
+      observers: [
+        'getPartner(partnerId)'
+      ],
+
+      getPartner: function(id) {
+        id = parseInt(id);
+        if (id) {
+          this.db.partners.get(id).then(function(partner) {
+            this.set('partner', partner);
+          }.bind(this)).catch(function(error) {
+            console.error('Error getting partner: ' + error);
+          });
+        } else {
+          console.error('You must provide a valid partner ID');
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>
