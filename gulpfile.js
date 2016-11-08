@@ -16,6 +16,11 @@ const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
 const argv = require('yargs').argv;
 
+// const $ = {
+//   useref: require('gulp-useref'),
+//   replace: require('gulp-replace')
+// }
+
 // Got problems? Try logging 'em
 // use -l to activate plylogs
 if (argv.l) {
@@ -31,7 +36,7 @@ global.config = {
   appName: 'app',
   polymerJsonPath: path.join(process.cwd(), 'polymer.json'),
   build: {
-    rootDirectory: 'build',
+    rootDirectory: 'build/pmp',
     bundledDirectory: 'bundled',
     unbundledDirectory: 'unbundled',
     // Accepts either 'bundled', 'unbundled', or 'both'
@@ -85,8 +90,9 @@ var log = function (message) {
 
 function source() {
   return project.splitSource()
-  // Add your own build tasks here!
-    .pipe(gulpif('**/*.html', html.lint())).on('end', log('Linted HTML'))
+  // // Add your own build tasks here!
+    .pipe(gulpif('**/*.html', html.lint()))
+    .on('end', log('Linted HTML'))
     .pipe(gulpif('**/*.html', html.minify())).on('end', log('Minified HTML'))
 
     // lint CSS not working correctly. Not seeing temporary css files
