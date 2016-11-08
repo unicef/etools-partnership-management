@@ -15,6 +15,8 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
+<link rel="import" href="../../behaviors/dropdown-behavior.html">
+
 <dom-module id="partners-list">
 
   <template>
@@ -93,10 +95,10 @@
           placeholder="Search"
           on-search="_onSearch"></input>
 
-      <paper-icon-button icon="close" on-tap="clear"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <!-- note: this should be loaded from object -->
       <paper-dropdown-menu label="Partner Type" noink>
-        <paper-menu id="menu" class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
+        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
           <paper-item>Bilateral / Multilateral</paper-item>
           <paper-item>Civil Society Organization</paper-item>
           <paper-item>Government</paper-item>
@@ -104,10 +106,10 @@
         </paper-menu>
       </paper-dropdown-menu>
 
-      <paper-icon-button icon="close" on-tap="_clear"></paper-icon-button>
+      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <!-- note: this should be loaded from object -->
       <paper-dropdown-menu label="CSO Type" noink>
-        <paper-menu id="_menu" class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
+        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
           <paper-item>Academic Institution</paper-item>
           <paper-item>Community Based Organization</paper-item>
           <paper-item>International</paper-item>
@@ -158,6 +160,8 @@
     Polymer({
 
       is: 'partners-list',
+
+      behaviors: [pmpBehaviors.DropdownBehavior],
 
       properties: {
 
@@ -377,13 +381,6 @@
         this.set('pageNumber', 1);
       },
 
-      clear: function() {
-        this.$.menu.selected = null;
-      },
-      _clear: function() {
-        this.$._menu.selected = null;
-      },
-
       _computeTotalPages: function(pageSize, totalResults) {
         var result = 1;
         if (pageSize < totalResults) {
@@ -406,6 +403,7 @@
         return [start, end];
       },
 
+      // List fade in fade out effect
       _partnersChanged: function() {
         this.$.list.classList.add('hidden');
         this.async(function() {

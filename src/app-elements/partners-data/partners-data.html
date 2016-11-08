@@ -18,6 +18,8 @@
     var _data = {};
     var _partnersEls = [];
 
+    // Load the data we recieve into each active instance
+    // of partners-data
     var _setPartnersData = function(data) {
       _data.partners = data || {};
       this.load(_data);
@@ -90,10 +92,15 @@
 
       query: function(field, order, searchString, partnerType, csoType,
                       pageNumber, pageSize, showHidden) {
+
+        // If an active query transaction exists, abort it and start
+        // a new one
         if (curr) {
           curr.abort();
         }
+
         var _this = this;
+
         this.db.transaction('r', this.db.partners, function() {
           curr = Dexie.currentTransaction;
 
@@ -134,6 +141,9 @@
             return true;
           });
 
+          // This special Dexie function allows the work of counting
+          // the number of query results to be done in a parallel process,
+          // instead of blocking the main query
           Dexie.ignoreTransaction(function() {
             queryResult.count(function(count) {
               _this._setTotalResults(count);
