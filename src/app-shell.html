@@ -237,7 +237,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this._toast = document.createElement('paper-toast');
           this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
           Polymer.dom(this.$.layout).appendChild(this._toast);
-          Polymer.dom.flush();
         }
         if (!this._toastQueue.length) {
           this.push('_toastQueue', detail);

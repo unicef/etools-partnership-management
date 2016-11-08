@@ -37,7 +37,6 @@
         line-height: 56px;
         font-size: 12px;
         font-weight: bold;
-        color: var(--dark-primary-text-color);
         border-bottom: 1px solid var(--dark-divider-color);
       }
 
@@ -95,14 +94,24 @@
           on-search="_onSearch"></input>
 
       <paper-icon-button icon="close" on-tap="clear"></paper-icon-button>
-
       <!-- note: this should be loaded from object -->
       <paper-dropdown-menu label="Partner Type" noink>
-        <paper-menu id="menu" class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_partnerTypeSelected">
+        <paper-menu id="menu" class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
           <paper-item>Bilateral / Multilateral</paper-item>
           <paper-item>Civil Society Organization</paper-item>
           <paper-item>Government</paper-item>
           <paper-item>UN Agency</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+
+      <paper-icon-button icon="close" on-tap="_clear"></paper-icon-button>
+      <!-- note: this should be loaded from object -->
+      <paper-dropdown-menu label="CSO Type" noink>
+        <paper-menu id="_menu" class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
+          <paper-item>Academic Institution</paper-item>
+          <paper-item>Community Based Organization</paper-item>
+          <paper-item>International</paper-item>
+          <paper-item>National</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
 
@@ -165,23 +174,23 @@
         },
 
         partnerType: {
-          type: String,
-          notify: true
+          type: String
+        },
+
+        csoType: {
+          type: String
         },
 
         sortOrder: {
-          type: Array,
-          notify: true,
+          type: Array
         },
 
         pageNumber: {
-          type: Number,
-          notify: true,
+          type: Number
         },
 
         totalPages: {
           type: Number,
-          notify: true,
           computed: '_computeTotalPages(pageSize, totalResults)',
         },
 
@@ -191,8 +200,7 @@
         },
 
         pageSize: {
-          type: Number,
-          notify: true,
+          type: Number
         },
 
         showHidden: {
@@ -207,22 +215,27 @@
       },
 
       observers: [
-        '_updateURL(q, partnerType, pageNumber, pageSize, sortOrder, showHidden)',
+        '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
       ],
 
       ready: function() {
         this.$.list.classList.add('hidden');
       },
 
+      // Input: URL query params
+      // Initializes the properties of the list at page load
+      // to the params interpretted from the URL string.
       init: function(urlParams) {
         if (!urlParams) {
           return;
         }
         this.set('q', urlParams.q ? urlParams.q : '');
         this.set('partnerType', urlParams.partner_type ? urlParams.partner_type : '');
+        this.set('csoType', urlParams.cso_type ? urlParams.cso_type : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
         this.set('showHidden', urlParams.hidden ? true : false);
+        // format of sort param is sort=field.order ex: sort=name.asc
         var result = [{field: 'name', order: 'asc'}];
         if (urlParams.sort) {
           var p = urlParams.sort.split('.');
@@ -231,20 +244,28 @@
         this.set('sortOrder', result);
       },
 
+      // Updates URL state with new query string, and launches query
       _updateURL: function() {
         var qs = this._buildQueryString();
         if (qs !== _lastNavigated) {
           _lastNavigated = qs;
+          // Using replace state to change the URL here ensures the browser's
+          // back button doesn't take you through every query
           var currentState = window.history.state;
           window.history.replaceState(currentState, null, 'list' + (qs.length ? '?' + qs : ''));
+          // This event lets app-location and app-route know
+          // the URL has changed
           window.dispatchEvent(new CustomEvent('location-changed'));
 
+          // Query is debounced with a debounce time
+          // set depending on what action the user takes
           this.debounce('query', function() {
             this.$.partners.query(
               this.sortOrder[0].field,
               this.sortOrder[0].order,
               this.q.toLowerCase(),
               this.partnerType,
+              this.csoType,
               this.pageNumber,
               this.pageSize,
               this.showHidden);
@@ -253,6 +274,7 @@
         }
       },
 
+      // Outputs the query string for the list
       _buildQueryString: function() {
         var out = [];
         if (this.pageNumber && this.pageNumber > 1) {
@@ -266,6 +288,9 @@
         }
         if (this.partnerType && this.partnerType.length) {
           out.push('partner_type=' + this.partnerType);
+        }
+        if (this.csoType && this.csoType.length) {
+          out.push('cso_type=' + this.csoType);
         }
         if (this.sortOrder && this.sortOrder.length) {
           var sortQuery = [];
@@ -282,6 +307,8 @@
         return out.join('&');
       },
 
+      // Run when a list header is clicked
+      // uses the first class of the header to determine the field name
       _buildSortOrder: function(e) {
         var _field = e.path[1].classList[0];
         var _order = 'asc';
@@ -340,7 +367,7 @@
         this.set('pageSize', parseInt(detail.selected));
       },
 
-      _partnerTypeSelected: function() {
+      _dropdownSelected: function() {
         this.set('debounceTime', 200);
         this.set('pageNumber', 1);
       },
@@ -352,6 +379,9 @@
 
       clear: function() {
         this.$.menu.selected = null;
+      },
+      _clear: function() {
+        this.$._menu.selected = null;
       },
 
       _computeTotalPages: function(pageSize, totalResults) {

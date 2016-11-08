@@ -88,7 +88,8 @@
         _setPartnersData.bind(this)(res.detail);
       },
 
-      query: function(field, order, searchString, partnerType, pageNumber, pageSize, showHidden) {
+      query: function(field, order, searchString, partnerType, csoType,
+                      pageNumber, pageSize, showHidden) {
         if (curr) {
           curr.abort();
         }
@@ -110,12 +111,18 @@
               return false;
             }
 
+            if (csoType && partner.cso_type !== csoType) {
+              return false;
+            }
+
             if (searchString && searchString.length) {
               var vnMatch = true;
               if (partner.vendor_number) {
                 vnMatch = partner.vendor_number.indexOf(searchString) < 0;
               }
-              if (partner.name.toLowerCase().indexOf(searchString) < 0 && vnMatch) {
+              if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
+                  partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+                  vnMatch) {
                 return false;
               }
             }

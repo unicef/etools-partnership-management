@@ -127,9 +127,12 @@
           this._detailsEl = document.createElement('partner-details-dropdown');
           this._detailsEl.partner = this.partner;
           Polymer.dom(this.$.details).appendChild(this._detailsEl);
-          Polymer.dom.flush();
         }
         this._detailsEl.toggle();
+      },
+
+      clearDetails: function() {
+        Polymer.dom(this.$.details).removeChild(this._detailsEl);
       },
 
       _computeName: function(name, shortName) {
