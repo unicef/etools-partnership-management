@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
+    <base href="/">
     <title>eTools</title>
     <meta name="description" content="Partnership Management Portal">
 
@@ -61,7 +61,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Uncomment app.baseURL below and
           // set app.baseURL to '/your-pathname/' if running from folder in production
           baseUrl = '/pmp/';
+          document.getElementsByTagName('base')[0].setAttribute('href', baseUrl);
         }
+
         var onload = function() {
           // For native Imports, manually fire WebComponentsReady so user code
           // can use the same code path for native and polyfill'd imports.
