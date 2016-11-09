@@ -211,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function() {
-        if ((this.route.path === '/pmp/') || (this.route.path === '/')) {
+        if (this.route.path === this.baseUrl) {
           this.set('route.path', this.baseUrl + 'partners/list');
         }
       },
