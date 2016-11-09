@@ -62,16 +62,16 @@
           </div>
           <div class="top-content-row">
             <paper-tabs
-                selected="[[routeData.tab]]"
+                selected="{{routeData.tab}}"
                 attr-for-selected="name"
                 fallback-selection="overview" noink bottom-item>
 
               <paper-tab name="overview" link>
-                <a href="/pmp/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">Overview</a>
+                <span class="tab-content">Overview</span>
               </paper-tab>
 
               <paper-tab name="details" link>
-                <a href="/pmp/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">Partner Details</a>
+                <span class="tab-content">Partner Details</span>
               </paper-tab>
 
             </paper-tabs>
