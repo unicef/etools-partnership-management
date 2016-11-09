@@ -1,33 +1,376 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
+
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../../behaviors/dropdown-behavior.html">
 
 <dom-module id="agreements-list">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="shared-styles iron-flex iron-flex-factors">
 
-    <app-route
-        route="{{route}}"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
+      :host {
+        display: block;
+      }
 
+      :host([hidden]) {
+        display: none;
+      }
 
-    agreements list content goes here...
+      .header {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+
+        padding: 0 39px 0 49px;
+        line-height: 56px;
+        font-size: 12px;
+        font-weight: bold;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .header > div {
+        min-width: 100px;
+        margin-right: 10px;
+      }
+
+      .header > div > span {
+        cursor: pointer;
+      }
+
+      #list {
+        display: block;
+        position: relative;
+        margin: 20px auto;
+        opacity: 1;
+        transition: opacity 0.4s;
+        max-width: 920px;
+        background-color: #FFFFFF;
+      }
+
+      #list.hidden {
+        transition: none;
+        opacity: 0;
+      }
+
+      .row {
+        @apply(--layout-vertical);
+
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px 15px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .row:hover {
+        background: var(--dark-hover-color);
+      }
+
+    </style>
+
+    <agreements-data id="agreements" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreements-data>
+
+    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
+
+    <paper-material id="listControls" elevation="1">
+
+      <input id="query"
+          type="search"
+          autocomplete="off"
+          value="{{q::keyup}}"
+          placeholder="Search"
+          on-search="_onSearch"></input>
+
+      <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
+      <button type="button" name="page-left" on-tap="_pageLeft"> < </button>
+      <button type="button" name="page-right" on-tap="_pageRight"> > </button>
+      <button type="button" name="last-page" on-tap="_lastPage"> >| </button>
+
+      <paper-menu-button>
+        <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
+          <paper-item>5</paper-item>
+          <paper-item>10</paper-item>
+          <paper-item>25</paper-item>
+          <paper-item>50</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+
+      <paper-toggle-button checked="{{showHidden}}" on-change='_hiddenToggled'></paper-toggle-button>
+
+    </paper-material>
+
+    <paper-material id="list">
+
+      <div class="header">
+        <!-- first class of div must be name of field -->
+        <div class="name flex-2"><span on-tap="_buildSortOrder">Name</span></div>
+        <div class="agreement_type flex-2">Type</div>
+        <div class="rating flex"><span on-tap="_buildSortOrder">Risk</span></div>
+      </div>
+
+      <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
+      </template>
+
+    </paper-material>
 
   </template>
 
   <script>
-    (function() {
-      'use strict';
 
-      Polymer({
-        is: 'agreements-list',
-      });
+    var _lastNavigated = null;
 
-    })();
+    Polymer({
+
+      is: 'agreements-list',
+
+      behaviors: [pmpBehaviors.DropdownBehavior],
+
+      properties: {
+
+        filteredAgreements: {
+          type: Array,
+          notify: true,
+          observer: '_agreementsChanged'
+        },
+
+        q: {
+          type: String,
+          notify: true,
+          observer: '_qChanged'
+        },
+
+        agreementType: {
+          type: String
+        },
+
+        sortOrder: {
+          type: Array
+        },
+
+        pageNumber: {
+          type: Number
+        },
+
+        totalPages: {
+          type: Number,
+          computed: '_computeTotalPages(pageSize, totalResults)',
+        },
+
+        visibleRange: {
+          type: Array,
+          computed: '_computeVisibleRange(pageNumber, pageSize, totalResults, totalPages)'
+        },
+
+        pageSize: {
+          type: Number
+        },
+
+        debounceTime: {
+          type: Number,
+          value: 50
+        },
+
+      },
+
+      observers: [
+        '_updateURL(q, agreementType, pageNumber, pageSize, sortOrder, showHidden)',
+      ],
+
+      ready: function() {
+        this.$.list.classList.add('hidden');
+      },
+
+      // Input: URL query params
+      // Initializes the properties of the list at page load
+      // to the params interpretted from the URL string.
+      init: function(urlParams) {
+        if (!urlParams) {
+          return;
+        }
+        this.set('q', urlParams.q ? urlParams.q : '');
+        this.set('agreementType', urlParams.agreement_type ? urlParams.agreement_type : '');
+        this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
+        this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
+        // format of sort param is sort=field.order ex: sort=name.asc
+        var result = [{field: 'name', order: 'asc'}];
+        if (urlParams.sort) {
+          var p = urlParams.sort.split('.');
+          result = [{field: p[0], order: p[1]}];
+        }
+        this.set('sortOrder', result);
+      },
+
+      // Updates URL state with new query string, and launches query
+      _updateURL: function() {
+        var qs = this._buildQueryString();
+        if (qs !== _lastNavigated) {
+          _lastNavigated = qs;
+          // Using replace state to change the URL here ensures the browser's
+          // back button doesn't take you through every query
+          var currentState = window.history.state;
+          window.history.replaceState(currentState, null, 'list' + (qs.length ? '?' + qs : ''));
+          // This event lets app-location and app-route know
+          // the URL has changed
+          window.dispatchEvent(new CustomEvent('location-changed'));
+
+          // Query is debounced with a debounce time
+          // set depending on what action the user takes
+          this.debounce('query', function() {
+            this.$.agreements.query(
+              this.sortOrder[0].field,
+              this.sortOrder[0].order,
+              this.q.toLowerCase(),
+              this.agreementType,
+              this.pageNumber,
+              this.pageSize);
+          }, this.debounceTime);
+
+        }
+      },
+
+      // Outputs the query string for the list
+      _buildQueryString: function() {
+        var out = [];
+        if (this.pageNumber && this.pageNumber > 1) {
+          out.push('page=' + this.pageNumber);
+        }
+        if (this.pageSize) {
+          out.push('size=' + this.pageSize);
+        }
+        if (this.q && this.q.length) {
+          out.push('q=' + this.q);
+        }
+        if (this.agreementType && this.agreementType.length) {
+          out.push('agreement_type=' + this.agreementType);
+        }
+        if (this.sortOrder && this.sortOrder.length) {
+          var sortQuery = [];
+          this.sortOrder.forEach(function(sort) {
+            if (sort.field && sort.order) {
+              sortQuery.push('' + sort.field + '.' + sort.order);
+            }
+          });
+          out.push('sort=' + sortQuery.join('+'));
+        }
+        if (this.showHidden) {
+          out.push('hidden=true');
+        }
+        return out.join('&');
+      },
+
+      // Run when a list header is clicked
+      // uses the first class of the header to determine the field name
+      _buildSortOrder: function(e) {
+        var _field = e.path[1].classList[0];
+        var _order = 'asc';
+        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
+          _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
+        }
+        this.set('debounceTime', 150);
+        this.set('sortOrder', [{field: _field, order: _order}]);
+      },
+
+      _pageLeft: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber > 1) {
+          this.set('pageNumber', this.pageNumber - 1);
+        }
+      },
+
+      _pageRight: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber < this.totalPages) {
+          this.set('pageNumber', this.pageNumber + 1);
+        }
+      },
+
+      _firstPage: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber > 1) {
+          this.set('pageNumber', 1);
+        }
+      },
+
+      _lastPage: function() {
+        this.set('debounceTime', 50);
+        if (this.pageNumber < this.totalPages) {
+          this.set('pageNumber', this.totalPages);
+        }
+      },
+
+      _onSearch: function() {
+        this.q = this.$.query.value;
+      },
+
+      _qChanged: function(q) {
+        if (q) {
+          this.async(function() {
+            this.$.query.focus();
+          });
+        }
+        this.set('debounceTime', 300);
+        this.set('pageNumber', 1);
+      },
+
+      _pageSizeSelected: function(e, detail) {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+        this.set('pageSize', parseInt(detail.selected));
+      },
+
+      _dropdownSelected: function() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      },
+
+      _hiddenToggled: function() {
+        this.set('debounceTime', 50);
+        this.set('pageNumber', 1);
+      },
+
+      _computeTotalPages: function(pageSize, totalResults) {
+        var result = 1;
+        if (pageSize < totalResults) {
+          result = Math.ceil(totalResults / pageSize);
+        }
+        return result;
+      },
+
+      _computeVisibleRange: function(pageNumber, pageSize, totalResults, totalPages) {
+        var start = 1;
+        var end = totalResults;
+
+        if (pageNumber !== 1) {
+          start = (pageNumber - 1) * pageSize + 1;
+        }
+        if (pageNumber !== totalPages) {
+          end = start + pageSize - 1;
+        }
+
+        return [start, end];
+      },
+
+      // List fade in fade out effect
+      _agreementsChanged: function() {
+        this.$.list.classList.add('hidden');
+        this.async(function() {
+          this.$.list.classList.remove('hidden');
+        }, 50);
+      }
+
+    });
+
   </script>
 
 </dom-module>
