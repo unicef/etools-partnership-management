@@ -105,9 +105,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-location route="{{route}}"></app-location>
 
+    <app-location route="{{route}}"></app-location>
+
     <app-route
         route="{{route}}"
-        pattern="/:page"
+        pattern="/pmp/:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
@@ -126,8 +128,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="nav-menu">
             <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
 
-              <side-bar-item name="partners" icon="description" href="/partners/list"></side-bar-item>
-              <side-bar-item name="agreements" icon="book" href="/agreements/list"></side-bar-item>
+              <side-bar-item name="partners" icon="description" href="partners/list"></side-bar-item>
+              <side-bar-item name="agreements" icon="book" href="agreements/list"></side-bar-item>
               <side-bar-item name="interventions" icon="build" href="/interventions/list"></side-bar-item>
               <div class="divider"></div>
               <side-bar-item name="settings" icon="settings" href="/settings"></side-bar-item>
@@ -206,8 +208,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function() {
-        if (this.route.path === '/') {
-          this.set('route.path', '/partners/list');
+        if ((this.route.path === '/pmp/') || (this.route.path === '/')) {
+          this.set('route.path', '/pmp/partners/list');
         }
       },
 

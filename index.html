@@ -56,7 +56,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';
-
+        var baseUrl = '/';
+        if ((window.location.port === '') || (window.location.port === '8099')) {  // if production
+          // Uncomment app.baseURL below and
+          // set app.baseURL to '/your-pathname/' if running from folder in production
+          baseUrl = '/pmp/';
+        }
         var onload = function() {
           // For native Imports, manually fire WebComponentsReady so user code
           // can use the same code path for native and polyfill'd imports.
@@ -76,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!webComponentsSupported) {
           var script = document.createElement('script');
           script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          script.src = baseUrl + 'bower_components/webcomponentsjs/webcomponents-lite.min.js';
           script.onload = onload;
           document.head.appendChild(script);
         } else {
@@ -92,7 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </script>
 
-    <link rel="import" href="/src/app-shell.html">
+    <link rel="import" href="/pmp/app-shell.html">
 
     <style>
       body {
