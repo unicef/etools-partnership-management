@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
@@ -41,28 +43,41 @@
 
       <app-header id="header" fixed shadow>
 
-        <page-header title$="Partners [[partnerName]]"></page-header>
+        <page-header title="Partners"></page-header>
 
-        <div id="tabsWrapper" hidden$="{{!tabsActive}}">
-          <app-toolbar id="tabs-bar">
+      </app-header>
+
+      <div class="page-top-content" hidden$="{{!tabsActive}}">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>[[partnerName]]</h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row">
             <paper-tabs
                 selected="[[routeData.tab]]"
                 attr-for-selected="name"
                 fallback-selection="overview" noink bottom-item>
 
               <paper-tab name="overview" link>
-                <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">overview</a>
+                <a href="/partners/[[routeData.id]]/overview" class="tab-link" tabindex="-1">Overview</a>
               </paper-tab>
 
               <paper-tab name="details" link>
-                <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
+                <a href="/partners/[[routeData.id]]/details" class="tab-link" tabindex="-1">Partner Details</a>
               </paper-tab>
 
             </paper-tabs>
-          </app-toolbar>
+          </div>
         </div>
-
-      </app-header>
+      </div>
 
       <iron-pages id="partnersPages"
                   selected="{{partnerPage}}"
@@ -74,10 +89,10 @@
           <partners-list></partners-list>
         </div>
         <div class="page" name="overview">
-          <partner-overview partner-id="[[routeData.id]]"></partner-overview>
+          <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner-id="[[routeData.id]]"></partner-details>
+          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-details>
         </div>
       </iron-pages>
 

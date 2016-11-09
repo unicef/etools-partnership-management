@@ -22,7 +22,7 @@
       :host {
         display: block;
         width: 100%;
-        padding-bottom: 15px;
+        padding-bottom: 30px;
 
         --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
         --paper-fab: {
@@ -60,7 +60,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(index)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -69,19 +69,25 @@
               <div class="col col-4">
                 <!-- Position -->
                 <paper-input label="Position"
-                             value="{{item.position}}">
+                             value="{{item.position}}"
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
               <div class="col col-4">
                 <!-- First Name -->
                 <paper-input label="First Name"
-                             value="{{item.first_name}}">
+                             value="{{item.first_name}}"
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
               <div class="col col-4">
                 <!-- Last Name -->
                 <paper-input label="Last Name"
-                             value="{{item.last_name}}">
+                             value="{{item.last_name}}"
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
             </div>
@@ -89,14 +95,18 @@
               <div class="col col-4">
                 <!-- Phone number -->
                 <paper-input label="Phone number"
-                             value="{{item.phone_number}}">
+                             value="{{item.phone_number}}"
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                   <iron-icon prefix icon="communication:phone"></iron-icon>
                 </paper-input>
               </div>
               <div class="col col-4">
                 <!-- Email address -->
                 <paper-input label="E-mail address"
-                             value="{{item.email_address}}">
+                             value="{{item.email_address}}"
+                             placeholder="&#8212;"
+                             readonly$="[[!_canBeRemoved(index)]]">
                   <iron-icon prefix icon="communication:email"></iron-icon>
                 </paper-input>
               </div>
@@ -106,7 +116,9 @@
                   <etools-checkable-input checked="{{item.active}}"
                                           label="Active?"
                                           type="checkbox"
-                                          label-alignment="right"></etools-checkable-input>
+                                          label-alignment="right"
+                                          readonly$="[[!editMode]]">
+                  </etools-checkable-input>
                 </div>
               </div>
             </div>
@@ -120,7 +132,7 @@
       <p>There are no assessments added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h">
+    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
                  on-tap="_addElement"
                  title="Add"></paper-fab>
@@ -152,10 +164,13 @@
       },
 
       _canBeRemoved: function(index) {
-        if (this.dataItems[index] && typeof this.dataItems[index].id !== 'undefined' && this.dataItems[index].id !== null) {
-          return true;
+        if (!this.editMode) {
+          return false;
         }
-        return false;
+        if (this.dataItems[index] && typeof this.dataItems[index].id !== 'undefined' && this.dataItems[index].id !== null) {
+          return false;
+        }
+        return true;
       }
 
     });

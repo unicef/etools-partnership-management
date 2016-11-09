@@ -184,7 +184,7 @@
    {
       "id":2,
       "partner_type":"Civil Society Organisation",
-      "cso_type":null,
+      "cso_type": "National",
       "name":"Albir Society",
       "short_name":"ABS",
       "description":"",

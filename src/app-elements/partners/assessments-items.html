@@ -54,7 +54,11 @@
 
       #collapse {
         position: relative;
-        padding: 15px 0;
+        padding: 15px 0 0;
+      }
+
+      .action.delete[disabled] {
+        visibility: hidden;
       }
 
     </style>
@@ -76,6 +80,7 @@
                   <paper-icon-button class="action delete"
                                      on-tap="_openDeleteConfirmation"
                                      data-args$="[[index]]"
+                                     disabled$="[[!editMode]]"
                                      icon="cancel"></paper-icon-button>
                 </div>
 
@@ -84,23 +89,33 @@
                 <div class="row-h">
                   <div class="col col-4">
                     <!-- Assessment type -->
-                    <paper-dropdown-menu label="Assessment Type" horizontal-align="left" vertical-align="top">
-                      <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}" attr-for-selected="value">
-                        <paper-item value="Micro Assessment">Micro Assessment</paper-item>
-                        <paper-item value="Simplified Checklist">Simplified Checklist</paper-item>
-                        <paper-item value="Scheduled Audit Report">Scheduled Audit Report</paper-item>
-                        <paper-item value="Special Audit Report">Special Audit Report</paper-item>
-                        <paper-item value="High Risk Assumed">High Risk Assumed</paper-item>
-                        <paper-item value="Other">Other</paper-item>
-                      </paper-listbox>
-                    </paper-dropdown-menu>
+                    <template is="dom-if" if="[[!editMode]]">
+                      <paper-input label="Assessment Type"
+                                   value="[[item.assessment_type]]"
+                                   placeholder="&#8212;"
+                                   readonly></paper-input>
+                    </template>
+                    <template is="dom-if" if="[[editMode]]">
+                      <paper-dropdown-menu label="Assessment Type" horizontal-align="left" vertical-align="top">
+                        <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}" attr-for-selected="value">
+                          <paper-item value="Micro Assessment">Micro Assessment</paper-item>
+                          <paper-item value="Simplified Checklist">Simplified Checklist</paper-item>
+                          <paper-item value="Scheduled Audit Report">Scheduled Audit Report</paper-item>
+                          <paper-item value="Special Audit Report">Special Audit Report</paper-item>
+                          <paper-item value="High Risk Assumed">High Risk Assumed</paper-item>
+                          <paper-item value="Other">Other</paper-item>
+                        </paper-listbox>
+                      </paper-dropdown-menu>
+                    </template>
                   </div>
                   <div class="col col-4">
                     <!-- Date submitted -->
                     <paper-input label="Date Submitted"
-                                 value="[[item.date_submitted]]">
+                                 value="[[item.date_submitted]]"
+                                 readonly$="[[!editMode]]">
                       <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                       <etools-datepicker-button suffix
+                                                date="{{_prepareDate(item.date_submitted)}}"
                                                 pretty-date="{{item.date_submitted}}"
                                                 is-disabled="[[!editMode]]"
                                                 hidden$="[[!editMode]]"></etools-datepicker-button>
@@ -113,6 +128,7 @@
                                               label="Basis for Risk Rating"
                                               type="radio"
                                               label-alignment="top"
+                                              readonly$="[[!editMode]]"
                                               on-value-changed="_basisForRiskRatingChanged"
                                               data-args$="[[index]]"></etools-checkable-input>
                     </div>
@@ -135,7 +151,7 @@
           <p>There are no assessments added.</p>
         </div>
 
-        <div id="bottom-actions" class="row-h">
+        <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
           <paper-fab icon="add"
                      on-tap="_addElement"
                      title="Add"></paper-fab>
@@ -149,39 +165,51 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'assessments-items',
-      behaviors: [
-        DynamicDialogBehavior,
-        RepeatableDataSetsBehavior
-      ],
-      properties: {
-        elevation: {
-          type: Number,
-          value: 0
-        }
-      },
+    (function() {
+      'use strict';
 
-      ready: function() {
-        this.dataSetModel = {
-          assessment_type: null,
-          date_submitted: null,
-          basis_for_risk_rating: false,
-          report_file: null
-        };
-      },
+      Polymer({
+        is: 'assessments-items',
+        behaviors: [
+          DynamicDialogBehavior,
+          RepeatableDataSetsBehavior
+        ],
+        properties: {
+          elevation: {
+            type: Number,
+            value: 0
+          }
+        },
 
-      _basisForRiskRatingChanged: function(event) {
-        if (event.detail.checked === true) {
-          var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
-          for (var i = 0; i < this.dataItems.length; i++) {
-            if (i !== index) {
-              this.set('dataItems.' + i + '.basis_for_risk_rating', false);
+        ready: function() {
+          this.dataSetModel = {
+            assessment_type: null,
+            date_submitted: null,
+            basis_for_risk_rating: false,
+            report_file: null
+          };
+        },
+
+        _basisForRiskRatingChanged: function(event) {
+          if (!this.editMode) {
+            return;
+          }
+          if (event.detail.checked === true) {
+            var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+            for (var i = 0; i < this.dataItems.length; i++) {
+              if (i !== index) {
+                this.set('dataItems.' + i + '.basis_for_risk_rating', false);
+              }
             }
           }
-        }
-      }
+        },
 
-    });
+        _prepareDate: function (dateSubmitted) {
+          return new Date(dateSubmitted);
+        },
+
+      });
+    })();
+
   </script>
 </dom-module>

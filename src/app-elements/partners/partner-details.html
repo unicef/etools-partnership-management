@@ -56,6 +56,7 @@
 
       .assessments {
         margin-top: 20px;
+        margin-bottom: 30px;
       }
 
     </style>
@@ -225,7 +226,7 @@
 
       <!-- Staff Members section-->
       <etools-content-panel class="partner-details-section" title$="Staff Members ([[staffMembers.length]])" show-expand-btn>
-        <staff-members data-items="{{staffMembers}}"></staff-members>
+        <staff-members data-items="{{staffMembers}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
     </div> <!-- main page content end -->
@@ -249,6 +250,10 @@
         properties: {
           partnerId: {
             type: Number,
+            notify: true
+          },
+          partnerName: {
+            type: String,
             notify: true
           },
           partner: {
@@ -282,6 +287,20 @@
         ready: function() {
 
           // test data
+          this.set('assessments', [
+            {
+              assessment_type: 'Micro Assessment',
+              date_submitted: '29 Jul 2016',
+              basis_for_risk_rating: true,
+              report_file: ''
+            },
+            {
+              assessment_type: 'Scheduled Audit Report',
+              date_submitted: '8 Nov 2016',
+              basis_for_risk_rating: false,
+              report_file: ''
+            }
+          ]);
           this.set('bankInformationItems', [
             {
               bank_name: 'Bank of Iordania',
@@ -327,13 +346,16 @@
 
         _partnerChanged: function(partner) {
           console.log(partner);
+          if (partner && partner.name) {
+            this.set('partnerName', partner.name);
+          }
         },
 
         _getPartnerType: function(partner) {
           if (Object.keys(partner).length > 0) {
             var partnerType = partner.partner_type;
             if (partner.cso_type !== null) {
-              partnerType = partner.cso_type + '/' + partnerType;
+              partnerType = partnerType + '/' + partner.cso_type;
             }
             return partnerType;
           }
