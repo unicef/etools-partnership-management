@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <!-- shared styles for all views -->
 <!-- not for styling index.html or pmp-shell -->
+
+<link rel="import" href="app-mixins.html">
 
 <dom-module id="shared-styles">
   <template>
@@ -20,42 +22,6 @@
 
       a:focus {
         outline: inherit;
-      }
-
-      app-header-layout {
-        position: inherit;
-      }
-
-      app-header {
-        background-color: var(--primary-background-color);
-      }
-
-      app-header div[main-title] {
-        position: relative;
-        bottom: 1px;
-        margin-left: 24px;
-        text-transform: capitalize;
-        color: var(--light-primary-text-color);
-      }
-
-      app-header paper-icon-button[icon="menu"] {
-        display: block;
-      }
-
-      #pageContent {
-        padding: 48px 15px;
-      }
-
-      @media (min-width: 850px) {
-        app-header paper-icon-button[icon="menu"] {
-          display: none;
-        }
-        app-header div[main-title] {
-          margin-left: 32px;
-        }
-        #pageContent {
-          padding: 48px 62px;
-        }
       }
 
       app-toolbar {
@@ -113,6 +79,74 @@
       paper-icon-button.light {
         color: var(--light-icon-color);
         --paper-icon-button-ink-color: var(--light-ink-color);
+      }
+
+      paper-input {
+        --paper-input-prefix: {
+          margin-top: -5px;
+          margin-right: 10px;
+          color: var(--dark-secondary-text-color);
+        };
+        --paper-input-suffix: {
+          margin-top: -5px;
+          margin-left: 10px;
+          color: var(--dark-secondary-text-color);
+        };
+      }
+      paper-dropdown-menu paper-listbox {
+        --paper-listbox-background-color: #fff;
+      }
+      paper-dropdown-menu paper-item {
+        cursor: pointer;
+      }
+
+      /* paper input readonly state */
+      paper-input[readonly] {
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        }	;
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+      }
+
+      paper-input.right-to-left {
+        text-align: right;
+        --paper-input-container-input: {
+          direction: rtl;
+          unicode-bidi: bidi-override;
+        }
+      }
+
+      .custom-field-wrapper {
+        box-sizing: border-box;
+        min-height: 60px;
+        padding-top: 9px;
+      }
+
+      .nested-content-panel {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border-top: 1px solid var(--dark-divider-color);
+        --ecp-header-height: 40px;
+        --ecp-header-bg: #F2F2F2; /* TODO: replace with app-theme var */
+        --ecp-expand-btn: {
+          @apply(--nested-content-panel-collapse-btn);
+        };
+        --ecp-header-title: {
+          @apply(--nested-content-panel-title);
+        };
+        --ecp-content: {
+          padding: 20px 0 0;
+        }
+      }
+
+      /* responsive css rules */
+      @media (min-width: 850px) {
+
       }
 
     </style>

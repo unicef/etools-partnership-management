@@ -20,6 +20,6 @@
     "Dexie": true,
     "etoolsAppConfig": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
-    "DynamicCustomStyleBehavior": true
+    "RepeatableDataSetsBehavior": true
   }
 }
