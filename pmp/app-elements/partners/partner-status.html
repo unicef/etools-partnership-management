@@ -134,7 +134,8 @@
         },
 
         _showBlockedStatus: function(partner) {
-          if (partner.deleted_flag === false && (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
+          if (partner.deleted_flag === false &&
+            (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
             return true;
           }
           return false;

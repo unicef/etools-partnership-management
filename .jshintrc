@@ -14,12 +14,14 @@
   "unused": true,
   "newcap": false,
   "laxbreak": true,
+  "unused":false,
   "globals": {
     "Polymer": true,
     "_": true,
     "Dexie": true,
     "etoolsAppConfig": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
-    "RepeatableDataSetsBehavior": true
+    "RepeatableDataSetsBehavior": true,
+    "DynamicDialogBehavior": true
   }
 }
