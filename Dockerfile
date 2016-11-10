@@ -14,5 +14,4 @@ RUN cp -a /tmp/node_modules /code/node_modules
 RUN cp -a /tmp/bower_components /code/bower_components
 RUN npm install -g gulp-cli
 RUN gulp
-CMD ["http-server", "/code/build/bundled"]
-
+CMD ["http-server", "/code/build/pmp/bundled"]
