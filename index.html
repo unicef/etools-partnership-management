@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
+    <base href="/pmp/">
     <title>eTools</title>
     <meta name="description" content="Partnership Management Portal">
 
@@ -56,12 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';
-        var baseUrl = '/';
-        if ((window.location.port === '') || (window.location.port === '8099')) {  // if production
-          // Uncomment app.baseURL below and
-          // set app.baseURL to '/your-pathname/' if running from folder in production
-          baseUrl = '/pmp/';
-        }
+        var baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
         var onload = function() {
           // For native Imports, manually fire WebComponentsReady so user code
           // can use the same code path for native and polyfill'd imports.
@@ -92,7 +87,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Load pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
+          navigator.serviceWorker.register(baseUrl +'/service-worker.js');
         });
       }
     </script>
