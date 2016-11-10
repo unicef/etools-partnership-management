@@ -184,7 +184,7 @@
    {
       "id":2,
       "partner_type":"Civil Society Organisation",
-      "cso_type":null,
+      "cso_type": "National",
       "name":"Albir Society",
       "short_name":"ABS",
       "description":"",
@@ -200,7 +200,7 @@
       "last_assessment_date":null,
       "core_values_assessment_date":null,
       "core_values_assessment":"http://localhost:8099/media/partners/core_values/E-Saf_Watsi.pdf",
-      "vision_synced":false,
+      "vision_synced":true,
       "hidden":false,
       "deleted_flag":false,
       "total_ct_cp":null,
