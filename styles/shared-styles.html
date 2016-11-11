@@ -9,6 +9,10 @@
   <template>
     <style>
 
+      *[hidden] {
+        display: none !important;
+      }
+
       h1 {
         font-size: 25px;
         margin: 16px 0;
@@ -53,15 +57,6 @@
         @apply(--layout-center-center);
       }
 
-      iron-pages[hidden] {
-        display: none;
-      }
-
-      paper-menu {
-        --paper-menu-background-color: var(--light-theme-content-color);
-        --paper-menu-color: var(--dark-primary-text-color);
-      }
-
       paper-item {
         font-size: 15px;
         white-space: nowrap;
@@ -69,7 +64,7 @@
 
       paper-material {
         padding: 15px 20px;
-        background-color: var(--light-theme-content-color);
+        background-color: var(--primary-background-color);
       }
 
       iron-icon.dark {
@@ -101,9 +96,6 @@
           margin-left: 10px;
           color: var(--dark-secondary-text-color);
         };
-      }
-      paper-dropdown-menu paper-listbox {
-        --paper-listbox-background-color: #fff;
       }
       paper-dropdown-menu paper-item {
         cursor: pointer;
