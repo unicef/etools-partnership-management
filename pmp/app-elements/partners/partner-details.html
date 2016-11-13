@@ -1,0 +1,370 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<!-- TODO: move partner-data into partners folder -->
+<link rel="import" href="../partner-data/partner-data.html">
+
+<link rel="import" href="assessments-items.html">
+<link rel="import" href="staff-members.html">
+<link rel="import" href="bank-information.html">
+<link rel="import" href="partner-status.html">
+
+<dom-module id="partner-details">
+
+  <template>
+
+    <style include="iron-flex iron-flex-alignment page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+        padding-bottom: 70px;
+
+        --etools-checkable-input-label: {
+          padding-bottom: 2px;
+        };
+
+      }
+
+      .partner-details-section:not(:first-of-type) {
+        margin-top: 25px;
+      }
+
+      paper-input,
+      paper-dropdown-menu {
+        width: 100%;
+      }
+
+      paper-input.risk-rating-field {
+        width: auto;
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          /* TODO: --risk-rating-field bg color must be removed, create separate mixins for each bg risk type */
+        };
+      }
+
+      .assessments {
+        margin-top: 20px;
+        margin-bottom: 30px;
+      }
+
+    </style>
+
+    <partner-data partner-id="[[partnerId]]" partner="{{partner}}"></partner-data>
+
+    <!-- main page content start -->
+    <div id="pageContent">
+
+      <etools-content-panel class="partner-details-section" title="Partner Details">
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Organization name -->
+            <paper-input label="Organization's Full Name"
+                         value="[[partner.name]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <!-- Short name -->
+            <paper-input label="Short Name"
+                         value="[[partner.short_name]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <!-- Alternate name -->
+            <paper-input label="Alternate Name"
+                         value="{{partner.alternate_name}}"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Vendor Number -->
+            <paper-input label="Vendor Number"
+                         value="[[partner.vendor_number]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <!-- Partner type -->
+            <paper-input label="Partner Type"
+                         value="[[_getPartnerType(partner)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <!-- Shared partner -->
+            <template is="dom-if" if="[[!editMode]]">
+              <paper-input label="Shared Partner"
+                           value="{{partner.shared_partner}}"
+                           placeholder="&#8212;"
+                           readonly></paper-input>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top" always-float-label>
+                <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
+                  <paper-item value="UNDP">UNDP</paper-item>
+                  <paper-item value="UNFPA">UNFPA</paper-item>
+                  <paper-item value="UNDP and UNFPA">UNDP and UNFPA</paper-item>
+                  <paper-item value="No">No</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+            </template>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Last accessed date -->
+            <paper-input label="Date last assessed"
+                         name="core_values_assessment_date"
+                         value="{{partner.core_values_assessment_date}}"
+                         placeholder="&#8212;"
+                         readonly>
+              <div prefix>
+                <iron-icon icon="date-range"></iron-icon>
+              </div>
+            </paper-input>
+          </div>
+          <div class="col col-4">
+            Core Values Assessment(upload file)
+            (core_values_assessment)
+          </div>
+          <div class="col col-4"></div>
+        </div>
+
+        <!-- Contact info box -->
+        <etools-content-panel class="nested-content-panel" title="Contact Info" elevation="0" show-expand-btn>
+          <div class="row-h flex-c">
+            <!-- Address -->
+            <paper-input label="Address"
+                         value="{{partner.address}}"
+                         placeholder="&#8212;"
+                         readonly>
+              <iron-icon prefix icon="communication:location-on"></iron-icon>
+            </paper-input>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-4">
+              <!-- Telephone number -->
+              <paper-input label="Phone Number"
+                           value="{{partner.phone_number}}"
+                           placeholder="&#8212;"
+                           readonly>
+                <iron-icon prefix icon="communication:phone"></iron-icon>
+              </paper-input>
+            </div>
+            <div class="col col-4">
+              <!-- Email address -->
+              <paper-input label="E-mail address"
+                           value="{{partner.email}}"
+                           placeholder="&#8212;"
+                           readonly>
+                <iron-icon prefix icon="communication:email"></iron-icon>
+              </paper-input>
+            </div>
+            <div class="col col-4"></div>
+          </div>
+        </etools-content-panel>
+
+      </etools-content-panel>
+
+      <etools-content-panel class="partner-details-section" title="Risk Rating & Assessments">
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Risk rating -->
+            <paper-input class="risk-rating-field"
+                         label="Risk Rating"
+                         value="{{partner.rating}}"
+                         placeholder="&#8212;"
+                         readonly ></paper-input>
+          </div>
+          <div class="col col-4">
+            <!-- Type of assessment -->
+            <paper-input label="Assessment Type"
+                         value="{{partner.type_of_assessment}}"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <!--Date last assessed-->
+            <paper-input label="Date Submitted"
+                         value="{{partner.last_assessment_date}}"
+                         placeholder="&#8212;"
+                         readonly>
+              <div prefix>
+                <iron-icon icon="date-range"></iron-icon>
+              </div>
+            </paper-input>
+          </div>
+        </div>
+
+        <!-- Assessments section -->
+        <div class="assessments">
+          <assessments-items data-items="{{assessments}}" edit-mode="[[editMode]]"></assessments-items>
+        </div>
+      </etools-content-panel>
+
+      <!-- Bank information section -->
+      <etools-content-panel class="partner-details-section" title$="Bank Information ([[bankInformationItems.length]])" show-expand-btn>
+        <bank-information bank-information-items="[[bankInformationItems]]"></bank-information>
+      </etools-content-panel>
+
+      <!-- Staff Members section-->
+      <etools-content-panel class="partner-details-section" title$="Staff Members ([[staffMembers.length]])" show-expand-btn>
+        <staff-members data-items="{{staffMembers}}" edit-mode="[[editMode]]"></staff-members>
+      </etools-content-panel>
+
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      <partner-status partner="[[partner]]"></partner-status>
+    </div>
+    <!-- sidebar content end -->
+
+
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'partner-details',
+
+        properties: {
+          partnerId: {
+            type: Number,
+            notify: true
+          },
+          partnerName: {
+            type: String,
+            notify: true
+          },
+          partner: {
+            type: Object,
+            value: {},
+            notify: true,
+            observer: '_partnerChanged'
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          assessments: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+          bankInformationItems: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          staffMembers: {
+            type: Array,
+            value: [],
+            notify: true
+          }
+
+        },
+
+        ready: function() {
+
+          // test data
+          this.set('assessments', [
+            {
+              assessment_type: 'Micro Assessment',
+              date_submitted: '29 Jul 2016',
+              basis_for_risk_rating: true,
+              report_file: ''
+            },
+            {
+              assessment_type: 'Scheduled Audit Report',
+              date_submitted: '8 Nov 2016',
+              basis_for_risk_rating: false,
+              report_file: ''
+            }
+          ]);
+          this.set('bankInformationItems', [
+            {
+              bank_name: 'Bank of Iordania',
+              account_number: '2234234234234',
+              title: 'Mr',
+              contact_person: 'John Doe',
+              bank_address: 'some street, somewhere in the world'
+            },
+            {
+              bank_name: 'Bank of Lebanon',
+              account_number: '2234234234234',
+              title: 'Mrs',
+              contact_person: 'Jane Doe',
+              bank_address: 'some street, somewhere in the world'
+            }
+          ]);
+
+          this.set('staffMembers', [
+            {
+              id: 1,
+              position: 'Program Officer',
+              first_name: 'John',
+              last_name: 'Doe',
+              phone_number: '345345345',
+              email_address: 'john.doe@unknown.com',
+              active: false
+            },
+            {
+              id: 2,
+              position: 'Program Officer',
+              first_name: 'Jane',
+              last_name: 'Doe',
+              phone_number: '345345345',
+              email_address: 'jane.doe@unknown.com',
+              active: false
+            }
+          ]);
+        },
+
+        _partnerIdChanged: function(id) {
+          this.set('partnerId', parseInt(id, 10));
+        },
+
+        _partnerChanged: function(partner) {
+          console.log(partner);
+          if (partner && partner.name) {
+            this.set('partnerName', partner.name);
+          }
+        },
+
+        _getPartnerType: function(partner) {
+          if (Object.keys(partner).length > 0) {
+            var partnerType = partner.partner_type;
+            if (partner.cso_type !== null) {
+              partnerType = partnerType + '/' + partner.cso_type;
+            }
+            return partnerType;
+          }
+          return null;
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,213 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+
+<dom-module id="assessments-items">
+  <template>
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        border-top: 1px solid var(--dark-divider-color);
+
+        --paper-toolbar-height: 40px;
+        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar-title: {
+          @apply(--nested-content-panel-title);
+        };
+
+        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab: {
+          @apply(--paper-fab-btn-green);
+        };
+
+      }
+
+      paper-material {
+        padding: 0;
+      }
+
+      paper-toolbar paper-icon-button {
+        @apply(--nested-content-panel-collapse-btn);
+      }
+
+      #content-wrapper {
+        position: relative;
+        padding: 15px 0 0;
+      }
+
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
+
+    </style>
+
+    <paper-material elevation="[[elevation]]">
+
+      <paper-toolbar>
+        <paper-icon-button on-click="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
+        <div class="title">Assessments</div>
+      </paper-toolbar>
+
+      <iron-collapse id="collapse" opened="{{open}}">
+        <div id="content-wrapper">
+          <div hidden$="[[_emptyList(dataItems.length)]]">
+            <template is="dom-repeat" items="{{dataItems}}">
+              <div class="row-h item-container">
+                <div class="row-h item-actions-container">
+
+                  <div class="row-v actions">
+                    <paper-icon-button class="action delete"
+                                       on-tap="_openDeleteConfirmation"
+                                       data-args$="[[index]]"
+                                       disabled$="[[!editMode]]"
+                                       icon="cancel"></paper-icon-button>
+                  </div>
+
+                </div>
+                <div class="row-v flex-c item-content">
+                  <div class="row-h">
+                    <div class="col col-4">
+                      <!-- Assessment type -->
+                      <template is="dom-if" if="[[!editMode]]">
+                        <paper-input label="Assessment Type"
+                                     value="[[item.assessment_type]]"
+                                     placeholder="&#8212;"
+                                     readonly></paper-input>
+                      </template>
+                      <template is="dom-if" if="[[editMode]]">
+                        <paper-dropdown-menu label="Assessment Type" horizontal-align="left" vertical-align="top">
+                          <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}" attr-for-selected="value">
+                            <paper-item value="Micro Assessment">Micro Assessment</paper-item>
+                            <paper-item value="Simplified Checklist">Simplified Checklist</paper-item>
+                            <paper-item value="Scheduled Audit Report">Scheduled Audit Report</paper-item>
+                            <paper-item value="Special Audit Report">Special Audit Report</paper-item>
+                            <paper-item value="High Risk Assumed">High Risk Assumed</paper-item>
+                            <paper-item value="Other">Other</paper-item>
+                          </paper-listbox>
+                        </paper-dropdown-menu>
+                      </template>
+                    </div>
+                    <div class="col col-4">
+                      <!-- Date submitted -->
+                      <paper-input label="Date Submitted"
+                                   value="[[item.date_submitted]]"
+                                   readonly$="[[!editMode]]">
+                        <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
+                        <etools-datepicker-button suffix
+                                                  date="{{_prepareDate(item.date_submitted)}}"
+                                                  pretty-date="{{item.date_submitted}}"
+                                                  is-disabled="[[!editMode]]"
+                                                  hidden$="[[!editMode]]"></etools-datepicker-button>
+                      </paper-input>
+                    </div>
+                    <div class="col col-4">
+                      <!-- Basis for risk rating checkbox -->
+                      <div class="custom-field-wrapper">
+                        <etools-checkable-input checked="{{item.basis_for_risk_rating}}"
+                                                label="Basis for Risk Rating"
+                                                type="radio"
+                                                label-alignment="top"
+                                                readonly$="[[!editMode]]"
+                                                on-value-changed="_basisForRiskRatingChanged"
+                                                data-args$="[[index]]"></etools-checkable-input>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row-h">
+                    <div class="col col-4">
+                      <!-- Report file -->
+                      report file, upload field
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+            <p>There are no assessments added.</p>
+          </div>
+
+          <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+            <paper-fab icon="add"
+                       on-tap="_addElement"
+                       title="Add"></paper-fab>
+          </div>
+        </div>
+      </iron-collapse>
+
+    </paper-material>
+
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'assessments-items',
+        behaviors: [pmpBehaviors.RepeatableDataSetsBehavior],
+        properties: {
+          elevation: {
+            type: Number,
+            value: 0
+          }
+        },
+
+        ready: function() {
+          this.dataSetModel = {
+            assessment_type: null,
+            date_submitted: null,
+            basis_for_risk_rating: false,
+            report_file: null
+          };
+        },
+
+        _basisForRiskRatingChanged: function(event) {
+          if (!this.editMode) {
+            return;
+          }
+          if (event.detail.checked === true) {
+            var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+            for (var i = 0; i < this.dataItems.length; i++) {
+              if (i !== index) {
+                this.set('dataItems.' + i + '.basis_for_risk_rating', false);
+              }
+            }
+          }
+        },
+
+        _prepareDate: function(dateSubmitted) {
+          return new Date(dateSubmitted);
+        },
+
+      });
+    })();
+
+  </script>
+</dom-module>

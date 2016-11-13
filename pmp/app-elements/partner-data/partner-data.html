@@ -16,13 +16,15 @@
           notify: true,
         },
 
-        partnerId: Number,
-
         db: {
           type: Object,
           value: function() {
             return etoolsAppConfig.db;
           }
+        },
+
+        partnerId: {
+          type: Number
         }
 
       },
