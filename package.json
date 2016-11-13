@@ -1,14 +1,14 @@
 {
-  "name": "polymer-starter-kit-custom-build",
+  "name": "pmp",
   "version": "0.0.0",
-  "description": "A starting point for Polymer 1.0 custom build apps",
+  "description": "eTools Partnership Management Portal",
   "repository": {
     "type": "git",
-    "url": "git@github.com:PolymerElements/generator-polymer-init-custom-build"
+    "url": "git@github.com:unicef/etools-partnership-management"
   },
-  "license": "http://polymer.github.io/LICENSE.txt",
+  "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
   "bugs": {
-    "url": "https://github.com/PolymerElements/generator-polymer-init-custom-build/issues"
+    "url": "https://github.com/unicef/etools-partnership-management/issues"
   },
   "engines": {
     "node": ">=4.0"

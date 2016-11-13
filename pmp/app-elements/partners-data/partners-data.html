@@ -28,8 +28,6 @@
       });
     };
 
-    var curr = null;
-
     Polymer({
 
       is: 'partners-data',
@@ -61,6 +59,11 @@
           value: function() {
             return etoolsAppConfig.db;
           }
+        },
+
+        currentQuery: {
+          type: Object,
+          value: null
         }
 
       },
@@ -95,14 +98,14 @@
 
         // If an active query transaction exists, abort it and start
         // a new one
-        if (curr) {
-          curr.abort();
+        if (this.currentQuery) {
+          this.currentQuery.abort();
         }
 
         var _this = this;
 
         this.db.transaction('r', this.db.partners, function() {
-          curr = Dexie.currentTransaction;
+          this.currentQuery = Dexie.currentTransaction;
 
           var queryResult = _this.db.partners;
           if (field) {
