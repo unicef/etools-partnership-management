@@ -62,6 +62,15 @@
         visibility: hidden;
       }
 
+      etools-file:not([multiple]) {
+        --etools-file-filename-container: {
+          width: auto;
+        };
+        --etools-file-readonly-filename-container: {
+          width: auto;
+        };
+      }
+
     </style>
 
     <paper-material elevation="[[elevation]]">
@@ -136,13 +145,10 @@
                   </div>
                 </div>
                 <div class="row-h">
-                  <div class="col col-4">
-                    <!-- Report file -->
-                    <etools-file files="{{item.report_file}}"
-                                 label="Report"
-                                 readonly="[[!editMode]]"></etools-file>
-                  </div>
-
+                  <!-- Report file -->
+                  <etools-file files="{{item.report_file}}"
+                               label="Report"
+                               readonly="[[!editMode]]"></etools-file>
                 </div>
 
               </div>
