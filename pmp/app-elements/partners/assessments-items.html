@@ -11,6 +11,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 
@@ -137,7 +138,9 @@
                 <div class="row-h">
                   <div class="col col-4">
                     <!-- Report file -->
-                    report file, upload field
+                    <etools-file files="{{item.report_file}}"
+                                 label="Report"
+                                 readonly="[[!editMode]]"></etools-file>
                   </div>
 
                 </div>
