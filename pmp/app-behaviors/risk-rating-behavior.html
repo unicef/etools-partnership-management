@@ -1,0 +1,27 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.RiskRatingBehavior = {
+
+    getRiskRatingValue: function(riskRating) {
+      if (typeof riskRating === 'string' && riskRating != '') {
+        return riskRating;
+      } else {
+        return 'Not Available';
+      }
+    },
+
+    getRiskRatingClass: function(riskRating) {
+      var riskRatingClass = '';
+      if (typeof riskRating === 'string' && riskRating != '') {
+        riskRatingClass = riskRating.toLowerCase();
+      } else {
+        riskRatingClass = 'unavailable';
+      }
+      setTimeout(function() {
+        this.updateStyles();
+      }.bind(this), 0);
+      return riskRatingClass;
+    }
+
+  };
+</script>

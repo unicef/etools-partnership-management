@@ -1,0 +1,70 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="app-mixins.html">
+
+<dom-module id="risk-rating-styles">
+  <template>
+    <style>
+      /* Not Available, Non-Assessed, Low, Moderate, High, Significant */
+      :host {
+        --risk-rating-field: {
+          width: 168px;
+          height: 19px;
+          text-align: center;
+          padding: 0 5px;
+          background-color: #FF9640; /* TODO: replace with app-theme var */
+          color: #fff;
+          text-transform: uppercase;
+        };
+      }
+      .risk-rating-field {
+        width: auto;
+      }
+      .risk-rating-field.unavailable {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          background-color: rgba(255, 255, 255, 0);
+          color: var(--dark-primary-text-color);
+          text-align: left;
+          text-transform: capitalize;
+          padding-left: 0;
+        };
+      }
+      .risk-rating-field.non-assessed {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          background-color: #eeeeee; /* TODO: replace with app-theme var */
+          color: var(--dark-secondary-text-color);
+        };
+      }
+      .risk-rating-field.low {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          color: var(--dark-secondary-text-color);
+          background-color: #faec63; /* TODO: replace with app-theme var */
+        };
+      }
+      .risk-rating-field.moderate {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          color: var(--dark-secondary-text-color);
+          background-color: #ffbd00; /* TODO: replace with app-theme var */
+        };
+      }
+      .risk-rating-field.high {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          color: #fff;
+          background-color: #ffbd00; /* TODO: replace with app-theme var */
+        };
+      }
+      .risk-rating-field.significant {
+        --paper-input-container-input: {
+          @apply(--risk-rating-field);
+          color: #fff;
+          background-color: #ea4022; /* TODO: replace with app-theme var */
+        };
+      }
+    </style>
+  </template>
+</dom-module>
