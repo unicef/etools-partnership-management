@@ -8,6 +8,8 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
+<link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
+
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -180,9 +182,9 @@
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Risk rating -->
-            <paper-input class$="risk-rating-field [[_getRiskRatingClass(partner.rating)]]"
+            <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
                          label="Risk Rating"
-                         value="[[_getRiskRatingValue(partner.rating)]]"
+                         value="[[getRiskRatingValue(partner.rating)]]"
                          placeholder="&#8212;"
                          readonly ></paper-input>
           </div>
@@ -239,6 +241,10 @@
 
       Polymer({
         is: 'partner-details',
+
+        behaviors: [
+          pmpBehaviors.RiskRatingBehavior
+        ],
 
         properties: {
           partnerId: {
@@ -353,27 +359,6 @@
             return partnerType;
           }
           return null;
-        },
-
-        _getRiskRatingValue: function(riskRating) {
-          if (typeof riskRating === 'string' && riskRating != '') {
-            return riskRating;
-          } else {
-            return 'Not Available';
-          }
-        },
-
-        _getRiskRatingClass: function(riskRating) {
-          var riskRatingClass = '';
-          if (typeof riskRating === 'string' && riskRating != '') {
-            riskRatingClass = riskRating.toLowerCase();
-          } else {
-            riskRatingClass = 'unavailable';
-          }
-          setTimeout(function() {
-            this.updateStyles();
-          }.bind(this), 0);
-          return riskRatingClass;
         }
 
       });
