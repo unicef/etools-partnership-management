@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <dom-module id="partners-data">
 
@@ -22,6 +23,11 @@
     // of partners-data
     var _setPartnersData = function(data) {
       _data.partners = data || {};
+
+      if (data) {
+        _data.partnersMap = _.indexBy(data, 'id');
+      }
+
       this.load(_data);
       _partnersEls.forEach(function(el) {
         if (el !== this) { el.load(_data); }
@@ -38,6 +44,12 @@
 
         partners: {
           type: Array,
+          readOnly: true,
+          notify: true
+        },
+
+        partnersMap: {
+          type: Object,
           readOnly: true,
           notify: true
         },
@@ -86,6 +98,7 @@
       load: function(data) {
         if (data.partners) {
           this._setPartners(data.partners);
+          this._setPartnersMap(data.partnersMap);
         }
       },
 
