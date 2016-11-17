@@ -56,7 +56,6 @@
 
       .assessments {
         margin-top: 20px;
-        margin-bottom: 30px;
       }
 
     </style>
@@ -70,7 +69,7 @@
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Organization name -->
-            <paper-input label="Organization's Full Name"
+            <paper-input label="Full Name"
                          value="[[partner.name]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
@@ -87,7 +86,7 @@
             <paper-input label="Alternate Name"
                          value="{{partner.alternate_name}}"
                          placeholder="&#8212;"
-                         readonly></paper-input>
+                         readonly="[[!editMode]]"></paper-input>
           </div>
         </div>
 
@@ -117,10 +116,9 @@
             <template is="dom-if" if="[[editMode]]">
               <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top" always-float-label>
                 <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
-                  <paper-item value="UNDP">UNDP</paper-item>
-                  <paper-item value="UNFPA">UNFPA</paper-item>
-                  <paper-item value="UNDP and UNFPA">UNDP and UNFPA</paper-item>
-                  <paper-item value="No">No</paper-item>
+                  <template is="dom-repeat" items="[[sharedPartenerValues]]" as="sharedPartnerVal">
+                    <paper-item value="[[sharedPartnerVal]]">[[sharedPartnerVal]]</paper-item>
+                  </template>
                 </paper-listbox>
               </paper-dropdown-menu>
             </template>
@@ -148,38 +146,36 @@
         </div>
 
         <!-- Contact info box -->
-        <etools-content-panel class="nested-content-panel" title="Contact Info" elevation="0" show-expand-btn>
-          <div class="row-h flex-c">
-            <!-- Address -->
-            <paper-input label="Address"
-                         value="{{partner.address}}"
+        <div class="row-h flex-c">
+          <!-- Address -->
+          <paper-input label="Address"
+                       value="{{partner.address}}"
+                       placeholder="&#8212;"
+                       readonly>
+            <iron-icon prefix icon="communication:location-on"></iron-icon>
+          </paper-input>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Telephone number -->
+            <paper-input label="Phone Number"
+                         value="{{partner.phone_number}}"
                          placeholder="&#8212;"
                          readonly>
-              <iron-icon prefix icon="communication:location-on"></iron-icon>
+              <iron-icon prefix icon="communication:phone"></iron-icon>
             </paper-input>
           </div>
-          <div class="row-h flex-c">
-            <div class="col col-4">
-              <!-- Telephone number -->
-              <paper-input label="Phone Number"
-                           value="{{partner.phone_number}}"
-                           placeholder="&#8212;"
-                           readonly>
-                <iron-icon prefix icon="communication:phone"></iron-icon>
-              </paper-input>
-            </div>
-            <div class="col col-4">
-              <!-- Email address -->
-              <paper-input label="E-mail address"
-                           value="{{partner.email}}"
-                           placeholder="&#8212;"
-                           readonly>
-                <iron-icon prefix icon="communication:email"></iron-icon>
-              </paper-input>
-            </div>
-            <div class="col col-4"></div>
+          <div class="col col-4">
+            <!-- Email address -->
+            <paper-input label="E-mail address"
+                         value="{{partner.email}}"
+                         placeholder="&#8212;"
+                         readonly>
+              <iron-icon prefix icon="communication:email"></iron-icon>
+            </paper-input>
           </div>
-        </etools-content-panel>
+          <div class="col col-4"></div>
+        </div>
 
       </etools-content-panel>
 
@@ -202,7 +198,7 @@
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <paper-input label="Date Submitted"
+            <paper-input label="Date of Report"
                          value="{{partner.last_assessment_date}}"
                          placeholder="&#8212;"
                          readonly>
@@ -286,17 +282,21 @@
 
         ready: function() {
 
+          this.set('sharedPartenerValues', ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'UN Women',
+            'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
+            'WB', 'WFP', 'WHO']);
+
           // test data
           this.set('assessments', [
             {
               assessment_type: 'Micro Assessment',
-              date_submitted: '29 Jul 2016',
+              date_of_report: '29 Jul 2016',
               basis_for_risk_rating: true,
               report_file: ''
             },
             {
               assessment_type: 'Scheduled Audit Report',
-              date_submitted: '8 Nov 2016',
+              date_of_report: '8 Nov 2016',
               basis_for_risk_rating: false,
               report_file: ''
             }

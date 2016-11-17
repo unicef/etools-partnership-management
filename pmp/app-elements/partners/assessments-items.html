@@ -29,10 +29,14 @@
       :host {
         display: block;
         width: 100%;
-        border-top: 1px solid var(--dark-divider-color);
 
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar: {
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+        };
         --paper-toolbar-title: {
           @apply(--nested-content-panel-title);
         };
@@ -52,9 +56,11 @@
         @apply(--nested-content-panel-collapse-btn);
       }
 
+      #assessments-wrapper {
+        padding: 15px 0 0;
+      }
       #collapse {
         position: relative;
-        padding: 15px 0 0;
       }
 
       .action.delete[disabled] {
@@ -71,6 +77,7 @@
       </paper-toolbar>
 
       <iron-collapse id="collapse" opened="{{open}}">
+        <div id="assessments-wrapper">
         <div hidden$="[[_emptyList(dataItems.length)]]">
           <template is="dom-repeat" items="{{dataItems}}">
             <div class="row-h item-container">
@@ -110,15 +117,17 @@
                   </div>
                   <div class="col col-4">
                     <!-- Date submitted -->
-                    <paper-input label="Date Submitted"
-                                 value="[[item.date_submitted]]"
+                    <paper-input label="Date of Report"
+                                 value="[[item.date_of_report]]"
                                  readonly$="[[!editMode]]">
                       <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                       <etools-datepicker-button suffix
-                                                date="{{_prepareDate(item.date_submitted)}}"
-                                                pretty-date="{{item.date_submitted}}"
+                                                date="{{_prepareDate(item.date_of_report)}}"
+                                                pretty-date="{{item.date_of_report}}"
                                                 is-disabled="[[!editMode]]"
-                                                hidden$="[[!editMode]]"></etools-datepicker-button>
+                                                hidden$="[[!editMode]]"
+                                                no-init="[[_doNotInit(item.date_of_report)]]">
+                      </etools-datepicker-button>
                     </paper-input>
                   </div>
                   <div class="col col-4">
@@ -156,6 +165,7 @@
                      on-tap="_addElement"
                      title="Add"></paper-fab>
         </div>
+      </div>
 
       </iron-collapse>
 
@@ -183,7 +193,7 @@
         ready: function() {
           this.dataSetModel = {
             assessment_type: null,
-            date_submitted: null,
+            date_of_report: null,
             basis_for_risk_rating: false,
             report_file: null
           };
@@ -206,6 +216,13 @@
         _prepareDate: function(dateSubmitted) {
           return new Date(dateSubmitted);
         },
+
+        _doNotInit: function(dateString) {
+         if (dateString === null || typeof dateString === 'undefined') {
+           return true;
+         }
+         return false;
+        }
 
       });
     })();

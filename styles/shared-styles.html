@@ -122,25 +122,11 @@
       }
 
       .custom-field-wrapper {
-        box-sizing: border-box;
-        min-height: 60px;
-        padding-top: 9px;
+        padding: 8px 0;
       }
-
-      .nested-content-panel {
-        margin-top: 30px;
-        margin-bottom: 30px;
-        border-top: 1px solid var(--dark-divider-color);
-        --ecp-header-height: 40px;
-        --ecp-header-bg: #F2F2F2; /* TODO: replace with app-theme var */
-        --ecp-expand-btn: {
-          @apply(--nested-content-panel-collapse-btn);
-        };
-        --ecp-header-title: {
-          @apply(--nested-content-panel-title);
-        };
-        --ecp-content: {
-          padding: 20px 0 0;
+      .custom-field-wrapper etools-checkable-input {
+        --etools-checkable-input-label: {
+          margin-top: 1px;
         }
       }
 

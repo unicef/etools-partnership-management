@@ -92,7 +92,7 @@
           <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-details>
+          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
         </div>
       </iron-pages>
 
@@ -139,6 +139,13 @@
       _pageChanged: function(listActive, tab) {
         var activePage = this._getActivePage(listActive, tab);
         this.set('partnerPage', activePage);
+      },
+
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editPartnerDetails === true) {
+          return true;
+        }
+        return false;
       }
 
     });

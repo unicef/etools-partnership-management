@@ -55,12 +55,25 @@ App global configuration
 
       // permissions
       permissions: {
-        superPermissions: ['loggedInDefault', 'userInfoMenu',
-                           'interventionsMenu', 'statsMenu'], //for testing
+        defaultPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'viewPartnerDetails'
+        ],
         partnerOnlyPermissions: ['interventionsMenu'],
-        defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],
-        managementPermissions: ['statsMenu']
+        managementPermissions: [
+          'statsMenu',
+          'editPartnerDetails'
+        ],
+        superPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'interventionsMenu',
+          'statsMenu',
+          'viewPartnerDetails',
+          'editPartnerDetails'
+        ],
       },
 
     };
