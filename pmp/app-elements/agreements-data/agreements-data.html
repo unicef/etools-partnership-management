@@ -8,7 +8,7 @@
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  caching-storage="custom"
-                 dexie-db-collection="partners"
+                 dexie-db-collection="agreements"
                  on-success="_handleResponse"></etools-ajax>
 
   </template>
@@ -94,18 +94,18 @@
       },
 
       query: function(field, order, searchString, agreementType,
-                      pageNumber, pageSize) {
+                      startDate, endDate, pageNumber, pageSize) {
 
         // If an active query transaction exists, abort it and start
         // a new one
         if (this.currentQuery) {
-          currentQuery.abort();
+          this.currentQuery.abort();
         }
 
         var _this = this;
 
         this.db.transaction('r', this.db.agreements, function() {
-          currentQuery = Dexie.currentTransaction;
+          this.currentQuery = Dexie.currentTransaction;
 
           var queryResult = _this.db.agreements;
           if (field) {
@@ -121,8 +121,17 @@
               return false;
             }
 
+            if (startDate && startDate.length && (!agreement.start || agreement.start < startDate)) {
+              return false;
+            }
+
+            if (endDate && endDate.length && (!agreement.end || agreement.end > endDate)) {
+              return false;
+            }
+
             if (searchString && searchString.length) {
-              if (agreement.partner.toLowerCase().indexOf(searchString) < 0) {
+              if (agreement.reference_number.toLowerCase().indexOf(searchString) < 0 &&
+                  agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
                 return false;
               }
             }

@@ -14,8 +14,9 @@ App global configuration
     var etoolsCustomDexieDb = new Dexie('pmpApp');
     etoolsCustomDexieDb.version(1).stores({
       collectionsList: '&name, expire',
-      countries: 'id, name',
+      countries: 'id',
       partners: 'id, name, rating',
+      agreements: 'id',
       user: 'id'
     });
 
@@ -31,7 +32,8 @@ App global configuration
           cachingKey: 'user'
         },
         agreements: {
-          template: '/management/api/stats/agreements/',
+          //template: '/management/api/stats/agreements/',
+          url: '../../data/agreements.json',
           exp: 30 * 60 * 1000, // 30min
           cachingKey: 'agreements'
         },

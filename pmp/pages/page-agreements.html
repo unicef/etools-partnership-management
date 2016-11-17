@@ -1,15 +1,20 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<!--<link rel="import" href="../app-elements/agreements-data/agreements-data.html">-->
+<link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 
+<link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
 <dom-module id="page-agreements">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="page-layout-styles shared-styles">
 
       :host {
         display: block;
@@ -23,24 +28,61 @@
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
-    <agreements-data partner-id="[[routeData.id]]" partner="{{partner}}"></agreements-data>
+    <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
 
     <app-header-layout has-scrolling-region>
 
       <app-header id="header" fixed shadow>
 
-        <app-toolbar>
-          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>Agreements</div>
-        </app-toolbar>
+        <page-header title="Agreements"></page-header>
 
       </app-header>
 
-      <div id="pageContent">
+      <div class="page-top-content" hidden$="{{!tabsActive}}">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>[[agreementName]]</h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row">
+            <paper-tabs
+                selected="{{routeData.tab}}"
+                attr-for-selected="name"
+                fallback-selection="overview" noink bottom-item>
 
-        <agreements-list id="list" hidden$="[[!listActive]]"></agreements-list>
+              <paper-tab name="details" link>
+                <span class="tab-content">Agreement Details</span>
+              </paper-tab>
 
+            </paper-tabs>
+          </div>
+        </div>
       </div>
+
+      <iron-pages id="agreementsPages"
+                  selected="{{agreementPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <agreements-list id="list"></agreements-list>
+        </div>
+        <div class="page" name="details">
+          <agreement-details agreement-id="[[routeData.id]]" agreement-name="{{agreementName}}"></agreement-details>
+        </div>
+      </iron-pages>
 
     </app-header-layout>
 
@@ -54,15 +96,43 @@
 
       properties: {
 
+        agreementPage: {
+          type: String,
+        },
+
+        agreementName: {
+          type: String
+        }
+
       },
+
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_pageChanged(listActive, routeData.tab)',
+      ],
 
       ready: function() {
-        //this.$.list.init(this.queryParams);
+        if (this.listActive) {
+          this.$.list.init(this.queryParams);
+        }
       },
 
-      openDrawer: function() {
-        this.fire('drawer');
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
       },
+
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('agreementPage', activePage);
+      }
 
     });
 

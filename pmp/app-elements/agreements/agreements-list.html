@@ -1,6 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="../agreements-data/agreements-data.html">
+<link rel="import" href="../partners-data/partners-data.html">
+
 <link rel="import" href="../../../styles/shared-styles.html">
 
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
@@ -10,8 +13,10 @@
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
-<link rel="import" href="../../behaviors/dropdown-behavior.html">
+<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 
 <dom-module id="agreements-list">
 
@@ -57,6 +62,10 @@
         background-color: #FFFFFF;
       }
 
+      #temp {
+        @apply(--layout-horizontal);
+      }
+
       #list.hidden {
         transition: none;
         opacity: 0;
@@ -91,6 +100,41 @@
           placeholder="Search"
           on-search="_onSearch"></input>
 
+      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
+      <paper-dropdown-menu label="Agreement Type" noink>
+        <paper-menu class="dropdown-content" attr-for-selected="filter-value" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">
+          <!-- un-accounted for types here! -->
+          <paper-item filter-value="MOU">Momarendum of Understanding</paper-item>
+          <paper-item filter-value="PCA">Programme Cooperation Agreement</paper-item>
+          <paper-item filter-value="SSFA">Small Scale Funding Agreement</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+
+      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
+      <paper-dropdown-menu label="Agreement Status" noink>
+        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">
+          <!-- status is currently not a field on agreements -->
+          <paper-item>Draft</paper-item>
+          <paper-item>Active</paper-item>
+          <paper-item>Suspended</paper-item>
+          <paper-item>Terminated</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+
+      <partners-data partners="{{partners}}"></partners-data>
+      <etools-searchable-multiselection-menu
+          label="Partner"
+          options="[[uga]]"
+          value="{{name}}" multi></etools-searchable-multiselection-menu>
+
+      <paper-input label="Starts After" value="[[prettyStartDate]]" readonly>
+        <etools-datepicker-button prefix date="[[_convertToDate(startDate)]]" json-date="{{startDate}}" pretty-date="{{prettyStartDate}}" no-init></etools-datepicker-button>
+      </paper-input>
+
+      <paper-input label="Ends Before" value="[[prettyEndDate]]" readonly>
+        <etools-datepicker-button prefix date="[[_convertToDate(endDate)]]" json-date="{{endDate}}" pretty-date="{{prettyEndDate}}" no-init></etools-datepicker-button>
+      </paper-input>
+
       <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
       <button type="button" name="page-left" on-tap="_pageLeft"> < </button>
       <button type="button" name="page-right" on-tap="_pageRight"> > </button>
@@ -106,8 +150,6 @@
         </paper-menu>
       </paper-menu-button>
 
-      <paper-toggle-button checked="{{showHidden}}" on-change='_hiddenToggled'></paper-toggle-button>
-
     </paper-material>
 
     <paper-material id="list">
@@ -120,6 +162,13 @@
       </div>
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
+        <div id="temp">
+          <p>[[item.reference_number]]</p>
+          <p>___[[item.partner_name]]</p>
+          <p>___[[item.agreement_type]]</p>
+          <p>___[[item.start]]</p>
+          <p>___[[item.end]]</p>
+        </div>
       </template>
 
     </paper-material>
@@ -138,6 +187,13 @@
 
       properties: {
 
+        uga: {
+          type: Array,
+          value: function() {
+            return [{value: 1, label: 'nerd'}, {value: 2, label: 'gonp'}, {value: 3, label: 'geek'}, {value: 4, label: 'gook'}];
+          }
+        },
+
         filteredAgreements: {
           type: Array,
           notify: true,
@@ -152,6 +208,16 @@
 
         agreementType: {
           type: String
+        },
+
+        startDate: {
+          type: String,
+          observer: '_dateChanged'
+        },
+
+        endDate: {
+          type: String,
+          observer: '_dateChanged'
         },
 
         sortOrder: {
@@ -184,7 +250,7 @@
       },
 
       observers: [
-        '_updateURL(q, agreementType, pageNumber, pageSize, sortOrder, showHidden)',
+        '_updateURL(q, agreementType, startDate, endDate, pageNumber, pageSize, sortOrder)',
       ],
 
       ready: function() {
@@ -200,10 +266,12 @@
         }
         this.set('q', urlParams.q ? urlParams.q : '');
         this.set('agreementType', urlParams.agreement_type ? urlParams.agreement_type : '');
+        this.set('startDate', urlParams.start ? urlParams.start + 'T12:00:00' : '');
+        this.set('endDate', urlParams.end ? urlParams.end + 'T12:00:00' : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
         // format of sort param is sort=field.order ex: sort=name.asc
-        var result = [{field: 'name', order: 'asc'}];
+        var result = [{field: 'id', order: 'asc'}];
         if (urlParams.sort) {
           var p = urlParams.sort.split('.');
           result = [{field: p[0], order: p[1]}];
@@ -232,6 +300,8 @@
               this.sortOrder[0].order,
               this.q.toLowerCase(),
               this.agreementType,
+              this._addDays(this._convertToDate(this.startDate), -1),
+              this.endDate,
               this.pageNumber,
               this.pageSize);
           }, this.debounceTime);
@@ -254,6 +324,12 @@
         if (this.agreementType && this.agreementType.length) {
           out.push('agreement_type=' + this.agreementType);
         }
+        if (this.startDate && this.startDate.length) {
+          out.push('start=' + this._shortenDate(this.startDate));
+        }
+        if (this.endDate && this.endDate.length) {
+          out.push('end=' + this._shortenDate(this.endDate));
+        }
         if (this.sortOrder && this.sortOrder.length) {
           var sortQuery = [];
           this.sortOrder.forEach(function(sort) {
@@ -262,9 +338,6 @@
             }
           });
           out.push('sort=' + sortQuery.join('+'));
-        }
-        if (this.showHidden) {
-          out.push('hidden=true');
         }
         return out.join('&');
       },
@@ -334,11 +407,6 @@
         this.set('pageNumber', 1);
       },
 
-      _hiddenToggled: function() {
-        this.set('debounceTime', 50);
-        this.set('pageNumber', 1);
-      },
-
       _computeTotalPages: function(pageSize, totalResults) {
         var result = 1;
         if (pageSize < totalResults) {
@@ -359,6 +427,29 @@
         }
 
         return [start, end];
+      },
+
+      _dateChanged: function(date) {
+        this.set('pageNumber', 1);
+      },
+
+      _convertToDate(date) {
+        if (date && date.length) {
+          return new Date(date);
+        }
+      },
+
+      _shortenDate: function(date) {
+        if (date && date.length) {
+          return date.slice(0, date.indexOf('T'));
+        }
+      },
+
+      _addDays: function(date, numDays) {
+        if (date instanceof Date && date !== 'Invalid Date') {
+          date.setDate(date.getDate() + numDays);
+          return date;
+        }
       },
 
       // List fade in fade out effect

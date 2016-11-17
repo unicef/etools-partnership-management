@@ -37,13 +37,13 @@
     "etools-datepicker": "^1.0.0",
     "etools-checkable-input": "^1.0.0",
     "etools-content-panel": "^1.0.1",
-    "paper-listbox": "^1.1.2",
     "iron-form": "PolymerElements/iron-form#^1.1.4",
     "etools-page-refresh": "^1.0.0",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "etools-dialog": "^1.0.0",
-    "etools-loading": "^1.0.3"
+    "etools-loading": "^1.0.3",
+    "etools-searchable-multiselection-menu": "^1.0.2"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
