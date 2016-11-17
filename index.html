@@ -13,7 +13,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
     <title>eTools</title>
     <meta name="description" content="Partnership Management Portal">
 
@@ -52,11 +51,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         dom: 'shadow',
         lazyRegister: true
       };
-
+      var baseUrl = '/';
       // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';
-        var baseUrl = '/';
         if ((window.location.port === '') || (window.location.port === '8099')) {  // if production
           // Uncomment app.baseURL below and
           // set app.baseURL to '/your-pathname/' if running from folder in production
@@ -89,15 +87,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       })();
 
+      // add base tag with href set to baseUrl
+      var base = document.createElement('base');
+      base.href = baseUrl;
+      document.head.appendChild(base);
+
       // Load pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
+          navigator.serviceWorker.register('service-worker.js');
         });
       }
-    </script>
 
-    <link rel="import" href="/pmp/app-shell.html">
+      // set app shell import path based on baseUrl
+      var appShellImport = document.createElement('link');
+      appShellImport.rel = "import";
+      appShellImport.href = baseUrl + 'pmp/app-shell.html';
+      document.head.appendChild(appShellImport);
+
+    </script>
 
     <style>
       body {

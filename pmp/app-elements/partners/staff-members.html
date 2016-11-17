@@ -143,7 +143,11 @@
   <script>
     Polymer({
       is: 'staff-members',
-      behaviors: [pmpBehaviors.RepeatableDataSetsBehavior],
+
+      behaviors: [
+        pmpBehaviors.RepeatableDataSetsBehavior
+      ],
+
       properties: {
 
       },
@@ -165,8 +169,7 @@
           return false;
         }
         if (this.dataItems[index] &&
-            typeof this.dataItems[index].id !== 'undefined' &&
-            this.dataItems[index].id !== null) {
+          typeof this.dataItems[index].id !== 'undefined' && this.dataItems[index].id !== null) {
           return false;
         }
         return true;
