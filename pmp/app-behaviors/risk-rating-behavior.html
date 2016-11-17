@@ -3,7 +3,7 @@
   pmpBehaviors.RiskRatingBehavior = {
 
     getRiskRatingValue: function(riskRating) {
-      if (typeof riskRating === 'string' && riskRating != '') {
+      if (typeof riskRating === 'string' && riskRating !== '') {
         return riskRating;
       } else {
         return 'Not Available';
@@ -12,7 +12,7 @@
 
     getRiskRatingClass: function(riskRating) {
       var riskRatingClass = '';
-      if (typeof riskRating === 'string' && riskRating != '') {
+      if (typeof riskRating === 'string' && riskRating !== '') {
         riskRatingClass = riskRating.toLowerCase();
       } else {
         riskRatingClass = 'unavailable';
