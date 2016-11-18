@@ -9,10 +9,13 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 
+<link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
+
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/risk-rating-styles.html">
 
 <!-- TODO: move partner-data into partners folder -->
 <link rel="import" href="../partner-data/partner-data.html">
@@ -26,7 +29,7 @@
 
   <template>
 
-    <style include="iron-flex iron-flex-alignment page-layout-styles grid-layout-styles shared-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -45,14 +48,6 @@
       paper-input,
       paper-dropdown-menu {
         width: 100%;
-      }
-
-      paper-input.risk-rating-field {
-        width: auto;
-        --paper-input-container-input: {
-          @apply(--risk-rating-field);
-          /* TODO: --risk-rating-field bg color must be removed, create separate mixins for each bg risk type */
-        };
       }
 
       .assessments {
@@ -189,9 +184,9 @@
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Risk rating -->
-            <paper-input class="risk-rating-field"
+            <paper-input class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"
                          label="Risk Rating"
-                         value="{{partner.rating}}"
+                         value="[[getRiskRatingValue(partner.rating)]]"
                          placeholder="&#8212;"
                          readonly ></paper-input>
           </div>
@@ -249,6 +244,10 @@
       Polymer({
         is: 'partner-details',
 
+        behaviors: [
+          pmpBehaviors.RiskRatingBehavior
+        ],
+
         properties: {
           partnerId: {
             type: Number,
@@ -266,7 +265,7 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: true
           },
           coreValuesAssessmentFiles: {
             type: Array,

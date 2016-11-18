@@ -1,7 +1,12 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../partners-data/partners-data.html">
 
 <dom-module id="partner-data">
+
+  <template>
+    <partners-data partners-map="{{_partners}}"></partners-data>
+  </template>
 
   <script>
 
@@ -14,28 +19,27 @@
         partner: {
           type: Object,
           notify: true,
+          computed: 'getPartner(_partners, partnerId)'
+        },
+
+        _partners: {
+          type: Object
         },
 
         partnerId: {
-          type: Number
+          type: Number,
+          notify: true
         }
 
       },
 
-      observers: [
-        'getPartner(partnerId)'
-      ],
-
-      getPartner: function(id) {
+      getPartner: function(_partners, id) {
+        if (!_partners) {
+          return;
+        }
         id = parseInt(id);
         if (id) {
-          var db = etoolsAppConfig.appDexieDb;
-
-          db.partners.get(id).then(function(partner) {
-            this.set('partner', partner);
-          }.bind(this)).catch(function(error) {
-            console.error('Oops: ' + error);
-          });
+          return _partners[id];
         } else {
           console.error('You must provide a valid partner ID');
         }

@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<!--<link rel="import" href="../app-elements/agreements-data/agreements-data.html">-->
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 
 <link rel="import" href="../../styles/shared-styles.html">
@@ -19,13 +20,10 @@
     <app-route
         route="{{route}}"
         pattern="/list"
+        query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
-    <app-route
-        route="{{route}}"
-        pattern="/:id/details"
-        active="{{detailsActive}}"
-        data="{{routeData}}"></app-route>
+    <agreements-data partner-id="[[routeData.id]]" partner="{{partner}}"></agreements-data>
 
     <app-header-layout has-scrolling-region>
 
@@ -40,9 +38,7 @@
 
       <div id="pageContent">
 
-        <paper-material elevation="1">
-          <h1>Some agreements here!</h1>
-        </paper-material>
+        <agreements-list id="list" hidden$="[[!listActive]]"></agreements-list>
 
       </div>
 
@@ -60,9 +56,13 @@
 
       },
 
+      ready: function() {
+        //this.$.list.init(this.queryParams);
+      },
+
       openDrawer: function() {
         this.fire('drawer');
-      }
+      },
 
     });
 

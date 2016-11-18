@@ -1,4 +1,6 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.RepeatableDataSetsBehaviorImpl = {
@@ -110,11 +112,11 @@
       this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
           'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
     }
-
   };
 
   pmpBehaviors.RepeatableDataSetsBehavior = [
     etoolsBehaviors.DynamicDialogBehavior,
     pmpBehaviors.RepeatableDataSetsBehaviorImpl
   ];
+
 </script>

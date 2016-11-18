@@ -7,9 +7,9 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
-                 on-success="_handleResponse"
-                 caching-storage="dexie"
-                 dexie-db-collection="countries"></etools-ajax>
+                 caching-storage="custom"
+                 dexie-db-collection="countries"
+                 on-success="_handleResponse"></etools-ajax>
 
   </template>
 
@@ -30,6 +30,8 @@
 
       is: 'countries-data',
 
+      behaviors: [etoolsAppConfig.globals],
+
       properties: {
 
         countries: {
@@ -41,13 +43,12 @@
       },
 
       ready: function() {
-        this.$.ajax.alternateDexieDb = etoolsAppConfig.appDexieDb;
         this.load(_data);
       },
 
       attached: function() {
         if (_countryEls.length === 0 && !_data.countries) {
-          this.endpoint = etoolsAppConfig.globals.getEndpoint('countries');
+          this.endpoint = this.getEndpoint('countries');
         }
         _countryEls.push(this);
       },

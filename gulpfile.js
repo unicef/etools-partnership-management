@@ -53,7 +53,7 @@ global.config = {
   swPrecacheConfig: {
     navigateFallback: '/index.html'
   },
-  sourceCodeDirectory: './src'
+  sourceCodeDirectory: './pmp'
 };
 
 // Change global config if building into eTools
