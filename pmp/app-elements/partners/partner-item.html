@@ -83,7 +83,7 @@
       </div>
 
       <div id="name" class="flex-2">
-        <a href="../partners/[[partner.id]]/overview">
+        <a href="partners/[[partner.id]]/overview">
           [[_computeName(partner.name, partner.short_name)]]
         </a>
       </div>
@@ -127,9 +127,12 @@
           this._detailsEl = document.createElement('partner-details-dropdown');
           this._detailsEl.partner = this.partner;
           Polymer.dom(this.$.details).appendChild(this._detailsEl);
-          Polymer.dom.flush();
         }
         this._detailsEl.toggle();
+      },
+
+      clearDetails: function() {
+        Polymer.dom(this.$.details).removeChild(this._detailsEl);
       },
 
       _computeName: function(name, shortName) {

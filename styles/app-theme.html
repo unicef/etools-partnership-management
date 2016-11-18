@@ -9,9 +9,11 @@
 
   :root {
 
-    --primary-background-color: var(--paper-indigo-500);
-    --secondary-background-color: var(--paper-indigo-700);
-    --ternary-background-color: var(--paper-indigo-800);
+    --primary-background-color: #FFFFFF;
+    --primary-text-color: rgba(0, 0, 0, 0.87);
+    --primary-color: var(--paper-indigo-500);
+    --secondary-color: var(--paper-indigo-700);
+    --ternary-color: var(--paper-indigo-800);
     --accent-color: var(--paper-light-blue-a200);
     --error-color: var(--paper-deep-orange-a700);
     --dark-primary-text-color: rgba(0, 0, 0, 0.87);
@@ -31,7 +33,6 @@
     --dark-ink-color: rgba(0, 0, 0, 0.3);
     --light-ink-color: rgba(255, 255, 255, 0.30);
     --light-theme-background-color: var(paper-grey-50);
-    --light-theme-content-color: #FFFFFF;
 
     --partnership-management-color: var(--primary-background-color);
     --work-planning-color: var(--paper-light-green-500);
@@ -40,6 +41,8 @@
     --toolbar-height: 60px;
     --side-bar-scrolling: hidden;
 
+    --paper-menu-background-color: var(--light-theme-content-color);
+    --paper-tabs-selection-bar-color: var(--accent-color);
 
     /* custom etools polymer elements general customization */
     --ecp-header-title: {
@@ -49,12 +52,12 @@
 
     --etools-checkable-input-size: 20px;
     --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
-    --etools-checkable-input-checked-color: #00AEEF; /* TODO: replace with theme variable */
+    --etools-checkable-input-checked-color: var(--accent-color);
     --ecp-content: {
       padding: 10px 25px;
     };
     --ecp-expand-btn: {
-      color: #bbdaeb; /* TODO: replace with theme variable */
+      color: var(--light-icon-color);
       padding: 4px;
     };
   }
