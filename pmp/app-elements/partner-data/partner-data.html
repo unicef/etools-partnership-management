@@ -5,7 +5,7 @@
 <dom-module id="partner-data">
 
   <template>
-    <partners-data partners-map="{{_partners}}"></partners-data>
+    <partners-data></partners-data>
   </template>
 
   <script>
@@ -14,12 +14,15 @@
 
       is: 'partner-data',
 
+      listeners: {
+        "partner-maps-loaded": "getPartner"
+      }
+
       properties: {
 
         partner: {
           type: Object,
           notify: true,
-          computed: 'getPartner(_partners, partnerId)'
         },
 
         _partners: {
@@ -33,13 +36,13 @@
 
       },
 
-      getPartner: function(_partners, id) {
-        if (!_partners) {
+      getPartner: function(event) {
+        if (!event.details.map) {
           return;
         }
-        id = parseInt(id);
+        id = parseInt(this.partnerId);
         if (id) {
-          return _partners[id];
+          return event.details.map[id];
         } else {
           console.error('You must provide a valid partner ID');
         }

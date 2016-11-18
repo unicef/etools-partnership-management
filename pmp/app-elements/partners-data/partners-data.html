@@ -99,6 +99,7 @@
         if (data.partners) {
           this._setPartners(data.partners);
           this._setPartnersMap(data.partnersMap);
+          this.fire("partners-map-loaded", { "map": data.partnersMap });
         }
       },
 
