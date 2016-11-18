@@ -7,6 +7,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
@@ -136,8 +137,9 @@
             </paper-input>
           </div>
           <div class="col col-4">
-            Core Values Assessment(upload file)
-            (core_values_assessment)
+            <etools-file files="{{coreValuesAssessmentFiles}}"
+                         label="Core Values Assessment"
+                         readonly="[[!editMode]]"></etools-file>
           </div>
           <div class="col col-4"></div>
         </div>
@@ -265,6 +267,11 @@
             type: Boolean,
             value: true
           },
+          coreValuesAssessmentFiles: {
+            type: Array,
+            value: [],
+            notify: true
+          },
           assessments: {
             type: Array,
             value: [],
@@ -284,20 +291,27 @@
         },
 
         ready: function() {
-
           // test data
           this.set('assessments', [
             {
               assessment_type: 'Micro Assessment',
               date_submitted: '29 Jul 2016',
               basis_for_risk_rating: true,
-              report_file: ''
+              report_file: [{
+                id: 'report',
+                file_name: 'Assessment-report.jpg',
+                path: ' '
+              }]
             },
             {
               assessment_type: 'Scheduled Audit Report',
               date_submitted: '8 Nov 2016',
               basis_for_risk_rating: false,
-              report_file: ''
+              report_file: [{
+                id: 'report',
+                file_name: 'Assessment-report.jpg',
+                path: ' '
+              }]
             }
           ]);
           this.set('bankInformationItems', [
@@ -344,9 +358,19 @@
         },
 
         _partnerChanged: function(partner) {
-          console.log(partner);
+//          console.log(partner);
           if (partner && partner.name) {
             this.set('partnerName', partner.name);
+          }
+          // set core_values_assessment files
+          if (partner
+              && typeof partner.core_values_assessment === 'string'
+              && partner.core_values_assessment != '') {
+            this.set('coreValuesAssessmentFiles', [{
+              id: 'core_values_assessment',
+              file_name: partner.core_values_assessment.substr(partner.core_values_assessment.lastIndexOf('/') + 1),
+              path: partner.core_values_assessment
+            }]);
           }
         },
 
