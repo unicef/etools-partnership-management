@@ -7,9 +7,21 @@ App global configuration
 <script>
     'use strict';
 
+    /**
+     * for db versioning check
+     * https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
+     */
+    var etoolsCustomDexieDb = new Dexie('pmpApp');
+    etoolsCustomDexieDb.version(1).stores({
+      collectionsList: '&name, expire',
+      countries: 'id, name',
+      partners: 'id, name, rating',
+      user: 'id'
+    });
+
     var etoolsAppConfig = {
-      // dexie js
-      appDexieDb: new Dexie('pmpApp'),
+
+      db: etoolsCustomDexieDb,
 
       // app endpoints
       endpoints: {
@@ -77,16 +89,5 @@ App global configuration
       },
 
     };
-
-    /**
-     * for db versioning check
-     * https://github.com/dfahlander/Dexie.js/wiki/Design#database-versioning
-     */
-    etoolsAppConfig.appDexieDb.version(1).stores({
-      collectionsList: '&name, expire',
-      countries: 'id, name',
-      partners: 'id, name',
-      user: 'id'
-    });
 
 </script>

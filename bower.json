@@ -1,10 +1,10 @@
 {
-  "name": "Etools frontend template - based on polymer starter kit 2",
+  "name": "pmp",
   "authors": [
-    "The eTools team"
+    "The eTools Team"
   ],
   "private": true,
-  "license": "https://github.com/unicef-polymer/etools-frontend-template/blob/master/LICENSE.md",
+  "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^0.10.0",
     "app-route": "PolymerElements/app-route#^0.9.0",
@@ -32,6 +32,8 @@
     "etools-dexiejs": "^1.0.0",
     "paper-toast": "^1.3.0",
     "paper-tabs": "^1.6.2",
+    "paper-listbox": "^1.1.2",
+    "paper-toggle-button": "^1.2.1",
     "etools-datepicker": "^1.0.0",
     "etools-checkable-input": "^1.0.0",
     "etools-content-panel": "^1.0.1",
@@ -41,7 +43,8 @@
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "etools-dialog": "^1.0.0",
-    "etools-loading": "^1.0.3"
+    "etools-loading": "^1.0.3",
+    "etools-file": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

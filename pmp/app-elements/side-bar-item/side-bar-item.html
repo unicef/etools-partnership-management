@@ -53,7 +53,7 @@
       }
 
       :host(.iron-selected:not([nested-nav])) #main > * {
-        color: var(--primary-background-color);
+        color: var(--primary-color);
       }
 
       #main:active {
@@ -80,12 +80,12 @@
 
     </style>
 
-    <a id="main" href="{{href}}" on-tap="_handleMainTap">
-      <iron-icon icon="{{icon}}"></iron-icon>
-      <div id="name">{{name}}</div>
+    <a id="main" href="[[href]]" on-tap="_handleMainTap">
+      <iron-icon icon="[[icon]]"></iron-icon>
+      <div id="name">[[name]]</div>
     </a>
 
-    <iron-collapse id="collapse" opened="{{opened}}">
+    <iron-collapse id="collapse" opened="[[opened]]">
       <div class="content-wrapper">
         <content></content>
       </div>

@@ -9,8 +9,6 @@
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
 
-<link rel="import" href="../app-elements/partner-data/partner-data.html">
-
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
@@ -29,6 +27,7 @@
     <app-route
         route="{{route}}"
         pattern="/list"
+        query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
@@ -86,7 +85,7 @@
                   role="main">
 
         <div class="page" name="list">
-          <partners-list></partners-list>
+          <partners-list id="list"></partners-list>
         </div>
         <div class="page" name="overview">
           <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
@@ -107,12 +106,15 @@
       is: 'page-partners',
 
       properties: {
+
         partnerPage: {
           type: String,
         },
+
         partnerName: {
           type: String
         }
+
       },
 
       observers: [
@@ -121,7 +123,9 @@
       ],
 
       ready: function() {
-
+        if (this.listActive) {
+          this.$.list.init(this.queryParams);
+        }
       },
 
       _resizeHeader: function() {

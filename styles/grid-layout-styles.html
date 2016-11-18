@@ -22,7 +22,10 @@
       .row-h:first-child + .row-v {
         margin-top: 0;
       }
-
+      .no-overflow {
+        /* used to prevent flexbox to change it's size if content grows */
+        overflow: hidden;
+      }
       .col {
         @apply(--layout-horizontal);
       }

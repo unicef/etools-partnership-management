@@ -19,6 +19,8 @@
     "Polymer": true,
     "_": true,
     "Dexie": true,
+    "pmpBehaviors": true,
+    "etoolsBehaviors": true,
     "etoolsAppConfig": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
     "RepeatableDataSetsBehavior": true,
