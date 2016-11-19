@@ -1,22 +1,46 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../partners-data/partners-data.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <dom-module id="partner-data">
 
   <template>
-    <partners-data></partners-data>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="partners"
+                 on-success="_handleResponse"></etools-ajax>
   </template>
 
   <script>
+
+    var _data = {};
+    var _partnersEls = [];
+
+    // Load the data we recieve into each active instance
+    // of partners-data
+    var _setPartnersData = function(data) {
+      _data.partners = data || {};
+
+      if (data) {
+        _data.partnersMap = _.indexBy(data, 'id');
+      }
+
+      this.load(_data);
+      _partnersEls.forEach(function(el) {
+        if (el !== this) { el.load(_data); }
+      });
+    };
 
     Polymer({
 
       is: 'partner-data',
 
+      behaviors: [etoolsAppConfig.globals],
+
       listeners: {
         "partner-maps-loaded": "getPartner"
-      }
+      },
 
       properties: {
 
@@ -32,20 +56,158 @@
         partnerId: {
           type: Number,
           notify: true
+        },
+
+        partners: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        },
+
+        partnersMap: {
+          type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        filteredPartners: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        },
+
+        totalResults: {
+          type: Number,
+          readOnly: true,
+          notify: true
+        },
+
+        db: {
+          type: Object,
+          value: function() {
+            return etoolsAppConfig.db;
+          }
+        },
+
+        currentQuery: {
+          type: Object,
+          value: null
         }
 
       },
 
-      getPartner: function(event) {
-        if (!event.details.map) {
+      getPartner: function(map) {
+        if (!map) {
           return;
         }
         id = parseInt(this.partnerId);
         if (id) {
-          return event.details.map[id];
+          return map;
         } else {
           console.error('You must provide a valid partner ID');
         }
+      }
+
+
+      ready: function() {
+        this.load(_data);
+      },
+
+      attached: function() {
+        if (_partnersEls.length === 0 && !_data.partners) {
+          this.endpoint = this.getEndpoint('partners');
+        }
+        _partnersEls.push(this);
+      },
+
+      detached: function() {
+        _partnersEls.splice(_partnersEls.indexOf(this), 1);
+      },
+
+      load: function(data) {
+        if (data.partners) {
+          this._setPartners(data.partners);
+          this._setPartnersMap(data.partnersMap);
+          this.getPartner(data.partnersMap);
+        }
+      },
+
+      _handleResponse: function(res) {
+        _setPartnersData.bind(this)(res.detail);
+      },
+
+      query: function(field, order, searchString, partnerType, csoType,
+                      pageNumber, pageSize, showHidden) {
+
+        // If an active query transaction exists, abort it and start
+        // a new one
+        if (this.currentQuery) {
+          this.currentQuery.abort();
+        }
+
+        var _this = this;
+
+        this.db.transaction('r', this.db.partners, function() {
+          this.currentQuery = Dexie.currentTransaction;
+
+          var queryResult = _this.db.partners;
+          if (field) {
+            // note: null values don't appear in result set of sort
+            queryResult = queryResult.orderBy(field);
+          }
+          if (order === 'desc') {
+            queryResult = queryResult.reverse();
+          }
+
+          queryResult = queryResult.filter(function(partner) {
+            if (partnerType && partner.partner_type !== partnerType) {
+              return false;
+            }
+
+            if (csoType && partner.cso_type !== csoType) {
+              return false;
+            }
+
+            if (searchString && searchString.length) {
+              var vnMatch = true;
+              if (partner.vendor_number) {
+                vnMatch = partner.vendor_number.indexOf(searchString) < 0;
+              }
+              if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
+                  partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+                  vnMatch) {
+                return false;
+              }
+            }
+
+            if (!showHidden && partner.hidden) {
+              return false;
+            }
+
+            return true;
+          });
+
+          // This special Dexie function allows the work of counting
+          // the number of query results to be done in a parallel process,
+          // instead of blocking the main query
+          Dexie.ignoreTransaction(function() {
+            queryResult.count(function(count) {
+              _this._setTotalResults(count);
+            }).catch(function(error) {
+              console.error('Error counting query: ' + error);
+            });
+          });
+
+          return queryResult
+            .offset((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray();
+
+        }).then(function(result) {
+          _this._setFilteredPartners(result);
+        }).catch(function(error) {
+          console.error('Error querying partners: ' + error);
+        });
       }
 
     });
