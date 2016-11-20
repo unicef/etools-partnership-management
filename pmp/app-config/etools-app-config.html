@@ -20,37 +20,14 @@ App global configuration
     });
 
     var etoolsAppConfig = {
-
       db: etoolsCustomDexieDb,
 
-      // app endpoints
-      endpoints: {
-        user: {
-          url: '/users/api/profile/',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'user'
-        },
-        agreements: {
-          template: '/management/api/stats/agreements/',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'agreements'
-        },
-        countries: {
-          url: '../../data/countries.json',
-          exp: 6 * 60 * 60 * 1000, // 6h
-          cachingKey: 'countries'
-        },
-        partners: {
-          url: '../../data/partners.json',
-          exp: 6 * 60 * 60 * 1000, // 6h
-          cachingKey: 'partners'
-        }
-      },
-
+      // globals
       globals: {
-        // globals
+
         baseSite: window.location.origin,
-        basePath: (window.location.port === '8080') ? '/' : '/partnership-management/',
+        basePath: (window.location.port === '8080') ? '/' : '/pmp/',
+        serverBackend: (window.location.port !== '8080'),
 
         getEndpoint: function(endpointName, data) {
           var endpoint = etoolsAppConfig.endpoints[endpointName];
@@ -73,8 +50,53 @@ App global configuration
         defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],
         managementPermissions: ['statsMenu']
-      },
-
+      }
     };
+    var localEndpoints = {
+        user: {
+            url: '/users/api/profile/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'user'
+        },
+        agreements: {
+            template: '/management/api/stats/agreements/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'agreements'
+        },
+        countries: {
+            url: '../../data/countries.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'countries'
+        },
+        partners: {
+            url: '../../data/partners.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'partners'
+        }
+    };
+    var serverEndpoints = {
+        user: {
+            url: '/users/api/profile/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'user'
+        },
+        agreements: {
+            template: '/management/api/stats/agreements/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'agreements'
+        },
+        countries: {
+            url: '../../data/countries.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'countries'
+        },
+        partners: {
+            url: '../../data/partners.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'partners'
+        }
+    };
+
+    etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEndpoints : localEndpoints
 
 </script>
