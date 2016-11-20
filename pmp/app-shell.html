@@ -125,11 +125,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div class="nav-menu">
             <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
-
-              <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
-              <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
-              <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
-              <div class="divider"></div>
+              <template is="dom-if" if="{{permissions.loggedInDefault}}">
+                  <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
+                  <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
+                  <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                  <div class="divider"></div>
+              </template>
               <side-bar-item name="settings" icon="settings" href="settings"></side-bar-item>
               <side-bar-item name="user support" icon="help" href="support"></side-bar-item>
               <side-bar-item name="discussions" icon="question-answer" href="discussion"></side-bar-item>
@@ -153,9 +154,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           fallback-selection="not-found"
           role="main">
 
-        <page-partners name="partners" route="{{subroute}}"></page-partners>
+      <template is="dom-if" id="poo" on-dom-change="_pagesStamped" if="{{permissions.loggedInDefault}}">
+        <page-partners id="pp" on-dom-change="_pagesStamped" name="partners" route="{{subroute}}"></page-partners>
         <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
         <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
+      </template>
         <page-not-found name="not-found"></page-not-found>
 
       </iron-pages>
@@ -177,33 +180,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged'
         },
-
-        baseUrl: {
-          type: String,
-          value: function() {
-            return Polymer.dom().querySelector('base').getAttribute('href');
-          }
+        _pagesAvailable: {
+          type: Boolean,
+          value: false
         },
-
         narrow: {
           type: Boolean,
           reflectToAttribute: true
         },
-
+        baseUrl: String,
         _toast: {
           type: Object,
           value: null
         },
-
+        initialLoad: {
+            type: Boolean,
+            value: true
+        },
         _toastQueue: {
           type: Array,
           value: function() { return []; }
         },
+        permissions: {
+            type: Object,
+            value: null
+        }
 
       },
-
+      behaviors: [etoolsAppConfig.globals],
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
+        '_permissionsPagesStamped(permissions, _pagesAvailable)'
       ],
 
       listeners: {
@@ -213,11 +220,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function() {
-        if (this.route.path === this.baseUrl) {
-          this.set('route.path', this.baseUrl + 'partners/list');
-        }
-      },
+        // for some reason the "$=" will make basePath undefined, we need to use a local property
+        this.baseUrl = this.basePath;
 
+        //if (this.route.path === this.baseUrl) {
+        //  this.set('route.path', this.baseUrl + 'partners/list');
+        //}
+      },
+      _permissionsPagesStamped: function(permissions, _pagesAvailable){
+        if (!permissions || !_pagesAvailable){
+            return;
+        }
+        if ((this.route.path === this.baseUrl) && permissions.loggedInDefault) {
+          // setting the default path
+          this.set('route.path', this.baseUrl + 'partners/list');
+        } else if (this.initialLoad) {
+          // reseting the page as the pages might not have been stamped
+          this._routePageChanged(this.routeData.page);
+        }
+
+        this.initialLoad = false;
+      },
       toggleDrawer: function() {
         this.$.drawer.toggle();
       },
@@ -244,7 +267,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _routePageChanged: function(page) {
-        this.page = page || 'partners';
+        if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
+            console.log('setting page', page);
+            this.page = page || 'partners';
+        } else {
+            console.log('No permissions yet or page hasn\'t stampped', page);
+        }
       },
 
       _pageChanged: function(page) {
@@ -253,8 +281,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.page = 'not-found';
-        this.fire('toast', {text: 'Oops you hit a 404!'});
+          this.page = 'not-found';
+          this.fire('toast', {text: 'Oops you hit a 404!'});
+      },
+      _pagesStamped: function() {
+        if (!this._pagesAvailable){
+          this.$.poo.render();
+          console.log('dom is now visible');
+          this._pagesAvailable = true;
+         }
+
+
       }
 
     });
