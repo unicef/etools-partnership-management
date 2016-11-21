@@ -154,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           fallback-selection="not-found"
           role="main">
 
-      <template is="dom-if" id="poo" on-dom-change="_pagesStamped" if="{{permissions.loggedInDefault}}">
+      <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="{{permissions.loggedInDefault}}">
         <page-partners id="pp" on-dom-change="_pagesStamped" name="partners" route="{{subroute}}"></page-partners>
         <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
         <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
@@ -286,8 +286,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _pagesStamped: function() {
         if (!this._pagesAvailable){
-          this.$.poo.render();
-          console.log('dom is now visible');
+          this.$.privatePages.render();
           this._pagesAvailable = true;
          }
 
