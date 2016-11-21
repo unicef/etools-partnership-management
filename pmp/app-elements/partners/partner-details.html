@@ -400,7 +400,7 @@
         },
 
         _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
-          if (typeof partnerCoreValuesAssessment === 'string' && partnerCoreValuesAssessment != '') {
+          if (typeof partnerCoreValuesAssessment === 'string' && partnerCoreValuesAssessment !== '') {
             this.set('coreValuesAssessmentFiles', [{
               id: 'core_values_assessment',
               file_name: partnerCoreValuesAssessment.substr(partnerCoreValuesAssessment.lastIndexOf('/') + 1),
