@@ -124,7 +124,7 @@
                         <paper-dropdown-menu label="Assessment Type"
                                              horizontal-align="left"
                                              vertical-align="top"
-                                             invalid$="[[!_isValid('assessmentType', item.assessment_type, item.date_of_report, item.report_file.length, index)]]"
+                                             invalid$="[[!_isValid('assessmentType', item.assessment_type, item.date_of_report, item.report_file.length)]]"
                                              error-message="Assessment type is required">
                           <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}"
                                          attr-for-selected="value">
@@ -142,16 +142,19 @@
                       <!-- Date submitted -->
                       <paper-input label="Date of Report"
                                    value="[[item.date_of_report]]"
+                                   placeholder="&#8212;"
+                                   on-down="_openDatePicker"
                                    readonly$="[[!editMode]]"
-                                   invalid$="[[!_isValid('dateOfReport', item.assessment_type, item.date_of_report, item.report_file.length, index)]]"
+                                   invalid$="[[!_isValid('dateOfReport', item.assessment_type, item.date_of_report, item.report_file.length)]]"
                                    error-message="Date of report is required">
                         <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
-                        <etools-datepicker-button suffix
-                                                  date="{{_prepareDate(item.date_of_report)}}"
+                        <etools-datepicker-button id$="datePicker[[index]]"
+                                                  suffix
+                                                  date="[[_prepareDate(item)]]"
                                                   pretty-date="{{item.date_of_report}}"
                                                   is-disabled="[[!editMode]]"
                                                   hidden$="[[!editMode]]"
-                                                  no-init="[[_doNotInit(item.date_of_report)]]">
+                                                  no-init="[[_doNotInit(item.date_of_report)]]" show-clear-btn>
                         </etools-datepicker-button>
                       </paper-input>
                     </div>
@@ -175,7 +178,7 @@
                                    label="Report"
                                    readonly="[[!editMode]]"
                                    accept=".doc,.docx,.pdf,.jpg,.png"
-                                   invalid$="[[!_isValid('reportFile', item.assessment_type, item.date_of_report, item.report_file.length, index)]]"
+                                   invalid$="[[!_isValid('reportFile', item.assessment_type, item.date_of_report, item.report_file.length)]]"
                                    error-message="Please select the report file"></etools-file>
                     </div>
                   </div>
@@ -227,17 +230,6 @@
           };
         },
 
-        attached: function() {
-          this.lastAssessmentEmptyWarning = document.createElement('paper-toast');
-          this.lastAssessmentEmptyWarning.innerHTML = '<span>Last assessment required fields are all empty. ' +
-            'Please fill the date for those fields before adding a new assessment.</span>';
-          Polymer.dom().querySelector('body').appendChild(this.lastAssessmentEmptyWarning);
-        },
-
-        detached: function() {
-          Polymer.dom().querySelector('body').removeChild(this.lastAssessmentEmptyWarning);
-        },
-
         _basisForRiskRatingChanged: function(event) {
           if (!this.editMode) {
             return;
@@ -252,8 +244,16 @@
           }
         },
 
-        _prepareDate: function(dateSubmitted) {
-          return new Date(dateSubmitted);
+        _prepareDate: function(item) {
+          if (typeof item.date_of_report === 'string' && item.date_of_report !== '') {
+            var date = new Date(item.date_of_report);
+            if (date.toString() === 'Invalid Date') {
+              date = new Date();
+            }
+            return date;
+          } else {
+            return new Date();
+          }
         },
 
         _doNotInit: function(dateString) {
@@ -263,21 +263,25 @@
           return false;
         },
 
-        _isValid: function(field, assessmentType, dateOfReport, reportFileLength, index) {
+        _notEmpty: function(value) {
+          return typeof value !== 'undefined' && value !== null && value !== '';
+        },
+
+        _isValid: function(field, assessmentType, dateOfReport, reportFileLength) {
           var valid = true;
           switch (field) {
             case 'assessmentType':
-              if (assessmentType === null && (dateOfReport !== null || reportFileLength > 0)) {
+              if (!this._notEmpty(assessmentType) && (this._notEmpty(dateOfReport) || reportFileLength > 0)) {
                 valid = false;
               }
               break;
             case 'dateOfReport':
-              if (dateOfReport === null && (assessmentType !== null || reportFileLength > 0)) {
+              if (!this._notEmpty(dateOfReport) && (this._notEmpty(assessmentType) || reportFileLength > 0)) {
                 valid = false;
               }
               break;
             case 'reportFile':
-              if (reportFileLength === 0 && (assessmentType !== null || dateOfReport !== null)) {
+              if (reportFileLength === 0 && (this._notEmpty(assessmentType) || this._notEmpty(dateOfReport))) {
                 valid = false;
               }
               break;
@@ -291,10 +295,16 @@
             if (lastAssessmentAdded.assessment_type === null
                 && lastAssessmentAdded.date_of_report === null
                 && lastAssessmentAdded.report_file.length === 0) {
-              this.lastAssessmentEmptyWarning.open();
+              this.fire('toast', 'Last assessment required fields are all empty. Please fill the date for those fields before adding a new assessment.');
             } else {
               this._addElement();
             }
+          }
+        },
+
+        _openDatePicker: function(event) {
+          if (this.editMode) {
+            this.$$('#datePicker' + event.model.index).open = true;
           }
         }
 

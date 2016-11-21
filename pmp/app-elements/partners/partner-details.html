@@ -86,7 +86,7 @@
             <paper-input label="Alternate Name"
                          value="{{partner.alternate_name}}"
                          placeholder="&#8212;"
-                         readonly="[[!editMode]]"></paper-input>
+                         readonly$="[[!editMode]]"></paper-input>
           </div>
         </div>
 
@@ -142,7 +142,7 @@
             <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
               <etools-file files="{{coreValuesAssessmentFiles}}"
                            label="Core Values Assessment"
-                           readonly="[[!editMode]]"
+                           readonly$="[[!editMode]]"
                            accept=".doc,.docx,.pdf,.jpg,.png">
               </etools-file>
             </div>

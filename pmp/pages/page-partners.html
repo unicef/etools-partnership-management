@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../app-elements/user-data/user-data.html">
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
@@ -36,6 +37,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
+    <user-data permissions="{{permissions}}"></user-data>
     <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
 
     <app-header-layout has-scrolling-region>
