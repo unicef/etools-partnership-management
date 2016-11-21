@@ -143,7 +143,7 @@
 
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                 on-tap="_addElement"
+                 on-tap="_addNewStaffMember"
                  title="Add"></paper-fab>
     </div>
 
@@ -239,6 +239,21 @@
             break;
         }
         return valid;
+      },
+
+      _addNewStaffMember: function() {
+        if (this.editMode) {
+          var lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
+          if (!this._notEmpty(lastStaffMemberAdded.position)
+              && !this._notEmpty(lastStaffMemberAdded.first_name)
+              && !this._notEmpty(lastStaffMemberAdded.last_name)
+              && !this._notEmpty(lastStaffMemberAdded.phone_number)
+              && !this._notEmpty(lastStaffMemberAdded.email_address)) {
+            this.fire('toast', 'Last staff member required fields are all empty. Please fill the data for those fields before adding a new staff member.');
+          } else {
+            this._addElement();
+          }
+        }
       },
 
     });

@@ -295,7 +295,7 @@
             if (lastAssessmentAdded.assessment_type === null
                 && lastAssessmentAdded.date_of_report === null
                 && lastAssessmentAdded.report_file.length === 0) {
-              this.fire('toast', 'Last assessment required fields are all empty. Please fill the date for those fields before adding a new assessment.');
+              this.fire('toast', 'Last assessment required fields are all empty. Please fill the data for those fields before adding a new assessment.');
             } else {
               this._addElement();
             }
