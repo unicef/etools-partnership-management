@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
@@ -97,6 +98,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 26px;
         padding: 16px 16px;
         border-top: 1px solid var(--dark-divider-color);
+      }
+
+      .warning-toast-dismiss-btn {
+        text-transform: none;
+        color: #eeff41; /* TODO: replace with a var from above */
       }
 
     </style>
@@ -223,16 +229,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       queueToast: function(e, detail) {
+        var closeToastBtn = null;
         if (!this._toast) {
           this._toast = document.createElement('paper-toast');
           this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
+          closeToastBtn = document.createElement('paper-button');
+          closeToastBtn.innerHTML = 'Ok';
+          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+          closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
+          Polymer.dom(this._toast).appendChild(closeToastBtn);
           Polymer.dom(this.$.layout).appendChild(this._toast);
+        } else {
+          closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
+        }
+
+        if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
+          if (detail.showCloseBtn === true) {
+            closeToastBtn.removeAttribute('hidden');
+            detail.duration = 0;
+          } else {
+            closeToastBtn.setAttribute('hidden', true);
+            if (!detail.duration) {
+              detail.duration = 5;
+            }
+          }
+          delete detail.showCloseBtn;
+        } else {
+          closeToastBtn.setAttribute('hidden', true);
         }
         if (!this._toastQueue.length) {
           this.push('_toastQueue', detail);
           this._toast.show(detail);
         } else {
-          this.push('_toastQueue', detail);
+          var alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
+            return JSON.stringify(toastDetail) === JSON.stringify(detail);
+          });
+          if (alreadyInQueue.length === 0) {
+            this.push('_toastQueue', detail);
+          } // else already in the queue
         }
       },
 
@@ -240,6 +274,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.shift('_toastQueue');
         if (this._toastQueue.length) {
           this._toast.show(this._toastQueue[0]);
+        }
+      },
+
+      _toggleToast: function(toast) {
+        if (toast) {
+          toast.toggle();
         }
       },
 

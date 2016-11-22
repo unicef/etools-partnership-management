@@ -6,7 +6,6 @@
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/toast-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -155,8 +154,7 @@
       is: 'staff-members',
 
       behaviors: [
-        pmpBehaviors.RepeatableDataSetsBehavior,
-        pmpBehaviors.ToastBehavior
+        pmpBehaviors.RepeatableDataSetsBehavior
       ],
 
       properties: {},
@@ -251,26 +249,12 @@
               && !this._notEmpty(lastStaffMemberAdded.last_name)
               && !this._notEmpty(lastStaffMemberAdded.phone_number)
               && !this._notEmpty(lastStaffMemberAdded.email_address)) {
-            this._showEmptyStaffMemberWarning();
+            this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
           }
         }
       },
-
-      _showEmptyStaffMemberWarning: function() {
-        if (!this.emptyStaffMemberWarning) {
-          this.emptyStaffMemberWarning = this.createToast({text: 'Last staff member fields are empty!'}, true);
-        } else {
-          if (!this.emptyStaffMemberWarning.opened) {
-            this.toggleToast(this.emptyStaffMemberWarning);
-          }
-        }
-      },
-
-      detached: function() {
-        this.removeToast(this.emptyStaffMemberWarning);
-      }
 
     });
   </script>

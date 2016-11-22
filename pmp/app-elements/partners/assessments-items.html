@@ -15,7 +15,6 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/toast-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -212,8 +211,7 @@
         is: 'assessments-items',
 
         behaviors: [
-          pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.ToastBehavior
+          pmpBehaviors.RepeatableDataSetsBehavior
         ],
 
         properties: {
@@ -297,7 +295,7 @@
             if (lastAssessmentAdded.assessment_type === null
                 && lastAssessmentAdded.date_of_report === null
                 && lastAssessmentAdded.report_file.length === 0) {
-              this._showEmptyAssessmentWarning();
+              this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
             } else {
               this._addElement();
             }
@@ -309,20 +307,6 @@
             this.$$('#datePicker' + event.model.index).open = true;
           }
         },
-
-        _showEmptyAssessmentWarning: function() {
-          if (!this.emptyAssessmentWarning) {
-            this.emptyAssessmentWarning = this.createToast({text: 'Last assessment fields are empty!'}, true);
-          } else {
-            if (!this.emptyAssessmentWarning.opened) {
-              this.toggleToast(this.emptyAssessmentWarning);
-            }
-          }
-        },
-
-        detached: function() {
-          this.removeToast(this.emptyAssessmentWarning);
-        }
 
       });
     })();
