@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.ToastBehavior = {
+    createToast: function(options, showCloseBtn, closeBtnText, removeOnDismiss) {
+      if (typeof options !== 'object') {
+        console.error('[ToastBehavior] Options must be an object that contains paper toast properties.');
+      }
+      var toast = document.createElement('paper-toast');
+      if (removeOnDismiss === true) {
+        toast.addEventListener('iron-overlay-closed', this.removeToast.bind(this, toast));
+      }
+      if (showCloseBtn === true) {
+        var closeBtn = document.createElement('paper-button');
+        if (typeof closeBtnText !== 'string' || (typeof closeBtnText === 'string' && closeBtnText === '')) {
+          closeBtnText = 'OK';
+        }
+        closeBtn.innerHTML = closeBtnText;
+        closeBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+        closeBtn.addEventListener('tap', this.toggleToast.bind(this, toast));
+        Polymer.dom(toast).appendChild(closeBtn);
+        options.duration = 0;
+      } else {
+        if (!options.duration) {
+          options.duration = 5;
+        }
+      }
+      Polymer.dom().querySelector('body').appendChild(toast);
+      toast.show(options);
+      return toast;
+    },
+
+    removeToast: function(toast) {
+      if (toast) {
+        Polymer.dom().querySelector('body').removeChild(toast);
+      }
+    },
+
+    toggleToast: function(toast) {
+      if (toast) {
+        toast.toggle();
+      }
+    }
+  };
+</script>
+
