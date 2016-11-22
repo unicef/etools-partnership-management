@@ -229,37 +229,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       queueToast: function(e, detail) {
-        var closeToastBtn = null;
         if (!this._toast) {
           this._toast = document.createElement('paper-toast');
           this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
-          closeToastBtn = document.createElement('paper-button');
+          var closeToastBtn = document.createElement('paper-button');
           closeToastBtn.innerHTML = 'Ok';
           closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
           closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
           Polymer.dom(this._toast).appendChild(closeToastBtn);
           Polymer.dom(this.$.layout).appendChild(this._toast);
-        } else {
-          closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
         }
 
-        if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
-          if (detail.showCloseBtn === true) {
-            closeToastBtn.removeAttribute('hidden');
-            detail.duration = 0;
-          } else {
-            closeToastBtn.setAttribute('hidden', true);
-            if (!detail.duration) {
-              detail.duration = 5;
-            }
-          }
-          delete detail.showCloseBtn;
-        } else {
-          closeToastBtn.setAttribute('hidden', true);
-        }
         if (!this._toastQueue.length) {
           this.push('_toastQueue', detail);
-          this._toast.show(detail);
+          var toastProperties = this._prepareToastAndGetShowProperties(detail);
+          this._toast.show(toastProperties);
         } else {
           var alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
             return JSON.stringify(toastDetail) === JSON.stringify(detail);
@@ -273,8 +257,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       dequeueToast: function() {
         this.shift('_toastQueue');
         if (this._toastQueue.length) {
-          this._toast.show(this._toastQueue[0]);
+          var toastProperties = this._prepareToastAndGetShowProperties(this._toastQueue[0]);
+          this._toast.show(toastProperties);
         }
+      },
+
+      _prepareToastAndGetShowProperties: function(detail) {
+        var closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
+        // clone detail obj
+        var toastProperties = JSON.parse(JSON.stringify(detail));
+
+        toastProperties.duration = 0;
+        if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
+          if (detail.showCloseBtn === true) {
+            closeToastBtn.removeAttribute('hidden');
+          } else {
+            closeToastBtn.setAttribute('hidden', true);
+            if (!detail.duration) {
+              toastProperties.duration = 5000;
+            }
+          }
+          delete toastProperties.showCloseBtn;
+        } else {
+          closeToastBtn.setAttribute('hidden', true);
+        }
+
+        return toastProperties;
       },
 
       _toggleToast: function(toast) {
