@@ -1,0 +1,160 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/notification-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../../bower_components/etools-content-toggle-button/etools-content-toggle-button.html">
+
+<link rel="import" href="partner-details-dropdown.html">
+
+<dom-module id="partner-item">
+
+  <template>
+
+    <style include="shared-styles iron-flex iron-flex-factors">
+
+      :host {
+        display: block;
+        text-transform: capitalize;
+      }
+
+      #main > div:not(#expand-button) {
+        margin-right: 10px;
+      }
+      #main > div:not(.sync):not(#expand-button) {
+        min-width: 100px;
+      }
+      .sync {
+        color: var(--dark-disabled-icon-color);
+      }
+      .sync.true {
+        color: var(--etools-palette-green);
+      }
+      #name {
+        font-weight: bold;
+        color: var(--accent-color);
+      }
+      #type {
+        color: var(--dark-secondary-text-color);
+      }
+      #risk {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-self-stretch);
+        margin: -15px 0;
+      }
+      #risk #bar {
+        height: 100%;
+        min-width: 20px;
+        margin-right: 10px;
+      }
+      #risk.high #bar {
+        background-color: #f03a47;
+      }
+      #risk.significant #bar {
+        background-color: #ff8329;
+      }
+      #risk.moderate #bar {
+        background-color: #ffca3a;
+      }
+      #risk.low #bar {
+        background-color: #fff277;
+      }
+      #risk.non-assessed #bar {
+        background-color: #dcd8d8;
+      }
+      #risk.no-rating #bar {
+        background-color: #000;
+      }
+      #risk.no-rating #text:after {
+        content: 'No Rating';
+      }
+      etools-content-toggle-button {
+        --etools-content-toggle-btn-icon-color: var(--dark-icon-color);
+        --etools-content-toggle-btn-disabled-color: var(--dark-disabled-icon-color);
+      }
+
+    </style>
+
+    <div id="main" class="layout horizontal center">
+
+      <div class$="sync [[partner.vision_synced]]">
+        <iron-icon icon="notification:sync"></iron-icon>
+      </div>
+
+      <div id="name" class="flex-2">
+        <a href="partners/[[partner.id]]/overview">
+          [[_computeName(partner.name, partner.short_name)]]
+        </a>
+      </div>
+
+      <div id="type" class="flex-2">
+        [[_computeType(partner.cso_type, partner.partner_type)]]
+      </div>
+
+      <div id="risk" class$="flex [[_computeRating(partner.rating)]]">
+        <div id="bar"></div>
+        <div id="text">[[partner.rating]]</div>
+      </div>
+
+      <div id="expand-button">
+        <etools-content-toggle-button on-tap="toggleDetails"></etools-content-toggle-button>
+      </div>
+
+    </div>
+
+    <div id="details" class="layout horizontal"></div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'partner-item',
+
+      properties: {
+
+        _detailsEl: {
+          type: Object,
+          value: null
+        }
+
+      },
+
+      toggleDetails: function() {
+        if (!this._detailsEl) {
+          this._detailsEl = document.createElement('partner-details-dropdown');
+          this._detailsEl.partner = this.partner;
+          Polymer.dom(this.$.details).appendChild(this._detailsEl);
+        }
+        this._detailsEl.toggle();
+      },
+
+      clearDetails: function() {
+        Polymer.dom(this.$.details).removeChild(this._detailsEl);
+      },
+
+      _computeName: function(name, shortName) {
+        return shortName ? shortName + ' / ' + name : name;
+      },
+
+      _computeType: function(csoType, partnerType) {
+        if (!csoType) {
+          return partnerType;
+        } else if (csoType === 'Community Based Organization') {
+          return 'CSO / Community Based';
+        } else {
+          return 'CSO / ' + csoType;
+        }
+      },
+
+      _computeRating: function(rating) {
+        return rating ? rating.toLowerCase() : 'no-rating';
+      }
+
+    });
+
+  </script>
+
+</dom-module>

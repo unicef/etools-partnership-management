@@ -1,0 +1,152 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/partners/partners-list.html">
+<link rel="import" href="../app-elements/partners/partner-overview.html">
+<link rel="import" href="../app-elements/partners/partner-details.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="page-partners">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{queryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
+
+    <app-header-layout has-scrolling-region>
+
+      <app-header id="header" fixed shadow>
+
+        <page-header title="Partners"></page-header>
+
+      </app-header>
+
+      <div class="page-top-content" hidden$="{{!tabsActive}}">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>[[partnerName]]</h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row">
+            <paper-tabs
+                selected="{{routeData.tab}}"
+                attr-for-selected="name"
+                fallback-selection="overview" noink bottom-item>
+
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Partner Details</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </div>
+      </div>
+
+      <iron-pages id="partnersPages"
+                  selected="{{partnerPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <partners-list id="list"></partners-list>
+        </div>
+        <div class="page" name="overview">
+          <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
+        </div>
+        <div class="page" name="details">
+          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-details>
+        </div>
+      </iron-pages>
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-partners',
+
+      properties: {
+
+        partnerPage: {
+          type: String,
+        },
+
+        partnerName: {
+          type: String
+        }
+
+      },
+
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_pageChanged(listActive, routeData.tab)',
+      ],
+
+      ready: function() {
+        if (this.listActive) {
+          this.$.list.init(this.queryParams);
+        }
+      },
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
+      },
+
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('partnerPage', activePage);
+      }
+
+    });
+
+  </script>
+
+</dom-module>
