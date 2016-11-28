@@ -85,7 +85,7 @@
           <agreements-list id="list"></agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement-id="[[routeData.id]]" agreement-name="{{agreementName}}"></agreement-details>
+          <agreement-details agreement="[[agreement]]"></agreement-details>
         </div>
       </iron-pages>
 
@@ -103,12 +103,8 @@
 
         agreementPage: {
           type: String,
-        },
-
-        agreementName: {
-          type: String
         }
-
+        
       },
 
       observers: [
