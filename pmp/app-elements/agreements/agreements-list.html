@@ -3,6 +3,7 @@
 
 <link rel="import" href="../agreements-data/agreements-data.html">
 <link rel="import" href="../partners-data/partners-data.html">
+<link rel="import" href="../partner-data/partner-data.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -17,6 +18,8 @@
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <dom-module id="agreements-list">
 
@@ -102,37 +105,35 @@
 
       <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <paper-dropdown-menu label="Agreement Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="filter-value" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">
-          <!-- un-accounted for types here! -->
-          <paper-item filter-value="MOU">Momarendum of Understanding</paper-item>
-          <paper-item filter-value="PCA">Programme Cooperation Agreement</paper-item>
-          <paper-item filter-value="SSFA">Small Scale Funding Agreement</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">
+          <paper-item name="MOU">Momarendum of Understanding</paper-item>
+          <paper-item name="PCA">Programme Cooperation Agreement</paper-item>
+          <paper-item name="SSFA">Small Scale Funding Agreement</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
 
       <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <paper-dropdown-menu label="Agreement Status" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">
-          <!-- status is currently not a field on agreements -->
-          <paper-item>Draft</paper-item>
-          <paper-item>Active</paper-item>
-          <paper-item>Suspended</paper-item>
-          <paper-item>Terminated</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">
+          <paper-item name="draft">Draft</paper-item>
+          <paper-item name="active">Active</paper-item>
+          <paper-item name="suspended">Suspended</paper-item>
+          <paper-item name="terminated">Terminated</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
 
-      <partners-data partners="{{partners}}"></partners-data>
+      <partners-data id="partners" multi-map="{{partners}}" on-data-set="_mapIdsToMultiselect"></partners-data>
       <etools-searchable-multiselection-menu
           label="Partner"
-          options="[[uga]]"
-          value="{{name}}" multi></etools-searchable-multiselection-menu>
+          options="[[partners]]"
+          value="{{selectedPartners}}" multi></etools-searchable-multiselection-menu>
 
       <paper-input label="Starts After" value="[[prettyStartDate]]" readonly>
-        <etools-datepicker-button prefix date="[[_convertToDate(startDate)]]" json-date="{{startDate}}" pretty-date="{{prettyStartDate}}" no-init></etools-datepicker-button>
+        <etools-datepicker-button prefix date="[[_convertToDate(startDate)]]" json-date="{{startDate}}" pretty-date="{{prettyStartDate}}" no-init show-clear-btn></etools-datepicker-button>
       </paper-input>
 
       <paper-input label="Ends Before" value="[[prettyEndDate]]" readonly>
-        <etools-datepicker-button prefix date="[[_convertToDate(endDate)]]" json-date="{{endDate}}" pretty-date="{{prettyEndDate}}" no-init></etools-datepicker-button>
+        <etools-datepicker-button prefix date="[[_convertToDate(endDate)]]" json-date="{{endDate}}" pretty-date="{{prettyEndDate}}" no-init show-clear-btn></etools-datepicker-button>
       </paper-input>
 
       <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
@@ -142,11 +143,11 @@
 
       <paper-menu-button>
         <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
-          <paper-item>5</paper-item>
-          <paper-item>10</paper-item>
-          <paper-item>25</paper-item>
-          <paper-item>50</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="name" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
+          <paper-item name="5">5</paper-item>
+          <paper-item name="10">10</paper-item>
+          <paper-item name="25">25</paper-item>
+          <paper-item name="50">50</paper-item>
         </paper-menu>
       </paper-menu-button>
 
@@ -156,9 +157,12 @@
 
       <div class="header">
         <!-- first class of div must be name of field -->
-        <div class="name flex-2"><span on-tap="_buildSortOrder">Name</span></div>
-        <div class="agreement_type flex-2">Type</div>
-        <div class="rating flex"><span on-tap="_buildSortOrder">Risk</span></div>
+        <div class="reference_number flex-2"><span on-tap="_buildSortOrder">Reference Number</span></div>
+        <div class="partner_name flex-2"><span on-tap="_buildSortOrder">Partner<span></div>
+        <div class="agreement_type flex">Type</div>
+        <div class="status flex">Status</div>
+        <div class="start flex"><span on-tap="_buildSortOrder">Start Date<span></div>
+        <div class="end flex"><span on-tap="_buildSortOrder">End Date<span></div>
       </div>
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
@@ -166,6 +170,7 @@
           <p>[[item.reference_number]]</p>
           <p>___[[item.partner_name]]</p>
           <p>___[[item.agreement_type]]</p>
+          <p>___[[item.status]]</p>
           <p>___[[item.start]]</p>
           <p>___[[item.end]]</p>
         </div>
@@ -187,13 +192,6 @@
 
       properties: {
 
-        uga: {
-          type: Array,
-          value: function() {
-            return [{value: 1, label: 'nerd'}, {value: 2, label: 'gonp'}, {value: 3, label: 'geek'}, {value: 4, label: 'gook'}];
-          }
-        },
-
         filteredAgreements: {
           type: Array,
           notify: true,
@@ -208,6 +206,18 @@
 
         agreementType: {
           type: String
+        },
+
+        agreementStatus: {
+          type: String,
+        },
+
+        selectedPartners: {
+          type: Array
+        },
+
+        partnerIds: {
+          type: Array
         },
 
         startDate: {
@@ -250,7 +260,7 @@
       },
 
       observers: [
-        '_updateURL(q, agreementType, startDate, endDate, pageNumber, pageSize, sortOrder)',
+        '_updateURL(q, agreementType, agreementStatus, selectedPartners, startDate, endDate, pageNumber, pageSize, sortOrder)',
       ],
 
       ready: function() {
@@ -265,13 +275,15 @@
           return;
         }
         this.set('q', urlParams.q ? urlParams.q : '');
-        this.set('agreementType', urlParams.agreement_type ? urlParams.agreement_type : '');
+        this.set('agreementType', urlParams.type ? urlParams.type : '');
+        this.set('agreementStatus', urlParams.status ? urlParams.status : '');
+        this.set('partnerIds', urlParams.partners ? this._parsePartnerIds(urlParams.partners) : []);
         this.set('startDate', urlParams.start ? urlParams.start + 'T12:00:00' : '');
         this.set('endDate', urlParams.end ? urlParams.end + 'T12:00:00' : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
         // format of sort param is sort=field.order ex: sort=name.asc
-        var result = [{field: 'id', order: 'asc'}];
+        var result = [{field: 'partner_name', order: 'asc'}];
         if (urlParams.sort) {
           var p = urlParams.sort.split('.');
           result = [{field: p[0], order: p[1]}];
@@ -287,7 +299,8 @@
           // Using replace state to change the URL here ensures the browser's
           // back button doesn't take you through every query
           var currentState = window.history.state;
-          window.history.replaceState(currentState, null, 'list' + (qs.length ? '?' + qs : ''));
+          window.history.replaceState(currentState, null,
+            'agreements/list' + (qs.length ? '?' + qs : ''));
           // This event lets app-location and app-route know
           // the URL has changed
           window.dispatchEvent(new CustomEvent('location-changed'));
@@ -300,7 +313,9 @@
               this.sortOrder[0].order,
               this.q.toLowerCase(),
               this.agreementType,
-              this._addDays(this._convertToDate(this.startDate), -1),
+              this.agreementStatus,
+              _.map(this.selectedPartners, 'label'),
+              this._subtractDayString(this.startDate), // Subtract 1 day from start date for a <= behavior
               this.endDate,
               this.pageNumber,
               this.pageSize);
@@ -308,6 +323,8 @@
 
         }
       },
+
+
 
       // Outputs the query string for the list
       _buildQueryString: function() {
@@ -322,7 +339,13 @@
           out.push('q=' + this.q);
         }
         if (this.agreementType && this.agreementType.length) {
-          out.push('agreement_type=' + this.agreementType);
+          out.push('type=' + this.agreementType);
+        }
+        if (this.agreementStatus && this.agreementStatus.length) {
+          out.push('status=' + this.agreementStatus);
+        }
+        if (this.selectedPartners && this.selectedPartners.length) {
+          out.push('partners=' + _.map(this.selectedPartners, 'value').join('+'));
         }
         if (this.startDate && this.startDate.length) {
           out.push('start=' + this._shortenDate(this.startDate));
@@ -345,13 +368,35 @@
       // Run when a list header is clicked
       // uses the first class of the header to determine the field name
       _buildSortOrder: function(e) {
-        var _field = e.path[1].classList[0];
+        var _field = Polymer.dom(e).localTarget.parentNode.classList[0];
         var _order = 'asc';
         if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
         }
         this.set('debounceTime', 150);
         this.set('sortOrder', [{field: _field, order: _order}]);
+      },
+
+      // Convert ids from URL into array of ids
+      _parsePartnerIds: function(urlIds) {
+        return _.map(urlIds.split(' '), function(item) { return parseInt(item); });
+      },
+
+      // Run when partners-data is fully loaded
+      // Maps array of partner ids to multiselect compatible {value, label} format
+      // using partners-data to fetch names for labels
+      _mapIdsToMultiselect: function() {
+        if (this.selectedPartners) {
+          return;
+        }
+        this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
+          var partner = this.$.partners.getPartner(id);
+          if (partner) {
+            return { value: id,
+                     label: partner.name };
+          }
+        }.bind(this))));
+
       },
 
       _pageLeft: function() {
@@ -449,6 +494,14 @@
         if (date instanceof Date && date !== 'Invalid Date') {
           date.setDate(date.getDate() + numDays);
           return date;
+        }
+      },
+
+      _subtractDayString(dateString) {
+        if (dateString && dateString.length) {
+          return this._addDays(this._convertToDate(dateString), -1).toISOString();
+        } else {
+          return dateString;
         }
       },
 

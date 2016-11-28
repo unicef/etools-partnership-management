@@ -13,10 +13,10 @@ App global configuration
      */
     var etoolsCustomDexieDb = new Dexie('pmpApp');
     etoolsCustomDexieDb.version(1).stores({
-      collectionsList: '&name, expire',
+      collectionsList: 'name, expire',
       countries: 'id',
       partners: 'id, name, rating',
-      agreements: 'id',
+      agreements: 'id, reference_number, partner_name, start, end',
       user: 'id'
     });
 

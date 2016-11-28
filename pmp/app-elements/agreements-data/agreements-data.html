@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <dom-module id="agreements-data">
 
@@ -94,7 +95,7 @@
       },
 
       query: function(field, order, searchString, agreementType,
-                      startDate, endDate, pageNumber, pageSize) {
+                      agreementStatus, selectedPartnerNames, startDate, endDate, pageNumber, pageSize) {
 
         // If an active query transaction exists, abort it and start
         // a new one
@@ -117,7 +118,17 @@
           }
 
           queryResult = queryResult.filter(function(agreement) {
+
+            if (selectedPartnerNames && selectedPartnerNames.length &&
+                !_.includes(selectedPartnerNames, agreement.partner_name)) {
+              return false;
+            }
+
             if (agreementType && agreement.agreement_type !== agreementType) {
+              return false;
+            }
+
+            if (agreementStatus && agreement.status !== agreementStatus) {
               return false;
             }
 
@@ -129,11 +140,10 @@
               return false;
             }
 
-            if (searchString && searchString.length) {
-              if (agreement.reference_number.toLowerCase().indexOf(searchString) < 0 &&
-                  agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
-                return false;
-              }
+            if (searchString && searchString.length &&
+                agreement.reference_number.toLowerCase().indexOf(searchString) < 0 &&
+                agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
+              return false;
             }
 
             return true;
@@ -145,8 +155,6 @@
           Dexie.ignoreTransaction(function() {
             queryResult.count(function(count) {
               _this._setTotalResults(count);
-            }).catch(function(error) {
-              console.error('Error counting query: ' + error);
             });
           });
 

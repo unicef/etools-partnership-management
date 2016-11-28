@@ -20,6 +20,11 @@
         display: block;
       }
 
+      div[name="list"] {
+        max-width: 920px;
+        margin: 20px auto;
+      }
+
     </style>
 
     <app-route
@@ -76,7 +81,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div name="list">
           <agreements-list id="list"></agreements-list>
         </div>
         <div class="page" name="details">

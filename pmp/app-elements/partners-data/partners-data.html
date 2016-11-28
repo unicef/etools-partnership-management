@@ -25,7 +25,10 @@
       _data.partners = data || {};
 
       if (data) {
-        _data.partnersMap = _.indexBy(data, 'id');
+        _data.partnersIdMap = _.indexBy(data, 'id');
+        _data.partnersMultiMap = _.map(data, function(partner) {
+          return {value: partner.id, label: partner.name};
+        });
       }
 
       this.load(_data);
@@ -48,8 +51,14 @@
           notify: true
         },
 
-        partnersMap: {
+        idMap: {
           type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        multiMap: {
+          type: Array,
           readOnly: true,
           notify: true
         },
@@ -98,12 +107,23 @@
       load: function(data) {
         if (data.partners) {
           this._setPartners(data.partners);
-          this._setPartnersMap(data.partnersMap);
+          this._setIdMap(data.partnersIdMap);
+          this._setMultiMap(data.partnersMultiMap);
+          this.fire('data-set');
         }
       },
 
       _handleResponse: function(res) {
         _setPartnersData.bind(this)(res.detail);
+      },
+
+      // Get a partner by id
+      // Same functionality as partner-data element but
+      // without binding
+      getPartner: function(id) {
+        if (this.idMap) {
+          return this.idMap[id];
+        }
       },
 
       query: function(field, order, searchString, partnerType, csoType,
@@ -163,8 +183,6 @@
           Dexie.ignoreTransaction(function() {
             queryResult.count(function(count) {
               _this._setTotalResults(count);
-            }).catch(function(error) {
-              console.error('Error counting query: ' + error);
             });
           });
 
