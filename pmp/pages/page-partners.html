@@ -22,6 +22,11 @@
         display: block;
       }
 
+      .list-page {
+        max-width: 920px;
+        margin: 20px auto;
+      }
+
     </style>
 
     <app-route
@@ -84,7 +89,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div class="list-page">
           <partners-list id="list"></partners-list>
         </div>
         <div class="page" name="overview">
