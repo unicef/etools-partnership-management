@@ -260,7 +260,8 @@
       },
 
       observers: [
-        '_updateURL(q, agreementType, agreementStatus, selectedPartners, startDate, endDate, pageNumber, pageSize, sortOrder)',
+        '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+                   'startDate, endDate, pageNumber, pageSize, sortOrder)',
       ],
 
       ready: function() {
@@ -315,7 +316,8 @@
               this.agreementType,
               this.agreementStatus,
               _.map(this.selectedPartners, 'label'),
-              this._subtractDayString(this.startDate), // Subtract 1 day from start date for a <= behavior
+              // Subtract 1 day from start date for a <= behavior
+              this._subtractDayString(this.startDate),
               this.endDate,
               this.pageNumber,
               this.pageSize);
@@ -323,8 +325,6 @@
 
         }
       },
-
-
 
       // Outputs the query string for the list
       _buildQueryString: function() {
@@ -392,8 +392,8 @@
         this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
           var partner = this.$.partners.getPartner(id);
           if (partner) {
-            return { value: id,
-                     label: partner.name };
+            return {value: id,
+                     label: partner.name};
           }
         }.bind(this))));
 
@@ -478,7 +478,7 @@
         this.set('pageNumber', 1);
       },
 
-      _convertToDate(date) {
+      _convertToDate: function(date) {
         if (date && date.length) {
           return new Date(date);
         }
@@ -497,7 +497,7 @@
         }
       },
 
-      _subtractDayString(dateString) {
+      _subtractDayString: function(dateString) {
         if (dateString && dateString.length) {
           return this._addDays(this._convertToDate(dateString), -1).toISOString();
         } else {
