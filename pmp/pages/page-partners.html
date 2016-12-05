@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../app-elements/partner-data/partner-data.html">
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
@@ -49,7 +50,7 @@
       <div class="page-top-content" hidden$="{{!tabsActive}}">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>[[partnerName]]</h1>
+            <h1 main-title>[[partner.name]]</h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action">
                 <paper-button>
@@ -88,10 +89,10 @@
           <partners-list id="list"></partners-list>
         </div>
         <div class="page" name="overview">
-          <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
+          <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-details>
+          <partner-details partner="[[partner]]"></partner-details>
         </div>
       </iron-pages>
 
@@ -109,10 +110,6 @@
 
         partnerPage: {
           type: String,
-        },
-
-        partnerName: {
-          type: String
         }
 
       },
