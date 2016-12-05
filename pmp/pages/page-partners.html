@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/user-data/user-data.html">
+<link rel="import" href="../app-elements/partner-data/partner-data.html">
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
@@ -21,6 +22,11 @@
 
       :host {
         display: block;
+      }
+
+      .list-page {
+        max-width: 920px;
+        margin: 20px auto;
       }
 
     </style>
@@ -51,7 +57,7 @@
       <div class="page-top-content" hidden$="{{!tabsActive}}">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>[[partnerName]]</h1>
+            <h1 main-title>[[partner.name]]</h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action">
                 <paper-button>
@@ -86,14 +92,14 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div class="list-page" name="list">
           <partners-list id="list"></partners-list>
         </div>
         <div class="page" name="overview">
-          <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
+          <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          <partner-details partner="[[partner]]" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
         </div>
       </iron-pages>
 
@@ -111,10 +117,6 @@
 
         partnerPage: {
           type: String,
-        },
-
-        partnerName: {
-          type: String
         }
 
       },
