@@ -17,9 +17,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
 
-<!-- TODO: move partner-data into partners folder -->
-<link rel="import" href="../partner-data/partner-data.html">
-
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
@@ -56,8 +53,6 @@
       }
 
     </style>
-
-    <partner-data partner-id="[[partnerId]]" partner="{{partner}}"></partner-data>
 
     <!-- main page content start -->
     <div id="pageContent">
@@ -249,14 +244,6 @@
         ],
 
         properties: {
-          partnerId: {
-            type: Number,
-            notify: true
-          },
-          partnerName: {
-            type: String,
-            notify: true
-          },
           partner: {
             type: Object,
             value: {},
@@ -353,15 +340,7 @@
           ]);
         },
 
-        _partnerIdChanged: function(id) {
-          this.set('partnerId', parseInt(id, 10));
-        },
-
         _partnerChanged: function(partner) {
-//          console.log(partner);
-          if (partner && partner.name) {
-            this.set('partnerName', partner.name);
-          }
           // set core_values_assessment files
           if (partner
               && typeof partner.core_values_assessment === 'string'

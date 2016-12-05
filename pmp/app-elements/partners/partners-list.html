@@ -98,22 +98,22 @@
       <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <!-- note: this should be loaded from object -->
       <paper-dropdown-menu label="Partner Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
-          <paper-item>Bilateral / Multilateral</paper-item>
-          <paper-item>Civil Society Organization</paper-item>
-          <paper-item>Government</paper-item>
-          <paper-item>UN Agency</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
+          <paper-item name="Bilateral/Multilateral">Bilateral/Multilateral</paper-item>
+          <paper-item name="Civil Society Organization">Civil Society Organization</paper-item>
+          <paper-item name="Government">Government</paper-item>
+          <paper-item name="UN Agency">UN Agency</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
 
       <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <!-- note: this should be loaded from object -->
       <paper-dropdown-menu label="CSO Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
-          <paper-item>Academic Institution</paper-item>
-          <paper-item>Community Based Organization</paper-item>
-          <paper-item>International</paper-item>
-          <paper-item>National</paper-item>
+        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
+          <paper-item name="Academic Institution">Academic Institution</paper-item>
+          <paper-item name="Community Based Organization">Community Based Organization</paper-item>
+          <paper-item name="International">International</paper-item>
+          <paper-item name="National">National</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
 
@@ -125,10 +125,10 @@
       <paper-menu-button>
         <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
         <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
-          <paper-item>5</paper-item>
-          <paper-item>10</paper-item>
-          <paper-item>25</paper-item>
-          <paper-item>50</paper-item>
+          <paper-item name="5">5</paper-item>
+          <paper-item name="10">10</paper-item>
+          <paper-item name="25">25</paper-item>
+          <paper-item name="50">50</paper-item>
         </paper-menu>
       </paper-menu-button>
 
@@ -315,7 +315,7 @@
       // Run when a list header is clicked
       // uses the first class of the header to determine the field name
       _buildSortOrder: function(e) {
-        var _field = e.path[1].classList[0];
+        var _field = Polymer.dom(e).localTarget.parentNode.classList[0];
         var _order = 'asc';
         if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
