@@ -51,6 +51,7 @@ global.config = {
   // Service Worker precache options based on
   // https://github.com/GoogleChrome/sw-precache#options-parameter
   swPrecacheConfig: {
+    replacePrefix: '/pmp/',
     navigateFallback: '/index.html'
   },
   sourceCodeDirectory: './pmp'

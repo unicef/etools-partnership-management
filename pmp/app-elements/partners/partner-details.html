@@ -344,10 +344,11 @@
           // set core_values_assessment files
           if (partner
               && typeof partner.core_values_assessment === 'string'
-              && partner.core_values_assessment != '') {
+              && partner.core_values_assessment !== '') {
             this.set('coreValuesAssessmentFiles', [{
               id: 'core_values_assessment',
-              file_name: partner.core_values_assessment.substr(partner.core_values_assessment.lastIndexOf('/') + 1),
+              file_name: partner.core_values_assessment.
+                      substr(partner.core_values_assessment.lastIndexOf('/') + 1),
               path: partner.core_values_assessment
             }]);
           }
