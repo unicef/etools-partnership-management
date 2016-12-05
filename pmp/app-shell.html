@@ -125,16 +125,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div class="nav-menu">
             <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
-              <template is="dom-if" if="{{permissions.loggedInDefault}}">
-                  <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
-                  <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
-                  <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
-                  <div class="divider"></div>
+              <template is="dom-if" if="[[permissions.loggedInDefault]]">
+                <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
+                <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
+                <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <div class="divider"></div>
               </template>
-              <side-bar-item name="settings" icon="settings" href="settings"></side-bar-item>
-              <side-bar-item name="user support" icon="help" href="support"></side-bar-item>
-              <side-bar-item name="discussions" icon="question-answer" href="discussion"></side-bar-item>
-              <side-bar-item name="information" icon="info" href="information"></side-bar-item>
+              <side-bar-item name="settings" icon="settings" href$="[[baseUrl]]settings"></side-bar-item>
+              <side-bar-item name="user support" icon="help" href$="[[baseUrl]]support"></side-bar-item>
+              <side-bar-item name="discussions" icon="question-answer" href$="[[baseUrl]]discussion"></side-bar-item>
+              <side-bar-item name="information" icon="info" href$="[[baseUrl]]information"></side-bar-item>
 
             </iron-selector>
           </div>
@@ -154,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           fallback-selection="not-found"
           role="main">
 
-      <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="{{permissions.loggedInDefault}}">
+      <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
         <page-partners id="pp" on-dom-change="_pagesStamped" name="partners" route="{{subroute}}"></page-partners>
         <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
         <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
@@ -207,7 +207,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
       },
+
       behaviors: [etoolsAppConfig.globals],
+
       observers: [
         '_routePageChanged(routeData.page)',
         '_permissionsPagesStamped(permissions, _pagesAvailable)'
@@ -268,10 +270,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function(page) {
         if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
-            console.log('setting page', page);
-            this.page = page || 'partners';
+          console.log('setting page', page);
+          this.page = page || 'partners';
         } else {
-            console.log('No permissions yet or page hasn\'t stampped', page);
+          console.log('No permissions yet or page hasn\'t stampped', page);
         }
       },
 
@@ -281,14 +283,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-          this.page = 'not-found';
-          this.fire('toast', {text: 'Oops you hit a 404!'});
+        this.page = 'not-found';
+        this.fire('toast', {text: 'Oops you hit a 404!'});
       },
+
       _pagesStamped: function() {
         if (!this._pagesAvailable) {
           this.$.privatePages.render();
           this._pagesAvailable = true;
-         }
+        }
       }
 
     });
