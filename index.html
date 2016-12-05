@@ -52,7 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         lazyRegister: true
       };
       var serverBackend = (window.location.port !== '8080');
-      var baseUrl = serverBackend ? 'pmp' : '/';
+      var baseUrl = serverBackend ? '/pmp/' : '/';
       // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';

@@ -52,7 +52,7 @@ App global configuration
         managementPermissions: ['statsMenu']
       }
     };
-    var localEndpoints = {
+    var localEps = {
         user: {
             url: '/users/api/profile/',
             exp: 30 * 60 * 1000, // 30min
@@ -74,7 +74,7 @@ App global configuration
             cachingKey: 'partners'
         }
     };
-    var serverEndpoints = {
+    var serverEps = {
         user: {
             url: '/users/api/profile/',
             exp: 30 * 60 * 1000, // 30min
@@ -86,17 +86,18 @@ App global configuration
             cachingKey: 'agreements'
         },
         countries: {
-            url: '../../data/countries.json',
+            url: '/api/countries/',
             exp: 6 * 60 * 60 * 1000, // 6h
             cachingKey: 'countries'
         },
         partners: {
-            url: '../../data/partners.json',
+            url: '/api/partners',
             exp: 6 * 60 * 60 * 1000, // 6h
             cachingKey: 'partners'
         }
     };
-
-    etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEndpoints : localEndpoints
+    /* jshint ignore:start */
+    etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
+    /* jshint ignore:end */
 
 </script>
