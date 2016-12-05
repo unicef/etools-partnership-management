@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
@@ -109,13 +110,10 @@
                            readonly></paper-input>
             </template>
             <template is="dom-if" if="[[editMode]]">
-              <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top" always-float-label>
-                <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
-                  <template is="dom-repeat" items="[[sharedPartenerValues]]" as="sharedPartnerVal">
-                    <paper-item value="[[sharedPartnerVal]]">[[sharedPartnerVal]]</paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-dropdown-menu>
+              <etools-searchable-multiselection-menu label="Shared Partner"
+                                                     options="[[sharedPartenerValues]]"
+                                                     value="{{sharedPartenerSelectedValues}}"
+                                                     multi></etools-searchable-multiselection-menu>
             </template>
           </div>
         </div>
@@ -284,9 +282,26 @@
         ready: function() {
 
           this.set('showCoreValuesAssessmentAttachement', false);
-          this.set('sharedPartenerValues', ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'UN Women',
+
+          /**
+           * TODO: improve shared partners data once the server data is defined and final
+           * shared_partner value format ?
+           */
+          var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'UN Women',
             'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
-            'WB', 'WFP', 'WHO']);
+            'WB', 'WFP', 'WHO'];
+
+          var sharedPartnersPreparedValues = [];
+          sharedPartnersRealValues.forEach(function(val, index) {
+            sharedPartnersPreparedValues.push({value: index, label: val});
+          });
+          this.set('sharedPartenerValues', sharedPartnersPreparedValues);
+
+          var sharedPartnersSelectedVal = sharedPartnersPreparedValues.filter(function(sharedPartnerV) {
+            return sharedPartnerV.label === this.partner.shared_partner;
+          }.bind(this));
+
+          this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
 
           // test data
           this.set('assessments', [
