@@ -1,12 +1,32 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 
-<dom-module id="add-agreement">
+<dom-module id="agreement-details">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+        padding-bottom: 70px;
+      }
+
+      .content-section:not(:first-of-type) {
+        margin-top: 25px;
+      }
+    </style>
 
     <app-route
         route="{{route}}"
@@ -15,7 +35,102 @@
     </app-route>
 
 
-    add agreement page content goes here...
+    <!-- main page content start -->
+    <div id="pageContent">
+      <etools-content-panel class="content-section" title="Agreement Details">
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Partner name -->
+            <paper-input label="Partner Name"
+                         value="[[partner.name]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- Agreement Type -->
+            <paper-input label="Agreement Type"
+                         value="[[agreement.agreement_type]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- Reference Number -->
+            <paper-input label="Reference Number"
+                         value="[[agreement.agreement_number]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <!-- Start date -->
+            <paper-input label="Start date"
+                         value="[[_prettyDate(agreement.start)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- End date -->
+            <paper-input label="End date"
+                         value="[[_prettyDate(agreement.end)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Generate PCA -->
+            <paper-button>
+              <iron-icon icon="refresh"></iron-icon>
+              GENERATE PCA
+            </paper-button>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Signed By Partner -->
+            <paper-input label="Signed By Partner"
+                         value="[[_getStaffMemberName(agreement.signed_by)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Signed By Partner Date -->
+            <paper-input label="Signed By Partner Date"
+                         value="[[_prettyDate(agreement.signed_by_partner_date)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Signed By UNICEF -->
+            <paper-input label="Signed By UNICEF"
+                         value="[[_getPartnerManagerName(agreement.partner_manager)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Signed By Partner Date -->
+            <paper-input label="Signed By UNICEF Date"
+                         value="[[_prettyDate(agreement.signed_by_unicef_date)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <etools-file files="[[_signedAgreementFiles]]"
+                       label="Signed Agreement"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       readonly></etools-file>
+        </div>
+      </etools-content-panel>
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      agreement status
+    </div>
+    <!-- sidebar content end -->
+
 
   </template>
 
@@ -24,7 +139,61 @@
       'use strict';
 
       Polymer({
-        is: 'add-agreement',
+        is: 'agreement-details',
+
+        properties: {
+          agreement: {
+            type: Object,
+            observer: '_agreementChanged'
+          },
+          partner: {
+            type: Object
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          }
+        },
+
+        ready: function() {
+
+        },
+
+        _agreementChanged: function(agreement) {
+          if (typeof agreement === 'object' && agreement !== null
+              && typeof agreement.attached_agreement === 'string' && agreement.attached_agreement !== '') {
+            this.set('_signedAgreementFiles', [{
+              id: 'attached_agreement',
+              file_name: agreement.attached_agreement.substr(agreement.attached_agreement.lastIndexOf('/') + 1),
+              path: agreement.attached_agreement
+            }]);
+          } else {
+            this.set('_signedAgreementFiles', []);
+          }
+        },
+
+        _prettyDate: function(dateString) {
+          if (typeof dateString === 'string' && dateString !== '') {
+            return moment(new Date(dateString)).format('D MMM YYYY');
+          }
+          return '';
+        },
+
+        _getStaffMemberName: function(staffMemberId) {
+          /**
+           * TODO: replace this staff member data; get the staff member from an endpoint
+           * by staffMemberId(agreement.signed_by) then return first_name and last_name
+           */
+
+          return "John Doe";
+        },
+
+        _getPartnerManagerName: function(partnerManagerId) {
+          /**
+           * TODO: get partner manager data from an endpoint by partnerManagerId then return he's/she's name
+           */
+          return "Jane Doe Manager";
+        }
       });
 
     })();

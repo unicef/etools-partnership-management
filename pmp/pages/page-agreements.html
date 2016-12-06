@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/partner-data/partner-data.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 
@@ -40,6 +41,8 @@
         active="{{detailsActive}}"
         data="{{routeData}}"></app-route>
 
+    <partner-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-data>
+
     <app-header-layout has-scrolling-region>
 
       <app-header id="header" fixed shadow>
@@ -51,7 +54,7 @@
       <div class="page-top-content" hidden$="{{!detailsActive}}">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>[[agreementName]]</h1>
+            <h1 main-title>[[_setAgreementDetailsPageTitle(agreement, partner)]]</h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action">
                 <paper-button>
@@ -65,7 +68,7 @@
             <paper-tabs
                 selected="{{routeData.tab}}"
                 attr-for-selected="name"
-                fallback-selection="overview" noink bottom-item>
+                fallback-selection="details" noink bottom-item>
 
               <paper-tab name="details" link>
                 <span class="tab-content">Agreement Details</span>
@@ -86,7 +89,7 @@
           <agreements-list id="list"></agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement="[[agreement]]"></agreement-details>
+          <agreement-details agreement="[[agreement]]" partner="[[partner]]"></agreement-details>
         </div>
       </iron-pages>
 
@@ -117,6 +120,30 @@
         if (this.listActive) {
           this.$.list.init(this.queryParams);
         }
+
+        // TODO: replace this placeholder data
+        this.agreement = {
+          "id":8,
+          "created":"2016-04-21T08:52:31.214539Z",
+          "modified":"2016-04-21T08:52:31.215398Z",
+          "agreement_type":"PCA",
+          "agreement_number":"PCA 2015/29-3",
+          "attached_agreement":null,
+          "start":"2015-09-30",
+          "end":"2016-09-29",
+          "signed_by_unicef_date":"2015-07-28",
+          "signed_by_partner_date":"2015-07-28",
+          "bank_name":null,
+          "bank_address":"",
+          "account_title":null,
+          "account_number":null,
+          "routing_details":null,
+          "bank_contact_person":null,
+          "partner":21,
+          "signed_by":1152,
+          "partner_manager":134
+        };
+
       },
 
       _resizeHeader: function() {
@@ -134,6 +161,15 @@
       _pageChanged: function(listActive, tab) {
         var activePage = this._getActivePage(listActive, tab);
         this.set('agreementPage', activePage);
+      },
+
+      _setAgreementDetailsPageTitle: function(agreement, partner) {
+        if (typeof agreement === 'object'
+            && agreement !== null && Object.keys(agreement).length > 0) {
+          return partner.name + ': ' + agreement.agreement_number;
+        } else {
+          return 'Add Agreement';
+        }
       }
 
     });
