@@ -6,4 +6,10 @@ var basedir = '/code/build/pmp/bundled/';
 
 app.use('/pmp/', express.static(basedir));
 
+
+app.use(function(req, res) {
+  res.sendFile(basedir + 'index.html');
+});
+
+
 app.listen(8080);

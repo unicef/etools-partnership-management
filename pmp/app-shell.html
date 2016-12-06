@@ -271,10 +271,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function(page) {
         if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
-          console.log('setting page', page);
           this.page = page || 'partners';
         } else {
-          console.log('No permissions yet or page hasn\'t stampped', page);
+          //console.log('No permissions yet or page hasn\'t stampped', page);
         }
       },
 
