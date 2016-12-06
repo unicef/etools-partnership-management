@@ -6,6 +6,9 @@ var basedir = '/code/build/pmp/bundled/';
 
 app.use('/pmp/', express.static(basedir));
 
+app.get(/.*service-worker\.js/, function(req, res) {
+  res.sendFile(basedir + 'service-worker.js');
+});
 
 app.use(function(req, res) {
   res.sendFile(basedir + 'index.html');
