@@ -233,7 +233,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!permissions || !_pagesAvailable) {
             return;
         }
-        if ((this.route.path === this.baseUrl || this.route.path === '/') && permissions.loggedInDefault) {
+        if ((this.route.path === this.baseUrl || this.route.path === '/') &&
+            permissions.loggedInDefault) {
           // setting the default path
           this.set('route.path', this.baseUrl + 'partners/list');
         } else if (this.initialLoad) {
