@@ -167,12 +167,12 @@
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
         <div id="temp">
-          <p>[[item.reference_number]]</p>
-          <p>___[[item.partner_name]]</p>
-          <p>___[[item.agreement_type]]</p>
-          <p>___[[item.status]]</p>
-          <p>___[[item.start]]</p>
-          <p>___[[item.end]]</p>
+          <p class="flex-2">[[item.reference_number]]</p>
+          <p class="flex-2">[[item.partner_name]]</p>
+          <p class="flex">[[item.agreement_type]]</p>
+          <p class="flex">[[item.status]]</p>
+          <p class="flex">[[item.start]]</p>
+          <p class="flex">[[item.end]]</p>
         </div>
       </template>
 
