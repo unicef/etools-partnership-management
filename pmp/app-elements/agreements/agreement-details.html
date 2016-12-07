@@ -26,6 +26,15 @@
       .content-section:not(:first-of-type) {
         margin-top: 25px;
       }
+
+      #generate-pca {
+        --paper-button-ink-color: rgba(255, 255, 255, 0);
+        --paper-button: {
+          margin: 0;
+          padding: 0;
+        }
+      }
+
     </style>
 
     <app-route
@@ -78,7 +87,7 @@
           </div>
           <div class="col col-6">
             <!-- Generate PCA -->
-            <paper-button>
+            <paper-button id="generate-pca">
               <iron-icon icon="refresh"></iron-icon>
               GENERATE PCA
             </paper-button>
