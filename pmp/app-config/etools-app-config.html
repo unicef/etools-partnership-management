@@ -20,37 +20,14 @@ App global configuration
     });
 
     var etoolsAppConfig = {
-
       db: etoolsCustomDexieDb,
 
-      // app endpoints
-      endpoints: {
-        user: {
-          url: '/users/api/profile/',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'user'
-        },
-        agreements: {
-          template: '/management/api/stats/agreements/',
-          exp: 30 * 60 * 1000, // 30min
-          cachingKey: 'agreements'
-        },
-        countries: {
-          url: '../../data/countries.json',
-          exp: 6 * 60 * 60 * 1000, // 6h
-          cachingKey: 'countries'
-        },
-        partners: {
-          url: '../../data/partners.json',
-          exp: 6 * 60 * 60 * 1000, // 6h
-          cachingKey: 'partners'
-        }
-      },
-
+      // globals
       globals: {
-        // globals
+
         baseSite: window.location.origin,
-        basePath: (window.location.port === '8080') ? '/' : '/partnership-management/',
+        basePath: (window.location.port === '8080') ? '/' : '/pmp/',
+        serverBackend: (window.location.port !== '8080'),
 
         getEndpoint: function(endpointName, data) {
           var endpoint = etoolsAppConfig.endpoints[endpointName];
@@ -67,14 +44,75 @@ App global configuration
 
       // permissions
       permissions: {
-        superPermissions: ['loggedInDefault', 'userInfoMenu',
-                           'interventionsMenu', 'statsMenu'], //for testing
+        defaultPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'viewPartnerDetails'
+        ],
         partnerOnlyPermissions: ['interventionsMenu'],
-        defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],
-        managementPermissions: ['statsMenu']
-      },
-
+        managementPermissions: [
+          'statsMenu',
+          'editPartnerDetails'
+        ],
+        superPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'interventionsMenu',
+          'statsMenu',
+          'viewPartnerDetails',
+          'editPartnerDetails'
+        ]
+      }
     };
+
+    var localEps = {
+        user: {
+            url: '/users/api/profile/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'user'
+        },
+        agreements: {
+            template: '/management/api/stats/agreements/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'agreements'
+        },
+        countries: {
+            url: '../../data/countries.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'countries'
+        },
+        partners: {
+            url: '../../data/partners.json',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'partners'
+        }
+    };
+
+    var serverEps = {
+        user: {
+            url: '/users/api/profile/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'user'
+        },
+        agreements: {
+            template: '/management/api/stats/agreements/',
+            exp: 30 * 60 * 1000, // 30min
+            cachingKey: 'agreements'
+        },
+        countries: {
+            url: '/api/countries/',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'countries'
+        },
+        partners: {
+            url: '/api/partners',
+            exp: 6 * 60 * 60 * 1000, // 6h
+            cachingKey: 'partners'
+        }
+    };
+    /* jshint ignore:start */
+    etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
+    /* jshint ignore:end */
 
 </script>
