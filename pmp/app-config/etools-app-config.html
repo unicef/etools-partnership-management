@@ -44,14 +44,28 @@ App global configuration
 
       // permissions
       permissions: {
-        superPermissions: ['loggedInDefault', 'userInfoMenu',
-                           'interventionsMenu', 'statsMenu'], //for testing
+        defaultPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'viewPartnerDetails'
+        ],
         partnerOnlyPermissions: ['interventionsMenu'],
-        defaultPermissions: ['loggedInDefault','userInfoMenu'],
         partnerPermissions: ['interventionsMenu'],
-        managementPermissions: ['statsMenu']
+        managementPermissions: [
+          'statsMenu',
+          'editPartnerDetails'
+        ],
+        superPermissions: [
+          'loggedInDefault',
+          'userInfoMenu',
+          'interventionsMenu',
+          'statsMenu',
+          'viewPartnerDetails',
+          'editPartnerDetails'
+        ]
       }
     };
+
     var localEps = {
         user: {
             url: '/users/api/profile/',
@@ -74,6 +88,7 @@ App global configuration
             cachingKey: 'partners'
         }
     };
+
     var serverEps = {
         user: {
             url: '/users/api/profile/',
