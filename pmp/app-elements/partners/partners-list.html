@@ -82,7 +82,7 @@
 
     </style>
 
-    <partners-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
+    <partners-data id="partners" data="{{partners}}" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
@@ -219,7 +219,7 @@
       },
 
       observers: [
-        '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+        '_updateURL(partners, q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
       ],
 
       ready: function() {

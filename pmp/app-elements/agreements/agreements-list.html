@@ -90,7 +90,7 @@
 
     </style>
 
-    <agreements-data id="agreements" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreements-data>
+    <agreements-data id="agreements" data="{{agreements}}" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreements-data>
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
@@ -122,10 +122,10 @@
         </paper-menu>
       </paper-dropdown-menu>
 
-      <partners-data id="partners" multi-map="{{partners}}" on-data-set="_mapIdsToMultiselect"></partners-data>
+      <partners-data id="partners" multi-map="{{partnersMap}}"></partners-data>
       <etools-searchable-multiselection-menu
           label="Partner"
-          options="[[partners]]"
+          options="[[partnersMap]]"
           value="{{selectedPartners}}" multi></etools-searchable-multiselection-menu>
 
       <paper-input label="Starts After" value="[[prettyStartDate]]" readonly>
@@ -213,7 +213,7 @@
         },
 
         selectedPartners: {
-          type: Array
+          type: Array,
         },
 
         partnerIds: {
@@ -259,9 +259,11 @@
 
       },
 
+      // TODO: put a complex observer to change page to 1 like on interventions-list
       observers: [
-        '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+        '_updateURL(agreements, q, agreementType, agreementStatus, selectedPartners,' +
                    'startDate, endDate, pageNumber, pageSize, sortOrder)',
+        '_mapIdsToMultiselect(partnersMap)'
       ],
 
       ready: function() {
@@ -386,9 +388,6 @@
       // Maps array of partner ids to multiselect compatible {value, label} format
       // using partners-data to fetch names for labels
       _mapIdsToMultiselect: function() {
-        if (this.selectedPartners) {
-          return;
-        }
         this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
           var partner = this.$.partners.getPartner(id);
           if (partner) {
