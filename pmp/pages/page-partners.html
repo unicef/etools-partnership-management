@@ -85,7 +85,7 @@
                   role="main">
 
         <div class="page" name="list">
-          <partners-list id="list"></partners-list>
+          <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
           <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
@@ -120,13 +120,14 @@
       observers: [
         '_resizeHeader(tabsActive)',
         '_pageChanged(listActive, routeData.tab)',
+        //'_initList(listActive)'
       ],
 
-      ready: function() {
+    /*  _initList: function(listActive) {
         if (this.listActive) {
           this.$.list.init(this.queryParams);
         }
-      },
+      },*/
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
