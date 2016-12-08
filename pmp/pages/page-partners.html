@@ -120,14 +120,7 @@
       observers: [
         '_resizeHeader(tabsActive)',
         '_pageChanged(listActive, routeData.tab)',
-        //'_initList(listActive)'
       ],
-
-    /*  _initList: function(listActive) {
-        if (this.listActive) {
-          this.$.list.init(this.queryParams);
-        }
-      },*/
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();

@@ -327,6 +327,7 @@
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
         }
         this.set('debounceTime', 150);
+        this.set('pageNumber', 1);
         this.set('sortOrder', [{field: _field, order: _order}]);
       },
 

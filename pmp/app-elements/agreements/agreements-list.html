@@ -214,6 +214,7 @@
 
         selectedPartners: {
           type: Array,
+          observer: '_selectedPartnersChanged'
         },
 
         partnerIds: {
@@ -257,13 +258,17 @@
           value: 50
         },
 
+        urlParams: {
+          type: Object
+        }
+
       },
 
-      // TODO: put a complex observer to change page to 1 like on interventions-list
       observers: [
         '_updateURL(agreements, q, agreementType, agreementStatus, selectedPartners,' +
                    'startDate, endDate, pageNumber, pageSize, sortOrder)',
-        '_mapIdsToMultiselect(partnersMap)'
+        '_mapIdsToMultiselect(partnersMap)',
+        '_init(active)'
       ],
 
       ready: function() {
@@ -273,22 +278,23 @@
       // Input: URL query params
       // Initializes the properties of the list at page load
       // to the params interpretted from the URL string.
-      init: function(urlParams) {
-        if (!urlParams) {
+      _init: function(active) {
+        var parms = this.urlParams;
+        if (!active || !parms) {
           return;
         }
-        this.set('q', urlParams.q ? urlParams.q : '');
-        this.set('agreementType', urlParams.type ? urlParams.type : '');
-        this.set('agreementStatus', urlParams.status ? urlParams.status : '');
-        this.set('partnerIds', urlParams.partners ? this._parsePartnerIds(urlParams.partners) : []);
-        this.set('startDate', urlParams.start ? urlParams.start + 'T12:00:00' : '');
-        this.set('endDate', urlParams.end ? urlParams.end + 'T12:00:00' : '');
-        this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
-        this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
+        this.set('q', parms.q ? parms.q : '');
+        this.set('agreementType', parms.type ? parms.type : '');
+        this.set('agreementStatus', parms.status ? parms.status : '');
+        this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
+        this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
+        this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
+        this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+        this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
         // format of sort param is sort=field.order ex: sort=name.asc
         var result = [{field: 'partner_name', order: 'asc'}];
-        if (urlParams.sort) {
-          var p = urlParams.sort.split('.');
+        if (parms.sort) {
+          var p = parms.sort.split('.');
           result = [{field: p[0], order: p[1]}];
         }
         this.set('sortOrder', result);
@@ -376,6 +382,7 @@
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
         }
         this.set('debounceTime', 150);
+        this.set('pageNumber', 1);
         this.set('sortOrder', [{field: _field, order: _order}]);
       },
 
@@ -447,6 +454,11 @@
       },
 
       _dropdownSelected: function() {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+      },
+
+      _selectedPartnersChanged: function() {
         this.set('debounceTime', 200);
         this.set('pageNumber', 1);
       },
