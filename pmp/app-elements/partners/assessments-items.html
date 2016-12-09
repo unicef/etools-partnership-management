@@ -20,10 +20,11 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
 
 <dom-module id="assessments-items">
   <template>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles">
       [hidden] {
         display: none !important;
       }
@@ -68,21 +69,6 @@
 
       .action.delete[disabled] {
         visibility: hidden;
-      }
-
-      etools-file:not([multiple]) {
-        --etools-file-filename-container: {
-          width: auto;
-        };
-        --etools-file-readonly-filename-container: {
-          width: auto;
-        };
-        --etools-file-error: {
-          position: relative !important;
-        };
-      }
-      .assessment-report-wrapper {
-        max-width: 100%;
       }
 
     </style>
@@ -173,7 +159,7 @@
                   </div>
                   <div class="row-h no-overflow">
                     <!-- Report file -->
-                    <div class="assessment-report-wrapper">
+                    <div class="file-wrapper">
                       <etools-file files="{{item.report_file}}"
                                    label="Report"
                                    readonly="[[!editMode]]"

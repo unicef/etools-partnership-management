@@ -28,30 +28,6 @@
         padding-bottom: 70px;
       }
 
-      #generate-pca-wrapper {
-        --paper-input-container-underline: {
-          display: none;
-        };
-        --paper-input-container-underline-focus: {
-          display: none;
-        }	;
-        --paper-input-container-underline-disabled: {
-          display: none;
-        };
-      }
-
-      #generate-pca {
-        color: #00aeef; /* TODO: replace with app-theme var */
-        padding: 0 5px 0 0;
-        --paper-button: {
-          margin: 0;
-        }
-      }
-
-      #generate-pca-icon {
-        margin-right: 5px;
-      }
-
     </style>
 
     <app-route
@@ -103,11 +79,11 @@
                          readonly></paper-input>
           </div>
           <div class="col col-6">
-            <paper-input-container id="generate-pca-wrapper" always-float-label hidden>
+            <paper-input-container class="form-field-wrapper basic-btn-wrapper" always-float-label hidden>
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
-              <paper-button id="generate-pca" class="paper-input-input">
-                <iron-icon id="generate-pca-icon" icon="refresh"></iron-icon>
+              <paper-button class="paper-input-input basic-btn">
+                <iron-icon icon="refresh"></iron-icon>
                 GENERATE PCA
               </paper-button>
             </paper-input-container>

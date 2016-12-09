@@ -1,19 +1,28 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
-
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
+<link rel="import" href="agreement-amendment-details.html">
+<link rel="import" href="agreement-amendment-types.html">
 
 <dom-module id="agreement-amendments">
   <template>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles">
       [hidden] {
         display: none !important;
       }
@@ -21,6 +30,7 @@
       :host {
         display: block;
         width: 100%;
+        padding: 7px 0;
 
         --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
         --paper-fab: {
@@ -28,40 +38,57 @@
         };
       }
 
+      .item-container {
+        padding: 8px 15px;
+      }
+
       .item-actions-container .action.delete[disabled] {
         visibility: hidden;
       }
 
-      etools-file:not([multiple]) {
-        --etools-file-filename-container: {
-          width: auto;
-        };
-        --etools-file-readonly-filename-container: {
-          width: auto;
-        };
+      .item-actions-container {
+        position: relative;
+        padding-right: 10px;
+        border-right: 2px solid #00aeef; /* TODO: replace with app-theme var */;
+        margin-top: 25px;
       }
 
-      .row-h.notes {
-        font-style: italic;
-        margin-top: 0;
+      .item-actions-container:before {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        position: absolute;
+        top: -32px;
+        right: -12px;
+        background-color: #00aeef; /* TODO: replace with app-theme var */;
+        color: #fff;
+        content: attr(data-item-nr);
+        text-align: center;
+        font-size: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        z-index: 1;
       }
 
-      .amendment-type-item + .amendment-type-item {
-        margin-top: 15px;
+      .item-actions-container.amendment-locked {
+        border-right-color: var(--darker-divider-color);
+      }
+      .item-actions-container.amendment-locked:before {
+        background-color: var(--darker-divider-color);
       }
 
-      paper-input, paper-textarea {
-        width: 100%;
+      .item-container .item-content {
+        margin-left: 0;
+        border-left: none;
+        padding-bottom: 25px;
       }
-
-
 
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class="row-h item-actions-container">
+          <div class$="row-h item-actions-container [[_getLockedClass(index)]]" data-item-nr$="[[_getItemNr(index)]]">
             <div class="row-v actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
@@ -74,121 +101,44 @@
 
             <!-- already saved amendment, readonly -->
             <template is="dom-if" if="[[!_canBeRemoved(index)]]">
+              <agreement-amendment-details amendment="[[item]]"></agreement-amendment-details>
+            </template>
 
+            <!-- new, unsaved amendment, edit mode -->
+            <template is="dom-if" if="[[_canBeRemoved(index)]]">
               <div class="row-h">
+                <div class="col col-3">
+                  <paper-input-container class="form-field-wrapper basic-btn-wrapper" always-float-label>
+                    <!-- Auto-generated PCA Amendment -->
+                    <label aria-hidden="true">Auto-generated PCA Amendment</label>
+                    <paper-button class="paper-input-input basic-btn">
+                      <iron-icon icon="refresh"></iron-icon>
+                      GENERATE PCA
+                    </paper-button>
+                  </paper-input-container>
+                </div>
                 <div class="col col-3">
                   <!-- Signed Date -->
                   <paper-input label="Signed Date"
                                value="[[prettyDate(item.signed_date)]]"
-                               readonly>
+                               placeholder="&#8212;"
+                               on-down="_openSignedDatePicker">
+                    <etools-datepicker-button prefix
+                                              id$="datePicker[[index]]"
+                                              json-date="{{item.signed_date}}"
+                                              no-init show-clear-btn></etools-datepicker-button>
                   </paper-input>
                 </div>
-                <div class="col col-9">
-                  <!-- Signed Amendment -->
-                  <etools-file label="Signed Amendment"
-                               files="[[_prepareAttachementFile(item.signed_agreement)]]"
-                               readonly>
-                  </etools-file>
+                <div class="col col-6 file-container space-left">
+                  <!-- Signed Agreement -->
+                  <etools-file label="Signed Agreement"
+                               accept=".doc,.docx,.pdf,.jpg,.png"></etools-file>
                 </div>
               </div>
 
-              <template is="dom-repeat" items="[[item.amendment_types]]" as="amendmentType"
-                        index-as="amendmentTypeIndex">
-
-                <div class="amendment-type-item">
-
-                  <div class="row-h">
-                    <!-- Amendment Type -->
-                    <paper-input label="Amendment Type"
-                                 value="[[amendmentType.amendment_type]]"
-                                 readonly>
-                    </paper-input>
-                  </div>
-
-                  <template is="dom-if" if="[[_showNotes(amendmentType.amendment_type)]]">
-                    <div class="row-h notes">
-                      [[amendmentType.notes]]
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[_showAmendmentTypeOfficer(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <!-- Officer -->
-                      <paper-input label="Officer"
-                                   value="[[_getOfficerName(amendmentType.officer_id)]]"
-                                   readonly>
-                      </paper-input>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[_showAmendmentTypeBankInfo(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <!-- Bank information -->
-                      <paper-input label="New Bank Account"
-                                   value="[[amendmentType.bank_info]]"
-                                   readonly>
-                      </paper-input>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[_showAmendmentTypeLegalNameOfIp(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <!-- Legal name of IP -->
-                      <paper-input label="Full Name of Implementing Partner"
-                                   value="[[amendmentType.legal_name_of_ip]]"
-                                   readonly>
-                      </paper-input>
-                    </div>
-                  </template>
-
-                  <template is="dom-if"
-                            if="[[_showAmendmentTypeExtensionProgrammeCycle(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <div class="col col-3">
-                        <!-- Start Date -->
-                        <paper-input label="CP Cycle Start Date"
-                                     value="[[prettyDate(amendmentType.cp_cycle_start)]]"
-                                     readonly>
-                        </paper-input>
-                      </div>
-                      <div class="col col-3">
-                        <!-- End Date -->
-                        <paper-input label="CP Cycle End Date"
-                                     value="[[prettyDate(amendmentType.cp_cycle_end)]]"
-                                     readonly>
-                        </paper-input>
-                      </div>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[_showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <!-- Additional Clauses -->
-                      <paper-textarea label="Additional Clauses"
-                                      value="[[amendmentType.additional_clauses]]"
-                                      readonly>
-                      </paper-textarea>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[_showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)]]">
-                    <div class="row-h">
-                      <!-- Change Existing Clauses -->
-                      <paper-textarea label="Clause Change"
-                                      value="[[amendmentType.existing_clause_amended]]"
-                                      readonly>
-                      </paper-textarea>
-                    </div>
-                  </template>
-
-                </div>
-
-              </template>
+              <agreement-amendment-types data-items="{{item.amendment_types}}"></agreement-amendment-types>
 
             </template>
-
-            <!-- new, unsaved amendment, edit mode -->
-            <template is="dom-if" if="[[!_canBeRemoved(index)]]"></template>
 
 
           </div>
@@ -230,15 +180,7 @@
             signed_agreement: null,
             amendment_types: []
           };
-
-          this.set('_amendmentTypes', [
-            'Change in Legal Name of Implementing Partner',
-            'Extension of Country Programme Cycle',
-            'Change Authorized Officer',
-            'Banking Information',
-            'Additional Clause',
-            'Amend Existing Clause'
-          ]);
+          this.set('editMode', true);
         },
 
         _canBeRemoved: function (index) {
@@ -251,50 +193,28 @@
           return true
         },
 
-        _prepareAttachementFile: function (filePath) {
-          if (typeof filePath === 'string' && filePath != '') {
-            return [{
-              id: null,
-              file_name: filePath.substr(filePath.lastIndexOf('/') + 1),
-              path: filePath
-            }];
+        _getLockedClass: function(index) {
+          if (!this._canBeRemoved(index)) {
+            return 'amendment-locked';
           }
-          return [];
+          return '';
         },
 
-        _getOfficerName: function (officerId) {
-          // officerId === staff member id
-          // TODO: get officer date by id and return it's name
-          return 'John Doe Jr.'
+        _getItemNr: function(index) {
+          return parseInt(index, 10) + 1;
         },
 
-        _showAmendmentTypeOfficer: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Change Authorized Officer';
+        _openSignedDatePicker: function(event) {
+            this.$$('#datePicker' + event.model.index).open = true;
         },
 
-        _showAmendmentTypeBankInfo: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Banking Information';
-        },
-
-        _showAmendmentTypeLegalNameOfIp: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Change in Legal Name of Implementing Partner';
-        },
-
-        _showAmendmentTypeExtensionProgrammeCycle: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Extension of Country Programme Cycle';
-        },
-
-        _showAmendmentTypeAdditionalClauses: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Additional Clause';
-        },
-
-        _showAmendmentTypeExistingClauseAmended: function (amendmentTypeStr) {
-          return amendmentTypeStr === 'Amend Existing Clause';
-        },
-
-        _showNotes: function(amendmentTypeStr) {
-          return !this._showAmendmentTypeAdditionalClauses(amendmentTypeStr)
-              && !this._showAmendmentTypeExistingClauseAmended(amendmentTypeStr);
+        _addNewAmendment: function() {
+          var lastAmendmentItem = this.dataItems[this.dataItems.length - 1];
+//          if (lastAmendmentItem.signed_date !== null) {
+//            this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: false});
+//          } else {
+            this._addElement();
+//          }
         }
 
 

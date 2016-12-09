@@ -1,0 +1,52 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.AgreementAmendmentsBehavior = {
+
+    getOfficerName: function (officerId) {
+      // officerId === staff member id
+      // TODO: get officer date by id and return it's name
+      return 'John Doe Jr.'
+    },
+
+    prepareAttachementFile: function (filePath) {
+      if (typeof filePath === 'string' && filePath != '') {
+        return [{
+          id: null,
+          file_name: filePath.substr(filePath.lastIndexOf('/') + 1),
+          path: filePath
+        }];
+      }
+      return [];
+    },
+
+    showAmendmentTypeOfficer: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Change Authorized Officer';
+    },
+
+    showAmendmentTypeBankInfo: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Banking Information';
+    },
+
+    showAmendmentTypeLegalNameOfIp: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Change in Legal Name of Implementing Partner';
+    },
+
+    showAmendmentTypeExtensionProgrammeCycle: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Extension of Country Programme Cycle';
+    },
+
+    showAmendmentTypeAdditionalClauses: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Additional Clause';
+    },
+
+    showAmendmentTypeExistingClauseAmended: function (amendmentTypeStr) {
+      return amendmentTypeStr === 'Amend Existing Clause';
+    },
+
+    showNotes: function(amendmentTypeStr) {
+      return !this.showAmendmentTypeAdditionalClauses(amendmentTypeStr)
+          && !this.showAmendmentTypeExistingClauseAmended(amendmentTypeStr);
+    },
+
+  };
+</script>

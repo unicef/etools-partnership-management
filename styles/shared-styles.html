@@ -103,7 +103,8 @@
 
       /* paper input readonly state */
       paper-input[readonly],
-      paper-textarea[readonly] {
+      paper-textarea[readonly],
+      .form-field-wrapper {
         --paper-input-container-underline: {
           display: none;
         };
@@ -126,10 +127,27 @@
       .custom-field-wrapper {
         padding: 8px 0;
       }
+
       .custom-field-wrapper etools-checkable-input {
         --etools-checkable-input-label: {
           margin-top: 1px;
         }
+      }
+
+      .basic-btn-wrapper {
+        --paper-input-container-input: {
+          @apply(--basic-btn-style);
+        };
+      }
+
+      .basic-btn {
+        --paper-button: {
+          @apply(--basic-btn-style);
+        };
+      }
+
+      .basic-btn iron-icon {
+        margin-right: 5px;
       }
 
       /* responsive css rules */
