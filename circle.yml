@@ -7,9 +7,9 @@ dependencies:
     - "~/docker"
 
   override:
-    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - if [[ -e ~/docker/image-pmp.tar ]]; then docker load -i ~/docker/image-pmp.tar; fi
     - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
-    - mkdir -p ~/docker; docker save unicef/etools-pmp > ~/docker/image.tar
+    - mkdir -p ~/docker; docker save unicef/etools-pmp > ~/docker/image-pmp.tar
 
 #disable tests for now
 #test:
