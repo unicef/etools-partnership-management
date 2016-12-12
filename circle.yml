@@ -1,0 +1,25 @@
+machine:
+   services:
+     - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  override:
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
+    - mkdir -p ~/docker; docker save unicef/etools-pmp > ~/docker/image.tar
+
+test:
+   override:
+     - export HOSTIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`;
+       docker run -it -e --add-host=docker:${HOSTIP} unicef/etools-pmp:$CIRCLE_BRANCH
+       polymer test
+
+deployment:
+   hub:
+     branch: [develop, staging, master]
+     commands:
+       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+       - docker push unicef/etools
