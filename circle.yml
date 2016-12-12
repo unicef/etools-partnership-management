@@ -1,6 +1,7 @@
 machine:
    services:
      - docker
+     - google-chrome-stable
 
 dependencies:
   cache_directories:
