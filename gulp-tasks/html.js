@@ -45,6 +45,6 @@ var lint = lazypipe()
 
 module.exports = {
   minify: minify,
-  lint: lint,
-  productionBasePath: productionBasePath
+  lint: lint
+  // productionBasePath: productionBasePath
 };
