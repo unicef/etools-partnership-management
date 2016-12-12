@@ -73,6 +73,7 @@
       .item-actions-container.amendment-locked {
         border-right-color: var(--darker-divider-color);
       }
+
       .item-actions-container.amendment-locked:before {
         background-color: var(--darker-divider-color);
       }
@@ -136,10 +137,12 @@
                 </div>
               </div>
 
-              <agreement-amendment-types data-items="{{item.amendment_types}}"></agreement-amendment-types>
+              <agreement-amendment-types data-items="{{item.amendment_types}}"
+                                         partner="[[partner]]"
+                                         partner-authorized-officers="[[partnerAuthorizedOfficers]]">
+              </agreement-amendment-types>
 
             </template>
-
 
           </div>
 
@@ -171,7 +174,15 @@
           pmpBehaviors.DateBehavior
         ],
 
-        properties: {},
+        properties: {
+          partner: {
+            type: Object
+          },
+          partnerAuthorizedOfficers: {
+            type: Array,
+            notify: true
+          }
+        },
 
         ready: function () {
           this.dataSetModel = {
@@ -193,29 +204,29 @@
           return true
         },
 
-        _getLockedClass: function(index) {
+        _getLockedClass: function (index) {
           if (!this._canBeRemoved(index)) {
             return 'amendment-locked';
           }
           return '';
         },
 
-        _getItemNr: function(index) {
+        _getItemNr: function (index) {
           return parseInt(index, 10) + 1;
         },
 
-        _openSignedDatePicker: function(event) {
-            this.$$('#datePicker' + event.model.index).open = true;
+        _openSignedDatePicker: function (event) {
+          this.$$('#datePicker' + event.model.index).open = true;
         },
 
-        _addNewAmendment: function() {
+        _addNewAmendment: function () {
           var lastAmendmentItem = this.dataItems[this.dataItems.length - 1];
 //          if (lastAmendmentItem.signed_date !== null) {
 //            this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: false});
 //          } else {
-            this._addElement();
+          this._addElement();
 //          }
-        }
+        },
 
 
       });

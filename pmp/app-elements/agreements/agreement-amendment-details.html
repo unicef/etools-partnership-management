@@ -38,6 +38,10 @@ keep amendments element small and easy to understand
         width: 100%;
       }
 
+      .amendment-type-item .row-h {
+        margin-top: 0;
+      }
+
     </style>
 
     <div class="row-h">
@@ -70,82 +74,58 @@ keep amendments element small and easy to understand
           </paper-input>
         </div>
 
-        <template is="dom-if" if="[[showNotes(amendmentType.amendment_type)]]">
-          <div class="row-h notes">
-            [[amendmentType.notes]]
-          </div>
-        </template>
+        <div class="row-h">
 
-        <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.amendment_type)]]">
-          <div class="row-h">
+          <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.amendment_type)]]">
             <!-- Officer -->
             <paper-input label="Officer"
                          value="[[getOfficerName(amendmentType.officer_id)]]"
                          readonly>
             </paper-input>
-          </div>
-        </template>
+          </template>
 
-        <template is="dom-if" if="[[showAmendmentTypeBankInfo(amendmentType.amendment_type)]]">
-          <div class="row-h">
+          <template is="dom-if" if="[[showAmendmentTypeBankInfo(amendmentType.amendment_type)]]">
             <!-- Bank information -->
             <paper-input label="New Bank Account"
                          value="[[amendmentType.bank_info]]"
                          readonly>
             </paper-input>
-          </div>
-        </template>
+          </template>
 
-        <template is="dom-if" if="[[showAmendmentTypeLegalNameOfIp(amendmentType.amendment_type)]]">
-          <div class="row-h">
+          <template is="dom-if" if="[[showAmendmentTypeLegalNameOfIp(amendmentType.amendment_type)]]">
             <!-- Legal name of IP -->
             <paper-input label="Full Name of Implementing Partner"
                          value="[[amendmentType.legal_name_of_ip]]"
                          readonly>
             </paper-input>
-          </div>
-        </template>
+          </template>
 
-        <template is="dom-if"
-                  if="[[showAmendmentTypeExtensionProgrammeCycle(amendmentType.amendment_type)]]">
-          <div class="row-h">
-            <div class="col col-3">
-              <!-- Start Date -->
-              <paper-input label="CP Cycle Start Date"
-                           value="[[prettyDate(amendmentType.cp_cycle_start)]]"
-                           readonly>
-              </paper-input>
-            </div>
-            <div class="col col-3">
-              <!-- End Date -->
-              <paper-input label="CP Cycle End Date"
-                           value="[[prettyDate(amendmentType.cp_cycle_end)]]"
-                           readonly>
-              </paper-input>
-            </div>
-          </div>
-        </template>
+          <template is="dom-if"
+                    if="[[showAmendmentTypeExtensionProgrammeCycle(amendmentType.amendment_type)]]">
+            <!-- End Date -->
+            <paper-input label="CP Cycle End Date"
+                         value="[[prettyDate(amendmentType.cp_cycle_end)]]"
+                         readonly>
+            </paper-input>
+          </template>
 
-        <template is="dom-if" if="[[showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)]]">
-          <div class="row-h">
+          <template is="dom-if" if="[[showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)]]">
             <!-- Additional Clauses -->
             <paper-textarea label="Additional Clauses"
                             value="[[amendmentType.additional_clauses]]"
                             readonly>
             </paper-textarea>
-          </div>
-        </template>
+          </template>
 
-        <template is="dom-if" if="[[showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)]]">
-          <div class="row-h">
+          <template is="dom-if" if="[[showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)]]">
             <!-- Change Existing Clauses -->
             <paper-textarea label="Clause Change"
                             value="[[amendmentType.existing_clause_amended]]"
                             readonly>
             </paper-textarea>
-          </div>
-        </template>
+          </template>
 
+        </div>
       </div>
 
     </template>

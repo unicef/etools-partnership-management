@@ -113,13 +113,13 @@
                                              invalid$="[[!_isValid('assessmentType', item.assessment_type, item.date_of_report, item.report_file.length)]]"
                                              error-message="Assessment type is required">
                           <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}"
-                                         attr-for-selected="value">
-                            <paper-item value="Micro Assessment">Micro Assessment</paper-item>
-                            <paper-item value="Simplified Checklist">Simplified Checklist</paper-item>
-                            <paper-item value="Scheduled Audit Report">Scheduled Audit Report</paper-item>
-                            <paper-item value="Special Audit Report">Special Audit Report</paper-item>
-                            <paper-item value="High Risk Assumed">High Risk Assumed</paper-item>
-                            <paper-item value="Other">Other</paper-item>
+                                         attr-for-selected="name">
+                            <paper-item name="Micro Assessment">Micro Assessment</paper-item>
+                            <paper-item name="Simplified Checklist">Simplified Checklist</paper-item>
+                            <paper-item name="Scheduled Audit Report">Scheduled Audit Report</paper-item>
+                            <paper-item name="Special Audit Report">Special Audit Report</paper-item>
+                            <paper-item name="High Risk Assumed">High Risk Assumed</paper-item>
+                            <paper-item name="Other">Other</paper-item>
                           </paper-listbox>
                         </paper-dropdown-menu>
                       </template>

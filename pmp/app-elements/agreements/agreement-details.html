@@ -136,7 +136,9 @@
 
       <!-- Amendments -->
       <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
-        <agreement-amendments data-items="{{amendments}}"></agreement-amendments>
+        <agreement-amendments data-items="{{amendments}}"
+                              partner="[[partner]]"
+                              partner-authorized-officers="[[partnerAuthorizedOfficers]]"></agreement-amendments>
       </etools-content-panel>
 
 
@@ -216,12 +218,9 @@
                 {
                   amendment_type_id: 1,
                   amendment_type: 'Change Authorized Officer',
-                  notes: 'Article I, paragraph 10 is amended to read as follows: "10. ' +
-                    'Authorized Officer means one of the following officers of the IP0"',
                   officer_id: 342,// staff member id
                   bank_info: null,
                   legal_name_of_ip: null,
-                  cp_cycle_start: null,
                   cp_cycle_end: null,
                   additional_clauses: null,
                   existing_clause_amended: null
@@ -229,12 +228,9 @@
                 {
                   amendment_type_id: 2,
                   amendment_type: 'Banking Information',
-                  notes: 'Article VIII, paragraph 10 is amended to read as follows: "10. ' +
-                  'The Cash transfer other than Direct Payment shall be made by UNICEF to the following bank account"',
                   officer_id: null,
                   bank_info: 'Bank of Lebanon: #3234234',
                   legal_name_of_ip: null,
-                  cp_cycle_start: null,
                   cp_cycle_end: null,
                   additional_clauses: null,
                   existing_clause_amended: null
@@ -242,11 +238,9 @@
                 {
                   amendment_type_id: 3,
                   amendment_type: 'Change in Legal Name of Implementing Partner',
-                  notes: 'Some notes...',
                   officer_id: null,
                   bank_info: null,
                   legal_name_of_ip: 'Some partner full name',
-                  cp_cycle_start: null,
                   cp_cycle_end: null,
                   additional_clauses: null,
                   existing_clause_amended: null
@@ -254,11 +248,9 @@
                 {
                   amendment_type_id: 3,
                   amendment_type: 'Extension of Country Programme Cycle',
-                  notes: 'Some notes...',
                   officer_id: null,
                   bank_info: null,
                   legal_name_of_ip: null,
-                  cp_cycle_start: '2016-07-15',
                   cp_cycle_end: '2018-08-30',
                   additional_clauses: null,
                   existing_clause_amended: null
@@ -266,11 +258,9 @@
                 {
                   amendment_type_id: 5,
                   amendment_type: 'Additional Clause',
-                  notes: 'Some notes...',
                   officer_id: null,
                   bank_info: null,
                   legal_name_of_ip: null,
-                  cp_cycle_start: null,
                   cp_cycle_end: null,
                   additional_clauses: 'Some Additional Clause text...',
                   existing_clause_amended: null
@@ -278,11 +268,9 @@
                 {
                   amendment_type_id: 6,
                   amendment_type: 'Amend Existing Clause',
-                  notes: 'Some notes...',
                   officer_id: null,
                   bank_info: null,
                   legal_name_of_ip: null,
-                  cp_cycle_start: null,
                   cp_cycle_end: null,
                   additional_clauses: null,
                   existing_clause_amended: 'Existing clause amended text...'
