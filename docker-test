@@ -9,7 +9,7 @@ RUN apt-get install -qqy firefox
 RUN apt-get install -y xvfb;
 
 # install java; needed by selenium
-RUN apt-get install -y default-jre
+RUN apt-get install -y --no-install-recommends default-jre
 
 # Gulp, bower
 RUN npm install -g gulp bower polymer-cli
