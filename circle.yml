@@ -4,14 +4,14 @@ machine:
 
 dependencies:
   cache_directories:
-    - "~/docker"
+    - "~/dockercache"
 
   override:
-    - if [[ -e ~/docker/image-pmp.tar ]]; then docker load -i ~/docker/image-pmp.tar; fi
+    - if [[ -e ~/dockercache/image-pmp.tar ]]; then docker load -i ~/dockercache/image-pmp.tar; fi
     - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
-    - if [[ -e ~/docker/image-pmp-test.tar ]]; then docker load -i ~/docker/image-pmp-test.tar; fi
+    - if [[ -e ~/dockercache/image-pmp-test.tar ]]; then docker load -i ~/dockercache/image-pmp-test.tar; fi
     - docker build --rm=false -t unicef/etools-pmp-test:$CIRCLE_BRANCH --file docker-test .
-    - mkdir -p ~/docker; docker save unicef/etools-pmp-test > ~/docker/image-pmp-test.tar; docker save unicef/etools-pmp > ~/docker/image-pmp.tar
+    - mkdir -p ~/dockercache; docker save unicef/etools-pmp-test > ~/dockercache/image-pmp-test.tar; docker save unicef/etools-pmp > ~/dockercache/image-pmp.tar
 
 
 test:
