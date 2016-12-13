@@ -1,0 +1,33 @@
+FROM nodesource/trusty:latest
+
+RUN apt-get update;
+
+# install Firefox
+RUN apt-get install -qqy firefox
+
+# install xvfb
+RUN apt-get install -y xvfb;
+
+# install java; needed by selenium
+RUN apt-get install -y default-jre
+
+# Gulp, bower
+RUN npm install -g gulp bower polymer-cli
+
+
+# Source
+ADD bower.json /tmp
+ADD package.json /tmp
+
+# Dependencies
+WORKDIR /tmp
+RUN npm install && bower install --allow-root --config.interactive=false -s
+
+# add code
+ADD . /code/
+WORKDIR /code
+RUN cp -a /tmp/node_modules /code/node_modules
+RUN cp -a /tmp/bower_components /code/bower_components
+
+# Run test
+CMD ["xvfb-run", "polymer", "test"]
