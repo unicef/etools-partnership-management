@@ -17,7 +17,7 @@ dependencies:
 
 test:
    override:
-     - docker run -it unicef/etools-pmp-test:$CIRCLE_BRANCH xvfb-run polymer test
+     - docker run -it unicef/etools-pmp-test:$CIRCLE_BRANCH
 
 deployment:
    hub:
