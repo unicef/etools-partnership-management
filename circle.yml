@@ -9,10 +9,9 @@ dependencies:
   override:
     - if [[ -e ~/docker/image-pmp.tar ]]; then docker load -i ~/docker/image-pmp.tar; fi
     - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
-    - mkdir -p ~/docker; docker save unicef/etools-pmp > ~/docker/image-pmp.tar
     - if [[ -e ~/docker/image-pmp-test.tar ]]; then docker load -i ~/docker/image-pmp-test.tar; fi
     - docker build --rm=false -t unicef/etools-pmp-test:$CIRCLE_BRANCH --file docker-test .
-    - mkdir -p ~/docker; docker save unicef/etools-pmp-test > ~/docker/image-pmp-test.tar
+    - mkdir -p ~/docker; docker save unicef/etools-pmp-test > ~/docker/image-pmp-test.tar; docker save unicef/etools-pmp > ~/docker/image-pmp.tar
 
 
 test:
