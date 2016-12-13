@@ -1,4 +1,4 @@
-FROM nodesource/trusty:latest
+FROM nodesource/trusty:6.3.0
 
 RUN apt-get update
 RUN apt-get install -qqy software-properties-common
