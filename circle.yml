@@ -10,13 +10,15 @@ dependencies:
     - if [[ -e ~/docker/image-pmp.tar ]]; then docker load -i ~/docker/image-pmp.tar; fi
     - docker build --rm=false -t unicef/etools-pmp:$CIRCLE_BRANCH .
     - mkdir -p ~/docker; docker save unicef/etools-pmp > ~/docker/image-pmp.tar
+    - if [[ -e ~/docker/image-pmp-test.tar ]]; then docker load -i ~/docker/image-pmp-test.tar; fi
+    - docker build --rm=false -t unicef/etools-pmp-test:$CIRCLE_BRANCH --file docker-test .
+    - mkdir -p ~/docker; docker save unicef/etools-pmp-test > ~/docker/image-pmp-test.tar
 
-#disable tests for now
-#test:
-#   override:
-#     - export HOSTIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`;
-#       docker run -it -e --add-host=docker:${HOSTIP} unicef/etools-pmp:$CIRCLE_BRANCH
-#       polymer test
+
+test:
+   override:
+     - docker run -it unicef/etools-pmp-test:$CIRCLE_BRANCH
+       xvfb-run polymer test
 
 deployment:
    hub:
