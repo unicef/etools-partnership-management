@@ -53,10 +53,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       };
       var serverBackend = (window.location.port !== '8080');
       var baseUrl = serverBackend ? '/pmp/' : '/';
+
       // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';
-
         var onload = function() {
           // For native Imports, manually fire WebComponentsReady so user code
           // can use the same code path for native and polyfill'd imports.
