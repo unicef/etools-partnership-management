@@ -108,7 +108,7 @@
             <!-- new, unsaved amendment, edit mode -->
             <template is="dom-if" if="[[_canBeRemoved(index)]]">
               <div class="row-h">
-                <div class="col col-3">
+                <div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_agreement.length)]]">
                   <paper-input-container class="form-field-wrapper basic-btn-wrapper" always-float-label>
                     <!-- Auto-generated PCA Amendment -->
                     <label aria-hidden="true">Auto-generated PCA Amendment</label>
@@ -120,10 +120,13 @@
                 </div>
                 <div class="col col-3">
                   <!-- Signed Date -->
-                  <paper-input label="Signed Date"
+                  <paper-input id$="signedDate_[[index]]"
+                               label="Signed Date"
                                value="[[prettyDate(item.signed_date)]]"
                                placeholder="&#8212;"
-                               on-down="_openSignedDatePicker">
+                               on-down="_openSignedDatePicker"
+                               invalid="[[_requireSignedDate(item.signed_agreement.length, item.signed_date, index, item.amendment_types.length)]]"
+                               error-message="Please select signed date">
                     <etools-datepicker-button prefix
                                               id$="datePicker[[index]]"
                                               json-date="{{item.signed_date}}"
@@ -133,13 +136,16 @@
                 <div class="col col-6 file-container space-left">
                   <!-- Signed Agreement -->
                   <etools-file label="Signed Agreement"
+                               files="{{item.signed_agreement}}"
                                accept=".doc,.docx,.pdf,.jpg,.png"></etools-file>
                 </div>
               </div>
 
-              <agreement-amendment-types data-items="{{item.amendment_types}}"
+              <agreement-amendment-types id$="amendmentTypes_[[index]]"
+                                         data-items="{{item.amendment_types}}"
                                          partner="[[partner]]"
-                                         partner-authorized-officers="[[partnerAuthorizedOfficers]]">
+                                         partner-authorized-officers="[[partnerAuthorizedOfficers]]"
+                                         on-amendment-selected="_amendmentTypeSelected">
               </agreement-amendment-types>
 
             </template>
@@ -184,17 +190,17 @@
           }
         },
 
-        ready: function () {
+        ready: function() {
           this.dataSetModel = {
             id: null,
             signed_date: null,
-            signed_agreement: null,
+            signed_agreement: [],
             amendment_types: []
           };
           this.set('editMode', true);
         },
 
-        _canBeRemoved: function (index) {
+        _canBeRemoved: function(index) {
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
           if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {
@@ -204,29 +210,81 @@
           return true
         },
 
-        _getLockedClass: function (index) {
+        _getLockedClass: function(index) {
           if (!this._canBeRemoved(index)) {
             return 'amendment-locked';
           }
           return '';
         },
 
-        _getItemNr: function (index) {
+        _getItemNr: function(index) {
           return parseInt(index, 10) + 1;
         },
 
-        _openSignedDatePicker: function (event) {
+        _openSignedDatePicker: function(event) {
           this.$$('#datePicker' + event.model.index).open = true;
         },
 
-        _addNewAmendment: function () {
-          var lastAmendmentItem = this.dataItems[this.dataItems.length - 1];
-//          if (lastAmendmentItem.signed_date !== null) {
-//            this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: false});
-//          } else {
-          this._addElement();
-//          }
+        _lastAmendmentFieldsAreEmpty: function(amendmentItem, index) {
+          return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
+              && (amendmentItem.signed_agreement.length === 0)
+              && (amendmentItem.amendment_types.length === 0
+                || (amendmentItem.amendment_types.length > 0
+                  && this._hasAmendmentTypesSelected(index) === false));
         },
+
+        _addNewAmendment: function() {
+          var lastAmendmentItemIndex = this.dataItems.length - 1;
+          if (this._canBeRemoved(lastAmendmentItemIndex)) {
+            var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
+            if (this._lastAmendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
+              this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
+            } else {
+              this._addElement();
+            }
+          } else {
+            this._addElement();
+          }
+        },
+
+        _requireSignedDate: function(signedAgreementFilesLength, date, index) {
+          if (signedAgreementFilesLength > 0 || this._hasAmendmentTypesSelected(index)) {
+            if (date === null || date === '') {
+              return true;
+            }
+          }
+          return false;
+        },
+
+        _hideGenerateBtn: function(signedAgreementFilesLength) {
+          if (signedAgreementFilesLength > 0) {
+            return true;
+          }
+          return false;
+        },
+
+        _hasAmendmentTypesSelected: function(index) {
+          var amendmentItem = this.dataItems[index];
+          if (amendmentItem && amendmentItem.amendment_types.length > 0) {
+            var atLeastOneIsSelected = false;
+            for(var i=0; i<= amendmentItem.amendment_types.length - 1; i++) {
+              if (amendmentItem.amendment_types[i].amendment_type !== null
+                  && amendmentItem.amendment_types[i].amendment_type !== '') {
+                atLeastOneIsSelected = true;
+                break;
+              }
+            }
+            return atLeastOneIsSelected;
+          }
+          return false;
+        },
+
+        _amendmentTypeSelected: function(event) {
+          var amendmentIndex = event.model.index;
+          var amendment = this.dataItems[amendmentIndex];
+          this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_agreement.length,
+              amendment.signed_date, amendmentIndex);
+        }
 
 
       });
