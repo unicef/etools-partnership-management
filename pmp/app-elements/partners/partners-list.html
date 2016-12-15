@@ -1,155 +1,147 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
-<link rel="import" href="../partners-data/partners-data.html">
-
-<link rel="import" href="partner-item.html">
-
-<link rel="import" href="../../../styles/shared-styles.html">
-
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
+<link rel="import" href="../partners-data/partners-data.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+
+<link rel="import" href="partner-item.html">
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="partners-list">
 
   <template>
 
-    <style include="shared-styles iron-flex iron-flex-factors">
-
-      :host {
-        display: block;
-      }
-
-      :host([hidden]) {
-        display: none;
-      }
-
-      .header {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-
-        padding: 0 39px 0 49px;
-        line-height: 56px;
-        font-size: 12px;
-        font-weight: bold;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      .header > div {
-        min-width: 100px;
-        margin-right: 10px;
-      }
-
-      .header > div > span {
-        cursor: pointer;
-      }
-
-      #list {
-        display: block;
-        position: relative;
-        margin: 20px auto;
-        opacity: 1;
-        transition: opacity 0.4s;
-        max-width: 920px;
-        background-color: #FFFFFF;
-      }
-
-      #list.hidden {
-        transition: none;
-        opacity: 0;
-      }
-
-      .row {
-        @apply(--layout-vertical);
-
-        cursor: pointer;
-        overflow: hidden;
-        padding: 15px 15px;
-        font-size: 13px;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      .row:hover {
-        background: var(--dark-hover-color);
-      }
-
-    </style>
+    <style include="shared-styles list-styles iron-flex iron-flex-factors"></style>
 
     <partners-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
 
-    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
-
     <paper-material id="listControls" elevation="1">
 
-      <input id="query"
-          type="search"
-          autocomplete="off"
-          value="{{q::keyup}}"
-          placeholder="Search"
-          on-search="_onSearch"></input>
+      <div class="wrap-controls">
 
-      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
-      <!-- note: this should be loaded from object -->
-      <paper-dropdown-menu label="Partner Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
-          <paper-item>Bilateral / Multilateral</paper-item>
-          <paper-item>Civil Society Organization</paper-item>
-          <paper-item>Government</paper-item>
-          <paper-item>UN Agency</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+        <paper-input id="query"
+            type="search"
+            autocomplete="off"
+            value="[[q]]"
+            on-keyup="_setQ"
+            placeholder="Search"
+            on-search="_setQ">
+            <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
 
-      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
-      <!-- note: this should be loaded from object -->
-      <paper-dropdown-menu label="CSO Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
-          <paper-item>Academic Institution</paper-item>
-          <paper-item>Community Based Organization</paper-item>
-          <paper-item>International</paper-item>
-          <paper-item>National</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+        <div class="dropdown-with-clear-btn">
+          <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
+          <paper-dropdown-menu label="Partner Type" noink>
+            <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
+              <paper-item>Bilateral / Multilateral</paper-item>
+              <paper-item>Civil Society Organization</paper-item>
+              <paper-item>Government</paper-item>
+              <paper-item>UN Agency</paper-item>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
 
-      <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
-      <button type="button" name="page-left" on-tap="_pageLeft"> < </button>
-      <button type="button" name="page-right" on-tap="_pageRight"> > </button>
-      <button type="button" name="last-page" on-tap="_lastPage"> >| </button>
+        <div class="dropdown-with-clear-btn">
+          <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
+          <paper-dropdown-menu label="CSO Type" noink>
+            <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{csoType}}" on-iron-activate="_dropdownSelected">
+              <paper-item>Academic Institution</paper-item>
+              <paper-item>Community Based Organization</paper-item>
+              <paper-item>International</paper-item>
+              <paper-item>National</paper-item>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
 
-      <paper-menu-button>
-        <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
-        <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
-          <paper-item>5</paper-item>
-          <paper-item>10</paper-item>
-          <paper-item>25</paper-item>
-          <paper-item>50</paper-item>
+      </div>
+
+      <div class="fixed-controls">
+
+      <div class="divider" style="margin-right: 12px;"></div>
+
+      <paper-menu-button id="filterMenu">
+        <paper-button class="button dropdown-trigger">
+          <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
+        <paper-menu class="dropdown-content">
+          <paper-item>Filter</paper-item>
+          <paper-item>Filter</paper-item>
+          <paper-item>Filter</paper-item>
         </paper-menu>
       </paper-menu-button>
 
-      <paper-toggle-button checked="{{showHidden}}" on-change='_hiddenToggled'></paper-toggle-button>
+      <div class="divider"></div>
 
-    </paper-material>
-
-    <paper-material id="list">
-
-      <div class="header">
-        <!-- first class of div must be name of field -->
-        <div class="name flex-2"><span on-tap="_buildSortOrder">Name</span></div>
-        <div class="partner_type flex-2">Type</div>
-        <div class="rating flex"><span on-tap="_buildSortOrder">Risk</span></div>
+      <div id="hiddenToggle" on-tap="_toggleHidden">
+        Show hidden
+        <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
       </div>
 
-      <template id="rows" is="dom-repeat" items="[[filteredPartners]]" initial-count="10">
-        <partner-item class="row" partner="[[item]]"></partner-item>
-      </template>
+    </div>
 
     </paper-material>
+
+    <div id="list">
+
+      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <data-table-column class="flex" field="vendor_number" sortable>
+          Vendor #
+        </data-table-column>
+        <data-table-column class="flex-3" field="name" sortable>
+          Name(short - full)
+        </data-table-column>
+        <data-table-column class="flex-2" field="partner_type">
+          Type
+        </data-table-column>
+        <data-table-column class="flex" field="rating">
+          Risk
+        </data-table-column>
+      </data-table-header>
+
+      <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10">
+        <data-table-row>
+          <a class="flex" href="partners/[[partner.id]]/overview">
+            [[partner.vendor_number]]
+          </a>
+          <span class="flex-3">
+            [[_computeName(partner.name, partner.short_name)]]
+          </span>
+          <span class="flex-2">
+            [[_computeType(partner.cso_type, partner.partner_type)]]
+          </span>
+          <span class="flex" style="text-transform: capitalize">
+            [[partner.rating]]
+          </span>
+        </data-table-row>
+      </template>
+
+      </paper-material>
+
+      <data-table-footer
+        page-size="[[pageSize]]"
+        page-number="[[pageNumber]]"
+        total-results="[[totalResults]]"
+        visible-range="{{visibleRange}}"
+        on-page-size-changed="_pageSizeChanged"
+        on-page-number-changed="_pageNumberChanged">
+      </data-table-footer>
+
+    </div>
+
 
   </template>
 
@@ -193,16 +185,6 @@
           type: Number
         },
 
-        totalPages: {
-          type: Number,
-          computed: '_computeTotalPages(pageSize, totalResults)',
-        },
-
-        visibleRange: {
-          type: Array,
-          computed: '_computeVisibleRange(pageNumber, pageSize, totalResults, totalPages)'
-        },
-
         pageSize: {
           type: Number
         },
@@ -222,6 +204,10 @@
         '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
       ],
 
+      listeners: {
+        'sort-changed': '_sortOrderChanged',
+      },
+
       ready: function() {
         this.$.list.classList.add('hidden');
       },
@@ -240,12 +226,13 @@
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
         this.set('showHidden', urlParams.hidden ? true : false);
         // format of sort param is sort=field.order ex: sort=name.asc
-        var result = [{field: 'name', order: 'asc'}];
+        var result = {field: 'name', direction: 'asc'};
         if (urlParams.sort) {
           var p = urlParams.sort.split('.');
-          result = [{field: p[0], order: p[1]}];
+          result = {field: p[0], direction: p[1]};
         }
         this.set('sortOrder', result);
+        this.$.listHeader.sortOrder = result;
       },
 
       // Updates URL state with new query string, and launches query
@@ -266,8 +253,8 @@
           // set depending on what action the user takes
           this.debounce('query', function() {
             this.$.partners.query(
-              this.sortOrder[0].field,
-              this.sortOrder[0].order,
+              this.sortOrder.field,
+              this.sortOrder.direction,
               this.q.toLowerCase(),
               this.partnerType,
               this.csoType,
@@ -297,14 +284,8 @@
         if (this.csoType && this.csoType.length) {
           out.push('cso_type=' + this.csoType);
         }
-        if (this.sortOrder && this.sortOrder.length) {
-          var sortQuery = [];
-          this.sortOrder.forEach(function(sort) {
-            if (sort.field && sort.order) {
-              sortQuery.push('' + sort.field + '.' + sort.order);
-            }
-          });
-          out.push('sort=' + sortQuery.join('+'));
+        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
         }
         if (this.showHidden) {
           out.push('hidden=true');
@@ -312,64 +293,29 @@
         return out.join('&');
       },
 
-      // Run when a list header is clicked
-      // uses the first class of the header to determine the field name
-      _buildSortOrder: function(e) {
-        var _field = e.path[1].classList[0];
-        var _order = 'asc';
-        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
-          _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
-        }
+      _sortOrderChanged: function(e) {
         this.set('debounceTime', 150);
-        this.set('sortOrder', [{field: _field, order: _order}]);
+        this.set('sortOrder', e.detail);
       },
 
-      _pageLeft: function() {
+      _pageSizeChanged: function(e) {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+        this.set('pageSize', parseInt(e.detail.value));
+      },
+
+      _pageNumberChanged: function(e) {
         this.set('debounceTime', 50);
-        if (this.pageNumber > 1) {
-          this.set('pageNumber', this.pageNumber - 1);
-        }
+        this.set('pageNumber', e.detail.value);
       },
 
-      _pageRight: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) {
-          this.set('pageNumber', this.pageNumber + 1);
-        }
-      },
-
-      _firstPage: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber > 1) {
-          this.set('pageNumber', 1);
-        }
-      },
-
-      _lastPage: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) {
-          this.set('pageNumber', this.totalPages);
-        }
-      },
-
-      _onSearch: function() {
-        this.q = this.$.query.value;
+      _setQ: function() {
+        this.set('q', this.$.query.value);
       },
 
       _qChanged: function(q) {
-        if (q) {
-          this.async(function() {
-            this.$.query.focus();
-          });
-        }
         this.set('debounceTime', 300);
         this.set('pageNumber', 1);
-      },
-
-      _pageSizeSelected: function(e, detail) {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-        this.set('pageSize', parseInt(detail.selected));
       },
 
       _dropdownSelected: function() {
@@ -377,31 +323,10 @@
         this.set('pageNumber', 1);
       },
 
-      _hiddenToggled: function() {
+      _toggleHidden: function() {
         this.set('debounceTime', 50);
+        this.set('showHidden', this.showHidden ? false : true);
         this.set('pageNumber', 1);
-      },
-
-      _computeTotalPages: function(pageSize, totalResults) {
-        var result = 1;
-        if (pageSize < totalResults) {
-          result = Math.ceil(totalResults / pageSize);
-        }
-        return result;
-      },
-
-      _computeVisibleRange: function(pageNumber, pageSize, totalResults, totalPages) {
-        var start = 1;
-        var end = totalResults;
-
-        if (pageNumber !== 1) {
-          start = (pageNumber - 1) * pageSize + 1;
-        }
-        if (pageNumber !== totalPages) {
-          end = start + pageSize - 1;
-        }
-
-        return [start, end];
       },
 
       // List fade in fade out effect
@@ -410,7 +335,21 @@
         this.async(function() {
           this.$.list.classList.remove('hidden');
         }, 50);
-      }
+      },
+
+      _computeName: function(name, shortName) {
+        return shortName ? shortName + ' / ' + name : name;
+      },
+
+      _computeType: function(csoType, partnerType) {
+        if (!csoType) {
+          return partnerType;
+        } else if (csoType === 'Community Based Organization') {
+          return 'CSO / Community Based';
+        } else {
+          return 'CSO / ' + csoType;
+        }
+      },
 
     });
 
