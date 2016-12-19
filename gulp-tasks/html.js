@@ -6,7 +6,7 @@
 const htmlmin = require('gulp-htmlmin');
 const htmlhint = require('gulp-htmlhint');
 const lazypipe = require('lazypipe'); // Lazy pipe creates a reusable pipe stream
-const replace = require('gulp-replace');
+// const replace = require('gulp-replace');
 
 // Minify HTML
 function minify() {
@@ -30,8 +30,8 @@ var htmlLintOptions = {
  *
  */
 
-var productionBasePath = lazypipe()
-    .pipe(replace, /([A-Za-z]+[/]app-shell.html)/g, 'app-shell.html');
+// var productionBasePath = lazypipe()
+//    .pipe(replace, /([A-Za-z]+[/]app-shell.html)/g, 'app-shell.html');
 
 /**
  * Lint HTML
@@ -45,6 +45,6 @@ var lint = lazypipe()
 
 module.exports = {
   minify: minify,
-  lint: lint,
-  productionBasePath: productionBasePath
+  lint: lint
+  // productionBasePath: productionBasePath
 };
