@@ -20,12 +20,12 @@
 <!-- TODO: move partner-data into partners folder -->
 <link rel="import" href="../partner-data/partner-data.html">
 
-<link rel="import" href="assessments-items.html">
-<link rel="import" href="staff-members.html">
-<link rel="import" href="bank-information.html">
-<link rel="import" href="partner-status.html">
+<link rel="import" href="../partners/assessments-items.html">
+<link rel="import" href="../partners/staff-members.html">
+<link rel="import" href="../partners/bank-information.html">
+<link rel="import" href="../partners/partner-status.html">
 
-<dom-module id="partner-details">
+<dom-module id="government-details">
 
   <template>
 
@@ -242,7 +242,7 @@
       'use strict';
 
       Polymer({
-        is: 'partner-details',
+        is: 'government-details',
 
         behaviors: [
           pmpBehaviors.RiskRatingBehavior
