@@ -249,14 +249,11 @@
       /**
        * Catch new-agreement-saved event and redirect to details
        * TODO: this might not be the right flow, maybe the redirect page will be the list (?)
-       * @param event
-       * @private
        */
       _newAgreementSaved: function(event) {
         this.set('agreement', event.detail);
         this.set('route.path', '/' + this.agreement.id + '/details');
       }
-
 
     });
 

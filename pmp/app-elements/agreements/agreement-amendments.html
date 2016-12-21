@@ -126,7 +126,8 @@
                                label="Signed Date"
                                value="[[prettyDate(item.signed_date)]]"
                                placeholder="&#8212;"
-                               on-down="_openSignedDatePicker"
+                               on-down="openDatePicker"
+                               data-selector$="datePicker[[index]]"
                                invalid="[[_requireSignedDate(item.signed_agreement.length, item.signed_date, index, item.amendment_types.length)]]"
                                error-message="Please select signed date">
                     <etools-datepicker-button prefix
@@ -171,7 +172,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       Polymer({
@@ -201,6 +202,9 @@
           };
         },
 
+        /**
+         * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
+         */
         _canBeRemoved: function(index) {
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
@@ -208,9 +212,13 @@
             // amendment already saved (has an id assigned)
             return false;
           }
-          return true
+          return true;
         },
 
+        /**
+         * If the amendment can be removed, the left border and top badge needs to have a different style.
+         * This class will help with that.
+         */
         _getLockedClass: function(index) {
           if (!this._canBeRemoved(index)) {
             return 'amendment-locked';
@@ -222,23 +230,25 @@
           return parseInt(index, 10) + 1;
         },
 
-        _openSignedDatePicker: function(event) {
-          this.$$('#datePicker' + event.model.index).open = true;
-        },
-
-        _lastAmendmentFieldsAreEmpty: function(amendmentItem, index) {
+        /**
+         * Check if amendment fields are empty
+         */
+        _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
               && (amendmentItem.signed_agreement.length === 0)
               && (amendmentItem.amendment_types.length === 0
-                || (amendmentItem.amendment_types.length > 0
-                  && this._hasAmendmentTypesSelected(index) === false));
+              || (amendmentItem.amendment_types.length > 0
+              && this._hasAmendmentTypesSelected(index) === false));
         },
 
+        /**
+         * Validate last added amendment and if is not empty add a new one
+         */
         _addNewAmendment: function() {
           var lastAmendmentItemIndex = this.dataItems.length - 1;
           if (this._canBeRemoved(lastAmendmentItemIndex)) {
             var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
-            if (this._lastAmendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
+            if (this._amendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
             } else {
               this._addElement();
@@ -248,6 +258,9 @@
           }
         },
 
+        /**
+         * Check if amendment signed date is required
+         */
         _requireSignedDate: function(signedAgreementFilesLength, date, index) {
           if (signedAgreementFilesLength > 0 || this._hasAmendmentTypesSelected(index)) {
             if (date === null || date === '') {
@@ -257,6 +270,9 @@
           return false;
         },
 
+        /**
+         *  TODO: to be revised
+         */
         _hideGenerateBtn: function(signedAgreementFilesLength) {
           if (signedAgreementFilesLength > 0) {
             return true;
@@ -264,11 +280,14 @@
           return false;
         },
 
+        /**
+         * Check if amendment has at least an amendment type selected
+         */
         _hasAmendmentTypesSelected: function(index) {
           var amendmentItem = this.dataItems[index];
           if (amendmentItem && amendmentItem.amendment_types.length > 0) {
             var atLeastOneIsSelected = false;
-            for(var i=0; i<= amendmentItem.amendment_types.length - 1; i++) {
+            for (var i = 0; i <= amendmentItem.amendment_types.length - 1; i++) {
               if (amendmentItem.amendment_types[i].amendment_type !== null
                   && amendmentItem.amendment_types[i].amendment_type !== '') {
                 atLeastOneIsSelected = true;
@@ -280,13 +299,15 @@
           return false;
         },
 
+        /**
+         * Validate signed date if an amendment type is selected
+         */
         _amendmentTypeSelected: function(event) {
           var amendmentIndex = event.model.index;
           var amendment = this.dataItems[amendmentIndex];
           this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_agreement.length,
               amendment.signed_date, amendmentIndex);
         }
-
 
       });
     })();

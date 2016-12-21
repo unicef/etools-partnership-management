@@ -304,8 +304,6 @@
         /**
          * When agreement data is changed we need to check and prepare attached agreement file and
          * display amendments if needed
-         * @param agreement
-         * @private
          */
         _agreementChanged: function(agreement) {
           if (typeof agreement === 'object' && agreement !== null) {
@@ -330,8 +328,6 @@
 
         /**
          * When partner data is received, update partnerName, needed for page title
-         * @param partner
-         * @private
          */
         _partnerChanged: function(partner) {
           if (typeof partner === 'object' && partner.id > 0) {
@@ -342,35 +338,27 @@
         /**
          * TODO: replace this staff member data; get the staff member from an endpoint
          * by staffMemberId(agreement.signed_by) then return first_name and last_name
-         * @param staffMemberId
-         * @returns {string}
-         * @private
          */
         _getStaffMemberName: function(staffMemberId) {
-          return "John Doe";
+          return 'John Doe';
         },
 
         /**
          * TODO: get partner manager data from an endpoint by partnerManagerId then return he's/she's name
-         * @param partnerManagerId
-         * @returns {string}
-         * @private
          */
         _getPartnerManagerName: function(partnerManagerId) {
-          return "Jane Doe Manager";
+          return 'Jane Doe Manager';
         },
 
         /**
          * Update agreement data
-         * @param event
-         * @private
          */
         _updateAgreement: function(event) {
           if (!this.editMode) {
             return;
           }
           // TODO: implement save agreement
-          this.fire('toast', {text: 'Save functionality not implemented yet!'})
+          this.fire('toast', {text: 'Save functionality not implemented yet!', showCloseBtn: false});
         }
       });
 

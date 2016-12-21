@@ -8,7 +8,8 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -17,6 +18,7 @@
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
+<link rel="import" href="./agreement-behaviors/agreements-common-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
 <dom-module id="agreement-amendment-types">
@@ -70,6 +72,7 @@
         padding-top: 10px;
         padding-bottom: 10px;
       }
+
       .item-content .row-h + .row-h {
         margin-top: 0;
       }
@@ -103,7 +106,7 @@
               <etools-searchable-multiselection-menu id$="officersDropdown_[[index]]"
                                                      label="Officer"
                                                      placeholder="&#8212;"
-                                                     options="[[_prepareAuthorizedOfficersData(partnerAuthorizedOfficers)]]"
+                                                     options="[[preparedDropdownOfficersData]]"
                                                      hidden="[[!showAmendmentTypeOfficer(item.amendment_type)]]"
                                                      on-value-change="_officerSelected"
                                                      error-message="Please select an officer">
@@ -172,7 +175,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       Polymer({
@@ -180,6 +183,7 @@
 
         behaviors: [
           pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.AgreementsCommonBehavior,
           pmpBehaviors.AgreementAmendmentsBehavior,
           pmpBehaviors.DateBehavior
         ],
@@ -195,7 +199,7 @@
 
         observers: ['_amendmentTypePropertyChanged(dataItems.*)'],
 
-        ready: function () {
+        ready: function() {
           // TODO: refactor this data model, might not have the same properties with the API data
           this.dataSetModel = {
             amendment_type_id: null,
@@ -220,10 +224,13 @@
 
           // TODO: get countryProgrammeCycle from patner/API ?
           this._countryProgrammeCycleEndDate = '2017-07-25';
-
+          this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
         },
 
-        _addNewAmendmentType: function () {
+        /**
+         * Validate last amendment type; if valid add a new one.
+         */
+        _addNewAmendmentType: function() {
           if (this.dataItems.length === 0) {
             this._addElement();
           } else {
@@ -243,6 +250,9 @@
           }
         },
 
+        /**
+         * Amendment type property observer
+         */
         _amendmentTypePropertyChanged: function(dataItem) {
           if (dataItem.path !== 'dataItems' && dataItem.path !== 'dataItems.splices'
               && dataItem.path !== 'dataItems.length' && this.get(dataItem.path) !== null) {
@@ -298,6 +308,9 @@
           }
         },
 
+        /**
+         * Reset amendment type fields when the type changes
+         */
         _resetPaths: function(index, exceptions) {
           if (index > 0) {
             Object.keys(this.dataSetModel).forEach(function(property) {
@@ -308,30 +321,18 @@
           }
         },
 
-        _prepareAuthorizedOfficersData: function(partnerAuthorizedOfficers) {
-          if (Array.isArray(partnerAuthorizedOfficers) && !Array.isArray(this._officersData)) {
-            var _officersD = [];
-            partnerAuthorizedOfficers.forEach(function(officer) {
-              _officersD.push({
-                value: officer.id,
-                label: this._computeOfficerName(officer.first_name, officer.last_name)
-              });
-            }.bind(this));
-            this.set('_officersData', _officersD);
-          }
-          return this._officersData;
-        },
-
-        _computeOfficerName: function (firstName, lastName) {
-          return firstName + ' ' + lastName;
-        },
-
+        /**
+         * Reset officers dropdown
+         */
         _resetOfficersDropdownSelection: function(itemIndex) {
           var officersDropdown = this.$$('#officersDropdown_' + itemIndex);
           officersDropdown.selectedValues = [];
           officersDropdown.value = '';
         },
 
+        /**
+         * When a amendment type is selected or not, validate this field and notify parent, to revalidate signed date
+         */
         _amendmentTypeSelected: function(event) {
           var selectedAmendmentType = null;
           var amendmentTypeId = '#amendmentType_' + event.model.index;
@@ -345,6 +346,9 @@
           this.fire('amendment-selected', {type: selectedAmendmentType});
         },
 
+        /**
+         * Handle officer selection
+         */
         _officerSelected: function(event) {
           var officerId = null;
           if (event.detail.selectedValues !== null) {
@@ -353,6 +357,9 @@
           this.set('dataItems.' + event.model.index + '.officer_id', officerId);
         },
 
+        /**
+         * Set invalid value of the amendment type field
+         */
         _invalidAmendmentTypeField: function(value, selector) {
           this.$$(selector).invalid = value;
         },

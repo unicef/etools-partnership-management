@@ -6,9 +6,6 @@
 
     /**
      * Format date string to any format supported by momentjs
-     * @param dateString
-     * @param format
-     * @returns {*}
      */
     prettyDate: function(dateString, format) {
       if (!format) {
@@ -23,7 +20,6 @@
     /**
      * Open input field assigned(as prefix or suffix) etools-datepicker on tap.
      * Make sure you also have the data-selector attribute set on the input field.
-     * @param event
      */
     openDatePicker: function(event) {
       var id = Polymer.dom(event).localTarget.getAttribute('data-selector');

@@ -259,7 +259,7 @@
         ready: function() {
 
           // create loading element, used for saving functionality
-          this.savingAgreementLoading = this.createLoading('Saving the new agreement, please wait...')
+          this.savingAgreementLoading = this.createLoading('Saving the new agreement, please wait...');
           this.set('authorizedOfficersIds', []);
 
           this.set('_agreementTypes', [
@@ -301,7 +301,7 @@
 
           this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
 
-          // TODO: get etools(List of Staff) WHERE Group = "Senior Management"
+          // TODO: get etools(List of Staff) WHERE Group = 'Senior Management'
           this.set('partnerSeniorManagers', [
             {
               value: 1,
@@ -334,8 +334,6 @@
 
         /**
          * Get partner id from dropdown selection and add it to agreement
-         * @param event
-         * @private
          */
         _partnerSelected: function(event) {
           var selectedPartner = event.detail.selectedValues;
@@ -347,8 +345,6 @@
 
         /**
          * Get agreement type string from dropdown selection and add it to the agreement
-         * @param event
-         * @private
          */
         _agreementTypeSelected: function(event) {
           var selectedType = event.detail.selectedValues;
@@ -362,9 +358,6 @@
          * End date is conditioned by the start date
          * if start date is entered, then the end date is required;
          * also, when end date changes, trigger the validation again.
-         * @param start
-         * @param end
-         * @private
          */
         _startOrEndDateChanged: function(start, end) {
           var endDateField = this.$.endDateField;
@@ -374,11 +367,6 @@
         /**
          * SignedBy fields require condition depend on the selected values;
          * also officers are required if at least one of these fields are populated.
-         * @param singedByPartnerId
-         * @param signedByDateString
-         * @param singedByUnicefId
-         * @param signedByUnicefDateString
-         * @private
          */
         _signedByFieldsChanged: function(singedByPartnerId, signedByDateString,
                                          singedByUnicefId, signedByUnicefDateString) {
@@ -410,8 +398,6 @@
 
         /**
          * Handling signed by partner selection. The partner id is needed and must be assigned to agreement.
-         * @param event
-         * @private
          */
         _signedByPartnerSelected: function(event) {
           var selectedOfficer = event.detail.selectedValues;
@@ -423,8 +409,6 @@
 
         /**
          * Handling signed by unicef selection. The partner manager id is needed and must be assigned to agreement.
-         * @param event
-         * @private
          */
         _signedByUnicefSelected: function(event) {
           var selectedUnicefManager = event.detail.selectedValues;
@@ -437,7 +421,6 @@
         /**
          * Save agreement if all fields are validated
          * beware: FAKE DATA :) ... until API integration
-         * @private
          */
         _saveAgreement: function() {
           if (this._validateAgreement()) {
@@ -450,7 +433,7 @@
               // fake id, this will be assigned on backend
               this.agreement.id = 1;
               // fake agreement_number, this will be assigned on backend too
-              this.agreement.agreement_number = "PCA 2015/29-3";
+              this.agreement.agreement_number = 'PCA 2015/29-3';
               localStorage.setItem('newAgreement', JSON.stringify(this.agreement));
               this.savingAgreementLoading.active = false;
               // TODO: check this event when API will be used here
@@ -463,8 +446,6 @@
 
         /**
          * Validate agreement fields
-         * @returns {boolean}
-         * @private
          */
         _validateAgreement: function() {
           var valid = true;
@@ -507,9 +488,6 @@
 
         /**
          * Validate integer value
-         * @param idValue
-         * @returns {boolean}
-         * @private
          */
         _validateIdValue: function(idValue) {
           var id = parseInt(idValue, 10);
@@ -521,9 +499,6 @@
 
         /**
          * Validate string value
-         * @param stringValue
-         * @returns {boolean}
-         * @private
          */
         _validateStringValue: function(stringValue) {
           if (typeof stringValue === 'string' && stringValue !== '') {
@@ -534,13 +509,6 @@
 
         /**
          * Validate signed by fields
-         * @param partnerId
-         * @param partnerSignedDate
-         * @param managerId
-         * @param managerSignedDate
-         * @param updateUi
-         * @returns {boolean}
-         * @private
          */
         _validSignedByFields: function(partnerId, partnerSignedDate, managerId, managerSignedDate, updateUi) {
           var valid = true;
@@ -587,7 +555,7 @@
             if (validSignedByPartnerManagerDate === false) {
               valid = false;
               if (updateUi) {
-                this.$.signedByUnicefDateField.validate()
+                this.$.signedByUnicefDateField.validate();
               }
             }
           }
@@ -597,8 +565,6 @@
 
         /**
          * Validate officers selection
-         * @returns {boolean}
-         * @private
          */
         _validateSelectedOfficers: function() {
           var valid = true;
@@ -613,12 +579,6 @@
 
         /**
          * Check if signed by fields have at least one valid value
-         * @param signedByPartnerId
-         * @param signedByPartnerDate
-         * @param signedByPartnerManagerId
-         * @param signedByPartnerManagerDate
-         * @returns {*|boolean}
-         * @private
          */
         _signedByValuesFilledAndValid: function(signedByPartnerId, signedByPartnerDate,
                                          signedByPartnerManagerId, signedByPartnerManagerDate) {

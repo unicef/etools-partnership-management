@@ -132,11 +132,9 @@
         _initSelectedOfficers: function() {
           if (this.selectedOfficersIds.length > 0 && this.dropdownOfficersData.length > 0) {
 
-            if (!this.editMode) {
-              var selectedOfficersNames = [];
-            } else {
-              var selectedOfficers = [];
-            }
+            var selectedOfficersNames = [];
+            var selectedOfficers = [];
+
             this.selectedOfficersIds.forEach(function(id) {
               var officer = this.dropdownOfficersData.filter(function(officerData) {
                 return parseInt(officerData.value, 10) === parseInt(id, 10);

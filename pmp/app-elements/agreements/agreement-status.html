@@ -50,6 +50,7 @@
         @apply(--layout-center-justified);
         @apply(--layout-warp);
       }
+
       .status {
         margin-left: 10px;
       }
@@ -93,6 +94,7 @@
       .status-container.active.suspended .icon-wrapper {
         background-color: #F7A14B; /* TODO: replace with app-theme var */
       }
+
       .status-container.active.suspended .icon-wrapper {
         width: 30px;
         height: 30px;
@@ -116,6 +118,7 @@
         width: 100%;
         height: 100%;
       }
+
       .status-container.active.terminated .icon-wrapper iron-icon {
         color: #E54F2E; /* TODO: replace with app-theme var */
       }
@@ -162,7 +165,6 @@
     </etools-content-panel>
 
 
-
   </template>
 
   <script>
@@ -187,7 +189,7 @@
           // prepare statuses properties
           var statuses = [
             {
-              statusClass: (this.status === 'draft') ? 'active': 'completed',
+              statusClass: (this.status === 'draft') ? 'active' : 'completed',
               icon: 'done',
               showIcon: (this.status === 'draft') ? false : true,
               statusNr: '1',
@@ -217,7 +219,6 @@
 
         /**
          * Fire custom event to notify parent element to execute agreement save
-         * @private
          */
         _triggerAgreementSave: function() {
           this.fire('save-agreement', {});
@@ -225,8 +226,6 @@
 
         /**
          * Second status category values can be: active, suspended and terminated
-         * @returns {boolean}
-         * @private
          */
         _isSecondStatusCategory: function() {
           return this.status === 'active' || this.status === 'suspended' || this.status === 'terminated';
@@ -234,8 +233,6 @@
 
         /**
          * Show second status category icon only for: suspended and terminated
-         * @returns {boolean}
-         * @private
          */
         _showSecondStatusCategoryIcon: function() {
           if (['active', 'draft', 'expired'].indexOf(this.status) > -1) {
@@ -246,8 +243,6 @@
 
         /**
          * Get suspended and terminated icon names
-         * @returns {*}
-         * @private
          */
         _getSecondStatusCategoryIcon: function() {
           if (this.status === 'suspended') {
@@ -261,8 +256,6 @@
 
         /**
          * Get status element class
-         * @returns {string}
-         * @private
          */
         _getStatusClass: function() {
           var statusClass = '';
@@ -278,7 +271,6 @@
           }
           return statusClass;
         }
-
 
       });
     })();
