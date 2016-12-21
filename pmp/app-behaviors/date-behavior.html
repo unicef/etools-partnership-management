@@ -1,9 +1,15 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../bower_components/moment-element/moment-import.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.DateBehavior = {
 
+    /**
+     * Format date string to any format supported by momentjs
+     * @param dateString
+     * @param format
+     * @returns {*}
+     */
     prettyDate: function(dateString, format) {
       if (!format) {
         format = 'D MMM YYYY';
@@ -12,6 +18,22 @@
         return moment(new Date(dateString)).format(format);
       }
       return '';
+    },
+
+    /**
+     * Open input field assigned(as prefix or suffix) etools-datepicker on tap.
+     * Make sure you also have the data-selector attribute set on the input field.
+     * @param event
+     */
+    openDatePicker: function(event) {
+      var id = Polymer.dom(event).localTarget.getAttribute('data-selector');
+      if (id) {
+        var datepickerId = '#' + id;
+        var datePicker = this.$$(datepickerId);
+        if (datePicker) {
+          datePicker.open = true;
+        }
+      }
     }
 
   };

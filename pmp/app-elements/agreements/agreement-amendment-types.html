@@ -13,6 +13,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
@@ -20,7 +21,7 @@
 
 <dom-module id="agreement-amendment-types">
   <template>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -161,7 +162,7 @@
     </div>
 
     <div class="row-h add-amendment-type-wrapper">
-      <paper-button class="basic-btn"
+      <paper-button class="secondary-btn"
                     on-tap="_addNewAmendmentType"
                     title="Add Amendment Type">
         Add Amendment Type

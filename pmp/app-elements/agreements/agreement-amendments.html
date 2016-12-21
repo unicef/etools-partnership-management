@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
@@ -13,6 +14,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
@@ -22,7 +24,7 @@
 
 <dom-module id="agreement-amendments">
   <template>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -109,10 +111,10 @@
             <template is="dom-if" if="[[_canBeRemoved(index)]]">
               <div class="row-h">
                 <div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_agreement.length)]]">
-                  <paper-input-container class="form-field-wrapper basic-btn-wrapper" always-float-label>
+                  <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
                     <!-- Auto-generated PCA Amendment -->
                     <label aria-hidden="true">Auto-generated PCA Amendment</label>
-                    <paper-button class="paper-input-input basic-btn">
+                    <paper-button class="paper-input-input secondary-btn">
                       <iron-icon icon="refresh"></iron-icon>
                       GENERATE PCA
                     </paper-button>
@@ -197,7 +199,6 @@
             signed_agreement: [],
             amendment_types: []
           };
-          this.set('editMode', true);
         },
 
         _canBeRemoved: function(index) {

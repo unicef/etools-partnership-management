@@ -11,9 +11,13 @@
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
+<link rel="import" href="../partner-data/partner-data.html">
+
+<link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
 <link rel="import" href="partner-authorized-officers.html">
 <link rel="import" href="agreement-amendments.html">
 
@@ -21,7 +25,7 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles buttons-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -36,6 +40,7 @@
         tail="{{subroute}}">
     </app-route>
 
+    <partner-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-data>
 
     <!-- main page content start -->
     <div id="pageContent">
@@ -67,22 +72,22 @@
           <div class="col col-3">
             <!-- Start date -->
             <paper-input label="Start date"
-                         value="[[prettyDate(agreement.start)]]"
+                         value$="[[prettyDate(agreement.start)]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-3">
             <!-- End date -->
             <paper-input label="End date"
-                         value="[[prettyDate(agreement.end)]]"
+                         value$="[[prettyDate(agreement.end)]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-6">
-            <paper-input-container class="form-field-wrapper basic-btn-wrapper" always-float-label hidden>
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label hidden>
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
-              <paper-button class="paper-input-input basic-btn">
+              <paper-button class="paper-input-input secondary-btn">
                 <iron-icon icon="refresh"></iron-icon>
                 GENERATE PCA
               </paper-button>
@@ -100,7 +105,7 @@
           <div class="col col-6">
             <!-- Signed By Partner Date -->
             <paper-input label="Signed By Partner Date"
-                         value="[[prettyDate(agreement.signed_by_partner_date)]]"
+                         value$="[[prettyDate(agreement.signed_by_partner_date)]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
@@ -114,9 +119,9 @@
                          readonly></paper-input>
           </div>
           <div class="col col-6">
-            <!-- Signed By Partner Date -->
+            <!-- Signed By UNICEF Date -->
             <paper-input label="Signed By UNICEF Date"
-                         value="[[prettyDate(agreement.signed_by_unicef_date)]]"
+                         value$="[[prettyDate(agreement.signed_by_unicef_date)]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
@@ -125,31 +130,35 @@
           <etools-file files="[[_signedAgreementFiles]]"
                        label="Signed Agreement"
                        accept=".doc,.docx,.pdf,.jpg,.png"
-                       readonly></etools-file>
+                       readonly$="[[!editMode]]"></etools-file>
         </div>
       </etools-content-panel>
 
       <!-- Partner Authorized Officers (partner staff members) -->
       <etools-content-panel class="content-section" title$="Partner Authorized Officers ([[partnerAuthorizedOfficers.length]])">
-        <partner-authorized-officers data-items="{{partnerAuthorizedOfficers}}" edit-mode="[[editMode]]"></partner-authorized-officers>
+        <partner-authorized-officers id="authorizedOfficers"
+                                     selected-officers-ids="{{authorizedOfficersIds}}"
+                                     dropdown-officers-data="[[preparedDropdownOfficersData]]">
+        </partner-authorized-officers>
       </etools-content-panel>
 
-      <!-- Amendments -->
-      <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
-        <agreement-amendments data-items="{{amendments}}"
-                              partner="[[partner]]"
-                              partner-authorized-officers="[[partnerAuthorizedOfficers]]"></agreement-amendments>
-      </etools-content-panel>
-
+      <template is="dom-if" if="[[_showAmendments]]">
+        <!-- Amendments -->
+        <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
+          <agreement-amendments data-items="{{amendments}}"
+                                partner="[[partner]]"
+                                partner-authorized-officers="[[partnerAuthorizedOfficers]]"
+                                edit-mode$="[[editMode]]"></agreement-amendments>
+        </etools-content-panel>
+      </template>
 
     </div> <!-- main page content end -->
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      agreement status
+      <agreement-status status="active" on-save-agreement="_updateAgreement" show-save-btn$="[[editMode]]"></agreement-status>
     </div>
     <!-- sidebar content end -->
-
 
   </template>
 
@@ -161,16 +170,23 @@
         is: 'agreement-details',
 
         behaviors: [
-          pmpBehaviors.DateBehavior
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.AgreementsCommonBehavior
         ],
 
         properties: {
           agreement: {
             type: Object,
+            notify: true,
             observer: '_agreementChanged'
           },
           partner: {
-            type: Object
+            type: Object,
+            observer: '_partnerChanged'
+          },
+          partnerName: {
+            type: String,
+            notify: true
           },
           partnerAuthorizedOfficers: {
             type: Array,
@@ -182,7 +198,7 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: true
           }
         },
 
@@ -278,35 +294,83 @@
               ]
             }
           ]);
+
+          this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
+
+          // TODO: find out how authorizedOfficersIds are saved ... is there a property in agreement object for this?
+          this.set('authorizedOfficersIds', [1, 2]);
         },
 
+        /**
+         * When agreement data is changed we need to check and prepare attached agreement file and
+         * display amendments if needed
+         * @param agreement
+         * @private
+         */
         _agreementChanged: function(agreement) {
-          if (typeof agreement === 'object' && agreement !== null
-              && typeof agreement.attached_agreement === 'string' && agreement.attached_agreement !== '') {
-            this.set('_signedAgreementFiles', [{
-              id: 'attached_agreement',
-              file_name: agreement.attached_agreement.substr(agreement.attached_agreement.lastIndexOf('/') + 1),
-              path: agreement.attached_agreement
-            }]);
-          } else {
-            this.set('_signedAgreementFiles', []);
+          if (typeof agreement === 'object' && agreement !== null) {
+            // TODO: include agreement.status in this condition
+            if (agreement.agreement_type === 'PCA') {
+              this.set('_showAmendments', true);
+            } else {
+              this.set('_showAmendments', false);
+            }
+            // prepare attached agreement data
+            if (typeof agreement.attached_agreement === 'string' && agreement.attached_agreement !== '') {
+              this.set('_signedAgreementFiles', [{
+                id: 'attached_agreement',
+                file_name: agreement.attached_agreement.substr(agreement.attached_agreement.lastIndexOf('/') + 1),
+                path: agreement.attached_agreement
+              }]);
+            } else {
+              this.set('_signedAgreementFiles', []);
+            }
           }
         },
 
-        _getStaffMemberName: function(staffMemberId) {
-          /**
-           * TODO: replace this staff member data; get the staff member from an endpoint
-           * by staffMemberId(agreement.signed_by) then return first_name and last_name
-           */
+        /**
+         * When partner data is received, update partnerName, needed for page title
+         * @param partner
+         * @private
+         */
+        _partnerChanged: function(partner) {
+          if (typeof partner === 'object' && partner.id > 0) {
+            this.set('partnerName', partner.name);
+          }
+        },
 
+        /**
+         * TODO: replace this staff member data; get the staff member from an endpoint
+         * by staffMemberId(agreement.signed_by) then return first_name and last_name
+         * @param staffMemberId
+         * @returns {string}
+         * @private
+         */
+        _getStaffMemberName: function(staffMemberId) {
           return "John Doe";
         },
 
+        /**
+         * TODO: get partner manager data from an endpoint by partnerManagerId then return he's/she's name
+         * @param partnerManagerId
+         * @returns {string}
+         * @private
+         */
         _getPartnerManagerName: function(partnerManagerId) {
-          /**
-           * TODO: get partner manager data from an endpoint by partnerManagerId then return he's/she's name
-           */
           return "Jane Doe Manager";
+        },
+
+        /**
+         * Update agreement data
+         * @param event
+         * @private
+         */
+        _updateAgreement: function(event) {
+          if (!this.editMode) {
+            return;
+          }
+          // TODO: implement save agreement
+          this.fire('toast', {text: 'Save functionality not implemented yet!'})
         }
       });
 

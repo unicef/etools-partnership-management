@@ -1,0 +1,26 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="required-field-flag.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.requiredFieldFlagBehavior = {
+
+    addRequiredFieldFlag: function(requiredElements, labelSelector, labelElementsProvided) {
+      if (requiredElements.length > 0) {
+        if (!labelSelector && !labelElementsProvided) {
+          labelSelector = 'label[for="input"]';
+        }
+        requiredElements.forEach(function(element) {
+          var requiredFlag = document.createElement('required-field-flag');
+          if (labelElementsProvided === true) {
+            element.appendChild(requiredFlag);
+          } else {
+            var elementLabel = Polymer.dom(element.root).querySelector(labelSelector);
+            elementLabel.appendChild(requiredFlag);
+          }
+
+        });
+      }
+    }
+
+  };
+</script>
