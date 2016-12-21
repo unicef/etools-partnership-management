@@ -3,7 +3,7 @@
 
 <link rel="import" href="../partners-data/partners-data.html">
 
-<!-- <link rel="import" href="partner-item.html"> -->
+<link rel="import" href="government-item.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -14,6 +14,7 @@
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
 
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 
@@ -80,9 +81,25 @@
         background: var(--dark-hover-color);
       }
 
+      .paper-font-caption {
+        @apply(--paper-font-caption);
+        color: #909090;
+      }
+      .paper-font-title {
+        @apply(--paper-font-title);
+      }
+      .paper-font-body2 {
+        @apply(--paper-font-body2);
+      }
+
     </style>
 
     <partners-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
+
+    <!-- <paper-material id="infoCard" elevation="1">
+      <div class="paper-font-caption">CP Output(s)</div>
+      <div class="paper-font-body2">Lorem Ipsum</div>
+    </paper-material> -->
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
@@ -95,8 +112,7 @@
           placeholder="Search"
           on-search="_onSearch"></input>
 
-      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
-      <!-- note: this should be loaded from object -->
+<!--  <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <paper-dropdown-menu label="Partner Type" noink>
         <paper-menu class="dropdown-content" attr-for-selected="text-content" selected="{{partnerType}}" on-iron-activate="_dropdownSelected">
           <paper-item>Bilateral / Multilateral</paper-item>
@@ -104,7 +120,7 @@
           <paper-item>Government</paper-item>
           <paper-item>UN Agency</paper-item>
         </paper-menu>
-      </paper-dropdown-menu>
+      </paper-dropdown-menu> -->
 
       <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
       <!-- note: this should be loaded from object -->
@@ -234,7 +250,7 @@
           return;
         }
         this.set('q', urlParams.q ? urlParams.q : '');
-        this.set('partnerType', urlParams.partner_type ? urlParams.partner_type : '');
+        this.set('partnerType', 'Government');
         this.set('csoType', urlParams.cso_type ? urlParams.cso_type : '');
         this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
         this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
@@ -257,7 +273,7 @@
           // back button doesn't take you through every query
           var currentState = window.history.state;
           window.history.replaceState(currentState, null,
-            'partners/list' + (qs.length ? '?' + qs : ''));
+            'governments/list' + (qs.length ? '?' + qs : ''));
           // This event lets app-location and app-route know
           // the URL has changed
           window.dispatchEvent(new CustomEvent('location-changed'));

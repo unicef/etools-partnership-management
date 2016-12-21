@@ -70,13 +70,14 @@
               </paper-tab>
 
               <paper-tab name="details" link>
-                <span class="tab-content">Partner Details</span>
+                <span class="tab-content">Partnership Details</span>
               </paper-tab>
 
             </paper-tabs>
           </div>
         </div>
       </div>
+
 
       <iron-pages id="partnersPages"
                   selected="{{partnerPage}}"
@@ -85,13 +86,13 @@
                   role="main">
 
         <div class="page" name="list">
-          <partners-list id="list"></partners-list>
+          <governments-list id="list"></governments-list>
         </div>
         <div class="page" name="overview">
-          <partner-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-overview>
+          <government-overview partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></government-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></partner-details>
+          <government-details partner-id="[[routeData.id]]" partner-name="{{partnerName}}"></government-details>
         </div>
       </iron-pages>
 
