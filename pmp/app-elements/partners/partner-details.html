@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
@@ -16,9 +17,6 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
-
-<!-- TODO: move partner-data into partners folder -->
-<link rel="import" href="../partner-data/partner-data.html">
 
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
@@ -38,6 +36,10 @@
         --etools-checkable-input-label: {
           padding-bottom: 2px;
         };
+        --esmm-external-wrapper: {
+          width: 100%;
+          margin: 0;
+        }
 
       }
 
@@ -52,12 +54,13 @@
 
       .assessments {
         margin-top: 20px;
-        margin-bottom: 30px;
+      }
+
+      #core-values-assessment {
+        width: 100%;
       }
 
     </style>
-
-    <partner-data partner-id="[[partnerId]]" partner="{{partner}}"></partner-data>
 
     <!-- main page content start -->
     <div id="pageContent">
@@ -66,7 +69,7 @@
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Organization name -->
-            <paper-input label="Organization's Full Name"
+            <paper-input label="Full Name"
                          value="[[partner.name]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
@@ -83,7 +86,7 @@
             <paper-input label="Alternate Name"
                          value="{{partner.alternate_name}}"
                          placeholder="&#8212;"
-                         readonly></paper-input>
+                         readonly$="[[!editMode]]"></paper-input>
           </div>
         </div>
 
@@ -98,7 +101,7 @@
           <div class="col col-4">
             <!-- Partner type -->
             <paper-input label="Partner Type"
-                         value="[[_getPartnerType(partner)]]"
+                         value="[[_getPartnerType(partner.partner_type, partner.cso_type)]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
@@ -111,14 +114,10 @@
                            readonly></paper-input>
             </template>
             <template is="dom-if" if="[[editMode]]">
-              <paper-dropdown-menu label="Shared Partner" horizontal-align="left" vertical-align="top" always-float-label>
-                <paper-listbox class="dropdown-content" selected="{{partner.shared_partner}}" attr-for-selected="value">
-                  <paper-item value="UNDP">UNDP</paper-item>
-                  <paper-item value="UNFPA">UNFPA</paper-item>
-                  <paper-item value="UNDP and UNFPA">UNDP and UNFPA</paper-item>
-                  <paper-item value="No">No</paper-item>
-                </paper-listbox>
-              </paper-dropdown-menu>
+              <etools-searchable-multiselection-menu label="Shared Partner"
+                                                     options="[[sharedPartenerValues]]"
+                                                     value="{{sharedPartenerSelectedValues}}"
+                                                     multi></etools-searchable-multiselection-menu>
             </template>
           </div>
         </div>
@@ -136,47 +135,49 @@
               </div>
             </paper-input>
           </div>
-          <div class="col col-4">
-            <etools-file files="{{coreValuesAssessmentFiles}}"
-                         label="Core Values Assessment"
-                         readonly="[[!editMode]]"></etools-file>
+          <div class="col col-4 no-overflow">
+            <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
+              <etools-file files="{{coreValuesAssessmentFiles}}"
+                           label="Core Values Assessment"
+                           readonly$="[[!editMode]]"
+                           accept=".doc,.docx,.pdf,.jpg,.png">
+              </etools-file>
+            </div>
           </div>
           <div class="col col-4"></div>
         </div>
 
         <!-- Contact info box -->
-        <etools-content-panel class="nested-content-panel" title="Contact Info" elevation="0" show-expand-btn>
-          <div class="row-h flex-c">
-            <!-- Address -->
-            <paper-input label="Address"
-                         value="{{partner.address}}"
+        <div class="row-h flex-c">
+          <!-- Address -->
+          <paper-input label="Address"
+                       value="{{partner.address}}"
+                       placeholder="&#8212;"
+                       readonly>
+            <iron-icon prefix icon="communication:location-on"></iron-icon>
+          </paper-input>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-4">
+            <!-- Telephone number -->
+            <paper-input label="Phone Number"
+                         value="{{partner.phone_number}}"
                          placeholder="&#8212;"
                          readonly>
-              <iron-icon prefix icon="communication:location-on"></iron-icon>
+              <iron-icon prefix icon="communication:phone"></iron-icon>
             </paper-input>
           </div>
-          <div class="row-h flex-c">
-            <div class="col col-4">
-              <!-- Telephone number -->
-              <paper-input label="Phone Number"
-                           value="{{partner.phone_number}}"
-                           placeholder="&#8212;"
-                           readonly>
-                <iron-icon prefix icon="communication:phone"></iron-icon>
-              </paper-input>
-            </div>
-            <div class="col col-4">
-              <!-- Email address -->
-              <paper-input label="E-mail address"
-                           value="{{partner.email}}"
-                           placeholder="&#8212;"
-                           readonly>
-                <iron-icon prefix icon="communication:email"></iron-icon>
-              </paper-input>
-            </div>
-            <div class="col col-4"></div>
+          <div class="col col-4">
+            <!-- Email address -->
+            <paper-input label="E-mail address"
+                         value="{{partner.email}}"
+                         placeholder="&#8212;"
+                         readonly>
+              <iron-icon prefix icon="communication:email"></iron-icon>
+            </paper-input>
           </div>
-        </etools-content-panel>
+          <div class="col col-4"></div>
+        </div>
 
       </etools-content-panel>
 
@@ -199,7 +200,7 @@
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
-            <paper-input label="Date Submitted"
+            <paper-input label="Date of Report"
                          value="{{partner.last_assessment_date}}"
                          placeholder="&#8212;"
                          readonly>
@@ -249,14 +250,6 @@
         ],
 
         properties: {
-          partnerId: {
-            type: Number,
-            notify: true
-          },
-          partnerName: {
-            type: String,
-            notify: true
-          },
           partner: {
             type: Object,
             value: {},
@@ -265,7 +258,7 @@
           },
           editMode: {
             type: Boolean,
-            value: true
+            value: false
           },
           coreValuesAssessmentFiles: {
             type: Array,
@@ -291,11 +284,34 @@
         },
 
         ready: function() {
+
+          this.set('showCoreValuesAssessmentAttachement', false);
+
+          /**
+           * TODO: improve shared partners data once the server data is defined and final
+           * shared_partner value format ?
+           */
+          var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'UN Women',
+            'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
+            'WB', 'WFP', 'WHO'];
+
+          var sharedPartnersPreparedValues = [];
+          sharedPartnersRealValues.forEach(function(val, index) {
+            sharedPartnersPreparedValues.push({value: index, label: val});
+          });
+          this.set('sharedPartenerValues', sharedPartnersPreparedValues);
+
+          var sharedPartnersSelectedVal = sharedPartnersPreparedValues.filter(function(sharedPartnerV) {
+            return sharedPartnerV.label === this.partner.shared_partner;
+          }.bind(this));
+
+          this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
+
           // test data
           this.set('assessments', [
             {
               assessment_type: 'Micro Assessment',
-              date_submitted: '29 Jul 2016',
+              date_of_report: '29 Jul 2016',
               basis_for_risk_rating: true,
               report_file: [{
                 id: 'report',
@@ -305,7 +321,7 @@
             },
             {
               assessment_type: 'Scheduled Audit Report',
-              date_submitted: '8 Nov 2016',
+              date_of_report: '8 Nov 2016',
               basis_for_risk_rating: false,
               report_file: [{
                 id: 'report',
@@ -353,24 +369,42 @@
           ]);
         },
 
-        _partnerIdChanged: function(id) {
-          this.set('partnerId', parseInt(id, 10));
+        _partnerChanged: function(partner) {
+          console.log(partner);
+          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+            // decide if we should show core values assessment attachment
+            this.set('showCoreValuesAssessmentAttachment',
+                this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment));
+
+          }
         },
 
-        _partnerChanged: function(partner) {
-//          console.log(partner);
-          if (partner && partner.name) {
-            this.set('partnerName', partner.name);
+        _getPartnerType: function(partnerType, csoType) {
+          if (csoType !== null) {
+              partnerType = partnerType + '/' + csoType;
           }
-          // set core_values_assessment files
-          if (partner
-              && typeof partner.core_values_assessment === 'string'
-              && partner.core_values_assessment.length) {
+          return partnerType;
+        },
+
+        _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
+          // TODO; see if this values are correct for displaying core values assessment file
+          if (['Civil Society Organization', 'Civil Society Organisation'].indexOf(partnerType) >= 0
+              && ['National', 'National NGO'].indexOf(csoType) >= 0) {
+            this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
+            return true;
+          }
+          return false;
+        },
+
+        _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
+          if (typeof partnerCoreValuesAssessment === 'string' && partnerCoreValuesAssessment !== '') {
             this.set('coreValuesAssessmentFiles', [{
               id: 'core_values_assessment',
-              file_name: this._getFileNameFromURL(partner.core_values_assessment),
-              path: partner.core_values_assessment
+              file_name: this._getFileNameFromURL(partnerCoreValuesAssessment),
+              path: partnerCoreValuesAssessment
             }]);
+          } else {
+            this.set('coreValuesAssessmentFiles', []);
           }
         },
 
