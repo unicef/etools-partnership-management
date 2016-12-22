@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Partners Page</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../pmp/pages/page-agreements.html">
+  </head>
+  <body>
+    <test-fixture id="agreementsPages">
+      <template>
+        <page-agreements></page-agreements>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('page-agreements tests', function() {
+        var agreementsPages;
+        setup(function() {
+          agreementsPages = fixture('agreementsPages');
+        });
+
+        test('Validate page-agreements element', function() {
+          assert.equal(agreementsPages.is, 'page-agreements');
+        });
+
+        test('Check new agreement page', function(done) {
+          agreementsPages.set('agreementPage', 'new-agreement');
+          agreementsPages.set('route.path', '/new-agreement');
+          flush(function() {
+            assert.equal(agreementsPages.agreementPage, 'new-agreement');
+            done();
+          });
+        });
+
+        // TODO: more tests will be done later (after app functionality is completed)
+
+      });
+    </script>
+  </body>
+</html>
