@@ -82,7 +82,7 @@
                   role="main">
 
         <div class="list-page" name="list">
-          <agreements-list id="list"></agreements-list>
+          <agreements-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">
           <agreement-details agreement="[[agreement]]"></agreement-details>
@@ -104,19 +104,13 @@
         agreementPage: {
           type: String,
         }
-        
+
       },
 
       observers: [
         '_resizeHeader(tabsActive)',
         '_pageChanged(listActive, routeData.tab)',
       ],
-
-      ready: function() {
-        if (this.listActive) {
-          this.$.list.init(this.queryParams);
-        }
-      },
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();

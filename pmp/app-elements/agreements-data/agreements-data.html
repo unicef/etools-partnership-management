@@ -2,6 +2,8 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-behaviors/data-element-behavior.html">
+
 <dom-module id="agreements-data">
 
   <template>
@@ -16,31 +18,17 @@
 
   <script>
 
-    var _data = {};
-    var _agreementsEls = [];
-
-    // Load the data we recieve into each active instance
-    // of partners-data
-    var _setAgreementsData = function(data) {
-      _data.agreements = data || {};
-      this.load(_data);
-      _agreementsEls.forEach(function(el) {
-        if (el !== this) { el.load(_data); }
-      });
-    };
-
     Polymer({
 
       is: 'agreements-data',
 
-      behaviors: [etoolsAppConfig.globals],
+      behaviors: [pmpBehaviors.DataElementBehavior],
 
       properties: {
 
-        agreements: {
-          type: Array,
-          readOnly: true,
-          notify: true
+        endpointName: {
+          type: String,
+          value: 'agreements'
         },
 
         filteredAgreements: {
@@ -55,43 +43,11 @@
           notify: true
         },
 
-        db: {
-          type: Object,
-          value: function() {
-            return etoolsAppConfig.db;
-          }
-        },
-
         currentQuery: {
           type: Object,
           value: null
         }
 
-      },
-
-      ready: function() {
-        this.load(_data);
-      },
-
-      attached: function() {
-        if (_agreementsEls.length === 0 && !_data.agreements) {
-          this.endpoint = this.getEndpoint('agreements');
-        }
-        _agreementsEls.push(this);
-      },
-
-      detached: function() {
-        _agreementsEls.splice(_agreementsEls.indexOf(this), 1);
-      },
-
-      load: function(data) {
-        if (data.agreements) {
-          this._setAgreements(data.agreements);
-        }
-      },
-
-      _handleResponse: function(res) {
-        _setAgreementsData.bind(this)(res.detail);
       },
 
       query: function(field, order, searchString, agreementType,
