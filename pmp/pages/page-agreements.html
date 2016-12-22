@@ -103,7 +103,7 @@
                   role="main">
 
         <div class="list-page" name="list">
-          <agreements-list id="list"></agreements-list>
+          <agreements-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">
           <agreement-details agreement="[[agreement]]" partner-name="{{partnerName}}"></agreement-details>
@@ -143,10 +143,6 @@
       ],
 
       ready: function() {
-        if (this.listActive) {
-          this.$.list.init(this.queryParams);
-        }
-
         // TODO: replace this placeholder data
         // get fake data for testing
         // TODO: remove this after API si used
@@ -198,8 +194,8 @@
         return page;
       },
 
-      _pageChanged: function(listActive, newAgreementActive, tab) {
-        var activePage = this._getActivePage(listActive, newAgreementActive, tab);
+      _pageChanged: function(listActive, newAgreementActive, detailsActive) {
+        var activePage = this._getActivePage(listActive, newAgreementActive, detailsActive);
         this.set('agreementPage', activePage);
       },
 

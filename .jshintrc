@@ -23,8 +23,8 @@
     "etoolsBehaviors": true,
     "etoolsAppConfig": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
-    "RepeatableDataSetsBehavior": true,
-    "DynamicDialogBehavior": true,
+    "_data": true,
+    "_setData": true,
     "moment": true
   }
 }
