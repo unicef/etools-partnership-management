@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="app-mixins.html">
+
+<dom-module id="buttons-styles">
+  <template>
+    <style>
+
+      .buttons-section {
+        @apply(--layout-horizontal);
+        border-top: 1px solid var(--dark-divider-color);
+        padding: 25px;
+      }
+
+      .primary-btn {
+        --paper-button: {
+          background-color: #3A94FF; /* TODO: replace with app-theme var */
+          color: #fff; /* TODO: replace with app-theme var */
+          font-size: 14px;
+          font-weight: bold;
+        };
+      }
+
+      paper-button.w100 {
+        width: 100%;
+      }
+
+      .secondary-btn-wrapper {
+        width: 100%;
+        --paper-input-container-input: {
+          @apply(--basic-btn-style);
+        };
+      }
+
+      .secondary-btn {
+        --paper-button: {
+          @apply(--basic-btn-style);
+        };
+      }
+
+      .secondary-btn iron-icon {
+        margin-right: 5px;
+      }
+
+      /* responsive css rules */
+      @media (min-width: 850px) {
+
+      }
+
+    </style>
+  </template>
+</dom-module>

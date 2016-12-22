@@ -1,0 +1,191 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<dom-module id="partner-authorized-officers">
+  <template>
+    <style include="grid-layout-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+      }
+      paper-input {
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        }	;
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+      }
+      .officer {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+      .row-h + .row-h {
+        margin-top: 0;
+      }
+      .item-wrapper {
+        margin-left: 63px;
+        padding-left: 25px;
+        border-left: 1px solid var(--darker-divider-color);
+      }
+    </style>
+    <template is="dom-if" if="[[editMode]]">
+      <div class="row-h flex-c">
+        <etools-searchable-multiselection-menu id="officers"
+                                               label="Officers"
+                                               placeholder="Select authorized officers"
+                                               options="[[dropdownOfficersData]]"
+                                               value="[[_selectedOfficersValues]]"
+                                               on-value-change="_officersSelected"
+                                               error-message="Please select authorized officers"
+                                               auto-validate$="[[_autoValidateIsOn(editMode, required)]]"
+                                               required$="[[_autoValidateIsOn(editMode, required)]]"
+                                               readonly$="[[!editMode]]"
+                                               multi>
+        </etools-searchable-multiselection-menu>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[!editMode]]">
+      <template is="dom-repeat" items="[[_selectedOfficersNames]]">
+        <div class="row-h flex-c officer">
+          <div class="item-wrapper">
+            <paper-input label="Officer" value="[[item]]" readonly></paper-input>
+          </div>
+        </div>
+      </template>
+
+      <div class="row-h flex-c" hidden$="[[!_noOfficersSelected(selectedOfficersIds.length)]]">
+        <p>There are no partner authorized officers selected</p>
+      </div>
+    </template>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'partner-authorized-officers',
+
+        properties: {
+          selectedOfficersIds: {
+            type: Array,
+            value: [],
+            notify: true,
+            observer: '_selectedOfficersIdsChanged'
+          },
+
+          dropdownOfficersData: {
+            type: Array,
+            value: []
+          },
+
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+
+          required: {
+            type: Boolean,
+            value: false
+          }
+        },
+
+        ready: function() {
+          this.set('_selectedOfficersValues', []);
+        },
+
+        _selectedOfficersIdsChanged: function(ids, oldIds) {
+          if (!this._selectedOfficersValuesAlreadyInit) {
+            if (Array.isArray(oldIds) && oldIds.length === 0 && Array.isArray(ids) && ids.length > 0) {
+              this._initSelectedOfficers();
+              this._selectedOfficersValuesAlreadyInit = true;
+            }
+          }
+        },
+
+        _officersSelected: function(event) {
+          var selectedOfficersData = event.detail.selectedValues;
+          this.set('selectedOfficersIds', []);
+          if (selectedOfficersData !== null) {
+            selectedOfficersData.forEach(function(officerSelected) {
+              this.push('selectedOfficersIds', parseInt(officerSelected.value, 10));
+            }.bind(this));
+          }
+          this.validateOfficersSelection();
+        },
+
+        _initSelectedOfficers: function() {
+          if (this.selectedOfficersIds.length > 0 && this.dropdownOfficersData.length > 0) {
+
+            var selectedOfficersNames = [];
+            var selectedOfficers = [];
+
+            this.selectedOfficersIds.forEach(function(id) {
+              var officer = this.dropdownOfficersData.filter(function(officerData) {
+                return parseInt(officerData.value, 10) === parseInt(id, 10);
+              });
+              if (officer.length > 0) {
+                if (!this.editMode) {
+                  selectedOfficersNames.push(officer[0].label);
+                } else {
+                  selectedOfficers.push({
+                    value: officer[0].value,
+                    label: officer[0].label
+                  });
+                }
+              }
+            }.bind(this));
+            if (!this.editMode) {
+              this.set('_selectedOfficersNames', selectedOfficersNames);
+            } else {
+              this.set('_selectedOfficersValues', selectedOfficers);
+            }
+          }
+        },
+
+        validateOfficersSelection: function() {
+          if (this.selectedOfficersIds.length === 0 && this.required) {
+            this._updateInvalidState(true);
+            return false;
+          }
+          this._updateInvalidState(false);
+          return true;
+        },
+
+        _autoValidateIsOn: function(editMode, required) {
+          if (editMode && required) {
+            return true;
+          }
+          return false;
+        },
+
+        _noOfficersSelected: function(selectedIdsLength) {
+          return selectedIdsLength === 0;
+        },
+
+        _updateInvalidState: function(value) {
+          var dropdown = this.$$('#officers');
+          if (dropdown) {
+            dropdown.invalid = value;
+          }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

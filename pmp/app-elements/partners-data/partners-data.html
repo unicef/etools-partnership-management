@@ -76,6 +76,16 @@
         currentQuery: {
           type: Object,
           value: null
+        },
+
+        partnersDropdownData: {
+          type: Array,
+          notify: true
+        },
+
+        prepareDropdownData: {
+          type: Boolean,
+          value: false
         }
 
       },
@@ -99,6 +109,10 @@
         if (data.partners) {
           this._setPartners(data.partners);
           this._setPartnersMap(data.partnersMap);
+
+          if (this.prepareDropdownData) {
+            this._setPartnersDropdownData(data.partners);
+          }
         }
       },
 
@@ -178,6 +192,22 @@
         }).catch(function(error) {
           console.error('Error querying partners: ' + error);
         });
+      },
+
+      _setPartnersDropdownData: function(partners) {
+        var preparedData = [];
+        if (partners.length > 0) {
+          // TODO: decide how are we gonna get this data ... if it remains like this cache it using dexiejs db
+          partners.forEach(function(partner) {
+            if (!partner.hidden) {
+              preparedData.push({
+                value: partner.id,
+                label: partner.name
+              });
+            }
+          });
+        }
+        this.set('partnersDropdownData', preparedData);
       }
 
     });
