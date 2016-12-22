@@ -82,7 +82,7 @@
 
     </style>
 
-    <partners-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
+    <partners-data id="partners" data="{{partners}}" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-data>
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
@@ -216,10 +216,15 @@
           value: 50
         },
 
+        urlParams: {
+          type: Object,
+        }
+
       },
 
       observers: [
-        '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+        '_updateURL(partners, q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+        '_init(active)'
       ],
 
       ready: function() {
@@ -229,20 +234,21 @@
       // Input: URL query params
       // Initializes the properties of the list at page load
       // to the params interpretted from the URL string.
-      init: function(urlParams) {
-        if (!urlParams) {
+      _init: function(active) {
+        var parms = this.urlParams;
+        if (!active || !parms) {
           return;
         }
-        this.set('q', urlParams.q ? urlParams.q : '');
-        this.set('partnerType', urlParams.partner_type ? urlParams.partner_type : '');
-        this.set('csoType', urlParams.cso_type ? urlParams.cso_type : '');
-        this.set('pageNumber', urlParams.page ? parseInt(urlParams.page) : 1);
-        this.set('pageSize', urlParams.size ? parseInt(urlParams.size) : 5);
-        this.set('showHidden', urlParams.hidden ? true : false);
+        this.set('q', parms.q ? parms.q : '');
+        this.set('partnerType', parms.partner_type ? parms.partner_type : '');
+        this.set('csoType', parms.cso_type ? parms.cso_type : '');
+        this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+        this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+        this.set('showHidden', parms.hidden ? true : false);
         // format of sort param is sort=field.order ex: sort=name.asc
         var result = [{field: 'name', order: 'asc'}];
-        if (urlParams.sort) {
-          var p = urlParams.sort.split('.');
+        if (parms.sort) {
+          var p = parms.sort.split('.');
           result = [{field: p[0], order: p[1]}];
         }
         this.set('sortOrder', result);
@@ -321,6 +327,7 @@
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
         }
         this.set('debounceTime', 150);
+        this.set('pageNumber', 1);
         this.set('sortOrder', [{field: _field, order: _order}]);
       },
 

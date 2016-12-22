@@ -370,7 +370,7 @@
         },
 
         _partnerChanged: function(partner) {
-          console.log(partner);
+          // console.log(partner);
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
@@ -400,12 +400,16 @@
           if (typeof partnerCoreValuesAssessment === 'string' && partnerCoreValuesAssessment !== '') {
             this.set('coreValuesAssessmentFiles', [{
               id: 'core_values_assessment',
-              file_name: partnerCoreValuesAssessment.substr(partnerCoreValuesAssessment.lastIndexOf('/') + 1),
+              file_name: this._getFileNameFromURL(partnerCoreValuesAssessment),
               path: partnerCoreValuesAssessment
             }]);
           } else {
             this.set('coreValuesAssessmentFiles', []);
           }
+        },
+
+        _getFileNameFromURL: function(url, partner) {
+          return url.substr(url.lastIndexOf('/') + 1);
         }
 
       });

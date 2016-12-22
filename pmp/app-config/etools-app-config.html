@@ -13,9 +13,10 @@ App global configuration
      */
     var etoolsCustomDexieDb = new Dexie('pmpApp');
     etoolsCustomDexieDb.version(1).stores({
-      collectionsList: '&name, expire',
-      countries: 'id, name',
+      collectionsList: 'name, expire',
+      countries: 'id',
       partners: 'id, name, rating',
+      agreements: 'id, reference_number, partner_name, start, end',
       user: 'id'
     });
 
@@ -67,49 +68,50 @@ App global configuration
     };
 
     var localEps = {
-        user: {
-            url: '/users/api/profile/',
-            exp: 30 * 60 * 1000, // 30min
-            cachingKey: 'user'
-        },
-        agreements: {
-            template: '/management/api/stats/agreements/',
-            exp: 30 * 60 * 1000, // 30min
-            cachingKey: 'agreements'
-        },
-        countries: {
-            url: '../../data/countries.json',
-            exp: 6 * 60 * 60 * 1000, // 6h
-            cachingKey: 'countries'
-        },
-        partners: {
-            url: '../../data/partners.json',
-            exp: 6 * 60 * 60 * 1000, // 6h
-            cachingKey: 'partners'
-        }
+      user: {
+        url: '/users/api/profile/',
+        exp: 30 * 60 * 1000, // 30min
+        cachingKey: 'user'
+      },
+      agreements: {
+        //template: '/management/api/stats/agreements/',
+        url: '../../data/agreements.json',
+        exp: 30 * 60 * 1000, // 30min
+        cachingKey: 'agreements'
+      },
+      countries: {
+        url: '../../data/countries.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'countries'
+      },
+      partners: {
+        url: '../../data/partners.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'partners'
+      }
     };
 
     var serverEps = {
-        user: {
-            url: '/users/api/profile/',
-            exp: 30 * 60 * 1000, // 30min
-            cachingKey: 'user'
-        },
-        agreements: {
-            template: '/management/api/stats/agreements/',
-            exp: 30 * 60 * 1000, // 30min
-            cachingKey: 'agreements'
-        },
-        countries: {
-            url: '/api/countries/',
-            exp: 6 * 60 * 60 * 1000, // 6h
-            cachingKey: 'countries'
-        },
-        partners: {
-            url: '/api/partners',
-            exp: 6 * 60 * 60 * 1000, // 6h
-            cachingKey: 'partners'
-        }
+      user: {
+        url: '/users/api/profile/',
+        exp: 30 * 60 * 1000, // 30min
+        cachingKey: 'user'
+      },
+      agreements: {
+        template: '/management/api/stats/agreements/',
+        exp: 30 * 60 * 1000, // 30min
+        cachingKey: 'agreements'
+      },
+      countries: {
+        url: '/api/countries/',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'countries'
+      },
+      partners: {
+        url: '/api/partners',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'partners'
+      }
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;

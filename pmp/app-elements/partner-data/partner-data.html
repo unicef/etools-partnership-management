@@ -5,7 +5,7 @@
 <dom-module id="partner-data">
 
   <template>
-    <partners-data partners-map="{{_partners}}"></partners-data>
+    <partners-data id-map="{{_partners}}"></partners-data>
   </template>
 
   <script>
@@ -18,8 +18,9 @@
 
         partner: {
           type: Object,
+          readOnly: true,
           notify: true,
-          computed: 'getPartner(_partners, partnerId)'
+          computed: '_getPartner(_partners, partnerId)'
         },
 
         _partners: {
@@ -33,7 +34,7 @@
 
       },
 
-      getPartner: function(_partners, id) {
+      _getPartner: function(_partners, id) {
         if (!_partners) {
           return;
         }
