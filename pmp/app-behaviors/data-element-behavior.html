@@ -13,7 +13,7 @@
   };
 
   window.pmpBehaviors = window.pmpBehaviors || {};
-  DataElementBehaviorImpl = {
+  pmpBehaviors.DataElementBehaviorImpl = {
 
     properties: {
 
@@ -63,6 +63,9 @@
 
   };
 
-  pmpBehaviors.DataElementBehavior = [DataElementBehaviorImpl, etoolsAppConfig.globals];
+  pmpBehaviors.DataElementBehavior = [
+    etoolsAppConfig.globals,
+    pmpBehaviors.DataElementBehaviorImpl
+  ];
 
 </script>

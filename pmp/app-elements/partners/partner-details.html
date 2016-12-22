@@ -370,7 +370,7 @@
         },
 
         _partnerChanged: function(partner) {
-          console.log(partner);
+          // console.log(partner);
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
@@ -410,17 +410,6 @@
 
         _getFileNameFromURL: function(url, partner) {
           return url.substr(url.lastIndexOf('/') + 1);
-        },
-
-        _getPartnerType: function(partner) {
-          if (Object.keys(partner).length > 0) {
-            var partnerType = partner.partner_type;
-            if (partner.cso_type !== null) {
-              partnerType = partnerType + '/' + partner.cso_type;
-            }
-            return partnerType;
-          }
-          return null;
         }
 
       });
