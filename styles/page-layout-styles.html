@@ -14,7 +14,11 @@
       }
 
       app-header {
-        background-color: var(--primary-color);
+        background-color: #2A3B46;  /* TODO: replace with app-theme var */
+      }
+
+      iron-pages[role="main"] {
+        @apply(--layout-flex);
       }
 
       .page {

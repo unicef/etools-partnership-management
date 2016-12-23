@@ -6,6 +6,7 @@
 
 <link rel="import" href="../app-elements/partner-data/partner-data.html">
 <link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
@@ -44,11 +45,11 @@
 
     <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
 
-    <app-header-layout has-scrolling-region>
+    <app-header-layout has-scrolling-region fullbleed>
 
       <app-header id="header" fixed shadow>
 
-        <page-header title="Partners"></page-header>
+        <page-header></page-header>
 
       </app-header>
 
@@ -100,6 +101,8 @@
           <partner-details partner="[[partner]]" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
         </div>
       </iron-pages>
+
+      <page-footer></page-footer>
 
     </app-header-layout>
 
