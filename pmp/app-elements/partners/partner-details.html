@@ -213,18 +213,18 @@
 
         <!-- Assessments section -->
         <div class="assessments">
-          <assessments-items data-items="{{assessments}}" edit-mode="[[editMode]]"></assessments-items>
+          <assessments-items data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
         </div>
       </etools-content-panel>
 
       <!-- Bank information section -->
-      <etools-content-panel class="partner-details-section" title$="Bank Information ([[bankInformationItems.length]])" show-expand-btn>
-        <bank-information bank-information-items="[[bankInformationItems]]"></bank-information>
-      </etools-content-panel>
+      <!--<etools-content-panel class="partner-details-section" title$="Bank Information ([[bankInformationItems.length]])" show-expand-btn>-->
+        <!--<bank-information bank-information-items="[[bankInformationItems]]"></bank-information>-->
+      <!--</etools-content-panel>-->
 
       <!-- Staff Members section-->
-      <etools-content-panel class="partner-details-section" title$="Staff Members ([[staffMembers.length]])" show-expand-btn>
-        <staff-members data-items="{{staffMembers}}" edit-mode="[[editMode]]"></staff-members>
+      <etools-content-panel class="partner-details-section" title$="Staff Members ([[partner.staff_members.length]])" show-expand-btn>
+        <staff-members data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
     </div> <!-- main page content end -->
@@ -264,21 +264,6 @@
             type: Array,
             value: [],
             notify: true
-          },
-          assessments: {
-            type: Array,
-            value: [],
-            notify: true,
-          },
-          bankInformationItems: {
-            type: Array,
-            value: [],
-            notify: true
-          },
-          staffMembers: {
-            type: Array,
-            value: [],
-            notify: true
           }
 
         },
@@ -307,71 +292,56 @@
 
           this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
 
-          // test data
-          this.set('assessments', [
-            {
-              assessment_type: 'Micro Assessment',
-              date_of_report: '29 Jul 2016',
-              basis_for_risk_rating: true,
-              report_file: [{
-                id: 'report',
-                file_name: 'Assessment-report.jpg',
-                path: ' '
-              }]
-            },
-            {
-              assessment_type: 'Scheduled Audit Report',
-              date_of_report: '8 Nov 2016',
-              basis_for_risk_rating: false,
-              report_file: [{
-                id: 'report',
-                file_name: 'Assessment-report.jpg',
-                path: ' '
-              }]
-            }
-          ]);
-          this.set('bankInformationItems', [
-            {
-              bank_name: 'Bank of Iordania',
-              account_number: '2234234234234',
-              title: 'Mr',
-              contact_person: 'John Doe',
-              bank_address: 'some street, somewhere in the world'
-            },
-            {
-              bank_name: 'Bank of Lebanon',
-              account_number: '2234234234234',
-              title: 'Mrs',
-              contact_person: 'Jane Doe',
-              bank_address: 'some street, somewhere in the world'
-            }
-          ]);
-
-          this.set('staffMembers', [
-            {
-              id: 1,
-              position: 'Program Officer',
-              first_name: 'John',
-              last_name: 'Doe',
-              phone_number: '345345345',
-              email_address: 'john.doe@unknown.com',
-              active: false
-            },
-            {
-              id: 2,
-              position: 'Program Officer',
-              first_name: 'Jane',
-              last_name: 'Doe',
-              phone_number: '345345345',
-              email_address: 'jane.doe@unknown.com',
-              active: false
-            }
-          ]);
         },
 
         _partnerChanged: function(partner) {
-          // console.log(partner);
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+
+            // test data
+            // TODO: remove this once the assessments and staff members come in partner data as properties
+            this.set('partner.assessments', [
+              {
+                assessment_type: 'Micro Assessment',
+                date_of_report: '29 Jul 2016',
+                basis_for_risk_rating: true,
+                report_file: [{
+                  id: 'report',
+                  file_name: 'Assessment-report.jpg',
+                  path: ' '
+                }]
+              },
+              {
+                assessment_type: 'Scheduled Audit Report',
+                date_of_report: '8 Nov 2016',
+                basis_for_risk_rating: false,
+                report_file: [{
+                  id: 'report',
+                  file_name: 'Assessment-report.jpg',
+                  path: ' '
+                }]
+              }
+            ]);
+            this.set('partner.staff_members', [
+              {
+                id: 1,
+                position: 'Program Officer',
+                first_name: 'John',
+                last_name: 'Doe',
+                phone_number: '345345345',
+                email_address: 'john.doe@unknown.com',
+                active: false
+              },
+              {
+                id: 2,
+                position: 'Program Officer',
+                first_name: 'Jane',
+                last_name: 'Doe',
+                phone_number: '345345345',
+                email_address: 'jane.doe@unknown.com',
+                active: false
+              }
+            ]);
+
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment));

@@ -252,7 +252,7 @@
               && !this._notEmpty(lastStaffMemberAdded.last_name)
               && !this._notEmpty(lastStaffMemberAdded.phone_number)
               && !this._notEmpty(lastStaffMemberAdded.email_address)) {
-            this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: false});
+            this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
           }
