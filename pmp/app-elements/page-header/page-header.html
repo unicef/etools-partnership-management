@@ -13,16 +13,21 @@
 
   <template>
     <style include="shared-styles">
+
       div[main-title] {
         position: relative;
         bottom: 1px;
         margin-left: 24px;
-        text-transform: capitalize;
+        min-height: 30px;
+        background: url('../../../images/etools_logo_icon.png') no-repeat center left;
+        background-size: auto 48px;
+        padding-left: 48px;
+        font-size: 30px;
+        color: var(--light-primary-text-color);
       }
 
-      div[main-title],
       etools-page-refresh {
-        color: var(--light-primary-text-color);
+        color: #BCC1C6; /* TODO: replace with app-theme var */
       }
 
       #menuButton {
@@ -49,7 +54,7 @@
     </style>
     <app-toolbar sticky>
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-      <div main-title>{{title}}</div>
+      <div main-title>eTools</div>
       <div class="right-side">
         <countries-dropdown id="countries" countries="[[countries]]"></countries-dropdown>
         <etools-page-refresh></etools-page-refresh>
@@ -61,10 +66,6 @@
     (function() {
       Polymer({
         is: 'page-header',
-
-        properties: {
-          title: String
-        },
 
         openDrawer: function() {
           this.fire('drawer');
