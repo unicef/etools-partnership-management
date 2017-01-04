@@ -1,0 +1,368 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+
+<link rel="import" href="../../app-behaviors/date-behavior.html">
+
+<link rel="import" href="../partner-data/partner-data.html">
+
+<link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
+<link rel="import" href="partner-authorized-officers.html">
+<link rel="import" href="agreement-amendments.html">
+
+<dom-module id="agreement-details">
+
+  <template>
+
+    <style include="page-layout-styles grid-layout-styles shared-styles buttons-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+        padding-bottom: 70px;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+    <partner-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-data>
+
+    <!-- main page content start -->
+    <div id="pageContent">
+      <etools-content-panel class="content-section" title="Agreement Details">
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Partner name -->
+            <paper-input label="Partner Name"
+                         value="[[partner.name]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- Agreement Type -->
+            <paper-input label="Agreement Type"
+                         value="[[agreement.agreement_type]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- Reference Number -->
+            <paper-input label="Reference Number"
+                         value="[[agreement.agreement_number]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <!-- Start date -->
+            <paper-input label="Start date"
+                         value$="[[prettyDate(agreement.start)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- End date -->
+            <paper-input label="End date"
+                         value$="[[prettyDate(agreement.end)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label hidden>
+              <!-- Generate PCA -->
+              <label aria-hidden="true">Auto-generated PCA</label>
+              <paper-button class="paper-input-input secondary-btn">
+                <iron-icon icon="refresh"></iron-icon>
+                GENERATE PCA
+              </paper-button>
+            </paper-input-container>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Signed By Partner -->
+            <paper-input label="Signed By Partner"
+                         value="[[_getStaffMemberName(agreement.signed_by)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Signed By Partner Date -->
+            <paper-input label="Signed By Partner Date"
+                         value$="[[prettyDate(agreement.signed_by_partner_date)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Signed By UNICEF -->
+            <paper-input label="Signed By UNICEF"
+                         value="[[_getPartnerManagerName(agreement.partner_manager)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Signed By UNICEF Date -->
+            <paper-input label="Signed By UNICEF Date"
+                         value$="[[prettyDate(agreement.signed_by_unicef_date)]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <etools-file files="[[_signedAgreementFiles]]"
+                       label="Signed Agreement"
+                       accept=".doc,.docx,.pdf,.jpg,.png"
+                       readonly$="[[!editMode]]"></etools-file>
+        </div>
+      </etools-content-panel>
+
+      <!-- Partner Authorized Officers (partner staff members) -->
+      <etools-content-panel class="content-section" title$="Partner Authorized Officers ([[partnerAuthorizedOfficers.length]])">
+        <partner-authorized-officers id="authorizedOfficers"
+                                     selected-officers-ids="{{authorizedOfficersIds}}"
+                                     dropdown-officers-data="[[preparedDropdownOfficersData]]">
+        </partner-authorized-officers>
+      </etools-content-panel>
+
+      <template is="dom-if" if="[[_showAmendments]]">
+        <!-- Amendments -->
+        <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
+          <agreement-amendments data-items="{{amendments}}"
+                                partner="[[partner]]"
+                                partner-authorized-officers="[[partnerAuthorizedOfficers]]"
+                                edit-mode$="[[editMode]]"></agreement-amendments>
+        </etools-content-panel>
+      </template>
+
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      <agreement-status status="active" on-save-agreement="_updateAgreement" show-save-btn$="[[editMode]]"></agreement-status>
+    </div>
+    <!-- sidebar content end -->
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'agreement-details',
+
+        behaviors: [
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.AgreementsCommonBehavior
+        ],
+
+        properties: {
+          agreement: {
+            type: Object,
+            notify: true,
+            observer: '_agreementChanged'
+          },
+          partner: {
+            type: Object,
+            observer: '_partnerChanged'
+          },
+          partnerName: {
+            type: String,
+            notify: true
+          },
+          partnerAuthorizedOfficers: {
+            type: Array,
+            value: []
+          },
+          amendments: {
+            type: Array,
+            value: []
+          },
+          editMode: {
+            type: Boolean,
+            value: true
+          }
+        },
+
+        ready: function() {
+
+          // TODO: replace this placeholder data with the right partner authorized officers data (staff members data)
+          this.set('partnerAuthorizedOfficers', [
+            {
+              id: 1,
+              position: 'Program Officer',
+              first_name: 'John',
+              last_name: 'Doe',
+              phone_number: '345345345',
+              email_address: 'john.doe@unknown.com',
+              active: true
+            },
+            {
+              id: 2,
+              position: 'Program Officer',
+              first_name: 'Jane',
+              last_name: 'Doe',
+              phone_number: '345345345',
+              email_address: 'jane.doe@unknown.com',
+              active: true
+            }
+          ]);
+          this.set('amendments', [
+            {
+              id: 1,
+              signed_date: '2015-07-28',
+              signed_agreement: 'https://pbs.twimg.com/profile_images/616542814319415296/McCTpH_E.jpg',
+              amendment_types: [
+                {
+                  amendment_type_id: 1,
+                  amendment_type: 'Change Authorized Officer',
+                  officer_id: 342,// staff member id
+                  bank_info: null,
+                  legal_name_of_ip: null,
+                  cp_cycle_end: null,
+                  additional_clauses: null,
+                  existing_clause_amended: null
+                },
+                {
+                  amendment_type_id: 2,
+                  amendment_type: 'Banking Information',
+                  officer_id: null,
+                  bank_info: 'Bank of Lebanon: #3234234',
+                  legal_name_of_ip: null,
+                  cp_cycle_end: null,
+                  additional_clauses: null,
+                  existing_clause_amended: null
+                },
+                {
+                  amendment_type_id: 3,
+                  amendment_type: 'Change in Legal Name of Implementing Partner',
+                  officer_id: null,
+                  bank_info: null,
+                  legal_name_of_ip: 'Some partner full name',
+                  cp_cycle_end: null,
+                  additional_clauses: null,
+                  existing_clause_amended: null
+                },
+                {
+                  amendment_type_id: 3,
+                  amendment_type: 'Extension of Country Programme Cycle',
+                  officer_id: null,
+                  bank_info: null,
+                  legal_name_of_ip: null,
+                  cp_cycle_end: '2018-08-30',
+                  additional_clauses: null,
+                  existing_clause_amended: null
+                },
+                {
+                  amendment_type_id: 5,
+                  amendment_type: 'Additional Clause',
+                  officer_id: null,
+                  bank_info: null,
+                  legal_name_of_ip: null,
+                  cp_cycle_end: null,
+                  additional_clauses: 'Some Additional Clause text...',
+                  existing_clause_amended: null
+                },
+                {
+                  amendment_type_id: 6,
+                  amendment_type: 'Amend Existing Clause',
+                  officer_id: null,
+                  bank_info: null,
+                  legal_name_of_ip: null,
+                  cp_cycle_end: null,
+                  additional_clauses: null,
+                  existing_clause_amended: 'Existing clause amended text...'
+                }
+              ]
+            }
+          ]);
+
+          this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
+
+          // TODO: find out how authorizedOfficersIds are saved ... is there a property in agreement object for this?
+          this.set('authorizedOfficersIds', [1, 2]);
+        },
+
+        /**
+         * When agreement data is changed we need to check and prepare attached agreement file and
+         * display amendments if needed
+         */
+        _agreementChanged: function(agreement) {
+          if (typeof agreement === 'object' && agreement !== null) {
+            // TODO: include agreement.status in this condition
+            if (agreement.agreement_type === 'PCA') {
+              this.set('_showAmendments', true);
+            } else {
+              this.set('_showAmendments', false);
+            }
+            // prepare attached agreement data
+            if (typeof agreement.attached_agreement === 'string' && agreement.attached_agreement !== '') {
+              this.set('_signedAgreementFiles', [{
+                id: 'attached_agreement',
+                file_name: agreement.attached_agreement.substr(agreement.attached_agreement.lastIndexOf('/') + 1),
+                path: agreement.attached_agreement
+              }]);
+            } else {
+              this.set('_signedAgreementFiles', []);
+            }
+          }
+        },
+
+        /**
+         * When partner data is received, update partnerName, needed for page title
+         */
+        _partnerChanged: function(partner) {
+          if (typeof partner === 'object' && partner.id > 0) {
+            this.set('partnerName', partner.name);
+          }
+        },
+
+        /**
+         * TODO: replace this staff member data; get the staff member from an endpoint
+         * by staffMemberId(agreement.signed_by) then return first_name and last_name
+         */
+        _getStaffMemberName: function(staffMemberId) {
+          return 'John Doe';
+        },
+
+        /**
+         * TODO: get partner manager data from an endpoint by partnerManagerId then return he's/she's name
+         */
+        _getPartnerManagerName: function(partnerManagerId) {
+          return 'Jane Doe Manager';
+        },
+
+        /**
+         * Update agreement data
+         */
+        _updateAgreement: function(event) {
+          if (!this.editMode) {
+            return;
+          }
+          // TODO: implement save agreement
+          this.fire('toast', {text: 'Save functionality not implemented yet!', showCloseBtn: false});
+        }
+      });
+
+    })();
+  </script>
+
+</dom-module>

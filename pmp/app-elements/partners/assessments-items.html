@@ -20,10 +20,11 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
 
 <dom-module id="assessments-items">
   <template>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles">
       [hidden] {
         display: none !important;
       }
@@ -70,21 +71,6 @@
         visibility: hidden;
       }
 
-      etools-file:not([multiple]) {
-        --etools-file-filename-container: {
-          width: auto;
-        };
-        --etools-file-readonly-filename-container: {
-          width: auto;
-        };
-        --etools-file-error: {
-          position: relative !important;
-        };
-      }
-      .assessment-report-wrapper {
-        max-width: 100%;
-      }
-
     </style>
 
     <paper-material elevation="[[elevation]]">
@@ -127,13 +113,13 @@
                                              invalid$="[[!_isValid('assessmentType', item.assessment_type, item.date_of_report, item.report_file.length)]]"
                                              error-message="Assessment type is required">
                           <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}"
-                                         attr-for-selected="value">
-                            <paper-item value="Micro Assessment">Micro Assessment</paper-item>
-                            <paper-item value="Simplified Checklist">Simplified Checklist</paper-item>
-                            <paper-item value="Scheduled Audit Report">Scheduled Audit Report</paper-item>
-                            <paper-item value="Special Audit Report">Special Audit Report</paper-item>
-                            <paper-item value="High Risk Assumed">High Risk Assumed</paper-item>
-                            <paper-item value="Other">Other</paper-item>
+                                         attr-for-selected="name">
+                            <paper-item name="Micro Assessment">Micro Assessment</paper-item>
+                            <paper-item name="Simplified Checklist">Simplified Checklist</paper-item>
+                            <paper-item name="Scheduled Audit Report">Scheduled Audit Report</paper-item>
+                            <paper-item name="Special Audit Report">Special Audit Report</paper-item>
+                            <paper-item name="High Risk Assumed">High Risk Assumed</paper-item>
+                            <paper-item name="Other">Other</paper-item>
                           </paper-listbox>
                         </paper-dropdown-menu>
                       </template>
@@ -173,7 +159,7 @@
                   </div>
                   <div class="row-h no-overflow">
                     <!-- Report file -->
-                    <div class="assessment-report-wrapper">
+                    <div class="file-wrapper">
                       <etools-file files="{{item.report_file}}"
                                    label="Report"
                                    readonly="[[!editMode]]"

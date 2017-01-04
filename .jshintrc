@@ -24,6 +24,7 @@
     "etoolsAppConfig": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
     "_data": true,
-    "_setData": true
+    "_setData": true,
+    "moment": true
   }
 }
