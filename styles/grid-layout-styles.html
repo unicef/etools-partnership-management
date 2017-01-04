@@ -28,21 +28,34 @@
       }
       .col {
         @apply(--layout-horizontal);
+        box-sizing: border-box;
       }
       .col:not(:first-of-type) {
         padding-left: 25px;
       }
 
       .col-3 {
-        @apply(--layout-flex-3);
+        flex: 0 0 25%;
+        max-width: 25%;
       }
 
       .col-4 {
-        @apply(--layout-flex-4);
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+
+      .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
       }
 
       .col-9 {
-        @apply(--layout-flex-9);
+        flex: 0 0 75%;
+        max-width: 75%;
+      }
+      .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
       }
 
       /* TODO: more classes will e added if needed */
