@@ -16,7 +16,7 @@ App global configuration
       collectionsList: 'name, expire',
       countries: 'id',
       partners: 'id, name, rating',
-      agreements: 'id, reference_number, partner_name, start, end',
+      agreements: 'id, agreement_number, partner_name, start, end',
       user: 'id'
     });
 
@@ -98,9 +98,14 @@ App global configuration
         cachingKey: 'user'
       },
       agreements: {
-        template: '/management/api/stats/agreements/',
+        template: '/api/v2/agreements/',
         exp: 30 * 60 * 1000, // 30min
         cachingKey: 'agreements'
+      },
+      agreementDetails: {
+        template: '/api/v2/agreements/<%=id%>/',
+        exp: 30 * 60 * 1000, // 30min
+        cachingKey: 'agreementDetails'
       },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
@@ -116,7 +121,8 @@ App global configuration
         template: '/api/v2/partners/<%=id%>/',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'partnerDetails'
-      }
+      },
+
 
     };
     /* jshint ignore:start */

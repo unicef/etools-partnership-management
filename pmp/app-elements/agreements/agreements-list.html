@@ -157,17 +157,17 @@
 
       <div class="header">
         <!-- first class of div must be name of field -->
-        <div class="reference_number flex-2"><span on-tap="_buildSortOrder">Reference Number</span></div>
-        <div class="partner_name flex-2"><span on-tap="_buildSortOrder">Partner<span></div>
-        <div class="agreement_type flex">Type</div>
-        <div class="status flex">Status</div>
-        <div class="start flex"><span on-tap="_buildSortOrder">Start Date<span></div>
-        <div class="end flex"><span on-tap="_buildSortOrder">End Date<span></div>
+        <div class="reference_number flex-2" filter-property="agreement_number"><span on-tap="_buildSortOrder">Reference Number</span></div>
+        <div class="partner_name flex-2" filter-property="partner_name"><span on-tap="_buildSortOrder">Partner</span></div>
+        <div class="agreement_type flex" filter-property="agreement_type">Type</div>
+        <div class="status flex" filter-property="status">Status</div>
+        <div class="start flex" filter-property="start"><span on-tap="_buildSortOrder">Start Date</span></div>
+        <div class="end flex" filter-property="end"><span on-tap="_buildSortOrder">End Date</span></div>
       </div>
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
         <div id="temp">
-          <p class="flex-2">[[item.reference_number]]</p>
+          <p class="flex-2">[[item.agreement_number]]</p>
           <p class="flex-2">[[item.partner_name]]</p>
           <p class="flex">[[item.agreement_type]]</p>
           <p class="flex">[[item.status]]</p>
@@ -376,7 +376,8 @@
       // Run when a list header is clicked
       // uses the first class of the header to determine the field name
       _buildSortOrder: function(e) {
-        var _field = Polymer.dom(e).localTarget.parentNode.classList[0];
+          console.log(Polymer.dom(e).localTarget.parentNode);
+        var _field = Polymer.dom(e).localTarget.parentNode.getAttribute('filter-property');
         var _order = 'asc';
         if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
           _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
