@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
@@ -45,7 +46,7 @@
         pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <app-header-layout has-scrolling-region>
+    <app-header-layout has-scrolling-region fullbleed>
 
       <app-header id="header" fixed shadow>
 
@@ -53,7 +54,7 @@
 
       </app-header>
 
-      <div class="page-top-content">
+      <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
             <h1 main-title>
@@ -112,6 +113,8 @@
           <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
         </div>
       </iron-pages>
+
+      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -249,6 +252,16 @@
       _newAgreementSaved: function(event) {
         this.set('agreement', event.detail);
         this.set('route.path', '/' + this.agreement.id + '/details');
+      },
+
+      /**
+       *
+       */
+      _getTopContentAdditionalClass: function(activePage) {
+        if (this._showPageTabs(activePage)) {
+          return 'with-tabs'
+        }
+        return '';
       }
 
     });
