@@ -108,10 +108,16 @@ App global configuration
         cachingKey: 'countries'
       },
       partners: {
-        url: '/api/partners',
+        url: '/api/v2/partners/',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'partners'
+      },
+      partnerDetails: {
+        url: '/api/v2/partners/<%=id%>/',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'partnerDetails'
       }
+
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
