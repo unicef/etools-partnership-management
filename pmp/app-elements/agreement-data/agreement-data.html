@@ -1,0 +1,51 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="partner-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                endpoint="[[endpoint]]"
+                on-success="_handleResponse"></etools-ajax>
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'agreement-data',
+      behaviors: [etoolsAppConfig.globals],
+      properties: {
+
+        agreement: {
+          type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        _partners: {
+          type: Object
+        },
+
+        agreementId: {
+            type: Number,
+            notify: true,
+            observer: "_agreementIdChanged"
+        }
+
+      },
+      _agreementIdChanged: function(newId){
+          if (newId){
+              this.endpoint = this.getEndpoint('agreementDetails',{id:newId});
+
+          }
+      },
+      _handleResponse: function(response){
+          this._setAgreement(response.detail);
+      }
+
+    });
+
+  </script>
+
+</dom-module>
