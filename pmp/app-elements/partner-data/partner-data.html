@@ -1,11 +1,12 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../partners-data/partners-data.html">
 
 <dom-module id="partner-data">
 
   <template>
-    <partners-data id-map="{{_partners}}"></partners-data>
+    <etools-ajax id="ajax"
+                endpoint="[[endpoint]]"
+                on-success="_handleResponse"></etools-ajax>
   </template>
 
   <script>
@@ -13,14 +14,13 @@
     Polymer({
 
       is: 'partner-data',
-
+      behaviors: [etoolsAppConfig.globals],
       properties: {
 
         partner: {
           type: Object,
           readOnly: true,
-          notify: true,
-          computed: '_getPartner(_partners, partnerId)'
+          notify: true
         },
 
         _partners: {
@@ -28,22 +28,20 @@
         },
 
         partnerId: {
-          type: Number,
-          notify: true
+            type: Number,
+            notify: true,
+            observer: "_partnerIdChanged"
         }
 
       },
+      _partnerIdChanged: function(newId){
+          if (newId){
+              this.endpoint = this.getEndpoint('partnerDetails',{id:newId});
 
-      _getPartner: function(_partners, id) {
-        if (!_partners) {
-          return;
-        }
-        id = parseInt(id);
-        if (id) {
-          return _partners[id];
-        } else {
-          console.error('You must provide a valid partner ID');
-        }
+          }
+      },
+      _handleResponse: function(response){
+          this._setPartner(response.detail);
       }
 
     });

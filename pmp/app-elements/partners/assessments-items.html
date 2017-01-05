@@ -110,7 +110,7 @@
                         <paper-dropdown-menu label="Assessment Type"
                                              horizontal-align="left"
                                              vertical-align="top"
-                                             invalid$="[[!_isValid('assessmentType', item.assessment_type, item.date_of_report, item.report_file.length)]]"
+                                             invalid$="[[!_isValid('assessmentType', item.assessment_type, item.completed_date, item.report_file.length)]]"
                                              error-message="Assessment type is required">
                           <paper-listbox class="dropdown-content" selected="{{item.assessment_type}}"
                                          attr-for-selected="name">
@@ -127,27 +127,27 @@
                     <div class="col col-4">
                       <!-- Date submitted -->
                       <paper-input label="Date of Report"
-                                   value="[[item.date_of_report]]"
+                                   value="[[item.completed_date]]"
                                    placeholder="&#8212;"
                                    on-down="_openDatePicker"
                                    readonly$="[[!editMode]]"
-                                   invalid$="[[!_isValid('dateOfReport', item.assessment_type, item.date_of_report, item.report_file.length)]]"
+                                   invalid$="[[!_isValid('dateOfReport', item.assessment_type, item.completed_date, item.report_file.length)]]"
                                    error-message="Date of report is required">
                         <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                         <etools-datepicker-button id$="datePicker[[index]]"
                                                   suffix
                                                   date="[[_prepareDate(item)]]"
-                                                  pretty-date="{{item.date_of_report}}"
+                                                  pretty-date="{{item.completed_date}}"
                                                   is-disabled="[[!editMode]]"
                                                   hidden$="[[!editMode]]"
-                                                  no-init="[[_doNotInit(item.date_of_report)]]" show-clear-btn>
+                                                  no-init="[[_doNotInit(item.completed_date)]]" show-clear-btn>
                         </etools-datepicker-button>
                       </paper-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
                       <div class="custom-field-wrapper">
-                        <etools-checkable-input checked="{{item.basis_for_risk_rating}}"
+                        <etools-checkable-input checked="{{item.current}}"
                                                 label="Basis for Risk Rating"
                                                 type="radio"
                                                 label-alignment="top"
@@ -164,7 +164,7 @@
                                    label="Report"
                                    readonly="[[!editMode]]"
                                    accept=".doc,.docx,.pdf,.jpg,.png"
-                                   invalid$="[[!_isValid('reportFile', item.assessment_type, item.date_of_report, item.report_file.length)]]"
+                                   invalid$="[[!_isValid('reportFile', item.type, item.completed_date, item.report_file.length)]]"
                                    error-message="Please select the report file"></etools-file>
                     </div>
                   </div>
@@ -209,9 +209,9 @@
 
         ready: function() {
           this.dataSetModel = {
-            assessment_type: null,
-            date_of_report: null,
-            basis_for_risk_rating: false,
+            type: null,
+            completed_date: null,
+            current: false,
             report_file: []
           };
         },
@@ -224,15 +224,15 @@
             var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
             for (var i = 0; i < this.dataItems.length; i++) {
               if (i !== index) {
-                this.set('dataItems.' + i + '.basis_for_risk_rating', false);
+                this.set('dataItems.' + i + '.current', false);
               }
             }
           }
         },
 
         _prepareDate: function(item) {
-          if (typeof item.date_of_report === 'string' && item.date_of_report !== '') {
-            var date = new Date(item.date_of_report);
+          if (typeof item.completed_date === 'string' && item.completed_date !== '') {
+            var date = new Date(item.completed_date);
             if (date.toString() === 'Invalid Date') {
               date = new Date();
             }
@@ -278,8 +278,8 @@
         _addNewAssessment: function() {
           if (this.editMode) {
             var lastAssessmentAdded = this.dataItems[this.dataItems.length - 1];
-            if (lastAssessmentAdded.assessment_type === null
-                && lastAssessmentAdded.date_of_report === null
+            if (lastAssessmentAdded.type === null
+                && lastAssessmentAdded.completed_date === null
                 && lastAssessmentAdded.report_file.length === 0) {
               this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
             } else {
