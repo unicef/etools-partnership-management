@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
-<dom-module id="partner-data">
+<dom-module id="agreement-data">
 
   <template>
     <etools-ajax id="ajax"
@@ -36,7 +36,7 @@
       },
       _agreementIdChanged: function(newId){
           if (newId){
-              this.endpoint = this.getEndpoint('agreementDetails',{id:newId});
+              this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails',{id:newId}));
 
           }
       },

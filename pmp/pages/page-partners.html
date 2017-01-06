@@ -32,14 +32,14 @@
     </style>
 
     <app-route
-        route="{{route}}"
-        pattern="/list"
+        route="[[route]]"
+        pattern="/p/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
-        route="{{route}}"
-        pattern="/:id/:tab"
+        route="[[route]]"
+        pattern="/p/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
