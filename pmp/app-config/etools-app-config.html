@@ -31,7 +31,7 @@ App global configuration
         serverBackend: (window.location.port !== '8080'),
 
         getEndpoint: function(endpointName, data) {
-          var endpoint = etoolsAppConfig.endpoints[endpointName];
+          var endpoint = JSON.parse(JSON.stringify(etoolsAppConfig.endpoints[endpointName]));
           if (endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '') {
             endpoint.url = this.baseSite + _.template(endpoint.template)(data);
           }
