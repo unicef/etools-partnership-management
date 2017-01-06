@@ -120,7 +120,7 @@
                     <div class="col col-4">
                       <!-- Date submitted -->
                       <paper-input label="Date of Report"
-                                   value="[[prettyDate(item.completed_date)]]"
+                                   value="[[item.completed_date]]"
                                    placeholder="&#8212;"
                                    on-down="openDatePicker"
                                    data-selector$="completedDate_[[index]]"
@@ -130,12 +130,11 @@
                         <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                         <etools-datepicker-button id$="completedDate_[[index]]"
                                                   suffix
-                                                  date="[[prepareDate(item.completed_date)]]"
                                                   format="YYYY-MM-DD"
                                                   pretty-date="{{item.completed_date}}"
                                                   is-disabled="[[!editMode]]"
                                                   hidden$="[[!editMode]]"
-                                                  no-init="[[_doNotInit(item.completed_date)]]" show-clear-btn>
+                                                  no-init show-clear-btn>
                         </etools-datepicker-button>
                       </paper-input>
                     </div>
@@ -206,6 +205,7 @@
         observers: ['_dataHasChanged(dataItems)'],
 
         ready: function() {
+            console.log
           this.dataSetModel = {
             type: null,
             completed_date: null,
@@ -221,6 +221,7 @@
           });
           this.set('assessmentTypesOptions', assessmentTypes);
         },
+
 
         _getAssessmentType: function(type) {
           var selectedType = null;
@@ -245,6 +246,7 @@
         },
 
         _dataHasChanged: function(dataItems) {
+            console.log('here')
           // prepare data for assessment reports
           dataItems.forEach(function(item, index) {
             if ((typeof item.report === 'string' && item.report !== '')
@@ -272,13 +274,6 @@
               }
             }
           }
-        },
-
-        _doNotInit: function(dateString) {
-          if (dateString === null || typeof dateString === 'undefined') {
-            return true;
-          }
-          return false;
         },
 
         _notEmpty: function(value) {
