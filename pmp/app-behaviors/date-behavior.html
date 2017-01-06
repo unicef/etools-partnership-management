@@ -18,6 +18,21 @@
     },
 
     /**
+     * Prepare date from string
+     */
+    prepareDate: function(dateString) {
+      if (typeof dateString === 'string' && dateString !== '') {
+        var date = new Date(dateString);
+        if (date.toString() === 'Invalid Date') {
+          date = new Date();
+        }
+        return date;
+      } else {
+        return new Date();
+      }
+    },
+
+    /**
      * Open input field assigned(as prefix or suffix) etools-datepicker on tap.
      * Make sure you also have the data-selector attribute set on the input field.
      */

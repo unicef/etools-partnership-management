@@ -120,7 +120,8 @@ App global configuration
       partnerDetails: {
         template: '/api/v2/partners/<%=id%>/',
         exp: 6 * 60 * 60 * 1000, // 6h
-        cachingKey: 'partnerDetails'
+        // if this caching key is missing then the data will be cached with the url as key
+        // cachingKey: 'partnerDetails'
       },
 
 

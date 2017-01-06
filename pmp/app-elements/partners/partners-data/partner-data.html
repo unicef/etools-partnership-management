@@ -1,5 +1,5 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <dom-module id="partner-data">
 
@@ -28,20 +28,21 @@
         },
 
         partnerId: {
-            type: Number,
-            notify: true,
-            observer: "_partnerIdChanged"
+          type: Number,
+          notify: true,
+          observer: "_partnerIdChanged"
         }
 
       },
-      _partnerIdChanged: function(newId){
-          if (newId){
-              this.endpoint = this.getEndpoint('partnerDetails',{id:newId});
 
-          }
+      _partnerIdChanged: function(newId) {
+        if (newId) {
+          this.endpoint = this.getEndpoint('partnerDetails', {id: newId});
+        }
       },
-      _handleResponse: function(response){
-          this._setPartner(response.detail);
+
+      _handleResponse: function(response) {
+        this._setPartner(response.detail);
       }
 
     });
