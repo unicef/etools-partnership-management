@@ -30,17 +30,17 @@
         agreementId: {
             type: Number,
             notify: true,
-            observer: "_agreementIdChanged"
+            observer: '_agreementIdChanged'
         }
 
       },
-      _agreementIdChanged: function(newId){
-          if (newId){
-              this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails',{id:newId}));
+      _agreementIdChanged: function(newId) {
+          if (newId) {
+              this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
 
           }
       },
-      _handleResponse: function(response){
+      _handleResponse: function(response) {
           this._setAgreement(response.detail);
       }
 

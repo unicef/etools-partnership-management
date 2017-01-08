@@ -205,7 +205,6 @@
         observers: ['_dataHasChanged(dataItems)'],
 
         ready: function() {
-            console.log
           this.dataSetModel = {
             type: null,
             completed_date: null,
@@ -221,8 +220,6 @@
           });
           this.set('assessmentTypesOptions', assessmentTypes);
         },
-
-
         _getAssessmentType: function(type) {
           var selectedType = null;
           if (typeof type === 'string' && type !== '') {
@@ -246,7 +243,6 @@
         },
 
         _dataHasChanged: function(dataItems) {
-            console.log('here')
           // prepare data for assessment reports
           dataItems.forEach(function(item, index) {
             if ((typeof item.report === 'string' && item.report !== '')
