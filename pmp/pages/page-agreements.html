@@ -8,7 +8,7 @@
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
-<link rel="import" href="../app-elements/agreement-data/agreement-data.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -40,7 +40,7 @@
         route="{{route}}"
         pattern="/a/:id/details"
         active="{{agreementDetailsActive}}"
-        data="{{agreementDetailsRouteData}}"></app-route>
+        data="{{routeData}}"></app-route>
 
     <app-route
         route="{{route}}"
@@ -48,7 +48,7 @@
         active="{{newAgreementActive}}"></app-route>
 
 
-    <agreement-data agreement="{{agreement}}" agreement-id="[[agreementDetailsRouteData.id]]"></agreement-data>
+    <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
 
     <app-header-layout has-scrolling-region>
 

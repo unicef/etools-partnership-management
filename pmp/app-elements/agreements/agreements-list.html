@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="../agreements-data/agreements-data.html">
+<link rel="import" href="agreement-data/agreement-list-data.html">
 <link rel="import" href="../partners/partners-data/partners-data.html">
 <link rel="import" href="../partners/partners-data/partner-data.html">
 
@@ -90,7 +90,7 @@
 
     </style>
 
-    <agreements-data id="agreements" data="{{agreements}}" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreements-data>
+    <agreement-list-data id="agreements" data="{{agreements}}" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreement-list-data>
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
