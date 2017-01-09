@@ -24,11 +24,6 @@
         display: block;
       }
 
-      .list-page {
-        max-width: 920px;
-        margin: 20px auto;
-      }
-
     </style>
 
     <app-route
@@ -56,8 +51,21 @@
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>[[_getPartnerPageTitle(listActive, partner.name)]]</h1>
+            <h1 main-title>
+              <template is="dom-if" if="[[listActive]]">
+                <span>Partners</span>
+              </template>
+              <template is="dom-if" if="[[tabsActive]]">
+                <span>[[partner.name]]</span>
+              </template>
+            </h1>
             <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!listActive]]">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
               <div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
@@ -66,22 +74,23 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row" hidden$="{{!tabsActive}}">
-            <paper-tabs
-                selected="{{routeData.tab}}"
-                attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+          <template is="dom-if" if="[[tabsActive]]">
+            <div class="top-content-row">
+              <paper-tabs
+                  selected="[[routeData.tab]]"
+                  attr-for-selected="name" noink bottom-item>
 
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
 
-              <paper-tab name="details" link>
-                <span class="tab-content">Partner Details</span>
-              </paper-tab>
+                <paper-tab name="details" link>
+                  <span class="tab-content">Partner Details</span>
+                </paper-tab>
 
-            </paper-tabs>
-          </div>
+              </paper-tabs>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -91,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="list-page" name="list">
+        <div class="page" name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
@@ -140,6 +149,7 @@
 
       _pageChanged: function(listActive, tab) {
         var activePage = this._getActivePage(listActive, tab);
+        console.log(activePage);
         this.set('partnerPage', activePage);
       },
 
