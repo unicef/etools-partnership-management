@@ -36,14 +36,14 @@
 
     <app-route
         route="{{route}}"
-        pattern="/list"
+        pattern="/i/list"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/:id/:tab"
+        pattern="/i/:intId/:intTab"
         active="{{tabsActive}}"
-        data="{{routeData}}"></app-route>
+        data="{{routeDataIntv}}"></app-route>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -80,7 +80,7 @@
           </div>
           <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
-                selected="{{routeData.tab}}"
+                selected="{{routeDataIntv.intTab}}"
                 attr-for-selected="name"
                 fallback-selection="details" noink bottom-item>
 
@@ -150,23 +150,23 @@
 
       observers: [
         '_resizeHeader(tabsActive)',
-        '_pageChanged(listActive, routeData.tab)',
+        '_pageChanged(listActive, routeDataIntv.intTab)',
       ],
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
 
-      _getActivePage: function(listActive, tab) {
+      _getActivePage: function(listActive, intTab) {
         if (listActive) {
           return 'list';
         } else {
-          return tab;
+          return intTab;
         }
       },
 
-      _pageChanged: function(listActive, tab) {
-        var activePage = this._getActivePage(listActive, tab);
+      _pageChanged: function(listActive, intTab) {
+        var activePage = this._getActivePage(listActive, intTab);
         this.set('interventionPage', activePage);
       },
 
