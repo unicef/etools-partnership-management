@@ -120,7 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
 
           <div class="nav-menu">
-            <iron-selector selected="{{page}}" attr-for-selected="name" selectable="side-bar-item" role="navigation">
+            <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
               <template is="dom-if" if="[[permissions.loggedInDefault]]">
                 <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/p/list"></side-bar-item>
                 <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/a/list"></side-bar-item>
@@ -202,7 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'page-selected': '_pageSelected',
+//        'page-selected': '_pageSelected',
         'drawer': 'toggleDrawer',
         '404': '_pageNotFound'
       },
