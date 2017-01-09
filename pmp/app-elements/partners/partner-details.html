@@ -207,11 +207,6 @@
         </div>
       </etools-content-panel>
 
-      <!-- Bank information section -->
-      <!--<etools-content-panel class="content-section" title$="Bank Information ([[bankInformationItems.length]])" show-expand-btn>-->
-        <!--<bank-information bank-information-items="[[bankInformationItems]]"></bank-information>-->
-      <!--</etools-content-panel>-->
-
       <!-- Staff Members section-->
       <etools-content-panel class="content-section" title$="Staff Members ([[partner.staff_members.length]])" show-expand-btn>
         <staff-members data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
@@ -274,26 +269,30 @@
             sharedPartnersPreparedValues.push({value: index, label: val});
           });
           this.set('sharedPartenerValues', sharedPartnersPreparedValues);
-
-          var sharedPartnersSelectedVal = sharedPartnersPreparedValues.filter(function(sharedPartnerV) {
-            return sharedPartnerV.label === this.partner.shared_partner;
-          }.bind(this));
-
-          this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
-
         },
 
         _partnerChanged: function(partner) {
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
-
-            // test data
-            // TODO: remove this once the assessments and staff members come in partner data as properties
+            // check & set shared_partner values
+            this._setSharedPartnerValues();
 
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment));
 
           }
+        },
+
+        /**
+         * Check partner shared_partner value and prepare it to be displayed
+         */
+        _setSharedPartnerValues: function() {
+            // TODO: Find out shared_partner and shared_with data models and prepare shared partner dropdown data
+//          var sharedPartnersSelectedVal = this.sharedPartenerValues.filter(function(sharedPartnerV) {
+//            return sharedPartnerV.label === this.partner.shared_partner;
+//          }.bind(this));
+//
+//          this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
         },
 
         _getPartnerType: function(partnerType, csoType) {

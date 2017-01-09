@@ -109,7 +109,7 @@
                         <etools-searchable-multiselection-menu id$="assessmentType_[[index]]"
                                                                label="Assessment Type"
                                                                options="[[assessmentTypesOptions]]"
-                                                               value="[[_getAssessmentType(item.type)]]"
+                                                               value="[[_getAssessmentType(item)]]"
                                                                on-value-change="_assessmentTypeSelected"
                                                                invalid$="[[!_isValid('assessmentType', item.type, item.completed_date, item.report_file.length)]]"
                                                                error-message="Assessment type is required">
@@ -119,7 +119,7 @@
                     <div class="col col-4">
                       <!-- Date submitted -->
                       <paper-input label="Date of Report"
-                                   value="[[item.completed_date]]"
+                                   value="[[prettyDate(item.completed_date)]]"
                                    placeholder="&#8212;"
                                    on-down="openDatePicker"
                                    data-selector$="completedDate_[[index]]"
@@ -219,7 +219,8 @@
           });
           this.set('assessmentTypesOptions', assessmentTypes);
         },
-        _getAssessmentType: function(type) {
+        _getAssessmentType: function(item) {
+          var type = item.type;
           var selectedType = null;
           if (typeof type === 'string' && type !== '') {
             // capitalize value

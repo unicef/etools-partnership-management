@@ -66,13 +66,13 @@
           <div class="row-v flex-c item-content">
             <div class="row-h">
               <div class="col col-4">
-                <!-- Position -->
-                <paper-input label="Position"
-                             value="{{item.position}}"
+                <!-- Title -->
+                <paper-input label="Title"
+                             value="{{item.title}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('position', item.position, item.first_name, item.last_name, item.phone_number, item.email_address, index)]]"
-                             error-message="Position is required">
+                             invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.phone, item.email, index)]]"
+                             error-message="Title is required">
                 </paper-input>
               </div>
               <div class="col col-4">
@@ -81,7 +81,7 @@
                              value="{{item.first_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('firstName', item.position, item.first_name, item.last_name, item.phone_number, item.email_address, index)]]"
+                             invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.phone, item.email, index)]]"
                              error-message="First name is required">
                 </paper-input>
               </div>
@@ -91,7 +91,7 @@
                              value="{{item.last_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('lastName', item.position, item.first_name, item.last_name, item.phone_number, item.email_address, index)]]"
+                             invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.phone, item.email, index)]]"
                              error-message="Last name is required">
                 </paper-input>
               </div>
@@ -100,10 +100,10 @@
               <div class="col col-4">
                 <!-- Phone number -->
                 <paper-input label="Phone number"
-                             value="{{item.phone_number}}"
+                             value="{{item.phone}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('phoneNumber', item.position, item.first_name, item.last_name, item.phone_number, item.email_address, index)]]"
+                             invalid$="[[!_isValid('phoneNumber', item.title, item.first_name, item.last_name, item.phone, item.email, index)]]"
                              error-message="Phone number is required">
                   <iron-icon prefix icon="communication:phone"></iron-icon>
                 </paper-input>
@@ -111,10 +111,10 @@
               <div class="col col-4">
                 <!-- Email address -->
                 <paper-input label="E-mail address"
-                             value="{{item.email_address}}"
+                             value="{{item.email}}"
                              placeholder="&#8212;"
                              readonly$="[[!_canBeRemoved(index)]]"
-                             invalid$="[[!_isValid('emailAddress', item.position, item.first_name, item.last_name, item.phone_number, item.email_address, index)]]"
+                             invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.phone, item.email, index)]]"
                              error-message="A valid & unused email address is required">
                   <iron-icon prefix icon="communication:email"></iron-icon>
                 </paper-input>
@@ -162,11 +162,11 @@
       ready: function() {
         this.dataSetModel = {
           id: null,
-          position: null,
+          title: null,
           first_name: null,
           last_name: null,
-          phone_number: null,
-          email_address: null,
+          phone: null,
+          email: null,
           active: false
         };
       },
@@ -185,7 +185,7 @@
       _validStaffMemberEmailAddress: function(emailAddress, staffMemberIndex) {
         var emailAddressValid = true;
         var alreadyUsedFilterResult = this.dataItems.filter(function(staffMember, index) {
-          return staffMember.email_address === emailAddress && index !== staffMemberIndex;
+          return staffMember.email === emailAddress && index !== staffMemberIndex;
         });
         if (alreadyUsedFilterResult.length > 0) {
           // address already used
@@ -201,29 +201,29 @@
         return typeof value !== 'undefined' && value !== null && value !== '';
       },
 
-      _isValid: function(field, position, firstName, lastName, phoneNumber, emailAddress, index) {
+      _isValid: function(field, title, firstName, lastName, phoneNumber, emailAddress, index) {
         var valid = true;
         switch (field) {
-          case 'position':
-            if (!this._notEmpty(position) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
+          case 'title':
+            if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
                 this._notEmpty(phoneNumber) || this._notEmpty(emailAddress))) {
               valid = false;
             }
             break;
           case 'firstName':
-            if (!this._notEmpty(firstName) && (this._notEmpty(position) || this._notEmpty(lastName) ||
+            if (!this._notEmpty(firstName) && (this._notEmpty(title) || this._notEmpty(lastName) ||
                 this._notEmpty(phoneNumber) || this._notEmpty(emailAddress))) {
               valid = false;
             }
             break;
           case 'lastName':
-            if (!this._notEmpty(lastName) && (this._notEmpty(position) || this._notEmpty(firstName) ||
+            if (!this._notEmpty(lastName) && (this._notEmpty(title) || this._notEmpty(firstName) ||
                 this._notEmpty(phoneNumber) || this._notEmpty(emailAddress))) {
               valid = false;
             }
             break;
           case 'phoneNumber':
-            if (!this._notEmpty(phoneNumber) && (this._notEmpty(position) || this._notEmpty(firstName) ||
+            if (!this._notEmpty(phoneNumber) && (this._notEmpty(title) || this._notEmpty(firstName) ||
                 this._notEmpty(lastName) || this._notEmpty(emailAddress))) {
               valid = false;
             }
@@ -232,7 +232,7 @@
             if (this._notEmpty(emailAddress)) {
               valid = this._validStaffMemberEmailAddress(emailAddress, index);
             } else {
-              if (this._notEmpty(position) || this._notEmpty(firstName) || this._notEmpty(lastName) ||
+              if (this._notEmpty(title) || this._notEmpty(firstName) || this._notEmpty(lastName) ||
                   this._notEmpty(phoneNumber)) {
                 valid = false;
               } else {
@@ -247,11 +247,11 @@
       _addNewStaffMember: function() {
         if (this.editMode) {
           var lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
-          if (!this._notEmpty(lastStaffMemberAdded.position)
+          if (!this._notEmpty(lastStaffMemberAdded.title)
               && !this._notEmpty(lastStaffMemberAdded.first_name)
               && !this._notEmpty(lastStaffMemberAdded.last_name)
-              && !this._notEmpty(lastStaffMemberAdded.phone_number)
-              && !this._notEmpty(lastStaffMemberAdded.email_address)) {
+              && !this._notEmpty(lastStaffMemberAdded.phone)
+              && !this._notEmpty(lastStaffMemberAdded.email)) {
             this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
