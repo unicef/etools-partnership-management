@@ -112,8 +112,7 @@
                                                                value="[[_getAssessmentType(item.type)]]"
                                                                on-value-change="_assessmentTypeSelected"
                                                                invalid$="[[!_isValid('assessmentType', item.type, item.completed_date, item.report_file.length)]]"
-                                                               error-message="Assessment type is required"
-                                                               hide-search>
+                                                               error-message="Assessment type is required">
                         </etools-searchable-multiselection-menu>
                       </template>
                     </div>
@@ -130,12 +129,11 @@
                         <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                         <etools-datepicker-button id$="completedDate_[[index]]"
                                                   suffix
-                                                  date="[[prepareDate(item.completed_date)]]"
                                                   format="YYYY-MM-DD"
                                                   pretty-date="{{item.completed_date}}"
                                                   is-disabled="[[!editMode]]"
                                                   hidden$="[[!editMode]]"
-                                                  no-init="[[_doNotInit(item.completed_date)]]" show-clear-btn>
+                                                  no-init show-clear-btn>
                         </etools-datepicker-button>
                       </paper-input>
                     </div>
@@ -257,7 +255,6 @@
               }]);
             }
           }.bind(this));
-          console.log(this.dataItems);
         },
 
         _basisForRiskRatingChanged: function(event) {
@@ -272,13 +269,6 @@
               }
             }
           }
-        },
-
-        _doNotInit: function(dateString) {
-          if (dateString === null || typeof dateString === 'undefined') {
-            return true;
-          }
-          return false;
         },
 
         _notEmpty: function(value) {
