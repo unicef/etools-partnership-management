@@ -1,19 +1,35 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-footer/page-footer.html">
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
+<link rel="import" href="../app-elements/interventions/intervention-details.html">
+<link rel="import" href="../app-elements/interventions/intervention-supplies.html">
+<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
+<link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 
+<link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
 
 <dom-module id="page-interventions">
 
   <template>
 
-    <style include="shared-styles">
+    <style include="page-layout-styles shared-styles buttons-styles">
 
       :host {
         display: block;
+      }
+
+      .list-page {
+        max-width: 920px;
+        margin: 20px auto;
       }
 
     </style>
@@ -29,56 +45,91 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <app-header-layout has-scrolling-region>
+    <app-header-layout has-scrolling-region fullbleed>
 
       <app-header id="header" fixed shadow>
+        <page-header title="Interventions"></page-header>
+      </app-header>
 
-        <app-toolbar>
-          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>Interventions</div>
-        </app-toolbar>
-
-        <div id="tabsWrapper" hidden$="[[!tabsActive]]">
-
-          <app-toolbar id="tabs-bar">
-
-            <paper-tabs selected="[[routeData.tab]]" attr-for-selected="name" fallback-selection="details" noink bottom-item>
+      <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+              PD/SSFA ToRs
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+              <div class="top-content-action">
+                <paper-button class="primary-btn with-prefix">
+                  <iron-icon icon="add"></iron-icon>
+                  Add new PD/SSFA ToR
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
+            <paper-tabs
+                selected="{{routeData.tab}}"
+                attr-for-selected="name"
+                fallback-selection="details" noink bottom-item>
 
               <paper-tab name="details" link>
-                <a href="/interventions/[[routeData.id]]/details" class="tab-link" tabindex="-1">details</a>
-              </paper-tab>
-
-              <paper-tab name="workplan" link>
-                <a href="/interventions/[[routeData.id]]/workplan" class="tab-link" tabindex="-1">workplan</a>
+                <span class="tab-content">Details</span>
               </paper-tab>
 
               <paper-tab name="supplies" link>
-                <a href="/interventions/[[routeData.id]]/supplies" class="tab-link" tabindex="-1">supplies</a>
+                <span class="tab-content">Supplies</span>
               </paper-tab>
 
               <paper-tab name="review-and-sign" link>
-                <a href="/interventions/[[routeData.id]]/review-and-sign" class="tab-link" tabindex="-1">review and sign</a>
+                <span class="tab-content">Review & Sign</span>
               </paper-tab>
 
-              <paper-tab name="docs" link>
-                <a href="/interventions/[[routeData.id]]/docs" class="tab-link" tabindex="-1">docs</a>
+              <paper-tab name="attachments" link>
+                <span class="tab-content">Attachments</span>
               </paper-tab>
 
             </paper-tabs>
-
-          </app-toolbar>
-
+          </div>
         </div>
-
-      </app-header>
-
-      <div id="pageContent">
-
-        <paper-material elevation="1">
-          <h1>Some interventions here!</h1>
-        </paper-material>
-
       </div>
+
+
+      <iron-pages id="interventionsPages"
+                  selected="{{interventionPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <interventions-list></interventions-list>
+        </div>
+        <div class="page" name="details">
+          <intervention-details></intervention-details>
+        </div>
+        <div class="page" name="supplies">
+          <intervention-supplies></intervention-supplies>
+        </div>
+        <div class="page" name="review-and-sign">
+          <intervention-review-and-sign></intervention-review-and-sign>
+        </div>
+        <div class="page" name="attachments">
+          <intervention-attachments></intervention-attachments>
+        </div>
+      </iron-pages>
+
+      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -91,12 +142,46 @@
       is: 'page-interventions',
 
       properties: {
-
+        interventionPage: {
+          type: String,
+          notify: true
+        },
       },
 
-      openDrawer: function() {
-        this.fire('drawer');
-      }
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_pageChanged(listActive, routeData.tab)',
+      ],
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
+      },
+
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('interventionPage', activePage);
+      },
+
+      _showPageTabs: function(interventionPage) {
+        return interventionPage !== 'list';
+      },
+
+      _getTopContentAdditionalClass: function(interventionPage) {
+        if (this._showPageTabs(interventionPage)) {
+          return 'with-tabs'
+        }
+        return '';
+      },
+
+
 
     });
 

@@ -6,6 +6,19 @@
 <dom-module id="buttons-styles">
   <template>
     <style>
+      :root {
+        --primary-button-default: {
+          background-color: #3A94FF; /* TODO: replace with app-theme var */
+          color: #fff; /* TODO: replace with app-theme var */
+          /*font-size: 14px;*/
+          font-weight: bold;
+          padding: 5px 10px;
+        };
+
+        --primary-button-with-prefix: {
+          padding-right: 15px;
+        };
+      }
 
       .buttons-section {
         @apply(--layout-horizontal);
@@ -15,10 +28,14 @@
 
       .primary-btn {
         --paper-button: {
-          background-color: #3A94FF; /* TODO: replace with app-theme var */
-          color: #fff; /* TODO: replace with app-theme var */
-          font-size: 14px;
-          font-weight: bold;
+          @apply(--primary-button-default);
+        };
+      }
+
+      .primary-btn.with-prefix {
+        --paper-button: {
+          @apply(--primary-button-default);
+          @apply(--primary-button-with-prefix);
         };
       }
 

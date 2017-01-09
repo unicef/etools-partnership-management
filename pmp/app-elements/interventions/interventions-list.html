@@ -1,21 +1,34 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 
 <dom-module id="interventions-list">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply(--layout-flex);
+      }
+    </style>
 
-    <app-route
-        route="{{route}}"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
+    <paper-material class="content-section" elevation="1">
+      <div class="row-h flex-c">
+        <div class="col col-10">
 
+        </div>
+        <div class="col col-2">
 
-    interventions list content goes here...
+        </div>
+      </div>
+    </paper-material>
+
+    <paper-material class="content-section" elevation="1">
+
+    </paper-material>
 
   </template>
 

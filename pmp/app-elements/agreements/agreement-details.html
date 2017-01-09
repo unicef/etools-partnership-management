@@ -29,16 +29,10 @@
       :host {
         @apply(--layout-horizontal);
         width: 100%;
-        padding-bottom: 70px;
       }
 
     </style>
 
-    <app-route
-        route="{{route}}"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
     <!-- TODO: remove partner from here.. add it to the agreement-detail api endpoint -->
     <partner-item-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-item-data>
 
