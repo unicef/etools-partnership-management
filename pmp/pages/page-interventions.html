@@ -43,7 +43,7 @@
         route="{{route}}"
         pattern="/i/:intId/:intTab"
         active="{{tabsActive}}"
-        data="{{routeDataIntv}}"></app-route>
+        data="{{routeData}}"></app-route>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -80,7 +80,7 @@
           </div>
           <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
-                selected="{{routeDataIntv.intTab}}"
+                selected="{{routeData.intTab}}"
                 attr-for-selected="name"
                 fallback-selection="details" noink bottom-item>
 
@@ -150,7 +150,7 @@
 
       observers: [
         '_resizeHeader(tabsActive)',
-        '_pageChanged(listActive, routeDataIntv.intTab)',
+        '_pageChanged(listActive, routeData.intTab)',
       ],
 
       _resizeHeader: function() {
