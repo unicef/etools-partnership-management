@@ -8,7 +8,7 @@
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
-<link rel="import" href="../app-elements/agreement-data/agreement-data.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -32,20 +32,24 @@
 
     <app-route
         route="{{route}}"
-        pattern="/list"
-        query-params="{{queryParams}}"
-        active="{{listActive}}"></app-route>
+        pattern="/a/list"
+        query-params="{{agreementQueryParams}}"
+        active="{{agreementListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/:id/details"
-        active="{{detailsActive}}"></app-route>
+        pattern="/a/:id/details"
+        active="{{agreementDetailsActive}}"
+        data="{{routeData}}"></app-route>
 
     <app-route
         route="{{route}}"
         pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
-    <agreement-data agreement="{{agreement}}" agreement_id="[[agreementId]]"></agreement-data>
+
+
+    <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
+
     <app-header-layout has-scrolling-region>
 
       <app-header id="header" fixed shadow>
@@ -104,10 +108,10 @@
                   role="main">
 
         <div class="list-page" name="list">
-          <agreements-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></agreements-list>
+          <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement="[[agreement]]" partner-name="{{partnerName}}"></agreement-details>
+          <agreement-details agreement="[[agreement]]" ></agreement-details>
         </div>
         <div class="page" name="new-agreement">
           <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
@@ -139,16 +143,16 @@
       },
 
       observers: [
-        '_resizeHeader(listActive, detailsActive, newAgreementActive)',
-        '_pageChanged(listActive, newAgreementActive, detailsActive)',
+        '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
+        '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
       ],
 
       ready: function() {
         // TODO: replace this placeholder data
         // get fake data for testing
         // TODO: remove this after API si used
-        var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
-        this.set('agreement', localSavedAgreement);
+        //var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
+        //this.set('agreement', localSavedAgreement);
 
         // TODO: remove this
         if (this.agreementPage === 'new-agreement') {

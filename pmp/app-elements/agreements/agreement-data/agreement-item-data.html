@@ -1,7 +1,7 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
-<dom-module id="partner-data">
+<dom-module id="agreement-item-data">
 
   <template>
     <etools-ajax id="ajax"
@@ -13,7 +13,7 @@
 
     Polymer({
 
-      is: 'agreement-data',
+      is: 'agreement-item-data',
       behaviors: [etoolsAppConfig.globals],
       properties: {
 
@@ -30,17 +30,17 @@
         agreementId: {
             type: Number,
             notify: true,
-            observer: "_agreementIdChanged"
+            observer: '_agreementIdChanged'
         }
 
       },
-      _agreementIdChanged: function(newId){
-          if (newId){
-              this.endpoint = this.getEndpoint('agreementDetails',{id:newId});
+      _agreementIdChanged: function(newId) {
+          if (newId) {
+              this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
 
           }
       },
-      _handleResponse: function(response){
+      _handleResponse: function(response) {
           this._setAgreement(response.detail);
       }
 

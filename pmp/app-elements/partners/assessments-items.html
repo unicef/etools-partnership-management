@@ -119,7 +119,7 @@
                     <div class="col col-4">
                       <!-- Date submitted -->
                       <paper-input label="Date of Report"
-                                   value="[[prettyDate(item.completed_date)]]"
+                                   value="[[item.completed_date]]"
                                    placeholder="&#8212;"
                                    on-down="openDatePicker"
                                    data-selector$="completedDate_[[index]]"
@@ -219,7 +219,6 @@
           });
           this.set('assessmentTypesOptions', assessmentTypes);
         },
-
         _getAssessmentType: function(type) {
           var selectedType = null;
           if (typeof type === 'string' && type !== '') {
