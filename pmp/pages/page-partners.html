@@ -33,7 +33,7 @@
         active="{{listActive}}"></app-route>
 
     <app-route
-        route="[[route]]"
+        route="{{route}}"
         pattern="/p/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
@@ -77,7 +77,7 @@
           <template is="dom-if" if="[[tabsActive]]">
             <div class="top-content-row">
               <paper-tabs
-                  selected="[[routeData.tab]]"
+                  selected="{{routeData.tab}}"
                   attr-for-selected="name" noink bottom-item>
 
                 <paper-tab name="overview" link>
@@ -149,7 +149,6 @@
 
       _pageChanged: function(listActive, tab) {
         var activePage = this._getActivePage(listActive, tab);
-        console.log(activePage);
         this.set('partnerPage', activePage);
       },
 

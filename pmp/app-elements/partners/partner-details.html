@@ -99,7 +99,7 @@
             <!-- Shared partner -->
             <template is="dom-if" if="[[!editMode]]">
               <paper-input label="Shared Partner"
-                           value="{{partner.shared_partner}}"
+                           value="{{sharedPartenerSelectedValuesString}}"
                            placeholder="&#8212;"
                            readonly></paper-input>
             </template>
@@ -260,7 +260,7 @@
            * TODO: improve shared partners data once the server data is defined and final
            * shared_partner value format ?
            */
-          var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'UN Women',
+          var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'Women',
             'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
             'WB', 'WFP', 'WHO'];
 
@@ -287,12 +287,23 @@
          * Check partner shared_partner value and prepare it to be displayed
          */
         _setSharedPartnerValues: function() {
-            // TODO: Find out shared_partner and shared_with data models and prepare shared partner dropdown data
-//          var sharedPartnersSelectedVal = this.sharedPartenerValues.filter(function(sharedPartnerV) {
-//            return sharedPartnerV.label === this.partner.shared_partner;
-//          }.bind(this));
-//
-//          this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
+          if (this.editMode) {
+            // edit mode
+            var sharedPartnersSelectedVal = this.sharedPartenerValues.filter(function(sharedPartnerV) {
+              if (Array.isArray(this.partner.shared_with) && this.partner.shared_with.length > 0) {
+                if (this.partner.shared_with.indexOf(sharedPartnerV.label) > -1) {
+                  return sharedPartnerV;
+                }
+              }
+              return sharedPartnerV.label === this.partner.shared_partner;
+            }.bind(this));
+            this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
+          } else {
+            // readonly mode
+            if (Array.isArray(this.partner.shared_with) && this.partner.shared_with.length > 0) {
+              this.set('sharedPartenerSelectedValuesString', this.partner.shared_with.join(', '));
+            }
+          }
         },
 
         _getPartnerType: function(partnerType, csoType) {

@@ -2,7 +2,7 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="agreement-data/agreement-list-data.html">
-<link rel="import" href="../partners/partners-data/partners-data.html">
+<link rel="import" href="../partners/partners-data/partners-list-data.html">
 <link rel="import" href="../partners/partners-data/partner-item-data.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -122,7 +122,7 @@
         </paper-menu>
       </paper-dropdown-menu>
 
-      <partners-data id="partners" multi-map="{{partnersMap}}"></partners-data>
+      <partners-list-data id="partners" multi-map="{{partnersMap}}"></partners-list-data>
       <etools-searchable-multiselection-menu
           label="Partner"
           options="[[partnersMap]]"
