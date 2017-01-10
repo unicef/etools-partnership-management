@@ -16,7 +16,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
@@ -28,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-elements/user-data/user-data.html">
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
+<link rel="import" href="app-behaviors/notification-toasts-behavior.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
@@ -122,9 +122,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="nav-menu">
             <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
               <template is="dom-if" if="[[permissions.loggedInDefault]]">
-                <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
-                <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
-                <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/p/list"></side-bar-item>
+                <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/a/list"></side-bar-item>
+                <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/i/list"></side-bar-item>
                 <div class="divider"></div>
               </template>
               <side-bar-item name="settings" icon="settings" href$="[[baseUrl]]settings"></side-bar-item>
@@ -146,7 +146,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           role="main">
 
         <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
-          <page-partners id="pp" on-dom-change="_pagesStamped" name="partners" route="{{subroute}}" permissions="[[permissions]]"></page-partners>
+          <page-partners on-dom-change="_pagesStamped" name="partners" route="{{subroute}}" permissions="[[permissions]]"></page-partners>
           <page-agreements name="agreements" route="{{subroute}}"></page-agreements>
           <page-interventions name="interventions" route="{{subroute}}"></page-interventions>
         </template>
@@ -180,17 +180,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         },
         baseUrl: String,
-        _toast: {
-          type: Object,
-          value: null
-        },
         initialLoad: {
             type: Boolean,
             value: true
-        },
-        _toastQueue: {
-          type: Array,
-          value: function() { return []; }
         },
         permissions: {
             type: Object,
@@ -199,7 +191,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       },
 
-      behaviors: [etoolsAppConfig.globals],
+      behaviors: [
+        etoolsAppConfig.globals,
+        pmpBehaviors.NotificationToastsBehavior
+      ],
 
       observers: [
         '_routePageChanged(routeData.page)',
@@ -207,7 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'toast': 'queueToast',
+//        'page-selected': '_pageSelected',
         'drawer': 'toggleDrawer',
         '404': '_pageNotFound'
       },
@@ -227,7 +222,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if ((this.route.path === this.baseUrl || this.route.path === '/') &&
             permissions.loggedInDefault) {
           // setting the default path
-          this.set('route.path', this.baseUrl + 'partners/list');
+          this.set('route.path', this.baseUrl + 'partners/p/list');
         } else if (this.initialLoad) {
           // reseting the page as the pages might not have been stamped
           this._routePageChanged(this.routeData.page);
@@ -239,72 +234,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.drawer.toggle();
       },
 
-      queueToast: function(e, detail) {
-        if (!this._toast) {
-          this._toast = document.createElement('paper-toast');
-          this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
-          var closeToastBtn = document.createElement('paper-button');
-          closeToastBtn.innerHTML = 'Ok';
-          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
-          closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
-          Polymer.dom(this._toast).appendChild(closeToastBtn);
-          Polymer.dom(this.$.layout).appendChild(this._toast);
-        }
-
-        if (!this._toastQueue.length) {
-          this.push('_toastQueue', detail);
-          var toastProperties = this._prepareToastAndGetShowProperties(detail);
-          this._toast.show(toastProperties);
-        } else {
-          var alreadyInQueue = this._toastQueue.filter(function(toastDetail) {
-            return JSON.stringify(toastDetail) === JSON.stringify(detail);
-          });
-          if (alreadyInQueue.length === 0) {
-            this.push('_toastQueue', detail);
-          } // else already in the queue
-        }
-      },
-
-      dequeueToast: function() {
-        this.shift('_toastQueue');
-        if (this._toastQueue.length) {
-          var toastProperties = this._prepareToastAndGetShowProperties(this._toastQueue[0]);
-          this._toast.show(toastProperties);
-        }
-      },
-
-      _prepareToastAndGetShowProperties: function(detail) {
-        var closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
-        // clone detail obj
-        var toastProperties = JSON.parse(JSON.stringify(detail));
-
-        toastProperties.duration = 0;
-        if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
-          if (detail.showCloseBtn === true) {
-            closeToastBtn.removeAttribute('hidden');
-          } else {
-            closeToastBtn.setAttribute('hidden', true);
-            if (!detail.duration) {
-              toastProperties.duration = 5000;
-            }
-          }
-          delete toastProperties.showCloseBtn;
-        } else {
-          closeToastBtn.setAttribute('hidden', true);
-        }
-
-        return toastProperties;
-      },
-
-      _toggleToast: function(toast) {
-        if (toast) {
-          toast.toggle();
-        }
-      },
+//      _pageSelected: function(event) {
+//        this.set('route.path', event.detail.pagePath);
+//      },
 
       _routePageChanged: function(page) {
         if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
-          this.page = page || 'partners';
+          this.set('page', (page || 'partners'));
         } else {
           //console.log('No permissions yet or page hasn\'t stampped', page);
         }

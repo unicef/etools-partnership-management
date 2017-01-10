@@ -12,9 +12,28 @@
         format = 'D MMM YYYY';
       }
       if (typeof dateString === 'string' && dateString !== '') {
-        return moment(new Date(dateString)).format(format);
+        var date = new Date(dateString);
+        if (date.toString() !== 'Invalid Date') {
+          // using moment.utc() ensures that the date will not be changed no matter timezone the user has set
+          return moment.utc(date).format(format);
+        }
       }
       return '';
+    },
+
+    /**
+     * Prepare date from string
+     */
+    prepareDate: function(dateString) {
+      if (typeof dateString === 'string' && dateString !== '') {
+        var date = new Date(dateString);
+        if (date.toString() === 'Invalid Date') {
+          date = new Date();
+        }
+        return date;
+      } else {
+        return new Date();
+      }
     },
 
     /**

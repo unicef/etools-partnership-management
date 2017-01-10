@@ -99,11 +99,16 @@
 
       is: 'side-bar-item',
 
-      _handleMainTap: function() {
+      properties: {
+        name: String
+      },
+
+      _handleMainTap: function(event) {
+//        event.preventDefault();
         if (this.hasAttribute('nested-nav')) {
           this.toggleDrawer();
         }
-        this.fire('selected');
+//        this.fire('page-selected', {pagePath: this.href});
       },
 
       toggleDrawer: function() {

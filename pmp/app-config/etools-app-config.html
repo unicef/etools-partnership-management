@@ -16,7 +16,7 @@ App global configuration
       collectionsList: 'name, expire',
       countries: 'id',
       partners: 'id, name, rating',
-      agreements: 'id, reference_number, partner_name, start, end',
+      agreements: 'id, name, agreement_number, partner_name, start, end',
       user: 'id'
     });
 
@@ -31,7 +31,7 @@ App global configuration
         serverBackend: (window.location.port !== '8080'),
 
         getEndpoint: function(endpointName, data) {
-          var endpoint = etoolsAppConfig.endpoints[endpointName];
+          var endpoint = JSON.parse(JSON.stringify(etoolsAppConfig.endpoints[endpointName]));
           if (endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '') {
             endpoint.url = this.baseSite + _.template(endpoint.template)(data);
           }
@@ -98,20 +98,31 @@ App global configuration
         cachingKey: 'user'
       },
       agreements: {
-        template: '/management/api/stats/agreements/',
+        template: '/api/v2/agreements/',
         exp: 30 * 60 * 1000, // 30min
         cachingKey: 'agreements'
       },
+      agreementDetails: {
+        template: '/api/v2/agreements/<%=id%>/',
+        exp: 30 * 60 * 1000 // 30min
+      },
       countries: {
-        url: '/api/countries/',
+        url: '/api/countries/', // API request receives a 404 for now
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'countries'
       },
       partners: {
-        url: '/api/partners',
+        url: '/api/v2/partners/',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'partners'
-      }
+      },
+      partnerDetails: {
+        template: '/api/v2/partners/<%=id%>/',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        // if this caching key is missing then the data will be cached with the url as key
+        // cachingKey: 'partnerDetails'
+      },
+
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;

@@ -77,6 +77,8 @@
       if (!this.editMode) {
         return;
       }
+      this._makeSureDataItemsAreValid();
+
       var newObj = this._getItemModelObject();
       this.push('dataItems', newObj);
     },
@@ -111,6 +113,28 @@
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
           'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+    },
+
+    /**
+     * Get last data item
+     */
+    _getLastDataItem: function() {
+      if (Array.isArray(this.dataItems) && this.dataItems.length > 0) {
+        return this.dataItems[this.dataItems.length - 1];
+      } else {
+        this._makeSureDataItemsAreValid();
+        return null;
+      }
+
+    },
+
+    /**
+     * Check is dataItems is Array, if not init with empty Array
+     */
+    _makeSureDataItemsAreValid: function() {
+      if (!Array.isArray(this.dataItems)) {
+        this.set('dataItems', []);
+      }
     }
   };
 

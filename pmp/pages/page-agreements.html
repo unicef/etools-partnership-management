@@ -5,9 +5,11 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -31,21 +33,25 @@
 
     <app-route
         route="{{route}}"
-        pattern="/list"
-        query-params="{{queryParams}}"
-        active="{{listActive}}"></app-route>
+        pattern="/a/list"
+        query-params="{{agreementQueryParams}}"
+        active="{{agreementListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/:id/details"
-        active="{{detailsActive}}"></app-route>
+        pattern="/a/:id/details"
+        active="{{agreementDetailsActive}}"
+        data="{{routeData}}"></app-route>
 
     <app-route
         route="{{route}}"
         pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <app-header-layout has-scrolling-region>
+
+    <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
+
+    <app-header-layout has-scrolling-region fullbleed>
 
       <app-header id="header" fixed shadow>
 
@@ -53,7 +59,7 @@
 
       </app-header>
 
-      <div class="page-top-content">
+      <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
             <h1 main-title>
@@ -103,15 +109,17 @@
                   role="main">
 
         <div class="list-page" name="list">
-          <agreements-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></agreements-list>
+          <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement="[[agreement]]" partner-name="{{partnerName}}"></agreement-details>
+          <agreement-details agreement="[[agreement]]"></agreement-details>
         </div>
         <div class="page" name="new-agreement">
           <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
         </div>
       </iron-pages>
+
+      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -138,16 +146,16 @@
       },
 
       observers: [
-        '_resizeHeader(listActive, detailsActive, newAgreementActive)',
-        '_pageChanged(listActive, newAgreementActive, detailsActive)',
+        '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
+        '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
       ],
 
       ready: function() {
         // TODO: replace this placeholder data
         // get fake data for testing
         // TODO: remove this after API si used
-        var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
-        this.set('agreement', localSavedAgreement);
+        //var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
+        //this.set('agreement', localSavedAgreement);
 
         // TODO: remove this
         if (this.agreementPage === 'new-agreement') {
@@ -249,6 +257,16 @@
       _newAgreementSaved: function(event) {
         this.set('agreement', event.detail);
         this.set('route.path', '/' + this.agreement.id + '/details');
+      },
+
+      /**
+       *
+       */
+      _getTopContentAdditionalClass: function(activePage) {
+        if (this._showPageTabs(activePage)) {
+          return 'with-tabs'
+        }
+        return '';
       }
 
     });

@@ -28,7 +28,7 @@
         margin-left: 10px;
       }
 
-      .synced, .blocked, .marked-for-deletion {
+      .synced, .blocked, .marked-for-deletion, .not-synced {
         @apply(--layout-vertical);
         @apply(--layout-center-justified);
         width: 24px;
@@ -46,7 +46,11 @@
         background-color: #FFA149; /* TODO: replace with app-theme var */
       }
 
-      .synced iron-icon, .blocked iron-icon {
+      .not-synced {
+        background-color: #3A94FF; /* TODO: replace with app-theme var */
+      }
+
+      .synced iron-icon, .blocked iron-icon, .not-synced iron-icon {
         --iron-icon-height: 16px;
         --iron-icon-width: 16px;
         color: #ffffff;
@@ -72,6 +76,17 @@
     </style>
 
     <etools-content-panel title="Partner status">
+
+      <div class="status-container" hidden$="[[!_showNotSyncedStatus(partner)]]">
+        <div class="status-icon">
+          <span class="not-synced">
+            <iron-icon icon="info"></iron-icon>
+          </span>
+        </div>
+        <div class="status">
+          <p>Not Synced</p>
+        </div>
+      </div>
 
       <div class="status-container" hidden$="[[!_showSyncedStatus(partner)]]">
         <div class="status-icon">
@@ -146,6 +161,10 @@
             return true;
           }
           return false;
+        },
+
+        _showNotSyncedStatus: function(partner) {
+          return partner.vision_synced === false;
         }
 
       });

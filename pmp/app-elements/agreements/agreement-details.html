@@ -15,7 +15,7 @@
 
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
-<link rel="import" href="../partner-data/partner-data.html">
+<link rel="import" href="../partners/partners-data/partner-item-data.html">
 
 <link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
 <link rel="import" href="partner-authorized-officers.html">
@@ -29,18 +29,12 @@
       :host {
         @apply(--layout-horizontal);
         width: 100%;
-        padding-bottom: 70px;
       }
 
     </style>
 
-    <app-route
-        route="{{route}}"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
-
-    <partner-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-data>
+    <!-- TODO: remove partner from here.. add it to the agreement-detail api endpoint -->
+    <partner-item-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-item-data>
 
     <!-- main page content start -->
     <div id="pageContent">

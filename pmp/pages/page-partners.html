@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../app-elements/partner-data/partner-data.html">
+<link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
@@ -24,26 +24,21 @@
         display: block;
       }
 
-      .list-page {
-        max-width: 920px;
-        margin: 20px auto;
-      }
-
     </style>
 
     <app-route
-        route="{{route}}"
-        pattern="/list"
+        route="[[route]]"
+        pattern="/p/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/:id/:tab"
+        pattern="/p/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-data>
+    <partner-item-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -53,11 +48,24 @@
 
       </app-header>
 
-      <div class="page-top-content" hidden$="{{!tabsActive}}">
+      <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>[[partner.name]]</h1>
+            <h1 main-title>
+              <template is="dom-if" if="[[listActive]]">
+                <span>Partners</span>
+              </template>
+              <template is="dom-if" if="[[tabsActive]]">
+                <span>[[partner.name]]</span>
+              </template>
+            </h1>
             <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!listActive]]">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
               <div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
@@ -66,22 +74,23 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row">
-            <paper-tabs
-                selected="{{routeData.tab}}"
-                attr-for-selected="name"
-                fallback-selection="overview" noink bottom-item>
+          <template is="dom-if" if="[[tabsActive]]">
+            <div class="top-content-row">
+              <paper-tabs
+                  selected="{{routeData.tab}}"
+                  attr-for-selected="name" noink bottom-item>
 
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
 
-              <paper-tab name="details" link>
-                <span class="tab-content">Partner Details</span>
-              </paper-tab>
+                <paper-tab name="details" link>
+                  <span class="tab-content">Partner Details</span>
+                </paper-tab>
 
-            </paper-tabs>
-          </div>
+              </paper-tabs>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -91,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="list-page" name="list">
+        <div class="page" name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
@@ -123,7 +132,7 @@
 
       observers: [
         '_resizeHeader(tabsActive)',
-        '_pageChanged(listActive, routeData.tab)',
+        '_pageChanged(listActive, routeData.tab)'
       ],
 
       _resizeHeader: function() {
@@ -148,6 +157,20 @@
           return true;
         }
         return false;
+      },
+
+      _getPartnerPageTitle: function(listActive, partnerName) {
+        if (listActive) {
+          return 'Partners';
+        }
+        return partnerName;
+      },
+
+      _getTopContentAdditionalClass: function(listActive) {
+        if (!listActive) {
+          return 'with-tabs'
+        }
+        return '';
       }
 
     });
