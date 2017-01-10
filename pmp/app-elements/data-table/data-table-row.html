@@ -1,0 +1,83 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="data-table-row">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+      }
+
+      :host(:hover) paper-material {
+        background-color: #EEEEEE;
+      }
+
+      paper-material {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+
+        height: 48px;
+        padding-right: 24px;
+        font-size: 13px;
+        color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
+        background-color: var(--primary-background-color, #FFFFFF);
+      }
+
+      ::content > * {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      #iconWrapper {
+        height: 48px;
+        line-height: 48px;
+        padding: 0 24px;
+        cursor: pointer;
+      }
+
+      iron-icon {
+        color: var(--dark-icon-color, rgba(0, 0, 0, 0.54));
+      }
+
+      #less {
+        display: none;
+      }
+
+    </style>
+
+    <paper-material elevation="0">
+      <div id="iconWrapper">
+        <iron-icon id="more" icon="expand-more"></iron-icon>
+        <iron-icon id="less" icon="expand-less"></iron-icon>
+      </div>
+      <!--<paper-icon-button icon="arrow-upward"></paper-icon-button>-->
+      <content></content>
+    </paper-material>
+
+    <iron-collapse>
+      <div id="collapse-wrapper">
+        <!--<content></content>-->
+      </div>
+    </iron-collapse>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'data-table-row',
+
+      properties: {
+
+      },
+
+    });
+
+  </script>
+
+</dom-module>

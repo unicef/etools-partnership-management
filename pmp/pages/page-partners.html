@@ -27,7 +27,7 @@
     </style>
 
     <app-route
-        route="[[route]]"
+        route="{{route}}"
         pattern="/p/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
@@ -100,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
