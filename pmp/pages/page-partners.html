@@ -27,14 +27,14 @@
     </style>
 
     <app-route
-        route="[[route]]"
-        pattern="/p/list"
+        route="{{route}}"
+        pattern="partners/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/p/:id/:tab"
+        pattern="partners/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -100,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
