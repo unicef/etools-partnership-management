@@ -170,6 +170,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged'
         },
+        route: {
+          type: Object
+        },
         _pagesAvailable: {
           type: Boolean,
           value: false
@@ -206,7 +209,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
 //        'page-selected': '_pageSelected',
         'drawer': 'toggleDrawer',
-        '404': '_pageNotFound'
+        '404': '_pageNotFound',
+        'update-main-path': '_updateMainPath'
       },
 
       attached: function() {
@@ -216,6 +220,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //if (this.route.path === this.baseUrl) {
         //  this.set('route.path', this.baseUrl + 'partners/list');
         //}
+      },
+      _updateMainPath: function(event) {
+        console.log(event.detail.path);
+        this.set('route.path', this.baseUrl + event.detail.path);
+        //event.stopPropagation();
       },
       _permissionsPagesStamped: function(permissions, _pagesAvailable) {
         if (!permissions || !_pagesAvailable) {
@@ -241,7 +250,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 //      },
 
       _routePageChanged: function(page) {
-        console.log(this.route)
         if ((this.route) && (this.baseUrl)) {
           var subroute = JSON.parse(JSON.stringify(this.route));
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);

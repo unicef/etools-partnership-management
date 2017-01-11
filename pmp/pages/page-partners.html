@@ -127,11 +127,15 @@
 
         partnerPage: {
           type: String,
+        },
+        routeData: {
+          type: Object,
         }
       },
 
       observers: [
         '_resizeHeader(tabsActive)',
+        '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, routeData.tab)'
       ],
 
@@ -158,6 +162,15 @@
         }
         return false;
       },
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        //console.log(tab);
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
+      },
 
       _getPartnerPageTitle: function(listActive, partnerName) {
         if (listActive) {
@@ -168,7 +181,7 @@
 
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       }
