@@ -1,6 +1,7 @@
 <!-- Styles for list pages -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="list-styles">
 
@@ -9,9 +10,7 @@
     <style>
 
       :host {
-        display: block;
-        max-width: 1200px;
-        margin: 20px auto;
+        @apply(--layout-flex);
       }
 
       :host([hidden]) {
@@ -75,6 +74,26 @@
 
       #filterMenu .button iron-icon {
         margin-right: 5px;
+      }
+
+      #filterMenu paper-item {
+        --paper-item: {
+          cursor: pointer;
+        };
+        --paper-item-selected: {
+          font-weight: normal !important;
+        };
+        --paper-item-focused: {
+          background-color: rgba(255, 255, 255, 1);
+        };
+        --paper-item-focused-before: {
+          background: none;
+          opacity: 0;
+        };
+        --paper-item-focused-after: {
+          background: none;
+          opacity: 0;
+        }
       }
 
       #hiddenToggle {

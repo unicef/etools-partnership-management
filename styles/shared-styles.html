@@ -85,10 +85,15 @@
         --paper-icon-button-ink-color: var(--light-ink-color);
       }
 
-      paper-icon-button.clear {
+      .dropdown-with-clear-btn paper-icon-button.clear,
+      .dropdown-with-clear-btn paper-icon-button.remove {
         width: 35px;
         height: 35px;
         top: 10px;
+      }
+
+      .dropdown-with-clear-btn paper-icon-button.remove {
+        color: #ea4022 /* TODO: replace with app-theme var */
       }
 
       .dropdown-with-clear-btn {

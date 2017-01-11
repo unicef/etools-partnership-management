@@ -60,6 +60,7 @@
               <paper-item>UN Agency</paper-item>
             </paper-menu>
           </paper-dropdown-menu>
+          <paper-icon-button class="remove" icon="cancel"></paper-icon-button>
         </div>
 
         <div class="dropdown-with-clear-btn">
@@ -72,6 +73,7 @@
               <paper-item>National</paper-item>
             </paper-menu>
           </paper-dropdown-menu>
+          <paper-icon-button class="remove" icon="cancel"></paper-icon-button>
         </div>
 
       </div>
@@ -84,9 +86,9 @@
         <paper-button class="button dropdown-trigger">
           <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
         <paper-menu class="dropdown-content">
-          <paper-item>Filter</paper-item>
-          <paper-item>Filter</paper-item>
-          <paper-item>Filter</paper-item>
+          <template is="dom-repeat" items="[[listFilterOptions]]">
+            <paper-item on-tap="_selectFilter">[[item]]</paper-item>
+          </template>
         </paper-menu>
       </paper-menu-button>
 
@@ -221,6 +223,9 @@
 
       ready: function() {
         this.$.list.classList.add('hidden');
+
+        // init add filter menu options
+        this.set('listFilterOptions', ['Partner Type', 'CSO Type']);
       },
 
       // Input: URL query params
@@ -363,6 +368,10 @@
         }
       },
 
+      _selectFilter: function(event) {
+        var selectedOption = event.model.item;
+
+      }
     });
 
   </script>
