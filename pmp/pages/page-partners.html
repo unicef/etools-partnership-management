@@ -27,14 +27,14 @@
     </style>
 
     <app-route
-        route="[[route]]"
-        pattern="/p/list"
+        route="{{route}}"
+        pattern="partners/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/p/:id/:tab"
+        pattern="partners/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -100,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="page" name="list">
+        <div name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
@@ -127,11 +127,15 @@
 
         partnerPage: {
           type: String,
+        },
+        routeData: {
+          type: Object,
         }
       },
 
       observers: [
         '_resizeHeader(tabsActive)',
+        '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, routeData.tab)'
       ],
 
@@ -158,6 +162,15 @@
         }
         return false;
       },
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        //console.log(tab);
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
+      },
 
       _getPartnerPageTitle: function(listActive, partnerName) {
         if (listActive) {
@@ -168,7 +181,7 @@
 
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       }

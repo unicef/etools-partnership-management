@@ -20,6 +20,7 @@
     },
 
     queueToast: function(e, detail) {
+      e.stopPropagation();
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');

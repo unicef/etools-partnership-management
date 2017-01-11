@@ -244,17 +244,19 @@
 
         _dataHasChanged: function(dataItems) {
           // prepare data for assessment reports
-          dataItems.forEach(function(item, index) {
-            if ((typeof item.report === 'string' && item.report !== '')
-                && (!Array.isArray(item.report_file) || (Array.isArray(item.report_file)
+          if (Array.isArray(dataItems) && dataItems.length > 0) {
+            dataItems.forEach(function(item, index) {
+              if ((typeof item.report === 'string' && item.report !== '')
+                  && (!Array.isArray(item.report_file) || (Array.isArray(item.report_file)
                   && item.report_file.length === 0))) {
-              this.set('dataItems.' + index + '.report_file', [{
-                id: 'report_file_' + index,
-                file_name: item.report.substr(item.report.lastIndexOf('/') + 1),
-                path: item.report
-              }]);
-            }
-          }.bind(this));
+                this.set('dataItems.' + index + '.report_file', [{
+                  id: 'report_file_' + index,
+                  file_name: item.report.substr(item.report.lastIndexOf('/') + 1),
+                  path: item.report
+                }]);
+              }
+            }.bind(this));
+          }
         },
 
         _basisForRiskRatingChanged: function(event) {

@@ -15,12 +15,13 @@ App global configuration
     etoolsCustomDexieDb.version(1).stores({
       collectionsList: 'name, expire',
       countries: 'id',
-      partners: 'id, name, rating',
+      partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
       user: 'id'
     });
 
     var etoolsAppConfig = {
+
       db: etoolsCustomDexieDb,
 
       // globals
