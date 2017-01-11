@@ -119,10 +119,10 @@
             this.$.ajax.endpoint = this.getEndpoint('changeCountry');
           }
           this.set('country', this.$.repeat.itemForElement(e.detail.item));
-          //this.fire('main_refresh');
       },
       _handleResponse: function(res) {
-        // TODO: check response to make sure it contains a valid user
+        // TODO: before main refresh... move to base url
+        console.log('before refreshing move to baseurl')
         this.fire('main_refresh');
       },
 
