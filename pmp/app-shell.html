@@ -222,9 +222,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //}
       },
       _updateMainPath: function(event) {
-        console.log(event.detail.path);
         this.set('route.path', this.baseUrl + event.detail.path);
-        //event.stopPropagation();
+        event.stopPropagation();
       },
       _permissionsPagesStamped: function(permissions, _pagesAvailable) {
         if (!permissions || !_pagesAvailable) {
@@ -244,10 +243,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       toggleDrawer: function() {
         this.$.drawer.toggle();
       },
-
-//      _pageSelected: function(event) {
-//        this.set('route.path', event.detail.pagePath);
-//      },
 
       _routePageChanged: function(page) {
         if ((this.route) && (this.baseUrl)) {

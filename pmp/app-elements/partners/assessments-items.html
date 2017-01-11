@@ -305,7 +305,7 @@
             if (lastAssessmentAdded && lastAssessmentAdded.type === null
                 && lastAssessmentAdded.completed_date === null
                 && lastAssessmentAdded.report_file.length === 0) {
-              this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true}, {bubbles: false});
+              this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
             } else {
               this._addElement();
             }
