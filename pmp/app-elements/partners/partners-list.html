@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="partners-data/partners-list-data.html">
@@ -22,6 +23,7 @@
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
+<link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="partner-item.html">
 <link rel="import" href="../data-table/data-table-footer.html">
@@ -33,7 +35,16 @@
 
   <template>
 
-    <style include="shared-styles list-styles iron-flex iron-flex-factors"></style>
+    <style include="shared-styles list-styles iron-flex iron-flex-factors partner-status-styles">
+      .col-data {
+        display: inline-flex;
+        line-height: 24px;
+        height: 24px;
+      }
+      .sm-status-wrapper {
+        padding-left: 10px;
+      }
+    </style>
 
     <partners-list-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-list-data>
 
@@ -101,53 +112,87 @@
 
     </paper-material>
 
-    <div id="list">
+    <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="flex" field="vendor_number" sortable>
-          Vendor #
-        </data-table-column>
-        <data-table-column class="flex-3" field="name" sortable>
-          Name(short - full)
-        </data-table-column>
-        <data-table-column class="flex-2" field="partner_type">
-          Type
-        </data-table-column>
-        <data-table-column class="flex" field="rating">
-          Risk
-        </data-table-column>
-      </data-table-header>
+        <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+          <data-table-column class="flex" field="vendor_number" sortable>
+            Vendor #
+          </data-table-column>
+          <data-table-column class="flex-3" field="name" sortable>
+            Name(short - full)
+          </data-table-column>
+          <data-table-column class="flex-2" field="partner_type">
+            Type
+          </data-table-column>
+          <data-table-column class="flex" field="rating">
+            Risk
+          </data-table-column>
+        </data-table-header>
 
-      <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10">
-        <data-table-row>
-          <a class="flex" href="partners/[[partner.id]]/overview">
-            [[partner.vendor_number]]
-          </a>
-          <span class="flex-3">
-            [[_computeName(partner.name, partner.short_name)]]
-          </span>
-          <span class="flex-2">
-            [[_computeType(partner.cso_type, partner.partner_type)]]
-          </span>
-          <span class="flex" style="text-transform: capitalize">
-            [[partner.rating]]
-          </span>
-        </data-table-row>
-      </template>
+        <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
+          <data-table-row details-opened="[[detailsOpened]]">
+            <div slot="row-data">
+              <a class="col-data flex" href="partners/[[partner.id]]/details">
+                [[partner.vendor_number]]
+              </a>
+              <span class="col-data flex-3">
+                [[_computeName(partner.name, partner.short_name)]]
 
-      </paper-material>
+                <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
+                  <span class="marked-for-deletion">
+                    <iron-icon icon="delete"></iron-icon>
+                  </span>
+                </span>
 
-      <data-table-footer
-        page-size="[[pageSize]]"
-        page-number="[[pageNumber]]"
-        total-results="[[totalResults]]"
-        visible-range="{{visibleRange}}"
-        on-page-size-changed="_pageSizeChanged"
-        on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+                <span class="sm-status-wrapper" hidden$="[[!partner.blocked]]">
+                  <span class="blocked">
+                    <iron-icon icon="block"></iron-icon>
+                  </span>
+                </span>
 
-    </div>
+              </span>
+              <span class="col-data flex-2">
+                [[_computeType(partner.cso_type, partner.partner_type)]]
+              </span>
+              <span class="col-data flex" style="text-transform: capitalize">
+                [[partner.rating]]
+              </span>
+            </div>
+            <div slot="row-data-details">
+              <div class="row-details-content flex">
+                <span class="rdc-title">Shared Partner</span>
+                <span>[[_getPartnerSharedWithValue(partner.shared_with)]]</span>
+              </div>
+              <div class="row-details-content flex">
+                <span class="rdc-title">Email</span>
+                <span>[[_checkAndShowPartnerValue(partner.email)]]</span>
+              </div>
+              <div class="row-details-content flex">
+                <span class="rdc-title">Phone Number</span>
+                <span>[[_checkAndShowPartnerValue(partner.phone_number)]]</span>
+              </div>
+              <div class="row-details-content flex">
+                <span class="rdc-title">Actual Cash Transfer for CP</span>
+                <span>$ [[_checkAndShowPartnerValue(partner.total_ct_cp)]]</span>
+              </div>
+              <div class="row-details-content flex">
+                <span class="rdc-title">Actual Cash Transfer for Current Year</span>
+                <span>$ [[_checkAndShowPartnerValue(partner.total_ct_cy)]]</span>
+              </div>
+            </div>
+          </data-table-row>
+        </template>
 
+        <data-table-footer
+          page-size="[[pageSize]]"
+          page-number="[[pageNumber]]"
+          total-results="[[totalResults]]"
+          visible-range="{{visibleRange}}"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged">
+        </data-table-footer>
+
+    </paper-material>
 
   </template>
 
@@ -210,7 +255,6 @@
         urlParams: {
           type: Object,
         }
-
       },
 
       observers: [
@@ -377,6 +421,33 @@
           return 'CSO / Community Based';
         } else {
           return 'CSO / ' + csoType;
+        }
+      },
+
+       // When the list data rows are changing check and close any details opened
+      _listDataChanged: function() {
+        var rows = this.$.list.querySelectorAll('data-table-row');
+        if (rows) {
+          rows.forEach(function(row) {
+            if (row.detailsOpened) {
+              row.set('detailsOpened', false);
+            }
+          });
+        }
+      },
+
+      _checkAndShowPartnerValue: function(val) {
+        if (val) {
+          return val;
+        }
+        return "–";
+      },
+
+      _getPartnerSharedWithValue: function(sharedWith) {
+        if (Array.isArray(sharedWith) && sharedWith.length > 0) {
+          return sharedWith.join(', ');
+        } else {
+          return "–";
         }
       }
 
