@@ -90,7 +90,7 @@
 
     </style>
 
-    <agreement-list-data id="agreements" data="{{agreements}}" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreement-list-data>
+    <agreement-list-data id="agreements" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreement-list-data>
 
     <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
 
@@ -167,7 +167,7 @@
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
         <div id="temp">
-          <p class="flex-2"><a href="agreements/a/[[item.id]]/details">
+          <p class="flex-2"><a href="agreements/[[item.id]]/details">
           [[item.agreement_number]]
             </a></p>
           <p class="flex-2">[[item.partner_name]]</p>
