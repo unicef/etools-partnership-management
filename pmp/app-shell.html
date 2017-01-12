@@ -97,7 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <user-data permissions="{{permissions}}"></user-data>
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -145,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           role="main">
 
         <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
-          <page-partners on-dom-change="_pagesStamped" name="partners" route="[[subroute]]" permissions="[[permissions]]"></page-partners>
+          <page-partners on-dom-change="_pagesStamped" name="partners" route="[[subroute]]" user="[[user]]" permissions="[[permissions]]"></page-partners>
           <page-agreements name="agreements" route="[[subroute]]"></page-agreements>
           <page-interventions name="interventions" route="[[subroute]]"></page-interventions>
         </template>
