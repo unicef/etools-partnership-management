@@ -44,7 +44,7 @@
 
       <app-header id="header" fixed shadow>
 
-        <page-header></page-header>
+        <page-header user="[[user]]"></page-header>
 
       </app-header>
 
@@ -100,7 +100,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div name="list">
+        <div class="page" name="list">
           <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
@@ -124,7 +124,9 @@
       is: 'page-partners',
 
       properties: {
-
+        user: {
+          type: Object
+        },
         partnerPage: {
           type: String,
         },
@@ -166,7 +168,6 @@
         if (!tab) {
           return;
         }
-        //console.log(tab);
         this.debounce('debounce-url-tab-update', function() {
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);

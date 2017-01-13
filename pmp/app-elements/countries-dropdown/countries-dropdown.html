@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../styles/countries-flags/country-flag-styles.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../countries-data/countries-data.html">
 
@@ -68,14 +69,18 @@
       }
 
     </style>
-    <countries-data data="{{countries}}"></countries-data>
+
+    <etools-ajax id="ajax"
+                 method="POST"
+                 on-success="_handleResponse"
+                 on-fail="_handleError"></etools-ajax>
 
     <iron-icon class$="[[country.imgClass]]" prefix></iron-icon>
 
     <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
-      <paper-listbox class="dropdown-content" on-iron-select="_countrySelected">
+      <paper-listbox class="dropdown-content" id="countriesListbox" attr-for-selected="countryId" selected="[[current]]" on-iron-select="_countrySelected">
         <template id="repeat" is="dom-repeat" items="[[countries]]">
-          <paper-item>
+          <paper-item country-id="[[item.id]]">
             <iron-icon class$="[[item.imgClass]]" item-icon></iron-icon>
             [[item.name]]
           </paper-item>
@@ -93,12 +98,41 @@
       is: 'countries-dropdown',
 
       properties: {
+          current: Number,
+          country: {
+            type: Object
+          },
+          countries: {
+              type: Array
+          }
 
       },
+      behaviors: [
+        etoolsAppConfig.globals
+      ],
 
       _countrySelected: function(e) {
-        this.set('country', this.$.repeat.itemForElement(e.detail.item));
-      }
+          if (e.detail.item.countryId !== this.current) {
+            //send post request to change_coutry endpoint
+            console.log('change_country_request');
+            this.$.ajax.body = {country: e.detail.item.countryId};
+            this.$.ajax.endpoint = this.getEndpoint('changeCountry');
+          }
+          this.set('country', this.$.repeat.itemForElement(e.detail.item));
+      },
+      _handleResponse: function(res) {
+        // TODO: before main refresh... move to base url
+        console.log('before refreshing move to baseurl')
+        this.fire('main_refresh');
+      },
+
+      _handleError: function(rsp, err) {
+        console.log(rsp);
+        console.log(err);
+        console.log('TODO: this should be a larger alert.');
+        this.$.countriesListbox.selected = this.current;
+        this.fire('toast', {text: 'Something went wrong changing your workspace. Please try again'});
+      },
 
     });
 

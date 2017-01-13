@@ -1,5 +1,6 @@
 <!-- Mixins used all over the app. This will prevent duplicating css rules -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <style is="custom-style">
   :root {
@@ -34,6 +35,16 @@
       font-size: 14px;
       font-weight: bold;
     };
+
+    --partner-status-wrapper: {
+      @apply(--layout-vertical);
+      @apply(--layout-center-justified);
+      width: 24px;
+      height: 24px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+    }
 
   }
 </style>

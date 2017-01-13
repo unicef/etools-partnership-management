@@ -100,7 +100,7 @@
             }
 
             if (searchString && searchString.length &&
-                agreement.reference_number.toLowerCase().indexOf(searchString) < 0 &&
+                agreement.agreement_number.toLowerCase().indexOf(searchString) < 0 &&
                 agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
               return false;
             }

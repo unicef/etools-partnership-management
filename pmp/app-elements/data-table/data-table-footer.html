@@ -19,7 +19,7 @@
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
       }
 
-      paper-material {
+      #table-footer {
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-end-justified);
@@ -54,7 +54,7 @@
 
     </style>
 
-    <paper-material elevation="1">
+    <div id="table-footer">
       <span id="rows">Rows per page:</span>
 
       <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink>
@@ -76,7 +76,7 @@
 
       <paper-icon-button icon="last-page" on-tap="_lastPage" disabled$="[[_pageForwardDisabled(pageNumber, totalPages)]]"></paper-icon-button>
 
-    </paper-material>
+    </div>
 
   </template>
 

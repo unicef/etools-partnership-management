@@ -56,8 +56,8 @@
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div main-title>eTools</div>
       <div class="right-side">
-        <countries-dropdown id="countries" countries="[[countries]]"></countries-dropdown>
-        <etools-page-refresh></etools-page-refresh>
+        <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
+        <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
     </app-toolbar>
   </template>
@@ -66,12 +66,47 @@
     (function() {
       Polymer({
         is: 'page-header',
-
+        properties: {
+          countries: {
+            type: Array
+          },
+          user: {
+            type: Object,
+          }
+        },
+        observers: [
+          '_updateCountriesList(user.profile.countries_available)'
+        ],
+        listeners: {
+        'main_refresh': '_refresh_page'
+        },
         openDrawer: function() {
           this.fire('drawer');
-        }
-
-      });
+        },
+        _refresh_page: function(event) {
+            console.log('refreshing page');
+            event.stopImmediatePropagation();
+            this.$.refresh._refresh();
+        },
+        _getFlagIconClass: function(id) {
+          var flagIdMap = {
+            '0': 'us',
+            '234R': 'syxb',
+            '2490': 'lb',
+            '4020': 'su',
+            '4140': 'sy',
+            '2070': 'in'
+          };
+          return 'flag-icon ' + 'flag-icon-' + flagIdMap[id];
+        },
+        _updateCountriesList: function(countries) {
+          console.log(countries);
+          var arrayObj = countries.map(function(arrayItem) { 
+            return {id: arrayItem.id, name: arrayItem.name, imgClass: this._getFlagIconClass(arrayItem.business_area_code)};
+          }.bind(this));
+          this.set('countries', arrayObj);
+          }
+        });
     })();
   </script>
 

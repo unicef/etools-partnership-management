@@ -13,20 +13,16 @@
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
 
 <dom-module id="page-agreements">
 
   <template>
 
-    <style include="page-layout-styles shared-styles">
+    <style include="page-layout-styles shared-styles buttons-styles">
 
       :host {
         display: block;
-      }
-
-      .list-page {
-        max-width: 920px;
-        margin: 20px auto;
       }
 
     </style>
@@ -55,7 +51,7 @@
 
       <app-header id="header" fixed shadow>
 
-        <page-header title="Agreements"></page-header>
+        <page-header user="[[user]]"></page-header>
 
       </app-header>
 
@@ -79,10 +75,22 @@
               </span>
             </h1>
             <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!agreementListActive]]">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
               <div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
+                </paper-button>
+              </div>
+              <div class="top-content-action" hidden$="[[!agreementListActive]]">
+                <paper-button class="primary-btn with-prefix">
+                  <iron-icon icon="add"></iron-icon>
+                  Add New Agreement
                 </paper-button>
               </div>
             </div>
@@ -108,7 +116,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="list-page" name="list">
+        <div class="page" name="list">
           <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">

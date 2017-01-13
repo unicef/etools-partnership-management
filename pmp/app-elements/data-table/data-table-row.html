@@ -1,10 +1,14 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="data-table-row">
 
   <template>
 
     <style>
+      *[hidden] {
+        display: none !important;
+      }
 
       :host {
         display: block;
@@ -12,7 +16,7 @@
       }
 
       :host(:hover) paper-material {
-        background-color: #EEEEEE;
+        background-color: #EEEEEE; /* TODO: replace with app-theme var */
       }
 
       paper-material {
@@ -26,7 +30,7 @@
         background-color: var(--primary-background-color, #FFFFFF);
       }
 
-      ::content > * {
+      paper-material ::slotted(*) {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -43,24 +47,25 @@
         color: var(--dark-icon-color, rgba(0, 0, 0, 0.54));
       }
 
-      #less {
-        display: none;
+      #collapse-wrapper {
+        padding: 15px 24px 15px 72px;
+        background-color: #EEEEEE; /* TODO: replace with app-theme var */
+        border-top: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
       }
 
     </style>
 
     <paper-material elevation="0">
       <div id="iconWrapper">
-        <iron-icon id="more" icon="expand-more"></iron-icon>
-        <iron-icon id="less" icon="expand-less"></iron-icon>
+        <iron-icon id="more" icon="expand-more" hidden$="[[detailsOpened]]" on-tap="_toggleRowDetails"></iron-icon>
+        <iron-icon id="less" icon="expand-less" hidden$="[[!detailsOpened]]" on-tap="_toggleRowDetails"></iron-icon>
       </div>
-      <!--<paper-icon-button icon="arrow-upward"></paper-icon-button>-->
-      <content></content>
+      <slot name="row-data"></slot>
     </paper-material>
 
-    <iron-collapse>
+    <iron-collapse id="details" opened="{{detailsOpened}}">
       <div id="collapse-wrapper">
-        <!--<content></content>-->
+        <slot name="row-data-details"></slot>
       </div>
     </iron-collapse>
 
@@ -73,8 +78,15 @@
       is: 'data-table-row',
 
       properties: {
-
+        detailsOpened: {
+          type: Boolean,
+          value: false
+        }
       },
+
+      _toggleRowDetails: function() {
+        this.$.details.toggle();
+      }
 
     });
 

@@ -13,6 +13,7 @@
         height: 56px;
         font-size: 12px;
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+        font-weight: bold;
       }
 
       :host([sortable]) {
@@ -64,7 +65,7 @@
     </style>
 
     <span id="label">
-      <content></content>
+      <slot></slot>
     </span>
     <div id="icon-wrapper">
       <iron-icon id="up" icon="arrow-upward"></iron-icon>
