@@ -27,14 +27,14 @@
         margin-bottom: 20px;
       }
 
-      .wrap-controls, .fixed-controls {
+      .wrap-controls, .fixed-controls,
+      .wrap-controls .filter{
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
 
       .wrap-controls {
         @apply(--layout-wrap);
-
         padding-bottom: 8px;
       }
 
@@ -46,8 +46,9 @@
         min-width: 200px;
       }
 
-      .wrap-controls paper-dropdown-menu {
-        width: 250px;
+      .wrap-controls paper-dropdown-menu,
+      .wrap-controls .filter {
+        min-width: 250px;
       }
 
       .fixed-controls {

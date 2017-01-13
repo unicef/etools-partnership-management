@@ -1,5 +1,4 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
@@ -15,9 +14,11 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
@@ -36,69 +37,7 @@
 
   <template>
 
-    <style include="shared-styles list-styles iron-flex iron-flex-factors">
-
-      :host {
-        display: block;
-      }
-
-      :host([hidden]) {
-        display: none;
-      }
-
-      .header {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-
-        padding: 0 39px 0 49px;
-        line-height: 56px;
-        font-size: 12px;
-        font-weight: bold;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      .header > div {
-        min-width: 100px;
-        margin-right: 10px;
-      }
-
-      .header > div > span {
-        cursor: pointer;
-      }
-
-      #list {
-        display: block;
-        position: relative;
-        margin: 20px auto;
-        opacity: 1;
-        transition: opacity 0.4s;
-        max-width: 920px;
-        background-color: #FFFFFF;
-      }
-
-      #temp {
-        @apply(--layout-horizontal);
-      }
-
-      #list.hidden {
-        transition: none;
-        opacity: 0;
-      }
-
-      .row {
-        @apply(--layout-vertical);
-
-        cursor: pointer;
-        overflow: hidden;
-        padding: 15px 15px;
-        font-size: 13px;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      .row:hover {
-        background: var(--dark-hover-color);
-      }
-
+    <style include="shared-styles list-styles grid-layout-styles">
     </style>
 
     <agreement-list-data id="agreements" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreement-list-data>
@@ -144,19 +83,42 @@
           </template>
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
-
-            <etools-searchable-multiselection-menu
-                label="Partner"
-                placeholder="&#8212;"
-                options="[[filter.selectionOptions]]"
-                value="[[filter.alreadySelected]]"
-                multi="[[filter.multiple]]"
-                on-value-change="esmmValueChanged"
-                data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+            <div class="filter">
+              <etools-searchable-multiselection-menu
+                  label="[[filter.filterName]]"
+                  placeholder="&#8212;"
+                  disabled$="[[!filter.selectionOptions.length]"
+                  options="[[filter.selectionOptions]]"
+                  value="[[filter.alreadySelected]]"
+                  multi="[[filter.multiple]]"
+                  on-value-change="esmmValueChanged"
+                  data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+            </div>
           </template>
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
-
+            <div class="filter">
+              <paper-input label="[[filter.filterName]]"
+                           on-down="openDatePicker"
+                           data-selector$="datepicker_[[filter.path]]">
+                <etools-datepicker-button prefix
+                                          id$="datepicker_[[filter.path]]"
+                                          format="D MMM YYYY"
+                                          data-filter-path$="[[filter.path]]"
+                                          on-date-has-changed="_filterDateHasChanged"
+                                          no-init show-clear-btn fire-date-has-changed>
+                </etools-datepicker-button>
+                </paper-icon-button>
+              </paper-input>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+            </div>
           </template>
 
         </template>
@@ -181,105 +143,70 @@
 
     </paper-material>
 
-    <!--<paper-material id="list" elevation="1"></paper-material>-->
+    <paper-material id="list" elevation="1">
 
+      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <data-table-column class="flex-c" field="agreement_number" sortable>
+          Agreement Number
+        </data-table-column>
+        <data-table-column class="col-4" field="partner_name" sortable>
+          Partner Full Name
+        </data-table-column>
+        <data-table-column class="col-2" field="partner_type">
+          Type
+        </data-table-column>
+        <data-table-column class="flex-c" field="start" sortable>
+          Start Date
+        </data-table-column>
+        <data-table-column class="flex-c" field="end" sortable>
+          End Date
+        </data-table-column>
+      </data-table-header>
 
+      <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" as="agreement" initial-count="10" on-dom-change="_listDataChanged">
+        <data-table-row details-opened="[[detailsOpened]]">
+          <div slot="row-data">
 
+            <a class="col-data flex-c" href="agreement/[[agreement.id]]/details">
+              [[agreement.agreement_number]]
+            </a>
+            <span class="col-data col-4">
+                [[agreement.partner_name]]
+            </span>
+            <span class="col-data col-2">
+                [[agreement.agreement_type]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.start)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.end)]]
+            </span>
 
+          </div>
+          <div slot="row-data-details">
 
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By Partner Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By UNICEF Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
+            </div>
 
-
-
-
-
-
-
-
-    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
-
-    <paper-material id="listControls-old" elevation="1">
-
-      <!--<input id="query"-->
-          <!--type="search"-->
-          <!--autocomplete="off"-->
-          <!--value="{{q::keyup}}"-->
-          <!--placeholder="Search"-->
-          <!--on-search="_onSearch"></input>-->
-
-      <!--<paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>-->
-      <!--<paper-dropdown-menu label="Agreement Type" noink>-->
-        <!--<paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">-->
-          <!--<paper-item name="MOU">Momarendum of Understanding</paper-item>-->
-          <!--<paper-item name="PCA">Programme Cooperation Agreement</paper-item>-->
-          <!--<paper-item name="SSFA">Small Scale Funding Agreement</paper-item>-->
-        <!--</paper-menu>-->
-      <!--</paper-dropdown-menu>-->
-
-      <!--<paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>-->
-      <!--<paper-dropdown-menu label="Agreement Status" noink>-->
-        <!--<paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">-->
-          <!--<paper-item name="draft">Draft</paper-item>-->
-          <!--<paper-item name="active">Active</paper-item>-->
-          <!--<paper-item name="suspended">Suspended</paper-item>-->
-          <!--<paper-item name="terminated">Terminated</paper-item>-->
-        <!--</paper-menu>-->
-      <!--</paper-dropdown-menu>-->
-
-      <!--<partners-list-data id="partners" multi-map="{{partnersMap}}"></partners-list-data>-->
-      <!--<etools-searchable-multiselection-menu-->
-          <!--label="Partner"-->
-          <!--options="[[partnersMap]]"-->
-          <!--value="{{selectedPartners}}" multi></etools-searchable-multiselection-menu>-->
-
-      <paper-input label="Starts After" value="[[prettyStartDate]]" readonly>
-        <etools-datepicker-button prefix date="[[_convertToDate(startDate)]]" json-date="{{startDate}}" pretty-date="{{prettyStartDate}}" no-init show-clear-btn></etools-datepicker-button>
-      </paper-input>
-
-      <paper-input label="Ends Before" value="[[prettyEndDate]]" readonly>
-        <etools-datepicker-button prefix date="[[_convertToDate(endDate)]]" json-date="{{endDate}}" pretty-date="{{prettyEndDate}}" no-init show-clear-btn></etools-datepicker-button>
-      </paper-input>
-
-      <button type="button" name="first-page" on-tap="_firstPage"> |< </button>
-      <button type="button" name="page-left" on-tap="_pageLeft"> < </button>
-      <button type="button" name="page-right" on-tap="_pageRight"> > </button>
-      <button type="button" name="last-page" on-tap="_lastPage"> >| </button>
-
-      <paper-menu-button>
-        <paper-item class="dropdown-trigger">[[pageSize]]</paper-item>
-        <paper-menu class="dropdown-content" attr-for-selected="name" selected="[[pageSize]]" on-iron-activate="_pageSizeSelected">
-          <paper-item name="5">5</paper-item>
-          <paper-item name="10">10</paper-item>
-          <paper-item name="25">25</paper-item>
-          <paper-item name="50">50</paper-item>
-        </paper-menu>
-      </paper-menu-button>
-
-    </paper-material>
-
-    <paper-material id="list">
-
-      <div class="header">
-        <!-- first class of div must be name of field -->
-        <div class="reference_number flex-2" filter-property="agreement_number"><span on-tap="_buildSortOrder">Reference Number</span></div>
-        <div class="partner_name flex-2" filter-property="partner_name"><span on-tap="_buildSortOrder">Partner</span></div>
-        <div class="agreement_type flex" filter-property="agreement_type">Type</div>
-        <div class="status flex" filter-property="status">Status</div>
-        <div class="start flex" filter-property="start"><span on-tap="_buildSortOrder">Start Date</span></div>
-        <div class="end flex" filter-property="end"><span on-tap="_buildSortOrder">End Date</span></div>
-      </div>
-
-      <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" initial-count="10">
-        <div id="temp">
-          <p class="flex-2"><a href="agreements/[[item.id]]/details">
-          [[item.agreement_number]]
-            </a></p>
-          <p class="flex-2">[[item.partner_name]]</p>
-          <p class="flex">[[item.agreement_type]]</p>
-          <p class="flex">[[item.status]]</p>
-          <p class="flex">[[item.start]]</p>
-          <p class="flex">[[item.end]]</p>
-        </div>
+          </div>
+        </data-table-row>
       </template>
+
+      <data-table-footer
+          page-size="[[pageSize]]"
+          page-number="[[pageNumber]]"
+          total-results="[[totalResults]]"
+          visible-range="{{visibleRange}}"
+          on-page-size-changed="_pageSizeSelected"
+          on-page-number-changed="_pageNumberChanged">
+      </data-table-footer>
 
     </paper-material>
 
@@ -294,6 +221,7 @@
       is: 'agreements-list',
 
       behaviors: [
+        pmpBehaviors.DateBehavior,
         pmpBehaviors.DropdownBehavior,
         pmpBehaviors.ListFiltersBehavior
       ],
@@ -339,22 +267,18 @@
           observer: '_dateChanged'
         },
 
-        sortOrder: {
-          type: Array
-        },
+        sortOrder: Object,
 
         pageNumber: {
           type: Number
         },
 
         totalPages: {
-          type: Number,
-          computed: '_computeTotalPages(pageSize, totalResults)',
+          type: Number
         },
 
         visibleRange: {
-          type: Array,
-          computed: '_computeVisibleRange(pageNumber, pageSize, totalResults, totalPages)'
+          type: Array
         },
 
         pageSize: {
@@ -370,8 +294,14 @@
           type: Object
         },
 
-        partnersDropdownData: Array
+        partnersDropdownData: Array,
 
+        detailsOpened: Boolean
+
+      },
+
+      listeners: {
+        'sort-changed': '_sortOrderChanged',
       },
 
       observers: [
@@ -447,10 +377,10 @@
         this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
         this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
         // format of sort param is sort=field.order ex: sort=name.asc
-        var result = [{field: 'partner_name', order: 'asc'}];
+        var result = {field: 'partner_name', direction: 'asc'};
         if (parms.sort) {
           var p = parms.sort.split('.');
-          result = [{field: p[0], order: p[1]}];
+          result = {field: p[0], direction: p[1]};
         }
         this.set('sortOrder', result);
       },
@@ -473,8 +403,8 @@
           // set depending on what action the user takes
           this.debounce('query', function() {
             this.$.agreements.query(
-              this.sortOrder[0].field,
-              this.sortOrder[0].order,
+              this.sortOrder.field,
+              this.sortOrder.direction,
               this.q.toLowerCase(),
               this.agreementType,
               this.agreementStatus,
@@ -516,30 +446,11 @@
         if (this.endDate && this.endDate.length) {
           out.push('end=' + this._shortenDate(this.endDate));
         }
-        if (this.sortOrder && this.sortOrder.length) {
-          var sortQuery = [];
-          this.sortOrder.forEach(function(sort) {
-            if (sort.field && sort.order) {
-              sortQuery.push('' + sort.field + '.' + sort.order);
-            }
-          });
-          out.push('sort=' + sortQuery.join('+'));
+        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
         }
-        return out.join('&');
-      },
 
-      // Run when a list header is clicked
-      // uses the first class of the header to determine the field name
-      _buildSortOrder: function(e) {
-          console.log(Polymer.dom(e).localTarget.parentNode);
-        var _field = Polymer.dom(e).localTarget.parentNode.getAttribute('filter-property');
-        var _order = 'asc';
-        if (this.sortOrder[0] && this.sortOrder[0].field === _field) {
-          _order = this.sortOrder[0].order === 'asc' ? 'desc' : 'asc';
-        }
-        this.set('debounceTime', 150);
-        this.set('pageNumber', 1);
-        this.set('sortOrder', [{field: _field, order: _order}]);
+        return out.join('&');
       },
 
       // Convert ids from URL into array of ids
@@ -571,34 +482,6 @@
 
       },
 
-      _pageLeft: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber > 1) {
-          this.set('pageNumber', this.pageNumber - 1);
-        }
-      },
-
-      _pageRight: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) {
-          this.set('pageNumber', this.pageNumber + 1);
-        }
-      },
-
-      _firstPage: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber > 1) {
-          this.set('pageNumber', 1);
-        }
-      },
-
-      _lastPage: function() {
-        this.set('debounceTime', 50);
-        if (this.pageNumber < this.totalPages) {
-          this.set('pageNumber', this.totalPages);
-        }
-      },
-
       _onSearch: function() {
         this.q = this.$.query.value;
       },
@@ -608,10 +491,15 @@
         this.set('pageNumber', 1);
       },
 
-      _pageSizeSelected: function(e, detail) {
+      _pageSizeSelected: function(e) {
         this.set('debounceTime', 200);
         this.set('pageNumber', 1);
-        this.set('pageSize', parseInt(detail.selected));
+        this.set('pageSize', parseInt(e.detail.value));
+      },
+
+      _pageNumberChanged: function(e) {
+        this.set('debounceTime', 50);
+        this.set('pageNumber', e.detail.value);
       },
 
       _dropdownSelected: function() {
@@ -622,28 +510,6 @@
       _selectedPartnersChanged: function() {
         this.set('debounceTime', 200);
         this.set('pageNumber', 1);
-      },
-
-      _computeTotalPages: function(pageSize, totalResults) {
-        var result = 1;
-        if (pageSize < totalResults) {
-          result = Math.ceil(totalResults / pageSize);
-        }
-        return result;
-      },
-
-      _computeVisibleRange: function(pageNumber, pageSize, totalResults, totalPages) {
-        var start = 1;
-        var end = totalResults;
-
-        if (pageNumber !== 1) {
-          start = (pageNumber - 1) * pageSize + 1;
-        }
-        if (pageNumber !== totalPages) {
-          end = start + pageSize - 1;
-        }
-
-        return [start, end];
       },
 
       _dateChanged: function(date) {
@@ -683,7 +549,32 @@
         this.async(function() {
           this.$.list.classList.remove('hidden');
         }, 50);
-      }
+      },
+
+      // TODO: refactor this, it is identical with partner-lists _listDataChanged
+      _listDataChanged: function(event) {
+        var rows = this.$.list.querySelectorAll('data-table-row');
+        if (rows) {
+          rows.forEach(function(row) {
+            if (row.detailsOpened) {
+              row.set('detailsOpened', false);
+            }
+          });
+        }
+      },
+
+      // verify date and prettify or not
+      _checkAndShowAgreementDate: function(dateString) {
+        if (typeof dateString === 'string' && dateString != '') {
+          return this.prettyDate(dateString);
+        }
+        return "–";
+      },
+
+      _sortOrderChanged: function(e) {
+        this.set('debounceTime', 150);
+        this.set('sortOrder', e.detail);
+      },
 
     });
 

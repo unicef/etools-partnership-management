@@ -29,32 +29,34 @@
     // update filter data
     updateFilters: function(filterName, property, newValue) {
       // update main filters
-      if (this.listFilterOptions.length > 0) {
-        for(var i = 0; i < this.listFilterOptions.length; i++) {
-          if (this.listFilterOptions[i].filterName === filterName) {
-            this.set('listFilterOptions.' + i + '.' + property, newValue);
-            break;
-          }
-        }
-      }
-      // update available filters
-      var found = false;
-      if (this.availableListFilterOptions.length > 0) {
-        for(var i = 0; i < this.availableListFilterOptions.length; i++) {
-          if (this.availableListFilterOptions[i].filterName === filterName) {
-            this.set('availableListFilterOptions.' + i + '.' + property, newValue);
-            found = true;
-            break;
-          }
-        }
-      }
-      // if the filter was moved from available to selected then update in selected filters
-      if (!found) {
-        if (this.selectedFilters.length > 0) {
-          for(var i = 0; i < this.selectedFilters.length; i++) {
-            if (this.selectedFilters[i].filterName === filterName) {
-              this.set('selectedFilters.' + i + '.' + property, newValue);
+      if (this.listFilterOptions) {
+        if (this.listFilterOptions.length > 0) {
+          for (var i = 0; i < this.listFilterOptions.length; i++) {
+            if (this.listFilterOptions[i].filterName === filterName) {
+              this.set('listFilterOptions.' + i + '.' + property, newValue);
               break;
+            }
+          }
+        }
+        // update available filters
+        var found = false;
+        if (this.availableListFilterOptions.length > 0) {
+          for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+            if (this.availableListFilterOptions[i].filterName === filterName) {
+              this.set('availableListFilterOptions.' + i + '.' + property, newValue);
+              found = true;
+              break;
+            }
+          }
+        }
+        // if the filter was moved from available to selected then update in selected filters
+        if (!found) {
+          if (this.selectedFilters.length > 0) {
+            for (var i = 0; i < this.selectedFilters.length; i++) {
+              if (this.selectedFilters[i].filterName === filterName) {
+                this.set('selectedFilters.' + i + '.' + property, newValue);
+                break;
+              }
             }
           }
         }
@@ -76,6 +78,7 @@
     selectFilter: function(event) {
       var selectedOption = event.model.item;
       this.push('selectedFilters', selectedOption);
+      this.$.filterMenu.close();
       this._updateAvailableFilterOptions();
     },
 
@@ -135,6 +138,17 @@
       var filterPath = Polymer.dom(event).localTarget.getAttribute('data-filter-path');
       var filterVal = event.detail.selectedValues;
       this.set(filterPath, filterVal);
+    },
+
+    // change event for a etoold-datepicker filter
+    _filterDateHasChanged: function(event) {
+      var filterPath = Polymer.dom(event).localTarget.getAttribute('data-filter-path');
+      var parentField = Polymer.dom(event).localTarget.parentNode;
+      if (parentField) {
+        parentField.value = event.detail.prettyDate;
+      }
+      this.set(filterPath, event.detail.jsonDate);
+//      console.log(event.detail, filterPath, parentField);
     }
 
   };
