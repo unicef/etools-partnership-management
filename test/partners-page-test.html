@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Partners Page</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../pmp/app-config/etools-app-config.html">
+    <!-- Import the element to test -->
+    <link rel="import" href="../pmp/pages/page-partners.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <page-partners></page-partners>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('page-partners tests', function() {
+        var home;
+        setup(function() {
+          home = fixture('basic');
+        });
+        test('Page Header should be Partners', function() {
+          var pgHeader = Polymer.dom(home.root).querySelector('page-header');
+          assert.equal(pgHeader.title, '');
+        })
+      });
+    </script>
+  </body>
+</html>

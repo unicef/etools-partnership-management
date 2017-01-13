@@ -14,11 +14,17 @@
   "unused": true,
   "newcap": false,
   "laxbreak": true,
+  "unused":false,
   "globals": {
     "Polymer": true,
     "_": true,
     "Dexie": true,
+    "pmpBehaviors": true,
+    "etoolsBehaviors": true,
     "etoolsAppConfig": true,
-    "etoolsAjaxDefaultDexieDbPrefix": true
+    "etoolsAjaxDefaultDexieDbPrefix": true,
+    "_data": true,
+    "_setData": true,
+    "moment": true
   }
 }

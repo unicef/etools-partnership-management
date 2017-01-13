@@ -1,0 +1,109 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../app-behaviors/data-element-behavior.html">
+
+<dom-module id="user-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="user"
+                 on-success="_handleResponse"
+                 on-fail="_handleError"></etools-ajax>
+  </template>
+
+  <script>
+
+    var _setUserData = function(data) {
+
+      var user = data;
+      _data.permissions = {};
+
+      var permissions = this.getAllPermissions();
+
+      if (!_.isEmpty(data)) {
+        permissions.defaultPermissions.forEach(function(perm) {
+          _data.permissions[perm] = true;
+        });
+        // if partner: (!staff)
+        if (!user.is_staff) {
+          permissions.partnerOnlyPermissions.forEach(function(perm) {
+            _data.permissions[perm] = true;
+          });
+        } else {
+          // user is not partner but staff:
+          permissions.managementPermissions.forEach(function(perm) {
+            _data.permissions[perm] = true;
+          });
+
+          if (user.profile.partner_staff_member) {
+            // staff that has faked partnership by setting partner_staff_member on their profile
+            permissions.partnerPermissions.forEach(function(perm) {
+              _data.permissions[perm] = true;
+            });
+          }
+        }
+      } else {
+        //for testing
+        permissions.superPermissions.forEach(function(perm) {
+          _data.permissions[perm] = true;
+        });
+      }
+
+      _setData.bind(this)(data);
+    };
+
+    Polymer({
+
+      is: 'user-data',
+
+      behaviors: [pmpBehaviors.DataElementBehavior],
+
+      properties: {
+
+        endpointName: {
+          type: String,
+          value: 'user'
+        },
+
+        user: {
+          type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        permissions: {
+          type: Object,
+          readOnly: true,
+          notify: true,
+        }
+
+      },
+
+      load: function(data) {
+        if (data.user) {
+          this._setUser(data.user);
+          this._setPermissions(data.permissions);
+        }
+      },
+
+      _handleResponse: function(res) {
+        // TODO: check response to make sure it contains a valid user
+        _setUserData.bind(this)(res.detail);
+      },
+
+      _handleError: function(rsp, err) {
+        console.log(rsp);
+        console.log(err);
+        _setUserData.bind(this)(null);
+      },
+
+    });
+
+  </script>
+
+</dom-module>

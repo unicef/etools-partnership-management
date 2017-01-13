@@ -1,0 +1,136 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+
+<dom-module id="agreement-list-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="agreements"
+                 on-success="_handleResponse"></etools-ajax>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'agreement-list-data',
+
+      behaviors: [pmpBehaviors.DataElementBehavior],
+
+      properties: {
+
+        endpointName: {
+          type: String,
+          value: 'agreements'
+        },
+
+        filteredAgreements: {
+          type: Array,
+          readOnly: true,
+          notify: true
+        },
+
+        totalResults: {
+          type: Number,
+          readOnly: true,
+          notify: true
+        },
+
+        currentQuery: {
+          type: Object,
+          value: null
+        }
+
+      },
+
+      query: function(field, order, searchString, agreementType,
+                      agreementStatus, selectedPartnerNames, startDate,
+                      endDate, pageNumber, pageSize) {
+
+        // If an active query transaction exists, abort it and start
+        // a new one
+        if (this.currentQuery) {
+          this.currentQuery.abort();
+        }
+
+        var _this = this;
+
+        this.db.transaction('r', this.db.agreements, function() {
+          this.currentQuery = Dexie.currentTransaction;
+
+          var queryResult = _this.db.agreements;
+          if (field) {
+            // note: null values don't appear in result set of sort
+            queryResult = queryResult.orderBy(field);
+          }
+          if (order === 'desc') {
+            queryResult = queryResult.reverse();
+          }
+
+          queryResult = queryResult.filter(function(agreement) {
+
+            if (selectedPartnerNames && selectedPartnerNames.length &&
+                !_.includes(selectedPartnerNames, agreement.partner_name)) {
+              return false;
+            }
+
+            if (agreementType && agreement.agreement_type !== agreementType) {
+              return false;
+            }
+
+            if (agreementStatus && agreement.status !== agreementStatus) {
+              return false;
+            }
+
+            if (startDate && startDate.length &&
+               (!agreement.start || agreement.start < startDate)) {
+              return false;
+            }
+
+            if (endDate && endDate.length &&
+               (!agreement.end || agreement.end > endDate)) {
+              return false;
+            }
+
+            if (searchString && searchString.length &&
+                agreement.agreement_number.toLowerCase().indexOf(searchString) < 0 &&
+                agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
+              return false;
+            }
+
+            return true;
+          });
+
+          // This special Dexie function allows the work of counting
+          // the number of query results to be done in a parallel process,
+          // instead of blocking the main query
+          Dexie.ignoreTransaction(function() {
+            queryResult.count(function(count) {
+              _this._setTotalResults(count);
+            });
+          });
+
+          return queryResult
+            .offset((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray();
+
+        }).then(function(result) {
+          _this._setFilteredAgreements(result);
+        }).catch(function(error) {
+          console.error('Error querying agreements: ' + error);
+        });
+      }
+
+    });
+
+  </script>
+
+</dom-module>

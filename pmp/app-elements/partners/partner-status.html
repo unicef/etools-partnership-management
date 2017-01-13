@@ -1,0 +1,129 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+
+<link rel="import" href="../../../styles/partner-status-styles.html">
+
+<dom-module id="partner-status">
+  <template>
+    <style include="partner-status-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+      }
+
+      .status-container {
+        @apply(--layout-horizontal);
+      }
+      .status-icon, .status {
+        @apply(--layout-vertical);
+        @apply(--layout-warp);
+        @apply(--layout-center-justified);
+      }
+      .status {
+        margin-left: 10px;
+      }
+    </style>
+
+    <etools-content-panel title="Partner status">
+
+      <div class="status-container" hidden$="[[!_showNotSyncedStatus(partner)]]">
+        <div class="status-icon">
+          <span class="not-synced">
+            <iron-icon icon="info"></iron-icon>
+          </span>
+        </div>
+        <div class="status">
+          <p>Not Synced</p>
+        </div>
+      </div>
+
+      <div class="status-container" hidden$="[[!_showSyncedStatus(partner)]]">
+        <div class="status-icon">
+          <span class="synced">
+            <iron-icon icon="autorenew"></iron-icon>
+          </span>
+        </div>
+        <div class="status">
+          <p>Synced from VISION</p>
+        </div>
+      </div>
+
+
+      <div class="status-container" hidden$="[[!_showBlockedStatus(partner)]]">
+        <div class="status-icon">
+          <span class="blocked">
+            <iron-icon icon="block"></iron-icon>
+          </span>
+        </div>
+        <div class="status">
+          <p>Blocked in VISION</p>
+        </div>
+      </div>
+
+
+      <div class="status-container" hidden$="[[!_showMakedForDeletionStatus(partner)]]">
+        <div class="status-icon">
+          <span class="marked-for-deletion">
+            <iron-icon icon="delete"></iron-icon>
+          </span>
+        </div>
+        <div class="status">
+          <p>Marked For Deletion in VISION</p>
+        </div>
+      </div>
+
+    </etools-content-panel>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'partner-status',
+
+        properties: {
+          partner: {
+            type: Object,
+            notify: true
+          }
+        },
+
+        _showSyncedStatus: function(partner) {
+          if (partner.vision_synced === true && partner.deleted_flag === false &&
+              (typeof partner.blocked === 'undefined' || partner.blocked === false)) {
+            return true;
+          }
+          return false;
+        },
+
+        _showBlockedStatus: function(partner) {
+          if (partner.deleted_flag === false &&
+            (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
+            return true;
+          }
+          return false;
+        },
+
+        _showMakedForDeletionStatus: function(partner) {
+          if (partner.deleted_flag === true) {
+            return true;
+          }
+          return false;
+        },
+
+        _showNotSyncedStatus: function(partner) {
+          return partner.vision_synced === false;
+        }
+
+      });
+    })();
+
+  </script>
+</dom-module>

@@ -1,16 +1,17 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/app-shell.html",
+  "shell": "pmp/app-shell.html",
   "fragments": [
-    "src/pages/page-section1.html",
-    "src/pages/page-section2.html",
-    "src/pages/page-section3.html",
-    "src/pages/page-not-found.html"
+    "pmp/pages/page-partners.html",
+    "pmp/pages/page-agreements.html",
+    "pmp/pages/page-interventions.html",
+    "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [
-   "src/**/*",
+   "pmp/**/*",
    "images/**/*",
    "styles/**/*",
+   "scripts/**/*",
    "data/**/*",
    "bower.json"
   ],

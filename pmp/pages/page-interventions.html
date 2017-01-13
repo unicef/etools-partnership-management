@@ -1,0 +1,190 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../app-elements/page-header/page-header.html">
+<link rel="import" href="../app-elements/page-footer/page-footer.html">
+
+<link rel="import" href="../app-elements/interventions/interventions-list.html">
+<link rel="import" href="../app-elements/interventions/intervention-details.html">
+<link rel="import" href="../app-elements/interventions/intervention-supplies.html">
+<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
+<link rel="import" href="../app-elements/interventions/intervention-attachments.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+<dom-module id="page-interventions">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles buttons-styles">
+
+      :host {
+        display: block;
+      }
+
+      .list-page {
+        max-width: 920px;
+        margin: 20px auto;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="/i/list"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/i/:intId/:intTab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <app-header-layout has-scrolling-region fullbleed>
+
+      <app-header id="header" fixed shadow>
+        <page-header title="Interventions"></page-header>
+      </app-header>
+
+      <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+              PD/SSFA ToRs
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+              <div class="top-content-action">
+                <paper-button class="primary-btn with-prefix">
+                  <iron-icon icon="add"></iron-icon>
+                  Add new PD/SSFA ToR
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
+            <paper-tabs
+                selected="{{routeData.intTab}}"
+                attr-for-selected="name"
+                fallback-selection="details" noink bottom-item>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Details</span>
+              </paper-tab>
+
+              <paper-tab name="supplies" link>
+                <span class="tab-content">Supplies</span>
+              </paper-tab>
+
+              <paper-tab name="review-and-sign" link>
+                <span class="tab-content">Review & Sign</span>
+              </paper-tab>
+
+              <paper-tab name="attachments" link>
+                <span class="tab-content">Attachments</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </div>
+      </div>
+
+
+      <iron-pages id="interventionsPages"
+                  selected="{{interventionPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <interventions-list></interventions-list>
+        </div>
+        <div class="page" name="details">
+          <intervention-details></intervention-details>
+        </div>
+        <div class="page" name="supplies">
+          <intervention-supplies></intervention-supplies>
+        </div>
+        <div class="page" name="review-and-sign">
+          <intervention-review-and-sign></intervention-review-and-sign>
+        </div>
+        <div class="page" name="attachments">
+          <intervention-attachments></intervention-attachments>
+        </div>
+      </iron-pages>
+
+      <page-footer></page-footer>
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-interventions',
+
+      properties: {
+        interventionPage: {
+          type: String,
+          notify: true
+        },
+      },
+
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_pageChanged(listActive, routeData.intTab)',
+      ],
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
+      },
+
+      _getActivePage: function(listActive, intTab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return intTab;
+        }
+      },
+
+      _pageChanged: function(listActive, intTab) {
+        var activePage = this._getActivePage(listActive, intTab);
+        this.set('interventionPage', activePage);
+      },
+
+      _showPageTabs: function(interventionPage) {
+        return interventionPage !== 'list';
+      },
+
+      _getTopContentAdditionalClass: function(interventionPage) {
+        if (this._showPageTabs(interventionPage)) {
+          return 'with-tabs'
+        }
+        return '';
+      },
+
+
+
+    });
+
+  </script>
+
+</dom-module>

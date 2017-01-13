@@ -1,8 +1,9 @@
+
 {
   "preset": "google",
   "disallowSpacesInAnonymousFunctionExpression": null,
   "disallowTrailingWhitespace": null,
-  "maximumLineLength": 100,
+  "maximumLineLength": 120,
   "validateIndentation": null,
   "requireOperatorBeforeLineBreak": null,
   "requireCamelCaseOrUpperCaseIdentifiers": {"ignoreProperties": true},

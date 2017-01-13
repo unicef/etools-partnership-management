@@ -1,0 +1,80 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.AgreementAmendmentsBehavior = {
+
+    getOfficerName: function(officerId) {
+      // officerId === staff member id
+      // TODO: get officer date by id and return it's name
+      return 'John Doe Jr.';
+    },
+
+    prepareAttachementFile: function(filePath) {
+      if (typeof filePath === 'string' && filePath !== '') {
+        return [{
+          id: null,
+          file_name: filePath.substr(filePath.lastIndexOf('/') + 1),
+          path: filePath
+        }];
+      }
+      return [];
+    },
+
+    showAmendmentTypeOfficer: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Change Authorized Officer';
+    },
+
+    showAmendmentTypeBankInfo: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Banking Information';
+    },
+
+    showAmendmentTypeLegalNameOfIp: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Change in Legal Name of Implementing Partner';
+    },
+
+    showAmendmentTypeExtensionProgrammeCycle: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Extension of Country Programme Cycle';
+    },
+
+    showAmendmentTypeAdditionalClauses: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Additional Clause';
+    },
+
+    showAmendmentTypeExistingClauseAmended: function(amendmentTypeStr) {
+      return amendmentTypeStr === 'Amend Existing Clause';
+    },
+
+    validAmendmentType: function(amendmentType, index) {
+      var validation = {result: true, elementId: null};
+      if (this.showAmendmentTypeOfficer(amendmentType.amendment_type)) {
+        if (amendmentType.officer_id === null) {
+          validation.result = false;
+          validation.elementId = (index >= 0) ? ('officersDropdown_' + index) : null;
+        }
+      }
+
+      if (this.showAmendmentTypeBankInfo(amendmentType.amendment_type)) {
+        if (amendmentType.bank_info === null || amendmentType.bank_info === '') {
+          validation.result = false;
+          validation.elementId = (index >= 0) ? ('bankInfo_' + index) : null;
+        }
+      }
+
+      if (this.showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)) {
+        if (amendmentType.additional_clauses === null || amendmentType.additional_clauses === '') {
+          validation.result = false;
+          validation.elementId = (index >= 0) ? ('additionalClause_' + index) : null;
+        }
+      }
+
+      if (this.showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)) {
+        if (amendmentType.existing_clause_amended === null || amendmentType.existing_clause_amended === '') {
+          validation.result = false;
+          validation.elementId = (index >= 0) ? ('existingClauseAmended_' + index) : null;
+        }
+      }
+
+      return validation;
+    }
+
+  };
+</script>
