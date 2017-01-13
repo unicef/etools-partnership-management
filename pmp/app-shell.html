@@ -146,7 +146,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
           <page-partners on-dom-change="_pagesStamped" name="partners" route="[[subroute]]" user="[[user]]" permissions="[[permissions]]"></page-partners>
-          <page-agreements name="agreements" route="[[subroute]]"></page-agreements>
+          <page-agreements name="agreements" route="[[subroute]]" user="[[user]]"></page-agreements>
           <page-interventions name="interventions" route="[[subroute]]"></page-interventions>
         </template>
         <page-not-found name="not-found"></page-not-found>
