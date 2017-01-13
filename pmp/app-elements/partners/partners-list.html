@@ -1,5 +1,4 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
@@ -21,6 +20,7 @@
 
 <link rel="import" href="partners-data/partners-list-data.html">
 <link rel="import" href="partner-item.html">
+
 <link rel="import" href="../data-table/data-table-footer.html">
 <link rel="import" href="../data-table/data-table-header.html">
 <link rel="import" href="../data-table/data-table-column.html">
@@ -84,7 +84,7 @@
 
       <div class="fixed-controls">
 
-      <div class="divider" style="margin-right: 12px;"></div>
+      <div class="filters-divider"></div>
 
       <paper-menu-button id="filterMenu">
         <paper-button class="button dropdown-trigger">
@@ -96,7 +96,7 @@
         </paper-menu>
       </paper-menu-button>
 
-      <div class="divider"></div>
+      <div class="filters-divider"></div>
 
       <div id="hiddenToggle" on-tap="_toggleHidden">
         Show hidden

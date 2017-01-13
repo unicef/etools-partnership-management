@@ -25,11 +25,6 @@
         display: block;
       }
 
-      .list-page {
-        max-width: 920px;
-        margin: 20px auto;
-      }
-
     </style>
 
     <app-route
@@ -121,7 +116,7 @@
                   fallback-selection="list"
                   role="main">
 
-        <div class="list-page" name="list">
+        <div class="page" name="list">
           <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
         </div>
         <div class="page" name="details">

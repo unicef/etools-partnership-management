@@ -26,6 +26,52 @@
       this.set('selectedFilters', []);
     },
 
+    // update filter data
+    updateFilters: function(filterName, property, newValue) {
+      // update main filters
+      if (this.listFilterOptions.length > 0) {
+        for(var i = 0; i < this.listFilterOptions.length; i++) {
+          if (this.listFilterOptions[i].filterName === filterName) {
+            this.set('listFilterOptions.' + i + '.' + property, newValue);
+            break;
+          }
+        }
+      }
+      // update available filters
+      var found = false;
+      if (this.availableListFilterOptions.length > 0) {
+        for(var i = 0; i < this.availableListFilterOptions.length; i++) {
+          if (this.availableListFilterOptions[i].filterName === filterName) {
+            this.set('availableListFilterOptions.' + i + '.' + property, newValue);
+            found = true;
+            break;
+          }
+        }
+      }
+      // if the filter was moved from available to selected then update in selected filters
+      if (!found) {
+        if (this.selectedFilters.length > 0) {
+          for(var i = 0; i < this.selectedFilters.length; i++) {
+            if (this.selectedFilters[i].filterName === filterName) {
+              this.set('selectedFilters.' + i + '.' + property, newValue);
+              break;
+            }
+          }
+        }
+      }
+    },
+
+    // update available and selected filters
+    _updateAvailableFilters: function(filterName, property, newValue) {
+      if (this.availableListFilterOptions.length > 0) {
+        for(var i = 0; i < this.availableListFilterOptions.length; i++) {
+
+        }
+      } else {
+
+      }
+    },
+
     // select a filter from ADD FILTER menu
     selectFilter: function(event) {
       var selectedOption = event.model.item;
@@ -72,6 +118,23 @@
       this.debounce('listFilterChanged', function() {
         this.set(filterPath, filterVal);
       }.bind(this), 50);
+    },
+
+    /**
+     * Check filter type. Filter type can be:
+     *  - 'dropdown'(dropdown created using polymer catalog elements)
+     *  - 'esmm' (etools-searchable-multiselection-menu)
+     *  - 'datepicker' (etools-datepicker)
+     */
+    filterTypeIs: function(expentedType, checkedTypeValue) {
+      return expentedType === checkedTypeValue;
+    },
+
+    // 'esmm' (etools-searchable-multiselection-menu) filter value changed
+    esmmValueChanged: function(event) {
+      var filterPath = Polymer.dom(event).localTarget.getAttribute('data-filter-path');
+      var filterVal = event.detail.selectedValues;
+      this.set(filterPath, filterVal);
     }
 
   };

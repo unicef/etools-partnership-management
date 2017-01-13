@@ -1,31 +1,42 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="agreement-data/agreement-list-data.html">
-<link rel="import" href="../partners/partners-data/partners-list-data.html">
-<link rel="import" href="../partners/partners-data/partner-item-data.html">
-
-<link rel="import" href="../../../styles/shared-styles.html">
-
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
-<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
-
 <link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+<link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+<link rel="import" href="../../../styles/partner-status-styles.html">
+
+
+<link rel="import" href="agreement-data/agreement-list-data.html">
+<link rel="import" href="../partners/partners-data/partners-list-data.html">
+<link rel="import" href="../partners/partners-data/partner-item-data.html">
+
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="agreements-list">
 
   <template>
 
-    <style include="shared-styles iron-flex iron-flex-factors">
+    <style include="shared-styles list-styles iron-flex iron-flex-factors">
 
       :host {
         display: block;
@@ -91,42 +102,134 @@
     </style>
 
     <agreement-list-data id="agreements" filtered-agreements="{{filteredAgreements}}" total-results="{{totalResults}}"></agreement-list-data>
-
-    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
+    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}" prepare-dropdown-data></partners-list-data>
 
     <paper-material id="listControls" elevation="1">
 
-      <input id="query"
-          type="search"
-          autocomplete="off"
-          value="{{q::keyup}}"
-          placeholder="Search"
-          on-search="_onSearch"></input>
+      <div class="wrap-controls">
 
-      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
-      <paper-dropdown-menu label="Agreement Type" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">
-          <paper-item name="MOU">Momarendum of Understanding</paper-item>
-          <paper-item name="PCA">Programme Cooperation Agreement</paper-item>
-          <paper-item name="SSFA">Small Scale Funding Agreement</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+        <paper-input id="query"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="[[q]]"
+                     on-keyup="_onSearch"
+                     on-search="_onSearch">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
 
-      <paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>
-      <paper-dropdown-menu label="Agreement Status" noink>
-        <paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">
-          <paper-item name="draft">Draft</paper-item>
-          <paper-item name="active">Active</paper-item>
-          <paper-item name="suspended">Suspended</paper-item>
-          <paper-item name="terminated">Terminated</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
 
-      <partners-list-data id="partners" multi-map="{{partnersMap}}"></partners-list-data>
-      <etools-searchable-multiselection-menu
-          label="Partner"
-          options="[[partnersMap]]"
-          value="{{selectedPartners}}" multi></etools-searchable-multiselection-menu>
+          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
+            <div class="dropdown-with-clear-btn">
+              <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
+              <paper-dropdown-menu label$="[[filter.filterName]]" noink>
+                <paper-menu class="dropdown-content"
+                            attr-for-selected="name"
+                            on-iron-select="filterValueChanged"
+                            on-iron-deselect="filterValueChanged"
+                            data-filter-path$="[[filter.path]]"
+                            on-iron-activate="_dropdownSelected">
+                  <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
+                    <paper-item name="[[filterOption.name]]">[[filterOption.label]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-dropdown-menu>
+              <paper-icon-button class="remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+
+            <etools-searchable-multiselection-menu
+                label="Partner"
+                placeholder="&#8212;"
+                options="[[filter.selectionOptions]]"
+                value="[[filter.alreadySelected]]"
+                multi="[[filter.multiple]]"
+                on-value-change="esmmValueChanged"
+                data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+
+          </template>
+
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filters-divider"></div>
+
+        <paper-menu-button id="filterMenu">
+          <paper-button class="button dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
+          <paper-menu class="dropdown-content">
+            <template is="dom-repeat" items="[[availableListFilterOptions]]">
+              <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+            </template>
+          </paper-menu>
+        </paper-menu-button>
+
+      </div>
+
+    </paper-material>
+
+    <!--<paper-material id="list" elevation="1"></paper-material>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h3>Showing [[visibleRange.0]] - [[visibleRange.1]] of [[totalResults]] results</h3>
+
+    <paper-material id="listControls-old" elevation="1">
+
+      <!--<input id="query"-->
+          <!--type="search"-->
+          <!--autocomplete="off"-->
+          <!--value="{{q::keyup}}"-->
+          <!--placeholder="Search"-->
+          <!--on-search="_onSearch"></input>-->
+
+      <!--<paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>-->
+      <!--<paper-dropdown-menu label="Agreement Type" noink>-->
+        <!--<paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementType}}" on-iron-activate="_dropdownSelected">-->
+          <!--<paper-item name="MOU">Momarendum of Understanding</paper-item>-->
+          <!--<paper-item name="PCA">Programme Cooperation Agreement</paper-item>-->
+          <!--<paper-item name="SSFA">Small Scale Funding Agreement</paper-item>-->
+        <!--</paper-menu>-->
+      <!--</paper-dropdown-menu>-->
+
+      <!--<paper-icon-button icon="close" on-tap="clearDropdown"></paper-icon-button>-->
+      <!--<paper-dropdown-menu label="Agreement Status" noink>-->
+        <!--<paper-menu class="dropdown-content" attr-for-selected="name" selected="{{agreementStatus}}" on-iron-activate="_dropdownSelected">-->
+          <!--<paper-item name="draft">Draft</paper-item>-->
+          <!--<paper-item name="active">Active</paper-item>-->
+          <!--<paper-item name="suspended">Suspended</paper-item>-->
+          <!--<paper-item name="terminated">Terminated</paper-item>-->
+        <!--</paper-menu>-->
+      <!--</paper-dropdown-menu>-->
+
+      <!--<partners-list-data id="partners" multi-map="{{partnersMap}}"></partners-list-data>-->
+      <!--<etools-searchable-multiselection-menu-->
+          <!--label="Partner"-->
+          <!--options="[[partnersMap]]"-->
+          <!--value="{{selectedPartners}}" multi></etools-searchable-multiselection-menu>-->
 
       <paper-input label="Starts After" value="[[prettyStartDate]]" readonly>
         <etools-datepicker-button prefix date="[[_convertToDate(startDate)]]" json-date="{{startDate}}" pretty-date="{{prettyStartDate}}" no-init show-clear-btn></etools-datepicker-button>
@@ -190,7 +293,10 @@
 
       is: 'agreements-list',
 
-      behaviors: [pmpBehaviors.DropdownBehavior],
+      behaviors: [
+        pmpBehaviors.DropdownBehavior,
+        pmpBehaviors.ListFiltersBehavior
+      ],
 
       properties: {
 
@@ -262,19 +368,66 @@
 
         urlParams: {
           type: Object
-        }
+        },
+
+        partnersDropdownData: Array
 
       },
 
       observers: [
-        '_updateURL(agreements, q, agreementType, agreementStatus, selectedPartners,' +
+        '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
                    'startDate, endDate, pageNumber, pageSize, sortOrder)',
-        '_mapIdsToMultiselect(partnersMap)',
+        '_mapIdsToMultiselect(partnersDropdownData)',
         '_init(active)'
       ],
 
       ready: function() {
         this.$.list.classList.add('hidden');
+
+        // init list filter options
+        this.initListFiltersData([
+          {
+            filterName: 'Agreement Type',
+            type: 'dropdown',
+            selectionOptions: [
+              {name: 'MOU', label: 'Momarendum of Understanding'},
+              {name: 'PCA', label: 'Programme Cooperation Agreement'},
+              {name: 'SSFA', label: 'Small Scale Funding Agreement'}
+            ],
+            path: 'agreementType'
+          },
+          {
+            filterName: 'Agreement Status',
+            type: 'dropdown',
+            selectionOptions: [
+              {name: 'draft', label: 'Draft'},
+              {name: 'active', label: 'Active'},
+              {name: 'suspended', label: 'Suspended'},
+              {name: 'terminated', label: 'Terminated'}
+            ],
+            path: 'agreementStatus'
+          },
+          {
+            filterName: 'Partner',
+            type: 'esmm', // etools-searchable-multiselection-menu
+            multiple: true,
+            selectionOptions: [], // will be populated when the partners data is received
+            alreadySelected: [],
+            path: 'selectedPartners'
+          },
+          {
+            filterName: 'Starts After',
+            type: 'datepicker', // etools-datepicker
+            path: 'startDate'
+          },
+          {
+            filterName: 'Ends Before',
+            type: 'datepicker', // etools-datepicker
+            path: 'endDate'
+          },
+
+
+        ]);
       },
 
       // Input: URL query params
@@ -397,14 +550,24 @@
       // Run when partners-data is fully loaded
       // Maps array of partner ids to multiselect compatible {value, label} format
       // using partners-data to fetch names for labels
-      _mapIdsToMultiselect: function() {
+      _mapIdsToMultiselect: function(partnersDropdownData) {
+        // update partner filter
+        this.updateFilters('Partner', 'selectionOptions', partnersDropdownData);
+
+        // update selected partners if any
         this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
-          var partner = this.$.partners.getPartner(id);
+          var partner = partnersDropdownData.filter(function(p) {
+            return p.id === id;
+          })[0];
           if (partner) {
-            return {value: id,
-                     label: partner.name};
+            return {
+              value: id,
+              label: partner.name
+            };
           }
         }.bind(this))));
+
+        this.updateFilters('Partner', 'alreadySelected', this.selectedPartners);
 
       },
 
@@ -441,11 +604,6 @@
       },
 
       _qChanged: function(q) {
-        if (q) {
-          this.async(function() {
-            this.$.query.focus();
-          });
-        }
         this.set('debounceTime', 300);
         this.set('pageNumber', 1);
       },
