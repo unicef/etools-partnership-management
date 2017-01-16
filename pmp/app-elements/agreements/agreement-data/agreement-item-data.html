@@ -5,47 +5,50 @@
 
   <template>
     <etools-ajax id="ajax"
-                endpoint="[[endpoint]]"
-                on-success="_handleResponse"></etools-ajax>
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"></etools-ajax>
   </template>
 
   <script>
+    (function() {
+      'use strict';
 
-    Polymer({
+      Polymer({
 
-      is: 'agreement-item-data',
-      behaviors: [etoolsAppConfig.globals],
-      properties: {
+        is: 'agreement-item-data',
+        behaviors: [etoolsAppConfig.globals],
+        properties: {
 
-        agreement: {
-          type: Object,
-          readOnly: true,
-          notify: true
-        },
+          agreement: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
 
-        _partners: {
-          type: Object
-        },
+          _partners: {
+            type: Object
+          },
 
-        agreementId: {
+          agreementId: {
             type: Number,
             notify: true,
             observer: '_agreementIdChanged'
-        }
+          }
 
-      },
-      _agreementIdChanged: function(newId) {
+        },
+        _agreementIdChanged: function(newId) {
           if (newId) {
-              this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
+            this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
 
           }
-      },
-      _handleResponse: function(response) {
+        },
+        _handleResponse: function(response) {
           this._setAgreement(response.detail);
-      }
+        }
 
-    });
-
+      });
+    })();
   </script>
 
 </dom-module>
