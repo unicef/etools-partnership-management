@@ -6,6 +6,7 @@
 
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/page-footer/page-footer.html">
+<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
@@ -44,6 +45,9 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
+    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
+                        prepare-dropdown-data>
+    </partners-list-data>
 
     <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
 
@@ -69,7 +73,7 @@
               </template>
 
               <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement)]]">
-                <span>[[_getAgreementDetailsTitle(agreement.agreement_number, partnerName)]]</span>
+                <span>[[_getAgreementDetailsTitle(agreement)]]</span>
               </template>
 
               </span>
@@ -117,10 +121,21 @@
                   role="main">
 
         <div class="page" name="list">
-          <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
+          <agreements-list id="list"
+                           active="[[agreementListActive]]"
+                           url-params="[[agreementQueryParams]]"
+                           partners-dropdown-data="[[partnersDropdownData]]"
+                           agreement-types="[[agreementTypes]]">
+          </agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement="[[agreement]]"></agreement-details>
+          <agreement-details
+              agreement="[[agreement]]"
+              edit-mode="[[_hasEditPermissions(permissions)]]"
+              is-new-agreement="[[_isNewAgreement(agreement)]]"
+              partners-dropdown-data="[[partnersDropdownData]]"
+              agreement-types="[[agreementTypes]]">
+          </agreement-details>
         </div>
         <div class="page" name="new-agreement">
           <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
@@ -146,8 +161,13 @@
           notify: true
         },
 
-        partnerName: {
-          type: String,
+        partnersDropdownData: {
+          type: Array,
+          notify: true
+        },
+
+        agreementTypes: {
+          type: Array,
           notify: true
         }
 
@@ -159,6 +179,13 @@
       ],
 
       ready: function() {
+        this.set('agreementTypes', [
+          {name: 'MOU', label: 'Momarendum of Understanding'},
+          {name: 'PCA', label: 'Programme Cooperation Agreement'},
+          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
+        ]);
+
+
         // TODO: replace this placeholder data
         // get fake data for testing
         // TODO: remove this after API si used
@@ -169,28 +196,6 @@
         if (this.agreementPage === 'new-agreement') {
           this.set('agreement', null);
         }
-
-//        this.agreement = {
-//          "id":8,
-//          "created":"2016-04-21T08:52:31.214539Z",
-//          "modified":"2016-04-21T08:52:31.215398Z",
-//          "agreement_type":"PCA",
-//          "agreement_number":"PCA 2015/29-3",
-//          "attached_agreement":null,
-//          "start":"2015-09-30",
-//          "end":"2016-09-29",
-//          "signed_by_unicef_date":"2015-07-28",
-//          "signed_by_partner_date":"2015-07-28",
-//          "bank_name":null,
-//          "bank_address":"",
-//          "account_title":null,
-//          "account_number":null,
-//          "routing_details":null,
-//          "bank_contact_person":null,
-//          "partner":21,
-//          "signed_by":1152,
-//          "partner_manager":134
-//        };
       },
 
       _resizeHeader: function() {
@@ -246,8 +251,8 @@
       },
 
       // compute agreement details page title including partner name and agreement number
-      _getAgreementDetailsTitle: function(agreementNumber, partnerName) {
-        return (partnerName !== '' ? (partnerName + ': ') : '') + (agreementNumber ? agreementNumber : '');
+      _getAgreementDetailsTitle: function(agreement) {
+        return agreement.partner_name + ': ' + agreement.agreement_number;
       },
 
        // Except agreements list, the other pages have agreement details tab active
@@ -275,7 +280,14 @@
           return 'with-tabs'
         }
         return '';
-      }
+      },
+
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+          return true;
+        }
+        return false;
+      },
 
     });
 
