@@ -5,57 +5,60 @@
 
   <template>
     <etools-ajax id="ajax"
-                endpoint="[[endpoint]]"
-                on-success="_handleResponse"></etools-ajax>
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"></etools-ajax>
   </template>
 
   <script>
+    (function() {
+      'use strict';
 
-    Polymer({
+      Polymer({
 
-      is: 'partner-item-data',
-      behaviors: [etoolsAppConfig.globals],
-      properties: {
+        is: 'partner-item-data',
+        behaviors: [etoolsAppConfig.globals],
+        properties: {
 
-        partner: {
-          type: Object,
-          readOnly: true,
-          notify: true
+          partner: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          endpoint: {
+            type: Object,
+            reflectToAttribute: true
+          },
+
+          _partners: {
+            type: Object
+          },
+
+          partnerId: {
+            type: Number,
+            notify: true,
+            observer: '_partnerIdChanged'
+          }
+
         },
-        endpoint: {
-          type: Object,
-          reflectToAttribute: true
-        },
 
-        _partners: {
-          type: Object
-        },
-
-        partnerId: {
-          type: Number,
-          notify: true,
-          observer: '_partnerIdChanged'
-        }
-
-      },
-
-      _partnerIdChanged: function(newId) {
-        if (newId) {
+        _partnerIdChanged: function(newId) {
+          if (newId) {
             // set an empty partner
             this._setPartner({});
             // set the new endpoint
             //TODO: fire a loading event from here or etools ajax for side page load
             //this.$.fire('partial-loading', {element:'Partner Details'})
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
+          }
+        },
+
+        _handleResponse: function(response) {
+          this._setPartner(response.detail);
         }
-      },
 
-      _handleResponse: function(response) {
-        this._setPartner(response.detail);
-      }
-
-    });
-
+      });
+    })();
   </script>
 
 </dom-module>

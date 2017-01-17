@@ -84,7 +84,6 @@
           this.fire('drawer');
         },
         _refresh_page: function(event) {
-            console.log('refreshing page');
             event.stopImmediatePropagation();
             this.$.refresh._refresh();
         },
@@ -100,8 +99,7 @@
           return 'flag-icon ' + 'flag-icon-' + flagIdMap[id];
         },
         _updateCountriesList: function(countries) {
-          console.log(countries);
-          var arrayObj = countries.map(function(arrayItem) { 
+          var arrayObj = countries.map(function(arrayItem) {
             return {id: arrayItem.id, name: arrayItem.name, imgClass: this._getFlagIconClass(arrayItem.business_area_code)};
           }.bind(this));
           this.set('countries', arrayObj);
