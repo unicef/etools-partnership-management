@@ -175,9 +175,11 @@
         is: 'agreement-status',
 
         properties: {
+          statuses: Array,
           status: {
             type: String,
-            value: 'draft'
+            value: 'draft',
+            observer: '_statusChanged'
           },
           showSaveBtn: {
             type: Boolean,
@@ -185,7 +187,7 @@
           }
         },
 
-        ready: function() {
+        _statusChanged: function() {
           // prepare statuses properties
           var statuses = [
             {
@@ -203,11 +205,11 @@
               statusText: !this._isSecondStatusCategory() ? 'Active' : this.status
             },
             {
-              statusClass: (this.status === 'expired') ? 'active' : '',
+              statusClass: (this.status === 'ended') ? 'active' : '',
               icon: '',
               showIcon: false,
               statusNr: '3',
-              statusText: 'Expired'
+              statusText: 'Ended'
             }
           ];
           this.set('statuses', statuses);
@@ -235,7 +237,7 @@
          * Show second status category icon only for: suspended and terminated
          */
         _showSecondStatusCategoryIcon: function() {
-          if (['active', 'draft', 'expired'].indexOf(this.status) > -1) {
+          if (['active', 'draft', 'ended'].indexOf(this.status) > -1) {
             return false;
           }
           return true;

@@ -49,7 +49,7 @@
                         prepare-dropdown-data>
     </partners-list-data>
 
-    <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
+    <agreement-item-data id="agreementData" agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -134,11 +134,12 @@
               edit-mode="[[_hasEditPermissions(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               partners-dropdown-data="[[partnersDropdownData]]"
-              agreement-types="[[agreementTypes]]">
+              agreement-types="[[agreementTypes]]"
+              on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
         <div class="page" name="new-agreement">
-          <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
+          <new-agreement></new-agreement>
         </div>
       </iron-pages>
 
@@ -288,6 +289,12 @@
         }
         return false;
       },
+
+      _saveAgreement: function(event) {
+        event.stopImmediatePropagation();
+        console.log('save agreement ', event.detail);
+        this.$.agreementData.saveAgreement(event.detail)
+      }
 
     });
 

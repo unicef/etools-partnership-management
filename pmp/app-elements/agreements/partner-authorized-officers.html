@@ -91,7 +91,8 @@
 
           officersDropdownData: {
             type: Array,
-            value: []
+            value: [],
+            observer: '_dropdownOptionsChanged'
           },
 
           availableOfficers: {
@@ -121,15 +122,30 @@
 
         _selectedOfficersChanged: function(selectedOfficers) {
           if (!this._selectedOfficersValuesAlreadyInit) {
-            if (Array.isArray(selectedOfficers) && selectedOfficers.length > 0) {
-              var selected = selectedOfficers.map(function(officer) {
-                return {
-                  value: officer.id,
-                  label: officer.first_name + ' ' + officer.last_name
-                }
-              });
-              this.set('_selectedDropdownOfficers', selected);
-              this._selectedOfficersValuesAlreadyInit = true;
+            this._initSelectedOfficers(selectedOfficers);
+          }
+        },
+
+        _initSelectedOfficers: function(selectedOfficers) {
+          if (Array.isArray(selectedOfficers) && selectedOfficers.length > 0) {
+            var selected = selectedOfficers.map(function(officer) {
+              return {
+                value: officer.id,
+                label: officer.first_name + ' ' + officer.last_name
+              }
+            });
+            this.set('_selectedDropdownOfficers', selected);
+            this._selectedOfficersValuesAlreadyInit = true;
+          } else {
+            this.set('_selectedDropdownOfficers', []);
+          }
+        },
+
+        _dropdownOptionsChanged: function(newOptions) {
+          if (this._selectedOfficersValuesAlreadyInit) {
+            if (Array.isArray(newOptions) && newOptions.length > 0) {
+              this._selectedOfficersValuesAlreadyInit = false;
+              this._initSelectedOfficers(this.selectedOfficers);
             }
           }
         },

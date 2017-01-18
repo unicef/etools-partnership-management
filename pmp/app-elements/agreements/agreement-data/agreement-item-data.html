@@ -39,12 +39,16 @@
         },
         _agreementIdChanged: function(newId) {
           if (newId) {
+            this.fire('global-loading', {message: 'Loading agreement data...', active: true});
             this.$.ajax.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
-
           }
         },
         _handleResponse: function(response) {
           this._setAgreement(response.detail);
+        },
+
+        saveAgreement: function(agreement) {
+
         }
 
       });
