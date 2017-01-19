@@ -83,10 +83,14 @@
       }
 
       .status {
+        margin-top: 15px;
+        margin-bottom: 15px;
         text-transform: capitalize;
         color: #9D9D9D; /* TODO: replace with app-theme var */
       }
-
+      .status-container.active .status {
+        cursor: pointer;
+      }
       .status-container.active .icon-wrapper {
         background-color: #3A94FF; /* TODO: replace with app-theme var */
       }
@@ -106,7 +110,8 @@
       }
 
       .status-container.active.suspended .icon-wrapper iron-icon,
-      .status-container.active.terminated .icon-wrapper iron-icon {
+      .status-container.active.terminated .icon-wrapper iron-icon,
+      .status-container.completed .icon-wrapper iron-icon {
         --iron-icon-height: 100%;
         --iron-icon-width: 100%;
       }
@@ -132,29 +137,68 @@
       .buttons-section {
         margin: 25px -25px 0 -25px;
       }
+      .status-container.completed .icon-wrapper {
+        background: #75c300; /* TODO: replace with app-theme var */;
+      }
+      .status-container.completed .icon-wrapper .status-nr,
+      .status-container:not(.completed) iron-icon[icon="check"] {
+        display: none;
+      }
+
+      iron-icon[icon="check"] {
+        color: #fff;
+      }
+      iron-icon[icon="report-problem"] {
+        --iron-icon-height: 24px;
+        --iron-icon-width: 24px;
+      }
 
     </style>
 
     <etools-content-panel title="Status">
 
-      <template is="dom-repeat" items="[[statuses]]">
-        <div class$="status-container [[item.statusClass]]">
-          <div class="status-icon">
+      <div class$="status-container [[_getFirstStatusWrapperClass(status)]]">
+        <div class="status-icon">
             <span class="icon-wrapper">
-              <iron-icon icon$="[[item.icon]]" hidden$="[[!item.showIcon]]"></iron-icon>
-              <span hidden$="[[item.showIcon]]">[[item.statusNr]]</span>
+              <span class="status-nr">1</span>
+              <iron-icon icon="check"></iron-icon>
             </span>
-          </div>
-          <div class="status">
-            <p>[[item.statusText]]</p>
-          </div>
         </div>
-        <template is="dom-if" if="[[_showDivider(index)]]">
-          <div class="divider">
-            <div class="status-divider"></div>
-          </div>
-        </template>
-      </template>
+        <div class="status">
+          <span hidden$="[[!_showDraft(status)]]" on-tap="_updateStatus" data-status="cancelled">Draft</span>
+          <span hidden$="[[!_showCanceled(status)]]" on-tap="_updateStatus" data-status="draft">Cancelled</span>
+        </div>
+      </div>
+      <div class="divider">
+        <div class="status-divider"></div>
+      </div>
+      <div class$="status-container [[_getSecondStatusWrapperClass(status)]]">
+        <div class="status-icon">
+            <span class="icon-wrapper">
+              <span class="status-nr" hidden$="[[!_showActive(status)]]">2</span>
+              <iron-icon icon="av:pause-circle-filled" hidden$="[[!_showSuspended(status)]]"></iron-icon>
+              <iron-icon icon="report-problem" hidden$="[[!_showTerminated(status)]]"></iron-icon>
+            </span>
+        </div>
+        <div class="status">
+          <span hidden$="[[!_showActive(status)]]" on-tap="_updateStatus" data-status="suspended">Active</span>
+          <span hidden$="[[!_showSuspended(status)]]" on-tap="_updateStatus" data-status="terminated">Suspended</span>
+          <span hidden$="[[!_showTerminated(status)]]" on-tap="_updateStatus" data-status="active">Terminated</span>
+        </div>
+      </div>
+      <div class="divider">
+        <div class="status-divider"></div>
+      </div>
+      <div class$="status-container [[_getThirdStatusWrapperClass(status)]]">
+        <div class="status-icon">
+            <span class="icon-wrapper">
+              <span>3</span>
+            </span>
+        </div>
+        <div class="status">
+          <span>Ended</span>
+        </div>
+      </div>
 
       <template is="dom-if" if="[[showSaveBtn]]">
         <div class="buttons-section">
@@ -163,7 +207,6 @@
       </template>
 
     </etools-content-panel>
-
 
   </template>
 
@@ -175,11 +218,13 @@
         is: 'agreement-status',
 
         properties: {
-          statuses: Array,
+          newAgreement: {
+            type: Boolean,
+            value: false
+          },
           status: {
             type: String,
-            value: 'draft',
-            observer: '_statusChanged'
+            value: 'draft'
           },
           showSaveBtn: {
             type: Boolean,
@@ -187,92 +232,81 @@
           }
         },
 
-        _statusChanged: function() {
-          // prepare statuses properties
-          var statuses = [
-            {
-              statusClass: (this.status === 'draft') ? 'active' : 'completed',
-              icon: 'done',
-              showIcon: (this.status === 'draft') ? false : true,
-              statusNr: '1',
-              statusText: 'Draft'
-            },
-            {
-              statusClass: this._getStatusClass(),
-              icon: this._getSecondStatusCategoryIcon(),
-              showIcon: this._showSecondStatusCategoryIcon(),
-              statusNr: '2',
-              statusText: !this._isSecondStatusCategory() ? 'Active' : this.status
-            },
-            {
-              statusClass: (this.status === 'ended') ? 'active' : '',
-              icon: '',
-              showIcon: false,
-              statusNr: '3',
-              statusText: 'Ended'
+        _getFirstStatusWrapperClass: function(status) {
+          if (['draft', 'cancelled'].indexOf(status) > -1) {
+            return 'active'
+          }
+          return 'completed';
+        },
+
+        _getSecondStatusWrapperClass: function(status) {
+          if (['active', 'suspended', 'terminated'].indexOf(status) > -1) {
+            return 'active' + ((status !== 'active') ? (' ' + status) : '');
+          } else {
+            if (['draft', 'cancelled'].indexOf(status) === -1) {
+              return 'completed';
             }
-          ];
-          this.set('statuses', statuses);
-        },
-
-        _showDivider: function(index) {
-          return index < 2;
-        },
-
-        /**
-         * Fire custom event to notify parent element to execute agreement save
-         */
-        _triggerAgreementSave: function() {
-          this.fire('save-agreement', {});
-        },
-
-        /**
-         * Second status category values can be: active, suspended and terminated
-         */
-        _isSecondStatusCategory: function() {
-          return this.status === 'active' || this.status === 'suspended' || this.status === 'terminated';
-        },
-
-        /**
-         * Show second status category icon only for: suspended and terminated
-         */
-        _showSecondStatusCategoryIcon: function() {
-          if (['active', 'draft', 'ended'].indexOf(this.status) > -1) {
-            return false;
-          }
-          return true;
-        },
-
-        /**
-         * Get suspended and terminated icon names
-         */
-        _getSecondStatusCategoryIcon: function() {
-          if (this.status === 'suspended') {
-            return 'av:pause-circle-filled';
-          }
-          if (this.status === 'terminated') {
-            return 'report-problem';
           }
           return '';
         },
 
-        /**
-         * Get status element class
-         */
-        _getStatusClass: function() {
-          var statusClass = '';
-          if (this._isSecondStatusCategory()) {
-            statusClass += 'active';
-            if (this.status !== 'active') {
-              statusClass += ' ' + this.status;
-            }
-          } else {
-            if (this.status !== 'draft') {
-              statusClass += ' was-active';
+        _getThirdStatusWrapperClass: function(status) {
+          if (status === 'ended') {
+            return 'active'
+          }
+          return '';
+        },
+
+        _showDraft: function(status) {
+          if(status === 'draft' || !this._showCanceled(status)) {
+            return true;
+          }
+          return false;
+        },
+
+        _showCanceled: function(status) {
+          return status === 'cancelled';
+        },
+
+        _showActive: function(status) {
+          if (status === 'active' || (status !== 'suspended' && status !== 'terminated')) {
+            return true;
+          }
+          return false;
+        },
+        _showSuspended: function(status) {
+          if (status === 'suspended') {
+            return true;
+          }
+          return false;
+        },
+        _showTerminated: function(status) {
+          if (status === 'terminated') {
+            return true;
+          }
+          return false;
+        },
+
+        _updateStatus: function(event) {
+          var newStatus = Polymer.dom(event).localTarget.getAttribute('data-status');
+
+          if (newStatus === 'draft' || newStatus === 'canceled') {
+            // if agreement was not saved (is new) or the status is already changed
+            // from draft/canceled, stop status change
+            if (this.newAgreement || (this.status !== 'draft' && this.status !== 'cancelled')) {
+              return false;
             }
           }
-          return statusClass;
-        }
+          if (newStatus === 'active' || newStatus === 'suspended' || newStatus === 'terminated') {
+            if (this.newAgreement || (this.status !== 'active' && this.status !== 'suspended'
+                && this.status !== 'terminated')) {
+              return false;
+            }
+          }
+          this.set('status', newStatus);
+          console.log(newStatus);
+        },
+
 
       });
     })();

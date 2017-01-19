@@ -77,6 +77,17 @@
         return false;
       }
       return true;
+    },
+
+    /**
+     * Reset field validation
+     */
+    fieldValidationReset: function(selector) {
+      var field = this.$$(selector);
+      if (field) {
+        field.invalid = false;
+      }
+      return field;
     }
 
   };

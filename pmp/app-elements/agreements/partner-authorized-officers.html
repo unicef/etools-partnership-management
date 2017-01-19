@@ -146,6 +146,7 @@
             if (Array.isArray(newOptions) && newOptions.length > 0) {
               this._selectedOfficersValuesAlreadyInit = false;
               this._initSelectedOfficers(this.selectedOfficers);
+              this._updateInvalidState(false);
             }
           }
         },
