@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <link rel="import" href="../../../styles/buttons-styles.html">
 
@@ -88,9 +89,7 @@
         text-transform: capitalize;
         color: #9D9D9D; /* TODO: replace with app-theme var */
       }
-      .status-container.active .status {
-        cursor: pointer;
-      }
+
       .status-container.active .icon-wrapper {
         background-color: #3A94FF; /* TODO: replace with app-theme var */
       }
@@ -165,8 +164,8 @@
             </span>
         </div>
         <div class="status">
-          <span hidden$="[[!_showDraft(status)]]" on-tap="_updateStatus" data-status="cancelled">Draft</span>
-          <span hidden$="[[!_showCanceled(status)]]" on-tap="_updateStatus" data-status="draft">Cancelled</span>
+          <span hidden$="[[!_showDraft(status)]]">Draft</span>
+          <span hidden$="[[!_statusIs(status, 'cancelled')]]">Cancelled</span>
         </div>
       </div>
       <div class="divider">
@@ -176,14 +175,15 @@
         <div class="status-icon">
             <span class="icon-wrapper">
               <span class="status-nr" hidden$="[[!_showActive(status)]]">2</span>
-              <iron-icon icon="av:pause-circle-filled" hidden$="[[!_showSuspended(status)]]"></iron-icon>
-              <iron-icon icon="report-problem" hidden$="[[!_showTerminated(status)]]"></iron-icon>
+              <iron-icon icon="check"></iron-icon>
+              <iron-icon icon="av:pause-circle-filled" hidden$="[[!_statusIs(status, 'suspended')]]"></iron-icon>
+              <iron-icon icon="report-problem" hidden$="[[!_statusIs(status, 'terminated')]]"></iron-icon>
             </span>
         </div>
         <div class="status">
-          <span hidden$="[[!_showActive(status)]]" on-tap="_updateStatus" data-status="suspended">Active</span>
-          <span hidden$="[[!_showSuspended(status)]]" on-tap="_updateStatus" data-status="terminated">Suspended</span>
-          <span hidden$="[[!_showTerminated(status)]]" on-tap="_updateStatus" data-status="active">Terminated</span>
+          <span hidden$="[[!_showActive(status)]]">Active</span>
+          <span hidden$="[[!_statusIs(status, 'suspended')]]">Suspended</span>
+          <span hidden$="[[!_statusIs(status, 'terminated')]]">Terminated</span>
         </div>
       </div>
       <div class="divider">
@@ -201,8 +201,47 @@
       </div>
 
       <template is="dom-if" if="[[showSaveBtn]]">
-        <div class="buttons-section">
-          <paper-button class="primary-btn w100" on-tap="_triggerAgreementSave">SAVE</paper-button>
+        <div class="buttons-section vertical">
+
+          <paper-button class="primary-btn success-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="draft"
+                        hidden$="[[!_statusIs(status, 'cancelled')]]">
+            Change to draft
+          </paper-button>
+
+          <paper-button class="primary-btn danger-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="cancelled"
+                        hidden$="[[_hideCancelBtn(status)]]">
+            Cancel
+          </paper-button>
+
+          <paper-button class="primary-btn success-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="active"
+                        hidden$="[[_hideActivateBtn(status)]]">
+            Activate
+          </paper-button>
+
+          <paper-button class="primary-btn warning-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="suspended"
+                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+            Suspend
+          </paper-button>
+
+          <paper-button class="primary-btn danger-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="terminated"
+                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+            Terminate
+          </paper-button>
+
+          <paper-button class="primary-btn w100"
+                        on-tap="_triggerAgreementSave">
+            Save
+          </paper-button>
         </div>
       </template>
 
@@ -217,7 +256,12 @@
       Polymer({
         is: 'agreement-status',
 
+        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+
         properties: {
+          agreementId: {
+            type: Number
+          },
           newAgreement: {
             type: Boolean,
             value: false
@@ -229,21 +273,42 @@
           showSaveBtn: {
             type: Boolean,
             value: true
+          },
+          warningDialog: Object,
+          newStatus: String
+        },
+
+        ready: function() {
+          var statusChangeWarningDialogContent = document.createElement('p');
+          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
+              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+        },
+
+        detach: function() {
+          if (this.warningDialog) {
+            this.removeDialog(this.warningDialog);
           }
         },
 
+        _statusIs: function(status, expectedStatus) {
+          return status === expectedStatus;
+        },
+
         _getFirstStatusWrapperClass: function(status) {
-          if (['draft', 'cancelled'].indexOf(status) > -1) {
+          if (this._statusIs(status, 'draft') || this._statusIs(status, 'cancelled')) {
             return 'active'
           }
           return 'completed';
         },
 
         _getSecondStatusWrapperClass: function(status) {
-          if (['active', 'suspended', 'terminated'].indexOf(status) > -1) {
-            return 'active' + ((status !== 'active') ? (' ' + status) : '');
+          if (this._statusIs(status, 'active')
+              || this._statusIs(status, 'suspended')
+              || this._statusIs(status, 'terminated')) {
+            return 'active' + (!this._statusIs(status, 'active') ? (' ' + status) : '');
           } else {
-            if (['draft', 'cancelled'].indexOf(status) === -1) {
+            if (!this._statusIs(status, 'draft') && !this._statusIs(status, 'cancelled')) {
               return 'completed';
             }
           }
@@ -251,45 +316,78 @@
         },
 
         _getThirdStatusWrapperClass: function(status) {
-          if (status === 'ended') {
+          if (this._statusIs(status, 'ended')) {
             return 'active'
           }
           return '';
         },
 
         _showDraft: function(status) {
-          if(status === 'draft' || !this._showCanceled(status)) {
+          if(this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
             return true;
           }
           return false;
-        },
-
-        _showCanceled: function(status) {
-          return status === 'cancelled';
         },
 
         _showActive: function(status) {
-          if (status === 'active' || (status !== 'suspended' && status !== 'terminated')) {
+          if (this._statusIs('active')
+              || (!this._statusIs('suspended') && !this._statusIs('terminated'))) {
             return true;
           }
           return false;
         },
-        _showSuspended: function(status) {
-          if (status === 'suspended') {
-            return true;
+
+        _hideCancelBtn: function(status) {
+          if (this._statusIs(status, 'draft')) {
+            return false;
           }
-          return false;
+          return true;
         },
-        _showTerminated: function(status) {
-          if (status === 'terminated') {
-            return true;
+
+        _hideActivateBtn: function(status) {
+          if (this._statusIs(status, 'suspended')) {
+            return false;
           }
-          return false;
+          return true;
+        },
+
+        _hideSuspendAndTerminateBtns: function(status) {
+          if (this._statusIs(status, 'active')) {
+            return false;
+          }
+          return true;
+        },
+
+        _showStatusChangeConfirmationDialog: function() {
+          if (this.warningDialog) {
+            var warningMessage = 'Are you sure you want to change agreement status from: <strong>\''
+                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
+            var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+            if (msgEl) {
+              msgEl.innerHTML = warningMessage;
+              this.warningDialog.opened = true;
+            } else {
+              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+            }
+          } else {
+            console.warn('[pmp agreement status change] warningDialog not created!');
+          }
+        },
+
+        _statusChangeConfirmationCallback: function(event) {
+          console.log('dynamic dialog closed', event.detail);
+          if (event.detail.confirmed) {
+            this.fire('update-agreement-status', {
+              agreementId: this.agreementId,
+              status: this.newStatus + ''
+            });
+          }
+          this.set('newStatus', '');
         },
 
         _updateStatus: function(event) {
           var newStatus = Polymer.dom(event).localTarget.getAttribute('data-status');
-
+          console.log(newStatus);
           if (newStatus === 'draft' || newStatus === 'canceled') {
             // if agreement was not saved (is new) or the status is already changed
             // from draft/canceled, stop status change
@@ -303,10 +401,16 @@
               return false;
             }
           }
-          this.set('status', newStatus);
-          console.log(newStatus);
+          this.set('newStatus', newStatus);
+          this._showStatusChangeConfirmationDialog();
         },
 
+        /**
+         * Fire custom event to notify parent element to execute agreement save
+         */
+        _triggerAgreementSave: function() {
+          this.fire('save-agreement', {});
+        }
 
       });
     })();

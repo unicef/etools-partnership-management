@@ -121,6 +121,9 @@
         },
 
         _selectedOfficersChanged: function(selectedOfficers) {
+          if (!this.editMode) {
+            return;
+          }
           if (!this._selectedOfficersValuesAlreadyInit) {
             this._initSelectedOfficers(selectedOfficers);
           }
@@ -142,13 +145,20 @@
         },
 
         _dropdownOptionsChanged: function(newOptions) {
+          if (!this.editMode) {
+            return;
+          }
           if (this._selectedOfficersValuesAlreadyInit) {
             if (Array.isArray(newOptions) && newOptions.length > 0) {
-              this._selectedOfficersValuesAlreadyInit = false;
-              this._initSelectedOfficers(this.selectedOfficers);
+              this.resetSelection();
               this._updateInvalidState(false);
             }
           }
+        },
+
+        resetSelection: function() {
+          this._selectedOfficersValuesAlreadyInit = false;
+          this._initSelectedOfficers(this.selectedOfficers);
         },
 
         _officersSelected: function(event) {

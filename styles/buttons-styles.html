@@ -8,7 +8,6 @@
     <style>
       :root {
         --primary-button-default: {
-          background-color: #3A94FF; /* TODO: replace with app-theme var */
           color: #fff; /* TODO: replace with app-theme var */
           /*font-size: 14px;*/
           font-weight: bold;
@@ -21,15 +20,37 @@
       }
 
       .buttons-section {
-        @apply(--layout-horizontal);
         border-top: 1px solid var(--dark-divider-color);
         padding: 25px;
       }
+      .buttons-section.horizontal {
+        @apply(--layout-horizontal);
+      }
+      .buttons-section.vertical {
+        @apply(--layout-vertical);
+      }
+
+      .buttons-section.vertical .primary-btn:not(:first-of-type) {
+        margin-top: 15px;
+      }
 
       .primary-btn {
+        background-color: #3A94FF; /* TODO: replace with app-theme var */
         --paper-button: {
           @apply(--primary-button-default);
         };
+      }
+
+      .danger-btn {
+        background-color: #E54F2E; /* TODO: replace with app-theme var */
+      }
+
+      .warning-btn {
+        background-color: #F7A14B; /* TODO: replace with app-theme var */
+      }
+
+      .success-btn {
+        background-color: #75c300; /* TODO: replace with app-theme var */;
       }
 
       .primary-btn.with-prefix {
@@ -41,6 +62,8 @@
 
       paper-button.w100 {
         width: 100%;
+        margin-right: 0;
+        margin-left: 0;
       }
 
       .secondary-btn-wrapper {

@@ -286,6 +286,7 @@
     <div id="sidebar">
       <agreement-status status="[[agreement.status]]"
                         new-agreement$="[[isNewAgreement]]"
+                        agreement-id$="[[agreement.id]]"
                         on-save-agreement="_validateAndTriggerAgreementSave"
                         show-save-btn$="[[editMode]]"></agreement-status>
     </div>
@@ -346,6 +347,10 @@
           unicefStaff: {
             type: Array,
             observer: '_unicefStaffChanged'
+          },
+          originalAgreementData: {
+            type: Object,
+            value: null
           },
           amendments: {
             type: Array,
@@ -462,7 +467,12 @@
             // reset invalid state for signedByUnicefDateField
             this.fieldValidationReset('#signedByUnicefDateField');
             // reset authorized officers invalid messages
-            this.$.authorizedOfficers._updateInvalidState(false);
+            var selectedOfficers = this.$.authorizedOfficers;
+            selectedOfficers._updateInvalidState(false);
+            selectedOfficers.resetSelection();
+
+            // keep a copy of the agreement before changes are made and use it later to save only the changes
+            this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
           }
           this.fire('global-loading', {active: false});
         },
@@ -679,6 +689,20 @@
         },
 
         /**
+         * Update esmm dropdown
+         */
+        _updateSignedByEsmmDropdown: function(esmm, selector, selectedValue) {
+          this.async(function() {
+            if (!esmm){
+              esmm = this.fieldValidationReset(selector);
+            }
+            if (esmm) {
+              esmm.value = selectedValue;
+            }
+          });
+        },
+
+        /**
          * Check is there is a selected signed by partner value when agreement data is received
          * and set it on the dropdown
          */
@@ -693,16 +717,11 @@
                 return parseInt(staff.value, 0) === partnerStaffId;
               });
               if (selected.length) {
-                this.async(function() {
-                  if (!signedByPField){
-                    this.fieldValidationReset('#signedByPartner');
-                  }
-                  if (signedByPField) {
-                    signedByPField.value = selected;
-                  }
-                });
+                this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', selected);
               }
             }.bind(this), 50);
+          } else {
+            this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', []);
           }
         },
 
@@ -717,16 +736,11 @@
                 return parseInt(staff.value, 0) === unicefStaffId;
               });
               if (selected.length) {
-                this.async(function() {
-                  if (!signedByUField) {
-                    this.fieldValidationReset('#signedByUnicef');
-                  }
-                  if (signedByUField) {
-                    signedByUField.value = selected;
-                  }
-                });
+                this._updateSignedByEsmmDropdown(signedByUField, '#signedByUnicef', selected);
               }
             }.bind(this), 50);
+          } else {
+            this._updateSignedByEsmmDropdown(signedByUField, '#signedByUnicef', []);
           }
         },
 
@@ -771,7 +785,6 @@
           }
 
           if (agreementProperty) {
-            console.log(agreementProperty);
             if (agreementProperty.path === 'agreement.start' || agreementProperty.path === 'agreement.end') {
               this._validateStartAndEndDateField();
             } else if (agreementProperty.path === 'agreement.signed_by'
@@ -969,13 +982,45 @@
         },
 
         /**
+         * Get agreement changed properties
+         */
+        _getCurrentChanges: function() {
+          var changes = {};
+          if (this.agreement.id === this.originalAgreementData.id) {
+            // prevent the possibility of checking 2 different agreements
+            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end',
+              'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
+              'authorized_officers'];
+            // TODO: include amendments to above array with proper checkings
+            availableChangingFields.forEach(function(fieldName) {
+              if (fieldName !== 'authorized_officers') {
+                if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
+                  changes[fieldName] = this.agreement[fieldName];
+                }
+              } else {
+                // TODO: authorized_officers more checkings?
+                changes[fieldName] = this.agreement[fieldName];
+              }
+            }.bind(this));
+          }
+          return changes;
+        },
+
+        /**
          * Save agreement if all fields are validated
          */
         _validateAndTriggerAgreementSave: function(event) {
           event.stopImmediatePropagation();
+          if (!editMode) {
+            return;
+          }
           if (this._validateAgreement()) {
-
-            this.fire('save-agreement', this.agreement);
+            // check/get only changed content to be used as a body to the save request
+            var changedAgreementProperties = this._getCurrentChanges();
+            // we also need the id
+            changedAgreementProperties.id = this.agreement.id;
+            // fire update agreement
+            this.fire('save-agreement', changedAgreementProperties);
           } else {
             this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           }

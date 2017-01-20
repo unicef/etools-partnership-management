@@ -49,7 +49,9 @@
                         prepare-dropdown-data>
     </partners-list-data>
 
-    <agreement-item-data id="agreementData" agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
+    <agreement-item-data id="agreementData"
+                         agreement="{{agreement}}"
+                         agreement-id="[[routeData.id]]"></agreement-item-data>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -135,6 +137,7 @@
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               partners-dropdown-data="[[partnersDropdownData]]"
               agreement-types="[[agreementTypes]]"
+              on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
@@ -268,10 +271,10 @@
        * Catch new-agreement-saved event and redirect to details
        * TODO: this might not be the right flow, maybe the redirect page will be the list (?)
        */
-      _newAgreementSaved: function(event) {
-        this.set('agreement', event.detail);
-        this.set('route.path', '/' + this.agreement.id + '/details');
-      },
+//      _newAgreementSaved: function(event) {
+//        this.set('agreement', event.detail);
+//        this.set('route.path', '/' + this.agreement.id + '/details');
+//      },
 
       /**
        *
@@ -292,8 +295,12 @@
 
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
-        console.log('save agreement ', event.detail);
-        this.$.agreementData.saveAgreement(event.detail)
+        this.$.agreementData.saveAgreement(event.detail);
+      },
+
+      _updateAgreementStatus: function(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(event.detail);
       }
 
     });
