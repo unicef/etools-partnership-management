@@ -275,7 +275,7 @@
         <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
           <agreement-amendments data-items="{{amendments}}"
                                 partner="[[partner]]"
-                                partner-authorized-officers="[[partnerAuthorizedOfficers]]"
+                                partner-authorized-officers="[[preparedOfficersDropdownData]]"
                                 edit-mode$="[[editMode]]"></agreement-amendments>
         </etools-content-panel>
       </template>
@@ -364,7 +364,6 @@
         ],
 
         ready: function() {
-          console.log('agreement detail ready...');
 //          this.set('amendments', [
 //            {
 //              id: 1,
@@ -993,13 +992,17 @@
               'authorized_officers'];
             // TODO: include amendments to above array with proper checkings
             availableChangingFields.forEach(function(fieldName) {
-              if (fieldName !== 'authorized_officers') {
+              if (fieldName === 'authorized_officers') {
+                // TODO: authorized_officers more checkings?
+                changes[fieldName] = this.agreement.authorized_officers.map(function(officer) {
+                  return officer.id;
+                });
+              } else if (fieldName === 'agreements') {
+                changes[fieldName] = this.agreement[fieldName];
+              } else {
                 if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
                   changes[fieldName] = this.agreement[fieldName];
                 }
-              } else {
-                // TODO: authorized_officers more checkings?
-                changes[fieldName] = this.agreement[fieldName];
               }
             }.bind(this));
           }
@@ -1011,7 +1014,7 @@
          */
         _validateAndTriggerAgreementSave: function(event) {
           event.stopImmediatePropagation();
-          if (!editMode) {
+          if (!this.editMode) {
             return;
           }
           if (this._validateAgreement()) {
@@ -1020,6 +1023,7 @@
             // we also need the id
             changedAgreementProperties.id = this.agreement.id;
             // fire update agreement
+            console.log(changedAgreementProperties);
             this.fire('save-agreement', changedAgreementProperties);
           } else {
             this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});

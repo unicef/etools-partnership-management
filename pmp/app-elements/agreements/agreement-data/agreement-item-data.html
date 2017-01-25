@@ -7,7 +7,8 @@
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
-                 on-success="_handleResponse"></etools-ajax>
+                 on-success="_handleResponse"
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -60,7 +61,7 @@
           this._setAgreement(response.detail);
           // call additional callback, if any
           if (this.handleResponseAdditionalCallback) {
-            console.log(typeof this.handleResponseAdditionalCallback);
+//            console.log(typeof this.handleResponseAdditionalCallback);
             this.handleResponseAdditionalCallback();
             // reset callback
             this.set('handleResponseAdditionalCallback', null);
@@ -85,7 +86,6 @@
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
-          console.log(this.ajaxEl.method, this.ajaxEl.endpoint, this.ajaxEl.body, this.ajaxEl.url);
           // after body is set the request is automatically triggered
         },
 
@@ -124,17 +124,17 @@
         /**
          * Save agreement data
          */
-        saveAgreement: function(agreement, callback) {
-          if (typeof agreement === 'object' && Object.keys(agreement).length > 0) {
+        saveAgreement: function(agreement) {
+          if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
             this._prepareEndpoint(agreement.id);
-            this.fire('global-loading', {message: 'Saving agreement data...', active: true});
             // remove id from data
             if (agreement.id) {
               delete agreement.id;
             }
             if (Object.keys(agreement).length > 0) {
+              this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole
               this._prepareAndFireRequest('PATCH', agreement, this.endpoint.url);
             } else {
@@ -143,8 +143,32 @@
                 showCloseBtn: true
               });
             }
+          }
+        },
 
-
+        _handleErrorResponse: function(response) {
+          this.fire('global-loading', {active: false});
+          var errors = response.detail.request.detail.request.response;
+          if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
+            // TODO: improve etools-ajax on-fail event data model (received errors)
+            var errorMessage = 'An error occurred during agreement save!';
+            if (errors) {
+              var errorMessages = ["Errors occurred:\n"];
+              if (Array.isArray(errors) && errors.length > 0) {
+                errors.forEach(function(err) {
+                  errorMessages.push(err + "\n");
+                });
+              } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
+                for (var errField in errors) {
+                  if (typeof errField)
+                    errorMessages.push('Field ' + errField + ' - ' + errors[errField] + "\n");
+                }
+              }
+              if (errorMessages.length > 1) {
+                errorMessage = errorMessages.join('');
+              }
+            }
+            this.fire('toast', {text: errorMessage, showCloseBtn: true});
           }
         }
 

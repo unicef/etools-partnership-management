@@ -246,7 +246,7 @@
          */
         _addNewAmendment: function() {
           var lastAmendmentItemIndex = this.dataItems.length - 1;
-          if (this._canBeRemoved(lastAmendmentItemIndex)) {
+          if (lastAmendmentItemIndex > 0 && this._canBeRemoved(lastAmendmentItemIndex)) {
             var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
             if (this._amendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});

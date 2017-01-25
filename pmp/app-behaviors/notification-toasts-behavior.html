@@ -23,6 +23,11 @@
       e.stopPropagation();
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
+        var messageWrapper = this._toast.$.label;
+        if (messageWrapper) {
+          messageWrapper.style.whiteSpace = 'pre';
+          messageWrapper.style.display = 'inline-block';
+        }
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
         var closeToastBtn = document.createElement('paper-button');
         closeToastBtn.innerHTML = 'Ok';
