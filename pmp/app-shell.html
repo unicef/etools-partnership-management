@@ -249,6 +249,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
           this.set('route.path', this.baseUrl + event.detail.path);
+          this.set('route.__queryParams', null);
         }
         event.stopPropagation();
       },

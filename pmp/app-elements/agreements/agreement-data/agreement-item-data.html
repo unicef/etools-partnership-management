@@ -60,9 +60,8 @@
         _handleResponse: function(response) {
           this._setAgreement(response.detail);
           // call additional callback, if any
-          if (this.handleResponseAdditionalCallback) {
-//            console.log(typeof this.handleResponseAdditionalCallback);
-            this.handleResponseAdditionalCallback();
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
             this.set('handleResponseAdditionalCallback', null);
           }
@@ -124,19 +123,35 @@
         /**
          * Save agreement data
          */
-        saveAgreement: function(agreement) {
+        saveAgreement: function(agreement, callback) {
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
-            this._prepareEndpoint(agreement.id);
+            var url = null;
+            var isNew = false;
+
+            if (agreement.id) {
+              // prepare PATCH endpoint
+              this._prepareEndpoint(agreement.id);
+              url = this.endpoint.url;
+            } else {
+              // new agreement, use POST method for the same endpoint
+              var agreementsEndpoint = this.getEndpoint('agreements');
+              url = agreementsEndpoint.url;
+              isNew = true;
+            }
             // remove id from data
             if (agreement.id) {
               delete agreement.id;
             }
             if (Object.keys(agreement).length > 0) {
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
               this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', agreement, this.endpoint.url);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', agreement, url);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',

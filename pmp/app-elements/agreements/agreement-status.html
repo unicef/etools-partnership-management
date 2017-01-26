@@ -338,7 +338,7 @@
         },
 
         _hideCancelBtn: function(status) {
-          if (this._statusIs(status, 'draft')) {
+          if (this._statusIs(status, 'draft') && !this.newAgreement) {
             return false;
           }
           return true;
@@ -386,8 +386,10 @@
         },
 
         _updateStatus: function(event) {
+          if (this.newAgreement) {
+            return;
+          }
           var newStatus = Polymer.dom(event).localTarget.getAttribute('data-status');
-          console.log(newStatus);
           if (newStatus === 'draft' || newStatus === 'canceled') {
             // if agreement was not saved (is new) or the status is already changed
             // from draft/canceled, stop status change

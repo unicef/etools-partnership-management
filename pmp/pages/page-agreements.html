@@ -94,7 +94,7 @@
                 </paper-button>
               </div>
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <paper-button class="primary-btn with-prefix">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
                   Add New Agreement
                 </paper-button>
@@ -141,9 +141,6 @@
               on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
-        <div class="page" name="new-agreement">
-          <new-agreement></new-agreement>
-        </div>
       </iron-pages>
 
       <page-footer></page-footer>
@@ -173,6 +170,27 @@
         agreementTypes: {
           type: Array,
           notify: true
+        },
+
+        newAgreementModel: {
+          type: Object,
+          value: {
+            id: null,
+            authorized_officers: [],
+            amendments: [],
+            agreement_type: null,
+            agreement_number: null,
+            attached_agreement: null,
+            start: null,
+            end: null,
+            signed_by_unicef_date: null,
+            signed_by_partner_date: null,
+            status: null,
+            partner: null,
+            country_programme: null,
+            signed_by: null,
+            partner_manager: null
+          }
         }
 
       },
@@ -197,8 +215,8 @@
         //this.set('agreement', localSavedAgreement);
 
         // TODO: remove this
-        if (this.agreementPage === 'new-agreement') {
-          this.set('agreement', null);
+        if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
+          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
 
@@ -209,10 +227,7 @@
       // get active page name
       _getActivePage: function(listActive, newAgreementActive, detailsActive) {
         var page = 'list'; // default
-        if (newAgreementActive) {
-          page = 'new-agreement';
-        }
-        if (detailsActive) {
+        if (detailsActive || newAgreementActive) {
           page = 'details';
         }
 
@@ -240,7 +255,7 @@
 
       // check if new greement page title should be shown
       _showNewAgreementTitle: function(agreementsPage, agreement) {
-        if (agreementsPage === 'new-agreement' && this._isNewAgreement(agreement)) {
+        if (agreementsPage === 'details' && this._isNewAgreement(agreement)) {
           return true;
         }
         return false;
@@ -268,15 +283,6 @@
       },
 
       /**
-       * Catch new-agreement-saved event and redirect to details
-       * TODO: this might not be the right flow, maybe the redirect page will be the list (?)
-       */
-//      _newAgreementSaved: function(event) {
-//        this.set('agreement', event.detail);
-//        this.set('route.path', '/' + this.agreement.id + '/details');
-//      },
-
-      /**
        *
        */
       _getTopContentAdditionalClass: function(activePage) {
@@ -295,12 +301,28 @@
 
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
-        this.$.agreementData.saveAgreement(event.detail);
+        this.$.agreementData.saveAgreement(event.detail, this._newAgreementSaved);
       },
 
       _updateAgreementStatus: function(event) {
         event.stopImmediatePropagation();
         this.$.agreementData.updateAgreementStatus(event.detail);
+      },
+
+      /**
+       * Go to details page once the new agreement has been saved
+       */
+      _newAgreementSaved: function(agreement) {
+        this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+      },
+
+      /**
+       * Go to new agreement page, it's just tha same details page with an empty agreement
+       * The new agreement model is defined in this element
+       */
+      _goToNewAgreementPage: function() {
+        // go to new agreement
+        this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
       }
 
     });

@@ -273,7 +273,7 @@
       <template is="dom-if" if="[[_showAmendments]]">
         <!-- Amendments -->
         <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
-          <agreement-amendments data-items="{{amendments}}"
+          <agreement-amendments data-items="{{agreement.amendments}}"
                                 partner="[[partner]]"
                                 partner-authorized-officers="[[preparedOfficersDropdownData]]"
                                 edit-mode$="[[editMode]]"></agreement-amendments>
@@ -321,11 +321,13 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           },
           isNewAgreement: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_isNewAgreementChanged'
           },
           partnersDropdownData: {
             type: Array,
@@ -436,13 +438,27 @@
 
         },
 
+        _isNewAgreementChanged: function(isNew) {
+          this._setDraftStatus(this.editMode, isNew);
+        },
+
+        _editModeChanged: function(editMode) {
+          this._setDraftStatus(editMode, this.isNewAgreement);
+        },
+
+        _setDraftStatus: function(editMode, isNewAgreement) {
+          if (editMode && isNewAgreement && this.agreement && this.agreement.status !== 'draft') {
+            this.set('agreement.status', 'draft');
+          }
+        },
+
         /**
          * When agreement data is changed we need to check and prepare attached agreement file and
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
           console.log(agreement);
-          if (typeof agreement === 'object' && agreement !== null) {
+          if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
               this.set('_showAmendments', true);
             } else {
@@ -472,6 +488,9 @@
 
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+          } else {
+            // new agreement, update status to draft
+            this._setDraftStatus(this.editMode, this.isNewAgreement);
           }
           this.fire('global-loading', {active: false});
         },
@@ -779,7 +798,7 @@
          */
         _agreementFieldChanged: function(agreementProperty) {
           // check edit permissions and continue only if true; no validations in view mode
-          if (!this._allowEdit(this.agreement.status)) {
+          if (this.agreement && !this._allowEdit(this.agreement.status)) {
             return;
           }
 
@@ -985,7 +1004,7 @@
          */
         _getCurrentChanges: function() {
           var changes = {};
-          if (this.agreement.id === this.originalAgreementData.id) {
+          if (this.agreement && this.agreement.id === this.originalAgreementData.id) {
             // prevent the possibility of checking 2 different agreements
             var availableChangingFields = ['partner', 'agreement_type', 'start', 'end',
               'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
@@ -1018,15 +1037,40 @@
             return;
           }
           if (this._validateAgreement()) {
-            // check/get only changed content to be used as a body to the save request
-            var changedAgreementProperties = this._getCurrentChanges();
-            // we also need the id
-            changedAgreementProperties.id = this.agreement.id;
-            // fire update agreement
-            console.log(changedAgreementProperties);
-            this.fire('save-agreement', changedAgreementProperties);
+            if (!this.isNewAgreement) {
+              // check/get only changed content to be used as a body to the save request
+              var changedAgreementProperties = this._getCurrentChanges();
+              // we also need the id
+              changedAgreementProperties.id = this.agreement.id;
+              // fire update agreement
+              console.log('changes to be saved: ', changedAgreementProperties);
+              this.fire('save-agreement', changedAgreementProperties);
+            } else {
+              this.fire('save-agreement', this._prepareNewAgreementDataForSave(this.agreement));
+            }
           } else {
             this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          }
+        },
+
+        _prepareNewAgreementDataForSave: function(agreement) {
+          // we do not need all the agreement object data for the first save
+          return {
+            id: null,
+            // authorized_officers: agreement.authorized_officers.map(function(officer) {
+            //   return officer.id;
+            // }),
+            agreement_type: agreement.agreement_type,
+            // TODO set attached_agreement after etools-file flow is decided
+            // attached_agreement: null,
+            start: agreement.start,
+            end: agreement.end,
+            signed_by_unicef_date: agreement.signed_by_unicef_date,
+            signed_by_partner_date: agreement.signed_by_partner_date,
+            status: 'draft',
+            partner: agreement.partner,
+            signed_by: agreement.signed_by,
+            partner_manager: agreement.partner_manager
           }
         }
 
