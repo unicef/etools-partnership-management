@@ -491,6 +491,9 @@
           } else {
             // new agreement, update status to draft
             this._setDraftStatus(this.editMode, this.isNewAgreement);
+
+            // TODO: Reset new agreement fields if an agreement was selected previously
+
           }
           this.fire('global-loading', {active: false});
         },

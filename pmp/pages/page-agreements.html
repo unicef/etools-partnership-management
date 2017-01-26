@@ -322,6 +322,7 @@
        */
       _goToNewAgreementPage: function() {
         // go to new agreement
+        this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
       }
 
