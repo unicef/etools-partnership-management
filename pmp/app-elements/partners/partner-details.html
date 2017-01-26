@@ -10,6 +10,7 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -230,10 +231,14 @@
         is: 'partner-details',
 
         behaviors: [
+          pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior
         ],
 
         properties: {
+          user: Object,
+          permissions: Object,
+
           partner: {
             type: Object,
             value: {},
@@ -324,19 +329,7 @@
         },
 
         _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
-          if (typeof partnerCoreValuesAssessment === 'string' && partnerCoreValuesAssessment !== '') {
-            this.set('coreValuesAssessmentFiles', [{
-              id: 'core_values_assessment',
-              file_name: this._getFileNameFromURL(partnerCoreValuesAssessment),
-              path: partnerCoreValuesAssessment
-            }]);
-          } else {
-            this.set('coreValuesAssessmentFiles', []);
-          }
-        },
-
-        _getFileNameFromURL: function(url) {
-          return url.substr(url.lastIndexOf('/') + 1);
+          this.set('coreValuesAssessmentFiles', this.prepareEtoolsFileDataFromUrl(partnerCoreValuesAssessment));
         }
 
       });

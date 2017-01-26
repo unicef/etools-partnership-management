@@ -46,8 +46,8 @@
         <etools-searchable-multiselection-menu id="officers"
                                                label="Officers"
                                                placeholder="Select authorized officers"
-                                               options="[[dropdownOfficersData]]"
-                                               value="[[_selectedOfficersValues]]"
+                                               options="[[officersDropdownData]]"
+                                               value="[[_selectedDropdownOfficers]]"
                                                on-value-change="_officersSelected"
                                                error-message="Please select authorized officers"
                                                auto-validate$="[[_autoValidateIsOn(editMode, required)]]"
@@ -59,15 +59,15 @@
     </template>
 
     <template is="dom-if" if="[[!editMode]]">
-      <template is="dom-repeat" items="[[_selectedOfficersNames]]">
+      <template is="dom-repeat" items="[[selectedOfficers]]">
         <div class="row-h flex-c officer">
           <div class="item-wrapper">
-            <paper-input label="Officer" value="[[item]]" readonly></paper-input>
+            <paper-input label="Officer" value="[[_computeName(item)]]" readonly></paper-input>
           </div>
         </div>
       </template>
 
-      <div class="row-h flex-c" hidden$="[[!_noOfficersSelected(selectedOfficersIds.length)]]">
+      <div class="row-h flex-c" hidden$="[[!_noOfficersSelected(selectedOfficers.length)]]">
         <p>There are no partner authorized officers selected</p>
       </div>
     </template>
@@ -82,16 +82,21 @@
         is: 'partner-authorized-officers',
 
         properties: {
-          selectedOfficersIds: {
+          selectedOfficers: {
             type: Array,
             value: [],
             notify: true,
-            observer: '_selectedOfficersIdsChanged'
+            observer: '_selectedOfficersChanged'
           },
 
-          dropdownOfficersData: {
+          officersDropdownData: {
             type: Array,
-            value: []
+            value: [],
+            observer: '_dropdownOptionsChanged'
+          },
+
+          availableOfficers: {
+            type: Array
           },
 
           editMode: {
@@ -102,64 +107,78 @@
           required: {
             type: Boolean,
             value: false
+          },
+
+          _selectedOfficersValuesAlreadyInit: {
+            type: Boolean,
+            value: false
+          },
+
+          _selectedDropdownOfficers: {
+            type: Array,
+            value: []
           }
         },
 
-        ready: function() {
-          this.set('_selectedOfficersValues', []);
+        _selectedOfficersChanged: function(selectedOfficers) {
+          if (!this.editMode) {
+            return;
+          }
+          if (!this._selectedOfficersValuesAlreadyInit) {
+            this._initSelectedOfficers(selectedOfficers);
+          }
         },
 
-        _selectedOfficersIdsChanged: function(ids, oldIds) {
-          if (!this._selectedOfficersValuesAlreadyInit) {
-            if (Array.isArray(oldIds) && oldIds.length === 0 && Array.isArray(ids) && ids.length > 0) {
-              this._initSelectedOfficers();
-              this._selectedOfficersValuesAlreadyInit = true;
+        _initSelectedOfficers: function(selectedOfficers) {
+          if (Array.isArray(selectedOfficers) && selectedOfficers.length > 0) {
+            var selected = selectedOfficers.map(function(officer) {
+              return {
+                value: officer.id,
+                label: officer.first_name + ' ' + officer.last_name
+              }
+            });
+            this.set('_selectedDropdownOfficers', selected);
+            this._selectedOfficersValuesAlreadyInit = true;
+          } else {
+            this.set('_selectedDropdownOfficers', []);
+          }
+        },
+
+        _dropdownOptionsChanged: function(newOptions) {
+          if (!this.editMode) {
+            return;
+          }
+          if (this._selectedOfficersValuesAlreadyInit) {
+            if (Array.isArray(newOptions) && newOptions.length > 0) {
+              this.resetSelection();
+              this._updateInvalidState(false);
             }
           }
+        },
+
+        resetSelection: function() {
+          this._selectedOfficersValuesAlreadyInit = false;
+          this._initSelectedOfficers(this.selectedOfficers);
         },
 
         _officersSelected: function(event) {
           var selectedOfficersData = event.detail.selectedValues;
-          this.set('selectedOfficersIds', []);
           if (selectedOfficersData !== null) {
-            selectedOfficersData.forEach(function(officerSelected) {
-              this.push('selectedOfficersIds', parseInt(officerSelected.value, 10));
-            }.bind(this));
+            var officersSelectedIds = selectedOfficersData.map(function(selectedOfficer) {
+              return selectedOfficer.value;
+            });
+            var selected = this.availableOfficers.filter(function(officer) {
+              return officersSelectedIds.indexOf(officer.id) > -1;
+            });
+            this.set('selectedOfficers', selected);
+          } else {
+            this.set('selectedOfficers', []);
           }
           this.validateOfficersSelection();
         },
 
-        _initSelectedOfficers: function() {
-          if (this.selectedOfficersIds.length > 0 && this.dropdownOfficersData.length > 0) {
-
-            var selectedOfficersNames = [];
-            var selectedOfficers = [];
-
-            this.selectedOfficersIds.forEach(function(id) {
-              var officer = this.dropdownOfficersData.filter(function(officerData) {
-                return parseInt(officerData.value, 10) === parseInt(id, 10);
-              });
-              if (officer.length > 0) {
-                if (!this.editMode) {
-                  selectedOfficersNames.push(officer[0].label);
-                } else {
-                  selectedOfficers.push({
-                    value: officer[0].value,
-                    label: officer[0].label
-                  });
-                }
-              }
-            }.bind(this));
-            if (!this.editMode) {
-              this.set('_selectedOfficersNames', selectedOfficersNames);
-            } else {
-              this.set('_selectedOfficersValues', selectedOfficers);
-            }
-          }
-        },
-
         validateOfficersSelection: function() {
-          if (this.selectedOfficersIds.length === 0 && this.required) {
+          if (this.selectedOfficers.length === 0 && this.required) {
             this._updateInvalidState(true);
             return false;
           }
@@ -174,15 +193,21 @@
           return false;
         },
 
-        _noOfficersSelected: function(selectedIdsLength) {
-          return selectedIdsLength === 0;
+        _noOfficersSelected: function(selectedLength) {
+          return selectedLength === 0;
         },
 
         _updateInvalidState: function(value) {
-          var dropdown = this.$$('#officers');
-          if (dropdown) {
-            dropdown.invalid = value;
-          }
+          this.async(function() {
+            var dropdown = this.$$('#officers');
+            if (dropdown) {
+              dropdown.invalid = value;
+            }
+          });
+        },
+
+        _computeName: function(officer) {
+          return officer.first_name + ' ' + officer.last_name;
         }
 
       });

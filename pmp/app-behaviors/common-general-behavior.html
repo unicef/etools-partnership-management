@@ -41,6 +41,55 @@
       }
     },
 
+    prepareEtoolsFileDataFromUrl: function(fileUrl) {
+      var files = [];
+      if (typeof fileUrl === 'string' && fileUrl !== '') {
+        var fileName = this.getFileNameFromURL(fileUrl);
+        files = [{
+          id: null,
+          file_name: fileName,
+          path: fileUrl
+        }];
+      }
+      return files;
+    },
+
+    getFileNameFromURL: function(url) {
+      return url.substr(url.lastIndexOf('/') + 1);
+    },
+
+    /**
+     * Validate string value
+     */
+    validateStringValue: function(stringValue) {
+      if (typeof stringValue === 'string' && stringValue !== '') {
+        return true;
+      }
+      return false;
+    },
+
+    /**
+     * Validate integer value
+     */
+    validateIdValue: function(idValue) {
+      var id = parseInt(idValue, 10);
+      if (isNaN(id) || (!isNaN(id) && id <= 0)) {
+        return false;
+      }
+      return true;
+    },
+
+    /**
+     * Reset field validation
+     */
+    fieldValidationReset: function(selector) {
+      var field = this.$$(selector);
+      if (field) {
+        field.invalid = false;
+      }
+      return field;
+    }
+
   };
 
   pmpBehaviors.CommonGeneralBehavior = [
