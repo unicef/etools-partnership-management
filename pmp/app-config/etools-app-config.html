@@ -17,6 +17,7 @@ App global configuration
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
+      interventions: 'id, reference_number, partner_name, document_type, status, title, start, end',
       user: 'id',
       unicefStaff: 'user_id, full_name, username, email',
     });
@@ -136,6 +137,11 @@ App global configuration
         exp: 6 * 60 * 60 * 1000, // 6h
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
+      },
+      interventions: {
+        url: '/api/v2/interventions/',
+        exp: 5 * 60 * 1000, // 5min
+        cachingKey: 'interventions'
       }
     };
     /* jshint ignore:start */

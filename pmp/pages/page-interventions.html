@@ -36,12 +36,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="/i/list"
+        pattern="interventions/list"
+        query-params="{{interventionsQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/i/:intId/:intTab"
+        pattern="interventions/:intId/:intTab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -78,11 +79,11 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
+          <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
                 selected="{{routeData.intTab}}"
                 attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+                noink bottom-item>
 
               <paper-tab name="details" link>
                 <span class="tab-content">Details</span>
@@ -113,7 +114,9 @@
                   role="main">
 
         <div class="page" name="list">
-          <interventions-list></interventions-list>
+          <interventions-list
+              active="[[listActive]]"
+              url-params="[[interventionsQueryParams]]"></interventions-list>
         </div>
         <div class="page" name="details">
           <intervention-details></intervention-details>
@@ -149,7 +152,7 @@
       },
 
       observers: [
-        '_resizeHeader(tabsActive)',
+        '_resizeHeader(listActive, tabsActive)',
         '_pageChanged(listActive, routeData.intTab)',
       ],
 
