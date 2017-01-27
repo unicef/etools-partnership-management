@@ -20,6 +20,8 @@
           separator = ', ';
         }
         return value.join(separator);
+      } else if (typeof value === 'number') {
+        return value;
       }
       return "–";
     },

@@ -1,0 +1,68 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+
+<link rel="import" href="redux-behaviors/dropdowns-pmp-redux-behavior.html">
+
+<dom-module id="dropdowns-pmp-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'dropdowns-pmp-data',
+        behaviors: [
+          EtoolsDropdownPmpDataReduxBehavior,
+          etoolsAppConfig.globals
+        ],
+        properties: {
+
+          endpoint: {
+            type: Object,
+            reflectToAttribute: true
+          }
+
+        },
+        actions: {
+          setHrps: function(hrpsData) {
+            return {
+              type: 'SET_HRPS',
+              hrps: hrpsData
+            }
+          }
+        },
+
+        ready: function() {
+          this.set('endpoint', this.getEndpoint('dropdownsPmp'));
+        },
+
+        _handleResponse: function(response) {
+          console.log('dropdowns-pmp-data ', response.detail);
+          if (response.detail && Array.isArray(response.detail.hrps) && response.detail.hrps.length > 0) {
+            var preparedHrps = this._prepareHrpsData(response.detail.hrps);
+            this.dispatch('setHrps', preparedHrps);
+          }
+        },
+
+        _prepareHrpsData: function(hrpsData) {
+          return hrpsData.map(function(hrp) {
+            return {
+              id: hrp.id,
+              name: hrp.name
+            }
+          });
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

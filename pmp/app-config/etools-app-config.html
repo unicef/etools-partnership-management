@@ -17,7 +17,7 @@ App global configuration
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
-      interventions: 'id, reference_number, partner_name, document_type, status, title, start, end',
+      interventions: 'id, number, partner_name, document_type, status, title, start, end',
       user: 'id',
       unicefStaff: 'user_id, full_name, username, email',
     });
@@ -142,6 +142,11 @@ App global configuration
         url: '/api/v2/interventions/',
         exp: 5 * 60 * 1000, // 5min
         cachingKey: 'interventions'
+      },
+      dropdownsPmp: {
+        url: '/api/v2/dropdowns/pmp',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsPmp'
       }
     };
     /* jshint ignore:start */
