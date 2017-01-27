@@ -1,12 +1,16 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../styles/partner-status-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <dom-module id="partner-status">
   <template>
+    <style include="buttons-styles"></style>
     <style include="partner-status-styles">
       [hidden] {
         display: none !important;
@@ -78,6 +82,16 @@
         </div>
       </div>
 
+      <template is="dom-if" if="[[showSaveBtn]]">
+        <div class="buttons-section vertical">
+          <paper-button 
+              class="primary-btn w100"
+              on-tap="_triggerPartnerSave">
+            Save
+          </paper-button>
+        </div>
+      </template>
+
     </etools-content-panel>
 
   </template>
@@ -92,6 +106,10 @@
           partner: {
             type: Object,
             notify: true
+          },
+          showSaveBtn: {
+            type: Boolean,
+            value: true
           }
         },
 
@@ -120,6 +138,9 @@
 
         _showNotSyncedStatus: function(partner) {
           return partner.vision_synced === false;
+        },
+        _triggerPartnerSave: function() {
+          this.fire('save-partner', {});
         }
 
       });

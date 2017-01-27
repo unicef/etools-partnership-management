@@ -609,9 +609,9 @@
               return {
                 value: (index + 1),
                 label: type.label
-              }
+              };
             });
-            this.set('agreementTypesOptions', preparedOptions)
+            this.set('agreementTypesOptions', preparedOptions);
           }
         },
 
@@ -630,7 +630,7 @@
               });
               if (selectedType.length) {
                 this.async(function() {
-                  if(!agreementTypeField) {
+                  if (!agreementTypeField) {
                     agreementTypeField = this.$$('#agreementType');
                   }
                   if (agreementTypeField) {
@@ -673,7 +673,7 @@
               return {
                 value: staffMember.id,
                 label: staffMember.first_name + ' ' + staffMember.last_name
-              }
+              };
             });
             this.set('preparedOfficersDropdownData', partnerStaff);
 
@@ -714,7 +714,7 @@
          */
         _updateSignedByEsmmDropdown: function(esmm, selector, selectedValue) {
           this.async(function() {
-            if (!esmm){
+            if (!esmm) {
               esmm = this.fieldValidationReset(selector);
             }
             if (esmm) {
@@ -813,7 +813,8 @@
               this._validateSignedByUnicefFields(this.agreement.signed_by, this.agreement.signed_by_unicef_date);
             } else if (agreementProperty.path === 'agreement.partner_manager'
                 || agreementProperty.path === 'agreement.signed_by_partner_date') {
-              this._validateSignedByPartnerFields(this.agreement.partner_manager, this.agreement.signed_by_partner_date);
+              this._validateSignedByPartnerFields(this.agreement.partner_manager, 
+                this.agreement.signed_by_partner_date);
             }
           }
 
@@ -1074,7 +1075,7 @@
             partner: agreement.partner,
             signed_by: agreement.signed_by,
             partner_manager: agreement.partner_manager
-          }
+          };
         }
 
       });
