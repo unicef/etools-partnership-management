@@ -7,6 +7,8 @@
 <link rel="import" href="../app-elements/page-header/page-header.html">
 <link rel="import" href="../app-elements/page-footer/page-footer.html">
 
+<link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
+
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
 <link rel="import" href="../app-elements/interventions/intervention-supplies.html">
@@ -36,14 +38,19 @@
 
     <app-route
         route="{{route}}"
-        pattern="/i/list"
+        pattern="interventions/list"
+        query-params="{{interventionsQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="/i/:intId/:intTab"
+        pattern="interventions/:intId/:intTab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
+
+    <intervention-item-data id="interventionData"
+                         intervention="{{intervention}}"
+                         intervention-id="[[routeData.intId]]"></intervention-item-data>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -78,11 +85,11 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row" hidden="[[!_showPageTabs(interventionPage)]]">
+          <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
                 selected="{{routeData.intTab}}"
                 attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+                noink bottom-item>
 
               <paper-tab name="details" link>
                 <span class="tab-content">Details</span>
@@ -113,10 +120,12 @@
                   role="main">
 
         <div class="page" name="list">
-          <interventions-list></interventions-list>
+          <interventions-list
+              active="[[listActive]]"
+              url-params="[[interventionsQueryParams]]"></interventions-list>
         </div>
         <div class="page" name="details">
-          <intervention-details></intervention-details>
+          <intervention-details intervention="[[intervention]]"></intervention-details>
         </div>
         <div class="page" name="supplies">
           <intervention-supplies></intervention-supplies>
@@ -149,12 +158,22 @@
       },
 
       observers: [
-        '_resizeHeader(tabsActive)',
+        '_resizeHeader(listActive, tabsActive)',
+        '_updateUrlTab(routeData.intTab)',
         '_pageChanged(listActive, routeData.intTab)',
       ],
 
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
+      },
+
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
       },
 
       _getActivePage: function(listActive, intTab) {

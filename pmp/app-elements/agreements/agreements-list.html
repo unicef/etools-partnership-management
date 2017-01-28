@@ -24,7 +24,7 @@
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="agreement-data/agreement-list-data.html">
-<link rel="import" href="../partners/partners-data/partner-item-data.html">
+<link rel="import" href="../partners/partners-data/partners-list-data.html">
 
 <link rel="import" href="../data-table/data-table-footer.html">
 <link rel="import" href="../data-table/data-table-header.html">
@@ -103,6 +103,7 @@
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
             </div>
           </template>
 
@@ -124,6 +125,7 @@
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
                                  data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
             </div>
           </template>
 
@@ -152,8 +154,8 @@
     <paper-material id="list" elevation="1">
 
       <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="flex-c" field="agreement_number" sortable>
-          Agreement Number
+        <data-table-column class="col-2" field="agreement_number" sortable>
+          Agreement Number #
         </data-table-column>
         <data-table-column class="col-4" field="partner_name" sortable>
           Partner Full Name
@@ -173,10 +175,12 @@
         <data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
 
-            <a class="col-data flex-c" href="agreements/[[agreement.id]]/details">
+            <a class="col-data col-2 truncate"
+               href="agreements/[[agreement.id]]/details"
+               title="[[getDisplayValue(agreement.agreement_number)]]">
               [[getDisplayValue(agreement.agreement_number)]]
             </a>
-            <span class="col-data col-4">
+            <span class="col-data col-4 truncate" title="[[getDisplayValue(agreement.partner_name)]]">
                 [[getDisplayValue(agreement.partner_name)]]
             </span>
             <span class="col-data col-2">
@@ -370,8 +374,6 @@
               type: 'datepicker', // etools-datepicker
               path: 'endDate'
             }
-
-
           ]);
         },
 
@@ -434,8 +436,7 @@
                 this.agreementType,
                 this.agreementStatus,
                 _.map(this.selectedPartners, 'label'),
-                // Subtract 1 day from start date for a <= behavior
-                this._subtractDayString(this.startDate),
+                this.startDate,
                 this.endDate,
                 this.pageNumber,
                 this.pageSize);
@@ -559,28 +560,28 @@
           }
         },
 
-        _addDays: function(date, numDays) {
-          if (date instanceof Date && date !== 'Invalid Date') {
-            date.setDate(date.getDate() + numDays);
-            return date;
-          }
-        },
-
-        _subtractDayString: function(dateString) {
-          if (dateString && dateString.length) {
-            return this._addDays(this._convertToDate(dateString), -1).toISOString();
-          } else {
-            return dateString;
-          }
-        },
+//        _addDays: function(date, numDays) {
+//          if (date instanceof Date && date !== 'Invalid Date') {
+//            date.setDate(date.getDate() + numDays);
+//            return date;
+//          }
+//        },
+//
+//        _subtractDayString: function(dateString) {
+//          if (dateString && dateString.length) {
+//            return this._addDays(this._convertToDate(dateString), -1).toISOString();
+//          } else {
+//            return dateString;
+//          }
+//        },
 
         // List fade in fade out effect
         _agreementsChanged: function() {
           this.$.list.classList.add('hidden');
           this.async(function() {
-            var agreementsList = this.$.agreements;
+            var agreementsList = this.$$('#agreements');
             if (agreementsList && Array.isArray(agreementsList.data) && agreementsList.data.length > 0) {
-              this.$.list.classList.remove('hidden');
+              this.$$('#list').classList.remove('hidden');
             }
           }, 50);
         },
@@ -608,8 +609,8 @@
         },
 
         /**
-         * At page refresh Dexie DBs might be wiped out and filteredPartners will be empty.
-         * Because of this we need to refilter after partners data is saved locally.
+         * At page refresh Dexie DBs might be wiped out and filteredAgreements will be empty.
+         * Because of this we need to refilter after agreements data is saved locally.
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();

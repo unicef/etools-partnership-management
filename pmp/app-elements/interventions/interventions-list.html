@@ -1,32 +1,214 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+<link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+<link rel="import" href="../../../styles/partner-status-styles.html">
+
+<link rel="import" href="intervention-data/interventions-list-data.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="interventions-list">
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="shared-styles list-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
       }
     </style>
 
-    <paper-material class="content-section" elevation="1">
-      <div class="row-h flex-c">
-        <div class="col col-10">
+    <interventions-list-data id="interventions"
+                         filtered-interventions="{{filteredInterventions}}"
+                         total-results="{{totalResults}}"
+                         on-interventions-loaded="_requiredDataHasBeenLoaded"
+                         fire-data-loaded>
+    </interventions-list-data>
 
-        </div>
-        <div class="col col-2">
+    <paper-material id="listControls" elevation="1">
 
-        </div>
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="[[q]]"
+                     on-keyup="_onSearch"
+                     on-search="_onSearch">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <div class="filter esmm">
+              <etools-searchable-multiselection-menu
+                  label="[[filter.filterName]]"
+                  placeholder="&#8212;"
+                  disabled$="[[!filter.selectionOptions.length]"
+                  options="[[filter.selectionOptions]]"
+                  value="[[filter.alreadySelected]]"
+                  multi="[[filter.multiple]]"
+                  on-value-change="esmmValueChanged"
+                  data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+            <div class="filter">
+              <paper-input label="[[filter.filterName]]"
+                           on-down="openDatePicker"
+                           data-selector$="datepicker_[[filter.path]]">
+                <etools-datepicker-button prefix
+                                          id$="datepicker_[[filter.path]]"
+                                          format="D MMM YYYY"
+                                          data-filter-path$="[[filter.path]]"
+                                          on-date-has-changed="_filterDateHasChanged"
+                                          no-init show-clear-btn fire-date-has-changed>
+                </etools-datepicker-button>
+                </paper-icon-button>
+              </paper-input>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+        </template>
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filters-divider"></div>
+
+        <paper-menu-button id="filterMenu" dynamic-align>
+          <paper-button class="button dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
+          <paper-menu class="dropdown-content">
+            <template is="dom-repeat" items="[[availableListFilterOptions]]">
+              <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+            </template>
+          </paper-menu>
+        </paper-menu-button>
+
       </div>
     </paper-material>
 
-    <paper-material class="content-section" elevation="1">
+    <paper-material id="list" elevation="1">
+
+      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <data-table-column class="col-2" field="number" sortable>
+          Reference #
+        </data-table-column>
+        <data-table-column class="col-3" field="partner_name" sortable>
+          Partner Name
+        </data-table-column>
+        <data-table-column class="flex-c" field="document_type">
+          Document Type
+        </data-table-column>
+        <data-table-column class="flex-c" field="status">
+          Status
+        </data-table-column>
+        <data-table-column class="col-2" field="title">
+          Title
+        </data-table-column>
+        <data-table-column class="flex-c" field="start" sortable>
+          Start Date
+        </data-table-column>
+        <data-table-column class="flex-c" field="end" sortable>
+          End Date
+        </data-table-column>
+      </data-table-header>
+
+      <template id="rows" is="dom-repeat" items="[[filteredInterventions]]"
+                as="intervention" initial-count="10" on-dom-change="_listDataChanged">
+        <data-table-row details-opened="[[detailsOpened]]">
+          <div slot="row-data">
+            <a class="col-data col-2 truncate"
+               href="interventions/[[intervention.id]]/details"
+               title="[[getDisplayValue(intervention.number)]]">
+              [[getDisplayValue(intervention.number)]]
+            </a>
+            <span class="col-data col-3 truncate" title="[[getDisplayValue(intervention.partner_name)]]">
+                [[getDisplayValue(intervention.partner_name)]]
+            </span>
+            <span class="col-data flex-c">
+                [[getDisplayValue(intervention.document_type)]]
+            </span>
+            <span class="col-data flex-c">
+                [[getDisplayValue(intervention.status)]]
+            </span>
+            <span class="col-data col-2 truncate" title="[[getDisplayValue(intervention.title)]]">
+                [[getDisplayValue(intervention.title)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowInterventionDate(intervention.start)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowInterventionDate(intervention.end)]]
+            </span>
+          </div>
+          <div slot="row-data-details">
+
+            <div class="row-details-content col-2">
+              <span class="rdc-title">In response to HPR?</span>
+              <span>[[_getHrpValue(intervention.hrp)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Sectors</span>
+              <span>[[getDisplayValue(intervention.sectors)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Total CSO Contribution</span>
+              <span>$ [[getDisplayValue(intervention.cso_contribution)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Total UNICEF Budget</span>
+              <span>$ [[getDisplayValue(intervention.unicef_budget)]]</span>
+            </div>
+
+          </div>
+        </data-table-row>
+      </template>
+
+      <data-table-footer
+          page-size="[[pageSize]]"
+          page-number="[[pageNumber]]"
+          total-results="[[totalResults]]"
+          visible-range="{{visibleRange}}"
+          on-page-size-changed="_pageSizeSelected"
+          on-page-number-changed="_pageNumberChanged">
+      </data-table-footer>
 
     </paper-material>
 
@@ -36,8 +218,545 @@
     (function() {
       'use strict';
 
+      var _interventionsLastNavigated = null;
+
       Polymer({
         is: 'interventions-list',
+
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.DropdownBehavior,
+          pmpBehaviors.ListFiltersBehavior
+        ],
+
+        properties: {
+          filteredInterventions: {
+            type: Array,
+            notify: true,
+            observer: '_interventionsChanged'
+          },
+
+          q: {
+            type: String,
+            notify: true,
+            observer: '_qChanged'
+          },
+
+          documentTypes: {
+            type: Array,
+            statePath: 'interventionDocTypes'
+          },
+
+          selectedDocumentTypes: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+          interventionStatuses: {
+            type: Array,
+            statePath: 'interventionStatuses'
+          },
+
+          selectedStatuses: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+          startDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          endDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          sortOrder: Object,
+
+          pageNumber: {
+            type: Number
+          },
+
+          totalPages: {
+            type: Number
+          },
+
+          visibleRange: {
+            type: Array
+          },
+
+          pageSize: {
+            type: Number
+          },
+
+          debounceTime: {
+            type: Number,
+            value: 50
+          },
+
+          urlParams: {
+            type: Object
+          },
+
+          detailsOpened: Boolean,
+          active: Boolean,
+
+          forceDataRefresh: {
+            type: Boolean,
+            value: false
+          },
+
+          // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
+          hrps: {
+            type: Array,
+            statePath:  'hrps' //function(state) { console.log(state); return state.hrps; }
+          },
+          cpOutputs: {
+            type: Array,
+            statePath:  'cpOutputs'
+          },
+          selectedCpOutputs: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+          sectors: {
+            type: Array,
+            statePath: 'sectors'
+          },
+
+          selectedSectors: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+          unicefUsersData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+
+          selectedUnicefFocalPoints: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+          offices: {
+            type: Array,
+            statePath: 'offices'
+          },
+
+          selectedOffices: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
+        },
+
+        listeners: {
+          'sort-changed': '_sortOrderChanged',
+        },
+
+        observers: [
+          '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
+            'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder)',
+          '_init(active)'
+        ],
+
+        ready: function() {
+          // this.$.list.classList.add('hidden');
+
+          // init list filter options
+          this.initListFiltersData([
+            {
+              filterName: 'PD/SSFA Type',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.documentTypes.map(function(type, index) {
+                return {
+                  value: (index + 1),
+                  label: type.value
+                }
+              }),
+              alreadySelected: [],
+              path: 'selectedDocumentTypes'
+            },
+            {
+              filterName: 'Country Programme Output',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.cpOutputs,
+              alreadySelected: [],
+              path: 'selectedCpOutputs'
+            },
+            {
+              filterName: 'Sectors',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.sectors,
+              alreadySelected: [],
+              path: 'selectedSectors'
+            },
+            {
+              filterName: 'Status',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.interventionStatuses,
+              alreadySelected: [],
+              path: 'selectedStatuses'
+            },
+            {
+              filterName: 'UNICEF focal point',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.unicefUsersData,
+              alreadySelected: [],
+              path: 'selectedUnicefFocalPoints'
+            },
+            {
+              filterName: 'Offices',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.offices,
+              alreadySelected: [],
+              path: 'selectedOffices'
+            },
+            {
+              filterName: 'Starts After',
+              type: 'datepicker', // etools-datepicker
+              path: 'startDate'
+            },
+            {
+              filterName: 'Ends Before',
+              type: 'datepicker', // etools-datepicker
+              path: 'endDate'
+            }
+          ]);
+        },
+
+        // Input: URL query params
+        // Initializes the properties of the list at page load
+        // to the params interpretted from the URL string.
+        _init: function(active) {
+          var parms = this.urlParams;
+          if (!active || !parms) {
+            return;
+          }
+          this.set('q', parms.q ? parms.q : '');
+          this.set('selectedDocumentTypes', parms.type ? this._setSelectedDocTypes(parms.type) : []);
+          this.set('selectedStatuses', parms.status ? this._setSelectedStatuses(parms.status) : []);
+          this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
+          this.set('selectedSectors', parms.sector ? this._setSelectedSectors(parms.sector) : []);
+          this.set('selectedUnicefFocalPoints',
+              parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
+          this.set('selectedOffices', parms.offices ? this._setSelectedOffices(parms.offices) : []);
+          this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
+          this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
+          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          // format of sort param is sort=field.order ex: sort=name.asc
+          var result = {field: 'partner_name', direction: 'asc'};
+          if (parms.sort) {
+            var p = parms.sort.split('.');
+            result = {field: p[0], direction: p[1]};
+          }
+          this.set('sortOrder', result);
+        },
+
+        // Updates URL state with new query string, and launches query
+        _updateURL: function() {
+          var qs = this._buildQueryString();
+          if (qs !== _interventionsLastNavigated) {
+            _interventionsLastNavigated = qs;
+            // update URL
+            this.updateAppState('interventions/list', qs, true);
+            // filter interventions
+            this._filterInterventionsData();
+          } else {
+            if (location.search === '') {
+              // only update URL query string, without location change event being fired(no page refresh)
+              this.updateAppState('interventions/list', qs, false);
+            }
+            if (this.forceDataRefresh) {
+              // refilter agreements data
+              // this will only execute when agreements-loaded event is received
+              this._filterInterventionsData();
+              this.set('forceDataRefresh', false);
+            }
+          }
+        },
+
+        _filterInterventionsData: function() {
+          // Query is debounced with a debounce time
+          // set depending on what action the user takes
+          this.debounce('query', function() {
+            this.$.interventions.query(
+              this.sortOrder.field,
+              this.sortOrder.direction,
+              this.q.toLowerCase(),
+
+              (this.selectedDocumentTypes && this.selectedDocumentTypes.length)
+                  ? this.selectedDocumentTypes.map(function(type) {
+                return type.label;
+              }) : [],
+
+              (this.selectedCpOutputs && this.selectedCpOutputs.length)
+                  ? this.selectedCpOutputs.map(function(cpOutput) {
+                return cpOutput.value;
+              }) : [],
+
+              (this.selectedStatuses && this.selectedStatuses.length)
+                  ? this.selectedStatuses.map(function(status) {
+                return status.label.toLowerCase();
+              }) : [],
+
+              (this.selectedSectors && this.selectedSectors.length)
+                  ? this.selectedSectors.map(function(sector) {
+                return sector.value;
+              }) : [],
+
+              (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
+                  ? this.selectedUnicefFocalPoints.map(function(fPt) {
+                return fPt.value;
+              }) : [],
+
+              (this.selectedOffices && this.selectedOffices.length)
+                  ? this.selectedOffices.map(function(office) {
+                return office.value;
+              }) : [],
+
+              this.startDate,
+              this.endDate,
+              this.pageNumber,
+              this.pageSize);
+          }, this.debounceTime);
+        },
+
+        // Outputs the query string for the list
+        _buildQueryString: function() {
+          var out = [];
+          if (this.pageNumber && this.pageNumber > 1) {
+            out.push('page=' + this.pageNumber);
+          }
+          if (this.pageSize) {
+            out.push('size=' + this.pageSize);
+          }
+          if (this.q && this.q.length) {
+            out.push('q=' + this.q);
+          }
+
+          if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
+            out.push('type=' + this.selectedDocumentTypes.map(function(type) {
+              return type.label;
+            }).join('+'));
+          }
+
+          if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
+            out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
+              return cpOutput.value;
+            }).join('+'));
+          }
+
+          if (this.selectedStatuses && this.selectedStatuses.length) {
+            out.push('status=' + this.selectedStatuses.map(function(status) {
+              return status.label;
+            }).join('+'));
+          }
+
+          if (this.selectedSectors && this.selectedSectors.length) {
+            out.push('sector=' + this.selectedSectors.map(function(sector) {
+              return sector.value;
+            }).join('+'));
+          }
+
+          if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
+            out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
+              return focalPt.value;
+            }).join('+'));
+          }
+
+          if (this.selectedOffices && this.selectedOffices.length) {
+            out.push('offices=' + this.selectedOffices.map(function(office) {
+              return office.value;
+            }).join('+'));
+          }
+
+          if (this.startDate && this.startDate.length) {
+            out.push('start=' + this.prettyDate(this.startDate, 'YYYY-MM-DD'));
+          }
+          if (this.endDate && this.endDate.length) {
+            out.push('end=' + this.prettyDate(this.endDate, 'YYYY-MM-DD'));
+          }
+          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
+          }
+
+          return out.join('&');
+        },
+
+        _setSelectedOffices: function(officesStr) {
+          var officesIdsArr = officesStr.split('+');
+          if (officesIdsArr && officesIdsArr.length) {
+            officesIdsArr = officesIdsArr.map(function(officeIdStr) {
+              return parseInt(officeIdStr, 10);
+            });
+            return this.offices.filter(function(o) {
+              return officesIdsArr.indexOf(parseInt(o.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
+
+        _setSelectedUnicefFocalPoints: function(focalPtsStr) {
+          var focalPtsStrArr = focalPtsStr.split('+');
+          if (focalPtsStrArr && focalPtsStrArr.length) {
+            focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
+              return parseInt(fPtsIdStr, 10);
+            });
+            return this.unicefUsersData.filter(function(u) {
+              return focalPtsStrArr.indexOf(parseInt(u.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
+        _setSelectedSectors: function(sectors) {
+          var sectorsArr = sectors.split('+');
+          if (sectorsArr && sectorsArr.length) {
+            sectorsArr = sectorsArr.map(function(sectorIdStr) {
+              return parseInt(sectorIdStr, 10);
+            });
+            return this.sectors.filter(function(s) {
+              return sectorsArr.indexOf(parseInt(s.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
+
+        _setSelectedStatuses: function(statuses) {
+          var statusesStrArr = statuses.split('+');
+          return this.interventionStatuses.filter(function(status) {
+            return statusesStrArr.indexOf(status.label) > -1;
+          });
+        },
+
+        _setSelectedCpOutputs: function(cpOutputsString) {
+          var cpOut = cpOutputsString.split('+');
+          if (cpOut && cpOut.length) {
+            cpOut = cpOut.map(function(cpOutStrValue) {
+              return parseInt(cpOutStrValue, 10);
+            });
+            return this.cpOutputs.filter(function(cpo) {
+              return cpOut.indexOf(parseInt(cpo.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
+        _setSelectedDocTypes: function(types) {
+          var typesStrArr = types.split('+');
+          if (typesStrArr && typesStrArr.length) {
+            return this.documentTypes.filter(function(t, index) {
+              if (typesStrArr.indexOf(t.value) > -1) {
+                return {
+                  value: (index + 1),
+                  label: t.value
+                }
+              }
+            });
+
+          }
+          return [];
+        },
+
+        _interventionsChanged: function() {
+          // List fade in fade out effect
+          // this.$.list.classList.add('hidden');
+//          this.async(function() {
+//            var interventionsList = this.$$('#interventions');
+//            if (interventionsList && Array.isArray(interventionsList.data) && interventionsList.data.length > 0) {
+//              this.$$('#list').classList.remove('hidden');
+//            }
+//          }.bind(this), 300);
+        },
+
+        _qChanged: function(q) {
+          this.set('debounceTime', 300);
+          this.set('pageNumber', 1);
+        },
+
+        _dateChanged: function(date) {
+          this.set('pageNumber', 1);
+        },
+
+        /**
+         * At page refresh Dexie DBs might be wiped out and filteredInterventions will be empty.
+         * Because of this we need to refilter after interventions data is saved locally.
+         */
+        _requiredDataHasBeenLoaded: function(event) {
+          event.stopImmediatePropagation();
+          if (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0) {
+            this.set('forceDataRefresh',  true);
+          }
+          // recheck params to trigger partners filtering
+          this._init(this.active);
+        },
+
+        _onSearch: function() {
+          this.q = this.$.query.value;
+        },
+
+        _pageSizeSelected: function(e) {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+          this.set('pageSize', parseInt(e.detail.value));
+        },
+
+        _pageNumberChanged: function(e) {
+          this.set('debounceTime', 50);
+          this.set('pageNumber', e.detail.value);
+        },
+
+        _sortOrderChanged: function(e) {
+          this.set('debounceTime', 150);
+          this.set('sortOrder', e.detail);
+        },
+
+        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
+        _listDataChanged: function(event) {
+          var rows = this.$.list.querySelectorAll('data-table-row');
+          if (rows) {
+            rows.forEach(function(row) {
+              if (row.detailsOpened) {
+                row.set('detailsOpened', false);
+              }
+            });
+          }
+        },
+
+        // verify date and prettify or not
+        _checkAndShowInterventionDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        },
+
+        /**
+         * Get HRP name to be shown in the intervention details(collapsible content) row
+         */
+        _getHrpValue: function(hrpId) {
+          var hrpData = this.hrps.filter(function(hrp) {
+            return parseInt(hrp.value, 10) === parseInt(hrpId, 10);
+          })[0];
+          if (hrpData) {
+            return this.getDisplayValue(hrpData.label);
+          } else {
+            return '-';
+          }
+        },
+
+        _filtersChanged: function() {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+        }
+
       });
 
     })();
