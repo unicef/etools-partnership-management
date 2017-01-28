@@ -11,8 +11,12 @@
     interventionStatuses: [],
     sectors: [],
     unicefUsersData: [],
-    offices: []
-  }
+    locations: [],
+    offices: [],
+    partners: [],
+    partnersDropdownData: [],
+    agreementsList: []
+  };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
     if (!state) {
@@ -59,6 +63,16 @@
       case 'SET_OFFICES':
         // console.log('set offices data...', action.offices);
         return Object.assign({}, state, { offices: action.offices });
+
+      case 'SET_PARTNERS':     
+        //console.log('set partners data...', action.partners); 
+        return Object.assign({}, state, {partners: action.partnersData});
+      case 'SET_AGREEMENTS':     
+        //console.log('set partners data...', action.partners); 
+        return Object.assign({}, state, {agreementsList: action.agreementsList});
+      case 'SET_PARTNERS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
+        return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
     }
   });
 

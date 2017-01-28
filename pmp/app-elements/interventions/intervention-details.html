@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="object-searchable-multi-selection.html">
 
 <dom-module id="intervention-details">
 
@@ -33,18 +34,26 @@
       <etools-content-panel class="content-section" title="Partnership Information">
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-searchable-multiselection-menu id="partner"
-                                                   label="Partner"
-                                                   placeholder="&#8212;"
-                                                   options="[[partnersDropdownData]]">
-            </etools-searchable-multiselection-menu>
+            <paper-input label="Partner Name"
+                           value="[[intervention.agreement_obj.partner_name]]"
+                           placeholder="&#8212;"
+                           readonly></paper-input>
           </div>
           <div class="col col-3">
-            <etools-searchable-multiselection-menu id="agreement"
+            <object-searchable-multi-selection id="agreements"
+                                                   label="Agreement"
+                                                   placeholder="&#8212;"
+                                                   obj-val-prop="id"
+                                                   obj-label-prop="agreement_number"
+                                                   object-options="[[agreementsList]]"
+                                                   object-value="{{intervention.agreement_obj}}"
+                                                   on-object-value-changed="_interventionAgreementChanged">
+            </object-searchable-multi-selection>
+            <!-- <etools-searchable-multiselection-menu id="agreement"
                                                    label="Agreement"
                                                    placeholder="&#8212;"
                                                    options="[[agreementsDropdownData]]">
-            </etools-searchable-multiselection-menu>
+            </etools-searchable-multiselection-menu> -->
           </div>
           <div class="col col-3">
             <etools-searchable-multiselection-menu id="documentType"
@@ -189,6 +198,14 @@
             type: Array,
             value: []
           },
+          agreementsList: {
+            type: Array,
+            statePath: 'agreementsList'
+          },
+          partners: {
+            type: Array,
+            statePath: 'partners'
+          },
           partnerStaffMembersDropdownData: {
             type: Array,
             value: []
@@ -223,6 +240,10 @@
           console.log(intervention);
 
           this.fire('global-loading', {active: false});
+        },
+
+        _interventionAgreementChanged: function() {
+          this.set('intervention.agreement', this.intervention.agreement_obj.id);
         },
 
         _prepareDropdownDocTypes: function(types) {
