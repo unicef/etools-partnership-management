@@ -48,6 +48,10 @@
         // console.log('set sectors data...', action.sectors);
         return Object.assign({}, state, { sectors: action.sectors });
 
+      case 'SET_LOCATIONS':
+        // console.log('set locations data...', action.locations);
+        return Object.assign({}, state, {locations: action.locations});
+
       case 'SET_UNICEF_USERS_DATA':
         // console.log('set unicefUsersData data...', action.unicefUsersData);
         return Object.assign({}, state, { unicefUsersData: action.unicefUsersData });
