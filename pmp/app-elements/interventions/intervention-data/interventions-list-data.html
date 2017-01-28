@@ -55,8 +55,8 @@
           }
         },
 
-        query: function(field, order, searchString, documentType,
-                        interventionStatus, startDate,
+        query: function(field, order, searchString, documentTypes, cpOutputs,
+                        interventionStatuses, sectors, unicefFocalPoints, offices, startDate,
                         endDate, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
@@ -81,12 +81,60 @@
 
             queryResult = queryResult.filter(function(intervention) {
 
-              if (documentType && intervention.document_type !== documentType) {
-                return false;
+              if (documentTypes.length) {
+                var matchType = documentTypes.filter(function(selectedType) {
+                  return selectedType === intervention.document_type;
+                })[0];
+
+                if (!matchType) {
+                  return false;
+                }
               }
 
-              if (interventionStatus && intervention.status !== interventionStatus) {
-                return false;
+              if (cpOutputs.length) {
+                var matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
+                  return cpOutputs.indexOf(cpOut) > -1;
+                });
+                if (matchCpOut && matchCpOut.length === 0) {
+                  return false;
+                }
+              }
+
+              if (interventionStatuses.length) {
+                var matchStatus = interventionStatuses.filter(function(selectedStatus) {
+                  return selectedStatus === intervention.status;
+                })[0];
+
+                if (!matchStatus) {
+                  return false;
+                }
+              }
+
+              if (sectors.length) {
+                var matchSectors = intervention.sectors.filter(function(sector) {
+                  return sectors.indexOf(sector) > -1;
+                });
+                if (matchSectors && matchSectors.length === 0) {
+                  return false;
+                }
+              }
+
+              if (unicefFocalPoints.length) {
+                var matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
+                  return unicefFocalPoints.indexOf(fPt) > -1;
+                });
+                if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
+                  return false;
+                }
+              }
+
+              if (offices.length) {
+                var matchOffices = intervention.offices.filter(function(officeId) {
+                  return offices.indexOf(officeId) > -1;
+                });
+                if (matchOffices && matchOffices.length === 0) {
+                  return false;
+                }
               }
 
               if (startDate && startDate.length &&

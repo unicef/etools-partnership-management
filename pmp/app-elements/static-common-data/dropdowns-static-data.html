@@ -1,0 +1,83 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+
+<link rel="import" href="redux-behaviors/common-static-data-redux-behavior.html">
+
+<dom-module id="dropdowns-static-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'dropdowns-static-data',
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsAppConfig.globals
+        ],
+        properties: {
+
+          endpoint: {
+            type: Object
+          }
+
+        },
+        actions: {
+          setInterventionDocTypes: function(docTypes) {
+            return {
+              type: 'SET_INTERVENTION_DOC_TYPES',
+              interventionDocTypes: docTypes
+            }
+          },
+          setInterventionStatuses: function(statuses) {
+            return {
+              type: 'SET_INTERVENTION_STATUSES',
+              statuses: statuses
+            }
+          }
+        },
+
+        ready: function() {
+          this.set('endpoint', this.getEndpoint('dropdownsStatic'));
+        },
+
+        _handleResponse: function(response) {
+          if (response.detail) {
+            // set intervention_doc_type values
+            if (Array.isArray(response.detail.intervention_doc_type) && response.detail.intervention_doc_type.length > 0) {
+              this.dispatch('setInterventionDocTypes', response.detail.intervention_doc_type);
+            }
+            // set intervention_status values
+            if (Array.isArray(response.detail.intervention_status) && response.detail.intervention_status.length > 0) {
+              var preparedStatuses = this._prepareDropdownStatusesData(response.detail.intervention_status);
+              this.dispatch('setInterventionStatuses', preparedStatuses);
+            }
+
+          }
+        },
+
+        /**
+         * Prepare values for dropdowns
+         */
+        _prepareDropdownStatusesData: function(data) {
+          return data.map(function(d, index) {
+            return {
+              value: (index + 1), // value must be integer for esmm to work
+              label: d.label
+            };
+          });
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

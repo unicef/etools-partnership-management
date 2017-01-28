@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
-<link rel="import" href="redux-behaviors/dropdowns-pmp-redux-behavior.html">
+<link rel="import" href="redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="dropdowns-pmp-data">
 
@@ -20,7 +20,7 @@
 
         is: 'dropdowns-pmp-data',
         behaviors: [
-          EtoolsDropdownPmpDataReduxBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           etoolsAppConfig.globals
         ],
         properties: {
@@ -37,6 +37,24 @@
               type: 'SET_HRPS',
               hrps: hrpsData
             }
+          },
+          setCpOutputs: function(cpOutputsData) {
+            return {
+              type: 'SET_CP_OUTPUTS',
+              cpOutputs: cpOutputsData
+            }
+          },
+          setSignedByUnicefUsers: function(signedByUnicefUsersData) {
+            return {
+              type: 'SET_SIGNED_BY_UNICEF_USERS',
+              signedByUnicefUsers: signedByUnicefUsersData
+            }
+          },
+          setSupplyItems: function(supplyItemsData) {
+            return {
+              type: 'SET_SUPPLY_ITEMS',
+              supplyItems: supplyItemsData
+            }
           }
         },
 
@@ -45,18 +63,53 @@
         },
 
         _handleResponse: function(response) {
-          console.log('dropdowns-pmp-data ', response.detail);
-          if (response.detail && Array.isArray(response.detail.hrps) && response.detail.hrps.length > 0) {
-            var preparedHrps = this._prepareHrpsData(response.detail.hrps);
-            this.dispatch('setHrps', preparedHrps);
+          if (response.detail) {
+            // set HRPs value
+            if (Array.isArray(response.detail.hrps) && response.detail.hrps.length > 0) {
+              var preparedHrps = this._prepareDropdownData(response.detail.hrps);
+              this.dispatch('setHrps', preparedHrps);
+            }
+            // set CP Outputs values
+            if (Array.isArray(response.detail.cp_outputs) && response.detail.cp_outputs.length > 0) {
+              var preparedCpOutputs = this._prepareDropdownData(response.detail.cp_outputs);
+              this.dispatch('setCpOutputs', preparedCpOutputs);
+            }
+            // set Signed By UNICEF Users
+            if (Array.isArray(response.detail.signed_by_unicef_users)
+                && response.detail.signed_by_unicef_users.length > 0) {
+              var signedByUnicefUsers = this._prepareDropdownData(response.detail.signed_by_unicef_users, true);
+              this.dispatch('setSignedByUnicefUsers', signedByUnicefUsers);
+            }
+            // set supply items
+            if (Array.isArray(response.detail.supply_items)
+                && response.detail.supply_items.length > 0) {
+              var supplyItems = this._prepareDropdownData(response.detail.supply_items);
+              this.dispatch('setSupplyItems', supplyItems);
+            }
           }
         },
 
-        _prepareHrpsData: function(hrpsData) {
-          return hrpsData.map(function(hrp) {
-            return {
-              id: hrp.id,
-              name: hrp.name
+        /**
+         * Prepare values for dropdowns
+         */
+        _prepareDropdownData: function(data, usersData) {
+          return data.map(function(d) {
+            if (usersData) {
+              var userName = d.first_name + ' ' + d.last_name;
+              userName = userName.trim();
+              if (userName === '') {
+                // no first and last name => use email
+                userName = d.email;
+              }
+              return {
+                value: d.id,
+                label: userName
+              };
+            } else {
+              return {
+                value: d.id,
+                label: d.name
+              };
             }
           });
         }

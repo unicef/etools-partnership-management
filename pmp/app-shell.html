@@ -31,6 +31,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
 
+<link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
+<link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
+<link rel="import" href="app-elements/static-common-data/sectors-data.html">
+<link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
+<link rel="import" href="app-elements/static-common-data/offices-data.html">
+
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
@@ -98,6 +104,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
     </style>
+
+    <!-- get static data -->
+    <dropdowns-pmp-data></dropdowns-pmp-data>
+    <dropdowns-static-data></dropdowns-static-data>
+    <sectors-data></sectors-data>
+    <unicef-users-data></unicef-users-data>
+    <offices-data></offices-data>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
