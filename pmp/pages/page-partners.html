@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
 
 <dom-module id="page-partners">
 
@@ -38,7 +39,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partnerData" partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
 
     <app-header-layout has-scrolling-region fullbleed>
 
@@ -107,7 +108,11 @@
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner="[[partner]]" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          <partner-details 
+              partner="[[partner]]" 
+              edit-mode="[[_hasEditPermissions(permissions)]]"
+              on-save-partner="_savePartner">      
+          </partner-details>
         </div>
       </iron-pages>
 
@@ -140,7 +145,6 @@
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, routeData.tab)'
       ],
-
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -179,13 +183,16 @@
         }
         return partnerName;
       },
-
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
           return 'with-tabs';
         }
         return '';
-      }
+      },
+      _savePartner: function(event) {
+        event.stopImmediatePropagation();
+        this.$.partnerData.savePartner(event.detail);
+      },
 
     });
 
