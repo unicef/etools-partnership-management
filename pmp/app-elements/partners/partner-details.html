@@ -376,12 +376,6 @@
             return;
           }
           if (this._validatePartner()) {
-            // check/get only changed content to be used as a body to the save request
-            // var changedPartnerProperties = this._getCurrentChanges();
-            // we also need the id
-            // changedAgreementProperties.id = this.agreement.id;
-            // fire update agreement
-            // console.log('changes to be saved: ', changedAgreementProperties);
             var partnerChanges = this._cleanUpdateData(this.partner);
             partnerChanges.id = this.partner.id;
             console.log('_validateAndTriggerPartnerSave: ', partnerChanges);
