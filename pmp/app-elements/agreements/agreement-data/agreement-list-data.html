@@ -95,12 +95,12 @@
               }
 
               if (startDate && startDate.length &&
-                  (!agreement.start || agreement.start < startDate)) {
+                  (!agreement.start || agreement.start <= startDate)) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!agreement.end || agreement.end > endDate)) {
+                  (!agreement.end || agreement.end >= endDate)) {
                 return false;
               }
 

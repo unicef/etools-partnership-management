@@ -9,8 +9,7 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="unicefStaff"
+                 caching-storage="dexie"
                  on-success="_handleResponse"></etools-ajax>
   </template>
 
@@ -27,7 +26,7 @@
         properties: {
           endpointName: {
             type: String,
-            value: 'unicefStaff'
+            value: 'unicefUsers'
           },
         }
 

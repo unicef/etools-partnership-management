@@ -17,8 +17,9 @@ App global configuration
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
-      user: 'id',
-      unicefStaff: 'user_id, full_name, username, email',
+      interventions: 'id, number, partner_name, document_type, ' +
+        'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
+      user: 'id'
     });
 
     var etoolsAppConfig = {
@@ -102,10 +103,10 @@ App global configuration
         url: '/users/api/changecountry/'
       },
       // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
-      unicefStaff: {
+      unicefUsers: {
         url: '/users/api/',
         exp: 60 * 60 * 1000, // 1h
-        cachingKey: 'unicefStaff'
+        cachingKey: 'unicefUsers'
       },
       user: {
         url: '/users/api/profile/',
@@ -136,7 +137,37 @@ App global configuration
         exp: 6 * 60 * 60 * 1000, // 6h
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
+      },
+      interventions: {
+        url: '/api/v2/interventions/',
+        exp: 5 * 60 * 1000, // 5min
+        cachingKey: 'interventions'
+      },
+      interventionDetails: {
+        template: '/api/v2/interventions/<%=id%>/',
+        exp: 30 * 60 * 1000 // 30min
+      },
+      dropdownsPmp: {
+        url: '/api/v2/dropdowns/pmp',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsPmp'
+      },
+      dropdownsStatic: {
+        url: '/api/v2/dropdowns/static',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsStatic'
+      },
+      sectors: {
+        url: '/api/reports/sectors',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'sectors'
+      },
+      offices: {
+        url: '/api/offices',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'offices'
       }
+
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
