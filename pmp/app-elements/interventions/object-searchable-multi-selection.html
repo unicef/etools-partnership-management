@@ -35,6 +35,10 @@
 			'use strict';  
 			Polymer({
 				is: 'object-searchable-multi-selection',
+				behaviors: [
+		          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+		          pmpBehaviors.CommonGeneralBehavior
+		        ],
 				properties: {
 					value: {
 						value: String,

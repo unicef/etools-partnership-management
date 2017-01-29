@@ -14,6 +14,7 @@
     locations: [],
     offices: [],
     partners: [],
+    agreementsDropdownData: [],
     partnersDropdownData: [],
     agreementsList: []
   };
@@ -73,6 +74,9 @@
       case 'SET_PARTNERS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
+      case 'SET_AGREEMENTS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
+        return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
     }
   });
 

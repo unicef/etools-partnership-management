@@ -66,12 +66,26 @@
               type: 'SET_AGREEMENTS',
               agreementsList: agreements
             };
+          },
+          setAgreementsDropdown: function(agreementsDropdown) {
+            return {
+              type: 'SET_AGREEMENTS_DROPDOWN',
+              agreementsList: agreementsDropdown
+            };
           }
         },
 
-        _handleMyResponse: function(res){
+        _handleMyResponse: function(res) {
           this._handleResponse(res);
           this.dispatch('setAgreements', res.detail);
+          var preparedData = res.detail.map(function(p) {
+                return {
+                  value: p.id,
+                  label: p.agreement_number
+                };
+          });
+          this.dispatch('setAgreementsDropdown', preparedData);
+
         },
 
         query: function(field, order, searchString, agreementType,
