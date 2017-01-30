@@ -7,7 +7,8 @@
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
-                 on-success="_handleResponse"></etools-ajax>
+                 on-success="_handleResponse"
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -30,18 +31,27 @@
             reflectToAttribute: true
           },
 
-          _partners: {
-            type: Object
-          },
-
           partnerId: {
             type: Number,
             notify: true,
             observer: '_partnerIdChanged'
-          }
+          },
+
+          handleResponseAdditionalCallback: Object,
+          ajaxEl: Object
 
         },
-
+        attached: function() {
+          this.ajaxEl = this.$.ajax;
+        },
+        _prepareEndpoint: function(partnerId) {
+          if (partnerId > 0) {
+            // check and prepare request URL
+            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
+              this.set('endpoint', this.getEndpoint('partnerDetails', {id: partnerId}));
+            }
+          }
+        },
         _partnerIdChanged: function(newId) {
           if (newId) {
             // set an empty partner
@@ -52,9 +62,94 @@
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           }
         },
+        _prepareAndFireRequest: function(method, data, url) {
+          if (!method) {
+            method = 'GET';
+            // reset ajax for GET request
+            this.ajaxEl.set('params', null);
+            this.ajaxEl.set('body', null);
+            this.ajaxEl.set('url', null);
+          }
+          this.ajaxEl.set('method', method);
+          if (typeof data === 'object' && Object.keys(data).length > 0
+              && ['PATCH', 'POST'].indexOf(method) > -1) {
+            this.ajaxEl.set('body', data);
+            this.ajaxEl.set('url', url);
+          }
+          // after body is set the request is automatically triggered
+        },
 
         _handleResponse: function(response) {
           this._setPartner(response.detail);
+          this.fire('global-loading', {active: false});
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            // reset callback
+            this.set('handleResponseAdditionalCallback', null);
+          }
+        },
+        savePartner: function(partner, callback) {
+          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
+            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+          } else {
+            var url = null;
+            var isNew = false;
+
+            if (partner.id) {
+              // prepare PATCH endpoint
+              this._prepareEndpoint(partner.id);
+              url = this.endpoint.url;
+            } else {
+              // new partner, use POST method for the same endpoint
+              var partnersEndpoint = this.getEndpoint('partners');
+              url = partnersEndpoint.url;
+              isNew = true;
+            }
+            // remove id from data
+            if (partner.id) {
+              delete partner.id;
+            }
+            if (Object.keys(partner).length > 0) {
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
+              this.fire('global-loading', {message: 'Saving partner data...', active: true});
+              // fire in the hole
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url);
+            } else {
+              this.fire('toast', {
+                text: 'There is nothing to save. No change detected on this partner.',
+                showCloseBtn: true
+              });
+            }
+          }
+        },
+        _handleErrorResponse: function(response) {
+          this.fire('global-loading', {active: false});
+          var errors = response.detail.request.detail.request.response;
+          if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
+            // TODO: improve etools-ajax on-fail event data model (received errors)
+            var errorMessage = 'An error occurred during partner save!';
+            if (errors) {
+              var errorMessages = ['Errors occurred:\n'];
+              if (Array.isArray(errors) && errors.length > 0) {
+                errors.forEach(function(err) {
+                  errorMessages.push(err + '\n');
+                });
+              } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
+                for (var errField in errors) {
+                  if (typeof errField) {
+                    errorMessages.push('Field ' + errField + ' - ' + errors[errField] + '\n');
+                  }
+                }
+              }
+              if (errorMessages.length > 1) {
+                errorMessage = errorMessages.join('');
+              }
+            }
+            this.fire('toast', {text: errorMessage, showCloseBtn: true});
+          }
         }
 
       });

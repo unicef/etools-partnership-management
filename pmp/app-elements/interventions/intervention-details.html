@@ -1,14 +1,201 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="object-searchable-multi-selection.html">
+<link rel="import" href="intervention-form/agreement-selector.html">
+
+<link rel="import" href="../partners/partners-data/partner-item-data.html">
+<link rel="import" href="intervention-planned-budget.html">
 
 <dom-module id="intervention-details">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+      }
+      paper-input,
+      paper-textarea,
+      agreement-selector {
+        width: 100%;
+      }
+    </style>
 
-    intervention details page content goes here...
+    <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
+
+    <div id="pageContent">
+      <etools-content-panel class="content-section" title="Partnership Information">
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <agreement-selector agreement-id="{{intervention.agreement}}" partner-id="{{selectedPartnerId}}"></agreement-selector>
+          </div>
+          <div class="col col-3">
+            <etools-searchable-multiselection-menu id="documentType"
+                                                   label="Document Type"
+                                                   placeholder="&#8212;"
+                                                   value="[[_getEsmmValue('document_type', intervention.document_type)]]"
+                                                   options="[[_prepareDropdownDocTypes(documentTypes)]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="document_type"
+                                                   data-to-use="label"
+                                                   hide-search>
+            </etools-searchable-multiselection-menu>
+          </div>
+          <div class="col col-3">
+            <!-- Reference Number -->
+            <paper-input label="Reference Number"
+                         value="[[intervention.number]]"
+                         placeholder="&#8212;"
+                         disabled></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <!-- Title -->
+          <paper-input label="Title"
+                       value="{{intervention.title}}"
+                       placeholder="&#8212;"
+                       char-counter
+                       maxlength="256"></paper-input>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <etools-searchable-multiselection-menu id="unicefOffices"
+                                                   label="UNICEF Office(s)"
+                                                   placeholder="&#8212;"
+                                                   value="[[_getEsmmValue('offices', intervention.offices)]]"
+                                                   options="[[offices]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="offices"
+                                                   multi>
+            </etools-searchable-multiselection-menu>
+          </div>
+          <div class="col col-6">
+            <etools-searchable-multiselection-menu id="unicefFocalPts"
+                                                   label="UNICEF Focal Points(s)"
+                                                   placeholder="&#8212;"
+                                                   value="[[_getEsmmValue('unicef_focal_points', intervention.unicef_focal_points)]]"
+                                                   options="[[unicefUsersData]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="unicef_focal_points"
+                                                   multi>
+            </etools-searchable-multiselection-menu>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <etools-searchable-multiselection-menu id="partnerFocalPts"
+               label="Partner Focal Points(s)"
+               placeholder="&#8212;"
+               value="[[_getEsmmValue('partner_focal_points', intervention.partner_focal_points, partnerStaffMembersDropdownData.length)]]"
+               options="[[partnerStaffMembersDropdownData]]"
+               on-value-change="_esmmValueChanged"
+               data-path="partner_focal_points"
+               multi>
+            </etools-searchable-multiselection-menu>
+          </div>
+        </div>
+
+      </etools-content-panel>
+      <etools-content-panel class="content-section" title="PD or SSFA Details">
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-searchable-multiselection-menu id="hrps"
+                                                   label="In response to an HRP, Select"
+                                                   placeholder="&#8212;"
+                                                   value="[[_getEsmmValue('hrp', intervention.hrp)]]"
+                                                   options="[[hrps]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="hrp">
+            </etools-searchable-multiselection-menu>
+          </div>
+          <div class="col col-3">
+            <!-- Start date -->
+            <paper-input label="Start Date"
+                         value="[[prettyDate(intervention.start)]]"
+                         placeholder="&#8212;"
+                         disabled>
+              <div prefix>
+                <iron-icon icon="date-range"></iron-icon>
+              </div>
+            </paper-input>
+          </div>
+          <div class="col col-3">
+            <!-- Start date -->
+            <paper-input label="End Date"
+                         value="[[prettyDate(intervention.end)]]"
+                         placeholder="&#8212;"
+                         disabled>
+              <div prefix>
+                <iron-icon icon="date-range"></iron-icon>
+              </div>
+            </paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <!-- Population Focus -->
+          <paper-textarea label="Population Focus"
+                          value="{{intervention.population_focus}}"
+                          placeholder="&#8212;"
+                          char-counter
+                          maxlength="256"></paper-textarea>
+        </div>
+        <div class="row-h flex-c">
+          <etools-searchable-multiselection-menu id="sectors"
+                                                 label="Sectors"
+                                                 placeholder="&#8212;"
+                                                 value="[[_getEsmmValue('sectors', intervention.sectors)]]"
+                                                 options="[[sectors]]"
+                                                 on-value-change="_esmmValueChanged"
+                                                 data-path="sectors"
+                                                 multi>
+          </etools-searchable-multiselection-menu>
+        </div>
+        <div class="row-h flex-c">
+          <etools-searchable-multiselection-menu id="locations"
+                                                 label="Locations"
+                                                 placeholder="&#8212;"
+                                                 value="[[_getEsmmValue('locations', intervention.locations)]]"
+                                                 options="[[locations]]"
+                                                 on-value-change="_esmmValueChanged"
+                                                 data-path="locations"
+                                                 multi>
+          </etools-searchable-multiselection-menu>
+        </div>
+      </etools-content-panel>
+      <!--<etools-content-panel class="content-section" title="Expected results">-->
+
+      <!--</etools-content-panel>-->
+      <etools-content-panel class="content-section" title="Planned Budget">
+        <intervention-planned-budget data-items="{{intervention.planned_budget}}"
+                                     edit-mode$="[[editMode]]"
+                                     intervention-start="[[intervention.start]]"
+                                     intervention-end="[[intervention.end]]"></intervention-planned-budget>
+      </etools-content-panel>
+      <etools-content-panel class="content-section" title="Planned Visits">
+
+      </etools-content-panel>
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      <intervention-status status="[[intervention.status]]"></intervention-status>
+    </div>
+    <!-- sidebar content end -->
+
 
   </template>
 
@@ -18,6 +205,189 @@
 
       Polymer({
         is: 'intervention-details',
+
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.CommonGeneralBehavior
+        ],
+
+        properties: {
+          intervention: {
+            type: Object,
+            observer: '_interventionChanged'
+          },
+          selectedPartnerId: {
+            type: Number
+          },
+          partner: {
+            type: Object,
+            observer: '_partnerSelected'
+          },
+          partnerStaffMembersDropdownData: {
+            type: Array,
+            value: []
+          },
+
+          documentTypes: {
+            type: Array,
+            statePath: 'interventionDocTypes'
+          },
+          offices: {
+            type: Array,
+            statePath: 'offices'
+          },
+          unicefUsersData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+          hrps: {
+            type: Array,
+            statePath: 'hrps'
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          sectors: {
+            type: Array,
+            statePath: 'sectors'
+          }
+        },
+
+        _interventionChanged: function(intervention) {
+          console.log(intervention);
+
+          // ensure loading msg close
+          this.fire('global-loading', {active: false});
+        },
+
+        _prepareDropdownDocTypes: function(types, selected) {
+          if (selected) {
+            // filter selected to show selected value
+            var selectedType = types.filter(function(type, index) {
+              return type.value === selected;
+            })[0];
+            if (selectedType) {
+              return [{
+                value: (types.indexOf(selectedType) + 1),
+                label: selectedType.value
+              }];
+            } else {
+              return [];
+            }
+          }
+
+          return types.map(function(type, index) {
+            return {
+              value: (index + 1),
+              label: type.value
+            }
+          });
+        },
+
+        _esmmValueChanged: function(event) {
+          var esmmField = Polymer.dom(event).localTarget;
+          var dataPath = esmmField.getAttribute('data-path');
+          var dataToUse = esmmField.getAttribute('data-to-use');
+          if (esmmField.multi) {
+            // multiselection
+            var selectedValues = [];
+            var optionsSelected = event.detail.selectedValues;
+            if (Array.isArray(optionsSelected)) {
+              selectedValues = optionsSelected.map(function(option) {
+                if (dataToUse && dataToUse === 'label') {
+                  return option.label;
+                } else {
+                  return option.value;
+                }
+              });
+            }
+            this.set('intervention.' + dataPath, selectedValues);
+          } else {
+            // single selection
+            var optionSelected = event.detail.selectedValues;
+            var selectedOpt = null;
+            if (optionSelected.value) {
+              if (dataToUse && dataToUse === 'label') {
+                selectedOpt = optionSelected.label;
+              } else {
+                selectedOpt = optionSelected.value;
+              }
+            }
+            this.set('intervention.' + dataPath, selectedOpt);
+          }
+        },
+
+        _getEsmmValue: function(dataPath, selectedValues, other) {
+          switch (dataPath) {
+            case 'document_type':
+              if (typeof selectedValues === 'string' && selectedValues !== '') {
+                return  this._prepareDropdownDocTypes(this.documentTypes, selectedValues);
+              }
+              break;
+            case 'offices':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.offices.filter(function(office) {
+                  return selectedValues.indexOf(office.value) > -1;
+                });
+              }
+              break;
+            case 'unicef_focal_points':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.unicefUsersData.filter(function(user) {
+                  return selectedValues.indexOf(user.value) > -1;
+                });
+              }
+              break;
+            case 'partner_focal_points':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0 && other) {
+                var selected = this.partnerStaffMembersDropdownData.filter(function(staffMemberId) {
+                  return selectedValues.indexOf(staffMemberId) > -1;
+                });
+                return selected;
+              }
+              break;
+            case 'hrp':
+              var hrpId = parseInt(selectedValues, 10);
+              if (!isNaN(hrpId)) {
+                return this.hrps.filter(function(hrp) {
+                  return hrp.value === hrpId;
+                });
+              }
+              break;
+            case 'sectors':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.sectors.filter(function(sector) {
+                  return selectedValues.indexOf(sector.value) > -1;
+                });
+              }
+              break;
+            case 'locations':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.locations.filter(function(location) {
+                  return selectedValues.indexOf(location.value) > -1;
+                });
+              }
+              break;
+          }
+        },
+
+        _partnerSelected: function(partner) {
+          console.log(partner);
+          if (partner && partner.staff_members) {
+            // prepare selected partner staff members data
+            this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
+              return {
+                value: staffMember.id,
+                label: staffMember.first_name + ' ' + staffMember.last_name
+              };
+            }));
+          }
+        },
+
+
+
+
       });
 
     })();

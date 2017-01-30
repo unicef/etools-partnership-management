@@ -37,11 +37,7 @@
         --paper-toggle-button-checked-bar-color: #88D4F7; /* TODO: replace with app-theme var */
         --paper-toggle-button-checked-button-color: #3baaee; /* TODO: replace with app-theme var */
       }
-      .col-data {
-        display: inline-flex;
-        line-height: 24px;
-        height: 24px;
-      }
+
       .sm-status-wrapper {
         padding-left: 10px;
       }
@@ -138,11 +134,13 @@
         <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
           <data-table-row details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <a class="col-data flex" href="partners/[[partner.id]]/details">
+              <a class="col-data flex truncate"
+                 href="partners/[[partner.id]]/details"
+                 title="[[getDisplayValue(partner.vendor_number)]]">
                 [[getDisplayValue(partner.vendor_number)]]
               </a>
               <span class="col-data flex-3">
-                [[_computeName(partner.name, partner.short_name)]]
+                <span class="truncate">[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
                   <span class="marked-for-deletion">
@@ -431,9 +429,9 @@
         _partnersChanged: function(filteredPartners) {
           this.$.list.classList.add('hidden');
           this.async(function() {
-            var partnersList = this.$.partners;
+            var partnersList = this.$$('#partners');
             if (partnersList && Array.isArray(partnersList.data) && partnersList.data.length > 0) {
-              this.$.list.classList.remove('hidden');
+              this.$$('#list').classList.remove('hidden');
             }
           }, 50);
         },

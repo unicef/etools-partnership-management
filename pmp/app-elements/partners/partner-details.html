@@ -52,7 +52,6 @@
       }
 
     </style>
-
     <!-- main page content start -->
     <div id="pageContent">
 
@@ -217,7 +216,7 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <partner-status partner="[[partner]]"></partner-status>
+      <partner-status on-save-partner="_validateAndTriggerPartnerSave" partner="[[partner]]"></partner-status>
     </div>
     <!-- sidebar content end -->
 
@@ -249,11 +248,16 @@
             type: Boolean,
             value: false
           },
+          contentVisible: {
+            type: Boolean,
+            value: false
+          },
           coreValuesAssessmentFiles: {
             type: Array,
             value: [],
             notify: true
-          }
+          },
+          originalPartnerData: Object
 
         },
 
@@ -277,14 +281,18 @@
         },
 
         _partnerChanged: function(partner) {
+          console.log('partner changed', partner)
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+            this.contentVisible = true;
             // check & set shared_partner values
             this._setSharedPartnerValues();
 
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment));
-
+            this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
+          } else {
+            this.contentVisible = false;
           }
         },
 
@@ -330,6 +338,53 @@
 
         _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
           this.set('coreValuesAssessmentFiles', this.prepareEtoolsFileDataFromUrl(partnerCoreValuesAssessment));
+        },
+        _validatePartner: function() {
+          //TODO: validation goes here
+          return true;
+        },
+        _cleanUpdateData: function(partner) {
+          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments'];
+          var changes = {};
+          updateableFields.forEach(function(fieldName) {
+            if (fieldName === 'shared_with') {
+
+              console.log(this.sharedPartenerSelectedValues);
+              var sharedPartners = (this.sharedPartenerSelectedValues.length) ? this.sharedPartenerSelectedValues.map(function(shared) {
+                  return shared.label;
+                }) : [];
+
+              console.log(sharedPartners);
+
+              if (sharedPartners !== partner.shared_with) {
+                console.log(sharedPartners, partner.shared_with);
+                changes[fieldName] = sharedPartners;
+              }
+            } else {
+              if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
+                changes[fieldName] = partner[fieldName];
+              }
+            }
+          }.bind(this));
+
+          return changes;
+
+        },
+        _validateAndTriggerPartnerSave: function(event) {
+          event.stopImmediatePropagation();
+          if (!this.editMode) {
+            return;
+          }
+          if (this._validatePartner()) {
+            var partnerChanges = this._cleanUpdateData(this.partner);
+            partnerChanges.id = this.partner.id;
+            console.log('_validateAndTriggerPartnerSave: ', partnerChanges);
+            this.fire('save-partner', partnerChanges);
+            
+          } else {
+            this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          }
+
         }
 
       });

@@ -132,6 +132,27 @@
         @apply(--layout-flex);
       }
 
+      *[slot="row-data"] .col-data {
+        display: inline-flex;
+        line-height: 24px;
+        height: 24px;
+      }
+
+      *[slot="row-data"] .truncate {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      data-table-column,
+      *[slot="row-data"] .col-data {
+        padding-right: 15px;
+      }
+      data-table-column:last-child,
+      *[slot="row-data"] .col-data:last-child {
+        padding-right: 0;
+      }
       .row-details-content {
         font-size: 12px;
       }

@@ -1,0 +1,157 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+
+<dom-module id="object-searchable-multi-selection">
+
+  	<template>
+        <etools-searchable-multiselection-menu id="multiSelection"
+                                               label="[[label]]"
+                                               placeholder="[[placeholder]]"
+                                               options="[[options]]"
+                                               on-value-change="_valueChanged"
+                                               error-message="[[errorMessage]]"
+                                               required="[[required]]"
+                                               invalid="[[invalid]]"
+                                               multi="[[multi]]">
+        </etools-searchable-multiselection-menu>
+	</template>
+
+	<script>
+		(function() {
+			'use strict';  
+			Polymer({
+				is: 'object-searchable-multi-selection',
+				behaviors: [
+		          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+		          pmpBehaviors.CommonGeneralBehavior
+		        ],
+				properties: {
+					value: {
+						value: String,
+					},
+					objectValue: {
+						type: Object,
+						notify: true,
+						observer: '_objectValueChanged'
+					},
+					objectOptions: {
+						type: Array,
+						observer: '_objectOptionsChanged'
+					},
+					objValProp: String,
+					objLabelProp: String,
+					mapping: Object,
+					label: String,
+					placeholder: String,
+					errorMessage: String,
+					options: Array,
+					required: Boolean,
+					invalid: Boolean,
+					multi: Boolean
+				},
+				_valueChanged: function(event) {
+						var selectedValues = event.detail.selectedValues;
+						if (this.objValProp) {
+							this._mapSelectedToObjOptions(selectedValues);
+						}
+				},
+				_mapSelectedToObjOptions: function(selectedValues) {
+						// find the selected value int he objectOptions array (by value)
+						console.log('in _mapSelectedToObjOptions selectedValues:', selectedValues);
+						var objectOptionPorperty = this.objValProp;
+						var selectedObjects = [];
+
+						if (this.multi) {
+							selectedValues.forEach(function(val) {
+								selectedObjects.push(
+									_.find(this.objectOptions, function(obj) {return obj[objectOptionPorperty] === val.value;})
+								);
+							}.bind(this));
+						} else {
+							selectedObjects = _.find(
+								this.objectOptions, 
+								function(obj) {return obj[objectOptionPorperty] === selectedValues.value;}
+							);
+						}
+						console.log('woo')
+						//console.log(this.objectValue, selectedValues);
+						if (!_.isEqual(this.objectValue, selectedObjects)) {
+							console.log('they\'re not equal')
+							this.set('objectValue', JSON.parse(JSON.stringify(selectedObjects)));
+						}
+				},
+				_objectValueChanged: function(objectValue) {
+					console.log('_objectValueChanged', objectValue);
+					var dropDown = this.$$('#multiSelection');
+					if ((!objectValue) || (dropDown.value === objectValue)) {
+						console.log('nothing to see here');
+						return;
+					};
+
+					var initialSelection;
+					if (this.multi) {
+						initialSelection = [];
+						console.error('TODO: add in case of multi selection');
+						//TODO: add in case of multi selection
+					} else {
+						console.log('we\'re setting objectvalues', dropDown.value, dropDown.selectedValues, this.objectValue[this.objValProp]);
+						if (!_.isEqual(objectValue, dropDown.selectedValues)) {
+							console.log('isEqual');
+							var asd = this.objectValue[this.objValProp];
+
+							initialSelection = _.find(this.options, function(option) {
+								return option.value === asd;
+							});
+
+							console.log(initialSelection);
+
+							dropDown.set(
+								'value',
+								initialSelection
+							);
+							console.log('we\' set to', dropDown.value, dropDown.selectedValues);
+						}
+						
+					}
+				},
+				_objectOptionsChanged: function(objectOptions) {
+
+						console.log('in objectOptions changed', objectOptions.length);
+						if (objectOptions && 
+								objectOptions instanceof Array &&
+								objectOptions.length > 0) {
+
+							var dropDown = this.$$('#multiSelection');
+							var myOptions = [];
+							objectOptions.forEach(function(objOption) {
+								myOptions.push({
+									value: objOption[this.objValProp],
+									label: objOption[this.objLabelProp]
+								});
+							}.bind(this));
+
+							this.set('options', myOptions);
+							
+						} else {
+							console.error('no objectOptions -> TODO: if ojectValues is defined... add those objects as options');
+						}
+				}
+
+			});
+		})();
+	</script>
+          
