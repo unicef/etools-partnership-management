@@ -11,8 +11,13 @@
     interventionStatuses: [],
     sectors: [],
     unicefUsersData: [],
-    offices: []
-  }
+    locations: [],
+    offices: [],
+    partners: [],
+    agreementsDropdownData: [],
+    partnersDropdownData: [],
+    agreementsList: []
+  };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
     if (!state) {
@@ -48,6 +53,10 @@
         // console.log('set sectors data...', action.sectors);
         return Object.assign({}, state, { sectors: action.sectors });
 
+      case 'SET_LOCATIONS':
+        // console.log('set locations data...', action.locations);
+        return Object.assign({}, state, {locations: action.locations});
+
       case 'SET_UNICEF_USERS_DATA':
         // console.log('set unicefUsersData data...', action.unicefUsersData);
         return Object.assign({}, state, { unicefUsersData: action.unicefUsersData });
@@ -55,6 +64,19 @@
       case 'SET_OFFICES':
         // console.log('set offices data...', action.offices);
         return Object.assign({}, state, { offices: action.offices });
+
+      case 'SET_PARTNERS':     
+        //console.log('set partners data...', action.partners); 
+        return Object.assign({}, state, {partners: action.partnersData});
+      case 'SET_AGREEMENTS':     
+        //console.log('set partners data...', action.partners); 
+        return Object.assign({}, state, {agreementsList: action.agreementsList});
+      case 'SET_PARTNERS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
+        return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
+      case 'SET_AGREEMENTS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
+        return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
     }
   });
 
