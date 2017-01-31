@@ -378,7 +378,7 @@
             // prepare selected partner staff members data
             this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
               return {
-                value: staffMember.id,
+                value: parseInt(staffMember.id),
                 label: staffMember.first_name + ' ' + staffMember.last_name
               };
             }));
