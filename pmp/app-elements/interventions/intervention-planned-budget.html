@@ -53,25 +53,30 @@
       }
       #totals-content-wrapper .darkbg {
         padding: 15px;
+        @apply(--layout-horizontal);
+      }
+      #totals-content-wrapper .darkbg:first-child {
+        margin-bottom: 15px;
       }
 
       #totals-content-wrapper {
         margin-left: auto;
         padding-left: 25px;
+        @apply(--layout-vertical);
       }
 
-      #total-unicef-label {
+      .total-unicef-label {
         @apply(--layout-end-justified);
       }
-      #total-unicef-label span {
+      .total-unicef-label span {
         display: flex;
         align-self: center;
       }
 
-      #total-unicef {
+      .total-unicef {
         @apply(--layout-vertical);
       }
-      #total-unicef span {
+      .total-unicef span {
         display: inline-block;
         width: 100%;
         background-color: #F7EE76; /* TODO: replace with app-theme var */
@@ -114,10 +119,9 @@
                     <etools-searchable-multiselection-menu id$="year_[[index]]"
                        label="Year"
                        placeholder="&#8212;"
-                       value="[[_getSelectedYear(item.year)]]"
+                       value="[[_getSelectedYear(item.year, years.length)]]"
                        options="[[years]]"
-                       on-value-change="_yearChanged"
-                       data-path="locations">
+                       on-value-change="_yearChanged">
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
@@ -148,7 +152,7 @@
                   <div class="col col-4">
                     <paper-input label="UNICEF Total (Local)"
                       class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.partner_contribution_local, item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
+                      value$="[[_getPlannedBudgetTotal(item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
                       placeholder="&#8212;"
                       readonly>
                     </paper-input>
@@ -189,7 +193,7 @@
                   <div class="col col-4">
                     <paper-input label="UNICEF Total (USD)"
                       class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.partner_contribution, item.unicef_cash, item.in_kind_amount, localCurrency)]]"
+                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, localCurrency)]]"
                       placeholder="&#8212;"
                       readonly>
                     </paper-input>
@@ -204,14 +208,26 @@
       </template>
       <div id="totals" class="row-h">
         <div id="totals-content-wrapper" class="col col-8">
-          <div class="row-h flex-c darkbg">
-            <div id="total-unicef-label" class="col flex-c">
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
               <span>Total UNICEF Budget</span>
             </div>
             <div class="col col-4">
-              <div id="total-unicef" class="flex-c">
-                <span>[[_localTotal]] [[localCurrency]]</span>
-                <span>[[_usdTotal]] USD</span>
+              <div class="flex-c total-unicef">
+                <span>[[_localUnicefTotal]] [[localCurrency]]</span>
+                <span>[[_usdUnicefTotal]] USD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
+              <span>Total CSO Budget</span>
+            </div>
+            <div class="col col-4">
+              <div class="flex-c total-unicef">
+                <span>[[_localCsoTotal]] [[localCurrency]]</span>
+                <span>[[_usdCsoTotal]] USD</span>
               </div>
             </div>
           </div>
@@ -247,19 +263,19 @@
             type: Array,
             value: []
           },
-          interventionStart: {
-            type: String,
-            value: '2016-12-25'
-          },
-          interventionEnd: {
-            type: String,
-            value: '2016-12-25'
-          },
-          _localTotal: {
+          _localUnicefTotal: {
             type: Number,
             value: 0
           },
-          _usdTotal: {
+          _usdUnicefTotal: {
+            type: Number,
+            value: 0
+          },
+          _localCsoTotal: {
+            type: Number,
+            value: 0
+          },
+          _usdCsoTotal: {
             type: Number,
             value: 0
           },
@@ -268,11 +284,11 @@
             value: []
           },
           localCurrency: {
-            type: String
+            type: String,
+            value: ''
           }
         },
         observers: [
-            '_setYears(interventionStart, interventionEnd)',
             '_dataItemsChanged(dataItems)',
             '_dataItemChange(dataItems.*)'
         ],
@@ -316,36 +332,29 @@
         },
 
         _computeTotals: function(data) {
-          var localTotal = 0;
-          var usdTotal = 0;
+          var localUnicefTotal = 0;
+          var usdUnicefTotal = 0;
+          var localCsoTotal = 0;
+          var usdCsoTotal = 0;
           data.forEach(function(plannedBudget) {
-            usdTotal += this._getPlannedBudgetTotal(plannedBudget.partner_contribution,
-                plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
-            localTotal += this._getPlannedBudgetTotal(plannedBudget.partner_contribution_local,
-                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local);
+            usdUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
+            localUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash_local,
+                plannedBudget.in_kind_amount_local);
+
+            var contLocal = parseFloat(plannedBudget.partner_contribution_local);
+            if (!isNaN(contLocal)) {
+              localCsoTotal += contLocal;
+            }
+
+            var contUsd = parseFloat(plannedBudget.partner_contribution);
+            if (!isNaN(contUsd)) {
+              usdCsoTotal += contUsd;
+            }
           }.bind(this));
-          this.set('_localTotal', localTotal);
-          this.set('_usdTotal', usdTotal);
-        },
-
-        _setYears: function(interventionStart, interventionEnd) {
-          if (typeof interventionStart === 'string' && interventionStart !== ''
-              && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            this.debounce('setInterventionsPlannedBudgetYears', function() {
-              var start = parseInt(interventionStart.substr(0, 4), 10);
-              var end = parseInt(interventionEnd.substr(0, 4), 10);
-              var years = [];
-              while (start <= end) {
-                years.push({
-                  value: start,
-                  label: start
-                });
-                start++;
-              }
-              this.set('years', years);
-
-            }.bind(this), 50)
-          }
+          this.set('_localUnicefTotal', localUnicefTotal);
+          this.set('_usdUnicefTotal', usdUnicefTotal);
+          this.set('_localCsoTotal', localCsoTotal);
+          this.set('_usdCsoTotal', usdCsoTotal);
         },
 
         /**
@@ -362,9 +371,9 @@
         },
 
         _getSelectedYear: function(year) {
-          if (year) {
+          if (year && this.years.length) {
             return this.years.filter(function(y) {
-              return y === parseInt(year, 10);
+              return y.value === parseInt(year, 10);
             });
           }
           return [];
@@ -382,21 +391,17 @@
           this.set('localCurrency', currencySelected);
         },
 
-        _getPlannedBudgetTotal: function(partnerContribution, unicefCash, inKindAmount, currency) {
+        _getPlannedBudgetTotal: function(val1, val2, currency) {
           var t = 0;
-          partnerContribution = parseFloat(partnerContribution);
-          if (!isNaN(partnerContribution)) {
-            t += partnerContribution;
+          val1 = parseFloat(val1);
+          if (!isNaN(val1)) {
+            t += val1;
           }
-          unicefCash = parseFloat(unicefCash);
-          if (!isNaN(unicefCash)) {
-            t += unicefCash;
+          val2 = parseFloat(val2);
+          if (!isNaN(val2)) {
+            t += val2;
           }
-          inKindAmount = parseFloat(inKindAmount);
-          if (!isNaN(inKindAmount)) {
-            t += inKindAmount;
-          }
-          if (currency) {
+          if (typeof currency === 'string' && currency !== '') {
             return t + ' ' + currency;
           }
           return t;
