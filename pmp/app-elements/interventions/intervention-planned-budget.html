@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -32,6 +33,12 @@
         width: 100%;
       }
 
+      paper-input.total-input {
+        --paper-input-container-input: {
+          font-weight: bold;
+        };
+      }
+
       .darkbg {
         padding: 0 15px;
         background-color: #EDEDED; /* TODO: replace with app-theme var */
@@ -40,12 +47,57 @@
         border-radius: 10px;
       }
 
+      #totals {
+        padding: 15px 15px 15px 86px;
+        font-weight: bold;
+      }
+      #totals-content-wrapper .darkbg {
+        padding: 15px;
+      }
+
+      #totals-content-wrapper {
+        margin-left: auto;
+        padding-left: 25px;
+      }
+
+      #total-unicef-label {
+        @apply(--layout-end-justified);
+      }
+      #total-unicef-label span {
+        display: flex;
+        align-self: center;
+      }
+
+      #total-unicef {
+        @apply(--layout-vertical);
+      }
+      #total-unicef span {
+        display: inline-block;
+        width: 100%;
+        background-color: #F7EE76; /* TODO: replace with app-theme var */
+        padding: 15px;
+        box-sizing: border-box;
+        border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+        text-align: center;
+      }
+
+      #currency {
+        width: auto;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
+      <div class="row-h flex-c">
+        <etools-searchable-multiselection-menu id="currency"
+                                               label="Local Currency"
+                                               placeholder="&#8212;"
+                                               options="[[currencies]]"
+                                               on-value-change="_currencyChanged">
+        </etools-searchable-multiselection-menu>
+      </div>
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class="row-h item-actions-container" data-item-nr$="[[_getItemNr(index)]]">
+          <div class="row-h item-actions-container">
             <div class="row-v actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
@@ -66,6 +118,7 @@
                        options="[[years]]"
                        on-value-change="_yearChanged"
                        data-path="locations">
+                    </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
                     <paper-input label="CSO Cont. (Local)"
@@ -94,8 +147,8 @@
                   </div>
                   <div class="col col-4">
                     <paper-input label="UNICEF Total (Local)"
-                      value$="[[_getTotal(item.partner_contribution_local, item.unicef_cash_local, item.in_kind_amount_local)]]"
-                      type="number"
+                      class="total-input"
+                      value$="[[_getPlannedBudgetTotal(item.partner_contribution_local, item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
                       placeholder="&#8212;"
                       readonly>
                     </paper-input>
@@ -135,8 +188,8 @@
                   </div>
                   <div class="col col-4">
                     <paper-input label="UNICEF Total (USD)"
-                      value$="[[_getTotal(item.partner_contribution, item.unicef_cash, item.in_kind_amount)]]"
-                      type="number"
+                      class="total-input"
+                      value$="[[_getPlannedBudgetTotal(item.partner_contribution, item.unicef_cash, item.in_kind_amount, localCurrency)]]"
                       placeholder="&#8212;"
                       readonly>
                     </paper-input>
@@ -149,10 +202,18 @@
 
         </div>
       </template>
-      <div class="row-h">
-        <div class="col col-8" style="margin-left: auto;">
+      <div id="totals" class="row-h">
+        <div id="totals-content-wrapper" class="col col-8">
           <div class="row-h flex-c darkbg">
-            <p>Total UNICEF Budget...</p>
+            <div id="total-unicef-label" class="col flex-c">
+              <span>Total UNICEF Budget</span>
+            </div>
+            <div class="col col-4">
+              <div id="total-unicef" class="flex-c">
+                <span>[[_localTotal]] [[localCurrency]]</span>
+                <span>[[_usdTotal]] USD</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -193,11 +254,27 @@
           interventionEnd: {
             type: String,
             value: '2016-12-25'
+          },
+          _localTotal: {
+            type: Number,
+            value: 0
+          },
+          _usdTotal: {
+            type: Number,
+            value: 0
+          },
+          currencies: {
+            type: Array,
+            value: []
+          },
+          localCurrency: {
+            type: String
           }
         },
         observers: [
             '_setYears(interventionStart, interventionEnd)',
-            '_dataItemsChanged(dataItems)'
+            '_dataItemsChanged(dataItems)',
+            '_dataItemChange(dataItems.*)'
         ],
 
         ready: function() {
@@ -213,13 +290,42 @@
             total: 0
           };
 
+          // TODO: setup curencies, fake data for now
+          this.set('currencies', [
+            {
+              value: 1,
+              label: 'LBP'
+            },
+            {
+              value: 2,
+              label: 'USD'
+            }
+          ]);
         },
 
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
+        },
 
+        _dataItemChange: function(dataItem) {
+          if (dataItem.path !== 'dataItems.splices' && dataItem.path !== 'dataItems.length') {
+            this._computeTotals(this.dataItems);
+          }
+        },
+
+        _computeTotals: function(data) {
+          var localTotal = 0;
+          var usdTotal = 0;
+          data.forEach(function(plannedBudget) {
+            usdTotal += this._getPlannedBudgetTotal(plannedBudget.partner_contribution,
+                plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
+            localTotal += this._getPlannedBudgetTotal(plannedBudget.partner_contribution_local,
+                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local);
+          }.bind(this));
+          this.set('_localTotal', localTotal);
+          this.set('_usdTotal', usdTotal);
         },
 
         _setYears: function(interventionStart, interventionEnd) {
@@ -255,10 +361,6 @@
           return true;
         },
 
-        _getItemNr: function(index) {
-          return parseInt(index, 10) + 1;
-        },
-
         _getSelectedYear: function(year) {
           if (year) {
             return this.years.filter(function(y) {
@@ -269,11 +371,35 @@
         },
 
         _yearChanged: function(event) {
-          console.log(event.model.index);
+          var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
+              ? event.detail.selectedValues.value : null;
+          this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
 
-        _getTotal: function(val1, val2, val3) {
-          return parseFloat(val1) + parseFloat(val2) + parseFloat(val3);
+        _currencyChanged: function(event) {
+          var currencySelected = (event.detail.selectedValues && event.detail.selectedValues.label)
+              ? event.detail.selectedValues.label : null;
+          this.set('localCurrency', currencySelected);
+        },
+
+        _getPlannedBudgetTotal: function(partnerContribution, unicefCash, inKindAmount, currency) {
+          var t = 0;
+          partnerContribution = parseFloat(partnerContribution);
+          if (!isNaN(partnerContribution)) {
+            t += partnerContribution;
+          }
+          unicefCash = parseFloat(unicefCash);
+          if (!isNaN(unicefCash)) {
+            t += unicefCash;
+          }
+          inKindAmount = parseFloat(inKindAmount);
+          if (!isNaN(inKindAmount)) {
+            t += inKindAmount;
+          }
+          if (currency) {
+            return t + ' ' + currency;
+          }
+          return t;
         },
 
         /**
