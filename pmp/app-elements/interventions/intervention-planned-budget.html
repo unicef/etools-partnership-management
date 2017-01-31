@@ -28,6 +28,9 @@
           @apply(--paper-fab-btn-green);
         };
       }
+      paper-input {
+        width: 100%;
+      }
 
       .darkbg {
         padding: 0 15px;
@@ -55,31 +58,104 @@
             <div class="row-h">
               <div class="col col-4">
                 <div class="row-h flex-c">
-                  <div class="col">
+                  <div class="col col-4">
                     <etools-searchable-multiselection-menu id$="year_[[index]]"
-                                                           label="Locations"
-                                                           placeholder="&#8212;"
-                                                           value="[[_getEsmmValue('locations', intervention.locations)]]"
-                                                           options="[[locations]]"
-                                                           on-value-change="_esmmValueChanged"
-                                                           data-path="locations"
-                                                           multi>
+                       label="Year"
+                       placeholder="&#8212;"
+                       value="[[_getSelectedYear(item.year)]]"
+                       options="[[years]]"
+                       on-value-change="_yearChanged"
+                       data-path="locations">
                   </div>
-                  <div class="col col-2">
-                    CSO CONT
+                  <div class="col col-8">
+                    <paper-input label="CSO Cont. (Local)"
+                      value="{{item.partner_contribution_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
-                  the rest
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Cash (Local)"
+                      value="{{item.unicef_cash_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Supply (Local)"
+                      value="{{item.in_kind_amount_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Total (Local)"
+                      value$="[[_getTotal(item.partner_contribution_local, item.unicef_cash_local, item.in_kind_amount_local)]]"
+                      type="number"
+                      placeholder="&#8212;"
+                      readonly>
+                    </paper-input>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div class="row-h">
+              <div class="col col-4">
+                <div class="row-h flex-c">
+                  <div class="col col-4"></div>
+                  <div class="col col-8">
+                    <paper-input label="CSO Cont. (USD)"
+                      value="{{item.partner_contribution}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                </div>
+              </div>
+              <div class="col col-8">
+                <div class="row-h flex-c darkbg">
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Cash (USD)"
+                      value="{{item.unicef_cash}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Supply (USD)"
+                      value="{{item.in_kind_amount}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Total (USD)"
+                      value$="[[_getTotal(item.partner_contribution, item.unicef_cash, item.in_kind_amount)]]"
+                      type="number"
+                      placeholder="&#8212;"
+                      readonly>
+                    </paper-input>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </template>
+      <div class="row-h">
+        <div class="col col-8" style="margin-left: auto;">
+          <div class="row-h flex-c darkbg">
+            <p>Total UNICEF Budget...</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
@@ -111,14 +187,17 @@
             value: []
           },
           interventionStart: {
-            type: String
+            type: String,
+            value: '2016-12-25'
           },
           interventionEnd: {
-            type: String
+            type: String,
+            value: '2016-12-25'
           }
         },
         observers: [
-            '_setYears(interventionStart, interventionEnd)'
+            '_setYears(interventionStart, interventionEnd)',
+            '_dataItemsChanged(dataItems)'
         ],
 
         ready: function() {
@@ -133,6 +212,14 @@
             year: null,
             total: 0
           };
+
+        },
+
+        _dataItemsChanged: function(dataItems) {
+          if (!Array.isArray(dataItems)) {
+            this.set('dataItems', []);
+          }
+
         },
 
         _setYears: function(interventionStart, interventionEnd) {
@@ -141,7 +228,16 @@
             this.debounce('setInterventionsPlannedBudgetYears', function() {
               var start = parseInt(interventionStart.substr(0, 4), 10);
               var end = parseInt(interventionEnd.substr(0, 4), 10);
-              console.log(start, end);
+              var years = [];
+              while (start <= end) {
+                years.push({
+                  value: start,
+                  label: start
+                });
+                start++;
+              }
+              this.set('years', years);
+
             }.bind(this), 50)
           }
         },
@@ -161,6 +257,23 @@
 
         _getItemNr: function(index) {
           return parseInt(index, 10) + 1;
+        },
+
+        _getSelectedYear: function(year) {
+          if (year) {
+            return this.years.filter(function(y) {
+              return y === parseInt(year, 10);
+            });
+          }
+          return [];
+        },
+
+        _yearChanged: function(event) {
+          console.log(event.model.index);
+        },
+
+        _getTotal: function(val1, val2, val3) {
+          return parseFloat(val1) + parseFloat(val2) + parseFloat(val3);
         },
 
         /**
