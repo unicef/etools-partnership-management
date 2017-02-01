@@ -125,10 +125,13 @@
           <intervention-supplies></intervention-supplies>
         </div>
         <div class="page" name="review-and-sign">
-          <intervention-review-and-sign></intervention-review-and-sign>
+          <intervention-review-and-sign intervention="[[intervention]]"
+                                        on-save-intervention="_saveIntervention"
+                                        edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
         </div>
         <div class="page" name="attachments">
-          <intervention-attachments></intervention-attachments>
+          <intervention-attachments on-save-intervention="_saveIntervention"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-attachments>
         </div>
       </iron-pages>
 

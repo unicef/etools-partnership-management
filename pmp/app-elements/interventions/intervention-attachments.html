@@ -1,14 +1,43 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+
+<link rel="import" href="intervention-status.html">
 
 <dom-module id="intervention-attachments">
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="page-layout-styles grid-layout-styles shared-styles file-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+      }
+    </style>
 
-    intervention attachments page content goes here...
+    <!-- main page content start -->
+    <div id="pageContent">
+      <etools-content-panel class="content-section" title="Attachments">
+        <div class="row-h flex-c">
+          <etools-file id="attachments" files="{{attachments}}" multiple></etools-file>
+        </div>
+      </etools-content-panel>
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      <intervention-status status="[[intervention.status]]"
+                           on-save-intervention="_validateAndSaveAttachements"
+                           show-save-btn$="[[editMode]]"></intervention-status>
+    </div>
+    <!-- sidebar content end -->
 
   </template>
 
@@ -18,6 +47,27 @@
 
       Polymer({
         is: 'intervention-attachments',
+        properties: {
+          intervention: {
+            type: Object,
+          },
+          attachments: {
+            type: Array,
+            value: []
+          }
+        },
+
+        _validateAndSaveAttachements: function(event) {
+          event.stopImmediatePropagation();
+          if (!this.editMode) {
+            return;
+          }
+
+          // TODO: implement intervention attachments save
+          this.fire('toast', {text: 'Save attachements feature not implemented!', showCloseBtn: true});
+
+          // this.fire('save-intervention', interventionAttachmntsData);
+        }
       });
 
     })();
