@@ -3,16 +3,27 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="intervention-form/agreement-selector.html">
+
+<link rel="import" href="../partners/partners-data/partner-item-data.html">
+<link rel="import" href="intervention-planned-budget.html">
+<link rel="import" href="intervention-planned-visits.html">
+<link rel="import" href="intervention-sector-locations.html">
+<link rel="import" href="intervention-status.html">
 
 <dom-module id="intervention-details">
 
@@ -24,33 +35,48 @@
         width: 100%;
       }
       paper-input,
-      paper-textarea {
+      paper-textarea,
+      agreement-selector,
+      paper-material {
         width: 100%;
       }
+
+      paper-material {
+        padding: 0;
+      }
+      paper-material paper-toolbar {
+        --paper-toolbar-height: 40px;
+        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar: {
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+        };
+        --paper-toolbar-title: {
+          @apply(--nested-content-panel-title);
+          margin-left: 0;
+        };
+      }
     </style>
+
+    <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
 
     <div id="pageContent">
       <etools-content-panel class="content-section" title="Partnership Information">
         <div class="row-h flex-c">
-          <div class="col col-3">
-            <etools-searchable-multiselection-menu id="partner"
-                                                   label="Partner"
-                                                   placeholder="&#8212;"
-                                                   options="[[partnersDropdownData]]">
-            </etools-searchable-multiselection-menu>
-          </div>
-          <div class="col col-3">
-            <etools-searchable-multiselection-menu id="agreement"
-                                                   label="Agreement"
-                                                   placeholder="&#8212;"
-                                                   options="[[agreementsDropdownData]]">
-            </etools-searchable-multiselection-menu>
+          <div class="col col-6">
+            <agreement-selector agreement-id="{{intervention.agreement}}" partner-id="{{selectedPartnerId}}"></agreement-selector>
           </div>
           <div class="col col-3">
             <etools-searchable-multiselection-menu id="documentType"
                                                    label="Document Type"
                                                    placeholder="&#8212;"
-                                                   options="[[_prepareDropdownDocTypes(documentTypes)]]">
+                                                   value="[[_getEsmmValue('document_type', intervention.document_type)]]"
+                                                   options="[[_prepareDropdownDocTypes(documentTypes)]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="document_type"
+                                                   data-to-use="label"
+                                                   hide-search>
             </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
@@ -65,30 +91,44 @@
           <!-- Title -->
           <paper-input label="Title"
                        value="{{intervention.title}}"
-                       placeholder="&#8212;"></paper-input>
+                       placeholder="&#8212;"
+                       char-counter
+                       maxlength="256"></paper-input>
         </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-searchable-multiselection-menu id="unicefOffices"
                                                    label="UNICEF Office(s)"
                                                    placeholder="&#8212;"
-                                                   options="[[offices]]">
+                                                   value="[[_getEsmmValue('offices', intervention.offices)]]"
+                                                   options="[[offices]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="offices"
+                                                   multi>
             </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-6">
             <etools-searchable-multiselection-menu id="unicefFocalPts"
                                                    label="UNICEF Focal Points(s)"
                                                    placeholder="&#8212;"
-                                                   options="[[unicefUsersData]]">
+                                                   value="[[_getEsmmValue('unicef_focal_points', intervention.unicef_focal_points)]]"
+                                                   options="[[unicefUsersData]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="unicef_focal_points"
+                                                   multi>
             </etools-searchable-multiselection-menu>
           </div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-searchable-multiselection-menu id="partnerFocalPts"
-                                                   label="Partner Focal Points(s)"
-                                                   placeholder="&#8212;"
-                                                   options="[[partnerStaffMembersDropdownData]]">
+               label="Partner Focal Points(s)"
+               placeholder="&#8212;"
+               value="[[_getEsmmValue('partner_focal_points', intervention.partner_focal_points, partnerStaffMembersDropdownData.length)]]"
+               options="[[partnerStaffMembersDropdownData]]"
+               on-value-change="_esmmValueChanged"
+               data-path="partner_focal_points"
+               multi>
             </etools-searchable-multiselection-menu>
           </div>
         </div>
@@ -100,68 +140,87 @@
             <etools-searchable-multiselection-menu id="hrps"
                                                    label="In response to an HRP, Select"
                                                    placeholder="&#8212;"
-                                                   options="[[hrps]]">
+                                                   value="[[_getEsmmValue('hrp', intervention.hrp)]]"
+                                                   options="[[hrps]]"
+                                                   on-value-change="_esmmValueChanged"
+                                                   data-path="hrp">
             </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
             <!-- Start date -->
-            <paper-input label="Start Date"
+            <paper-input id="intStart"
+                         label="Start date"
                          value="[[prettyDate(intervention.start)]]"
-                         placeholder="&#8212;"
-                         disabled>
-              <div prefix>
-                <iron-icon icon="date-range"></iron-icon>
-              </div>
+                         on-down="openDatePicker"
+                         data-selector="intStartDate"
+                         placeholder="&#8212;">
+              <etools-datepicker-button prefix
+                                        id="intStartDate"
+                                        date="[[prepareDate(intervention.start)]]"
+                                        format="YYYY-MM-DD"
+                                        pretty-date="{{intervention.start}}"
+                                        no-init show-clear-btn></etools-datepicker-button>
             </paper-input>
           </div>
           <div class="col col-3">
-            <!-- Start date -->
-            <paper-input label="End Date"
+            <!-- End date -->
+            <paper-input id="intEnd"
+                         label="End date"
                          value="[[prettyDate(intervention.end)]]"
-                         placeholder="&#8212;"
-                         disabled>
-              <div prefix>
-                <iron-icon icon="date-range"></iron-icon>
-              </div>
+                         on-down="openDatePicker"
+                         data-selector="intEndDate"
+                         placeholder="&#8212;">
+              <etools-datepicker-button prefix
+                                        id="intEndDate"
+                                        date="[[prepareDate(intervention.end)]]"
+                                        format="YYYY-MM-DD"
+                                        pretty-date="{{intervention.end}}"
+                                        no-init show-clear-btn></etools-datepicker-button>
             </paper-input>
           </div>
         </div>
         <div class="row-h flex-c">
           <!-- Population Focus -->
           <paper-textarea label="Population Focus"
-                       value="{{intervention.population_focus}}"
-                       placeholder="&#8212;"></paper-textarea>
+                          value="{{intervention.population_focus}}"
+                          placeholder="&#8212;"
+                          char-counter
+                          maxlength="256"></paper-textarea>
         </div>
         <div class="row-h flex-c">
-          <etools-searchable-multiselection-menu id="sectors"
-                                                 label="Sectors"
-                                                 placeholder="&#8212;"
-                                                 options="[[sectors]]">
-          </etools-searchable-multiselection-menu>
+          <paper-material elevation="0">
+            <paper-toolbar>
+              <div class="title">Sector Locations</div>
+            </paper-toolbar>
+            <intervention-sector-locations data-items="{{intervention.sector_locations}}"
+                                           edit-mode$="[[editMode]]"></intervention-sector-locations>
+
+          </paper-material>
         </div>
         <div class="row-h flex-c">
-          <!-- TODO: do we need locations here? -->
-          <etools-searchable-multiselection-menu id="locations"
-                                                 label="Locations"
-                                                 placeholder="&#8212;"
-                                                 options="[[locations]]">
-          </etools-searchable-multiselection-menu>
+
         </div>
       </etools-content-panel>
       <!--<etools-content-panel class="content-section" title="Expected results">-->
 
       <!--</etools-content-panel>-->
       <etools-content-panel class="content-section" title="Planned Budget">
-
+        <intervention-planned-budget data-items="{{intervention.planned_budget}}"
+                                     edit-mode$="[[editMode]]"
+                                     years="[[years]]"></intervention-planned-budget>
       </etools-content-panel>
       <etools-content-panel class="content-section" title="Planned Visits">
-
+        <intervention-planned-visits data-items="{{intervention.planned_visits}}"
+                                     edit-mode$="[[editMode]]"
+                                     years="[[years]]"></intervention-planned-visits>
       </etools-content-panel>
     </div> <!-- main page content end -->
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <intervention-status status="[[intervention.status]]"></intervention-status>
+      <intervention-status status="[[intervention.status]]"
+                           on-save-intervention="_validateAndTriggerInterventionSave"
+                           show-save-btn$="[[editMode]]"></intervention-status>
     </div>
     <!-- sidebar content end -->
 
@@ -185,18 +244,18 @@
             type: Object,
             observer: '_interventionChanged'
           },
-          partnersDropdownData: {
-            type: Array,
-            value: []
+          selectedPartnerId: {
+            type: Number
+          },
+          partner: {
+            type: Object,
+            observer: '_partnerSelected'
           },
           partnerStaffMembersDropdownData: {
             type: Array,
             value: []
           },
-          agreementsDropdownData: {
-            type: Array,
-            value: []
-          },
+
           documentTypes: {
             type: Array,
             statePath: 'interventionDocTypes'
@@ -213,26 +272,191 @@
             type: Array,
             statePath: 'hrps'
           },
-          sectors: {
+          years: {
             type: Array,
-            statePath: 'sectors'
+            value: []
           }
         },
 
         _interventionChanged: function(intervention) {
-          console.log(intervention);
+          console.log('intervention', intervention);
+          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+            this._setYears(intervention.start, intervention.end);
+          }
 
+          // ensure loading msg close
           this.fire('global-loading', {active: false});
         },
 
-        _prepareDropdownDocTypes: function(types) {
+        _setYears: function(interventionStart, interventionEnd) {
+          if (typeof interventionStart === 'string' && interventionStart !== ''
+              && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            this.debounce('setInterventionYears', function() {
+              var start = parseInt(interventionStart.substr(0, 4), 10);
+              var end = parseInt(interventionEnd.substr(0, 4), 10);
+              var years = [];
+              while (start <= end) {
+                years.push({
+                  value: start,
+                  label: start
+                });
+                start++;
+              }
+              this.set('years', years);
+            }.bind(this), 50)
+          }
+        },
+
+        _prepareDropdownDocTypes: function(types, selected) {
+          if (selected) {
+            // filter selected to show selected value
+            var selectedType = types.filter(function(type, index) {
+              return type.value === selected;
+            })[0];
+            if (selectedType) {
+              return [{
+                value: (types.indexOf(selectedType) + 1),
+                label: selectedType.value
+              }];
+            } else {
+              return [];
+            }
+          }
+
           return types.map(function(type, index) {
             return {
               value: (index + 1),
               label: type.value
             }
           });
+        },
+
+        _esmmValueChanged: function(event) {
+          var esmmField = Polymer.dom(event).localTarget;
+          var dataPath = esmmField.getAttribute('data-path');
+          var dataToUse = esmmField.getAttribute('data-to-use');
+          if (esmmField.multi) {
+            // multiselection
+            var selectedValues = [];
+            var optionsSelected = event.detail.selectedValues;
+            if (Array.isArray(optionsSelected)) {
+              selectedValues = optionsSelected.map(function(option) {
+                if (dataToUse && dataToUse === 'label') {
+                  return option.label;
+                } else {
+                  return option.value;
+                }
+              });
+            }
+            this.set('intervention.' + dataPath, selectedValues);
+          } else {
+            // single selection
+            var optionSelected = event.detail.selectedValues;
+            var selectedOpt = null;
+            if (optionSelected.value) {
+              if (dataToUse && dataToUse === 'label') {
+                selectedOpt = optionSelected.label;
+              } else {
+                selectedOpt = optionSelected.value;
+              }
+            }
+            this.set('intervention.' + dataPath, selectedOpt);
+          }
+        },
+
+        _getEsmmValue: function(dataPath, selectedValues, other) {
+          switch (dataPath) {
+            case 'document_type':
+              if (typeof selectedValues === 'string' && selectedValues !== '') {
+                return  this._prepareDropdownDocTypes(this.documentTypes, selectedValues);
+              }
+              break;
+            case 'offices':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.offices.filter(function(office) {
+                  return selectedValues.indexOf(office.value) > -1;
+                });
+              }
+              break;
+            case 'unicef_focal_points':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
+                return this.unicefUsersData.filter(function(user) {
+                  return selectedValues.indexOf(user.value) > -1;
+                });
+              }
+              break;
+            case 'partner_focal_points':
+              if (Array.isArray(selectedValues) && selectedValues.length > 0 && other) {
+                var selected = this.partnerStaffMembersDropdownData.filter(function(staffMember) {
+                  return selectedValues.indexOf(staffMember.value) > -1;
+                });
+                return selected;
+              }
+              break;
+            case 'hrp':
+              var hrpId = parseInt(selectedValues, 10);
+              if (!isNaN(hrpId)) {
+                return this.hrps.filter(function(hrp) {
+                  return hrp.value === hrpId;
+                });
+              }
+              break;
+          }
+        },
+
+        _partnerSelected: function(partner) {
+          console.log('intervention partner', partner);
+          if (partner && partner.staff_members) {
+            // prepare selected partner staff members data
+            this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
+              return {
+                value: parseInt(staffMember.id),
+                label: staffMember.first_name + ' ' + staffMember.last_name
+              };
+            }));
+          }
+        },
+
+        /**
+         * Validate intervention data and trigger save
+         */
+        _validateAndTriggerInterventionSave: function(event) {
+          event.stopImmediatePropagation();
+          if (!this.editMode) {
+            return;
+          }
+          if (this._validateIntervention()) {
+            var interventionData = Object.assign({}, this.intervention);
+
+            // on save sector_locations sector prop needs to be sector ID and not the sector obj
+            interventionData.sector_locations = interventionData.sector_locations.map(function(sectorLocation) {
+              return {
+                id: sectorLocation.id,
+                sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
+                locations: this._prepareLocationsForSave(sectorLocation.locations)
+              }
+            }.bind(this));
+
+            this.fire('save-intervention', interventionData);
+          } else {
+            this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          }
+        },
+
+        _prepareLocationsForSave: function(locations) {
+          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length == 0)) {
+            return [];
+          }
+          return locations.map(function(location) {
+            return location.id;
+          });
+        },
+
+        _validateIntervention: function() {
+          // TODO: implement validations! ... for now we only rely on backend validations
+          return true;
         }
+
       });
 
     })();

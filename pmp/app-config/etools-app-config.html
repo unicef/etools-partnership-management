@@ -52,14 +52,16 @@ App global configuration
           'loggedInDefault',
           'userInfoMenu',
           'viewPartnerDetails',
-          'viewAgreementDetails'
+          'viewAgreementDetails',
+          'viewInterventionDetails'
         ],
         partnerOnlyPermissions: ['interventionsMenu'],
         partnerPermissions: ['interventionsMenu'],
         managementPermissions: [
           'statsMenu',
           'editPartnerDetails',
-          'editAgreementDetails'
+          'editAgreementDetails',
+          'editInterventionDetails'
         ],
         superPermissions: [
           'loggedInDefault',
@@ -69,7 +71,9 @@ App global configuration
           'viewPartnerDetails',
           'editPartnerDetails',
           'viewAgreementDetails',
-          'editAgreementDetails'
+          'editAgreementDetails',
+          'viewInterventionDetails',
+          'editInterventionDetails'
         ]
       }
     };
@@ -120,7 +124,6 @@ App global configuration
       },
       agreementDetails: {
         template: '/api/v2/agreements/<%=id%>/',
-        exp: 30 * 60 * 1000 // 30min
       },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
@@ -145,7 +148,6 @@ App global configuration
       },
       interventionDetails: {
         template: '/api/v2/interventions/<%=id%>/',
-        exp: 30 * 60 * 1000 // 30min
       },
       dropdownsPmp: {
         url: '/api/v2/dropdowns/pmp',
@@ -161,6 +163,11 @@ App global configuration
         url: '/api/reports/sectors',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'sectors'
+      },
+      locations: {
+        url: '/api/locations/',
+        exp: 60 * 60 * 60 * 1000, // 60h
+        cachingKey: 'locations'
       },
       offices: {
         url: '/api/offices',

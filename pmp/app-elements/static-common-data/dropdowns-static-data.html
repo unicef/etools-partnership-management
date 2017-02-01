@@ -42,6 +42,12 @@
               type: 'SET_INTERVENTION_STATUSES',
               statuses: statuses
             }
+          },
+          setCurrencies: function(currenciesData) {
+            return {
+              type: 'SET_CURRENCIES',
+              currencies: currenciesData
+            };
           }
         },
 
@@ -60,7 +66,10 @@
               var preparedStatuses = this._prepareDropdownStatusesData(response.detail.intervention_status);
               this.dispatch('setInterventionStatuses', preparedStatuses);
             }
-
+            // set currencies data
+            if (Array.isArray(response.detail.currencies) && response.detail.currencies.length > 0) {
+              this.dispatch('setCurrencies', response.detail.currencies);
+            }
           }
         },
 

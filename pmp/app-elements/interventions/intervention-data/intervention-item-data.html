@@ -84,6 +84,7 @@
           // after body is set the request is automatically triggered
         },
 
+        // TODO:  refactor this, add it in a behavior
         _handleErrorResponse: function(response) {
           this.fire('global-loading', {active: false});
           var errors = response.detail.request.detail.request.response;
@@ -98,8 +99,17 @@
                 });
               } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
                 for (var errField in errors) {
-                  if (typeof errField)
+                  if (typeof errors[errField] === 'string') {
                     errorMessages.push('Field ' + errField + ' - ' + errors[errField] + "\n");
+                  } else if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
+                    for (var errF in errors[errField]) {
+                      errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + "\n");
+                    }
+                  } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
+                    errors[errField].forEach(function(err) {
+                      errorMessages.push(err + "\n");
+                    });
+                  }
                 }
               }
               if (errorMessages.length > 1) {
@@ -107,6 +117,56 @@
               }
             }
             this.fire('toast', {text: errorMessage, showCloseBtn: true});
+          }
+        },
+
+        _prepareEndpoint: function(interventionId) {
+          if (interventionId > 0) {
+            // check and prepare request URL
+            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
+              this.set('endpoint', this.getEndpoint('interventionDetails', {id: interventionId}));
+            }
+          }
+        },
+
+        /**
+         * Save intervention data
+         */
+        saveIntervention: function(intervention, callback) {
+          if (typeof intervention === 'object' && Object.keys(intervention).length === 0) {
+            this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+          } else {
+            var url = null;
+            var isNew = false;
+
+            if (intervention.id) {
+              // prepare PATCH endpoint
+              this._prepareEndpoint(intervention.id);
+              url = this.endpoint.url;
+            } else {
+              // new agreement, use POST method for the same endpoint
+              var agreementsEndpoint = this.getEndpoint('interventions');
+              url = agreementsEndpoint.url;
+              isNew = true;
+            }
+            // remove id from data
+            if (intervention.id) {
+              delete intervention.id;
+            }
+            if (Object.keys(intervention).length > 0) {
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
+              this.fire('global-loading', {message: 'Saving intervention data...', active: true});
+              // fire in the hole
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url);
+            } else {
+              this.fire('toast', {
+                text: 'There is nothing to save. No change detected on this intervention.',
+                showCloseBtn: true
+              });
+            }
           }
         }
 
