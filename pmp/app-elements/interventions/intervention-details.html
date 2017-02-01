@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -23,12 +24,13 @@
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="intervention-sector-locations.html">
+<link rel="import" href="intervention-status.html">
 
 <dom-module id="intervention-details">
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles app-mixins">
+    <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -147,24 +149,34 @@
           </div>
           <div class="col col-3">
             <!-- Start date -->
-            <paper-input label="Start Date"
+            <paper-input id="intStart"
+                         label="Start date"
                          value="[[prettyDate(intervention.start)]]"
-                         placeholder="&#8212;"
-                         disabled>
-              <div prefix>
-                <iron-icon icon="date-range"></iron-icon>
-              </div>
+                         on-down="openDatePicker"
+                         data-selector="intStartDate"
+                         placeholder="&#8212;">
+              <etools-datepicker-button prefix
+                                        id="intStartDate"
+                                        date="[[prepareDate(intervention.start)]]"
+                                        format="YYYY-MM-DD"
+                                        pretty-date="{{intervention.start}}"
+                                        no-init show-clear-btn></etools-datepicker-button>
             </paper-input>
           </div>
           <div class="col col-3">
-            <!-- Start date -->
-            <paper-input label="End Date"
+            <!-- End date -->
+            <paper-input id="intEnd"
+                         label="End date"
                          value="[[prettyDate(intervention.end)]]"
-                         placeholder="&#8212;"
-                         disabled>
-              <div prefix>
-                <iron-icon icon="date-range"></iron-icon>
-              </div>
+                         on-down="openDatePicker"
+                         data-selector="intEndDate"
+                         placeholder="&#8212;">
+              <etools-datepicker-button prefix
+                                        id="intEndDate"
+                                        date="[[prepareDate(intervention.end)]]"
+                                        format="YYYY-MM-DD"
+                                        pretty-date="{{intervention.end}}"
+                                        no-init show-clear-btn></etools-datepicker-button>
             </paper-input>
           </div>
         </div>

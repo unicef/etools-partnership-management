@@ -11,6 +11,7 @@
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="intervention-planned-budget">
   <template>
@@ -255,7 +256,8 @@
         is: 'intervention-planned-budget',
 
         behaviors: [
-          pmpBehaviors.RepeatableDataSetsBehavior
+          pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
         ],
 
         properties: {
@@ -281,7 +283,14 @@
           },
           currencies: {
             type: Array,
-            value: []
+            statePath: function(state) {
+              return state.currencies.map(function(currency, index) {
+                return {
+                  value: (index + 1),
+                  label: currency.value
+                };
+              });
+            }
           },
           localCurrency: {
             type: String,
