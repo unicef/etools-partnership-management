@@ -125,7 +125,9 @@
               url-params="[[interventionsQueryParams]]"></interventions-list>
         </div>
         <div class="page" name="details">
-          <intervention-details intervention="[[intervention]]"></intervention-details>
+          <intervention-details intervention="[[intervention]]"
+                                on-save-intervention="_saveIntervention"
+                                edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
         </div>
         <div class="page" name="supplies">
           <intervention-supplies></intervention-supplies>
@@ -200,7 +202,17 @@
         return '';
       },
 
+      _saveIntervention: function(event) {
+        event.stopImmediatePropagation();
+        this.$.interventionData.saveIntervention(event.detail);
+      },
 
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
+      }
 
     });
 

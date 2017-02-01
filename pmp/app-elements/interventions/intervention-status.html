@@ -203,43 +203,43 @@
       <template is="dom-if" if="[[showSaveBtn]]">
         <div class="buttons-section vertical">
 
-          <paper-button class="primary-btn success-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="draft"
-                        hidden$="[[!_statusIs(status, 'cancelled')]]">
-            Change to draft
-          </paper-button>
+          <!--<paper-button class="primary-btn success-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="draft"-->
+                        <!--hidden$="[[!_statusIs(status, 'cancelled')]]">-->
+            <!--Change to draft-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn danger-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="cancelled"
-                        hidden$="[[_hideCancelBtn(status)]]">
-            Cancel
-          </paper-button>
+          <!--<paper-button class="primary-btn danger-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="cancelled"-->
+                        <!--hidden$="[[_hideCancelBtn(status)]]">-->
+            <!--Cancel-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn success-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="active"
-                        hidden$="[[_hideActivateBtn(status)]]">
-            Activate
-          </paper-button>
+          <!--<paper-button class="primary-btn success-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="active"-->
+                        <!--hidden$="[[_hideActivateBtn(status)]]">-->
+            <!--Activate-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn warning-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="suspended"
-                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-            Suspend
-          </paper-button>
+          <!--<paper-button class="primary-btn warning-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="suspended"-->
+                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
+            <!--Suspend-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn danger-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="terminated"
-                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-            Terminate
-          </paper-button>
+          <!--<paper-button class="primary-btn danger-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="terminated"-->
+                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
+            <!--Terminate-->
+          <!--</paper-button>-->
 
           <paper-button class="primary-btn w100"
-                        on-tap="_triggerAgreementSave">
+                        on-tap="_triggerInterventionSave">
             Save
           </paper-button>
         </div>
@@ -410,10 +410,10 @@
         },
 
         /**
-         * Fire custom event to notify parent element to execute agreement save
+         * Fire custom event to notify parent element to execute intervention save
          */
-        _triggerAgreementSave: function() {
-          //this.fire('save-agreement', {});
+        _triggerInterventionSave: function() {
+          this.fire('save-intervention', {});
         }
 
       });

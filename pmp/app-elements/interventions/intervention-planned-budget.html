@@ -118,6 +118,7 @@
                 <div class="row-h flex-c">
                   <div class="col col-4">
                     <etools-searchable-multiselection-menu id$="year_[[index]]"
+                       class="year"
                        label="Year"
                        placeholder="&#8212;"
                        value="[[_getSelectedYear(item.year, years.length)]]"
@@ -335,7 +336,7 @@
         },
 
         _dataItemChange: function(dataItem) {
-          if (dataItem.path !== 'dataItems.splices' && dataItem.path !== 'dataItems.length') {
+          if (dataItem.path !== 'dataItems.splices') {
             this._computeTotals(this.dataItems);
           }
         },
@@ -391,6 +392,17 @@
         _yearChanged: function(event) {
           var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
               ? event.detail.selectedValues.value : null;
+
+          if (this._yearAlreadySelected(yearSelected, event.model.index)) {
+            this.fire('toast', {text: 'Year already selected on other planned budget item.', showCloseBtn: true});
+            var yearDropdown = this.$$('#year_' + event.model.index);
+            if (yearDropdown) {
+              yearDropdown.value = [];
+              yearDropdown.selectedValues = null;
+            }
+            return;
+          }
+
           this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
 
@@ -416,34 +428,28 @@
           return t;
         },
 
-        /**
-         * Check if amendment fields are empty
-         */
-        //        _plannedBudgetFieldsAreNotEmpty: function(plannedBudgetItem) {
-        //          return parseFloat(plannedBudgetItem.partner_contribution) > 0
-        //              || parseFloat(plannedBudgetItem.unicef_cash) > 0
-        //              || parseFloat(plannedBudgetItem.in_kind_amount) > 0
-        //              || parseFloat(plannedBudgetItem.partner_contribution_local) > 0
-        //              || parseFloat(plannedBudgetItem.in_kind_amount_local) > 0
-        //              || parseInt(plannedBudgetItem.year, 10) > 0
-        //              || parseFloat(plannedBudgetItem.total) > 0
-        //        },
+        _yearAlreadySelected: function(year, dropdownIdx) {
+          var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
+          var selected = false;
+          if (dropdowns && dropdowns.length) {
+            for (var i = 0; i < dropdowns.length; i++) {
+              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
+                if (dropdowns[i].value.value === year) {
+                  // already selected sector
+                  selected = true;
+                  break;
+                }
+              }
+            }
+          }
+          return selected;
+        },
 
         /**
          * Validate last added planned budget and if is not empty add a new one
          */
         _addNewPlannedBudget: function() {
-          var lastPlannedBudgetItemIndex = this.dataItems.length - 1;
-          if (lastPlannedBudgetItemIndex >= 0 && this._canBeRemoved(lastPlannedBudgetItemIndex)) {
-            //            var lastPlannedBudgetItem = this.dataItems[lastPlannedBudgetItemIndex];
-            //            if (!this._plannedBudgetFieldsAreNotEmpty(lastPlannedBudgetItem)) {
-            //              this.fire('toast', {text: 'Last planned budget fields are empty!', showCloseBtn: true});
-            //            } else {
-            this._addElement();
-            //            }
-          } else {
-            this._addElement();
-          }
+          this._addElement();
         }
 
       });

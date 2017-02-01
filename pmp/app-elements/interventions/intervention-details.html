@@ -219,7 +219,9 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <intervention-status status="[[intervention.status]]"></intervention-status>
+      <intervention-status status="[[intervention.status]]"
+                           on-save-intervention="_validateAndTriggerInterventionSave"
+                           show-save-btn$="[[editMode]]"></intervention-status>
     </div>
     <!-- sidebar content end -->
 
@@ -278,7 +280,7 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log(intervention);
+          console.log('intervention', intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             this._setYears(intervention.start, intervention.end);
           }
@@ -404,7 +406,7 @@
         },
 
         _partnerSelected: function(partner) {
-          console.log(partner);
+          console.log('intervention partner', partner);
           if (partner && partner.staff_members) {
             // prepare selected partner staff members data
             this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
@@ -416,8 +418,45 @@
           }
         },
 
+        /**
+         * Validate intervention data and trigger save
+         */
+        _validateAndTriggerInterventionSave: function(event) {
+          event.stopImmediatePropagation();
+          if (!this.editMode) {
+            return;
+          }
+          if (this._validateIntervention()) {
+            var interventionData = Object.assign({}, this.intervention);
 
+            // on save sector_locations sector prop needs to be sector ID and not the sector obj
+            interventionData.sector_locations = interventionData.sector_locations.map(function(sectorLocation) {
+              return {
+                id: sectorLocation.id,
+                sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
+                locations: this._prepareLocationsForSave(sectorLocation.locations)
+              }
+            }.bind(this));
 
+            this.fire('save-intervention', interventionData);
+          } else {
+            this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          }
+        },
+
+        _prepareLocationsForSave: function(locations) {
+          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length == 0)) {
+            return [];
+          }
+          return locations.map(function(location) {
+            return location.id;
+          });
+        },
+
+        _validateIntervention: function() {
+          // TODO: implement validations! ... for now we only rely on backend validations
+          return true;
+        }
 
       });
 

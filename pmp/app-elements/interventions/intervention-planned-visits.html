@@ -49,6 +49,7 @@
             <div class="row-h">
               <div class="col col-2">
                 <etools-searchable-multiselection-menu id$="year_[[index]]"
+                                                       class="year"
                                                        label="Year"
                                                        placeholder="&#8212;"
                                                        value="[[_getSelectedYear(item.year, years.length)]]"
@@ -157,7 +158,35 @@
         _yearChanged: function(event) {
           var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
               ? event.detail.selectedValues.value : null;
+
+          if (this._yearAlreadySelected(yearSelected, event.model.index)) {
+            this.fire('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
+            var yearDropdown = this.$$('#year_' + event.model.index);
+            if (yearDropdown) {
+              yearDropdown.value = [];
+              yearDropdown.selectedValues = null;
+            }
+            return;
+          }
+
           this.set('dataItems.' + event.model.index + '.year', yearSelected);
+        },
+
+        _yearAlreadySelected: function(year, dropdownIdx) {
+          var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
+          var selected = false;
+          if (dropdowns && dropdowns.length) {
+            for (var i = 0; i < dropdowns.length; i++) {
+              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
+                if (dropdowns[i].value.value === year) {
+                  // already selected sector
+                  selected = true;
+                  break;
+                }
+              }
+            }
+          }
+          return selected;
         },
 
         /**

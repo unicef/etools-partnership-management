@@ -50,6 +50,7 @@
             <div class="row-h">
               <div class="col col-3">
                 <etools-searchable-multiselection-menu id$="sector_[[index]]"
+                                                       class="sector"
                                                        label="Sectors"
                                                        placeholder="&#8212;"
                                                        value="[[_setSector(item.sector, sectors.length)]]"
@@ -128,8 +129,18 @@
         _sectorSelected: function(event) {
           var sectorSelected = event.detail.selectedValues;
           if (sectorSelected && Object.keys(sectorSelected).length > 0) {
+            var sectorId = parseInt(sectorSelected.value, 10);
+            if (this._sectorAlreadySelected(sectorId, event.model.index)) {
+              this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
+              var sectorDropdown = this.$$('#sector_' + event.model.index);
+              if (sectorDropdown) {
+                sectorDropdown.value = [];
+                sectorDropdown.selectedValues = null;
+              }
+              return;
+            }
             this.set('dataItems.' + event.model.index + '.sector', {
-              id: sectorSelected.value,
+              id: sectorId,
               name: sectorSelected.label
             });
           } else {
@@ -148,8 +159,11 @@
 
         _setSectorLocations: function(locations) {
           if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
+            var selectedLocationsIds = locations.map(function(location){
+              return parseInt(location.id, 10);
+            });
             return this.locations.filter(function(l) {
-              return locations.indexOf(parseInt(l.value, 10)) > -1;
+              return selectedLocationsIds.indexOf(parseInt(l.value, 10)) > -1;
             });
           }
           return [];
@@ -159,11 +173,31 @@
           var locationsSelected = event.detail.selectedValues;
           if (Array.isArray(locationsSelected) && locationsSelected.length > 0) {
             this.set('dataItems.' + event.model.index + '.locations', locationsSelected.map(function(l) {
-              return l.value;
+              return {
+                id: parseInt(l.value, 10),
+                name: l.name
+              };
             }));
           } else {
             this.set('dataItems.' + event.model.index + '.locations', []);
           }
+        },
+
+        _sectorAlreadySelected: function(sectorId, dropdownIdx) {
+          var dropdowns = Polymer.dom(this.root).querySelectorAll('.sector');
+          var selected = false;
+          if (dropdowns && dropdowns.length) {
+            for (var i = 0; i < dropdowns.length; i++) {
+              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
+                if (dropdowns[i].value.value === sectorId) {
+                  // already selected sector
+                  selected = true;
+                  break;
+                }
+              }
+            }
+          }
+          return selected;
         },
 
         /**
