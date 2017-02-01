@@ -16,7 +16,8 @@
     partners: [],
     agreementsDropdownData: [],
     partnersDropdownData: [],
-    agreementsList: []
+    agreementsList: [],
+    currencies: []
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -77,6 +78,9 @@
       case 'SET_AGREEMENTS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
+      case 'SET_CURRENCIES':
+        // console.log('set currencies data...', action.currencies);
+        return Object.assign({}, state, {currencies: action.currencies});
     }
   });
 
