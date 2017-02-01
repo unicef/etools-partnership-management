@@ -7,7 +7,6 @@
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
-<link rel="import" href="../../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
@@ -16,27 +15,29 @@
 
 
 <dom-module id="agreement-selector">
+  <template>
+    <style include="grid-layout-styles shared-styles"></style>
+    <div class="row-h flex-c">
+      <div class="col col-6">
+        <etools-searchable-multiselection-menu id="partner"
+                                               label="Partner Organization"
+                                               placeholder="&#8212;"
+                                               on-value-change="_partnerSelected"
+                                               options="[[partnersDropdownData]]">
+        </etools-searchable-multiselection-menu>
+      </div>
 
-  	<template>
-        <div class="col col-3">
-            <etools-searchable-multiselection-menu id="partner"
-                                                   label="Partner Organization"
-                                                   placeholder="&#8212;"
-                                                   on-value-change="_partnerSelected"
-                                                   options="[[partnersDropdownData]]">
-            </etools-searchable-multiselection-menu>
-          </div>
+      <div class="col col-6">
+        <etools-searchable-multiselection-menu id="agreements"
+                                               label="Agreement"
+                                               placeholder="&#8212;"
+                                               options="[[filteredAgreements]]"
+                                               on-value-change="_agreementSelected">
+        </etools-searchable-multiselection-menu>
 
-          <div class="col col-3">
-          <etools-searchable-multiselection-menu id="agreements"
-                                                   label="Agreement"
-                                                   placeholder="&#8212;"
-                                                   options="[[filteredAgreements]]"
-                                                   on-value-change="_agreementSelected">
-          </etools-searchable-multiselection-menu>
-            
-          </div>
-	</template>
+      </div>
+    </div>
+  </template>
 
 	<script>
 		(function() {
@@ -44,13 +45,13 @@
 			Polymer({
 				is: 'agreement-selector',
 				behaviors: [
-					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-					pmpBehaviors.CommonGeneralBehavior
+					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
 				],
 				properties: {
 					agreementId: {
 						type: Number,
-						observer: '_agreementChanged'
+						observer: '_agreementChanged',
+            notify: true
 					},
 					filteredAgreements: {
 						type: Array,
@@ -67,7 +68,11 @@
 					agreementsDropdownData: {
 						type: Array,
 						statePath: 'agreementsDropdownData'
-					}
+					},
+          partnerId: {
+					  type: Number,
+            notify: true
+          }
 				},
 				_agreementSelected: function(event) {
 					if (isNaN(event.detail.selectedValues.value)) {return;}
@@ -78,20 +83,23 @@
 				},
 				_agreementChanged: function(agreementId) {
 					if (isNaN(agreementId)) { return; }
-					console.log('agreement-id changed', agreementId);
 					var partnerSelector = this.$.partner;
 
 					// this means we're setting this for the first time
-					console.log(partnerSelector.value);
 					if (!partnerSelector.value) {
 						// find the partner associated with this agreement
-						var agreement = _.find(this.agreements, function(obj) {return obj.id === agreementId;});
+						var agreement = _.find(this.agreements, function(obj) {
+						  return obj.id === agreementId;
+						});
 						
 						// find value to set on partners
-						var partnerValue = _.find(this.partnersDropdownData, function(obj) {return obj.value === agreement.partner;});
+						var partnerValue = _.find(this.partnersDropdownData, function(obj) {
+						  return obj.value === agreement.partner;
+						});
 
 						// set partner to be selected:
 						partnerSelector.set('value', partnerValue);
+            this.set('partnerId', partnerValue.value);
 						
 						this._filterAgreements(partnerValue.value);
 						var agreementOption = this._findAgreementOption(agreementId);
@@ -101,19 +109,20 @@
 				_filterAgreements: function(partnerId) {
 					this.$.agreements.set('value', null);
 					// set filtered agreements based on this
-					var agreements = _.filter(this.agreements, 
-						function(obj) {return obj.partner === partnerId;});
-					console.log(agreements);
-					this.filteredAgreements = agreements.map(function(p) {
-						return {value: p.id, label: p.agreement_number};
+					var agreements = _.filter(this.agreements, function(obj) {
+					  return obj.partner === partnerId;
 					});
+					this.set('filteredAgreements', agreements.map(function(p) {
+						return {value: p.id, label: p.agreement_number};
+					}));
 				},
 				_partnerSelected: function(event) {
 					// clear agreementSelection
 					this._filterAgreements(event.detail.selectedValues.value);
+					this.set('partnerId', event.detail.selectedValues.value);
 				}
 
 			});
 		})();
 	</script>
-          
+</dom-module>

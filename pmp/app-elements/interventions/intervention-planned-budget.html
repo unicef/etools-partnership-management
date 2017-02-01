@@ -1,0 +1,199 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+
+<dom-module id="intervention-planned-budget">
+  <template>
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        padding: 7px 0;
+
+        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab: {
+          @apply(--paper-fab-btn-green);
+        };
+      }
+
+      .darkbg {
+        padding: 0 15px;
+        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+      }
+
+    </style>
+
+    <div hidden$="[[_emptyList(dataItems.length)]]">
+      <template is="dom-repeat" items="{{dataItems}}">
+        <div class="row-h item-container">
+          <div class="row-h item-actions-container" data-item-nr$="[[_getItemNr(index)]]">
+            <div class="row-v actions">
+              <paper-icon-button class="action delete"
+                                 on-tap="_openDeleteConfirmation"
+                                 data-args$="[[index]]"
+                                 disabled="[[!_canBeRemoved(index)]]"
+                                 icon="cancel"></paper-icon-button>
+            </div>
+          </div>
+          <div class="row-v flex-c item-content">
+            <div class="row-h">
+              <div class="col col-4">
+                <div class="row-h flex-c">
+                  <div class="col">
+                    <etools-searchable-multiselection-menu id$="year_[[index]]"
+                                                           label="Locations"
+                                                           placeholder="&#8212;"
+                                                           value="[[_getEsmmValue('locations', intervention.locations)]]"
+                                                           options="[[locations]]"
+                                                           on-value-change="_esmmValueChanged"
+                                                           data-path="locations"
+                                                           multi>
+                  </div>
+                  <div class="col col-2">
+                    CSO CONT
+                  </div>
+                </div>
+              </div>
+              <div class="col col-8">
+                <div class="row-h flex-c darkbg">
+                  the rest
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </template>
+    </div>
+
+    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+      <p>There are no planned budgets added.</p>
+    </div>
+
+    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+      <paper-fab icon="add"
+                 on-tap="_addNewPlannedBudget"
+                 title="Add"></paper-fab>
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'intervention-planned-budget',
+
+        behaviors: [
+          pmpBehaviors.RepeatableDataSetsBehavior
+        ],
+
+        properties: {
+          years: {
+            type: Array,
+            value: []
+          },
+          interventionStart: {
+            type: String
+          },
+          interventionEnd: {
+            type: String
+          }
+        },
+        observers: [
+            '_setYears(interventionStart, interventionEnd)'
+        ],
+
+        ready: function() {
+          this.dataSetModel = {
+            id: null,
+            partner_contribution: null,
+            unicef_cash: null,
+            in_kind_amount: null,
+            partner_contribution_local: null,
+            unicef_cash_local: null,
+            in_kind_amount_local: null,
+            year: null,
+            total: 0
+          };
+        },
+
+        _setYears: function(interventionStart, interventionEnd) {
+          if (typeof interventionStart === 'string' && interventionStart !== ''
+              && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            this.debounce('setInterventionsPlannedBudgetYears', function() {
+              var start = parseInt(interventionStart.substr(0, 4), 10);
+              var end = parseInt(interventionEnd.substr(0, 4), 10);
+              console.log(start, end);
+            }.bind(this), 50)
+          }
+        },
+
+        /**
+         * The planned budget row data can be removed only if it doesn't have and id assigned(only if is not saved)
+         */
+        _canBeRemoved: function(index) {
+          var plannedBudget = this.dataItems[index];
+          var plannedBudget = parseInt(plannedBudget.id, 10);
+          if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
+            // planned budget already saved (has an id assigned)
+            return false;
+          }
+          return true;
+        },
+
+        _getItemNr: function(index) {
+          return parseInt(index, 10) + 1;
+        },
+
+        /**
+         * Check if amendment fields are empty
+         */
+        //        _plannedBudgetFieldsAreNotEmpty: function(plannedBudgetItem) {
+        //          return parseFloat(plannedBudgetItem.partner_contribution) > 0
+        //              || parseFloat(plannedBudgetItem.unicef_cash) > 0
+        //              || parseFloat(plannedBudgetItem.in_kind_amount) > 0
+        //              || parseFloat(plannedBudgetItem.partner_contribution_local) > 0
+        //              || parseFloat(plannedBudgetItem.in_kind_amount_local) > 0
+        //              || parseInt(plannedBudgetItem.year, 10) > 0
+        //              || parseFloat(plannedBudgetItem.total) > 0
+        //        },
+
+        /**
+         * Validate last added planned budget and if is not empty add a new one
+         */
+        _addNewPlannedBudget: function() {
+          var lastPlannedBudgetItemIndex = this.dataItems.length - 1;
+          if (lastPlannedBudgetItemIndex >= 0 && this._canBeRemoved(lastPlannedBudgetItemIndex)) {
+            //            var lastPlannedBudgetItem = this.dataItems[lastPlannedBudgetItemIndex];
+            //            if (!this._plannedBudgetFieldsAreNotEmpty(lastPlannedBudgetItem)) {
+            //              this.fire('toast', {text: 'Last planned budget fields are empty!', showCloseBtn: true});
+            //            } else {
+            this._addElement();
+            //            }
+          } else {
+            this._addElement();
+          }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

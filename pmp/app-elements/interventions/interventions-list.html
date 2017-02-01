@@ -513,7 +513,7 @@
 
               (this.selectedSectors && this.selectedSectors.length)
                   ? this.selectedSectors.map(function(sector) {
-                return sector.value;
+                return sector.label;
               }) : [],
 
               (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
@@ -566,7 +566,7 @@
 
           if (this.selectedSectors && this.selectedSectors.length) {
             out.push('sector=' + this.selectedSectors.map(function(sector) {
-              return sector.value;
+              return sector.label;
             }).join('+'));
           }
 
@@ -623,11 +623,8 @@
         _setSelectedSectors: function(sectors) {
           var sectorsArr = sectors.split('+');
           if (sectorsArr && sectorsArr.length) {
-            sectorsArr = sectorsArr.map(function(sectorIdStr) {
-              return parseInt(sectorIdStr, 10);
-            });
             return this.sectors.filter(function(s) {
-              return sectorsArr.indexOf(parseInt(s.value, 10)) > -1;
+              return sectorsArr.indexOf(s.label) > -1;
             });
           }
           return [];
