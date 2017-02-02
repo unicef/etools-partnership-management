@@ -5,14 +5,13 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
-<link rel="import" href="../app-elements/page-header/page-header.html">
-<link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
 
 <dom-module id="page-partners">
 
@@ -38,16 +37,9 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partnerData" partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
 
-    <app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-
-        <page-header user="[[user]]"></page-header>
-
-      </app-header>
-
+    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -107,11 +99,13 @@
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details partner="[[partner]]" edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          <partner-details 
+              partner="[[partner]]" 
+              edit-mode="[[_hasEditPermissions(permissions)]]"
+              on-save-partner="_savePartner">      
+          </partner-details>
         </div>
       </iron-pages>
-
-      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -140,7 +134,6 @@
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, routeData.tab)'
       ],
-
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -179,13 +172,16 @@
         }
         return partnerName;
       },
-
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
           return 'with-tabs';
         }
         return '';
-      }
+      },
+      _savePartner: function(event) {
+        event.stopImmediatePropagation();
+        this.$.partnerData.savePartner(event.detail);
+      },
 
     });
 

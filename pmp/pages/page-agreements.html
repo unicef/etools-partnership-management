@@ -4,10 +4,8 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../app-elements/page-header/page-header.html">
-<link rel="import" href="../app-elements/page-footer/page-footer.html">
+<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
-<link rel="import" href="../app-elements/agreements/new-agreement.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
@@ -44,17 +42,15 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
+    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
+                        prepare-dropdown-data>
+    </partners-list-data>
 
-    <agreement-item-data agreement="{{agreement}}" agreement-id="[[routeData.id]]"></agreement-item-data>
+    <agreement-item-data id="agreementData"
+                         agreement="{{agreement}}"
+                         agreement-id="[[routeData.id]]"></agreement-item-data>
 
-    <app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-
-        <page-header user="[[user]]"></page-header>
-
-      </app-header>
-
+    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -69,7 +65,7 @@
               </template>
 
               <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement)]]">
-                <span>[[_getAgreementDetailsTitle(agreement.agreement_number, partnerName)]]</span>
+                <span>[[_getAgreementDetailsTitle(agreement)]]</span>
               </template>
 
               </span>
@@ -88,7 +84,7 @@
                 </paper-button>
               </div>
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <paper-button class="primary-btn with-prefix">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
                   Add New Agreement
                 </paper-button>
@@ -117,17 +113,25 @@
                   role="main">
 
         <div class="page" name="list">
-          <agreements-list id="list" active="[[agreementListActive]]" url-params="[[agreementQueryParams]]"></agreements-list>
+          <agreements-list id="list"
+                           active="[[agreementListActive]]"
+                           url-params="[[agreementQueryParams]]"
+                           partners-dropdown-data="[[partnersDropdownData]]"
+                           agreement-types="[[agreementTypes]]">
+          </agreements-list>
         </div>
         <div class="page" name="details">
-          <agreement-details agreement="[[agreement]]"></agreement-details>
-        </div>
-        <div class="page" name="new-agreement">
-          <new-agreement on-new-agreement-saved="_newAgreementSaved"></new-agreement>
+          <agreement-details
+              agreement="[[agreement]]"
+              edit-mode="[[_hasEditPermissions(permissions)]]"
+              is-new-agreement="[[_isNewAgreement(agreement)]]"
+              partners-dropdown-data="[[partnersDropdownData]]"
+              agreement-types="[[agreementTypes]]"
+              on-update-agreement-status="_updateAgreementStatus"
+              on-save-agreement="_saveAgreement">
+          </agreement-details>
         </div>
       </iron-pages>
-
-      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -146,9 +150,35 @@
           notify: true
         },
 
-        partnerName: {
-          type: String,
+        partnersDropdownData: {
+          type: Array,
           notify: true
+        },
+
+        agreementTypes: {
+          type: Array,
+          notify: true
+        },
+
+        newAgreementModel: {
+          type: Object,
+          value: {
+            id: null,
+            authorized_officers: [],
+            amendments: [],
+            agreement_type: null,
+            agreement_number: null,
+            attached_agreement: null,
+            start: null,
+            end: null,
+            signed_by_unicef_date: null,
+            signed_by_partner_date: null,
+            status: null,
+            partner: null,
+            country_programme: null,
+            signed_by: null,
+            partner_manager: null
+          }
         }
 
       },
@@ -159,6 +189,13 @@
       ],
 
       ready: function() {
+        this.set('agreementTypes', [
+          {name: 'MOU', label: 'Momarendum of Understanding'},
+          {name: 'PCA', label: 'Programme Cooperation Agreement'},
+          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
+        ]);
+
+
         // TODO: replace this placeholder data
         // get fake data for testing
         // TODO: remove this after API si used
@@ -166,31 +203,9 @@
         //this.set('agreement', localSavedAgreement);
 
         // TODO: remove this
-        if (this.agreementPage === 'new-agreement') {
-          this.set('agreement', null);
+        if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
+          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
-
-//        this.agreement = {
-//          "id":8,
-//          "created":"2016-04-21T08:52:31.214539Z",
-//          "modified":"2016-04-21T08:52:31.215398Z",
-//          "agreement_type":"PCA",
-//          "agreement_number":"PCA 2015/29-3",
-//          "attached_agreement":null,
-//          "start":"2015-09-30",
-//          "end":"2016-09-29",
-//          "signed_by_unicef_date":"2015-07-28",
-//          "signed_by_partner_date":"2015-07-28",
-//          "bank_name":null,
-//          "bank_address":"",
-//          "account_title":null,
-//          "account_number":null,
-//          "routing_details":null,
-//          "bank_contact_person":null,
-//          "partner":21,
-//          "signed_by":1152,
-//          "partner_manager":134
-//        };
       },
 
       _resizeHeader: function() {
@@ -200,10 +215,7 @@
       // get active page name
       _getActivePage: function(listActive, newAgreementActive, detailsActive) {
         var page = 'list'; // default
-        if (newAgreementActive) {
-          page = 'new-agreement';
-        }
-        if (detailsActive) {
+        if (detailsActive || newAgreementActive) {
           page = 'details';
         }
 
@@ -231,7 +243,7 @@
 
       // check if new greement page title should be shown
       _showNewAgreementTitle: function(agreementsPage, agreement) {
-        if (agreementsPage === 'new-agreement' && this._isNewAgreement(agreement)) {
+        if (agreementsPage === 'details' && this._isNewAgreement(agreement)) {
           return true;
         }
         return false;
@@ -246,8 +258,8 @@
       },
 
       // compute agreement details page title including partner name and agreement number
-      _getAgreementDetailsTitle: function(agreementNumber, partnerName) {
-        return (partnerName !== '' ? (partnerName + ': ') : '') + (agreementNumber ? agreementNumber : '');
+      _getAgreementDetailsTitle: function(agreement) {
+        return agreement.partner_name + ': ' + agreement.agreement_number;
       },
 
        // Except agreements list, the other pages have agreement details tab active
@@ -259,15 +271,6 @@
       },
 
       /**
-       * Catch new-agreement-saved event and redirect to details
-       * TODO: this might not be the right flow, maybe the redirect page will be the list (?)
-       */
-      _newAgreementSaved: function(event) {
-        this.set('agreement', event.detail);
-        this.set('route.path', '/' + this.agreement.id + '/details');
-      },
-
-      /**
        *
        */
       _getTopContentAdditionalClass: function(activePage) {
@@ -275,6 +278,40 @@
           return 'with-tabs'
         }
         return '';
+      },
+
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+          return true;
+        }
+        return false;
+      },
+
+      _saveAgreement: function(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementData.saveAgreement(event.detail, this._newAgreementSaved);
+      },
+
+      _updateAgreementStatus: function(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(event.detail);
+      },
+
+      /**
+       * Go to details page once the new agreement has been saved
+       */
+      _newAgreementSaved: function(agreement) {
+        this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+      },
+
+      /**
+       * Go to new agreement page, it's just tha same details page with an empty agreement
+       * The new agreement model is defined in this element
+       */
+      _goToNewAgreementPage: function() {
+        // go to new agreement
+        this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
       }
 
     });

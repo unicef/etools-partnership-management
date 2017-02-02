@@ -8,7 +8,7 @@
 
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<dom-module id="agreement-status">
+<dom-module id="intervention-status">
   <template>
     <style include="buttons-styles">
       [hidden] {
@@ -196,50 +196,50 @@
             </span>
         </div>
         <div class="status">
-          <span>Ended</span>
+          <span>Implemented</span>
         </div>
       </div>
 
       <template is="dom-if" if="[[showSaveBtn]]">
         <div class="buttons-section vertical">
 
-          <paper-button class="primary-btn success-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="draft"
-                        hidden$="[[!_statusIs(status, 'cancelled')]]">
-            Change to draft
-          </paper-button>
+          <!--<paper-button class="primary-btn success-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="draft"-->
+                        <!--hidden$="[[!_statusIs(status, 'cancelled')]]">-->
+            <!--Change to draft-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn danger-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="cancelled"
-                        hidden$="[[_hideCancelBtn(status)]]">
-            Cancel
-          </paper-button>
+          <!--<paper-button class="primary-btn danger-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="cancelled"-->
+                        <!--hidden$="[[_hideCancelBtn(status)]]">-->
+            <!--Cancel-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn success-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="active"
-                        hidden$="[[_hideActivateBtn(status)]]">
-            Activate
-          </paper-button>
+          <!--<paper-button class="primary-btn success-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="active"-->
+                        <!--hidden$="[[_hideActivateBtn(status)]]">-->
+            <!--Activate-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn warning-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="suspended"
-                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-            Suspend
-          </paper-button>
+          <!--<paper-button class="primary-btn warning-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="suspended"-->
+                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
+            <!--Suspend-->
+          <!--</paper-button>-->
 
-          <paper-button class="primary-btn danger-btn w100"
-                        on-tap="_updateStatus"
-                        data-status="terminated"
-                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-            Terminate
-          </paper-button>
+          <!--<paper-button class="primary-btn danger-btn w100"-->
+                        <!--on-tap="_updateStatus"-->
+                        <!--data-status="terminated"-->
+                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
+            <!--Terminate-->
+          <!--</paper-button>-->
 
           <paper-button class="primary-btn w100"
-                        on-tap="_triggerAgreementSave">
+                        on-tap="_triggerInterventionSave">
             Save
           </paper-button>
         </div>
@@ -253,8 +253,10 @@
     (function() {
       'use strict';
 
+      // TODO: Very important! this is 99% the same as agreement status. Check if the statuses are the same and refactor this 2 elements
+
       Polymer({
-        is: 'agreement-status',
+        is: 'intervention-status',
 
         behaviors: [etoolsBehaviors.DynamicDialogBehavior],
 
@@ -316,7 +318,7 @@
         },
 
         _getThirdStatusWrapperClass: function(status) {
-          if (this._statusIs(status, 'ended')) {
+          if (this._statusIs(status, 'implemented')) {
             return 'active'
           }
           return '';
@@ -377,10 +379,10 @@
         _statusChangeConfirmationCallback: function(event) {
           console.log('dynamic dialog closed', event.detail);
           if (event.detail.confirmed) {
-            this.fire('update-agreement-status', {
-              agreementId: this.agreementId,
-              status: this.newStatus + ''
-            });
+//            this.fire('update-agreement-status', {
+//              agreementId: this.agreementId,
+//              status: this.newStatus + ''
+//            });
           }
           this.set('newStatus', '');
         },
@@ -408,10 +410,10 @@
         },
 
         /**
-         * Fire custom event to notify parent element to execute agreement save
+         * Fire custom event to notify parent element to execute intervention save
          */
-        _triggerAgreementSave: function() {
-          this.fire('save-agreement', {});
+        _triggerInterventionSave: function() {
+          this.fire('save-intervention', {});
         }
 
       });

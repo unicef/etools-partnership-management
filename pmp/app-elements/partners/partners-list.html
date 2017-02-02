@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
@@ -31,17 +32,23 @@
   <template>
 
     <style include="shared-styles list-styles iron-flex iron-flex-factors partner-status-styles">
-      .col-data {
-        display: inline-flex;
-        line-height: 24px;
-        height: 24px;
+      :host {
+        /* TODO: paper-toggle-button style could be global, recheck this when app-theme colors are defined */
+        --paper-toggle-button-checked-bar-color: #88D4F7; /* TODO: replace with app-theme var */
+        --paper-toggle-button-checked-button-color: #3baaee; /* TODO: replace with app-theme var */
       }
+
       .sm-status-wrapper {
         padding-left: 10px;
       }
     </style>
 
-    <partners-list-data id="partners" filtered-partners="{{filteredPartners}}" total-results="{{totalResults}}"></partners-list-data>
+    <partners-list-data id="partners"
+                        filtered-partners="{{filteredPartners}}"
+                        total-results="{{totalResults}}"
+                        on-partners-loaded="_requiredDataHasBeenLoaded"
+                        fire-data-loaded>
+    </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
 
@@ -127,11 +134,13 @@
         <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
           <data-table-row details-opened="[[detailsOpened]]">
             <div slot="row-data">
-              <a class="col-data flex" href="partners/[[partner.id]]/details">
-                [[partner.vendor_number]]
+              <a class="col-data flex truncate"
+                 href="partners/[[partner.id]]/details"
+                 title="[[getDisplayValue(partner.vendor_number)]]">
+                [[getDisplayValue(partner.vendor_number)]]
               </a>
               <span class="col-data flex-3">
-                [[_computeName(partner.name, partner.short_name)]]
+                <span class="truncate">[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
                   <span class="marked-for-deletion">
@@ -150,29 +159,29 @@
                 [[_computeType(partner.cso_type, partner.partner_type)]]
               </span>
               <span class="col-data flex" style="text-transform: capitalize">
-                [[partner.rating]]
+                [[getDisplayValue(partner.rating)]]
               </span>
             </div>
             <div slot="row-data-details">
               <div class="row-details-content flex">
                 <span class="rdc-title">Shared Partner</span>
-                <span>[[_getPartnerSharedWithValue(partner.shared_with)]]</span>
+                <span>[[getDisplayValue(partner.shared_with)]]</span>
               </div>
               <div class="row-details-content flex">
                 <span class="rdc-title">Email</span>
-                <span>[[_checkAndShowPartnerValue(partner.email)]]</span>
+                <span>[[getDisplayValue(partner.email)]]</span>
               </div>
               <div class="row-details-content flex">
                 <span class="rdc-title">Phone Number</span>
-                <span>[[_checkAndShowPartnerValue(partner.phone_number)]]</span>
+                <span>[[getDisplayValue(partner.phone_number)]]</span>
               </div>
               <div class="row-details-content flex">
                 <span class="rdc-title">Actual Cash Transfer for CP</span>
-                <span>$ [[_checkAndShowPartnerValue(partner.total_ct_cp)]]</span>
+                <span>$ [[getDisplayValue(partner.total_ct_cp)]]</span>
               </div>
               <div class="row-details-content flex">
                 <span class="rdc-title">Actual Cash Transfer for Current Year</span>
-                <span>$ [[_checkAndShowPartnerValue(partner.total_ct_cy)]]</span>
+                <span>$ [[getDisplayValue(partner.total_ct_cy)]]</span>
               </div>
             </div>
           </data-table-row>
@@ -192,263 +201,282 @@
   </template>
 
   <script>
+    (function() {
+      'use strict';
 
-    var _lastNavigated = null;
+      var _partnersLastNavigated = null;
 
-    Polymer({
+      Polymer({
 
-      is: 'partners-list',
+        is: 'partners-list',
 
-      behaviors: [
-        pmpBehaviors.DropdownBehavior,
-        pmpBehaviors.ListFiltersBehavior
-      ],
+        behaviors: [
+          pmpBehaviors.DropdownBehavior,
+          pmpBehaviors.ListFiltersBehavior,
+          pmpBehaviors.CommonGeneralBehavior
+        ],
 
-      properties: {
+        properties: {
 
-        filteredPartners: {
-          type: Array,
-          notify: true,
-          observer: '_partnersChanged'
-        },
-
-        q: {
-          type: String,
-          notify: true,
-          observer: '_qChanged'
-        },
-
-        partnerType: {
-          type: String
-        },
-
-        csoType: {
-          type: String
-        },
-
-        sortOrder: {
-          type: Object,
-        },
-
-        pageNumber: {
-          type: Number
-        },
-
-        pageSize: {
-          type: Number
-        },
-
-        showHidden: {
-          type: Boolean
-        },
-
-        debounceTime: {
-          type: Number,
-          value: 50
-        },
-
-        urlParams: {
-          type: Object,
-        },
-
-        detailsOpened: Boolean
-      },
-
-      observers: [
-        '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
-        '_init(active)'
-      ],
-
-      listeners: {
-        'sort-changed': '_sortOrderChanged',
-      },
-
-      ready: function() {
-        this.$.list.classList.add('hidden');
-
-        // init list filter options
-        this.initListFiltersData([
-          {
-            filterName: 'Partner Type',
-            selectionOptions: ['Bilateral / Multilateral', 'Civil Society Organization', 'Government', 'UN Agency'],
-            path: 'partnerType'
+          filteredPartners: {
+            type: Array,
+            notify: true,
+            observer: '_partnersChanged'
           },
-          {
-            filterName: 'CSO Type',
-            selectionOptions: ['Academic Institution', 'Community Based Organization', 'International', 'National'],
-            path: 'csoType'
+
+          q: {
+            type: String,
+            notify: true,
+            observer: '_qChanged'
+          },
+
+          partnerType: {
+            type: String
+          },
+
+          csoType: {
+            type: String
+          },
+
+          sortOrder: {
+            type: Object,
+          },
+
+          pageNumber: {
+            type: Number
+          },
+
+          pageSize: {
+            type: Number
+          },
+
+          showHidden: {
+            type: Boolean
+          },
+
+          debounceTime: {
+            type: Number,
+            value: 50
+          },
+
+          urlParams: {
+            type: Object,
+          },
+
+          detailsOpened: Boolean,
+          active: Boolean,
+
+          forceDataRefresh: {
+            type: Boolean,
+            value: false
           }
-        ]);
-      },
+        },
 
-      // Input: URL query params
-      // Initializes the properties of the list at page load
-      // to the params interpretted from the URL string.
-      _init: function(active) {
-        var parms = this.urlParams;
-        if (!active || !parms) {
-          return;
-        }
-        this.set('q', parms.q ? parms.q : '');
-        this.set('partnerType', parms.partner_type ? parms.partner_type : '');
-        this.set('csoType', parms.cso_type ? parms.cso_type : '');
-        this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-        this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
-        this.set('showHidden', parms.hidden ? true : false);
-        // format of sort param is sort=field.order ex: sort=name.asc
-        var result = {field: 'name', direction: 'asc'};
-        if (parms.sort) {
-          var p = parms.sort.split('.');
-          result = {field: p[0], direction: p[1]};
-        }
-        this.set('sortOrder', result);
-        //this.$.listHeader.sortOrder = result;
-      },
+        observers: [
+          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+          '_init(active)'
+        ],
 
-      // Updates URL state with new query string, and launches query
-      _updateURL: function() {
-        var qs = this._buildQueryString();
-        if (qs !== _lastNavigated) {
-          _lastNavigated = qs;
-          // Using replace state to change the URL here ensures the browser's
-          // back button doesn't take you through every query
-          var currentState = window.history.state;
-          window.history.replaceState(currentState, null,
-            'partners/list' + (qs.length ? '?' + qs : ''));
-          // This event lets app-location and app-route know
-          // the URL has changed
-          window.dispatchEvent(new CustomEvent('location-changed'));
+        listeners: {
+          'sort-changed': '_sortOrderChanged',
+        },
 
+        ready: function() {
+          this.$.list.classList.add('hidden');
+
+          // init list filter options
+          this.initListFiltersData([
+            {
+              filterName: 'Partner Type',
+              selectionOptions: ['Bilateral / Multilateral', 'Civil Society Organization', 'Government', 'UN Agency'],
+              path: 'partnerType'
+            },
+            {
+              filterName: 'CSO Type',
+              selectionOptions: ['Academic Institution', 'Community Based Organization', 'International', 'National'],
+              path: 'csoType'
+            }
+          ]);
+        },
+
+        // Input: URL query params
+        // Initializes the properties of the list at page load
+        // to the params interpretted from the URL string.
+        _init: function(active) {
+          var parms = this.urlParams;
+          if (!active || !parms) {
+            return;
+          }
+          this.set('q', parms.q ? parms.q : '');
+          this.set('partnerType', parms.partner_type ? parms.partner_type : '');
+          this.set('csoType', parms.cso_type ? parms.cso_type : '');
+          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('showHidden', parms.hidden ? true : false);
+          // format of sort param is sort=field.order ex: sort=name.asc
+          var result = {field: 'name', direction: 'asc'};
+          if (parms.sort) {
+            var p = parms.sort.split('.');
+            result = {field: p[0], direction: p[1]};
+          }
+          this.set('sortOrder', result);
+          //this.$.listHeader.sortOrder = result;
+        },
+
+        // Updates URL state with new query string, and launches query
+        _updateURL: function() {
+          var qs = this._buildQueryString();
+          if (qs !== _partnersLastNavigated) {
+            _partnersLastNavigated = qs;
+            // update URL
+            this.updateAppState('partners/list', qs, true);
+            // filter partners
+            this._filterPartnersData();
+          } else {
+            if (location.search === '') {
+              // only update URL query string, without location change event being fired(no page refresh)
+              this.updateAppState('partners/list', qs, false);
+            }
+            if (this.forceDataRefresh) {
+              // refilter partners data
+              // this will only execute when partners-loaded event is received
+              this._filterPartnersData();
+              this.set('forceDataRefresh', false);
+            }
+          }
+        },
+
+        _filterPartnersData: function() {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
             this.$.partners.query(
-              this.sortOrder.field,
-              this.sortOrder.direction,
-              this.q.toLowerCase(),
-              this.partnerType,
-              this.csoType,
-              this.pageNumber,
-              this.pageSize,
-              this.showHidden);
+                this.sortOrder.field,
+                this.sortOrder.direction,
+                this.q.toLowerCase(),
+                this.partnerType,
+                this.csoType,
+                this.pageNumber,
+                this.pageSize,
+                this.showHidden);
           }, this.debounceTime);
+        },
 
-        }
-      },
+        // Outputs the query string for the list
+        _buildQueryString: function() {
+          var out = [];
+          if (this.pageNumber && this.pageNumber > 1) {
+            out.push('page=' + this.pageNumber);
+          }
+          if (this.pageSize) {
+            out.push('size=' + this.pageSize);
+          }
+          if (this.q && this.q.length) {
+            out.push('q=' + this.q);
+          }
+          if (this.partnerType && this.partnerType.length) {
+            out.push('partner_type=' + this.partnerType);
+          }
+          if (this.csoType && this.csoType.length) {
+            out.push('cso_type=' + this.csoType);
+          }
+          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
+          }
+          if (this.showHidden) {
+            out.push('hidden=true');
+          }
+          return out.join('&');
+        },
 
-      // Outputs the query string for the list
-      _buildQueryString: function() {
-        var out = [];
-        if (this.pageNumber && this.pageNumber > 1) {
-          out.push('page=' + this.pageNumber);
-        }
-        if (this.pageSize) {
-          out.push('size=' + this.pageSize);
-        }
-        if (this.q && this.q.length) {
-          out.push('q=' + this.q);
-        }
-        if (this.partnerType && this.partnerType.length) {
-          out.push('partner_type=' + this.partnerType);
-        }
-        if (this.csoType && this.csoType.length) {
-          out.push('cso_type=' + this.csoType);
-        }
-        if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-          out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-        }
-        if (this.showHidden) {
-          out.push('hidden=true');
-        }
-        return out.join('&');
-      },
+        _sortOrderChanged: function(e) {
+          this.set('debounceTime', 150);
+          this.set('sortOrder', e.detail);
+        },
 
-      _sortOrderChanged: function(e) {
-        this.set('debounceTime', 150);
-        this.set('sortOrder', e.detail);
-      },
+        _pageSizeChanged: function(e) {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+          this.set('pageSize', parseInt(e.detail.value));
+        },
 
-      _pageSizeChanged: function(e) {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-        this.set('pageSize', parseInt(e.detail.value));
-      },
+        _pageNumberChanged: function(e) {
+          this.set('debounceTime', 50);
+          this.set('pageNumber', e.detail.value);
+        },
 
-      _pageNumberChanged: function(e) {
-        this.set('debounceTime', 50);
-        this.set('pageNumber', e.detail.value);
-      },
+        _setQ: function() {
+          this.set('q', this.$.query.value);
+        },
 
-      _setQ: function() {
-        this.set('q', this.$.query.value);
-      },
+        _qChanged: function(q) {
+          this.set('debounceTime', 300);
+          this.set('pageNumber', 1);
+        },
 
-      _qChanged: function(q) {
-        this.set('debounceTime', 300);
-        this.set('pageNumber', 1);
-      },
+        _dropdownSelected: function() {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+        },
 
-      _dropdownSelected: function() {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-      },
+        _toggleHidden: function() {
+          this.set('debounceTime', 50);
+          this.set('showHidden', this.showHidden ? false : true);
+          this.set('pageNumber', 1);
+        },
 
-      _toggleHidden: function() {
-        this.set('debounceTime', 50);
-        this.set('showHidden', this.showHidden ? false : true);
-        this.set('pageNumber', 1);
-      },
-
-      // List fade in fade out effect
-      _partnersChanged: function() {
-        this.$.list.classList.add('hidden');
-        this.async(function() {
-          this.$.list.classList.remove('hidden');
-        }, 50);
-      },
-
-      _computeName: function(name, shortName) {
-        return shortName ? shortName + ' / ' + name : name;
-      },
-
-      _computeType: function(csoType, partnerType) {
-        if (!csoType) {
-          return partnerType;
-        } else if (csoType === 'Community Based Organization') {
-          return 'CSO / Community Based';
-        } else {
-          return 'CSO / ' + csoType;
-        }
-      },
-
-       // When the list data rows are changing check and close any details opened
-      _listDataChanged: function() {
-        var rows = this.$.list.querySelectorAll('data-table-row');
-        if (rows) {
-          rows.forEach(function(row) {
-            if (row.detailsOpened) {
-              row.set('detailsOpened', false);
+        // List fade in fade out effect
+        _partnersChanged: function(filteredPartners) {
+          this.$.list.classList.add('hidden');
+          this.async(function() {
+            var partnersList = this.$$('#partners');
+            if (partnersList && Array.isArray(partnersList.data) && partnersList.data.length > 0) {
+              this.$$('#list').classList.remove('hidden');
             }
-          });
-        }
-      },
+          }, 50);
+        },
 
-      _checkAndShowPartnerValue: function(val) {
-        if (val) {
-          return val;
-        }
-        return "–";
-      },
+        _computeName: function(name, shortName) {
+          return this.getDisplayValue([shortName, name], false, ' / ');
+        },
 
-      _getPartnerSharedWithValue: function(sharedWith) {
-        if (Array.isArray(sharedWith) && sharedWith.length > 0) {
-          return sharedWith.join(', ');
-        } else {
-          return "–";
-        }
-      }
+        _computeType: function(csoType, partnerType) {
+          if (!csoType) {
+            return partnerType;
+          } else if (csoType === 'Community Based Organization') {
+            return 'CSO / Community Based';
+          } else {
+            return 'CSO / ' + csoType;
+          }
+        },
 
-    });
+        // When the list data rows are changing check and close any details opened
+        _listDataChanged: function() {
+          var rows = this.$.list.querySelectorAll('data-table-row');
+          if (rows) {
+            rows.forEach(function(row) {
+              if (row.detailsOpened) {
+                row.set('detailsOpened', false);
+              }
+            });
+          }
+        },
+
+        /**
+         * At page refresh Dexie DBs might be wiped out and filteredPartners will be empty.
+         * Because of this we need to refilter after partners data is saved locally.
+         */
+        _requiredDataHasBeenLoaded: function(event) {
+          event.stopImmediatePropagation();
+          if (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0) {
+            this.set('forceDataRefresh',  true);
+          }
+          // recheck params to trigger partners filtering
+          this._init(this.active);
+        },
+
+      });
+    })();
 
   </script>
 

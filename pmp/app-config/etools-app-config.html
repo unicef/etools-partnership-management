@@ -17,6 +17,8 @@ App global configuration
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
+      interventions: 'id, number, partner_name, document_type, ' +
+        'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
       user: 'id'
     });
 
@@ -49,13 +51,17 @@ App global configuration
         defaultPermissions: [
           'loggedInDefault',
           'userInfoMenu',
-          'viewPartnerDetails'
+          'viewPartnerDetails',
+          'viewAgreementDetails',
+          'viewInterventionDetails'
         ],
         partnerOnlyPermissions: ['interventionsMenu'],
         partnerPermissions: ['interventionsMenu'],
         managementPermissions: [
           'statsMenu',
-          'editPartnerDetails'
+          'editPartnerDetails',
+          'editAgreementDetails',
+          'editInterventionDetails'
         ],
         superPermissions: [
           'loggedInDefault',
@@ -63,7 +69,11 @@ App global configuration
           'interventionsMenu',
           'statsMenu',
           'viewPartnerDetails',
-          'editPartnerDetails'
+          'editPartnerDetails',
+          'viewAgreementDetails',
+          'editAgreementDetails',
+          'viewInterventionDetails',
+          'editInterventionDetails'
         ]
       }
     };
@@ -96,6 +106,12 @@ App global configuration
       changeCountry: {
         url: '/users/api/changecountry/'
       },
+      // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
+      unicefUsers: {
+        url: '/users/api/',
+        exp: 60 * 60 * 1000, // 1h
+        cachingKey: 'unicefUsers'
+      },
       user: {
         url: '/users/api/profile/',
         exp: 30 * 60 * 1000, // 30min
@@ -108,7 +124,6 @@ App global configuration
       },
       agreementDetails: {
         template: '/api/v2/agreements/<%=id%>/',
-        exp: 30 * 60 * 1000 // 30min
       },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
@@ -122,10 +137,43 @@ App global configuration
       },
       partnerDetails: {
         template: '/api/v2/partners/<%=id%>/',
-        exp: 6 * 60 * 60 * 1000, // 6h
+        // exp: 6 * 1000, // 6 sec
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
       },
+      interventions: {
+        url: '/api/v2/interventions/',
+        exp: 5 * 60 * 1000, // 5min
+        cachingKey: 'interventions'
+      },
+      interventionDetails: {
+        template: '/api/v2/interventions/<%=id%>/',
+      },
+      dropdownsPmp: {
+        url: '/api/v2/dropdowns/pmp',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsPmp'
+      },
+      dropdownsStatic: {
+        url: '/api/v2/dropdowns/static',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsStatic'
+      },
+      sectors: {
+        url: '/api/reports/sectors',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'sectors'
+      },
+      locations: {
+        url: '/api/locations/',
+        exp: 60 * 60 * 60 * 1000, // 60h
+        cachingKey: 'locations'
+      },
+      offices: {
+        url: '/api/offices',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'offices'
+      }
 
     };
     /* jshint ignore:start */

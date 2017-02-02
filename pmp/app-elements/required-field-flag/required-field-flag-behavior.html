@@ -2,7 +2,22 @@
 <link rel="import" href="required-field-flag.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
-  pmpBehaviors.requiredFieldFlagBehavior = {
+  pmpBehaviors.RequiredFieldFlagBehavior = {
+
+    /*
+     Example for esmm dropdown
+
+     // add required field flag to the label for the fields
+     // that are required without depending on other fields values
+     var requiredDropdownElements = Polymer.dom(this.root).querySelectorAll('#partner, #agreementType');
+     if (requiredDropdownElements.length > 0) {
+       requiredDropdownElements.forEach(function(element) {
+         setTimeout(function() {
+           this.addRequiredFieldFlag([Polymer.dom(element.root).querySelector('#singleSelectionDropdown')]);
+         }.bind(this), 0);
+      }.bind(this));
+     }
+     */
 
     addRequiredFieldFlag: function(requiredElements, labelSelector, labelElementsProvided) {
       if (requiredElements.length > 0) {

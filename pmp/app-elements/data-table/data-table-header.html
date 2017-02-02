@@ -5,18 +5,19 @@
 
   <template>
 
-    <style include="iron-flex iron-flex-factors">
+    <style is="custom-style" include="iron-flex iron-flex-factors">
 
       :host {
         display: block;
         border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+
       }
 
       paper-material {
         padding: 0 24px;
         height: 118px;
-
         background-color: var(--primary-background-color, #FFFFFF);
+        @apply(--data-table-header);
       }
 
 
@@ -26,14 +27,15 @@
         line-height: 64px;
         font-size: 20px;
         color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
+        @apply(--header-title);
       }
 
       #columns {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-
         margin-left: 48px;
         height: 56px;
+        @apply(--header-columns);
       }
 
     </style>
@@ -66,8 +68,16 @@
 
         _lastSelectedCol: {
           type: Object,
-        }
+        },
 
+        noTitle : {
+          type: Boolean,
+          observer: '_noTitle',
+        },
+        noCollapse: {
+          type: Boolean,
+          observer: '_noCollapse'
+        }
       },
 
       listeners: {
@@ -94,6 +104,18 @@
         }
         this._lastSelectedCol = column;
       },
+      _noTitle: function(){
+        this.customStyle = {
+          '--data-table-header' : 'height: auto',
+          '--header-title' : 'display: none'
+        }
+        this.updateStyles();
+      },
+      _noCollapse: function(){
+        this.customStyle['--header-columns']='margin-left : 0; flex: 1';
+        this.updateStyles();
+      }
+
 
     });
 

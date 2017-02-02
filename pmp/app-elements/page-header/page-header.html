@@ -2,9 +2,8 @@
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
-
+<link rel="import" href="../app-selector/app-selector.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -13,6 +12,10 @@
 
   <template>
     <style include="shared-styles">
+
+      app-toolbar {
+        padding: 0 16px 0 0;
+      }
 
       div[main-title] {
         position: relative;
@@ -42,6 +45,21 @@
       etools-page-refresh {
         margin-left: 25px;
       }
+      .titlebar {
+        flex: 1 ;
+        font-size: 28px;
+        font-weight: 300;
+        color: var(--light-primary-text-color);
+      }
+      .titlebar img{
+        width: 34px;
+        margin: 0 8px 0 24px;
+      }
+
+      .content-align {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
 
       @media (min-width: 850px) {
         #menuButton {
@@ -52,10 +70,14 @@
         }
       }
     </style>
-    <app-toolbar sticky>
+    <app-toolbar sticky class="content-align">
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-      <div main-title>eTools</div>
-      <div class="right-side">
+      <div class="titlebar content-align">
+        <app-selector id="selector"></app-selector>
+        <img src="../../../images/etools_logo_icon.png">
+        eTools
+      </div>
+      <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
         <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
@@ -84,7 +106,6 @@
           this.fire('drawer');
         },
         _refresh_page: function(event) {
-            console.log('refreshing page');
             event.stopImmediatePropagation();
             this.$.refresh._refresh();
         },
@@ -100,8 +121,7 @@
           return 'flag-icon ' + 'flag-icon-' + flagIdMap[id];
         },
         _updateCountriesList: function(countries) {
-          console.log(countries);
-          var arrayObj = countries.map(function(arrayItem) { 
+          var arrayObj = countries.map(function(arrayItem) {
             return {id: arrayItem.id, name: arrayItem.name, imgClass: this._getFlagIconClass(arrayItem.business_area_code)};
           }.bind(this));
           this.set('countries', arrayObj);

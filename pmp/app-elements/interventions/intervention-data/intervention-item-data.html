@@ -1,7 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
-<dom-module id="partner-item-data">
+<dom-module id="intervention-item-data">
 
   <template>
     <etools-ajax id="ajax"
@@ -17,51 +17,56 @@
 
       Polymer({
 
-        is: 'partner-item-data',
+        is: 'intervention-item-data',
         behaviors: [etoolsAppConfig.globals],
         properties: {
 
-          partner: {
+          intervention: {
             type: Object,
             readOnly: true,
             notify: true
           },
-          endpoint: {
-            type: Object,
-            reflectToAttribute: true
-          },
 
-          partnerId: {
+          interventionId: {
             type: Number,
             notify: true,
-            observer: '_partnerIdChanged'
+            observer: '_interventionIdChanged'
           },
 
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
 
         },
+
         attached: function() {
           this.ajaxEl = this.$.ajax;
         },
-        _prepareEndpoint: function(partnerId) {
-          if (partnerId > 0) {
-            // check and prepare request URL
-            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
-              this.set('endpoint', this.getEndpoint('partnerDetails', {id: partnerId}));
-            }
-          }
-        },
-        _partnerIdChanged: function(newId) {
+
+        _interventionIdChanged: function(newId) {
           if (newId) {
-            // set an empty partner
-            this._setPartner({});
-            // set the new endpoint
-            //TODO: fire a loading event from here or etools ajax for side page load
-            //this.$.fire('partial-loading', {element:'Partner Details'})
-            this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
+            this.fire('global-loading', {message: 'Loading intervention data...', active: true});
+            this._prepareAndFireRequest();
+            this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
           }
         },
+
+        /**
+         * Handle received data from request
+         */
+        _handleResponse: function(response) {
+          this._setIntervention(response.detail);
+          // call additional callback, if any
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            // reset callback
+            this.set('handleResponseAdditionalCallback', null);
+          }
+        },
+
+        /**
+         * Set the method of the request and the body.
+         * Used for unsafe requests (PATCH/POST).
+         */
         _prepareAndFireRequest: function(method, data, url) {
           if (!method) {
             method = 'GET';
@@ -79,64 +84,18 @@
           // after body is set the request is automatically triggered
         },
 
-        _handleResponse: function(response) {
-          this._setPartner(response.detail);
-          this.fire('global-loading', {active: false});
-          if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
-            // reset callback
-            this.set('handleResponseAdditionalCallback', null);
-          }
-        },
-        savePartner: function(partner, callback) {
-          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
-            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
-          } else {
-            var url = null;
-            var isNew = false;
-
-            if (partner.id) {
-              // prepare PATCH endpoint
-              this._prepareEndpoint(partner.id);
-              url = this.endpoint.url;
-            } else {
-              // new partner, use POST method for the same endpoint
-              var partnersEndpoint = this.getEndpoint('partners');
-              url = partnersEndpoint.url;
-              isNew = true;
-            }
-            // remove id from data
-            if (partner.id) {
-              delete partner.id;
-            }
-            if (Object.keys(partner).length > 0) {
-              // set additional callback if any
-              if (callback) {
-                this.set('handleResponseAdditionalCallback', callback);
-              }
-              this.fire('global-loading', {message: 'Saving partner data...', active: true});
-              // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url);
-            } else {
-              this.fire('toast', {
-                text: 'There is nothing to save. No change detected on this partner.',
-                showCloseBtn: true
-              });
-            }
-          }
-        },
         // TODO:  refactor this, add it in a behavior
         _handleErrorResponse: function(response) {
           this.fire('global-loading', {active: false});
           var errors = response.detail.request.detail.request.response;
           if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
             // TODO: improve etools-ajax on-fail event data model (received errors)
-            var errorMessage = 'An error occurred during partner save!';
+            var errorMessage = 'An error occurred during agreement save!';
             if (errors) {
-              var errorMessages = ['Errors occurred:\n'];
+              var errorMessages = ["Errors occurred:\n"];
               if (Array.isArray(errors) && errors.length > 0) {
                 errors.forEach(function(err) {
-                  errorMessages.push(err + '\n');
+                  errorMessages.push(err + "\n");
                 });
               } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
                 for (var errField in errors) {
@@ -158,6 +117,56 @@
               }
             }
             this.fire('toast', {text: errorMessage, showCloseBtn: true});
+          }
+        },
+
+        _prepareEndpoint: function(interventionId) {
+          if (interventionId > 0) {
+            // check and prepare request URL
+            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
+              this.set('endpoint', this.getEndpoint('interventionDetails', {id: interventionId}));
+            }
+          }
+        },
+
+        /**
+         * Save intervention data
+         */
+        saveIntervention: function(intervention, callback) {
+          if (typeof intervention === 'object' && Object.keys(intervention).length === 0) {
+            this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
+          } else {
+            var url = null;
+            var isNew = false;
+
+            if (intervention.id) {
+              // prepare PATCH endpoint
+              this._prepareEndpoint(intervention.id);
+              url = this.endpoint.url;
+            } else {
+              // new agreement, use POST method for the same endpoint
+              var agreementsEndpoint = this.getEndpoint('interventions');
+              url = agreementsEndpoint.url;
+              isNew = true;
+            }
+            // remove id from data
+            if (intervention.id) {
+              delete intervention.id;
+            }
+            if (Object.keys(intervention).length > 0) {
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
+              this.fire('global-loading', {message: 'Saving intervention data...', active: true});
+              // fire in the hole
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url);
+            } else {
+              this.fire('toast', {
+                text: 'There is nothing to save. No change detected on this intervention.',
+                showCloseBtn: true
+              });
+            }
           }
         }
 
