@@ -4,9 +4,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../app-elements/page-header/page-header.html">
-<link rel="import" href="../app-elements/page-footer/page-footer.html">
-
 
 <!-- Replace these with something more apppriate -->
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
@@ -39,16 +36,12 @@
         query-params="{{governmentQueryParams}}"
         active="{{governmentListActive}}">    
     </app-route>
-  	
+  	<!-- 
   	<partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
                         prepare-dropdown-data>
     </partners-list-data>
-
-  	<app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-        <page-header user="[[user]]"></page-header>
-      </app-header>
+ -->
+  	<app-header-layout>
 
       <div class$="page-top-content [[_getTopContentAdditionalClass()]]">
         <div class="top-content">
@@ -108,8 +101,6 @@
         </div>
         
       </iron-pages>
-
-      <page-footer></page-footer>
     </app-header-layout> 
 
   </template>
