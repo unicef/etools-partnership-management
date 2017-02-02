@@ -16,7 +16,8 @@
     partners: [],
     agreementsDropdownData: [],
     partnersDropdownData: [],
-    agreementsList: []
+    countryProgrammeDropdownData: [],
+    agreementsList: [],
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -53,6 +54,10 @@
         // console.log('set sectors data...', action.sectors);
         return Object.assign({}, state, { sectors: action.sectors });
 
+      case 'SET_SECTIONS':
+            // console.log('set sectors data...', action.sectors);
+        return Object.assign({}, state, { sections: action.sections });
+
       case 'SET_LOCATIONS':
         // console.log('set locations data...', action.locations);
         return Object.assign({}, state, {locations: action.locations});
@@ -65,18 +70,22 @@
         // console.log('set offices data...', action.offices);
         return Object.assign({}, state, { offices: action.offices });
 
-      case 'SET_PARTNERS':     
-        //console.log('set partners data...', action.partners); 
+      case 'SET_PARTNERS':
+        //console.log('set partners data...', action.partners);
         return Object.assign({}, state, {partners: action.partnersData});
-      case 'SET_AGREEMENTS':     
-        //console.log('set partners data...', action.partners); 
+      case 'SET_AGREEMENTS':
+        //console.log('set partners data...', action.partners);
         return Object.assign({}, state, {agreementsList: action.agreementsList});
-      case 'SET_PARTNERS_DROPDOWN':     
-        // console.log('set offices data...', action.partnersDropdownData);  
+      case 'SET_PARTNERS_DROPDOWN':
+        // console.log('set offices data...', action.partnersDropdownData);
         return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
-      case 'SET_AGREEMENTS_DROPDOWN':     
-        // console.log('set offices data...', action.partnersDropdownData);  
+      case 'SET_AGREEMENTS_DROPDOWN':
+        // console.log('set offices data...', action.partnersDropdownData);
         return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
+
+        case 'SET_COUNTRY_PROGRAMME_DROPDOWN' :
+            return Object.assign({}, state, {countryProgrammeDropdownData: action.countryProgramme});
+
     }
   });
 

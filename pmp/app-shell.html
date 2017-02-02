@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
+<link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -35,9 +36,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
 
+<link rel="import" href="app-elements/static-common-data/country-programme-data.html">
 <link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
 <link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
 <link rel="import" href="app-elements/static-common-data/sectors-data.html">
+<link rel="import" href="app-elements/static-common-data/sections-data.html">
 <link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
 <link rel="import" href="app-elements/static-common-data/offices-data.html">
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
@@ -113,7 +116,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- get static data -->
     <dropdowns-pmp-data></dropdowns-pmp-data>
     <dropdowns-static-data></dropdowns-static-data>
+    <country-programme-data></country-programme-data>
     <sectors-data></sectors-data>
+    <sections-data></sections-data>
     <unicef-users-data></unicef-users-data>
     <offices-data></offices-data>
     <locations-data></locations-data>
@@ -184,6 +189,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <page-not-found name="not-found"></page-not-found>
 
           </iron-pages>
+          <page-footer></page-footer>
         </app-header-layout>
       </app-drawer-layout>
     
