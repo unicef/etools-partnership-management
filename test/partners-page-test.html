@@ -27,8 +27,7 @@
           home = fixture('basic');
         });
         test('Page Header should be Partners', function() {
-          var pgHeader = Polymer.dom(home.root).querySelector('page-header');
-          assert.equal(pgHeader.title, '');
+          assert.equal(home.is, 'page-partners');
         })
       });
     </script>

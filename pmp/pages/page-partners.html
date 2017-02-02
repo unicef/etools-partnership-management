@@ -5,8 +5,6 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
-<link rel="import" href="../app-elements/page-header/page-header.html">
-<link rel="import" href="../app-elements/page-footer/page-footer.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
@@ -41,14 +39,7 @@
 
     <partner-item-data id="partnerData" partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
 
-    <app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-
-        <page-header user="[[user]]"></page-header>
-
-      </app-header>
-
+    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -115,8 +106,6 @@
           </partner-details>
         </div>
       </iron-pages>
-
-      <page-footer></page-footer>
 
     </app-header-layout>
 

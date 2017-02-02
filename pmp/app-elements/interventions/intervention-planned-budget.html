@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -10,6 +11,7 @@
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="intervention-planned-budget">
   <template>
@@ -28,6 +30,15 @@
           @apply(--paper-fab-btn-green);
         };
       }
+      paper-input {
+        width: 100%;
+      }
+
+      paper-input.total-input {
+        --paper-input-container-input: {
+          font-weight: bold;
+        };
+      }
 
       .darkbg {
         padding: 0 15px;
@@ -37,12 +48,62 @@
         border-radius: 10px;
       }
 
+      #totals {
+        padding: 15px 15px 15px 86px;
+        font-weight: bold;
+      }
+      #totals-content-wrapper .darkbg {
+        padding: 15px;
+        @apply(--layout-horizontal);
+      }
+      #totals-content-wrapper .darkbg:first-child {
+        margin-bottom: 15px;
+      }
+
+      #totals-content-wrapper {
+        margin-left: auto;
+        padding-left: 25px;
+        @apply(--layout-vertical);
+      }
+
+      .total-unicef-label {
+        @apply(--layout-end-justified);
+      }
+      .total-unicef-label span {
+        display: flex;
+        align-self: center;
+      }
+
+      .total-unicef {
+        @apply(--layout-vertical);
+      }
+      .total-unicef span {
+        display: inline-block;
+        width: 100%;
+        background-color: #F7EE76; /* TODO: replace with app-theme var */
+        padding: 15px;
+        box-sizing: border-box;
+        border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+        text-align: center;
+      }
+
+      #currency {
+        width: auto;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
+      <div class="row-h flex-c">
+        <etools-searchable-multiselection-menu id="currency"
+                                               label="Local Currency"
+                                               placeholder="&#8212;"
+                                               options="[[currencies]]"
+                                               on-value-change="_currencyChanged">
+        </etools-searchable-multiselection-menu>
+      </div>
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class="row-h item-actions-container" data-item-nr$="[[_getItemNr(index)]]">
+          <div class="row-h item-actions-container">
             <div class="row-v actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
@@ -55,31 +116,125 @@
             <div class="row-h">
               <div class="col col-4">
                 <div class="row-h flex-c">
-                  <div class="col">
+                  <div class="col col-4">
                     <etools-searchable-multiselection-menu id$="year_[[index]]"
-                                                           label="Locations"
-                                                           placeholder="&#8212;"
-                                                           value="[[_getEsmmValue('locations', intervention.locations)]]"
-                                                           options="[[locations]]"
-                                                           on-value-change="_esmmValueChanged"
-                                                           data-path="locations"
-                                                           multi>
+                       class="year"
+                       label="Year"
+                       placeholder="&#8212;"
+                       value="[[_getSelectedYear(item.year, years.length)]]"
+                       options="[[years]]"
+                       on-value-change="_yearChanged">
+                    </etools-searchable-multiselection-menu>
                   </div>
-                  <div class="col col-2">
-                    CSO CONT
+                  <div class="col col-8">
+                    <paper-input label="CSO Cont. (Local)"
+                      value="{{item.partner_contribution_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
-                  the rest
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Cash (Local)"
+                      value="{{item.unicef_cash_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Supply (Local)"
+                      value="{{item.in_kind_amount_local}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Total (Local)"
+                      class="total-input"
+                      value$="[[_getPlannedBudgetTotal(item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
+                      placeholder="&#8212;"
+                      readonly>
+                    </paper-input>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div class="row-h">
+              <div class="col col-4">
+                <div class="row-h flex-c">
+                  <div class="col col-4"></div>
+                  <div class="col col-8">
+                    <paper-input label="CSO Cont. (USD)"
+                      value="{{item.partner_contribution}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                </div>
+              </div>
+              <div class="col col-8">
+                <div class="row-h flex-c darkbg">
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Cash (USD)"
+                      value="{{item.unicef_cash}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Supply (USD)"
+                      value="{{item.in_kind_amount}}"
+                      type="number"
+                      placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col col-4">
+                    <paper-input label="UNICEF Total (USD)"
+                      class="total-input"
+                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, localCurrency)]]"
+                      placeholder="&#8212;"
+                      readonly>
+                    </paper-input>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </template>
+      <div id="totals" class="row-h">
+        <div id="totals-content-wrapper" class="col col-8">
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
+              <span>Total UNICEF Budget</span>
+            </div>
+            <div class="col col-4">
+              <div class="flex-c total-unicef">
+                <span>[[_localUnicefTotal]] [[localCurrency]]</span>
+                <span>[[_usdUnicefTotal]] USD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
+              <span>Total CSO Budget</span>
+            </div>
+            <div class="col col-4">
+              <div class="flex-c total-unicef">
+                <span>[[_localCsoTotal]] [[localCurrency]]</span>
+                <span>[[_usdCsoTotal]] USD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
@@ -102,7 +257,8 @@
         is: 'intervention-planned-budget',
 
         behaviors: [
-          pmpBehaviors.RepeatableDataSetsBehavior
+          pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
         ],
 
         properties: {
@@ -110,15 +266,41 @@
             type: Array,
             value: []
           },
-          interventionStart: {
-            type: String
+          _localUnicefTotal: {
+            type: Number,
+            value: 0
           },
-          interventionEnd: {
-            type: String
+          _usdUnicefTotal: {
+            type: Number,
+            value: 0
+          },
+          _localCsoTotal: {
+            type: Number,
+            value: 0
+          },
+          _usdCsoTotal: {
+            type: Number,
+            value: 0
+          },
+          currencies: {
+            type: Array,
+            statePath: function(state) {
+              return state.currencies.map(function(currency, index) {
+                return {
+                  value: (index + 1),
+                  label: currency.value
+                };
+              });
+            }
+          },
+          localCurrency: {
+            type: String,
+            value: ''
           }
         },
         observers: [
-            '_setYears(interventionStart, interventionEnd)'
+            '_dataItemsChanged(dataItems)',
+            '_dataItemChange(dataItems.*)'
         ],
 
         ready: function() {
@@ -133,17 +315,56 @@
             year: null,
             total: 0
           };
+
+          // TODO: setup curencies, fake data for now
+          this.set('currencies', [
+            {
+              value: 1,
+              label: 'LBP'
+            },
+            {
+              value: 2,
+              label: 'USD'
+            }
+          ]);
         },
 
-        _setYears: function(interventionStart, interventionEnd) {
-          if (typeof interventionStart === 'string' && interventionStart !== ''
-              && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            this.debounce('setInterventionsPlannedBudgetYears', function() {
-              var start = parseInt(interventionStart.substr(0, 4), 10);
-              var end = parseInt(interventionEnd.substr(0, 4), 10);
-              console.log(start, end);
-            }.bind(this), 50)
+        _dataItemsChanged: function(dataItems) {
+          if (!Array.isArray(dataItems)) {
+            this.set('dataItems', []);
           }
+        },
+
+        _dataItemChange: function(dataItem) {
+          if (dataItem.path !== 'dataItems.splices') {
+            this._computeTotals(this.dataItems);
+          }
+        },
+
+        _computeTotals: function(data) {
+          var localUnicefTotal = 0;
+          var usdUnicefTotal = 0;
+          var localCsoTotal = 0;
+          var usdCsoTotal = 0;
+          data.forEach(function(plannedBudget) {
+            usdUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
+            localUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash_local,
+                plannedBudget.in_kind_amount_local);
+
+            var contLocal = parseFloat(plannedBudget.partner_contribution_local);
+            if (!isNaN(contLocal)) {
+              localCsoTotal += contLocal;
+            }
+
+            var contUsd = parseFloat(plannedBudget.partner_contribution);
+            if (!isNaN(contUsd)) {
+              usdCsoTotal += contUsd;
+            }
+          }.bind(this));
+          this.set('_localUnicefTotal', localUnicefTotal);
+          this.set('_usdUnicefTotal', usdUnicefTotal);
+          this.set('_localCsoTotal', localCsoTotal);
+          this.set('_usdCsoTotal', usdCsoTotal);
         },
 
         /**
@@ -159,38 +380,76 @@
           return true;
         },
 
-        _getItemNr: function(index) {
-          return parseInt(index, 10) + 1;
+        _getSelectedYear: function(year) {
+          if (year && this.years.length) {
+            return this.years.filter(function(y) {
+              return y.value === parseInt(year, 10);
+            });
+          }
+          return [];
         },
 
-        /**
-         * Check if amendment fields are empty
-         */
-        //        _plannedBudgetFieldsAreNotEmpty: function(plannedBudgetItem) {
-        //          return parseFloat(plannedBudgetItem.partner_contribution) > 0
-        //              || parseFloat(plannedBudgetItem.unicef_cash) > 0
-        //              || parseFloat(plannedBudgetItem.in_kind_amount) > 0
-        //              || parseFloat(plannedBudgetItem.partner_contribution_local) > 0
-        //              || parseFloat(plannedBudgetItem.in_kind_amount_local) > 0
-        //              || parseInt(plannedBudgetItem.year, 10) > 0
-        //              || parseFloat(plannedBudgetItem.total) > 0
-        //        },
+        _yearChanged: function(event) {
+          var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
+              ? event.detail.selectedValues.value : null;
+
+          if (this._yearAlreadySelected(yearSelected, event.model.index)) {
+            this.fire('toast', {text: 'Year already selected on other planned budget item.', showCloseBtn: true});
+            var yearDropdown = this.$$('#year_' + event.model.index);
+            if (yearDropdown) {
+              yearDropdown.value = [];
+              yearDropdown.selectedValues = null;
+            }
+            return;
+          }
+
+          this.set('dataItems.' + event.model.index + '.year', yearSelected);
+        },
+
+        _currencyChanged: function(event) {
+          var currencySelected = (event.detail.selectedValues && event.detail.selectedValues.label)
+              ? event.detail.selectedValues.label : null;
+          this.set('localCurrency', currencySelected);
+        },
+
+        _getPlannedBudgetTotal: function(val1, val2, currency) {
+          var t = 0;
+          val1 = parseFloat(val1);
+          if (!isNaN(val1)) {
+            t += val1;
+          }
+          val2 = parseFloat(val2);
+          if (!isNaN(val2)) {
+            t += val2;
+          }
+          if (typeof currency === 'string' && currency !== '') {
+            return t + ' ' + currency;
+          }
+          return t;
+        },
+
+        _yearAlreadySelected: function(year, dropdownIdx) {
+          var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
+          var selected = false;
+          if (dropdowns && dropdowns.length) {
+            for (var i = 0; i < dropdowns.length; i++) {
+              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
+                if (dropdowns[i].value.value === year) {
+                  // already selected sector
+                  selected = true;
+                  break;
+                }
+              }
+            }
+          }
+          return selected;
+        },
 
         /**
          * Validate last added planned budget and if is not empty add a new one
          */
         _addNewPlannedBudget: function() {
-          var lastPlannedBudgetItemIndex = this.dataItems.length - 1;
-          if (lastPlannedBudgetItemIndex >= 0 && this._canBeRemoved(lastPlannedBudgetItemIndex)) {
-            //            var lastPlannedBudgetItem = this.dataItems[lastPlannedBudgetItemIndex];
-            //            if (!this._plannedBudgetFieldsAreNotEmpty(lastPlannedBudgetItem)) {
-            //              this.fire('toast', {text: 'Last planned budget fields are empty!', showCloseBtn: true});
-            //            } else {
-            this._addElement();
-            //            }
-          } else {
-            this._addElement();
-          }
+          this._addElement();
         }
 
       });

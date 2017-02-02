@@ -4,9 +4,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../app-elements/page-header/page-header.html">
-<link rel="import" href="../app-elements/page-footer/page-footer.html">
-
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
@@ -52,12 +49,7 @@
                          intervention="{{intervention}}"
                          intervention-id="[[routeData.intId]]"></intervention-item-data>
 
-    <app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-        <page-header title="Interventions"></page-header>
-      </app-header>
-
+    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -125,20 +117,23 @@
               url-params="[[interventionsQueryParams]]"></interventions-list>
         </div>
         <div class="page" name="details">
-          <intervention-details intervention="[[intervention]]"></intervention-details>
+          <intervention-details intervention="[[intervention]]"
+                                on-save-intervention="_saveIntervention"
+                                edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
         </div>
         <div class="page" name="supplies">
           <intervention-supplies></intervention-supplies>
         </div>
         <div class="page" name="review-and-sign">
-          <intervention-review-and-sign></intervention-review-and-sign>
+          <intervention-review-and-sign intervention="[[intervention]]"
+                                        on-save-intervention="_saveIntervention"
+                                        edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
         </div>
         <div class="page" name="attachments">
-          <intervention-attachments></intervention-attachments>
+          <intervention-attachments on-save-intervention="_saveIntervention"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-attachments>
         </div>
       </iron-pages>
-
-      <page-footer></page-footer>
 
     </app-header-layout>
 
@@ -200,7 +195,17 @@
         return '';
       },
 
+      _saveIntervention: function(event) {
+        event.stopImmediatePropagation();
+        this.$.interventionData.saveIntervention(event.detail);
+      },
 
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
+      }
 
     });
 
