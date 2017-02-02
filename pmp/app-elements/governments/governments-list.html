@@ -123,59 +123,48 @@
 
       </div>
     </paper-material>
-<!-- 
+
     <paper-material id="list" elevation="1">
 
       <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <data-table-column class="col-2" field="number" sortable>
-          Reference #
+          country_programme
         </data-table-column>
         <data-table-column class="col-3" field="partner_name" sortable>
-          Partner Name
+          partner
         </data-table-column>
         <data-table-column class="flex-c" field="document_type">
-          Document Type
+          result_structure
         </data-table-column>
         <data-table-column class="flex-c" field="status">
-          Status
-        </data-table-column>
-        <data-table-column class="col-2" field="title">
-          Title
-        </data-table-column>
+          id
+        </data-table-column>        
         <data-table-column class="flex-c" field="start" sortable>
-          Start Date
+          created_at
         </data-table-column>
-        <data-table-column class="flex-c" field="end" sortable>
-          End Date
-        </data-table-column>
+        
       </data-table-header>
 
-       <template id="rows" is="dom-repeat" items="[[filteredInterventionsfilteredGovernments]]"
+       <template id="rows" is="dom-repeat" items="[[filteredGovernments]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <a class="col-data col-2 truncate"
                href="interventions/[[intervention.id]]/details"
-               title="[[getDisplayValue(intervention.number)]]">
-              [[getDisplayValue(intervention.number)]]
+               title="[[getDisplayValue(intervention.country_programme)]]">
+              [[getDisplayValue(intervention.country_programme)]]
             </a>
-            <span class="col-data col-3 truncate" title="[[getDisplayValue(intervention.partner_name)]]">
-                [[getDisplayValue(intervention.partner_name)]]
+            <span class="col-data col-3 truncate" title="[[getDisplayValue(intervention.partner)]]">
+                [[getDisplayValue(intervention.partner)]]
             </span>
             <span class="col-data flex-c">
-                [[getDisplayValue(intervention.document_type)]]
+                [[getDisplayValue(intervention.result_structure)]]
             </span>
             <span class="col-data flex-c">
-                [[getDisplayValue(intervention.status)]]
-            </span>
-            <span class="col-data col-2 truncate" title="[[getDisplayValue(intervention.title)]]">
-                [[getDisplayValue(intervention.title)]]
+                [[getDisplayValue(intervention.id)]]
             </span>
             <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.start)]]
-            </span>
-            <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.end)]]
+                [[_checkAndShowInterventionDate(intervention.created_at)]]
             </span>
           </div>
           <div slot="row-data-details">
@@ -210,7 +199,7 @@
           on-page-number-changed="_pageNumberChanged">
       </data-table-footer>
 
-    </paper-material> -->
+    </paper-material>
 
   </template>
 
@@ -218,9 +207,7 @@
     (function() {
       'use strict';
 
-      var _interventionsLastNavigated = null;
-      
-      console.log('inside script tag');
+      var _interventionsLastNavigated = null;      
 
       Polymer({
         is: 'governments-list',
@@ -367,7 +354,6 @@
         ],
 
         ready: function() {
-          console.log('ready');
           // this.$.list.classList.add('hidden');
 
           // init list filter options
@@ -474,13 +460,13 @@
           if (qs !== _interventionsLastNavigated) {
             _interventionsLastNavigated = qs;
             // update URL
-            this.updateAppState('interventions/list', qs, true);
+            this.updateAppState('governments/list', qs, true);
             // filter interventions
             this._filterInterventionsData();
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
-              this.updateAppState('interventions/list', qs, false);
+              this.updateAppState('governments/list', qs, false);
             }
             if (this.forceDataRefresh) {
               // refilter agreements data
@@ -491,113 +477,113 @@
           }
         },
 
-//         _filterInterventionsData: function() {
-//           // Query is debounced with a debounce time
-//           // set depending on what action the user takes
-//           this.debounce('query', function() {
-//             this.$.interventions.query(
-//               this.sortOrder.field,
-//               this.sortOrder.direction,
-//               this.q.toLowerCase(),
+        _filterInterventionsData: function() {
+          // Query is debounced with a debounce time
+          // set depending on what action the user takes
+          this.debounce('query', function() {
+            this.$.governments.query(
+              this.sortOrder.field,
+              this.sortOrder.direction,
+              this.q.toLowerCase(),
 
-//               (this.selectedDocumentTypes && this.selectedDocumentTypes.length)
-//                   ? this.selectedDocumentTypes.map(function(type) {
-//                 return type.label;
-//               }) : [],
+              (this.selectedDocumentTypes && this.selectedDocumentTypes.length)
+                  ? this.selectedDocumentTypes.map(function(type) {
+                return type.label;
+              }) : [],
 
-//               (this.selectedCpOutputs && this.selectedCpOutputs.length)
-//                   ? this.selectedCpOutputs.map(function(cpOutput) {
-//                 return cpOutput.value;
-//               }) : [],
+              (this.selectedCpOutputs && this.selectedCpOutputs.length)
+                  ? this.selectedCpOutputs.map(function(cpOutput) {
+                return cpOutput.value;
+              }) : [],
 
-//               (this.selectedStatuses && this.selectedStatuses.length)
-//                   ? this.selectedStatuses.map(function(status) {
-//                 return status.label.toLowerCase();
-//               }) : [],
+              (this.selectedStatuses && this.selectedStatuses.length)
+                  ? this.selectedStatuses.map(function(status) {
+                return status.label.toLowerCase();
+              }) : [],
 
-//               (this.selectedSectors && this.selectedSectors.length)
-//                   ? this.selectedSectors.map(function(sector) {
-//                 return sector.label;
-//               }) : [],
+              (this.selectedSectors && this.selectedSectors.length)
+                  ? this.selectedSectors.map(function(sector) {
+                return sector.label;
+              }) : [],
 
-//               (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
-//                   ? this.selectedUnicefFocalPoints.map(function(fPt) {
-//                 return fPt.value;
-//               }) : [],
+              (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
+                  ? this.selectedUnicefFocalPoints.map(function(fPt) {
+                return fPt.value;
+              }) : [],
 
-//               (this.selectedOffices && this.selectedOffices.length)
-//                   ? this.selectedOffices.map(function(office) {
-//                 return office.value;
-//               }) : [],
+              (this.selectedOffices && this.selectedOffices.length)
+                  ? this.selectedOffices.map(function(office) {
+                return office.value;
+              }) : [],
 
-//               this.startDate,
-//               this.endDate,
-//               this.pageNumber,
-//               this.pageSize);
-//           }, this.debounceTime);
-//         },
+              this.startDate,
+              this.endDate,
+              this.pageNumber,
+              this.pageSize);
+          }, this.debounceTime);
+        },
 
-//         // Outputs the query string for the list
-//         _buildQueryString: function() {
-//           var out = [];
-//           if (this.pageNumber && this.pageNumber > 1) {
-//             out.push('page=' + this.pageNumber);
-//           }
-//           if (this.pageSize) {
-//             out.push('size=' + this.pageSize);
-//           }
-//           if (this.q && this.q.length) {
-//             out.push('q=' + this.q);
-//           }
+        // Outputs the query string for the list
+        _buildQueryString: function() {
+          var out = [];
+          if (this.pageNumber && this.pageNumber > 1) {
+            out.push('page=' + this.pageNumber);
+          }
+          if (this.pageSize) {
+            out.push('size=' + this.pageSize);
+          }
+          if (this.q && this.q.length) {
+            out.push('q=' + this.q);
+          }
 
-//           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
-//             out.push('type=' + this.selectedDocumentTypes.map(function(type) {
-//               return type.label;
-//             }).join('+'));
-//           }
+          if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
+            out.push('type=' + this.selectedDocumentTypes.map(function(type) {
+              return type.label;
+            }).join('+'));
+          }
 
-//           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-//             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-//               return cpOutput.value;
-//             }).join('+'));
-//           }
+          if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
+            out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
+              return cpOutput.value;
+            }).join('+'));
+          }
 
-//           if (this.selectedStatuses && this.selectedStatuses.length) {
-//             out.push('status=' + this.selectedStatuses.map(function(status) {
-//               return status.label;
-//             }).join('+'));
-//           }
+          if (this.selectedStatuses && this.selectedStatuses.length) {
+            out.push('status=' + this.selectedStatuses.map(function(status) {
+              return status.label;
+            }).join('+'));
+          }
 
-//           if (this.selectedSectors && this.selectedSectors.length) {
-//             out.push('sector=' + this.selectedSectors.map(function(sector) {
-//               return sector.label;
-//             }).join('+'));
-//           }
+          if (this.selectedSectors && this.selectedSectors.length) {
+            out.push('sector=' + this.selectedSectors.map(function(sector) {
+              return sector.label;
+            }).join('+'));
+          }
 
-//           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-//             out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
-//               return focalPt.value;
-//             }).join('+'));
-//           }
+          if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
+            out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
+              return focalPt.value;
+            }).join('+'));
+          }
 
-//           if (this.selectedOffices && this.selectedOffices.length) {
-//             out.push('offices=' + this.selectedOffices.map(function(office) {
-//               return office.value;
-//             }).join('+'));
-//           }
+          if (this.selectedOffices && this.selectedOffices.length) {
+            out.push('offices=' + this.selectedOffices.map(function(office) {
+              return office.value;
+            }).join('+'));
+          }
 
-//           if (this.startDate && this.startDate.length) {
-//             out.push('start=' + this.prettyDate(this.startDate, 'YYYY-MM-DD'));
-//           }
-//           if (this.endDate && this.endDate.length) {
-//             out.push('end=' + this.prettyDate(this.endDate, 'YYYY-MM-DD'));
-//           }
-//           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
-//             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-//           }
+          if (this.startDate && this.startDate.length) {
+            out.push('start=' + this.prettyDate(this.startDate, 'YYYY-MM-DD'));
+          }
+          if (this.endDate && this.endDate.length) {
+            out.push('end=' + this.prettyDate(this.endDate, 'YYYY-MM-DD'));
+          }
+          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
+          }
 
-//           return out.join('&');
-//         },
+          return out.join('&');
+        },
 
 //         _setSelectedOffices: function(officesStr) {
 //           var officesIdsArr = officesStr.split('+');
@@ -669,25 +655,25 @@
 //           return [];
 //         },
 
-//         _interventionsChanged: function() {
-//           // List fade in fade out effect
-//           // this.$.list.classList.add('hidden');
-// //          this.async(function() {
-// //            var interventionsList = this.$$('#interventions');
-// //            if (interventionsList && Array.isArray(interventionsList.data) && interventionsList.data.length > 0) {
-// //              this.$$('#list').classList.remove('hidden');
-// //            }
-// //          }.bind(this), 300);
-//         },
+        _interventionsChanged: function() {
+          // List fade in fade out effect
+          // this.$.list.classList.add('hidden');
+//          this.async(function() {
+//            var interventionsList = this.$$('#interventions');
+//            if (interventionsList && Array.isArray(interventionsList.data) && interventionsList.data.length > 0) {
+//              this.$$('#list').classList.remove('hidden');
+//            }
+//          }.bind(this), 300);
+        },
 
-//         _qChanged: function(q) {
-//           this.set('debounceTime', 300);
-//           this.set('pageNumber', 1);
-//         },
+        _qChanged: function(q) {
+          this.set('debounceTime', 300);
+          this.set('pageNumber', 1);
+        },
 
-//         _dateChanged: function(date) {
-//           this.set('pageNumber', 1);
-//         },
+        _dateChanged: function(date) {
+          this.set('pageNumber', 1);
+        },
 
 //         /**
 //          * At page refresh Dexie DBs might be wiped out and filteredInterventions will be empty.
@@ -702,61 +688,61 @@
           this._init(this.active);
         },
 
-//         _onSearch: function() {
-//           this.q = this.$.query.value;
-//         },
+        _onSearch: function() {
+          this.q = this.$.query.value;
+        },
 
-//         _pageSizeSelected: function(e) {
-//           this.set('debounceTime', 200);
-//           this.set('pageNumber', 1);
-//           this.set('pageSize', parseInt(e.detail.value));
-//         },
+        _pageSizeSelected: function(e) {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+          this.set('pageSize', parseInt(e.detail.value));
+        },
 
-//         _pageNumberChanged: function(e) {
-//           this.set('debounceTime', 50);
-//           this.set('pageNumber', e.detail.value);
-//         },
+        _pageNumberChanged: function(e) {
+          this.set('debounceTime', 50);
+          this.set('pageNumber', e.detail.value);
+        },
 
-//         _sortOrderChanged: function(e) {
-//           this.set('debounceTime', 150);
-//           this.set('sortOrder', e.detail);
-//         },
+        _sortOrderChanged: function(e) {
+          this.set('debounceTime', 150);
+          this.set('sortOrder', e.detail);
+        },
 
-//         // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
-//         _listDataChanged: function(event) {
-//           var rows = this.$.list.querySelectorAll('data-table-row');
-//           if (rows) {
-//             rows.forEach(function(row) {
-//               if (row.detailsOpened) {
-//                 row.set('detailsOpened', false);
-//               }
-//             });
-//           }
-//         },
+        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
+        _listDataChanged: function(event) {
+          var rows = this.$.list.querySelectorAll('data-table-row');
+          if (rows) {
+            rows.forEach(function(row) {
+              if (row.detailsOpened) {
+                row.set('detailsOpened', false);
+              }
+            });
+          }
+        },
 
-//         // verify date and prettify or not
-//         _checkAndShowInterventionDate: function(dateString) {
-//           return this.getDisplayValue(dateString, true);
-//         },
+        // verify date and prettify or not
+        _checkAndShowInterventionDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        },
 
-//         /**
-//          * Get HRP name to be shown in the intervention details(collapsible content) row
-//          */
-//         _getHrpValue: function(hrpId) {
-//           var hrpData = this.hrps.filter(function(hrp) {
-//             return parseInt(hrp.value, 10) === parseInt(hrpId, 10);
-//           })[0];
-//           if (hrpData) {
-//             return this.getDisplayValue(hrpData.label);
-//           } else {
-//             return '-';
-//           }
-//         },
+        /**
+         * Get HRP name to be shown in the intervention details(collapsible content) row
+         */
+        _getHrpValue: function(hrpId) {
+          var hrpData = this.hrps.filter(function(hrp) {
+            return parseInt(hrp.value, 10) === parseInt(hrpId, 10);
+          })[0];
+          if (hrpData) {
+            return this.getDisplayValue(hrpData.label);
+          } else {
+            return '-';
+          }
+        },
 
-//         _filtersChanged: function() {
-//           this.set('debounceTime', 200);
-//           this.set('pageNumber', 1);
-//         }
+        _filtersChanged: function() {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+        }
 
       });
 
