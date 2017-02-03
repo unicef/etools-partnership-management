@@ -52,10 +52,14 @@
           currentQuery: {
             type: Object,
             value: null
+          },
+
+          unicefUsersData: {
+            type: Array
           }
         }, 
-
-        query: function(field, order, searchString, selectedPartnerNames, pageNumber, pageSize) {
+        
+        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -66,11 +70,14 @@
 
           var _this = this;
 
+          console.log('selected focal points: ',unicefFocalPoints);
+
+
+
           this.db.transaction('r', this.db.governments, function() {
             this.currentQuery = Dexie.currentTransaction;
 
             var governmentsQueryResult = _this.db.governments;
-
 
             // if (field) {
             //   // note: null values don't appear in result set of sort
@@ -80,11 +87,27 @@
               governmentsQueryResult = governmentsQueryResult.reverse();
             }
 
-            governmentsQueryResult = governmentsQueryResult.filter(function(government) {                                          
+            governmentsQueryResult = governmentsQueryResult.filter(function(government) {   
+              
+              government.unicef_focal_point_names = [];
+
+              for(var key in government.unicef_focal_points) {
+                government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
+              }                                       
+              
               if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {                
                 return false;
               }
 
+              if (unicefFocalPoints.length) {
+                var matchUnicefFocalPoints = government.unicef_focal_points.filter(function(fPt) {
+                  return unicefFocalPoints.indexOf(fPt) > -1;
+                });
+                if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
+                  return false;
+                }
+              }
+              
               if (searchString && searchString.length &&
                   government.number.toLowerCase().indexOf(searchString) < 0 &&
                   government.partner_name.toLowerCase().indexOf(searchString) < 0) {                
@@ -114,7 +137,17 @@
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
           });
+        },
+
+        getUserNameFromId: function(Id) {
+          for (var i=0; i < this.unicefUsersData.length; i++) {
+            if (this.unicefUsersData[i].value === Id) {
+              return this.unicefUsersData[i].label;
+            }
+          }
         }
+
+
 
       });
     })();

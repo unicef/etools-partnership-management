@@ -45,6 +45,7 @@
                          filtered-governments="{{filteredGovernments}}"
                          total-results="{{totalResults}}"
                          on-governments-loaded="_requiredDataHasBeenLoaded"
+                         unicef-users-data="[[unicefUsersData]]"
                          fire-data-loaded>
     </governments-list-data>
 
@@ -170,7 +171,7 @@
 
             <div class="row-details-content col-2">
               <span class="rdc-title">Unicef Focal Point</span>
-              <span>[[getDisplayValue(entry.focal_points)]]</span>
+              <span>[[getDisplayValue(entry.unicef_focal_point_names)]]</span>
             </div>
 
             <div class="row-details-content col-2">
@@ -311,6 +312,11 @@
 
           partnersDropdownData: Array,
 
+          unicefUsersData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+
         },
 
         listeners: {
@@ -319,7 +325,7 @@
 
         observers: [
           '_updateURL(q, selectedCpOutputs, partnerIds, selectedPartners, ' +
-            'pageNumber, pageSize, sortOrder)',
+            'selectedUnicefFocalPoints, pageNumber, pageSize, sortOrder)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
@@ -336,7 +342,15 @@
               selectionOptions: [], // will be populated when the partners data is received
               alreadySelected: [],
               path: 'selectedPartners'
-            },           
+            },   
+            {
+              filterName: 'UNICEF focal point',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.unicefUsersData,
+              alreadySelected: [],
+              path: 'selectedUnicefFocalPoints'
+            },        
             
           ]);
         },
@@ -349,14 +363,18 @@
           if (!active || !parms) {
             return;
           }
-
-          console.log('parms:', parms);
-
+          
           this.set('q', parms.q ? parms.q : '');
           this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
           this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
+          this.set('selectedUnicefFocalPoints',
+              parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
+
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+
+
+
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'partner_name', direction: 'asc'};
           if (parms.sort) {
@@ -410,21 +428,10 @@
               this.sortOrder.direction,
               this.q.toLowerCase(),
               _.map(this.selectedPartners, 'label'),
-
-              // (this.selectedCpOutputs && this.selectedCpOutputs.length)
-              //     ? this.selectedCpOutputs.map(function(cpOutput) {
-              //   return cpOutput.value;
-              // }) : [],
-
-              // (this.selectedSectors && this.selectedSectors.length)
-              //     ? this.selectedSectors.map(function(sector) {
-              //   return sector.label;
-              // }) : [],
-
-              // (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
-              //     ? this.selectedUnicefFocalPoints.map(function(fPt) {
-              //   return fPt.value;
-              // }) : [],
+              (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
+                  ? this.selectedUnicefFocalPoints.map(function(fPt) {
+                return fPt.value;
+              }) : [],
 
               this.pageNumber,
               this.pageSize);
@@ -512,6 +519,18 @@
           return [];
         },
 
+        _setSelectedUnicefFocalPoints: function(focalPtsStr) {
+          var focalPtsStrArr = focalPtsStr.split('+');
+          if (focalPtsStrArr && focalPtsStrArr.length) {
+            focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
+              return parseInt(fPtsIdStr, 10);
+            });
+            return this.unicefUsersData.filter(function(u) {
+              return focalPtsStrArr.indexOf(parseInt(u.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
 
         _governmentsChanged: function() {
           // List fade in fade out effect
