@@ -59,7 +59,7 @@
           }
         }, 
         
-        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, pageNumber, pageSize) {
+        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -69,9 +69,6 @@
           }
 
           var _this = this;
-
-          console.log('selected focal points: ',unicefFocalPoints);
-
 
 
           this.db.transaction('r', this.db.governments, function() {
@@ -107,11 +104,24 @@
                   return false;
                 }
               }
-              
+
+              if (cpOutputs.length) {                
+                return cpOutputs.indexOf(government.country_programme) > -1;               
+              }
+
               if (searchString && searchString.length &&
                   government.number.toLowerCase().indexOf(searchString) < 0 &&
                   government.partner_name.toLowerCase().indexOf(searchString) < 0) {                
                 return false;
+              }
+
+              if (sectors.length) {
+                var matchSectors = government.sectors.filter(function(sector) {
+                  return sectors.indexOf(sector) > -1;
+                });
+                if (matchSectors && matchSectors.length === 0) {
+                  return false;
+                }
               }
 
               return true;

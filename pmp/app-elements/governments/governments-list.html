@@ -324,7 +324,7 @@
         },
 
         observers: [
-          '_updateURL(q, selectedCpOutputs, partnerIds, selectedPartners, ' +
+          '_updateURL(q, partnerIds, selectedCpOutputs, selectedPartners, selectedSectors, ' +
             'selectedUnicefFocalPoints, pageNumber, pageSize, sortOrder)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
@@ -350,8 +350,23 @@
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
-            },        
-            
+            },  
+            {
+              filterName: 'Country Programme Output',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.cpOutputs,
+              alreadySelected: [],
+              path: 'selectedCpOutputs'
+            },      
+            {
+              filterName: 'Sectors',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.sectors,
+              alreadySelected: [],
+              path: 'selectedSectors'
+            },
           ]);
         },
 
@@ -369,9 +384,10 @@
           this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
           this.set('selectedUnicefFocalPoints',
               parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
-
+          this.set('selectedSectors', parms.sector ? this._setSelectedSectors(parms.sector) : []);
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
 
 
 
@@ -386,8 +402,6 @@
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
-          console.log('updating URL');
-
           var qs = this._buildQueryString();
           
           if (qs !== _governmentsLastNavigated) {
@@ -433,6 +447,16 @@
                 return fPt.value;
               }) : [],
 
+              (this.selectedCpOutputs && this.selectedCpOutputs.length)
+                  ? this.selectedCpOutputs.map(function(cpOutput) {
+                return cpOutput.value;
+              }) : [],
+
+              (this.selectedSectors && this.selectedSectors.length)
+                  ? this.selectedSectors.map(function(sector) {
+                return sector.label;
+              }) : [],
+                  
               this.pageNumber,
               this.pageSize);
 
@@ -474,9 +498,14 @@
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
           }       
 
-          console.log('query string building ',this.selectedPartnerNames);
           if (this.selectedPartners && this.selectedPartners.length) {
             out.push('partners=' + _.map(this.selectedPartners, 'value').join('+'));
+          }
+
+          if (this.selectedSectors && this.selectedSectors.length) {
+            out.push('sector=' + this.selectedSectors.map(function(sector) {
+              return sector.label;
+            }).join('+'));
           }
 
           return out.join('&');
@@ -527,6 +556,16 @@
             });
             return this.unicefUsersData.filter(function(u) {
               return focalPtsStrArr.indexOf(parseInt(u.value, 10)) > -1;
+            });
+          }
+          return [];
+        },
+        
+        _setSelectedSectors: function(sectors) {
+          var sectorsArr = sectors.split('+');
+          if (sectorsArr && sectorsArr.length) {
+            return this.sectors.filter(function(s) {
+              return sectorsArr.indexOf(s.label) > -1;
             });
           }
           return [];
