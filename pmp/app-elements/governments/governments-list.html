@@ -21,7 +21,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
-<link rel="import" href="../partners/partners-data/partners-list-data.html">
+<!-- <link rel="import" href="../partners/partners-data/partners-list-data.html"> -->
 
 <link rel="import" href="governments-data/governments-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -318,16 +318,14 @@
         },
 
         observers: [
-          '_updateURL(q, selectedCpOutputs, selectedSectors, selectedPartners, ' +
-            'selectedUnicefFocalPoints, pageNumber, pageSize, sortOrder)',
+          '_updateURL(q, selectedCpOutputs, partnerIds, selectedPartners, ' +
+            'pageNumber, pageSize, sortOrder)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
 
         ready: function() {
           this.$.list.classList.add('hidden');
-          
-          console.log('ready');
 
           // init list filter options
           this.initListFiltersData([
@@ -347,8 +345,6 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          console.log('init');
-
           var parms = this.urlParams;
           if (!active || !parms) {
             return;
@@ -408,29 +404,31 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
+            
             this.$.governments.query(
               this.sortOrder.field,
               this.sortOrder.direction,
               this.q.toLowerCase(),
               _.map(this.selectedPartners, 'label'),
 
-              (this.selectedCpOutputs && this.selectedCpOutputs.length)
-                  ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.value;
-              }) : [],
+              // (this.selectedCpOutputs && this.selectedCpOutputs.length)
+              //     ? this.selectedCpOutputs.map(function(cpOutput) {
+              //   return cpOutput.value;
+              // }) : [],
 
-              (this.selectedSectors && this.selectedSectors.length)
-                  ? this.selectedSectors.map(function(sector) {
-                return sector.label;
-              }) : [],
+              // (this.selectedSectors && this.selectedSectors.length)
+              //     ? this.selectedSectors.map(function(sector) {
+              //   return sector.label;
+              // }) : [],
 
-              (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
-                  ? this.selectedUnicefFocalPoints.map(function(fPt) {
-                return fPt.value;
-              }) : [],
+              // (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
+              //     ? this.selectedUnicefFocalPoints.map(function(fPt) {
+              //   return fPt.value;
+              // }) : [],
 
               this.pageNumber,
               this.pageSize);
+
           }, this.debounceTime);
         },
 
@@ -541,9 +539,9 @@
 //          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          // if (Array.isArray(this.filteredGovernments) && this.filteredGovernments.length === 0) {
-          //   this.set('forceDataRefresh',  true);
-          // }
+          if (Array.isArray(this.filteredGovernments) && this.filteredGovernments.length === 0) {
+            this.set('forceDataRefresh',  true);
+          }
           // recheck params to trigger partners filtering
           this._init(this.active);
         },

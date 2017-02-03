@@ -53,11 +53,9 @@
             type: Object,
             value: null
           }
-        },
+        }, 
 
-        query: function(field, order, searchString, documentTypes, cpOutputs,
-                        selectedPartnerNames, sectors, unicefFocalPoints,  startDate,
-                        endDate, pageNumber, pageSize) {
+        query: function(field, order, searchString, selectedPartnerNames, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -67,35 +65,34 @@
           }
 
           var _this = this;
-          
 
           this.db.transaction('r', this.db.governments, function() {
             this.currentQuery = Dexie.currentTransaction;
 
             var governmentsQueryResult = _this.db.governments;
 
-            if (field) {
-              // note: null values don't appear in result set of sort
-              governmentsQueryResult = governmentsQueryResult.orderBy(field);
-            }
+
+            // if (field) {
+            //   // note: null values don't appear in result set of sort
+            //   governmentsQueryResult = governmentsQueryResult.orderBy(field);
+            // }
             if (order === 'desc') {
               governmentsQueryResult = governmentsQueryResult.reverse();
             }
 
-            governmentsQueryResult = governmentsQueryResult.filter(function(government) {              
-              
-              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, agreement.partner_name)) {
+            governmentsQueryResult = governmentsQueryResult.filter(function(government) {                                          
+              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {                
                 return false;
               }
 
               if (searchString && searchString.length &&
-                  agreement.agreement_number.toLowerCase().indexOf(searchString) < 0 &&
-                  agreement.partner_name.toLowerCase().indexOf(searchString) < 0) {
+                  government.number.toLowerCase().indexOf(searchString) < 0 &&
+                  government.partner_name.toLowerCase().indexOf(searchString) < 0) {                
                 return false;
               }
 
               return true;
-            });
+            });           
 
             // This special Dexie function allows the work of counting
             // the number of query results to be done in a parallel process,
