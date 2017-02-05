@@ -440,6 +440,7 @@
         // to the params interpretted from the URL string.
         _init: function(active) {
           var parms = this.urlParams;
+          console.log(this.urlParams);
           if (!active || !parms) {
             return;
           }
@@ -462,6 +463,14 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
+
+          this.updateShownFilters([
+            {
+              filterName: 'Sectors',
+              selected: this.selectedSectors
+            }
+          ]);
+
         },
 
         // Updates URL state with new query string, and launches query
@@ -567,7 +576,7 @@
           if (this.selectedSectors && this.selectedSectors.length) {
             out.push('sector=' + this.selectedSectors.map(function(sector) {
               return sector.label;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
@@ -621,11 +630,14 @@
           return [];
         },
         _setSelectedSectors: function(sectors) {
-          var sectorsArr = sectors.split('+');
+          var sectorsArr = sectors.split('|');
           if (sectorsArr && sectorsArr.length) {
-            return this.sectors.filter(function(s) {
+            var selectedSectors = this.sectors.filter(function(s) {
               return sectorsArr.indexOf(s.label) > -1;
             });
+            // init filters
+            this.checkForAlreadySelectedFilters('Sectors', 'alreadySelected', selectedSectors);
+            return selectedSectors;
           }
           return [];
         },

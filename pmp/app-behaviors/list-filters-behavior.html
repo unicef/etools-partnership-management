@@ -63,17 +63,6 @@
       }
     },
 
-    // update available and selected filters
-    _updateAvailableFilters: function(filterName, property, newValue) {
-      if (this.availableListFilterOptions.length > 0) {
-        for(var i = 0; i < this.availableListFilterOptions.length; i++) {
-
-        }
-      } else {
-
-      }
-    },
-
     // select a filter from ADD FILTER menu
     selectFilter: function(event) {
       var selectedOption = event.model.item;
@@ -149,7 +138,48 @@
       }
       this.set(filterPath, event.detail.jsonDate);
 //      console.log(event.detail, filterPath, parentField);
-    }
+    },
+
+    updateShownFilters: function(filters) {
+      if (!filters) filters = [];
+      if (Array.isArray(filters) && filters.length > 0) {
+        filters.forEach(function(filter) {
+          // check available filters
+          var filterActive = false;
+          if (this.availableListFilterOptions.length > 0) {
+            for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+              if (this.availableListFilterOptions[i].filterName === filterName) {
+                this.set('availableListFilterOptions.' + i + '.' + property, newValue);
+                found = true;
+                break;
+              }
+            }
+          }
+          // if the filter was moved from available to selected then update in selected filters
+          if (!found) {
+            if (this.selectedFilters.length > 0) {
+              for (var i = 0; i < this.selectedFilters.length; i++) {
+                if (this.selectedFilters[i].filterName === filterName) {
+                  this.set('selectedFilters.' + i + '.' + property, newValue);
+                  break;
+                }
+              }
+            }
+          }
+        }.bind(this));
+      }
+    },
+//    checkForAlreadySelectedFilters: function(filterName, filterProperty, selectedValues) {
+//      console.log(filterName, selectedValues, this.availableListFilterOptions, this.selectedFilters);
+//      var filter = this.availableListFilterOptions.filter(function(avFilter) {
+//        return avFilter.filterName === filterName;
+//      })[0];
+//      if (filter) {
+//        this.push('selectedFilters', filter);
+//        this._updateAvailableFilterOptions();
+//        this.updateFilters(filterName, filterProperty, selectedValues);
+//      }
+//    }
 
   };
 </script>
