@@ -1,1 +1,7 @@
-[{"id":2,"name":"New York","zonal_chief":null}]
+[
+  {
+    "id": 2,
+    "name": "New York",
+    "zonal_chief": null
+  }
+]
