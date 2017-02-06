@@ -136,7 +136,7 @@
         <data-table-column class="col-2" field="number" sortable>
           Reference #
         </data-table-column>
-        <data-table-column class="col-3" field="partner_name"  sortable>
+        <data-table-column class="col-4" field="partner_name"  sortable>
           Government Partner
         </data-table-column>
         <data-table-column class="flex-c" field="country_programme_name"  sortable>
@@ -157,7 +157,7 @@
                title="[[getDisplayValue(entry.number)]]">
               [[getDisplayValue(entry.number)]]
             </a>
-            <span class="col-data col-3 truncate" title="[[getDisplayValue(entry.partner_name)]]">
+            <span class="col-data col-4 truncate" title="[[getDisplayValue(entry.partner_name)]]">
                 [[getDisplayValue(entry.partner_name)]]
             </span>
             <span class="col-data flex-c">
@@ -398,8 +398,34 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
+          this._updateSelectedFiltersValues();
         },
 
+        // update selected filters (set in the url) at page refresh
+        _updateSelectedFiltersValues: function() {
+          this.debounce('updaetShownFilters', function() {
+            var filtersValues = [
+              {
+                filterName: 'Partner',
+                selectedValue: this.selectedPartners
+              },
+              {
+                filterName: 'UNICEF focal point',
+                selectedValue: this.selectedUnicefFocalPoints
+              },
+              {
+                filterName: 'Country Programme Output',
+                selectedValue: this.selectedCpOutputs
+              },
+              {
+                filterName: 'Sectors',
+                selectedValue: this.selectedSectors
+              }              
+            ];
+            this.updateShownFilters(filtersValues);
+          }.bind(this), 100);
+        },
+        
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           var qs = this._buildQueryString();
