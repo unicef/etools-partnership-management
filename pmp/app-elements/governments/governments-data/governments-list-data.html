@@ -60,7 +60,7 @@
           }
         }, 
         
-        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, pageNumber, pageSize) {
+        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -126,6 +126,15 @@
                   return sectors.indexOf(sector) > -1;
                 });
                 if (matchSectors && matchSectors.length === 0) {
+                  return false;
+                }
+              } 
+
+              if (years.length) {
+                var matchYears = government.years.filter(function(year) {
+                  return years.indexOf(year) > -1;
+                });
+                if (matchYears && matchYears.length === 0) {
                   return false;
                 }
               }

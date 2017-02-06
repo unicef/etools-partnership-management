@@ -290,6 +290,11 @@
             observer: '_filtersChanged'
           },
 
+          selectedYears: {
+            type: Array,
+            observer: '_filtersChanged'
+          },
+
           selectedPartner: {
             type: String,
             value: '',
@@ -324,8 +329,8 @@
         },
 
         observers: [
-          '_updateURL(q, partnerIds, selectedCpOutputs, selectedPartners, selectedSectors, ' +
-            'selectedUnicefFocalPoints, pageNumber, pageSize, sortOrder)',
+          '_updateURL(q, partnerIds, selectedCpOutputs, selectedPartners, selectedSectors,' +
+            'selectedYears, selectedUnicefFocalPoints, pageNumber, pageSize, sortOrder)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
@@ -366,6 +371,13 @@
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
+            },{
+              filterName: 'Years',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: [ {label: '2016', value: 2016}, {label: '2017', value: 2017}, {label: '2018', value: 2018} ],
+              alreadySelected: [],
+              path: 'selectedYears'
             },
           ]);
         },
@@ -388,6 +400,7 @@
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
           this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
+          this.set('selectedYears', parms.year ? this._setSelectedYears(parms.sector) : []);
 
 
 
@@ -420,6 +433,10 @@
               {
                 filterName: 'Sectors',
                 selectedValue: this.selectedSectors
+              },
+              {
+                filterName: 'Years',
+                selectedValue: this.selectedYears
               }              
             ];
             this.updateShownFilters(filtersValues);
@@ -482,6 +499,10 @@
                   ? this.selectedSectors.map(function(sector) {
                 return sector.label;
               }) : [],
+              (this.selectedYears && this.selectedYears.length)
+                  ? this.selectedYears.map(function(year) {
+                return year.label;
+              }) : [],
                   
               this.pageNumber,
               this.pageSize);
@@ -508,12 +529,6 @@
             }).join('+'));
           }
 
-          if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + this.selectedSectors.map(function(sector) {
-              return sector.label;
-            }).join('+'));
-          }
-
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
@@ -531,6 +546,12 @@
           if (this.selectedSectors && this.selectedSectors.length) {
             out.push('sector=' + this.selectedSectors.map(function(sector) {
               return sector.label;
+            }).join('+'));
+          }
+
+          if (this.selectedYears && this.selectedYears.length) {
+            out.push('year=' + this.selectedYears.map(function(year) {
+              return year.label;
             }).join('+'));
           }
 
