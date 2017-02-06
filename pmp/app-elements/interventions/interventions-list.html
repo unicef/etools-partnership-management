@@ -73,7 +73,8 @@
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
                   on-value-change="esmmValueChanged"
-                  data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+                  data-filter-path$="[[filter.path]]"
+                  custom-object-options></etools-searchable-multiselection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -85,10 +86,12 @@
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
               <paper-input label="[[filter.filterName]]"
+                           value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
                 <etools-datepicker-button prefix
                                           id$="datepicker_[[filter.path]]"
+                                          date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
@@ -368,17 +371,15 @@
           // this.$.list.classList.add('hidden');
 
           // init list filter options
+          // IMPORTANT!!!
+          // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+          // IMPORTANT!!!
           this.initListFiltersData([
             {
               filterName: 'PD/SSFA Type',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
-              selectionOptions: this.documentTypes.map(function(type, index) {
-                return {
-                  value: (index + 1),
-                  label: type.value
-                }
-              }),
+              selectionOptions: this.documentTypes,
               alreadySelected: [],
               path: 'selectedDocumentTypes'
             },
@@ -425,12 +426,14 @@
             {
               filterName: 'Starts After',
               type: 'datepicker', // etools-datepicker
-              path: 'startDate'
+              path: 'startDate',
+              dateSelected: ''
             },
             {
               filterName: 'Ends Before',
               type: 'datepicker', // etools-datepicker
-              path: 'endDate'
+              path: 'endDate',
+              dateSelected: ''
             }
           ]);
         },
@@ -451,8 +454,8 @@
           this.set('selectedUnicefFocalPoints',
               parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
           this.set('selectedOffices', parms.offices ? this._setSelectedOffices(parms.offices) : []);
-          this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
-          this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
+          this.set('startDate', parms.start ? parms.start : '');
+          this.set('endDate', parms.end ? parms.end : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
           // format of sort param is sort=field.order ex: sort=name.asc
@@ -462,6 +465,49 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
+
+          this._updateSelectedFiltersValues();
+        },
+
+        // update selected filters(przent in URL) at page refresh
+        _updateSelectedFiltersValues: function() {
+          this.debounce('updaetShownFilters', function() {
+            var filtersValues = [
+              {
+                filterName: 'PD/SSFA Type',
+                selectedValue: this.selectedDocumentTypes
+              },
+              {
+                filterName: 'Status',
+                selectedValue: this.selectedStatuses
+              },
+              {
+                filterName: 'Country Programme Output',
+                selectedValue: this.selectedCpOutputs
+              },
+              {
+                filterName: 'Sectors',
+                selectedValue: this.selectedSectors
+              },
+              {
+                filterName: 'UNICEF focal point',
+                selectedValue: this.selectedUnicefFocalPoints
+              },
+              {
+                filterName: 'Offices',
+                selectedValue: this.selectedOffices
+              },
+              {
+                filterName: 'Starts After',
+                selectedValue: this.startDate
+              },
+              {
+                filterName: 'Ends Before',
+                selectedValue: this.endDate
+              }
+            ];
+            this.updateShownFilters(filtersValues);
+          }.bind(this), 100);
         },
 
         // Updates URL state with new query string, and launches query
@@ -498,7 +544,7 @@
 
               (this.selectedDocumentTypes && this.selectedDocumentTypes.length)
                   ? this.selectedDocumentTypes.map(function(type) {
-                return type.label;
+                return type.value;
               }) : [],
 
               (this.selectedCpOutputs && this.selectedCpOutputs.length)
@@ -548,38 +594,38 @@
 
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
             out.push('type=' + this.selectedDocumentTypes.map(function(type) {
-              return type.label;
-            }).join('+'));
+              return type.value;
+            }).join('|'));
           }
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
               return cpOutput.value;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedStatuses && this.selectedStatuses.length) {
             out.push('status=' + this.selectedStatuses.map(function(status) {
               return status.label;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedSectors && this.selectedSectors.length) {
             out.push('sector=' + this.selectedSectors.map(function(sector) {
               return sector.label;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedOffices && this.selectedOffices.length) {
             out.push('offices=' + this.selectedOffices.map(function(office) {
               return office.value;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.startDate && this.startDate.length) {
@@ -596,7 +642,7 @@
         },
 
         _setSelectedOffices: function(officesStr) {
-          var officesIdsArr = officesStr.split('+');
+          var officesIdsArr = officesStr.split('|');
           if (officesIdsArr && officesIdsArr.length) {
             officesIdsArr = officesIdsArr.map(function(officeIdStr) {
               return parseInt(officeIdStr, 10);
@@ -609,7 +655,7 @@
         },
 
         _setSelectedUnicefFocalPoints: function(focalPtsStr) {
-          var focalPtsStrArr = focalPtsStr.split('+');
+          var focalPtsStrArr = focalPtsStr.split('|');
           if (focalPtsStrArr && focalPtsStrArr.length) {
             focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
               return parseInt(fPtsIdStr, 10);
@@ -621,24 +667,25 @@
           return [];
         },
         _setSelectedSectors: function(sectors) {
-          var sectorsArr = sectors.split('+');
+          var sectorsArr = sectors.split('|');
           if (sectorsArr && sectorsArr.length) {
-            return this.sectors.filter(function(s) {
+            var selectedSectors = this.sectors.filter(function(s) {
               return sectorsArr.indexOf(s.label) > -1;
             });
+            return selectedSectors;
           }
           return [];
         },
 
         _setSelectedStatuses: function(statuses) {
-          var statusesStrArr = statuses.split('+');
+          var statusesStrArr = statuses.split('|');
           return this.interventionStatuses.filter(function(status) {
             return statusesStrArr.indexOf(status.label) > -1;
           });
         },
 
         _setSelectedCpOutputs: function(cpOutputsString) {
-          var cpOut = cpOutputsString.split('+');
+          var cpOut = cpOutputsString.split('|');
           if (cpOut && cpOut.length) {
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
@@ -650,15 +697,10 @@
           return [];
         },
         _setSelectedDocTypes: function(types) {
-          var typesStrArr = types.split('+');
+          var typesStrArr = types.split('|');
           if (typesStrArr && typesStrArr.length) {
-            return this.documentTypes.filter(function(t, index) {
-              if (typesStrArr.indexOf(t.value) > -1) {
-                return {
-                  value: (index + 1),
-                  label: t.value
-                }
-              }
+            return this.documentTypes.filter(function(t) {
+              return typesStrArr.indexOf(t.value) > -1;
             });
 
           }
