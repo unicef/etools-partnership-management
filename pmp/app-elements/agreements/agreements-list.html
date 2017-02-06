@@ -589,12 +589,12 @@
         // TODO: refactor this, it is identical with partner-lists _listDataChanged
         _listDataChanged: function(event) {
           var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
               }
-            });
+            }
           }
         },
 
