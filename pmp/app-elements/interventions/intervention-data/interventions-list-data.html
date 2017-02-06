@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
 <dom-module id="interventions-list-data">
 
@@ -138,12 +139,12 @@
               }
 
               if (startDate && startDate.length &&
-                  (!intervention.start || intervention.start < startDate)) {
+                  (!intervention.start || (moment(intervention.start).isAfter(startDate)))) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!intervention.end || intervention.end > endDate)) {
+                  (!intervention.end || moment(intervention.end).isBefore(endDate))) {
                 return false;
               }
 
