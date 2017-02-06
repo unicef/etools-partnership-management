@@ -105,8 +105,13 @@
                 }
               }
 
-              if (cpOutputs.length) {                
-                return cpOutputs.indexOf(government.country_programme) > -1;               
+              if (cpOutputs.length) {
+                var matchCpOut = government.cp_outputs.filter(function(cpOut) {
+                  return cpOutputs.indexOf(cpOut) > -1;
+                });
+                if (matchCpOut && matchCpOut.length === 0) {
+                  return false;
+                }
               }
 
               if (searchString && searchString.length &&
