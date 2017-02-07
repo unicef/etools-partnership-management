@@ -269,11 +269,20 @@
           forceDataRefresh: {
             type: Boolean,
             value: false
+          },
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
           }
         },
 
         observers: [
-          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
+            'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -307,6 +316,7 @@
           if (!active || !parms) {
             return;
           }
+          this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
           this.set('partnerType', parms.partner_type ? parms.partner_type : '');
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
@@ -320,24 +330,31 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
-          //this.$.listHeader.sortOrder = result;
+          console.log('init complete');
+          this.set('initComplete', true);
         },
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
+          console.log('update url');
           var qs = this._buildQueryString();
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
             // update URL
             this.updateAppState('partners/list', qs, true);
-            // filter partners
-            this._filterPartnersData();
+            // filter partners, but only after data has been loaded
+            if (this.requiredDataLoaded) {
+              this._filterPartnersData();
+            }
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
               this.updateAppState('partners/list', qs, false);
             }
-            if (this.forceDataRefresh) {
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter partners data
               // this will only execute when partners-loaded event is received
               this._filterPartnersData();
@@ -347,6 +364,7 @@
         },
 
         _filterPartnersData: function() {
+          console.log('filter...');
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -427,13 +445,11 @@
 
         // List fade in fade out effect
         _partnersChanged: function(filteredPartners) {
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-            var partnersList = this.$$('#partners');
-            if (partnersList && Array.isArray(partnersList.data) && partnersList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }, 50);
+          var classList = this.$.list.classList;
+          console.log(classList.contains('hidden'));
+          if (filteredPartners instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _computeName: function(name, shortName) {
@@ -468,11 +484,16 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0) {
+          console.log('require data has been loaded');
+
+          console.log(this.filteredPartners);
+          if (typeof this.filteredPartners === 'undefined' ||
+              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger partners filtering
           this._init(this.active);
+          this.set('requiredDataLoaded', true);
         },
 
       });

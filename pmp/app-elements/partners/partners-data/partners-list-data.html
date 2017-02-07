@@ -173,6 +173,8 @@
           });
         },
 
+        // TODO: remove _setPartnersDropdownData method and prepareDropdownData property,
+        // the functionality is now based on redux store
         _setPartnersDropdownData: function(partners) {
           var preparedData = [];
           if (partners.length > 0) {
