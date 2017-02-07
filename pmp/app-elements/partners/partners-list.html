@@ -330,7 +330,6 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
-          console.log('init complete');
           this.set('initComplete', true);
         },
 
@@ -339,7 +338,6 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          console.log('update url');
           var qs = this._buildQueryString();
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
@@ -364,7 +362,6 @@
         },
 
         _filterPartnersData: function() {
-          console.log('filter...');
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -446,7 +443,6 @@
         // List fade in fade out effect
         _partnersChanged: function(filteredPartners) {
           var classList = this.$.list.classList;
-          console.log(classList.contains('hidden'));
           if (filteredPartners instanceof Array && classList.contains('hidden')) {
             classList.remove('hidden');
           }
@@ -484,16 +480,14 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          console.log('require data has been loaded');
-
-          console.log(this.filteredPartners);
           if (typeof this.filteredPartners === 'undefined' ||
               (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger partners filtering
-          this._init(this.active);
+          this.set('initComplete', false);
           this.set('requiredDataLoaded', true);
+          this._init(this.active);
         },
 
       });

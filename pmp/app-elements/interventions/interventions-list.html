@@ -307,6 +307,14 @@
             type: Boolean,
             value: false
           },
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
 
           // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
           hrps: {
@@ -360,7 +368,8 @@
 
         observers: [
           '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
-            'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder)',
+            'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
+            'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -443,6 +452,7 @@
           if (!active || !parms) {
             return;
           }
+          this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
           this.set('selectedDocumentTypes', parms.type ? this._setSelectedDocTypes(parms.type) : []);
           this.set('selectedStatuses', parms.status ? this._setSelectedStatuses(parms.status) : []);
@@ -462,23 +472,29 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
+          this.set('initComplete', true);
         },
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
           var qs = this._buildQueryString();
           if (qs !== _interventionsLastNavigated) {
             _interventionsLastNavigated = qs;
             // update URL
             this.updateAppState('interventions/list', qs, true);
             // filter interventions
-            this._filterInterventionsData();
+            if (this.requiredDataLoaded) {
+              this._filterInterventionsData();
+            }
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
               this.updateAppState('interventions/list', qs, false);
             }
-            if (this.forceDataRefresh) {
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter agreements data
               // this will only execute when agreements-loaded event is received
               this._filterInterventionsData();
@@ -665,15 +681,12 @@
           return [];
         },
 
-        _interventionsChanged: function() {
+        _interventionsChanged: function(filteredInterventions) {
           // List fade in fade out effect
-          // this.$.list.classList.add('hidden');
-//          this.async(function() {
-//            var interventionsList = this.$$('#interventions');
-//            if (interventionsList && Array.isArray(interventionsList.data) && interventionsList.data.length > 0) {
-//              this.$$('#list').classList.remove('hidden');
-//            }
-//          }.bind(this), 300);
+          var classList = this.$.list.classList;
+          if (filteredInterventions instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _qChanged: function(q) {
@@ -691,10 +704,13 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0) {
+          if (typeof this.filteredInterventions === 'undefined' ||
+              (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
-          // recheck params to trigger partners filtering
+          // recheck params to trigger interventions filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
           this._init(this.active);
         },
 
