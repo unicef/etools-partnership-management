@@ -45,8 +45,7 @@
                          fire-data-loaded>
     </agreement-list-data>
 
-    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
+    <partners-list-data prepare-dropdown-data>
     </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -98,7 +97,8 @@
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
                   on-value-change="esmmValueChanged"
-                  data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+                  data-filter-path$="[[filter.path]]"
+                  custom-object-options></etools-searchable-multiselection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -306,7 +306,11 @@
             type: Object
           },
 
-          partnersDropdownData: Array,
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+
 
           detailsOpened: Boolean,
           active: Boolean,
@@ -328,7 +332,7 @@
         },
 
         observers: [
-          '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+          '_updateURL(q, partnerIds, agreementType, agreementStatus, selectedPartners,' +
           'startDate, endDate, pageNumber, pageSize, sortOrder)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
@@ -356,7 +360,7 @@
               ],
               path: 'agreementStatus'
             },
-            {
+             {
               filterName: 'Partner',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
@@ -404,12 +408,16 @@
           this._updateSelectedFiltersValues();
         },
 
-        _updateSelectedFiltersValues: function(){
+        _updateSelectedFiltersValues: function() {
           this.debounce('updateShownFilters', function () {
+
+            console.log('selected agreements', this._getSelectedAgreementType());
+            console.log('selected partners: ',this.selectedPartners);
+
             var filtersValues = [
               {
                 filterName: 'Agreement Type',
-                selectedValue: this.agreementType
+                selectedValue: this._getSelectedAgreementType()
               }, 
               {
                 filterName: 'Agreement Status',
@@ -430,7 +438,13 @@
             ];            
             this.updateShownFilters(filtersValues);
 
-          }.bind(this), 100);
+          }.bind(this), 500);
+        },
+        
+        _getSelectedAgreementType() {
+          return this.agreementTypes.filter(function(a){
+            return a.name == this.agreementType;
+          }.bind(this));
         },
 
         // Updates URL state with new query string, and launches query
@@ -493,7 +507,7 @@
             out.push('status=' + this.agreementStatus);
           }
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partners=' + _.map(this.selectedPartners, 'value').join('+'));
+            out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
           }
           if (this.startDate && this.startDate.length) {
             out.push('start=' + this._shortenDate(this.startDate));
@@ -510,9 +524,20 @@
 
         // Convert ids from URL into array of ids
         _parsePartnerIds: function(urlIds) {
-          return _.map(urlIds.split(' '), function(item) {
+          return _.map(urlIds.split('|'), function(item) {
             return parseInt(item);
           });
+        },
+
+        _setSelectedPartners: function(partners) {
+          var partnersArr = partners.split('|');
+          if (partnersArr && partnersArr.length) {
+            var selectedPartners = this.partners.filter(function(p) {
+              return partnersArr.indexOf(p.label) > -1;
+            });
+            return selectedPartners;
+          }
+          return [];
         },
 
         // Run when partners-data is fully loaded
@@ -525,12 +550,12 @@
           // update selected partners if any
           this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
             var partner = partnersDropdownData.filter(function(p) {
-              return p.id === id;
+              return p.value === id;
             })[0];
             if (partner) {
               return {
                 value: id,
-                label: partner.name
+                label: partner.label
               };
             }
           }.bind(this))));
