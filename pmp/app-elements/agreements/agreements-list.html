@@ -42,7 +42,7 @@
                          filtered-agreements="{{filteredAgreements}}"
                          total-results="{{totalResults}}"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
+                         fire-data-loaded show-loading>
     </agreement-list-data>
 
     <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
@@ -635,6 +635,7 @@
           this.set('initComplete', false);
           this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
       });

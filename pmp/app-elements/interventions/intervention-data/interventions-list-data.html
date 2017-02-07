@@ -55,6 +55,13 @@
           }
         },
 
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading interventions data...', active: true});
+          }
+          this._elementReady();
+        },
+
         query: function(field, order, searchString, documentTypes, cpOutputs,
                         interventionStatuses, sectors, unicefFocalPoints, offices, startDate,
                         endDate, pageNumber, pageSize) {

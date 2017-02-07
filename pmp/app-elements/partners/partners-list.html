@@ -47,7 +47,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
-                        fire-data-loaded>
+                        fire-data-loaded show-loading>
     </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -488,6 +488,7 @@
           this.set('initComplete', false);
           this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
       });

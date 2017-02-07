@@ -87,6 +87,13 @@
 
         observers: ['_dataChanged(data.length)'],
 
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading partners data...', active: true});
+          }
+          this._elementReady();
+        },
+
         _handleMyResponse: function(res) {
           this._handleResponse(res);
           this.dispatch('setPartners', res.detail);

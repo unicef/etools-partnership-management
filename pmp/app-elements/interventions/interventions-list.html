@@ -44,7 +44,7 @@
                          filtered-interventions="{{filteredInterventions}}"
                          total-results="{{totalResults}}"
                          on-interventions-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
+                         fire-data-loaded show-loading>
     </interventions-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -374,7 +374,8 @@
         ],
 
         ready: function() {
-          // this.$.list.classList.add('hidden');
+          console.log('ready');
+          this.$.list.classList.add('hidden');
 
           // init list filter options
           this.initListFiltersData([
@@ -712,6 +713,7 @@
           this.set('initComplete', false);
           this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
         _onSearch: function() {

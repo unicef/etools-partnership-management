@@ -257,6 +257,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         // create loading element, used for global loading
         this.globalLoadingElement = this.createLoading();
+        this.fire('global-loading', {message: 'Loading data...', active: true});
       },
 
       attached: function() {
