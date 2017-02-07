@@ -469,12 +469,12 @@
         // When the list data rows are changing check and close any details opened
         _listDataChanged: function() {
           var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
               }
-            });
+            }
           }
         },
 
