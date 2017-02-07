@@ -400,6 +400,37 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
+
+          this._updateSelectedFiltersValues();
+        },
+
+        _updateSelectedFiltersValues: function(){
+          this.debounce('updateShownFilters', function () {
+            var filtersValues = [
+              {
+                filterName: 'Agreement Type',
+                selectedValue: this.agreementType
+              }, 
+              {
+                filterName: 'Agreement Status',
+                selectedValue: this.agreementStatus
+              }, 
+              {
+                filterName: 'Partner',
+                selectedValue: this.selectedPartners
+              }, 
+              {
+                filterName: 'Starts After',
+                selectedValue: this.startDate
+              }, 
+              {
+                filterName: 'Ends Before',
+                selectedValue: this.endDate
+              },                           
+            ];            
+            this.updateShownFilters(filtersValues);
+
+          }.bind(this), 100);
         },
 
         // Updates URL state with new query string, and launches query
