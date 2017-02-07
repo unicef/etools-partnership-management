@@ -21,7 +21,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
-<!-- <link rel="import" href="../partners/partners-data/partners-list-data.html"> -->
 
 <link rel="import" href="governments-data/governments-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -49,8 +48,7 @@
                          fire-data-loaded>
     </governments-list-data>
 
-    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
+    <partners-list-data prepare-dropdown-data>
     </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -283,6 +281,10 @@
           sectors: {
             type: Array,
             statePath: 'sectors'
+          }, 
+          years: {
+            type: Array,
+            value: [ {label: '2016', value: 2016}, {label: '2017', value: 2017}, {label: '2018', value: 2018} ]
           },
 
           selectedSectors: {
@@ -315,7 +317,10 @@
             type: Array
           },
 
-          partnersDropdownData: Array,
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersFilteredDropdownData'
+          },
 
           unicefUsersData: {
             type: Array,
@@ -375,7 +380,7 @@
               filterName: 'Years',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
-              selectionOptions: [ {label: '2016', value: 2016}, {label: '2017', value: 2017}, {label: '2018', value: 2018} ],
+              selectionOptions: this.years,
               alreadySelected: [],
               path: 'selectedYears'
             },
@@ -400,9 +405,7 @@
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
           this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
-          this.set('selectedYears', parms.year ? this._setSelectedYears(parms.sector) : []);
-
-
+          this.set('selectedYears', parms.year ? this._setSelectedYears(parms.year) : []);
 
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'partner_name', direction: 'asc'};
@@ -526,13 +529,13 @@
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
               return cpOutput.value;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
@@ -540,19 +543,19 @@
           }       
 
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partners=' + _.map(this.selectedPartners, 'value').join('+'));
+            out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
           }
 
           if (this.selectedSectors && this.selectedSectors.length) {
             out.push('sector=' + this.selectedSectors.map(function(sector) {
               return sector.label;
-            }).join('+'));
+            }).join('|'));
           }
 
           if (this.selectedYears && this.selectedYears.length) {
             out.push('year=' + this.selectedYears.map(function(year) {
               return year.label;
-            }).join('+'));
+            }).join('|'));
           }
 
           return out.join('&');
@@ -583,7 +586,7 @@
         },
 
         _setSelectedCpOutputs: function(cpOutputsString) {
-          var cpOut = cpOutputsString.split('+');
+          var cpOut = cpOutputsString.split('|');
           if (cpOut && cpOut.length) {
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
@@ -596,7 +599,7 @@
         },
 
         _setSelectedUnicefFocalPoints: function(focalPtsStr) {
-          var focalPtsStrArr = focalPtsStr.split('+');
+          var focalPtsStrArr = focalPtsStr.split('|');
           if (focalPtsStrArr && focalPtsStrArr.length) {
             focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
               return parseInt(fPtsIdStr, 10);
@@ -609,10 +612,20 @@
         },
         
         _setSelectedSectors: function(sectors) {
-          var sectorsArr = sectors.split('+');
+          var sectorsArr = sectors.split('|');
           if (sectorsArr && sectorsArr.length) {
             return this.sectors.filter(function(s) {
               return sectorsArr.indexOf(s.label) > -1;
+            });
+          }
+          return [];
+        },
+
+        _setSelectedYears: function(years) {
+          var yearsArr = years.split('|');
+          if (yearsArr && yearsArr.length) {
+            return this.years.filter(function(y) {
+              return yearsArr.indexOf(y.label) > -1;
             });
           }
           return [];

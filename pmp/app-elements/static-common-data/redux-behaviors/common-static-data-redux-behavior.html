@@ -75,6 +75,11 @@
       case 'SET_PARTNERS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
+     
+      case 'SET_PARTNERS_FILTERED_DROPDOWN':     
+        console.log('set filtered partners data..xxxx', action.partnersFilteredDropdownData);  
+        return Object.assign({}, state, {partnersFilteredDropdownData: action.partnersFilteredDropdownData});
+     
       case 'SET_AGREEMENTS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});

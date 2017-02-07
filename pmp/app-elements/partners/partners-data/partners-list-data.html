@@ -65,6 +65,11 @@
             notify: true
           },
 
+          partnersFilteredDropdownData: {
+            type: Array,
+            notify: true
+          },
+
           prepareDropdownData: {
             type: Boolean,
             value: false
@@ -75,6 +80,12 @@
             return {
               type: 'SET_PARTNERS_DROPDOWN',
               partnersDropdownData: partnersDropdownData
+            };
+          },
+          setPartnersFilteredDropdown: function(partnersFilteredDropdownData) {
+            return {
+              type: 'SET_PARTNERS_FILTERED_DROPDOWN',
+              partnersFilteredDropdownData: partnersFilteredDropdownData
             };
           },
           setPartners: function(partnersData) {
@@ -90,6 +101,7 @@
         _handleMyResponse: function(res) {
           this._handleResponse(res);
           this.dispatch('setPartners', res.detail);
+          
           var preparedData = res.detail.map(function(p) {
               if (!p.hidden) {
                 return {
@@ -97,8 +109,25 @@
                   label: p.name
                 };
             }
-          });
+          });          
+          var filteredData = res.detail.filter(function(p){
+              if(p.hidden){
+                return false;
+              }
+              if(p.partner_type !== "Government"){
+                return false;
+              }
+              return true;
+            }).map(function(p){
+              return {
+                  value: p.id,
+                  label: p.name
+                };
+            });
+          console.log('after', filteredData);
+
           this.dispatch('setPartnersDropdown', preparedData);
+          this.dispatch('setPartnersFilteredDropdown', filteredData);
         },
 
         query: function(field, order, searchString, partnerType, csoType,
