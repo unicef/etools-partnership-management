@@ -415,6 +415,7 @@
           }
           this.set('sortOrder', result);
           this._updateSelectedFiltersValues();
+          this._getYears();
         },
 
         // update selected filters (set in the url) at page refresh
@@ -715,6 +716,17 @@
           }
         },
 
+        _getYears: function () {
+          console.log(this.countryProgrammeDropdownData);
+          // var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
+          //   if(!_.isEmpty(cpObject)){
+          //     var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year()+1);
+          //       years = years.map(function(year){
+          //         return _.assign({},{label: year, value: year})
+          //       });
+          //       this.set('years', years);
+          //   }
+        },
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);

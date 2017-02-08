@@ -157,7 +157,6 @@
                 .toArray();
 
           }).then(function(result) {
-             console.log('filtered results: ', result);
             _this._setFilteredGovernments(result);
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);

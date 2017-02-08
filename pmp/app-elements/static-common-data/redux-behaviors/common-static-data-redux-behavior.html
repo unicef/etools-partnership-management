@@ -56,7 +56,7 @@
 
       case 'SET_LOCATIONS':
         // console.log('set locations data...', action.locations);
-        return Object.assign({}, state, {locations: action.locations});
+        return Object.assign({}, state, { locations: action.locations });
 
       case 'SET_UNICEF_USERS_DATA':
         // console.log('set unicefUsersData data...', action.unicefUsersData);
@@ -68,24 +68,24 @@
 
       case 'SET_PARTNERS':     
         //console.log('set partners data...', action.partners); 
-        return Object.assign({}, state, {partners: action.partnersData});
+        return Object.assign({}, state, { partners: action.partnersData });
       case 'SET_AGREEMENTS':     
         //console.log('set partners data...', action.partners); 
-        return Object.assign({}, state, {agreementsList: action.agreementsList});
+        return Object.assign({}, state, { agreementsList: action.agreementsList });
       case 'SET_PARTNERS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
-        return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
+        return Object.assign({}, state, { partnersDropdownData: action.partnersDropdownData });
      
       case 'SET_PARTNERS_FILTERED_DROPDOWN':     
-        console.log('set filtered partners data..xxxx', action.partnersFilteredDropdownData);  
-        return Object.assign({}, state, {partnersFilteredDropdownData: action.partnersFilteredDropdownData});
+        // console.log('set filtered partners data...', action.partnersFilteredDropdownData);  
+        return Object.assign({}, state, { partnersFilteredDropdownData: action.partnersFilteredDropdownData });
      
       case 'SET_AGREEMENTS_DROPDOWN':     
         // console.log('set offices data...', action.partnersDropdownData);  
-        return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
+        return Object.assign({}, state, { agreementsDropdownData: action.agreementsDropdownData });
       case 'SET_CURRENCIES':
         // console.log('set currencies data...', action.currencies);
-        return Object.assign({}, state, {currencies: action.currencies});
+        return Object.assign({}, state, { currencies: action.currencies });
     }
   });
 
