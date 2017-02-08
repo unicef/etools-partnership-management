@@ -20,7 +20,7 @@ App global configuration
       interventions: 'id, number, partner_name, document_type, ' +
         'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
       user: 'id',
-      governments: 'id, number, created_at, partner_name, country_programme_name, unicef_focal_points, sectors' 
+      governments: 'number, country_programme, country_programme_name, cp_outputs, partner, partner_name, sectors, unicef_focal_points, years' 
     });
 
     var etoolsAppConfig = {
@@ -179,6 +179,11 @@ App global configuration
         cachingKey: "governments",
         exp: 5 * 60 * 1000, // 5min
         url : "/api/v2/government_interventions"
+      },
+      countryProgrammes: {
+        cachingKey: "countryProgrammes",
+        exp: 5 * 60 * 1000, // 5min
+        url : "/api/v2/reports/countryprogramme/"
       }
 
     };

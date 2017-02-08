@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
-
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
 
 <dom-module id="governments-list-data">
@@ -71,21 +70,21 @@
 
           var _this = this;
 
-
           this.db.transaction('r', this.db.governments, function() {
             this.currentQuery = Dexie.currentTransaction;
 
             var governmentsQueryResult = _this.db.governments;
 
-            // if (field) {
-            //   // note: null values don't appear in result set of sort
-            //   governmentsQueryResult = governmentsQueryResult.orderBy(field);
-            // }
+            if (field) {
+              // note: null values don't appear in result set of sort
+              governmentsQueryResult = governmentsQueryResult.orderBy(field);
+            }
+
             if (order === 'desc') {
               governmentsQueryResult = governmentsQueryResult.reverse();
             }
 
-            governmentsQueryResult = governmentsQueryResult.filter(function(government) {   
+            governmentsQueryResult = governmentsQueryResult.filter(function(government) {
               
               government.unicef_focal_point_names = [];
 
@@ -170,9 +169,7 @@
             }
           }
         }
-
-
-
+        
       });
     })();
   </script>

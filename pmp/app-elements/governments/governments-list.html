@@ -267,7 +267,7 @@
           // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
           hrps: {
             type: Array,
-            statePath:  'hrps' //function(state) { console.log(state); return state.hrps; }
+            statePath:  'hrps'
           },
           cpOutputs: {
             type: Array,
@@ -284,7 +284,7 @@
           }, 
           years: {
             type: Array,
-            value: [ {label: '2016', value: 2016}, {label: '2017', value: 2017}, {label: '2018', value: 2018} ]
+            value: []
           },
 
           selectedSectors: {
@@ -326,6 +326,10 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
+          countryProgrammes: {
+            type: Array,
+            statePath: 'countryProgrammes'
+          },
 
         },
 
@@ -342,6 +346,7 @@
 
         ready: function() {
           this.$.list.classList.add('hidden');
+          this._getYears();
 
           // init list filter options
           this.initListFiltersData([
@@ -413,9 +418,8 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
-          this.set('sortOrder', result);
+          this.set('sortOrder', result);          
           this._updateSelectedFiltersValues();
-          this._getYears();
         },
 
         // update selected filters (set in the url) at page refresh
@@ -474,7 +478,7 @@
         
         // Convert ids from URL into array of ids
         _parsePartnerIds: function(urlIds) {
-          return _.map(urlIds.split(' '), function(item) {
+          return _.map(urlIds.split('|'), function(item) {
             return parseInt(item);
           });
         },
@@ -572,12 +576,12 @@
           // update selected partners if any
           this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
             var partner = partnersDropdownData.filter(function(p) {
-              return p.id === id;
+              return p.value === id;
             })[0];
             if (partner) {
               return {
                 value: id,
-                label: partner.name
+                label: partner.label
               };
             }
           }.bind(this))));
@@ -624,11 +628,12 @@
 
         _setSelectedYears: function(years) {
           var yearsArr = years.split('|');
+
           if (yearsArr && yearsArr.length) {
             return this.years.filter(function(y) {
               return yearsArr.indexOf(y.label) > -1;
             });
-          }
+          }          
           return [];
         },
 
@@ -716,17 +721,23 @@
           }
         },
 
-        _getYears: function () {
-          console.log(this.countryProgrammeDropdownData);
-          // var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
-          //   if(!_.isEmpty(cpObject)){
-          //     var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year()+1);
-          //       years = years.map(function(year){
-          //         return _.assign({},{label: year, value: year})
-          //       });
-          //       this.set('years', years);
-          //   }
+        _getYears: function () {          
+          var maxYear = 0, minYear = 3000;
+          
+          this.countryProgrammes.forEach(function(cpObject){
+            
+            maxYear = Math.max(maxYear, moment(cpObject.to_date).year());
+            minYear = Math.min(minYear, moment(cpObject.from_date).year());
+          });
+
+          var years = _.range(minYear, maxYear+1);
+          years = years.map(function(year){
+            return _.assign({},{label: year.toString(), value: year})
+          });
+
+          this.set('years', years);          
         },
+
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
