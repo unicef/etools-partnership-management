@@ -15,9 +15,9 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 
-<link rel="import" href="../users-data/unicef-staff-data.html">
 <link rel="import" href="../partners/partners-data/partner-item-data.html">
 
 <link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
@@ -41,8 +41,6 @@
     </style>
 
     <partner-item-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-item-data>
-
-    <unicef-staff-data data="{{unicefStaff}}"></unicef-staff-data>
 
     <!-- main page content start -->
     <div id="pageContent">
@@ -69,17 +67,18 @@
           </div>
           <div class="col col-3">
             <!-- Agreement Type -->
-            <template is="dom-if" if="[[!_allowFieldEditing('partnerType', agreement.status)]]">
+            <template is="dom-if" if="[[!_allowFieldEditing('agreementType', agreement.status)]]">
               <paper-input label="Agreement Type"
                            value="[[agreement.agreement_type]]"
                            placeholder="&#8212;"
                            readonly></paper-input>
             </template>
-            <template is="dom-if" if="[[_allowFieldEditing('partnerType', agreement.status)]]">
+            <template is="dom-if" if="[[_allowFieldEditing('agreementType', agreement.status)]]">
               <etools-searchable-multiselection-menu id="agreementType"
                                                      label="Agreement Type"
                                                      placeholder="&#8212;"
-                                                     options="[[agreementTypesOptions]]"
+                                                     options="[[agreementTypes]]"
+                                                     custom-object-options
                                                      hide-search
                                                      on-value-change="_agreementTypeSelected"
                                                      error-message="Please select agreement type"
@@ -218,7 +217,7 @@
               <etools-searchable-multiselection-menu id="signedByUnicef"
                                                      label="Signed By UNICEF"
                                                      placeholder="&#8212;"
-                                                     options="[[partnerSeniorManagers]]"
+                                                     options="[[unicefStaff]]"
                                                      on-value-change="_signedByUnicefSelected"
                                                      error-message="Please select UNICEF staff"
                                                      required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -303,14 +302,12 @@
         is: 'agreement-details',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.AgreementsCommonBehavior
         ],
 
         properties: {
-          user: Object,
-          permissions: Object,
-
           agreement: {
             type: Object,
             notify: true,
@@ -332,23 +329,19 @@
           },
           partnersDropdownData: {
             type: Array,
-            value: []
+            statePath: 'partnersDropdownData'
           },
-          agreementTypesOptions: Array,
           agreementTypes: {
             type: Array,
-            observer: '_prepareAgreementTypesOptions'
+            statePath: 'agreementTypes'
           },
           preparedOfficersDropdownData: {
             type: Array,
             value: []
           },
-          partnerSeniorManagers: {
-            type: Array,
-            value: []
-          },
           unicefStaff: {
             type: Array,
+            statePath: 'unicefUsersData',
             observer: '_unicefStaffChanged'
           },
           originalAgreementData: {
@@ -460,6 +453,10 @@
         _agreementChanged: function(agreement) {
           console.log(agreement);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
+            if (agreement.id > 0) {
+              // prevent wrong new agreement value
+              this.set('isNewAgreement', false);
+            }
             if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
               this.set('_showAmendments', true);
             } else {
@@ -470,7 +467,7 @@
             // check for partners dropdown selected values; reset invalid state
             this._partnersDropdownChanged(this.partnersDropdownData.length);
             // check agreement type dropdown selected value; reset invalid state
-            this._setAgreementTypeDropdownValue(agreement);
+            this._setAgreementTypeDropdownValue(agreement.agreement_type);
             // reset invalid state for endDateField
             this.fieldValidationReset('#endDateField');
             // set signed by dropdown value; reset invalid state
@@ -525,7 +522,7 @@
         _allowFieldEditing: function(fieldName, agreementStatus) {
 
           var allowEdit = false;
-          if (['partnerName', 'partnerType', 'startDate', 'endDate', 'signedByPartner',
+          if (['partnerName', 'agreementType', 'startDate', 'endDate', 'signedByPartner',
                 'signedByUnicef', 'signedByPartnerDate', 'signedByUnicefDate', 'officers'].indexOf(fieldName) > -1) {
               allowEdit = this._allowEdit(agreementStatus);
           }
@@ -589,56 +586,31 @@
         _agreementTypeSelected: function(event) {
           var selectedType = event.detail.selectedValues;
           if (selectedType !== null) {
-            var type = this.agreementTypes.filter(function(type) {
-              return type.label === selectedType.label;
-            })[0];
-            if (type) {
-              this.set('agreement.agreement_type', type.name);
-              this.async(function() {
-                this.$$('#agreementType').invalid = false;
-              });
-            }
-          }
-        },
-
-        /**
-         * Prepare agreement types dropdown options
-         */
-        _prepareAgreementTypesOptions: function(agreementTypes) {
-          if (Array.isArray(agreementTypes) && agreementTypes.length > 0) {
-            var preparedOptions = agreementTypes.map(function(type, index) {
-              return {
-                value: (index + 1),
-                label: type.label
-              };
+            this.set('agreement.agreement_type', selectedType.value);
+            this.async(function() {
+              this.$$('#agreementType').invalid = false;
             });
-            this.set('agreementTypesOptions', preparedOptions);
           }
         },
 
         /**
          * Set agreement type selected value
          */
-        _setAgreementTypeDropdownValue: function(agreement) {
+        _setAgreementTypeDropdownValue: function(agreementType) {
           var agreementTypeField = this.fieldValidationReset('#agreementType');
-          if (!this.isNewAgreement && this._allowFieldEditing('partnerType', agreement.status)) {
+          if (agreementType && this._allowFieldEditing('agreementType', this.agreement.status)) {
             var type = this.agreementTypes.filter(function(type) {
-              return type.name === agreement.agreement_type;
-            })[0];
-            if (type) {
-              var selectedType = this.agreementTypesOptions.filter(function(option) {
-                return option.label === type.label;
+              return type.value === agreementType;
+            });
+            if (type.length) {
+              this.async(function() {
+                if (!agreementTypeField) {
+                  agreementTypeField = this.$$('#agreementType');
+                }
+                if (agreementTypeField) {
+                  agreementTypeField.value = type;
+                }
               });
-              if (selectedType.length) {
-                this.async(function() {
-                  if (!agreementTypeField) {
-                    agreementTypeField = this.$$('#agreementType');
-                  }
-                  if (agreementTypeField) {
-                    agreementTypeField.value = selectedType;
-                  }
-                });
-              }
             }
           }
         },
@@ -749,12 +721,12 @@
 
         _setSignedByUnicefDropdownValue: function(unicefStaffId) {
           var signedByUField = this.fieldValidationReset('#signedByUnicef');
-          if (unicefStaffId && Array.isArray(this.partnerSeniorManagers)
-              && this.partnerSeniorManagers.length > 0
+          if (unicefStaffId && Array.isArray(this.unicefStaff)
+              && this.unicefStaff.length > 0
               && this._allowFieldEditing('signedByUnicef', this.agreement.status)) {
             this.debounce('setSelectedSignedByUnicef', function() {
               unicefStaffId = parseInt(unicefStaffId, 10);
-              var selected = this.partnerSeniorManagers.filter(function(staff) {
+              var selected = this.unicefStaff.filter(function(staff) {
                 return parseInt(staff.value, 0) === unicefStaffId;
               });
               if (selected.length) {
@@ -771,14 +743,6 @@
          */
         _unicefStaffChanged: function(unicefStaff) {
           if (Array.isArray(unicefStaff) && unicefStaff.length > 0) {
-            var signedByUnicefOptions = unicefStaff.map(function(unicefUser) {
-              return {
-                value: parseInt(unicefUser.user_id, 10),
-                label: unicefUser.full_name
-              }
-            });
-            this.set('partnerSeniorManagers', signedByUnicefOptions);
-
             if (this.agreement && this.agreement.signed_by) {
               this._setSignedByUnicefDropdownValue(this.agreement.signed_by);
             }
