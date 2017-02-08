@@ -10,7 +10,7 @@
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
-
+<link rel="import" href="../app-elements/governments/government-details.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
@@ -101,15 +101,10 @@
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details 
-              partner="[[partner]]" 
-              edit-mode="[[_hasEditPermissions(permissions)]]"
-              on-save-partner="_savePartner">      
-          </partner-details>
+          <government-details></government-details>
         </div>
       </iron-pages>
 
-      <page-footer></page-footer>
 
     </app-header-layout>
 

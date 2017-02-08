@@ -1,0 +1,238 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../bower_components/paper-styles/shadow.html">
+
+<link rel="import" href="government-plan-result.html">
+<link rel="import" href="government-status.html">
+
+<dom-module id="government-details">
+    <template>
+        <style include="app-mixins page-layout-styles shadow repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
+            :host {
+                @apply(--layout-horizontal);
+                width: 100%;
+                --paper-fab-keyboard-focus-background: var(--paper-fab-add-color);
+            }
+            paper-fab {
+                --paper-fab: {
+                    @apply(--paper-fab-btn-green);
+                }
+            }
+            paper-input {
+                width: 100%;
+            }
+
+        </style>
+        <div id="pageContent">
+            <!--Partnership Details-->
+            <etools-content-panel class="content-section" title="Partnership Details">
+                <div class="row-h flex-c">
+                    <div class="col flex-2">
+                        <template is="dom-if" if="[[!allowEdit]]">
+                            <paper-input
+                                    label="Government Partner"
+                                    value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
+                                    placeholder="&#8212;"
+                                    readonly></paper-input>
+                        </template>
+                        <template is="dom-if" if="[[allowEdit]]">
+                            <etools-searchable-multiselection-menu id="partner"
+                                                                   label="Government Partner"
+                                                                   placeholder="&#8212;"
+                                                                   options="[[partnersDropdownData]]"
+                                                                   value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
+                                                                   on-value-change="_handleValueChange"
+                                                                   error-message="Please select a partner"
+                                                                   required>
+                            </etools-searchable-multiselection-menu>
+                        </template>
+                    </div>
+                    <div class="col flex">
+                        <template is="dom-if" if="[[!allowEdit]]">
+                            <paper-input
+                                    label="Country Programme"
+                                    value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                                    placeholder="&#8212;"
+                                    readonly></paper-input>
+                        </template>
+                        <template is="dom-if" if="[[allowEdit]]">
+                            <etools-searchable-multiselection-menu id="country_programme"
+                                                                   label="Country Programme"
+                                                                   placeholder="&#8212;"
+                                                                   options="[[countryProgrammeDropdownData]]"
+                                                                   value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
+                                                                   on-value-change="_handleValueChange"
+                                                                   error-message="Please select a country programme"
+                                                                   required>
+                            </etools-searchable-multiselection-menu>
+                        </template>
+                    </div>
+                    <div class="col">
+                        <paper-input
+                                label="Reference Number"
+                                value="[[intervention.number]]"
+                                placeholder="&#8212;"
+                                readonly></paper-input>
+                    </div>
+                </div>
+            </etools-content-panel>
+            <!--Work Plan Results-->
+            <etools-content-panel class="content-section" title="Work Plan Results">
+                <template is="dom-repeat" items="[[intervention.results]]" as="result">
+                    <government-plan-result result="{{result}}" allow-edit="[[allowEdit]]" year-options="[[yearOptions]]" index="[[index]]"></government-plan-result>
+                </template>
+                <div id="bottom-actions" class="row-h" hidden$="[[!allowEdit]]">
+                    <paper-fab icon="add"
+                               on-tap="_addNewWorkPlan"
+                               elevation="5"
+                               title="Add"></paper-fab>
+                </div>
+            </etools-content-panel>
+        </div>
+            <div id="sidebar" hidden$="[[!allowEdit]]">
+                <government-status on-save-partnership="_validateSave"></government-status>
+            </div>
+    </template>
+
+    <script>
+        Polymer({
+            is : "government-details",
+            behaviors: [
+                pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+                pmpBehaviors.CommonGeneralBehavior
+            ],
+            observers: [
+                    '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
+                    '_interventionChanged(intervention.*)'
+            ],
+            properties: {
+                intervention: {
+                    type: Object,
+                    notify: true,
+                    // placeholder value for dev purposes
+                    value: {
+                        "id": 3,
+                        "number": "LEBA/MEHE/201601",
+                        "created_at": "2016-09-13T06:32:44.017719Z",
+                        "partner": 123,
+                        "result_structure": 6,
+                        "country_programme": 1,
+                        "results": [
+                            {
+                                "id": 3,
+                                "intervention": 3,
+                                "result": 10,
+                                "year": "2016",
+                                "planned_amount": 1800000,
+                                "activities": {},
+                                "unicef_managers": [
+                                    1096
+                                ],
+                                "sectors": [
+                                    2
+                                ],
+                                "sections": [
+                                    10
+                                ],
+                                "activities_list": []
+                            },
+                            {
+                                "id": 5,
+                                "intervention": 3,
+                                "result": 242,
+                                "year": "2015",
+                                "planned_amount": 123123,
+                                "activities": {
+                                    "1": "testing",
+                                    "2": "Lorem ipsum dolos samedi sinoc dans"
+                                },
+                                "unicef_managers": [
+                                    3019,
+                                    964
+                                ],
+                                "sectors": [
+                                    4,
+                                    8
+                                ],
+                                "sections": [
+                                    18,
+                                    19
+                                ]
+                            }
+                        ]
+                    },
+                    observer: '_interventionChanged'
+                },
+                allowEdit : {
+                    type: Boolean,
+                    value: true,
+                },
+                partnersDropdownData: {
+                    type: Array,
+                    statePath: 'partnersDropdownData'
+                },
+                countryProgrammeDropdownData: {
+                    type: Array,
+                    statePath: 'countryProgrammeDropdownData',
+                },
+                yearOptions: {
+                    type: Array,
+                    notify: true
+                }
+            },
+            _mapItemFromId : function(id,collection, getLabelOnly){
+                if(getLabelOnly){
+                    return _.find(collection, {value:id}).label
+                }
+                return _.find(collection, {value:id})
+            },
+            _getYears: function () {
+                var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
+                if(!_.isEmpty(cpObject)){
+                    var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year()+1);
+                    years = years.map(function(year){
+                        return _.assign({},{label: year, value: year.toString()})
+                    })
+                    this.set('yearOptions', years);
+                }
+            },
+            _handleValueChange: function (e) {
+                var path = 'intervention.' + e.target.id;
+                this.set(path,e.detail.selectedValues.value);
+            },
+            attached: function () {
+                this._initSidebar()
+                console.log('years', this.yearOptions)
+            },
+            _interventionChanged: function(){
+              this.debounce('interChange', function(){
+                  console.log('intervention: ',this.intervention)
+              }, 300);
+            },
+            _initSidebar : function(){
+
+            }
+
+
+        })
+    </script>
+</dom-module>
