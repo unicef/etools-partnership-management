@@ -1,0 +1,84 @@
+{
+  "id": 54,
+  "partner_name": "My test partner",
+  "authorized_officers": [
+    {
+      "id": 102,
+      "title": "Pirate",
+      "first_name": "Jack",
+      "last_name": "Sparrow",
+      "email": "jack.sparrow@uniceftest.test",
+      "phone": "34534534345",
+      "active": true
+    },
+    {
+      "id": 104,
+      "title": "Ms.",
+      "first_name": "Elizabeth",
+      "last_name": "Keen",
+      "email": "elizabeth.keen@blacklist.com",
+      "phone": "234234234",
+      "active": true
+    }
+  ],
+  "amendments": [
+    {
+      "id": 1,
+      "number": "02",
+      "created": "2017-01-25T14:57:37.764892Z",
+      "modified": "2017-01-25T15:04:55.730738Z",
+      "type": [
+        "C",
+        "h",
+        "a",
+        "n",
+        "g",
+        "e",
+        " ",
+        "I",
+        "P",
+        " ",
+        "n",
+        "a",
+        "m",
+        "e"
+      ],
+      "signed_amendment": "http://localhost:80/media/uat/file_attachments/partner_org/63/agreements/PCA201701/amendments/02/Lista_de_preturi_Public_Mustang.pdf",
+      "signed_date": "2017-01-25",
+      "agreement": 54
+    }
+  ],
+  "unicef_signatory": {
+    "id": 2866,
+    "username": "ahangan@unicef.org",
+    "email": "ahangan@unicef.org",
+    "is_superuser": false,
+    "first_name": "Adrian",
+    "last_name": "Hangan",
+    "is_staff": true,
+    "is_active": true,
+    "profile": {
+      "country": 2
+    }
+  },
+  "partner_signatory": {
+    "id": 103,
+    "title": "Captain",
+    "first_name": "James",
+    "last_name": "Kirk"
+  },
+  "created": "2017-01-25T11:23:43.045467Z",
+  "modified": "2017-01-25T15:04:55.728663Z",
+  "agreement_type": "PCA",
+  "agreement_number": "/PCA201701-02",
+  "attached_agreement": "http://localhost:80/media/uat/file_attachments/partner_organization/63/agreements/TempRef%3A54/Lista_de_preturi_Publ_NUWUM42.pdf",
+  "start": "2017-01-25",
+  "end": "2017-04-29",
+  "signed_by_unicef_date": "2017-01-25",
+  "signed_by_partner_date": "2017-01-25",
+  "status": "active",
+  "partner": 63,
+  "country_programme": 1,
+  "signed_by": 2866,
+  "partner_manager": 103
+}
