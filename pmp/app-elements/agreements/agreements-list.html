@@ -42,7 +42,7 @@
                          filtered-agreements="{{filteredAgreements}}"
                          total-results="{{totalResults}}"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
+                         fire-data-loaded show-loading>
     </agreement-list-data>
 
     <partners-list-data prepare-dropdown-data>
@@ -320,6 +320,15 @@
             value: false
           },
 
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
+
           agreementTypes: {
             type: Array,
             observer: '_agreementTypesChanged'
@@ -332,8 +341,9 @@
         },
 
         observers: [
-          '_updateURL(q, partnerIds, agreementType, agreementStatus, selectedPartners,' +
-          'startDate, endDate, pageNumber, pageSize, sortOrder)',
+
+          '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+            'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
@@ -389,6 +399,7 @@
           if (!active || !parms) {
             return;
           }
+          this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
           this.set('agreementType', parms.type ? parms.type : '');
           this.set('agreementStatus', parms.status ? parms.status : '');
@@ -404,7 +415,7 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
-
+          this.set('initComplete', true);
           this._updateSelectedFiltersValues();
         },
 
@@ -449,19 +460,24 @@
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
           var qs = this._buildQueryString();
           if (qs !== _lastNavigated) {
             _lastNavigated = qs;
             // update URL
             this.updateAppState('agreements/list', qs, true);
             // filter agreements
-            this._filterAgreementsData();
+            if (this.requiredDataLoaded) {
+              this._filterAgreementsData();
+            }
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
               this.updateAppState('agreements/list', qs, false);
             }
-            if (this.forceDataRefresh) {
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter agreements data
               // this will only execute when agreements-loaded event is received
               this._filterAgreementsData();
@@ -632,25 +648,22 @@
 //        },
 
         // List fade in fade out effect
-        _agreementsChanged: function() {
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-            var agreementsList = this.$$('#agreements');
-            if (agreementsList && Array.isArray(agreementsList.data) && agreementsList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }, 50);
+        _agreementsChanged: function(filteredAgreements) {
+          var classList = this.$.list.classList;
+          if (filteredAgreements instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         // TODO: refactor this, it is identical with partner-lists _listDataChanged
         _listDataChanged: function(event) {
           var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
               }
-            });
+            }
           }
         },
 
@@ -670,11 +683,15 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0) {
+          if (typeof this.filteredAgreements === 'undefined' ||
+              (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
-          // recheck params to trigger partners filtering
+          // recheck params to trigger agreements filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
       });
