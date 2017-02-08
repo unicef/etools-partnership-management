@@ -74,7 +74,7 @@
                             data-filter-path$="[[filter.path]]"
                             on-iron-activate="_dropdownSelected">
                   <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                    <paper-item name="[[filterOption.name]]">[[filterOption.label]]</paper-item>
+                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-dropdown-menu>
@@ -325,7 +325,11 @@
 
           agreementTypes: {
             type: Array,
-            observer: '_agreementTypesChanged'
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
           }
 
         },
@@ -348,18 +352,13 @@
             {
               filterName: 'Agreement Type',
               type: 'dropdown',
-              selectionOptions: [],
+              selectionOptions: this.agreementTypes,
               path: 'agreementType'
             },
             {
               filterName: 'Agreement Status',
               type: 'dropdown',
-              selectionOptions: [
-                {name: 'draft', label: 'Draft'},
-                {name: 'active', label: 'Active'},
-                {name: 'suspended', label: 'Suspended'},
-                {name: 'terminated', label: 'Terminated'}
-              ],
+              selectionOptions: this.agreementStatuses,
               path: 'agreementStatus'
             },
             {
@@ -511,12 +510,6 @@
             return _selectedPartners;
           }
           return [];
-        },
-
-        _agreementTypesChanged: function(types) {
-          if (Array.isArray(types) && types.length > 0) {
-            this.updateFilters('Agreement Type', 'selectionOptions', types);
-          }
         },
 
         _onSearch: function() {

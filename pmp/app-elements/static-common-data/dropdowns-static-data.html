@@ -54,6 +54,12 @@
               type: 'SET_AGREEMENT_TYPES',
               agreementTypes: agreementTypesData
             };
+          },
+          setAgreementStatuses: function(agreementStatusesData) {
+            return {
+              type: 'SET_AGREEMENT_STATUSES',
+              statuses: agreementStatusesData
+            }
           }
         },
 
@@ -79,6 +85,10 @@
             // set agreement types data
             if (Array.isArray(response.detail.agreement_types) && response.detail.agreement_types.length > 0) {
               this.dispatch('setAgreementTypes', response.detail.agreement_types);
+            }
+            // set agreement statuses data
+            if (Array.isArray(response.detail.agreement_status) && response.detail.agreement_status.length > 0) {
+              this.dispatch('setAgreementStatuses', response.detail.agreement_status);
             }
           }
         },
