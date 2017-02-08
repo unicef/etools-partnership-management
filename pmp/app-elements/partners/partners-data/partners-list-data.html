@@ -87,6 +87,13 @@
 
         observers: ['_dataChanged(data.length)'],
 
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading partners data...', active: true});
+          }
+          this._elementReady();
+        },
+
         _handleMyResponse: function(res) {
           this._handleResponse(res);
           this.dispatch('setPartners', res.detail);
@@ -173,6 +180,8 @@
           });
         },
 
+        // TODO: remove _setPartnersDropdownData method and prepareDropdownData property,
+        // the functionality is now based on redux store
         _setPartnersDropdownData: function(partners) {
           var preparedData = [];
           if (partners.length > 0) {

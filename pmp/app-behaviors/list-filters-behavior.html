@@ -63,17 +63,6 @@
       }
     },
 
-    // update available and selected filters
-    _updateAvailableFilters: function(filterName, property, newValue) {
-      if (this.availableListFilterOptions.length > 0) {
-        for(var i = 0; i < this.availableListFilterOptions.length; i++) {
-
-        }
-      } else {
-
-      }
-    },
-
     // select a filter from ADD FILTER menu
     selectFilter: function(event) {
       var selectedOption = event.model.item;
@@ -148,7 +137,61 @@
         parentField.value = event.detail.prettyDate;
       }
       this.set(filterPath, event.detail.jsonDate);
-//      console.log(event.detail, filterPath, parentField);
+      // console.log(event.detail, filterPath, parentField);
+    },
+
+    _validateFilterSelectedValue: function(value) {
+      return value && ((typeof value === 'string' && value !== '')
+          || (Array.isArray(value) && value.length > 0));
+    },
+    // update shown filters
+    updateShownFilters: function(filters) {
+      if (!filters) filters = [];
+      if (Array.isArray(filters) && filters.length > 0) {
+        filters.forEach(function(filter) {
+          // check available filters
+          if (this._validateFilterSelectedValue(filter.selectedValue)) {
+            var foundInAvailable = false;
+            if (this.availableListFilterOptions.length > 0) {
+              for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+                if (this.availableListFilterOptions[i].filterName === filter.filterName) {
+                  if (this.availableListFilterOptions[i].type === 'esmm') {
+                    // update esmm dropdown selection
+                    this.set('availableListFilterOptions.' + i + '.alreadySelected', filter.selectedValue);
+                  } else if (this.availableListFilterOptions[i].type === 'datepicker') {
+                    // update datepicker selection
+                    this.set('availableListFilterOptions.' + i + '.dateSelected', filter.selectedValue);
+                  }
+                  // add filter to selected filters list
+                  this.push('selectedFilters', this.availableListFilterOptions[i]);
+                  foundInAvailable = true;
+                  break;
+                }
+              }
+            }
+            // if the filter is not in available filters lists,
+            // search it in selected filters lists and update selected value0
+            if (!foundInAvailable) {
+              if (this.selectedFilters.length > 0) {
+                for (var i = 0; i < this.selectedFilters.length; i++) {
+                  if (this.selectedFilters[i].filterName === filter.filterName) {
+                    if (this.selectedFilters[i].type = 'esmm') {
+                      // update esmm dropdown selection
+                      this.set('selectedFilters.' + i + '.alreadySelected', filter.selectedValue);
+                    } else if (this.selectedFilters[i].type === 'datepicker') {
+                      // update datepicker selection
+                      this.set('selectedFilters.' + i + '.dateSelected', filter.selectedValue);
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }.bind(this));
+        // refresh available filters and remove those selected
+        this._updateAvailableFilterOptions();
+      }
     }
 
   };

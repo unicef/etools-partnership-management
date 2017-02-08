@@ -1,105 +1,42 @@
 {
-  "id": 44,
+  "id": 54,
   "staff_members": [
     {
-      "id": 94,
-      "title": "Mr",
-      "first_name": "Mac",
-      "last_name": "Glovinsky",
-      "email": "glovinsky@gmail.com",
-      "phone": "23213",
+      "id": 106,
+      "title": "Mr.",
+      "first_name": "Ilie",
+      "last_name": "Vasilescu",
+      "email": "aaa@test.com",
+      "phone": "34345345",
       "active": true,
-      "partner": 44
+      "partner": 54
     },
     {
-      "id": 55,
-      "title": "CEO",
-      "first_name": "Staffer",
-      "last_name": "McStafferson",
-      "email": "APOstaff@example.com",
-      "phone": "123",
+      "id": 107,
+      "title": "Ms.",
+      "first_name": "Teodora",
+      "last_name": "Grigore",
+      "email": "bbb@test.com",
+      "phone": "456456",
       "active": true,
-      "partner": 44
-    },
-    {
-      "id": 56,
-      "title": "CFO",
-      "first_name": "Staffer2",
-      "last_name": "McStafferson2",
-      "email": "APOstaff2@example.com",
-      "phone": "345",
-      "active": true,
-      "partner": 44
-    },
-    {
-      "id": 72,
-      "title": "Ms",
-      "first_name": "Andrea",
-      "last_name": "Petkovic",
-      "email": "andrea.petkovic5@gmail.com",
-      "phone": "15415246",
-      "active": true,
-      "partner": 44
-    },
-    {
-      "id": 57,
-      "title": "MR",
-      "first_name": "Robert",
-      "last_name": "Avram",
-      "email": "robert.selfdefense@gmail.com",
-      "phone": "123123123",
-      "active": true,
-      "partner": 44
-    },
-    {
-      "id": 71,
-      "title": "MR",
-      "first_name": "Rob",
-      "last_name": "Other",
-      "email": "robert@ravdev.com",
-      "phone": "32423425",
-      "active": false,
-      "partner": 44
+      "partner": 54
     }
   ],
-  "assessments": [
-    {
-      "id": 33,
-      "type": "Simplified Checklist",
-      "names_of_other_agencies": null,
-      "expected_budget": null,
-      "notes": null,
-      "requested_date": "2017-01-06",
-      "planned_date": null,
-      "completed_date": "2017-01-06",
-      "rating": "high",
-      "report": "https://robi.blob.core.windows.net/robi/uat/file_attachments/partner_organizations/44/assesments/None/Screen_Shot_2016-12-27_at__Z6SOnIM.png?sr=b&sp=r&sv=2014-02-14&st=2017-01-06T09%3A58%3A07Z&sig=cIIwsB5R5GAoTXwW5IEANN42dvg8bgeb8dlupVkPa20%3D&se=2017-01-06T10%3A02%3A07Z",
-      "current": false,
-      "partner": 44,
-      "requesting_officer": null,
-      "approving_officer": null
-    },
-    {
-      "id": 34,
-      "type": "Special Audit report",
-      "names_of_other_agencies": null,
-      "expected_budget": null,
-      "notes": null,
-      "requested_date": "2017-01-06",
-      "planned_date": null,
-      "completed_date": "2017-01-06",
-      "rating": "high",
-      "report": "https://robi.blob.core.windows.net/robi/uat/file_attachments/partner_organizations/44/assesments/None/Screen_Shot_2016-12-27_at__nsVW4dh.png?sr=b&sp=r&sv=2014-02-14&st=2017-01-06T09%3A58%3A07Z&sig=AoG79s%2BthQTVPp2JiXvqHENELuNPsFkhJg10DW8ZjQk%3D&se=2017-01-06T10%3A02%3A07Z",
-      "current": true,
-      "partner": 44,
-      "requesting_officer": null,
-      "approving_officer": null
-    }
-  ],
+  "assessments": [],
+  "hact_values": {
+    "audits_done": 0,
+    "planned_visits": 12,
+    "spot_checks": 0,
+    "programmatic_visits": 0,
+    "follow_up_flags": 0,
+    "planned_cash_transfer": 0,
+    "micro_assessment_needed": "Missing",
+    "audits_mr": 0
+  },
   "partner_type": "Civil Society Organization",
   "cso_type": "National",
-  "name": "Awesome Partner Org",
-  "short_name": "APO",
+  "name": "ASSOCIATION FEMME POUR LE DEVELOPPEMENT AGROPASTORAL",
+  "short_name": "AFDA_n",
   "description": "",
   "shared_with": [],
   "shared_partner": "No",
@@ -107,13 +44,13 @@
   "city": "",
   "postal_code": "",
   "country": "",
-  "address": "",
-  "email": "",
-  "phone_number": "",
+  "address": "XXXXX",
+  "email": "YYYYYYYY",
+  "phone_number": "081 XXXXXXX",
   "vendor_number": null,
   "alternate_id": null,
-  "alternate_name": "",
-  "rating": "high",
+  "alternate_name": "aaaa",
+  "rating": null,
   "type_of_assessment": null,
   "last_assessment_date": null,
   "core_values_assessment_date": null,
@@ -123,11 +60,5 @@
   "hidden": false,
   "deleted_flag": false,
   "total_ct_cp": null,
-  "total_ct_cy": null,
-  "hact_values": {
-    "follow_up_flags": 1,
-    "planned_cash_transfer": 10,
-    "programmatic_visits": 0,
-    "spot_checks": 0
-  }
+  "total_ct_cy": null
 }

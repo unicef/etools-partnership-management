@@ -26,11 +26,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 
+<link rel="import" href="../scripts/polyfils/es6-polyfils.html">
+
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
+<link rel="import" href="app-elements/page-header/page-header.html">
+<link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
@@ -151,28 +155,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
                 <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
                 <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
-                <div class="divider"></div>
               </template>
             </iron-selector>
           </div>
+
         </div>
 
       </app-drawer>
 
       <!-- Main content -->
-        <app-header-layout fullbleed has-scrolling-region>
-          <app-header  fixed shadow>
-            <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
-          </app-header>
-          <iron-pages id="pages"
-                      selected="[[page]]"
-                      attr-for-selected="name"
-                      fallback-selection="not-found"
-                      role="main">
+      <app-header-layout fullbleed has-scrolling-region>
+        <app-header  fixed shadow>
+          <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
+        </app-header>
+        <iron-pages id="pages"
+                    selected="[[page]]"
+                    attr-for-selected="name"
+                    fallback-selection="not-found"
+                    role="main">
 
-            <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
-              <page-partners name="partners"
-                             on-dom-change="_pagesStamped"
+          <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
+            <page-partners name="partners"
+                           on-dom-change="_pagesStamped"
+                           route="[[subroute]]"
+                           user="[[user]]"
+                           permissions="[[permissions]]">
+            </page-partners>
+            <page-agreements name="agreements"
                              route="[[subroute]]"
                              user="[[user]]"
                              permissions="[[permissions]]">
@@ -192,8 +201,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-footer></page-footer>
         </app-header-layout>
       </app-drawer-layout>
-    
 
+      </app-header-layout>
 
     </app-drawer-layout>
 
@@ -259,6 +268,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         // create loading element, used for global loading
         this.globalLoadingElement = this.createLoading();
+        this.fire('global-loading', {message: 'Loading data...', active: true});
       },
 
       attached: function() {
