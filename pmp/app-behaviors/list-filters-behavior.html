@@ -155,7 +155,7 @@
             if (this.availableListFilterOptions.length > 0) {
               for (var i = 0; i < this.availableListFilterOptions.length; i++) {
                 if (this.availableListFilterOptions[i].filterName === filter.filterName) {
-                  if (this.availableListFilterOptions[i].type === 'esmm') {
+                  if (this.availableListFilterOptions[i].type === 'esmm' || this.availableListFilterOptions[i].type === 'dropdown') {
                     // update esmm dropdown selection
                     this.set('availableListFilterOptions.' + i + '.alreadySelected', filter.selectedValue);
                   } else if (this.availableListFilterOptions[i].type === 'datepicker') {
@@ -175,7 +175,7 @@
               if (this.selectedFilters.length > 0) {
                 for (var i = 0; i < this.selectedFilters.length; i++) {
                   if (this.selectedFilters[i].filterName === filter.filterName) {
-                    if (this.selectedFilters[i].type = 'esmm') {
+                    if (this.selectedFilters[i].type === 'esmm' || this.selectedFilters[i].type === 'dropdown') {
                       // update esmm dropdown selection
                       this.set('selectedFilters.' + i + '.alreadySelected', filter.selectedValue);
                     } else if (this.selectedFilters[i].type === 'datepicker') {

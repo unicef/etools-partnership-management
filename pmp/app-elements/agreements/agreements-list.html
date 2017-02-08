@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -45,9 +46,6 @@
                          fire-data-loaded show-loading>
     </agreement-list-data>
 
-    <partners-list-data prepare-dropdown-data>
-    </partners-list-data>
-
     <paper-material id="listControls" elevation="1">
 
       <div class="wrap-controls">
@@ -73,9 +71,10 @@
                             on-iron-select="filterValueChanged"
                             on-iron-deselect="filterValueChanged"
                             data-filter-path$="[[filter.path]]"
-                            on-iron-activate="_dropdownSelected">
+                            on-iron-activate="_dropdownSelected"
+                            selected=[[filter.alreadySelected]]>
                   <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                    <paper-item name="[[filterOption.name]]">[[filterOption.label]]</paper-item>
+                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-dropdown-menu>
@@ -110,10 +109,12 @@
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
               <paper-input label="[[filter.filterName]]"
+                           value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
                 <etools-datepicker-button prefix
                                           id$="datepicker_[[filter.path]]"
+                                          date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
@@ -233,6 +234,7 @@
         is: 'agreements-list',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior
@@ -263,10 +265,6 @@
           selectedPartners: {
             type: Array,
             observer: '_selectedPartnersChanged'
-          },
-
-          partnerIds: {
-            type: Array
           },
 
           startDate: {
@@ -311,8 +309,8 @@
             statePath: 'partnersDropdownData'
           },
 
-
           detailsOpened: Boolean,
+
           active: Boolean,
 
           forceDataRefresh: {
@@ -331,7 +329,11 @@
 
           agreementTypes: {
             type: Array,
-            observer: '_agreementTypesChanged'
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
           }
 
         },
@@ -344,7 +346,6 @@
 
           '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
-          '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
 
@@ -356,36 +357,35 @@
             {
               filterName: 'Agreement Type',
               type: 'dropdown',
-              selectionOptions: [],
+              selectionOptions: this.agreementTypes,
+              alreadySelected: null,
               path: 'agreementType'
             },
             {
               filterName: 'Agreement Status',
               type: 'dropdown',
-              selectionOptions: [
-                {name: 'draft', label: 'Draft'},
-                {name: 'active', label: 'Active'},
-                {name: 'suspended', label: 'Suspended'},
-                {name: 'terminated', label: 'Terminated'}
-              ],
+              selectionOptions: this.agreementStatuses,
+              alreadySelected: null,
               path: 'agreementStatus'
             },
              {
               filterName: 'Partner',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
-              selectionOptions: [], // will be populated when the partners data is received
+              selectionOptions: this.partnersDropdownData,
               alreadySelected: [],
               path: 'selectedPartners'
             },
             {
               filterName: 'Starts After',
               type: 'datepicker', // etools-datepicker
+              dateSelected: '',
               path: 'startDate'
             },
             {
               filterName: 'Ends Before',
               type: 'datepicker', // etools-datepicker
+              dateSelected: '',
               path: 'endDate'
             }
           ]);
@@ -403,9 +403,9 @@
           this.set('q', parms.q ? parms.q : '');
           this.set('agreementType', parms.type ? parms.type : '');
           this.set('agreementStatus', parms.status ? parms.status : '');
-          this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
-          this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
-          this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
+          this.set('selectedPartners', parms.partners ? this._getPartners(parms.partners) : []);
+          this.set('startDate', parms.start ? parms.start : '');
+          this.set('endDate', parms.end ? parms.end : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
           // format of sort param is sort=field.order ex: sort=name.asc
@@ -422,13 +422,10 @@
         _updateSelectedFiltersValues: function() {
           this.debounce('updateShownFilters', function () {
 
-            console.log('selected agreements', this._getSelectedAgreementType());
-            console.log('selected partners: ',this.selectedPartners);
-
             var filtersValues = [
               {
                 filterName: 'Agreement Type',
-                selectedValue: this._getSelectedAgreementType()
+                selectedValue: this.agreementType
               }, 
               {
                 filterName: 'Agreement Status',
@@ -452,11 +449,6 @@
           }.bind(this), 500);
         },
         
-        _getSelectedAgreementType() {
-          return this.agreementTypes.filter(function(a){
-            return a.name == this.agreementType;
-          }.bind(this));
-        },
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
@@ -526,10 +518,10 @@
             out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
           }
           if (this.startDate && this.startDate.length) {
-            out.push('start=' + this._shortenDate(this.startDate));
+            out.push('start=' + this.startDate);
           }
           if (this.endDate && this.endDate.length) {
-            out.push('end=' + this._shortenDate(this.endDate));
+            out.push('end=' + this.endDate);
           }
           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
@@ -539,51 +531,26 @@
         },
 
         // Convert ids from URL into array of ids
-        _parsePartnerIds: function(urlIds) {
-          return _.map(urlIds.split('|'), function(item) {
-            return parseInt(item);
-          });
-        },
-
-        _setSelectedPartners: function(partners) {
-          var partnersArr = partners.split('|');
-          if (partnersArr && partnersArr.length) {
-            var selectedPartners = this.partners.filter(function(p) {
-              return partnersArr.indexOf(p.label) > -1;
+        _getPartners: function(urlIds) {
+          var urlIdsArr = urlIds.split('|');
+          if (urlIdsArr.length) {
+            var partnerIds = urlIdsArr.map(function(id) {
+              return parseInt(id, 10);
             });
-            return selectedPartners;
+            return this._getPartnersByIds(partnerIds);
           }
           return [];
         },
 
-        // Run when partners-data is fully loaded
-        // Maps array of partner ids to multiselect compatible {value, label} format
-        // using partners-data to fetch names for labels
-        _mapIdsToMultiselect: function(partnersDropdownData) {
-          // update partner filter
-          this.updateFilters('Partner', 'selectionOptions', partnersDropdownData);
-
-          // update selected partners if any
-          this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
-            var partner = partnersDropdownData.filter(function(p) {
-              return p.value === id;
-            })[0];
-            if (partner) {
-              return {
-                value: id,
-                label: partner.label
-              };
-            }
-          }.bind(this))));
-
-          this.updateFilters('Partner', 'alreadySelected', this.selectedPartners);
-
-        },
-
-        _agreementTypesChanged: function(types) {
-          if (Array.isArray(types) && types.length > 0) {
-            this.updateFilters('Agreement Type', 'selectionOptions', types);
+        // get partners by ids
+        _getPartnersByIds: function(partnerIds) {
+          if (partnerIds instanceof Array && partnerIds.length) {
+            var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+              return partnerIds.indexOf(partner.value) > -1;
+            });
+            return _selectedPartners;
           }
+          return [];
         },
 
         _onSearch: function() {
@@ -626,11 +593,6 @@
           }
         },
 
-        _shortenDate: function(date) {
-          if (date && date.length) {
-            return date.slice(0, date.indexOf('T'));
-          }
-        },
 
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {
