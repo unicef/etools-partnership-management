@@ -175,8 +175,7 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">Sectors</span>
               <span>[[getDisplayValue(entry.sectors)]]</span>
-            </div>
-            
+            </div>            
 
           </div>
         </data-table-row>
@@ -667,7 +666,10 @@
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger partners filtering
-          this._init(this.active);
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
+          this._init(this.active);          
+          this.fire('global-loading', {active: false});
         },
 
         _onSearch: function() {
