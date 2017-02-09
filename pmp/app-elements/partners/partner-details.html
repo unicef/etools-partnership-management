@@ -257,6 +257,14 @@
             value: [],
             notify: true
           },
+          csoTypes: {
+            type: Array,
+            path: 'csoTypes'
+          },
+          partnerTypes: {
+            type: Array,
+            path: 'partnerTypes'
+          },
           originalPartnerData: Object
 
         },
@@ -328,8 +336,8 @@
 
         _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
           // TODO; see if this values are correct for displaying core values assessment file
-          if (['Civil Society Organization', 'Civil Society Organisation'].indexOf(partnerType) >= 0
-              && ['National', 'National NGO'].indexOf(csoType) >= 0) {
+          if (this.partnerTypes.indexOf(partnerType) >= 0
+              && this.csoTypes.indexOf(csoType) >= 0) {
             this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
             return true;
           }
