@@ -105,6 +105,7 @@
             </template>
             <template is="dom-if" if="[[_allowFieldEditing('startDate', agreement.status)]]">
               <paper-input label="Start date"
+                           id="startDateField"
                            value="[[prettyDate(agreement.start)]]"
                            on-down="openDatePicker"
                            data-selector="startDate"
@@ -468,21 +469,16 @@
             this._partnersDropdownChanged(this.partnersDropdownData.length);
             // check agreement type dropdown selected value; reset invalid state
             this._setAgreementTypeDropdownValue(agreement.agreement_type);
-            // reset invalid state for endDateField
-            this.fieldValidationReset('#endDateField');
-            // set signed by dropdown value; reset invalid state
+
+            // reset invalid state for signed by values
+            this._resetSignedByValidations();
+
+            // set signed by dropdown value; 
             this._setSignedByPartnerDropdownValue(agreement.partner_manager);
-            // reset invalid state for signedByPartnerDateField0
-            this.fieldValidationReset('#signedByPartnerDateField');
-            // set signed by unicef value; reset invalid state
+            // set signed by unicef value; 
             this._setSignedByUnicefDropdownValue(agreement.signed_by);
-            this.fieldValidationReset('#signedByUnicef');
-            // reset invalid state for signedByUnicefDateField
-            this.fieldValidationReset('#signedByUnicefDateField');
             // reset authorized officers invalid messages
-            var selectedOfficers = this.$.authorizedOfficers;
-            selectedOfficers._updateInvalidState(false);
-            selectedOfficers.resetSelection();
+            this._resetOfficersField();
 
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
@@ -490,10 +486,44 @@
             // new agreement, update status to draft
             this._setDraftStatus(this.editMode, this.isNewAgreement);
 
+            this.set('_signedAgreementFiles',[]);
+            this._resetDropdown('#partner');
+            this._resetDropdown('#agreementType');
+            this._resetDropdown('#signedByUnicef');
+            this._resetDropdown('#signedByPartner', true);
             // TODO: Reset new agreement fields if an agreement was selected previously
-
+            // reset validations in case are shown
+            this._resetSignedByValidations();
+            this._resetOfficersField();
           }
           this.fire('global-loading', {active: false});
+        },
+
+        _resetDropdown: function(selector, clearOptions) {
+          if (!clearOptions) clearOptions = false;
+          var field = this.fieldValidationReset(selector);
+          if (field) {
+            field.value = [];
+            field.selectedValues = null;
+            field.search = '';
+            if (clearOptions) {
+              field.options = [];
+            }
+          }
+        },
+
+        _resetSignedByValidations: function() {
+            this.fieldValidationReset('#endDateField');
+            this.fieldValidationReset('#signedByPartner');
+            this.fieldValidationReset('#signedByPartnerDateField');
+            this.fieldValidationReset('#signedByUnicef');
+            this.fieldValidationReset('#signedByUnicefDateField');
+        },
+
+        _resetOfficersField: function() {
+          var selectedOfficers = this.$.authorizedOfficers;
+          selectedOfficers._updateInvalidState(false);
+          selectedOfficers.resetSelection();
         },
 
         /**
@@ -1026,9 +1056,9 @@
           // we do not need all the agreement object data for the first save
           return {
             id: null,
-            // authorized_officers: agreement.authorized_officers.map(function(officer) {
-            //   return officer.id;
-            // }),
+            authorized_officers: agreement.authorized_officers.map(function(officer) {
+              return officer.id;
+            }),
             agreement_type: agreement.agreement_type,
             // TODO set attached_agreement after etools-file flow is decided
             // attached_agreement: null,
