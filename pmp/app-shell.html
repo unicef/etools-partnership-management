@@ -24,6 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 
+<link rel="import" href="../scripts/polyfils/es6-polyfils.html">
+
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
@@ -263,6 +265,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         // create loading element, used for global loading
         this.globalLoadingElement = this.createLoading();
+        this.fire('global-loading', {message: 'Loading data...', active: true});
       },
 
       attached: function() {

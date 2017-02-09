@@ -47,7 +47,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
-                        fire-data-loaded>
+                        fire-data-loaded show-loading>
     </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -269,11 +269,20 @@
           forceDataRefresh: {
             type: Boolean,
             value: false
+          },
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
           }
         },
 
         observers: [
-          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
+            'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -307,6 +316,7 @@
           if (!active || !parms) {
             return;
           }
+          this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
           this.set('partnerType', parms.partner_type ? parms.partner_type : '');
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
@@ -320,24 +330,29 @@
             result = {field: p[0], direction: p[1]};
           }
           this.set('sortOrder', result);
-          //this.$.listHeader.sortOrder = result;
+          this.set('initComplete', true);
         },
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
           var qs = this._buildQueryString();
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
             // update URL
             this.updateAppState('partners/list', qs, true);
-            // filter partners
-            this._filterPartnersData();
+            // filter partners, but only after data has been loaded
+            if (this.requiredDataLoaded) {
+              this._filterPartnersData();
+            }
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
               this.updateAppState('partners/list', qs, false);
             }
-            if (this.forceDataRefresh) {
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter partners data
               // this will only execute when partners-loaded event is received
               this._filterPartnersData();
@@ -427,13 +442,10 @@
 
         // List fade in fade out effect
         _partnersChanged: function(filteredPartners) {
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-            var partnersList = this.$$('#partners');
-            if (partnersList && Array.isArray(partnersList.data) && partnersList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }, 50);
+          var classList = this.$.list.classList;
+          if (filteredPartners instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _computeName: function(name, shortName) {
@@ -453,12 +465,12 @@
         // When the list data rows are changing check and close any details opened
         _listDataChanged: function() {
           var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
               }
-            });
+            }
           }
         },
 
@@ -468,11 +480,15 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0) {
+          if (typeof this.filteredPartners === 'undefined' ||
+              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger partners filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
       });

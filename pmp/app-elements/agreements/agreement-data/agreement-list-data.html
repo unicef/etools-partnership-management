@@ -75,6 +75,13 @@
           }
         },
 
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading agreements data...', active: true});
+          }
+          this._elementReady();
+        },
+
         _handleMyResponse: function(res) {
           this._handleResponse(res);
           this.dispatch('setAgreements', res.detail);
