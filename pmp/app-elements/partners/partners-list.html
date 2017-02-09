@@ -69,13 +69,14 @@
             <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
             <paper-dropdown-menu label$="[[filter.filterName]]" noink>
               <paper-menu class="dropdown-content"
-                          attr-for-selected="text-content"
+                          attr-for-selected="name"
                           on-iron-select="filterValueChanged"
                           on-iron-deselect="filterValueChanged"
                           data-filter-path$="[[filter.path]]"
-                          on-iron-activate="_dropdownSelected">
+                          on-iron-activate="_dropdownSelected"
+                          selected=[[filter.alreadySelected]]>
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                  <paper-item>[[filterOption]]</paper-item>
+                  <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -297,12 +298,16 @@
           this.initListFiltersData([
             {
               filterName: 'Partner Type',
+              type: 'dropdown',
               selectionOptions: ['Bilateral / Multilateral', 'Civil Society Organization', 'Government', 'UN Agency'],
+              alreadySelected: null,
               path: 'partnerType'
             },
             {
               filterName: 'CSO Type',
+              type: 'dropdown',
               selectionOptions: ['Academic Institution', 'Community Based Organization', 'International', 'National'],
+              alreadySelected: null,
               path: 'csoType'
             }
           ]);
@@ -329,10 +334,29 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
+
           this.set('sortOrder', result);
           this.set('initComplete', true);
+
+          this._updateSelectedFiltersValues();         
         },
 
+        _updateSelectedFiltersValues: function(){
+          this.debounce('updateShownFilters', function () {
+            var filtersValues = [
+              {
+                filterName: 'Partner Type',
+                selectedValue: this.partnerType
+              },
+              {
+                filterName: 'CSO Type',
+                selectedValue: this.csoType
+              }                           
+            ];            
+            this.updateShownFilters(filtersValues);
+
+          }.bind(this), 100);
+        },
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           if (!this.requiredDataLoaded || !this.initComplete) {
