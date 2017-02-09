@@ -17,7 +17,13 @@
     agreementsDropdownData: [],
     partnersDropdownData: [],
     agreementsList: [],
-    currencies: []
+    currencies: [],
+    agencyChoices: [],
+    agreementAmendmentTypes: [],
+    csoTypes: [],
+    partnerTypes: [],
+    assessmentTypes: [],
+    interventionAmendmentTypes: []    
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -81,6 +87,24 @@
       case 'SET_CURRENCIES':
         // console.log('set currencies data...', action.currencies);
         return Object.assign({}, state, {currencies: action.currencies});
+      case 'SET_CSO_TYPES':
+        // console.log('set csoTypes...', action.csoTypes);
+        return Object.assign({}, state, {csoTypes: action.csoTypes});
+      case 'SET_PARTNER_TYPES':
+        // console.log('set partnerTypes...', action.partnerTypes);
+        return Object.assign({}, state, {partnerTypes: action.partnerTypes});                
+      case 'SET_AGENCY_CHOICHES':
+        // console.log('set agencyChoices...', action.agencyChoices);
+        return Object.assign({}, state, {agencyChoices: action.agencyChoices});
+      case 'SET_AGREEMENT_AMEDMENT_TYPES':
+        // console.log('set agreementAmendmentTypes...', action.agreementAmendmentTypes);
+        return Object.assign({}, state, {agreementAmendmentTypes: action.agreementAmendmentTypes});        
+      case 'SET_ASSESSMENT_TYPES':
+        // console.log('set assessmentTypes...', action.assessmentTypes);
+        return Object.assign({}, state, {assessmentTypes: action.assessmentTypes});
+      case 'SET_INTERVENTION_AMENDMENT_TYPES':
+        // console.log('set interventionAmendmentTypes...', action.interventionAmendmentTypes);
+        return Object.assign({}, state, {interventionAmendmentTypes: action.interventionAmendmentTypes});
     }
   });
 
