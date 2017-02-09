@@ -49,7 +49,6 @@
               currencies: currenciesData
             };
           },
-
           setAgencyChoices: function(agency_choices) {
             return {
               type: 'SET_AGENCY_CHOICHES',
@@ -84,9 +83,7 @@
             return {
               type: 'SET_INTERVENTION_AMENDMENT_TYPES',
               interventionAmendmentTypes: intervention_amendment_types
-            };
-          },
-
+            };          
           },
           setAgreementTypes: function(agreementTypesData) {
             return {
@@ -128,29 +125,28 @@
             // set agreement statuses data
             if (Array.isArray(response.detail.agreement_status) && response.detail.agreement_status.length > 0) {
               this.dispatch('setAgreementStatuses', response.detail.agreement_status);
-            }
-         
-            // set currencies data
+            }        
+            // set agency data
             if (Array.isArray(response.detail.agency_choices) && response.detail.agency_choices.length > 0) {
               this.dispatch('setAgencyChoices', response.detail.agency_choices);
             }
-            // set currencies data
+            // set agreement amendment data
             if (Array.isArray(response.detail.agreement_amendment_types) && response.detail.agreement_amendment_types.length > 0) {
               this.dispatch('setAgreementAmendmentTypes', response.detail.agreement_amendment_types);
             }
-            // set currencies data
+            // set cso types data
             if (Array.isArray(response.detail.cso_types) && response.detail.cso_types.length > 0) {
               this.dispatch('setCsoTypes', response.detail.cso_types);
             }
-            // set currencies data
+            // set partner types data
             if (Array.isArray(response.detail.partner_types) && response.detail.partner_types.length > 0) {
               this.dispatch('setPartnerTypes', response.detail.partner_types);
             }
-            // set currencies data
+            // set assessment types data
             if (Array.isArray(response.detail.assessment_types) && response.detail.assessment_types.length > 0) {
               this.dispatch('setAssessmentTypes', response.detail.assessment_types);
             }
-            // set currencies data
+            // set intervention ammendment data
             if (Array.isArray(response.detail.intervention_amendment_types) && response.detail.intervention_amendment_types.length > 0) {
               this.dispatch('setInterventionAmendmentTypes', response.detail.intervention_amendment_types);
             }
