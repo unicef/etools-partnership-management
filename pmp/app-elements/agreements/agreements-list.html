@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -45,9 +46,6 @@
                          fire-data-loaded show-loading>
     </agreement-list-data>
 
-    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
-    </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
 
@@ -76,7 +74,7 @@
                             data-filter-path$="[[filter.path]]"
                             on-iron-activate="_dropdownSelected">
                   <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                    <paper-item name="[[filterOption.name]]">[[filterOption.label]]</paper-item>
+                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-dropdown-menu>
@@ -233,6 +231,7 @@
         is: 'agreements-list',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior
@@ -263,10 +262,6 @@
           selectedPartners: {
             type: Array,
             observer: '_selectedPartnersChanged'
-          },
-
-          partnerIds: {
-            type: Array
           },
 
           startDate: {
@@ -306,7 +301,10 @@
             type: Object
           },
 
-          partnersDropdownData: Array,
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
 
           detailsOpened: Boolean,
           active: Boolean,
@@ -327,7 +325,11 @@
 
           agreementTypes: {
             type: Array,
-            observer: '_agreementTypesChanged'
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
           }
 
         },
@@ -339,7 +341,6 @@
         observers: [
           '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
-          '_mapIdsToMultiselect(partnersDropdownData)',
           '_init(active)'
         ],
 
@@ -351,25 +352,20 @@
             {
               filterName: 'Agreement Type',
               type: 'dropdown',
-              selectionOptions: [],
+              selectionOptions: this.agreementTypes,
               path: 'agreementType'
             },
             {
               filterName: 'Agreement Status',
               type: 'dropdown',
-              selectionOptions: [
-                {name: 'draft', label: 'Draft'},
-                {name: 'active', label: 'Active'},
-                {name: 'suspended', label: 'Suspended'},
-                {name: 'terminated', label: 'Terminated'}
-              ],
+              selectionOptions: this.agreementStatuses,
               path: 'agreementStatus'
             },
             {
               filterName: 'Partner',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
-              selectionOptions: [], // will be populated when the partners data is received
+              selectionOptions: this.partnersDropdownData,
               alreadySelected: [],
               path: 'selectedPartners'
             },
@@ -398,7 +394,7 @@
           this.set('q', parms.q ? parms.q : '');
           this.set('agreementType', parms.type ? parms.type : '');
           this.set('agreementStatus', parms.status ? parms.status : '');
-          this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
+          this.set('selectedPartners', parms.partners ? this._getPartners(parms.partners) : []);
           this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
           this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
@@ -478,7 +474,7 @@
             out.push('status=' + this.agreementStatus);
           }
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partners=' + _.map(this.selectedPartners, 'value').join('+'));
+            out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
           }
           if (this.startDate && this.startDate.length) {
             out.push('start=' + this._shortenDate(this.startDate));
@@ -494,40 +490,26 @@
         },
 
         // Convert ids from URL into array of ids
-        _parsePartnerIds: function(urlIds) {
-          return _.map(urlIds.split(' '), function(item) {
-            return parseInt(item);
-          });
-        },
-
-        // Run when partners-data is fully loaded
-        // Maps array of partner ids to multiselect compatible {value, label} format
-        // using partners-data to fetch names for labels
-        _mapIdsToMultiselect: function(partnersDropdownData) {
-          // update partner filter
-          this.updateFilters('Partner', 'selectionOptions', partnersDropdownData);
-
-          // update selected partners if any
-          this.set('selectedPartners', _.compact(_.map(this.partnerIds, function(id) {
-            var partner = partnersDropdownData.filter(function(p) {
-              return p.id === id;
-            })[0];
-            if (partner) {
-              return {
-                value: id,
-                label: partner.name
-              };
-            }
-          }.bind(this))));
-
-          this.updateFilters('Partner', 'alreadySelected', this.selectedPartners);
-
-        },
-
-        _agreementTypesChanged: function(types) {
-          if (Array.isArray(types) && types.length > 0) {
-            this.updateFilters('Agreement Type', 'selectionOptions', types);
+        _getPartners: function(urlIds) {
+          var urlIdsArr = urlIds.split('|');
+          if (urlIdsArr.length) {
+            var partnerIds = urlIdsArr.map(function(id) {
+              return parseInt(id, 10);
+            });
+            return this._getPartnersByIds(partnerIds);
           }
+          return [];
+        },
+
+        // get partners by ids
+        _getPartnersByIds: function(partnerIds) {
+          if (partnerIds instanceof Array && partnerIds.length) {
+            var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+              return partnerIds.indexOf(partner.value) > -1;
+            });
+            return _selectedPartners;
+          }
+          return [];
         },
 
         _onSearch: function() {

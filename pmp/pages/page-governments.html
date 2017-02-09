@@ -1,0 +1,169 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+
+<!-- Replace these with something more apppriate -->
+<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
+<!-- <link rel="import" href="../app-elements/agreements/agreements-list.html"> -->
+<link rel="import" href="../app-elements/governments/governments-list.html">
+<link rel="import" href="../app-elements/agreements/agreement-details.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
+
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+
+<dom-module id="page-governments">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles buttons-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="governments/list"
+        query-params="{{governmentQueryParams}}"
+        active="{{governmentListActive}}">    
+    </app-route>
+  	<!-- 
+  	<partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
+                        prepare-dropdown-data>
+    </partners-list-data>
+ -->
+  	<app-header-layout>
+
+      <div class$="page-top-content [[_getTopContentAdditionalClass()]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+
+              <span> Government in simple </span>
+        
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!governmentListActive]]">
+                <paper-button>
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
+                </paper-button>
+              </div>
+              <div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>
+              <div class="top-content-action" hidden$="[[!governmentListActive]]">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
+                  <iron-icon icon="add"></iron-icon>
+                  Add New Government in simple
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row" hidden="[[!_showPageTabs()]]">
+            <paper-tabs
+                selected="details"
+                attr-for-selected="name"
+                fallback-selection="details" noink bottom-item>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Government Details</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </div>
+      </div>    
+
+      <iron-pages id="governmentsPages"                  
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <governments-list id="list"
+                           active="[[governmentListActive]]"
+                           url-params="[[governmentQueryParams]]"
+                           partners-dropdown-data="[[partnersDropdownData]]">
+          </governments-list>
+        </div>
+        
+      </iron-pages>
+    </app-header-layout> 
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-governments',
+
+      properties: {
+
+        governementsPage: {
+          type: String,
+          notify: true
+        },        
+        
+        partnersDropdownData: {
+          type: Array,
+          notify: true
+        },
+
+        agreementTypes: {
+          type: Array,
+          notify: true
+        },
+
+      },
+
+      // observers: [
+      //   '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
+      //   '_pageChanged(governmentListActive, newAgreementActive, agreementDetailsActive)',
+      // ],
+
+      ready: function() {
+        this.set('agreementTypes', [
+          {name: 'MOU', label: 'Momarendum of Understanding'},
+          {name: 'PCA', label: 'Programme Cooperation Agreement'},
+          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
+        ]);
+
+        // // TODO: remove this
+        // if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
+        //   this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        // }
+      },
+     
+
+      _showPageTabs: function(activePage) {
+        // what was the logic behind this one?         
+        return false;
+      },
+
+      _getTopContentAdditionalClass: function () {
+      	return '';
+      },
+
+      _goToNewGovernmentPage: function() {
+        // go to new gvt
+      }
+      
+
+    });
+
+  </script>
+</dom-module>
