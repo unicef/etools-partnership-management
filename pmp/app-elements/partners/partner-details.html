@@ -9,6 +9,7 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
@@ -107,7 +108,8 @@
               <etools-searchable-multiselection-menu label="Shared Partner"
                                                      options="[[sharedPartenerValues]]"
                                                      value="{{sharedPartenerSelectedValues}}"
-                                                     multi></etools-searchable-multiselection-menu>
+                                                     multi
+                                                     custom-object-options></etools-searchable-multiselection-menu>
             </template>
           </div>
         </div>
@@ -229,7 +231,8 @@
       Polymer({
         is: 'partner-details',
 
-        behaviors: [
+        behaviors: [        
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior
         ],
@@ -259,11 +262,11 @@
           },
           csoTypes: {
             type: Array,
-            path: 'csoTypes'
+            statePath: 'csoTypes'
           },
           partnerTypes: {
             type: Array,
-            path: 'partnerTypes'
+            statePath: 'partnerTypes'
           },
           originalPartnerData: Object
 
@@ -272,7 +275,7 @@
         ready: function() {
 
           this.set('showCoreValuesAssessmentAttachement', false);
-
+          console.log('theasdlndsl', this.csoTypes, this.partnerTypes);
           /**
            * TODO: improve shared partners data once the server data is defined and final
            * shared_partner value format ?

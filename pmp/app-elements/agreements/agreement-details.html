@@ -451,17 +451,19 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          console.log(agreement);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
               // prevent wrong new agreement value
               this.set('isNewAgreement', false);
             }
-            if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
+
               this.set('_showAmendments', true);
-            } else {
-              this.set('_showAmendments', false);
-            }
+              
+            // if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
+            //   this.set('_showAmendments', true);
+            // } else {
+            //   this.set('_showAmendments', false);
+            // }
             // prepare attached agreement data
             this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
             // check for partners dropdown selected values; reset invalid state

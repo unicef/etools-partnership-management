@@ -11,6 +11,7 @@
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
@@ -190,6 +191,7 @@
         is: 'assessments-items',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.DateBehavior
         ],
@@ -200,7 +202,10 @@
             value: 0
           }
         },
-
+        assessmentTypesOptions: {
+          type: Array,
+          statePath: 'assessmentTypes'
+        },
         observers: ['_dataHasChanged(dataItems)'],
 
         ready: function() {
@@ -212,12 +217,15 @@
           };
 
           // prepare assessment type values
-          var assessmentTypes = [];
-          ['Micro Assessment', 'Simplified Checklist', 'Scheduled Audit report',
-            'Special Audit report', 'High Risk Assumed', 'Other'].forEach(function(val, index) {
-            assessmentTypes.push({value: index, label: val});
-          });
-          this.set('assessmentTypesOptions', assessmentTypes);
+          // var assessmentTypes = [];
+          // ['Micro Assessment', 'Simplified Checklist', 'Scheduled Audit report',
+          //   'Special Audit report', 'High Risk Assumed', 'Other'].forEach(function(val, index) {
+          //   assessmentTypes.push({value: index, label: val});
+          // });
+
+          // this.set('assessmentTypesOptions', assessmentTypes);
+
+          console.log(this.assessmentTypesOptions);
         },
         _getAssessmentType: function(item) {
           var type = item.type;
