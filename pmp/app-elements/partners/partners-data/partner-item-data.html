@@ -62,10 +62,14 @@
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           }
         },
-        _prepareAndFireRequest: function(method, data, url, multipart) {
+        _prepareAndFireRequest: function(method, data, url, multipart, experimentalObjBody) {
           if (!multipart){
             multipart = false;
           }
+          if (!experimentalObjBody){
+            experimentalObjBody = false;
+          }
+          this.ajaxEl.setContentType(null);
           if (!method) {
             method = 'GET';
             // reset ajax for GET request
@@ -73,6 +77,7 @@
             this.ajaxEl.set('body', null);
             this.ajaxEl.set('url', null);
             this.ajaxEl.set('multiPart', false);
+            this.ajaxEl.set('experimentalObjBody', false);
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
@@ -81,6 +86,11 @@
               this.ajaxEl.set('multiPart', true);
             } else {
               this.ajaxEl.set('multiPart', false);
+            }
+            if (experimentalObjBody) {
+              this.ajaxEl.set('experimentalObjBody', true);
+            } else {
+              this.ajaxEl.set('experimentalObjBody', false);
             }
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
@@ -124,14 +134,17 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               var withUpload = false; // used to set multipart prop on etools-ajax
+              var experimentalObjBody = false;
               if (partner.hasOwnProperty('core_values_assessment')) {
                 if (partner.core_values_assessment instanceof File) {
                   withUpload = true;
+                  experimentalObjBody = true;
                 }
               }
+              console.log(partner);
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload, experimentalObjBody);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',
