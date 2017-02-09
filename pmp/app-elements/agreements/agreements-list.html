@@ -46,7 +46,6 @@
                          fire-data-loaded show-loading>
     </agreement-list-data>
 
-
     <paper-material id="listControls" elevation="1">
 
       <div class="wrap-controls">
@@ -72,7 +71,8 @@
                             on-iron-select="filterValueChanged"
                             on-iron-deselect="filterValueChanged"
                             data-filter-path$="[[filter.path]]"
-                            on-iron-activate="_dropdownSelected">
+                            on-iron-activate="_dropdownSelected"
+                            selected=[[filter.alreadySelected]]>
                   <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                     <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
                   </template>
@@ -96,7 +96,8 @@
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
                   on-value-change="esmmValueChanged"
-                  data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
+                  data-filter-path$="[[filter.path]]"
+                  custom-object-options></etools-searchable-multiselection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -108,10 +109,12 @@
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
               <paper-input label="[[filter.filterName]]"
+                           value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
                 <etools-datepicker-button prefix
                                           id$="datepicker_[[filter.path]]"
+                                          date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
@@ -307,6 +310,7 @@
           },
 
           detailsOpened: Boolean,
+
           active: Boolean,
 
           forceDataRefresh: {
@@ -339,6 +343,7 @@
         },
 
         observers: [
+
           '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -353,15 +358,17 @@
               filterName: 'Agreement Type',
               type: 'dropdown',
               selectionOptions: this.agreementTypes,
+              alreadySelected: null,
               path: 'agreementType'
             },
             {
               filterName: 'Agreement Status',
               type: 'dropdown',
               selectionOptions: this.agreementStatuses,
+              alreadySelected: null,
               path: 'agreementStatus'
             },
-            {
+             {
               filterName: 'Partner',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
@@ -372,11 +379,13 @@
             {
               filterName: 'Starts After',
               type: 'datepicker', // etools-datepicker
+              dateSelected: '',
               path: 'startDate'
             },
             {
               filterName: 'Ends Before',
               type: 'datepicker', // etools-datepicker
+              dateSelected: '',
               path: 'endDate'
             }
           ]);
@@ -395,8 +404,8 @@
           this.set('agreementType', parms.type ? parms.type : '');
           this.set('agreementStatus', parms.status ? parms.status : '');
           this.set('selectedPartners', parms.partners ? this._getPartners(parms.partners) : []);
-          this.set('startDate', parms.start ? parms.start + 'T12:00:00' : '');
-          this.set('endDate', parms.end ? parms.end + 'T12:00:00' : '');
+          this.set('startDate', parms.start ? parms.start : '');
+          this.set('endDate', parms.end ? parms.end : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
           // format of sort param is sort=field.order ex: sort=name.asc
@@ -407,7 +416,39 @@
           }
           this.set('sortOrder', result);
           this.set('initComplete', true);
+          this._updateSelectedFiltersValues();
         },
+
+        _updateSelectedFiltersValues: function() {
+          this.debounce('updateShownFilters', function () {
+
+            var filtersValues = [
+              {
+                filterName: 'Agreement Type',
+                selectedValue: this.agreementType
+              }, 
+              {
+                filterName: 'Agreement Status',
+                selectedValue: this.agreementStatus
+              }, 
+              {
+                filterName: 'Partner',
+                selectedValue: this.selectedPartners
+              }, 
+              {
+                filterName: 'Starts After',
+                selectedValue: this.startDate
+              }, 
+              {
+                filterName: 'Ends Before',
+                selectedValue: this.endDate
+              },                           
+            ];            
+            this.updateShownFilters(filtersValues);
+
+          }.bind(this), 500);
+        },
+        
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
@@ -477,10 +518,10 @@
             out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
           }
           if (this.startDate && this.startDate.length) {
-            out.push('start=' + this._shortenDate(this.startDate));
+            out.push('start=' + this.startDate);
           }
           if (this.endDate && this.endDate.length) {
-            out.push('end=' + this._shortenDate(this.endDate));
+            out.push('end=' + this.endDate);
           }
           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
@@ -552,11 +593,6 @@
           }
         },
 
-        _shortenDate: function(date) {
-          if (date && date.length) {
-            return date.slice(0, date.indexOf('T'));
-          }
-        },
 
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {
