@@ -113,7 +113,8 @@
                                                                value="[[_getAssessmentType(item)]]"
                                                                on-value-change="_assessmentTypeSelected"
                                                                invalid$="[[!_isValid('assessmentType', item.type, item.completed_date, item.report_file.length)]]"
-                                                               error-message="Assessment type is required">
+                                                               error-message="Assessment type is required"
+                                                               custom-object-options>
                         </etools-searchable-multiselection-menu>
                       </template>
                     </div>
@@ -200,12 +201,15 @@
           elevation: {
             type: Number,
             value: 0
-          }
+          },
+
+          assessmentTypesOptions: {
+            type: Array,
+            value: [],
+            statePath: 'assessmentTypes'
+          },
         },
-        assessmentTypesOptions: {
-          type: Array,
-          statePath: 'assessmentTypes'
-        },
+
         observers: ['_dataHasChanged(dataItems)'],
 
         ready: function() {
@@ -214,18 +218,7 @@
             completed_date: null,
             current: false,
             report_file: []
-          };
-
-          // prepare assessment type values
-          // var assessmentTypes = [];
-          // ['Micro Assessment', 'Simplified Checklist', 'Scheduled Audit report',
-          //   'Special Audit report', 'High Risk Assumed', 'Other'].forEach(function(val, index) {
-          //   assessmentTypes.push({value: index, label: val});
-          // });
-
-          // this.set('assessmentTypesOptions', assessmentTypes);
-
-          console.log(this.assessmentTypesOptions);
+          };      
         },
         _getAssessmentType: function(item) {
           var type = item.type;
