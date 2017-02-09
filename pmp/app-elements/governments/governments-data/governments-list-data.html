@@ -37,7 +37,7 @@
             value: 'governments-loaded'
           },
 
-          filteredInterventions: {
+          filteredGovernments: {
             type: Array,
             readOnly: true,
             notify: true
@@ -52,15 +52,18 @@
           currentQuery: {
             type: Object,
             value: null
+          },
+
+          unicefUsersData: {
+            type: Array
           }
         },
 
-        query: function(field, order, searchString, documentTypes, cpOutputs,
-                        interventionStatuses, sectors, unicefFocalPoints, offices, startDate,
-                        endDate, pageNumber, pageSize) {
+        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
+
           if (this.currentQuery) {
             this.currentQuery.abort();
           }
@@ -70,88 +73,70 @@
           this.db.transaction('r', this.db.governments, function() {
             this.currentQuery = Dexie.currentTransaction;
 
-            var queryResult = _this.db.governments;
+            var governmentsQueryResult = _this.db.governments;
+
             if (field) {
               // note: null values don't appear in result set of sort
-              queryResult = queryResult.orderBy(field);
+              governmentsQueryResult = governmentsQueryResult.orderBy(field);
             }
+
             if (order === 'desc') {
-              queryResult = queryResult.reverse();
+              governmentsQueryResult = governmentsQueryResult.reverse();
             }
 
-            queryResult = queryResult.filter(function(governments) {
+            governmentsQueryResult = governmentsQueryResult.filter(function(government) {
 
-              // if (documentTypes.length) {
-              //   var matchType = documentTypes.filter(function(selectedType) {
-              //     return selectedType === governments.document_type;
-              //   })[0];
+              government.unicef_focal_point_names = [];
 
-              //   if (!matchType) {
-              //     return false;
-              //   }
-              // }
+              for(var key in government.unicef_focal_points) {
+                government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
+              }
 
-              // if (cpOutputs.length) {
-              //   var matchCpOut = governments.cp_outputs.filter(function(cpOut) {
-              //     return cpOutputs.indexOf(cpOut) > -1;
-              //   });
-              //   if (matchCpOut && matchCpOut.length === 0) {
-              //     return false;
-              //   }
-              // }
+              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {
+                return false;
+              }
 
-              // if (governmentsStatuses.length) {
-              //   var matchStatus = governmentsStatuses.filter(function(selectedStatus) {
-              //     return selectedStatus === governments.status;
-              //   })[0];
+              if (unicefFocalPoints.length) {
+                var matchUnicefFocalPoints = government.unicef_focal_points.filter(function(fPt) {
+                  return unicefFocalPoints.indexOf(fPt) > -1;
+                });
+                if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
+                  return false;
+                }
+              }
 
-              //   if (!matchStatus) {
-              //     return false;
-              //   }
-              // }
+              if (cpOutputs.length) {
+                var matchCpOut = government.cp_outputs.filter(function(cpOut) {
+                  return cpOutputs.indexOf(cpOut) > -1;
+                });
+                if (matchCpOut && matchCpOut.length === 0) {
+                  return false;
+                }
+              }
 
-              // if (sectors.length) {
-              //   var matchSectors = governments.sectors.filter(function(sector) {
-              //     return sectors.indexOf(sector) > -1;
-              //   });
-              //   if (matchSectors && matchSectors.length === 0) {
-              //     return false;
-              //   }
-              // }
+              if (searchString && searchString.length &&
+                  government.number.toLowerCase().indexOf(searchString) < 0 &&
+                  government.partner_name.toLowerCase().indexOf(searchString) < 0) {
+                return false;
+              }
 
-              // if (unicefFocalPoints.length) {
-              //   var matchUnicefFocalPoints = governments.unicef_focal_points.filter(function(fPt) {
-              //     return unicefFocalPoints.indexOf(fPt) > -1;
-              //   });
-              //   if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
-              //     return false;
-              //   }
-              // }
+              if (sectors.length) {
+                var matchSectors = government.sectors.filter(function(sector) {
+                  return sectors.indexOf(sector) > -1;
+                });
+                if (matchSectors && matchSectors.length === 0) {
+                  return false;
+                }
+              }
 
-              // if (offices.length) {
-              //   var matchOffices = governments.offices.filter(function(officeId) {
-              //     return offices.indexOf(officeId) > -1;
-              //   });
-              //   if (matchOffices && matchOffices.length === 0) {
-              //     return false;
-              //   }
-              // }
-
-              // if (startDate && startDate.length &&
-              //     (!governments.start || governments.start < startDate)) {
-              //   return false;
-              // }
-
-              // if (endDate && endDate.length &&
-              //     (!governments.end || governments.end > endDate)) {
-              //   return false;
-              // }
-
-              // if (searchString && searchString.length &&
-              //     governments.title.toLowerCase().indexOf(searchString) < 0 &&
-              //     governments.partner_name.toLowerCase().indexOf(searchString) < 0) {
-              //   return false;
-              // }
+              if (years.length) {
+                var matchYears = government.years.filter(function(year) {
+                  return years.indexOf(year) > -1;
+                });
+                if (matchYears && matchYears.length === 0) {
+                  return false;
+                }
+              }
 
               return true;
             });
@@ -160,21 +145,29 @@
             // the number of query results to be done in a parallel process,
             // instead of blocking the main query
             Dexie.ignoreTransaction(function() {
-              queryResult.count(function(count) {
+              governmentsQueryResult.count(function(count) {
                 _this._setTotalResults(count);
               });
             });
 
-            return queryResult
+            return governmentsQueryResult
                 .offset((pageNumber - 1) * pageSize)
                 .limit(pageSize)
                 .toArray();
 
           }).then(function(result) {
-            _this._setFilteredInterventions(result);
+            _this._setFilteredGovernments(result);
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
           });
+        },
+
+        getUserNameFromId: function(Id) {
+          for (var i=0; i < this.unicefUsersData.length; i++) {
+            if (this.unicefUsersData[i].value === Id) {
+              return this.unicefUsersData[i].label;
+            }
+          }
         }
 
       });

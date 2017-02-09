@@ -10,8 +10,7 @@
 
 <!-- Replace these with something more apppriate -->
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
-<!-- <link rel="import" href="../app-elements/agreements/agreements-list.html"> -->
-<link rel="import" href="../app-elements/governments/governments-list.html">
+<link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
@@ -39,16 +38,12 @@
         query-params="{{governmentQueryParams}}"
         active="{{governmentListActive}}">    
     </app-route>
-  	
+  	<!--
   	<partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
                         prepare-dropdown-data>
     </partners-list-data>
-
-  	<app-header-layout has-scrolling-region fullbleed>
-
-      <app-header id="header" fixed shadow>
-        <page-header user="[[user]]"></page-header>
-      </app-header>
+ -->
+  	<app-header-layout>
 
       <div class$="page-top-content [[_getTopContentAdditionalClass()]]">
         <div class="top-content">
@@ -92,9 +87,9 @@
             </paper-tabs>
           </div>
         </div>
-      </div>    
+      </div>
 
-      <iron-pages id="governmentsPages"                  
+      <iron-pages id="governmentsPages"
                   attr-for-selected="name"
                   fallback-selection="list"
                   role="main">
@@ -106,11 +101,9 @@
                            partners-dropdown-data="[[partnersDropdownData]]">
           </governments-list>
         </div>
-        
-      </iron-pages>
 
-      <page-footer></page-footer>
-    </app-header-layout> 
+      </iron-pages>
+    </app-header-layout>
 
   </template>
 
@@ -126,7 +119,7 @@
           type: String,
           notify: true
         },        
-        
+
         partnersDropdownData: {
           type: Array,
           notify: true
@@ -156,7 +149,7 @@
         //   this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         // }
       },
-     
+
 
       _showPageTabs: function(activePage) {
         // what was the logic behind this one?         

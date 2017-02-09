@@ -40,7 +40,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
 
-<link rel="import" href="app-elements/static-common-data/country-programme-data.html">
 <link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
 <link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
 <link rel="import" href="app-elements/static-common-data/sectors-data.html">
@@ -48,6 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
 <link rel="import" href="app-elements/static-common-data/offices-data.html">
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
+<link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
@@ -120,7 +120,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- get static data -->
     <dropdowns-pmp-data></dropdowns-pmp-data>
     <dropdowns-static-data></dropdowns-static-data>
-    <country-programme-data></country-programme-data>
     <sectors-data></sectors-data>
     <sections-data></sections-data>
     <unicef-users-data></unicef-users-data>
@@ -128,6 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <locations-data></locations-data>
     <partners-list-data></partners-list-data>
     <agreement-list-data></agreement-list-data>
+    <country-programmes-data></country-programmes-data>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
@@ -155,6 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
                 <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
                 <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <side-bar-item name="governments" icon="build" href$="[[baseUrl]]governments/list"></side-bar-item>
               </template>
             </iron-selector>
           </div>
@@ -180,19 +181,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            route="[[subroute]]"
                            user="[[user]]"
                            permissions="[[permissions]]">
+
             </page-partners>
             <page-agreements name="agreements"
                              route="[[subroute]]"
                              user="[[user]]"
                              permissions="[[permissions]]">
-              </page-agreements>
-              <page-interventions name="interventions"
-                                  route="[[subroute]]"
-                                  user="[[user]]"
-                                  permissions="[[permissions]]">
-              </page-interventions>
-            </template>
-            <page-not-found name="not-found"></page-not-found>
+            </page-agreements>
+            <page-interventions name="interventions"
+                                route="[[subroute]]"
+                                permissions="[[permissions]]">
+            </page-interventions>
+            <page-governments name="governments"
+                              route="[[subroute]]">
+            </page-governments>
+          </template>
+          <page-not-found name="not-found"></page-not-found>
 
           </iron-pages>
           <page-footer></page-footer>
@@ -200,6 +204,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer-layout>
 
       </app-header-layout>
+
 
     </app-drawer-layout>
 

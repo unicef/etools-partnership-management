@@ -15,14 +15,12 @@ App global configuration
     etoolsCustomDexieDb.version(1).stores({
       collectionsList: 'name, expire',
       countries: 'id',
-      countryProgramme: 'id, name',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
       interventions: 'id, number, partner_name, document_type, ' +
         'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
       user: 'id',
-      governments: 'id, number, created_at, partner, result_structure, country_programme',
-      sections: 'id,name'
+      governments: 'number, country_programme, country_programme_name, cp_outputs, partner, partner_name, sectors, unicef_focal_points, years'
     });
 
     var etoolsAppConfig = {
@@ -232,10 +230,10 @@ App global configuration
         exp: 5 * 60 * 1000, // 5min
         url : "/api/v2/government_interventions"
       },
-      countryProgramme: {
-          url: '/api/v2/reports/countryprogramme',
-          exp: 6 * 60 * 60 * 1000,
-          cachingKey: 'countryProgramme'
+      countryProgrammes: {
+        cachingKey: "countryProgrammes",
+        exp: 5 * 60 * 1000, // 5min
+        url : "/api/v2/reports/countryprogramme/"
       },
       sections: {
           url : '/api/sections',
