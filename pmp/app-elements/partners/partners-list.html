@@ -69,7 +69,7 @@
             <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
             <paper-dropdown-menu label$="[[filter.filterName]]" noink>
               <paper-menu class="dropdown-content"
-                          attr-for-selected="text-content"
+                          attr-for-selected="name"
                           on-iron-select="filterValueChanged"
                           on-iron-deselect="filterValueChanged"
                           data-filter-path$="[[filter.path]]"
