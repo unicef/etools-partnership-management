@@ -391,7 +391,6 @@
                             this._getUpdatedObject(id, e.detail.selectedValues, this.result) :
                             this._getUpdatedObject(id, this.result[id], this.result);
                     this.set('result', updatedResult);
-                    this.fire('result-edit');
                 },
                 _addActivity: function(){
                     if(_.isEmpty(this.result.activities)){
@@ -405,7 +404,6 @@
                 _updateResult: function(path,newObj){
                     var updatedResult = this._getUpdatedObject(path,newObj,this.result)
                     this.set('result',updatedResult)
-                    this.fire('result-edit');
                 },
                 _activityDeleted: function(e){
                     var newActivities = _.omit(this.result.activities, e.detail.index)

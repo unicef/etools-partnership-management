@@ -58,6 +58,7 @@
                         </template>
                         <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="partner"
+                                                                   starred
                                                                    label="Government Partner"
                                                                    placeholder="&#8212;"
                                                                    options="[[partnersDropdownData]]"
@@ -99,12 +100,11 @@
             </etools-content-panel>
             <!--Work Plan Results-->
             <etools-content-panel class="content-section" title="Work Plan Results">
-                <template is="dom-repeat" items="[[intervention.results]]" as="result">
+                <template is="dom-repeat" items="{{intervention.results}}" as="result">
                     <government-plan-result result="{{result}}"
                                             allow-edit="[[editMode]]"
                                             year-options="[[yearOptions]]"
                                             index="[[index]]"
-                                            on-result-edit="_propagateResultChanges"
                                             on-delete-confirm="_deleteResult">
                     </government-plan-result>
                 </template>
@@ -231,13 +231,8 @@
                   console.log('intervention: ',this.intervention)
               }, 300);
             },
-            _propagateResultChanges: function(){
-                var updatedObj = this._getUpdatedObject('results',this.intervention.results,this.intervention);
-                this.set('intervention', updatedObj)
-            },
             _deleteResult: function(e){
                 this.splice('intervention.results',e.detail.index,1);
-                this._propagateResultChanges();
             },
             _addNewResult: function(){
                     var newResult = {
@@ -252,7 +247,6 @@
                         "sections": []
                     }
                     this.push('intervention.results',newResult);
-                    this._propagateResultChanges();
             },
             _initSidebar : function(){
 
