@@ -65,6 +65,11 @@
             notify: true
           },
 
+          partnersFilteredDropdownData: {
+            type: Array,
+            notify: true
+          },
+
           prepareDropdownData: {
             type: Boolean,
             value: false
@@ -75,6 +80,12 @@
             return {
               type: 'SET_PARTNERS_DROPDOWN',
               partnersDropdownData: partnersDropdownData
+            };
+          },
+          setPartnersFilteredDropdown: function(partnersFilteredDropdownData) {
+            return {
+              type: 'SET_PARTNERS_FILTERED_DROPDOWN',
+              partnersFilteredDropdownData: partnersFilteredDropdownData
             };
           },
           setPartners: function(partnersData) {
@@ -97,6 +108,7 @@
           if (res.detail && res.detail.length) {
             this.dispatch('setPartners', res.detail);
             var preparedData = [];
+            var filteredData = [];
             res.detail.forEach(function(p) {
               if (!p.hidden) {
                 preparedData.push({
@@ -104,8 +116,15 @@
                   label: p.name
                 });
               }
+              if (!p.hidden && p.partner_type === "Government") {
+                filteredData.push({
+                  value: p.id,
+                  label: p.name
+                });
+              }
             });
             this.dispatch('setPartnersDropdown', preparedData);
+            this.dispatch('setPartnersFilteredDropdown', filteredData);
           }
         },
 
@@ -180,7 +199,7 @@
             console.error('Error querying partners: ' + error);
           });
         }
-  
+
       });
     })();
   </script>
