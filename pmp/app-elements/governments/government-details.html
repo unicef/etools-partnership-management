@@ -13,6 +13,8 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
+
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -98,7 +100,12 @@
             <!--Work Plan Results-->
             <etools-content-panel class="content-section" title="Work Plan Results">
                 <template is="dom-repeat" items="[[intervention.results]]" as="result">
-                    <government-plan-result result="{{result}}" allow-edit="[[allowEdit]]" year-options="[[yearOptions]]" index="[[index]]"></government-plan-result>
+                    <government-plan-result result="{{result}}"
+                                            allow-edit="[[allowEdit]]"
+                                            year-options="[[yearOptions]]"
+                                            index="[[index]]"
+                                            on-result-edit="_propagateResultChanges">
+                    </government-plan-result>
                 </template>
                 <div id="bottom-actions" class="row-h" hidden$="[[!allowEdit]]">
                     <paper-fab icon="add"
@@ -118,11 +125,12 @@
             is : "government-details",
             behaviors: [
                 pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-                pmpBehaviors.CommonGeneralBehavior
+                pmpBehaviors.CommonGeneralBehavior,
+                pmpBehaviors.ObjectDatabindBehavior
             ],
             observers: [
                     '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
-                    '_interventionChanged(intervention.*)'
+                    '_interventionChanged(intervention.*, intervention.*.*)'
             ],
             properties: {
                 intervention: {
@@ -143,6 +151,7 @@
                                 "result": 10,
                                 "year": "2016",
                                 "planned_amount": 1800000,
+                                "planned_visits": 4,
                                 "activities": {},
                                 "unicef_managers": [
                                     1096
@@ -153,7 +162,6 @@
                                 "sections": [
                                     10
                                 ],
-                                "activities_list": []
                             },
                             {
                                 "id": 5,
@@ -161,9 +169,10 @@
                                 "result": 242,
                                 "year": "2015",
                                 "planned_amount": 123123,
+                                "planned_visits": 12,
                                 "activities": {
-                                    "1": "testing",
-                                    "2": "Lorem ipsum dolos samedi sinoc dans"
+                                    "0": "testing",
+                                    "1": "Lorem ipsum dolos samedi sinoc dans"
                                 },
                                 "unicef_managers": [
                                     3019,
@@ -199,18 +208,12 @@
                     notify: true
                 }
             },
-            _mapItemFromId : function(id,collection, getLabelOnly){
-                if(getLabelOnly){
-                    return _.find(collection, {value:id}).label
-                }
-                return _.find(collection, {value:id})
-            },
             _getYears: function () {
                 var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
                 if(!_.isEmpty(cpObject)){
                     var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year()+1);
                     years = years.map(function(year){
-                        return _.assign({},{label: year, value: year.toString()})
+                        return _.assign({},{label: year.toString(), value: year})
                     })
                     this.set('yearOptions', years);
                 }
@@ -221,12 +224,16 @@
             },
             attached: function () {
                 this._initSidebar()
-                console.log('years', this.yearOptions)
             },
             _interventionChanged: function(){
               this.debounce('interChange', function(){
                   console.log('intervention: ',this.intervention)
               }, 300);
+            },
+            _propagateResultChanges: function(){
+                console.log('result edited')
+                var updatedObj = this._getUpdatedObject('results',this.intervention.results,this.intervention);
+                this.set('intervention', updatedObj)
             },
             _initSidebar : function(){
 
