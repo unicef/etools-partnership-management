@@ -36,7 +36,10 @@
             return _.has(value,'value') ?
                     _.assign({},oldObj, {[prop]: value.value}) :
                     _.assign({},oldObj,{[prop]: value});
-        }
+        },
+        _incrIndex: function(index){
+            return index+1;
+        },
 
     };
     pmpBehaviors.ObjectDatabindBehavior = [pmpBehaviors.ObjectDatabindBehaviorImpl];

@@ -90,7 +90,7 @@
                         <paper-icon-button class="action delete"
                                            on-tap="_openDeleteConfirmation"
                                            data-args$="[[index]]"
-                                           hidden$="[[!allowEdit]]"
+                                           hidden$="[[!editMode]]"
                                            icon="cancel">
                         </paper-icon-button>
                 </div>
@@ -100,7 +100,7 @@
                 <div class="layout horizontal">
                     <!--CP Output-->
                     <div class="col col-6">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="result"
                                                                    label="CP Output"
                                                                    placeholder="&#8212;"
@@ -111,7 +111,7 @@
                                                                    required>
                             </etools-searchable-multiselection-menu>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     label="CP Output"
                                     value="[[_mapItemFromId(result.result,cpOutputDropdownData,'true')]]"
@@ -121,7 +121,7 @@
                     </div>
                     <!--Year-->
                     <div class="col">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="year"
                                                                    label="Year"
                                                                    class="fixed-width"
@@ -133,7 +133,7 @@
                                                                    required>
                             </etools-searchable-multiselection-menu>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     label="Year"
                                     value="[[_mapItemFromId(result.year,yearOptions,'true')]]"
@@ -143,7 +143,7 @@
                     </div>
                     <!--PLanned Cash-->
                     <div class="col flex">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <paper-input
                                     class="input-wrapper"
                                     id="planned_amount"
@@ -154,7 +154,7 @@
                                     required>
                             </paper-input>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     id="plannedAmount"
                                     label="Planned Cash Transfers in USD"
@@ -166,7 +166,7 @@
                     </div>
                     <!--Planned Visits-->
                     <div class="col flex">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <paper-input
                                     class="input-wrapper"
                                     id="planned_visits"
@@ -176,7 +176,7 @@
                                     placeholder="&#8212;">
                             </paper-input>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     id="plannedVisits"
                                     label="# of Planned Visits"
@@ -190,7 +190,7 @@
                 <div class="layout horizontal">
                     <!--Programmes-->
                     <div class="col col-6">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="sectors"
                                                                    label="Programme(s)/Sector(s)"
                                                                    placeholder="&#8212;"
@@ -201,7 +201,7 @@
                                                                    multi>
                             </etools-searchable-multiselection-menu>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     id="sector"
                                     label="Programme(s)/Sector(s)"
@@ -212,7 +212,7 @@
                         </template>
                     </div>
                     <div class="col col-6">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="sections"
                                                                    label="Section(s)"
                                                                    placeholder="&#8212;"
@@ -223,7 +223,7 @@
                                                                    multi>
                             </etools-searchable-multiselection-menu>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     id="section"
                                     label="Section(s)"
@@ -236,7 +236,7 @@
                 </div>
                 <div class="layout horizontal">
                     <div class="flex-1">
-                        <template is="dom-if" if="[[allowEdit]]">
+                        <template is="dom-if" if="[[editMode]]">
                             <etools-searchable-multiselection-menu id="unicef_managers"
                                                                    label="UNICEF Focal Points"
                                                                    placeholder="&#8212;"
@@ -248,7 +248,7 @@
                                                                    required>
                             </etools-searchable-multiselection-menu>
                         </template>
-                        <template is="dom-if" if="[[!allowEdit]]">
+                        <template is="dom-if" if="[[!editMode]]">
                             <paper-input
                                     id="focalPoints"
                                     label="UNICEF Focal Points"
@@ -266,15 +266,15 @@
                                 <div class="layout vertical center-justified activity-divider">
                                         <paper-icon-button class="action delete-activity"
                                                            on-tap="_openDeleteConfirmation"
-                                                           data-args$="[[index]]"
-                                                           hidden$="[[!allowEdit]]"
+                                                           data-args$="[[activity.id]]"
+                                                           hidden$="[[!editMode]]"
                                                            icon="cancel">
                                         </paper-icon-button>
                                 </div>
 
                             <!--Activity data-->
                             <div class="layout horizontal flex">
-                                <template is="dom-if" if="[[allowEdit]]">
+                                <template is="dom-if" if="[[editMode]]">
                                     <paper-input
                                             id="activityId"
                                             class="activityId"
@@ -285,8 +285,7 @@
                                     </paper-input>
                                     <div class="flex">
                                         <paper-input
-                                                id="activities"
-                                                index="[[index]]"
+                                                id$="[[activity.id]]"
                                                 class="activityDesc"
                                                 label="Activity Description"
                                                 value="{{activity.description::input}}"
@@ -295,7 +294,7 @@
                                         </paper-input>
                                     </div>
                                 </template>
-                                <template is="dom-if" if="[[!allowEdit]]">
+                                <template is="dom-if" if="[[!editMode]]">
                                     <paper-input
                                             id="activityId"
                                             label="Activity ID"
@@ -318,7 +317,7 @@
                         </div>
                     </template>
                 </div>
-                <a on-tap="_addActivity" class="text-button" hidden$="[[!allowEdit]]">Add Work Plan Activity</a>
+                <a on-tap="_addActivity" class="text-button" hidden$="[[!editMode]]">Add Work Plan Activity</a>
             </div>
         </div>
     </template>
@@ -329,9 +328,12 @@
                 is : "government-plan-result",
                 behaviors: [
                     pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-                    pmpBehaviors.CommonGeneralBehavior,
+                    pmpBehaviors.RepeatableDataSetsBehavior,
                     pmpBehaviors.ObjectDatabindBehavior
                 ],
+                listeners: {
+                    'delete-confirm': '_activityDeleted'
+                },
                 properties: {
                     result: {
                         type: Object,
@@ -362,13 +364,12 @@
                         type: Array,
                         notify: true,
                     },
-                    allowEdit: {
+                    editMode: {
                         type: Boolean,
                         notify: true,
                     }
                 },
                 _activitiesToArray: function () {
-                    console.log("activities", this.result.activities)
                     if(!_.isEmpty(this.result)){
                         this.activities = _.map(this.result.activities, function(value,key){
                             return {
@@ -379,12 +380,9 @@
                     }
                 },
                 _activityChange: function(e){
-                    console.log('acChange',e.target.index)
-                    var newActivitiesObj = this._getUpdatedObject(e.target.index, e.target.value, this.result.activities)
+                    var newActivitiesObj = this._getUpdatedObject(e.target.id, e.target.value, this.result.activities)
                     this.set('result.activities', newActivitiesObj);
-                    var updatedResult = this._getUpdatedObject('activities',newActivitiesObj,this.result);
-                    this.set('result', updatedResult);
-                    this.fire('result-edit');
+                    this._updateResult('activities',newActivitiesObj)
                 },
                 _handleValueChange: function (e) {
                     var id = e.target.id;
@@ -393,24 +391,25 @@
                             this._getUpdatedObject(id, e.detail.selectedValues, this.result) :
                             this._getUpdatedObject(id, this.result[id], this.result);
                     this.set('result', updatedResult);
-                    console.log('updated result', this.result)
-                    this.fire('result-edit')
+                    this.fire('result-edit');
                 },
-                _incrIndex: function(index){
-                    return index+1;
-                },
-                attached: function () {
-                },
-                _addActivity: function(e){
+                _addActivity: function(){
                     if(_.isEmpty(this.result.activities)){
-                        var updatedResult = this._getUpdatedObject('activities',{0: ""}, this.result)
-                        this.set('result',updatedResult)
+                        this._updateResult('activities',{0:""})
                     }else{
                         var newId = _.chain(this.result.activities).keys().map(_.parseInt).last()+1;
                         var newActivities = _.assign(this.result.activities,{[newId]: ""})
-                        var updatedResult = this._getUpdatedObject('activities',newActivities, this.result)
-                        this.set('result',updatedResult)
+                        this._updateResult('activities',newActivities)
                     }
+                },
+                _updateResult: function(path,newObj){
+                    var updatedResult = this._getUpdatedObject(path,newObj,this.result)
+                    this.set('result',updatedResult)
+                    this.fire('result-edit');
+                },
+                _activityDeleted: function(e){
+                    var newActivities = _.omit(this.result.activities, e.detail.index)
+                    this._updateResult('activities',newActivities)
                 },
             })
         }
