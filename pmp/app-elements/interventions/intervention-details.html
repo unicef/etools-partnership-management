@@ -65,7 +65,9 @@
       <etools-content-panel class="content-section" title="Partnership Information">
         <div class="row-h flex-c">
           <div class="col col-6">
-            <agreement-selector agreement-id="{{intervention.agreement}}" partner-id="{{selectedPartnerId}}"></agreement-selector>
+            <agreement-selector agreement-id="{{intervention.agreement}}" 
+              partner-id="{{selectedPartnerId}}" 
+              selected-agreement="{{agreement}}"></agreement-selector>
           </div>
           <div class="col col-3">
             <etools-searchable-multiselection-menu id="documentType"
@@ -259,6 +261,14 @@
             type: Array,
             statePath: 'interventionDocTypes'
           },
+          pcaDocTypes: {
+            type: Array,
+            value: []
+          },
+          ssfaDocTypes: {
+            type: Array,
+            value: []
+          }, 
           offices: {
             type: Array,
             statePath: 'offices'
@@ -274,7 +284,30 @@
           years: {
             type: Array,
             value: []
+          },
+          agreement: {
+            type: Object,
+            value: null
           }
+        },
+
+        observers: [
+          '_agreementSelected(agreement.agreement_type)'
+        ],
+
+        ready: function() {
+          var pcaTypes = [];
+          var ssfaTypes = [];
+          this.documentTypes.forEach(function(type) {
+            if (type.value !== 'SSFA') {
+              pcaTypes.push(type);
+            }
+            if (type.value === 'SSFA') {
+              ssfaTypes.push(type);
+            }
+          });
+          this.set('pcaDocTypes', pcaTypes);
+          this.set('ssfaDocTypes', ssfaTypes);
         },
 
         _interventionChanged: function(intervention) {
@@ -391,6 +424,26 @@
                 label: staffMember.first_name + ' ' + staffMember.last_name
               };
             }));
+          }
+        },
+
+        /**
+         * When an agreement is selected then check it's type and update document types dropdown
+         */
+        _agreementSelected: function(agreementType) {
+          console.log('selected agreement', agreementType);
+          if (agreementType) {
+            var docTypeEl = this.$.documentType;
+            switch (agreementType) {
+              case 'PCA':
+                docTypeEl.value = null;
+                docTypeEl.options = this.pcaDocTypes;
+                break;
+              case 'SSFA':
+                docTypeEl.value = null;
+                docTypeEl.options = this.ssfaDocTypes;
+                break;
+            } 
           }
         },
 
