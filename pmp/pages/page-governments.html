@@ -9,7 +9,7 @@
 <!-- Replace these with something more apppriate -->
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/governments/governments-list.html">
-
+<link rel="import" href="../app-elements/governments/government-details.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -34,6 +34,12 @@
         query-params="{{governmentQueryParams}}"
         active="{{governmentListActive}}">    
     </app-route>
+
+    <app-route
+            route="{{route}}"
+            pattern="governments/:id/:tab"
+            active="{{tabsActive}}"
+            data="{{routeData}}"></app-route>
   	<!--
   	<partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
                         prepare-dropdown-data>
@@ -86,6 +92,7 @@
       </div>
 
       <iron-pages id="governmentsPages"
+                  selected="{{governmentsPage}}"
                   attr-for-selected="name"
                   fallback-selection="list"
                   role="main">
@@ -96,6 +103,12 @@
                            url-params="[[governmentQueryParams]]"
                            partners-dropdown-data="[[partnersDropdownData]]">
           </governments-list>
+        </div>
+        <div class="page" name="details">
+          <government-details id="details"
+                              intervention="[[fakeData]]"
+                              edit-mode="[[fakePermission]]"
+                              on-save-partner="_savePartner"></government-details>
         </div>
 
       </iron-pages>
@@ -111,7 +124,7 @@
 
       properties: {
 
-        governementsPage: {
+        governmentsPage: {
           type: String,
           notify: true
         },        
@@ -126,12 +139,56 @@
           notify: true
         },
 
+        fakeData: {
+          type: Object,
+          value: {
+            "id": 3,
+            "results": [
+              {
+                "id": 3,
+                "intervention": 3,
+                "result": 10,
+                "year": "2016",
+                "planned_amount": 1800000,
+                "result_activities": [
+                  {
+                    "id": 1,
+                    "description": "tesing activity1",
+                    "code": 3
+                  },
+                  {
+                    "id": 2,
+                    "description": "testing activity2",
+                    "code": 3
+                  }
+                ],
+                "unicef_managers": [
+                  1095
+                ],
+                "sectors": [
+                  2,
+                  3
+                ],
+                "sections": [
+                  10
+                ]
+              }
+            ],
+            "number": "LEBA/MEHE/201601",
+            "created_at": "2016-09-13T06:32:44.017719Z",
+            "partner": 123,
+            "result_structure": 6,
+            "country_programme": 1
+          }
+        },
+        fakePermission: true,
       },
 
-      // observers: [
-      //   '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
-      //   '_pageChanged(governmentListActive, newAgreementActive, agreementDetailsActive)',
-      // ],
+       observers: [
+//         '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
+         '_pageChanged(governmentListActive, routeData.tab)',
+         '_updateUrlTab(routeData.tab)'
+       ],
 
       ready: function() {
         this.set('agreementTypes', [
@@ -144,6 +201,26 @@
         // if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
         //   this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         // }
+      },
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+      _pageChanged : function (governmentListActive,  tab) {
+        var activePage = this._getActivePage(governmentListActive,tab)
+        this.set('governmentsPage', activePage)
+      },
+
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
       },
 
 

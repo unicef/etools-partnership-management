@@ -260,18 +260,17 @@
                     </div>
                 </div>
                 <div class="activities">
-                    <template is="dom-repeat" items="{{activities}}" as="activity">
+                    <template is="dom-repeat" items="{{result.result_activities}}" as="activity">
                         <div class="layout horizontal activity">
                             <!--Activity delete divider-->
                                 <div class="layout vertical center-justified activity-divider">
                                         <paper-icon-button class="action delete-activity"
                                                            on-tap="_openDeleteConfirmation"
-                                                           data-args$="[[activity.id]]"
+                                                           data-args$="[[index]]"
                                                            hidden$="[[!editMode]]"
                                                            icon="cancel">
                                         </paper-icon-button>
                                 </div>
-
                             <!--Activity data-->
                             <div class="layout horizontal flex">
                                 <template is="dom-if" if="[[editMode]]">
@@ -283,13 +282,18 @@
                                             readonly
                                             placeholder=" ">
                                     </paper-input>
+                                    <paper-input id="activityCode"
+                                                 class="activityId"
+                                                 label="Code"
+                                                 value="{{activity.code}}"
+                                                 placeholder=" ">
+                                    </paper-input>
                                     <div class="flex">
                                         <paper-input
                                                 id$="[[activity.id]]"
                                                 class="activityDesc"
                                                 label="Activity Description"
-                                                value="{{activity.description::input}}"
-                                                on-change="_activityChange"
+                                                value="{{activity.description}}"
                                                 placeholder=" ">
                                         </paper-input>
                                     </div>
@@ -301,6 +305,13 @@
                                             value="{{activity.id}}"
                                             readonly
                                             placeholder=" ">
+                                    </paper-input>
+                                    <paper-input id="activityCode"
+                                                 class="activityId"
+                                                 label="Code"
+                                                 value="{{activity.code}}"
+                                                 readonly
+                                                 placeholder=" ">
                                     </paper-input>
                                     <div class="flex">
                                         <paper-input
@@ -338,7 +349,6 @@
                     result: {
                         type: Object,
                         notify: true,
-                        observer: '_activitiesToArray'
                     },
                     cpOutputDropdownData :{
                         type: Array,
@@ -369,21 +379,6 @@
                         notify: true,
                     }
                 },
-                _activitiesToArray: function () {
-                    if(!_.isEmpty(this.result)){
-                        this.activities = _.map(this.result.activities, function(value,key){
-                            return {
-                                id: key,
-                                description: value
-                            }
-                        })
-                    }
-                },
-                _activityChange: function(e){
-                    var newActivitiesObj = this._getUpdatedObject(e.target.id, e.target.value, this.result.activities)
-                    this.set('result.activities', newActivitiesObj);
-                    this._updateResult('activities',newActivitiesObj)
-                },
                 _handleValueChange: function (e) {
                     var id = e.target.id;
                     // ensure this.result observes subproperty change
@@ -393,21 +388,20 @@
                     this.set('result', updatedResult);
                 },
                 _addActivity: function(){
-                    if(_.isEmpty(this.result.activities)){
-                        this._updateResult('activities',{0:""})
-                    }else{
-                        var newId = _.chain(this.result.activities).keys().map(_.parseInt).last()+1;
-                        var newActivities = _.assign(this.result.activities,{[newId]: ""})
-                        this._updateResult('activities',newActivities)
-                    }
+                    var activities = this.result.result_activities;
+                    var newId = _.isEmpty(activities) ? 0 : _.last(activities).id+1
+                    this.push('result.result_activities',{
+                        id: newId,
+                        "code" : "",
+                        "description": ""
+                    });
                 },
                 _updateResult: function(path,newObj){
                     var updatedResult = this._getUpdatedObject(path,newObj,this.result)
                     this.set('result',updatedResult)
                 },
                 _activityDeleted: function(e){
-                    var newActivities = _.omit(this.result.activities, e.detail.index)
-                    this._updateResult('activities',newActivities)
+                    this.splice('result.result_activities',e.detail.index,1)
                 },
             })
         }
