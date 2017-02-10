@@ -7,6 +7,7 @@
     // fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
+    countryProgrammes:[],
     interventionDocTypes: [],
     interventionStatuses: [],
     sectors: [],
@@ -23,7 +24,7 @@
     csoTypes: [],
     partnerTypes: [],
     assessmentTypes: [],
-    interventionAmendmentTypes: [],    
+    interventionAmendmentTypes: [],
     currencies: [],
     agreementTypes: [],
     agreementStatuses: []
@@ -66,6 +67,10 @@
       case 'SET_SECTORS':
         // console.log('set sectors data...', action.sectors);
         return Object.assign({}, state, { sectors: action.sectors });
+
+      case 'SET_SECTIONS':
+            // console.log('set sectors data...', action.sectors);
+        return Object.assign({}, state, { sections: action.sections });
 
       case 'SET_LOCATIONS':
         // console.log('set locations data...', action.locations);
@@ -115,7 +120,7 @@
 
       case 'SET_PARTNER_TYPES':
         // console.log('set partnerTypes...', action.partnerTypes);
-        return Object.assign({}, state, { partnerTypes: action.partnerTypes });                
+        return Object.assign({}, state, { partnerTypes: action.partnerTypes });
 
       case 'SET_AGENCY_CHOICHES':
         // console.log('set agencyChoices...', action.agencyChoices);
@@ -123,7 +128,7 @@
 
       case 'SET_AGREEMENT_AMEDMENT_TYPES':
         // console.log('set agreementAmendmentTypes...', action.agreementAmendmentTypes);
-        return Object.assign({}, state, { agreementAmendmentTypes: action.agreementAmendmentTypes });        
+        return Object.assign({}, state, { agreementAmendmentTypes: action.agreementAmendmentTypes });
 
       case 'SET_ASSESSMENT_TYPES':
         // console.log('set assessmentTypes...', action.assessmentTypes);

@@ -139,11 +139,11 @@
         </data-table-column>
         <data-table-column class="flex-c" field="country_programme_name"  sortable>
           Country Programme
-        </data-table-column>      
+        </data-table-column>
         <data-table-column class="flex-c" field="created_at">
           Years
         </data-table-column>
-        
+
       </data-table-header>
 
        <template id="rows" is="dom-repeat" items="[[filteredGovernments]]"
@@ -175,7 +175,7 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">Sectors</span>
               <span>[[getDisplayValue(entry.sectors)]]</span>
-            </div>            
+            </div>
 
           </div>
         </data-table-row>
@@ -198,7 +198,7 @@
     (function() {
       'use strict';
 
-      var _governmentsLastNavigated = null;      
+      var _governmentsLastNavigated = null;
 
       Polymer({
         is: 'governments-list',
@@ -227,7 +227,7 @@
             type: Array,
             statePath: 'interventionStatuses'
           },
-       
+
           sortOrder: Object,
 
           pageNumber: {
@@ -280,7 +280,7 @@
           sectors: {
             type: Array,
             statePath: 'sectors'
-          }, 
+          },
           years: {
             type: Array,
             value: []
@@ -356,7 +356,7 @@
               selectionOptions: [], // will be populated when the partners data is received
               alreadySelected: [],
               path: 'selectedPartners'
-            },   
+            },
             {
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
@@ -364,7 +364,7 @@
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
-            },  
+            },
             {
               filterName: 'Country Programme Output',
               type: 'esmm', // etools-searchable-multiselection-menu
@@ -372,7 +372,7 @@
               selectionOptions: this.cpOutputs,
               alreadySelected: [],
               path: 'selectedCpOutputs'
-            },      
+            },
             {
               filterName: 'Sectors',
               type: 'esmm', // etools-searchable-multiselection-menu
@@ -399,7 +399,7 @@
           if (!active || !parms) {
             return;
           }
-          
+
           this.set('q', parms.q ? parms.q : '');
           this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
           this.set('partnerIds', parms.partners ? this._parsePartnerIds(parms.partners) : []);
@@ -417,7 +417,7 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
-          this.set('sortOrder', result);          
+          this.set('sortOrder', result);
           this._updateSelectedFiltersValues();
         },
 
@@ -444,16 +444,16 @@
               {
                 filterName: 'Years',
                 selectedValue: this.selectedYears
-              }              
+              }
             ];
             this.updateShownFilters(filtersValues);
           }.bind(this), 100);
         },
-        
+
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           var qs = this._buildQueryString();
-          
+
           if (qs !== _governmentsLastNavigated) {
             _governmentsLastNavigated = qs;
             // update URL
@@ -474,7 +474,7 @@
           }
 
         },
-        
+
         // Convert ids from URL into array of ids
         _parsePartnerIds: function(urlIds) {
           return _.map(urlIds.split('|'), function(item) {
@@ -486,7 +486,7 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            
+
             this.$.governments.query(
               this.sortOrder.field,
               this.sortOrder.direction,
@@ -510,7 +510,7 @@
                   ? this.selectedYears.map(function(year) {
                 return year.label;
               }) : [],
-                  
+
               this.pageNumber,
               this.pageSize);
 
@@ -544,7 +544,7 @@
 
           if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
-          }       
+          }
 
           if (this.selectedPartners && this.selectedPartners.length) {
             out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
@@ -614,7 +614,7 @@
           }
           return [];
         },
-        
+
         _setSelectedSectors: function(sectors) {
           var sectorsArr = sectors.split('|');
           if (sectorsArr && sectorsArr.length) {
@@ -632,7 +632,7 @@
             return this.years.filter(function(y) {
               return yearsArr.indexOf(y.label) > -1;
             });
-          }          
+          }
           return [];
         },
 
@@ -668,7 +668,7 @@
           // recheck params to trigger partners filtering
           this.set('initComplete', false);
           this.set('requiredDataLoaded', true);
-          this._init(this.active);          
+          this._init(this.active);
           this.fire('global-loading', {active: false});
         },
 
@@ -723,11 +723,11 @@
           }
         },
 
-        _getYears: function () {          
+        _getYears: function () {
           var maxYear = 0, minYear = 3000;
-          
+
           this.countryProgrammes.forEach(function(cpObject){
-            
+
             maxYear = Math.max(maxYear, moment(cpObject.to_date).year());
             minYear = Math.min(minYear, moment(cpObject.from_date).year());
           });
@@ -737,7 +737,7 @@
             return _.assign({},{label: year.toString(), value: year})
           });
 
-          this.set('years', years);          
+          this.set('years', years);
         },
 
         _filtersChanged: function() {
