@@ -99,7 +99,9 @@
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details></partner-details>
+          <partner-details  partner="[[partner]]"
+                            edit-mode="[[_hasEditPermissions(permissions)]]"
+                            on-save-partner="_savePartner"></partner-details>
         </div>
       </iron-pages>
 
