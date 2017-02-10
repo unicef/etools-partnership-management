@@ -19,7 +19,8 @@
     agreementsList: [],
     currencies: [],
     agreementTypes: [],
-    agreementStatuses: []
+    agreementStatuses: [],
+    csoPartners: []
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -99,6 +100,9 @@
       case 'SET_AGREEMENT_STATUSES':
         // console.log('set agreement_statuses data...', action.statuses);
         return Object.assign({}, state, {agreementStatuses: action.statuses});
+      case 'SET_CSO_PARTNERS':
+        // console.log('set cso partners data...', action.csoPartners);
+        return Object.assign({}, state, {csoPartners: action.csoPartners});
     }
   });
 

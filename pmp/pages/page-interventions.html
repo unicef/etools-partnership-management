@@ -8,7 +8,7 @@
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
-<link rel="import" href="../app-elements/interventions/intervention-supplies.html">
+<!--<link rel="import" href="../app-elements/interventions/intervention-supplies.html">-->
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 
@@ -121,9 +121,9 @@
                                 on-save-intervention="_saveIntervention"
                                 edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
         </div>
-        <div class="page" name="supplies">
+        <!--<div class="page" name="supplies">
           <intervention-supplies></intervention-supplies>
-        </div>
+        </div>-->
         <div class="page" name="review-and-sign">
           <intervention-review-and-sign intervention="[[intervention]]"
                                         on-save-intervention="_saveIntervention"

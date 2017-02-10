@@ -72,10 +72,10 @@
                                                    label="Document Type"
                                                    placeholder="&#8212;"
                                                    value="[[_getEsmmValue('document_type', intervention.document_type)]]"
-                                                   options="[[_prepareDropdownDocTypes(documentTypes)]]"
+                                                   options="[[documentTypes]]"
+                                                   custom-object-options
                                                    on-value-change="_esmmValueChanged"
                                                    data-path="document_type"
-                                                   data-to-use="label"
                                                    hide-search>
             </etools-searchable-multiselection-menu>
           </div>
@@ -255,7 +255,6 @@
             type: Array,
             value: []
           },
-
           documentTypes: {
             type: Array,
             statePath: 'interventionDocTypes'
@@ -307,30 +306,6 @@
           }
         },
 
-        _prepareDropdownDocTypes: function(types, selected) {
-          if (selected) {
-            // filter selected to show selected value
-            var selectedType = types.filter(function(type, index) {
-              return type.value === selected;
-            })[0];
-            if (selectedType) {
-              return [{
-                value: (types.indexOf(selectedType) + 1),
-                label: selectedType.value
-              }];
-            } else {
-              return [];
-            }
-          }
-
-          return types.map(function(type, index) {
-            return {
-              value: (index + 1),
-              label: type.value
-            }
-          });
-        },
-
         _esmmValueChanged: function(event) {
           var esmmField = Polymer.dom(event).localTarget;
           var dataPath = esmmField.getAttribute('data-path');
@@ -368,7 +343,9 @@
           switch (dataPath) {
             case 'document_type':
               if (typeof selectedValues === 'string' && selectedValues !== '') {
-                return  this._prepareDropdownDocTypes(this.documentTypes, selectedValues);
+                return this.documentTypes.filter(function(type) {
+                  return type.value === selectedValues;
+                });
               }
               break;
             case 'offices':
