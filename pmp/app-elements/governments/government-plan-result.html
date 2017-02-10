@@ -278,19 +278,11 @@
                                             id="activityId"
                                             class="activityId"
                                             label="Activity ID"
-                                            value="[[activity.id]]"
-                                            readonly
+                                            value="{{activity.code}}"
                                             placeholder=" ">
-                                    </paper-input>
-                                    <paper-input id="activityCode"
-                                                 class="activityId"
-                                                 label="Code"
-                                                 value="{{activity.code}}"
-                                                 placeholder=" ">
                                     </paper-input>
                                     <div class="flex">
                                         <paper-input
-                                                id$="[[activity.id]]"
                                                 class="activityDesc"
                                                 label="Activity Description"
                                                 value="{{activity.description}}"
@@ -300,18 +292,11 @@
                                 </template>
                                 <template is="dom-if" if="[[!editMode]]">
                                     <paper-input
-                                            id="activityId"
                                             label="Activity ID"
-                                            value="{{activity.id}}"
+                                            class="activityId"
+                                            value="{{activity.code}}"
                                             readonly
                                             placeholder=" ">
-                                    </paper-input>
-                                    <paper-input id="activityCode"
-                                                 class="activityId"
-                                                 label="Code"
-                                                 value="{{activity.code}}"
-                                                 readonly
-                                                 placeholder=" ">
                                     </paper-input>
                                     <div class="flex">
                                         <paper-input
@@ -336,7 +321,7 @@
     <script>
         (function(){
             Polymer({
-                is : "government-plan-result",
+                is : 'government-plan-result',
                 behaviors: [
                     pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
                     pmpBehaviors.RepeatableDataSetsBehavior,
@@ -389,21 +374,19 @@
                 },
                 _addActivity: function(){
                     var activities = this.result.result_activities;
-                    var newId = _.isEmpty(activities) ? 0 : _.last(activities).id+1
                     this.push('result.result_activities',{
-                        id: newId,
-                        "code" : "",
-                        "description": ""
+                        'code' : '',
+                        'description': ''
                     });
                 },
                 _updateResult: function(path,newObj){
-                    var updatedResult = this._getUpdatedObject(path,newObj,this.result)
-                    this.set('result',updatedResult)
+                    var updatedResult = this._getUpdatedObject(path,newObj,this.result);
+                    this.set('result',updatedResult);
                 },
                 _activityDeleted: function(e){
-                    this.splice('result.result_activities',e.detail.index,1)
+                    this.splice('result.result_activities',e.detail.index,1);
                 },
-            })
+            });
         }
         )();
     </script>
