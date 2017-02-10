@@ -45,7 +45,7 @@
     "etools-loading": "^1.0.3",
     "etools-searchable-multiselection-menu": "^1.0.2",
     "etools-file": "^1.0.0",
-    "polymer-redux": "^0.3.0",
+    "polymer-redux": "^0.3.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
