@@ -457,13 +457,13 @@
               this.set('isNewAgreement', false);
             }
 
-              this.set('_showAmendments', true);
+              // this.set('_showAmendments', true);
               
-            // if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
-            //   this.set('_showAmendments', true);
-            // } else {
-            //   this.set('_showAmendments', false);
-            // }
+            if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
+              this.set('_showAmendments', true);
+            } else {
+              this.set('_showAmendments', false);
+            }
             // prepare attached agreement data
             this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
             // check for partners dropdown selected values; reset invalid state

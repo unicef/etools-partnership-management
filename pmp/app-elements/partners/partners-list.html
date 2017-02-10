@@ -312,14 +312,14 @@
               filterName: 'Partner Type',
               type: 'dropdown',
               alreadySelected: null,
-              selectionOptions: _.map(this.partnerTypes, 'label'),
+              selectionOptions: _.map(this.partnerTypes, 'value'),
               path: 'partnerType'
             },
             {
               filterName: 'CSO Type',
               alreadySelected: null,
               type: 'dropdown',
-              selectionOptions: _.map(this.csoTypes, 'label'),
+              selectionOptions: _.map(this.csoTypes, 'value'),
               path: 'csoType'
             }
           ]);
