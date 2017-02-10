@@ -30,12 +30,14 @@
         _getUpdatedObject : function(prop, value, oldObj){
             //for multiselect
             if(Array.isArray(value) && _.has(_.head(value),'value')){
-                var pluckedVals = _.map(value,'value')
-                    return _.assign({},oldObj, {[prop]: pluckedVals})
+                var pluckedVals = _.map(value,'value');
+                var newObj = {};
+                newObj[prop] = pluckedVals;
+                return _.assign({},oldObj, newObj)
             }
-            return _.has(value,'value') ?
-                    _.assign({},oldObj, {[prop]: value.value}) :
-                    _.assign({},oldObj,{[prop]: value});
+            var newObj = {};
+            newObj[prop] = _.has(value,'value') ? value.value : value;
+            return _.assign({},oldObj,newObj);
         },
         _incrIndex: function(index){
             return index+1;
