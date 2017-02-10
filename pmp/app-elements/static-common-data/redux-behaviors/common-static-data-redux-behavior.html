@@ -19,6 +19,13 @@
     partnersDropdownData: [],
     agreementsList: [],
     currencies: [],
+    agencyChoices: [],
+    agreementAmendmentTypes: [],
+    csoTypes: [],
+    partnerTypes: [],
+    assessmentTypes: [],
+    interventionAmendmentTypes: [],
+    currencies: [],
     agreementTypes: [],
     agreementStatuses: []
   };
@@ -80,29 +87,57 @@
       case 'SET_PARTNERS':     
         //console.log('set partners data...', action.partners); 
         return Object.assign({}, state, { partners: action.partnersData });
-      case 'SET_AGREEMENTS':
-        //console.log('set partners data...', action.partners);
+      case 'SET_AGREEMENTS':     
+        //console.log('set partners data...', action.partners); 
         return Object.assign({}, state, { agreementsList: action.agreementsList });
-      case 'SET_PARTNERS_DROPDOWN':
-        // console.log('set offices data...', action.partnersDropdownData);
+      case 'SET_PARTNERS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, { partnersDropdownData: action.partnersDropdownData });
 
       case 'SET_PARTNERS_FILTERED_DROPDOWN':
         // console.log('set filtered partners data...', action.partnersFilteredDropdownData);
         return Object.assign({}, state, { partnersFilteredDropdownData: action.partnersFilteredDropdownData });
 
-      case 'SET_AGREEMENTS_DROPDOWN':
-        // console.log('set offices data...', action.partnersDropdownData);
+      case 'SET_AGREEMENTS_DROPDOWN':     
+        // console.log('set offices data...', action.partnersDropdownData);  
         return Object.assign({}, state, { agreementsDropdownData: action.agreementsDropdownData });
+
       case 'SET_CURRENCIES':
         // console.log('set currencies data...', action.currencies);
         return Object.assign({}, state, { currencies: action.currencies });
+
       case 'SET_AGREEMENT_TYPES':
-          // console.log('set agreement_types data...', action.agreementTypes);
-        return Object.assign({}, state, {agreementTypes: action.agreementTypes});
+        // console.log('set agreement_types data...', action.agreementTypes);
+        return Object.assign({}, state, { agreementTypes: action.agreementTypes });
+
       case 'SET_AGREEMENT_STATUSES':
-          // console.log('set agreement_statuses data...', action.statuses);
-        return Object.assign({}, state, {agreementStatuses: action.statuses});
+        // console.log('set agreement_statuses data...', action.statuses);
+        return Object.assign({}, state, { agreementStatuses: action.statuses });
+
+      case 'SET_CSO_TYPES':
+        // console.log('set csoTypes...', action.csoTypes);
+        return Object.assign({}, state, { csoTypes: action.csoTypes });
+
+      case 'SET_PARTNER_TYPES':
+        // console.log('set partnerTypes...', action.partnerTypes);
+        return Object.assign({}, state, { partnerTypes: action.partnerTypes });
+
+      case 'SET_AGENCY_CHOICHES':
+        // console.log('set agencyChoices...', action.agencyChoices);
+        return Object.assign({}, state, { agencyChoices: action.agencyChoices });
+
+      case 'SET_AGREEMENT_AMEDMENT_TYPES':
+        // console.log('set agreementAmendmentTypes...', action.agreementAmendmentTypes);
+        return Object.assign({}, state, { agreementAmendmentTypes: action.agreementAmendmentTypes });
+
+      case 'SET_ASSESSMENT_TYPES':
+        // console.log('set assessmentTypes...', action.assessmentTypes);
+        return Object.assign({}, state, { assessmentTypes: action.assessmentTypes});
+
+      case 'SET_INTERVENTION_AMENDMENT_TYPES':
+        // console.log('set interventionAmendmentTypes...', action.interventionAmendmentTypes);
+        return Object.assign({}, state, { interventionAmendmentTypes: action.interventionAmendmentTypes });
+
     }
   });
 
