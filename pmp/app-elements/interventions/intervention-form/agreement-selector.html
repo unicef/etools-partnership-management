@@ -91,7 +91,6 @@
 				_agreementChanged: function(agreementId) {
 					var partnerSelector = this.$.partner;
 					var agreementSelector = this.$.agreements;
-
           if (!agreementId) { 
             partnerSelector.value = null,
             agreementSelector.value === null;
@@ -105,36 +104,38 @@
             return agreement.id === agreementId;
           });
           this.set('selectedAgreement', agreement);
-          this.set('partnerId', agreement.partner);
-          // find value to set on partners
-          
-          var partner = _.find(this.partnersDropdownData, function(partner) {
-            return partner.id === agreement.partner;
-          });
-          if (!partner) {
-            this.fire('toast', { text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
-            this._resetSelectorData(partnerSelector, agreementSelector);
-            return;
-          }
 
-          // set partner to be selected:
-          partnerSelector.set('value', partner);
-          agreementSelector.set('value', agreement);
+          if (this.partnerId !== agreement.partner) {
+            var partner = _.find(this.partnersDropdownData, function(partner) {
+              return partner.id === agreement.partner;
+            });
+            if (!partner) {
+              this.fire('toast', { text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+              this._resetSelectorData(partnerSelector, agreementSelector);
+              return;
+            }
+            partnerSelector.set('value', partner);
+            this.set('partnerId', partner.id);
+          }
 				},
 				_filterAgreements: function(partnerId) {
 					this.$.agreements.set('value', null);
-          this.set('selectedAgreement', null);
-					
           if (!partnerId) {
             this.set('filteredAgreements', []);
             return;
           }
+
+          if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId)  {
+            this.set('selectedAgreement', null);
+          }		
+          
 					// set filtered agreements based on this
 					var agreements = _.filter(this.agreements, function(agreement) {
 					  return agreement.partner === partnerId &&
                 ['suspended', 'terminated'].indexOf(agreement.status) === -1;
 					});
 					this.set('filteredAgreements', agreements);
+          this.$.agreements.set('value', this.selectedAgreement);
 				},
 				_partnerSelected: function(partnerId) {
 					// clear agreementSelection
