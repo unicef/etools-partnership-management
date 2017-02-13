@@ -11,6 +11,8 @@
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
@@ -97,7 +99,8 @@
                                                      placeholder="&#8212;"
                                                      options="[[_amendmentTypes]]"
                                                      on-value-change="_amendmentTypeSelected"
-                                                     error-message="Please select amendment type">>
+                                                     error-message="Please select amendment type"
+                                                     custom-object-options>
               </etools-searchable-multiselection-menu>
             </div>
 
@@ -182,6 +185,7 @@
         is: 'agreement-amendment-types',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
           pmpBehaviors.AgreementAmendmentsBehavior,
@@ -194,6 +198,10 @@
           },
           partnerAuthorizedOfficers: {
             type: Array, // partner staff members
+          },
+          _amendmentTypes: {
+            type: Array,
+            statePath: 'agreementAmendmentTypes'
           }
         },
 
@@ -211,16 +219,15 @@
             additional_clauses: null,
             existing_clause_amended: null
           };
-
           this.set('editMode', true);
-          this.set('_amendmentTypes', [
-            {value: 1, label: 'Change in Legal Name of Implementing Partner'},
-            {value: 2, label: 'Extension of Country Programme Cycle'},
-            {value: 3, label: 'Change Authorized Officer'},
-            {value: 4, label: 'Banking Information'},
-            {value: 5, label: 'Additional Clause'},
-            {value: 6, label: 'Amend Existing Clause'}
-          ]);
+          // this.set('_amendmentTypes', [
+          //   {value: 1, label: 'Change in Legal Name of Implementing Partner'},
+          //   {value: 2, label: 'Extension of Country Programme Cycle'},
+          //   {value: 3, label: 'Change Authorized Officer'},
+          //   {value: 4, label: 'Banking Information'},
+          //   {value: 5, label: 'Additional Clause'},
+          //   {value: 6, label: 'Amend Existing Clause'}
+          // ]);
 
           // TODO: get countryProgrammeCycle from patner/API ?
           this._countryProgrammeCycleEndDate = '2017-07-25';
@@ -337,7 +344,7 @@
           var selectedAmendmentType = null;
           var amendmentTypeId = '#amendmentType_' + event.model.index;
           if (event.detail.selectedValues !== null) {
-            selectedAmendmentType = event.detail.selectedValues.label;
+            selectedAmendmentType = event.detail.selectedValues.value;
             this._invalidAmendmentTypeField(false, amendmentTypeId);
           } else {
             this._invalidAmendmentTypeField(true, amendmentTypeId);

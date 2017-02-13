@@ -452,12 +452,14 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          console.log(agreement);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
               // prevent wrong new agreement value
               this.set('isNewAgreement', false);
             }
+
+              // this.set('_showAmendments', true);
+              
             if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
               this.set('_showAmendments', true);
             } else {

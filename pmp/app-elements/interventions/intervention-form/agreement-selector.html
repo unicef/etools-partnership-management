@@ -91,7 +91,7 @@
 				_agreementChanged: function(agreementId) {
 					var partnerSelector = this.$.partner;
 					var agreementSelector = this.$.agreements;
-          if (!agreementId) { 
+          if (!agreementId) {
             partnerSelector.value = null,
             agreementSelector.value === null;
             this.set('filteredAgreements', []);
@@ -127,8 +127,8 @@
 
           if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId)  {
             this.set('selectedAgreement', null);
-          }		
-          
+          }
+
 					// set filtered agreements based on this
 					var agreements = _.filter(this.agreements, function(agreement) {
 					  return agreement.partner === partnerId &&

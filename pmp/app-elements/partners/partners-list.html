@@ -14,6 +14,7 @@
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
@@ -212,6 +213,7 @@
         is: 'partners-list',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
           pmpBehaviors.CommonGeneralBehavior
@@ -229,6 +231,16 @@
             type: String,
             notify: true,
             observer: '_qChanged'
+          },
+
+          csoTypes: {
+            type: Array,
+            statePath: 'csoTypes'
+          },
+          
+          partnerTypes: {
+            type: Array,
+            statePath: 'partnerTypes'
           },
 
           partnerType: {
@@ -299,15 +311,15 @@
             {
               filterName: 'Partner Type',
               type: 'dropdown',
-              selectionOptions: ['Bilateral / Multilateral', 'Civil Society Organization', 'Government', 'UN Agency'],
               alreadySelected: null,
+              selectionOptions: _.map(this.partnerTypes, 'value'),
               path: 'partnerType'
             },
             {
               filterName: 'CSO Type',
-              type: 'dropdown',
-              selectionOptions: ['Academic Institution', 'Community Based Organization', 'International', 'National'],
               alreadySelected: null,
+              type: 'dropdown',
+              selectionOptions: _.map(this.csoTypes, 'value'),
               path: 'csoType'
             }
           ]);
