@@ -65,8 +65,9 @@
       <etools-content-panel class="content-section" title="Partnership Information">
         <div class="row-h flex-c">
           <div class="col col-6">
-            <agreement-selector agreement-id="{{intervention.agreement}}" 
-              partner-id="{{selectedPartnerId}}" 
+            <agreement-selector id="agreementSelector"
+              agreement-id="{{intervention.agreement}}"
+              partner-id="{{selectedPartnerId}}"
               selected-agreement="{{agreement}}"></agreement-selector>
           </div>
           <div class="col col-3">
@@ -79,7 +80,7 @@
                                                    on-value-change="_esmmValueChanged"
                                                    data-path="document_type"
                                                    hide-search 
-                                                   required
+                                                   required auto-validate
                                                    error-message="Document type is required">
             </etools-searchable-multiselection-menu>
           </div>
@@ -93,12 +94,13 @@
         </div>
         <div class="row-h flex-c">
           <!-- Title -->
-          <paper-input label="Title"
+          <paper-input id="title"
+                       label="Title"
                        value="{{intervention.title}}"
                        placeholder="&#8212;"
                        char-counter
                        maxlength="256"
-                       required
+                       required auto-validate
                        error-message="Please add a title"></paper-input>
         </div>
         <div class="row-h flex-c">
@@ -110,7 +112,8 @@
                                                    options="[[offices]]"
                                                    on-value-change="_esmmValueChanged"
                                                    data-path="offices"
-                                                   multi>
+                                                   multi required auto-validate
+                                                   error-message="Please select intervention's office(s)">
             </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-6">
@@ -121,7 +124,10 @@
                                                    options="[[unicefUsersData]]"
                                                    on-value-change="_esmmValueChanged"
                                                    data-path="unicef_focal_points"
-                                                   multi>
+                                                   multi
+                                                   required$="[[interventionRequiredField]]"
+                                                   auto-validate
+                                                   error-message="Please select UNICEF focal points">
             </etools-searchable-multiselection-menu>
           </div>
         </div>
@@ -134,7 +140,10 @@
                options="[[partnerStaffMembersDropdownData]]"
                on-value-change="_esmmValueChanged"
                data-path="partner_focal_points"
-               multi>
+               multi
+               required$="[[interventionRequiredField]]"
+               auto-validate
+               error-message="Please select partner focal points">
             </etools-searchable-multiselection-menu>
           </div>
         </div>
@@ -159,7 +168,10 @@
                          value="[[prettyDate(intervention.start)]]"
                          on-down="openDatePicker"
                          data-selector="intStartDate"
-                         placeholder="&#8212;">
+                         placeholder="&#8212;"
+                         required$="[[interventionRequiredField]]"
+                         auto-validate
+                         error-message="Please select start date">
               <etools-datepicker-button prefix
                                         id="intStartDate"
                                         date="[[prepareDate(intervention.start)]]"
@@ -175,7 +187,10 @@
                          value="[[prettyDate(intervention.end)]]"
                          on-down="openDatePicker"
                          data-selector="intEndDate"
-                         placeholder="&#8212;">
+                         placeholder="&#8212;"
+                         required$="[[interventionRequiredField]]"
+                         auto-validate
+                         error-message="Please select end date">
               <etools-datepicker-button prefix
                                         id="intEndDate"
                                         date="[[prepareDate(intervention.end)]]"
@@ -187,20 +202,26 @@
         </div>
         <div class="row-h flex-c">
           <!-- Population Focus -->
-          <paper-textarea label="Population Focus"
+          <paper-textarea id="populationFocus"
+                          label="Population Focus"
                           value="{{intervention.population_focus}}"
                           placeholder="&#8212;"
                           char-counter
-                          maxlength="256"></paper-textarea>
+                          maxlength="256"
+                          required$="[[interventionRequiredField]]"
+                          auto-validate
+                          error-message="Please enter population focus content"></paper-textarea>
         </div>
         <div class="row-h flex-c">
           <paper-material elevation="0">
             <paper-toolbar>
               <div class="title">Sector Locations</div>
             </paper-toolbar>
-            <intervention-sector-locations data-items="{{intervention.sector_locations}}"
-                                           edit-mode$="[[editMode]]"></intervention-sector-locations>
-
+            <intervention-sector-locations id="sectorLocations"
+                                           data-items="{{intervention.sector_locations}}"
+                                           edit-mode$="[[editMode]]"
+                                           required$="[[interventionRequiredField]]">
+            </intervention-sector-locations>
           </paper-material>
         </div>
         <div class="row-h flex-c">
@@ -211,9 +232,11 @@
 
       <!--</etools-content-panel>-->
       <etools-content-panel class="content-section" title="Planned Budget">
-        <intervention-planned-budget data-items="{{intervention.planned_budget}}"
+        <intervention-planned-budget id="plannedBudget"
+                                     data-items="{{intervention.planned_budget}}"
                                      edit-mode$="[[editMode]]"
-                                     years="[[years]]"></intervention-planned-budget>
+                                     years="[[years]]"
+                                     required$="[[interventionRequiredField]]"></intervention-planned-budget>
       </etools-content-panel>
       <etools-content-panel class="content-section" title="Planned Visits">
         <intervention-planned-visits data-items="{{intervention.planned_visits}}"
@@ -229,7 +252,6 @@
                            show-save-btn$="[[editMode]]"></intervention-status>
     </div>
     <!-- sidebar content end -->
-
 
   </template>
 
@@ -296,11 +318,20 @@
           agreement: {
             type: Object,
             value: null
+          },
+          interventionRequiredField: {
+            type: Boolean,
+            value: false
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           }
         },
 
         observers: [
-          '_agreementSelected(agreement)'
+          '_agreementSelected(agreement)',
+          '_setYears(intervention.start, intervention.end)'
         ],
 
         ready: function() {
@@ -321,7 +352,11 @@
         _interventionChanged: function(intervention) {
           console.log('intervention', intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            this._setYears(intervention.start, intervention.end);
+            // this._setYears(intervention.start, intervention.end);
+            this.set('interventionRequiredField', true); // TODO: remove this
+            //this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+          } else {
+            this.set('interventionRequiredField', false);
           }
 
           // ensure loading msg close
@@ -440,7 +475,6 @@
          * When an agreement is selected then check it's type and update document types dropdown
          */
         _agreementSelected: function(agreement) {
-          console.log('selected agreement', agreement);
           var options = this.documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
@@ -456,6 +490,13 @@
             } 
           }
           this.set('currentDocTypes', options);
+        },
+
+        /**
+         * Some interventions fields are required only if status is active or implemented
+         */
+        _requiredInterventionField: function(status) {
+          return status === 'active' || status === 'implemented';
         },
 
         /**
@@ -494,9 +535,16 @@
         },
 
         _validateIntervention: function() {
-          // TODO: implement validations! ... for now we only rely on backend validations
-          return true;
-        }
+          var valid = true;
+          var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+            'partnerFocalPts', 'intStart', 'intEnd', 'populationFocus', 'sectorLocations', 'plannedBudget'];
+          fields.forEach(function(field) {
+            if (!this.$$('#' + field).validate()) {
+              valid = false;
+            }
+          }.bind(this));
+          return valid;
+        },
 
       });
 
