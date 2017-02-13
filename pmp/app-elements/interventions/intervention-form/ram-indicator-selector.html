@@ -1,0 +1,112 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+
+<link rel="import" href="../../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
+
+<dom-module id="ram-indicator-selector">
+  <template>
+    <style include="grid-layout-styles shared-styles"></style>
+
+    <cp-output-ram-indicators-data rm-indicators="{{cpIndicators}}" cp-output-id="[[cpOutputId]]"></cp-output-ram-indicators-data>
+
+    <div class="row-h flex-c">
+      <div class="col col-4">s
+        <etools-searchable-multiselection-menu id="cpOutput"
+                                               label="CP Output"
+                                               placeholder="&#8212;"
+                                               options="[[partnersDropdownData]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
+                                               selected="{{cpOutputId}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Please select CP Output">
+        </etools-searchable-multiselection-menu>
+      </div>
+
+      <div class="col col-8">
+        <etools-searchable-multiselection-menu id="agreements"
+                                               label="CP Indicators(s)"
+                                               placeholder="&#8212;"
+                                               options="[[cpIndicators]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
+                                               selected="{{selectedCpIndicatorsIds}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Please select CP Indicators">
+        </etools-searchable-multiselection-menu>
+
+      </div>
+    </div>
+  </template>
+
+	<script>
+		(function() {
+			'use strict';  
+			Polymer({
+				is: 'ram-indicator-selector',
+				behaviors: [
+					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+				],
+				properties: {
+          cpOutputs: {
+            type: Array,
+            statePath: 'unmodifiedCpOutputs'
+          },
+          cpOutputId: {
+            type: Number,
+            observer: 'cpOutputSelected'
+          },
+          cpIndicators: {
+            type: Array,
+            value: []
+          },
+          selectedCpIndicatorsIds: {
+            type: Array,
+            value: [],
+            observer: 'cpIndicatorsSelected'
+          }
+
+
+				},
+
+        cpOutputSelected: function(cpOutputId) {
+				  var cpOutputSelector = this.$.cpOutput;
+          if (cpOutputId > 0) {
+            var currentCpValue = cpOutputSelector.value;
+            if (!currentCpValue || (currentCpValue && currentCpValue.id && currentCpValue.id !== cpOutputId)) {
+              // if no cpOut selected or selected cpOut id is different than cpOutputId, update selection
+              this._setSelectedCpOutput(cpOutputId);
+            }
+          } else {
+            cpOutputSelector.value = null;
+          }
+        },
+
+        _setSelectedCpOutput: function(id) {
+				  var selectedCpOutput = cpOutputs.filter(function(cpOut) {
+				    return cpOut.id === id;
+          })[0];
+				  if (selectedCpOutput) {
+            this.$.cpOutput.value = selectedCpOutput;
+          }
+        },
+
+        cpIndicatorsSelected: function(indicatorsIds) {
+
+        }
+
+
+
+			});
+		})();
+	</script>
+</dom-module>

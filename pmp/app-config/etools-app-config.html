@@ -239,6 +239,9 @@ App global configuration
           url : '/api/sections',
           exp: 6 * 60 * 60 * 1000,
           cachingKey: 'sections'
+      },
+      ramIndicators: {
+        template: '/api/v2/reports/results/<%=id%>/indicators/',
       }
 
     };

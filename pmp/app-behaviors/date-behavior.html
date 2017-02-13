@@ -49,6 +49,27 @@
           datePicker.open = true;
         }
       }
+    },
+
+    /**
+     * Diff between 2 dates
+     */
+    dateDiff: function(firstDateString, secondDateString, unit) {
+      if (!unit) {
+        unit = 'days';
+      }
+      if (typeof firstDateString === 'string' && firstDateString !== '' &&
+          typeof secondDateString === 'string' && secondDateString !== '') {
+        var firstDate = new Date(firstDateString);
+        var secondDate = new Date(secondDateString);
+
+        if (firstDate.toString() !== 'Invalid Date' && secondDate.toString() !== 'Invalid Date') {
+          var mFirstDate = moment.utc(firstDate);
+          var mSecondDate = moment.utc(secondDate);
+          return mSecondDate.diff(mFirstDate, unit)
+        }
+      }
+      return null;
     }
 
   };

@@ -57,6 +57,13 @@
           margin-left: 0;
         };
       }
+      .expiry-warning {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+        @apply(--layout-end-justified);
+        padding-bottom: 12px;
+        color: #ea4022; /* TODO: replace with app-theme var */
+      }
     </style>
 
     <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
@@ -199,6 +206,11 @@
                                         no-init show-clear-btn></etools-datepicker-button>
             </paper-input>
           </div>
+          <div class="col col-3">
+            <div class="expiry-warning">
+              <span>[[_daysUntilExpiry(intervention.start, intervention.end)]]</span>
+            </div>
+          </div>
         </div>
         <div class="row-h flex-c">
           <!-- Population Focus -->
@@ -228,9 +240,11 @@
 
         </div>
       </etools-content-panel>
-      <!--<etools-content-panel class="content-section" title="Expected results">-->
 
-      <!--</etools-content-panel>-->
+      <etools-content-panel class="content-section" title="Expected results">
+
+      </etools-content-panel>
+
       <etools-content-panel class="content-section" title="Planned Budget">
         <intervention-planned-budget id="plannedBudget"
                                      data-items="{{intervention.planned_budget}}"
@@ -545,6 +559,13 @@
           }.bind(this));
           return valid;
         },
+
+        _daysUntilExpiry: function(start, end) {
+          var diff = this.dateDiff(start, end);
+          if (diff) {
+            return diff + ' days until expiry';
+          }
+        }
 
       });
 
