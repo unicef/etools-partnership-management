@@ -61,6 +61,9 @@
          * Used for unsafe requests (PATCH/POST).
          */
         _prepareAndFireRequest: function() {
+          if (!this.ajaxEl) {
+            this.ajaxEl = this.$.ajax;
+          }
           this.ajaxEl.set('params', null);
           this.ajaxEl.set('body', null);
           this.ajaxEl.set('url', null);

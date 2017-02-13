@@ -10,16 +10,20 @@
 
 <dom-module id="ram-indicator-selector">
   <template>
-    <style include="grid-layout-styles shared-styles"></style>
+    <style include="grid-layout-styles shared-styles">
+      :host {
+        width: 100%;
+      }
+    </style>
 
     <cp-output-ram-indicators-data rm-indicators="{{cpIndicators}}" cp-output-id="[[cpOutputId]]"></cp-output-ram-indicators-data>
 
     <div class="row-h flex-c">
-      <div class="col col-4">s
+      <div class="col col-4">
         <etools-searchable-multiselection-menu id="cpOutput"
                                                label="CP Output"
                                                placeholder="&#8212;"
-                                               options="[[partnersDropdownData]]"
+                                               options="[[cpOutputs]]"
                                                custom-object-options
                                                option-value="id"
                                                option-label="name"
@@ -63,7 +67,7 @@
           },
           cpOutputId: {
             type: Number,
-            observer: 'cpOutputSelected'
+            observer: '_cpOutputSelected'
           },
           cpIndicators: {
             type: Array,
@@ -72,13 +76,21 @@
           selectedCpIndicatorsIds: {
             type: Array,
             value: [],
-            observer: 'cpIndicatorsSelected'
+            observer: '_cpIndicatorsSelected'
           }
-
-
 				},
 
-        cpOutputSelected: function(cpOutputId) {
+        ready: function() {
+          if (this.cpOutputs.length > 0 && this.cpOutputId) {
+            this._cpOutputSelected(this.cpOutputId);
+          }
+        },
+
+        _cpOutputSelected: function(cpOutputId) {
+          if (!Array.isArray(this.cpOutputs)) {
+            return;
+          }
+          console.log(cpOutputId);
 				  var cpOutputSelector = this.$.cpOutput;
           if (cpOutputId > 0) {
             var currentCpValue = cpOutputSelector.value;
@@ -92,7 +104,10 @@
         },
 
         _setSelectedCpOutput: function(id) {
-				  var selectedCpOutput = cpOutputs.filter(function(cpOut) {
+          if (!Array.isArray(this.cpOutputs)) {
+            return;
+          }
+				  var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
 				    return cpOut.id === id;
           })[0];
 				  if (selectedCpOutput) {
@@ -100,7 +115,7 @@
           }
         },
 
-        cpIndicatorsSelected: function(indicatorsIds) {
+        _cpIndicatorsSelected: function(indicatorsIds) {
 
         }
 
