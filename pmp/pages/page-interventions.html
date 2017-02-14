@@ -122,9 +122,7 @@
               url-params="[[interventionsQueryParams]]"></interventions-list>
         </div>
         <div class="page" name="overview">
-          <intervention-overview intervention="[[intervention]]"
-                                on-save-intervention="_saveIntervention"
-                                edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-overview>
+          <intervention-overview intervention="[[intervention]]"></intervention-overview>
         </div>
         <div class="page" name="details">
           <intervention-details intervention="[[intervention]]"

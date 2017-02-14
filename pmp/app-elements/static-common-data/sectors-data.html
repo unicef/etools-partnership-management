@@ -57,7 +57,8 @@
           return data.map(function(d) {
             return {
               value: parseInt(d.id, 10),
-              label: d.name
+              label: d.name,
+              color: d.color
             };
           });
         }
