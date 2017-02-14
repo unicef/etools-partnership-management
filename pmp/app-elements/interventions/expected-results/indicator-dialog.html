@@ -1,0 +1,162 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+
+<link rel="import" href="indicator-dissaggregations.html">
+
+<dom-module id="indicator-dialog">
+  <template>
+    <style include="grid-layout-styles shared-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        --etools-checkable-input-label: {
+          font-size: 14px;
+        };
+      }
+
+      etools-checkable-input:not(:last-of-type) {
+        margin-right: 30px;
+      }
+      paper-input,
+      paper-textarea,
+      paper-material {
+        width: 100%;
+      }
+
+      paper-material {
+        padding: 0;
+      }
+      paper-material paper-toolbar {
+        --paper-toolbar-height: 40px;
+        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar: {
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+        };
+        --paper-toolbar-title: {
+          @apply(--nested-content-panel-title);
+          margin-left: 0;
+        };
+      }
+
+      #indicator-content {
+        max-height: 700px;
+        overflow-y: auto;
+      }
+
+      .dissaggregation {
+        margin: 25px 0;
+      }
+
+    </style>
+
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator">
+      <div id="indicator-content">
+        <div class="row-h flex-c">
+          <etools-checkable-input type="radio" label="#" label-alignment="right" checked="true"></etools-checkable-input>
+          <etools-checkable-input type="radio" label="%" label-alignment="right"></etools-checkable-input>
+          <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"></etools-checkable-input>
+        </div>
+
+        <div class="row-h flex-c">
+          <paper-input label="Indicator" value="" placeholder="&#8212;"></paper-input>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <paper-input label="Baseline" value="" placeholder="&#8212;"></paper-input>
+          </div>
+          <div class="col col-3">
+            <paper-input label="Target" value="" placeholder="&#8212;"></paper-input>
+          </div>
+          <div class="col col-6">
+            <paper-textarea label="Means of Verification" value="" placeholder="&#8212;"></paper-textarea>
+          </div>
+        </div>
+
+        <div class="row-h flex-c dissaggregation">
+          <paper-material elevation="0">
+            <paper-toolbar>
+              <div class="title">Dissaggregation</div>
+            </paper-toolbar>
+            <indicator-dissaggregations data-items="{{indicator.disaggregation_logic}}"></indicator-dissaggregations>
+          </paper-material>
+        </div>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'indicator-dialog',
+
+        properties: {
+          indicator: {
+            type: Object
+          },
+          indicatorModel: {
+            type: Object,
+            value: {
+              id: null,
+              indicator: null,
+              baseline: null,
+              target: null,
+              means_of_verification: null,
+              unit: null,
+              disaggregation_logic: []
+            }
+          },
+          actionParams: {
+            type: Object
+          }
+        },
+
+        ready: function() {
+
+        },
+
+        openIndicatorDialog: function() {
+          this.$.indicatorDialog.opened = true;
+        },
+
+        // change ok btn label to some edit label or add label texts
+        setEditLabel: function() {
+          this.$.indicatorDialog.okBtnText = 'Edit Indicator';
+        },
+        setAddLabel: function() {
+          this.$.indicatorDialog.okBtnText = 'Add Indicator';
+        },
+        setTitle: function(title) {
+          this.$.indicatorDialog.dialogTitle = title;
+        },
+
+        setIndicatorData: function(data, actionParams) {
+          if (!data) {
+            data = this.indicatorModel;
+          }
+          this.set('indicator', data);
+          this.set('actionParams', actionParams);
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
+

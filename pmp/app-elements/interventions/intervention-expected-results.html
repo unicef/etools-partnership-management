@@ -17,6 +17,8 @@
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
 <link rel="import" href="intervention-form/ram-indicator-selector.html">
+<link rel="import" href="expected-results/result-link-lower-results.html">
+<link rel="import" href="expected-results/indicator-dialog.html">
 
 <dom-module id="intervention-expected-results">
   <template>
@@ -40,19 +42,6 @@
         padding: 8px 15px;
       }
 
-      .item-actions-container {
-        position: relative;
-        padding-right: 10px;
-        border-right: 2px solid #00aeef; /* TODO: replace with app-theme var */;
-        margin-top: 25px;
-      }
-
-      .item-container .item-content {
-        margin-left: 0;
-        border-left: none;
-        padding-bottom: 25px;
-      }
-
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -70,12 +59,16 @@
 
               <div class="row-h">
                 <ram-indicator-selector cp-output-id="{{item.cp_output}}"
-                                        selected-cp-indicators-ids="{{item.ram_indicators}}">
+                                        selected-cp-indicators-ids="{{item.ram_indicators}}"
+                                        already-selected-cpo="[[alreadySelectedCpOutputs]]">
                 </ram-indicator-selector>
               </div>
 
-              <div class="row-h">
-              </div>
+              <result-link-lower-results data-items="{{item.ll_results}}"
+                                         edit-mode$="[[editMode]]"
+                                         cp-output-id="[[item.cp_output]]"
+                                         on-open-indicator-dialog="_openIndicatorDialog">
+              </result-link-lower-results>
 
           </div>
         </div>
@@ -119,11 +112,19 @@
           editMode: {
             type: Boolean,
             value: false
+          },
+          alreadySelectedCpOutputs: {
+            type: Array,
+            value: []
+          },
+          indicatorDialog: {
+            type: Object
           }
         },
 
         observers: [
-          '_dataItemsChanged(dataItems)'
+          '_dataItemsChanged(dataItems)',
+          '_dataItemsChanges(dataItems.*)'
         ],
 
         ready: function() {
@@ -134,6 +135,17 @@
             ram_indicators: [],
             ll_results: []
           };
+
+          // init indicator dialog data
+          this.indicatorDialog = document.createElement('indicator-dialog');
+          this.indicatorDialog.setAttribute('id', 'indicatorDialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.indicatorDialog);
+        },
+
+        detached: function() {
+          if (this.indicatorDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
+          }
         },
 
         interventionIdChanged: function(interventionId) {
@@ -147,6 +159,30 @@
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
+          } else {
+            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
+          }
+        },
+
+        // get selected cpoutputs ids
+        _getSelectedCpOutputsIds: function() {
+          var selectedCpOIds = [];
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(result) {
+              if (result.cp_output) {
+                selectedCpOIds.push(result.cp_output);
+              }
+            });
+          }
+          return selectedCpOIds;
+        },
+
+        // every time cp_output is selected update alreadySelectedCpOutputs
+        // and do not show alreadySelectedCpOutputs in other dorpdowns
+        _dataItemsChanges: function(item) {
+          var change = item.path.substring(item.path.lastIndexOf('.') + 1);
+          if (change === 'cp_output' || change === 'length') {
+            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
           }
         },
 
@@ -157,6 +193,23 @@
           this._addElement();
         },
 
+        // open indicator dialog to add or edit indicator
+        _openIndicatorDialog: function(event) {
+          event.stopImmediatePropagation();
+          console.log(event.detail);
+          var actionParams = event.detail;
+
+          if (!actionParams.appliedIndicatorsIndex) {
+            this.indicatorDialog.setAddLabel();
+            this.indicatorDialog.setTitle('Add Indicator');
+          } else {
+            this.indicatorDialog.setEditLabel();
+            this.indicatorDialog.setTitle('Edit Indicator');
+          }
+
+          this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
+          this.indicatorDialog.openIndicatorDialog();
+        }
 
       });
     })();

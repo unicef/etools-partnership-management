@@ -243,8 +243,11 @@
       </etools-content-panel>
 
       <etools-content-panel class="content-section" title="Expected results">
-        <intervention-expected-results data-items="{{intervention.result_links}}"
-            edit-mode$="[[editMode]]" intervention-id="[[intervention.id]]"></intervention-expected-results>
+        <intervention-expected-results
+            data-items="{{resultLinks}}"
+            edit-mode$="[[editMode]]"
+            intervention-id="[[intervention.id]]">
+        </intervention-expected-results>
       </etools-content-panel>
 
       <etools-content-panel class="content-section" title="Planned Budget">
@@ -376,7 +379,25 @@
             if (intervention.result_links.length > 0) {
               for (var i = 0; i < intervention.result_links.length; i++) {
                 intervention.result_links[i].cp_output = intervention.result_links[i].cp_output.id;
+                intervention.result_links[i].ram_indicators = [];
+                if (i === 0) {
+                  intervention.result_links[i].ll_results = [
+                    {
+                      id: 1,
+                      name: 'My indicator name',
+                      applied_indicators: [
+                        {
+                          id: 1,
+                          baseline: "123312",
+                          target: "2000",
+                          indicator: 'some text here'
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
+              this.set('resultLinks', intervention.result_links)
             }
 
           } else {

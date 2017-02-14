@@ -20,10 +20,8 @@
         is: 'cp-output-ram-indicators-data',
         behaviors: [etoolsAppConfig.globals],
         properties: {
-
           ramIndicators: {
             type: Array,
-            readOnly: true,
             notify: true
           },
 
@@ -52,7 +50,7 @@
          * Handle received data from request
          */
         _handleResponse: function(response) {
-          this._setRamIndicators(response.detail);
+          this.set('ramIndicators', response.detail);
           this.fire('global-loading', {active: false});
         },
 
