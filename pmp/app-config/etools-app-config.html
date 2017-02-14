@@ -230,6 +230,9 @@ App global configuration
         exp: 5 * 60 * 1000, // 5min
         url : "/api/v2/government_interventions"
       },
+      governmentsDetails: {
+        template : "/api/v2/government_interventions/<%=id%>/"
+      },
       countryProgrammes: {
         cachingKey: "countryProgrammes",
         exp: 5 * 60 * 1000, // 5min

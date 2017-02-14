@@ -10,6 +10,7 @@
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/governments/governments-list.html">
 <link rel="import" href="../app-elements/governments/government-details.html">
+<link rel="import" href="../app-elements/governments/governments-data/government-intervention-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -40,20 +41,27 @@
             pattern="governments/:id/:tab"
             active="{{tabsActive}}"
             data="{{routeData}}"></app-route>
-  	<!--
-  	<partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
-    </partners-list-data>
- -->
+    <app-route
+            route="{{route}}"
+            pattern="governments/new/details"
+            active="{{newInterventionActive}}"
+    ></app-route>
+  	<government-intervention-item-data id="interventionData"
+                                       intervention="{{intervention}}"
+                                       intervention-id="[[selectedInterventionId]]"></government-intervention-item-data>
   	<app-header-layout>
 
-      <div class$="page-top-content [[_getTopContentAdditionalClass()]]">
+      <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
             <h1 main-title>
-
-              <span> Government in simple </span>
-        
+              <template is="dom-if" if="[[governmentListActive]]">
+                <span> Government in simple </span>
+              </template>
+              <template is="dom-if" if="[[newInterventionActive]]">
+                <span>Add New Goverment in Simple</span>
+              </template>
+              <span hidden$="[[governmentListActive]]">[[intervention.number]]</span>
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
@@ -76,18 +84,24 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row" hidden="[[!_showPageTabs()]]">
-            <paper-tabs
-                selected="details"
-                attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+          <template is="dom-if" if="[[_getTabsActive(tabsActive,newInterventionActive)]]">
+            <div class="top-content-row">
+              <paper-tabs
+                      selected="{{routeData.tab}}"
+                      attr-for-selected="name"
+                      noink bottom-item
+                      fallback-selection="details">
 
-              <paper-tab name="details" link>
-                <span class="tab-content">Government Details</span>
-              </paper-tab>
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+                <paper-tab name="details" link>
+                  <span class="tab-content">Government Details</span>
+                </paper-tab>
+              </paper-tabs>
+            </div>
+          </template>
 
-            </paper-tabs>
-          </div>
         </div>
       </div>
 
@@ -106,9 +120,9 @@
         </div>
         <div class="page" name="details">
           <government-details id="details"
-                              intervention="[[fakeData]]"
+                              intervention="[[intervention]]"
                               edit-mode="[[fakePermission]]"
-                              on-save-partner="_savePartner"></government-details>
+                              on-save-intervention="_saveIntervention"></government-details>
         </div>
 
       </iron-pages>
@@ -138,8 +152,20 @@
           type: Array,
           notify: true
         },
-
-        fakeData: {
+        newInterventionModel: {
+          type: Object,
+          value: {
+            results: [],
+            number: null,
+            partner: null,
+            result_structure: null,
+            country_programme: null
+          }
+        },
+        selectedInterventionId: {
+          type: Number
+        },
+        intervention: {
           type: Object,
           value: {
             "id": 3,
@@ -186,8 +212,8 @@
 
        observers: [
 //         '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
-         '_pageChanged(governmentListActive, routeData.tab)',
-         '_updateUrlTab(routeData.tab)'
+         '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
+         '_updateUrlTab(routeData.tab)',
        ],
 
       ready: function() {
@@ -202,16 +228,20 @@
         //   this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         // }
       },
-      _getActivePage: function(listActive, tab) {
-        if (listActive) {
-          return 'list';
-        } else {
-          return tab;
-        }
+      _getActivePage: function(listActive,tab,isNew) {
+        var result = listActive? 'list' :
+                isNew ? 'details' : tab;
+        return result;
       },
-      _pageChanged : function (governmentListActive,  tab) {
-        var activePage = this._getActivePage(governmentListActive,tab)
+      _pageChanged : function (governmentListActive, tab, newInterventionActive) {
+        var activePage = this._getActivePage(governmentListActive,tab, newInterventionActive)
         this.set('governmentsPage', activePage)
+      },
+      _getTabsActive: function(tabsActive,newInterventionActive){
+        if(tabsActive || newInterventionActive){
+          return true;
+        }
+        return false;
       },
 
       _updateUrlTab: function(tab) {
@@ -222,20 +252,20 @@
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
-
-
-      _showPageTabs: function(activePage) {
-        // what was the logic behind this one?         
-        return false;
+      _goToNewGovernmentPage: function(e){
+        this.set('intervention', this.newInterventionModel);
+        this.set('selectedInterventionId', 0);
+        this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
+        if(_.isEmpty(this.intervention.results)){
+          this.$.details._addNewResult();
+        };
       },
-
-      _getTopContentAdditionalClass: function () {
-      	return '';
+      _getTopContentAdditionalClass: function(listActive) {
+        if (!listActive) {
+          return 'with-tabs';
+        }
+        return '';
       },
-
-      _goToNewGovernmentPage: function() {
-        // go to new gvt
-      }
       
 
     });

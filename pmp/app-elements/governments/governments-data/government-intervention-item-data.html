@@ -1,0 +1,111 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="government-intervention-item-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"
+                 on-fail="_handleErrorResponse"></etools-ajax>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+
+        is: 'government-intervention-item-data',
+        behaviors: [etoolsAppConfig.globals],
+        properties: {
+          intervention: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          interventionId: {
+            type: Number,
+            notify: true,
+            observer: '_interventionIdChanged'
+          },
+          handleResponseAdditionalCallback: Object,
+          ajaxEl: Object
+        },
+        attached: function(){
+          this.ajaxEl = this.$.ajax;
+        },
+        saveIntervention: function (intervention, cb) {
+          if (_.isEmpty(intervention)) {
+            this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true})
+          } else {
+            var url = null;
+            var isNew = false;
+            if(_.has(intervention, 'id')){
+              //PATCH endpoint
+              this._prepareEndpoint(intervention.id);
+              url = this.endpoint.url;
+            }else{
+              url = this.getEndpoint('governments');
+              isNew = true;
+            }
+            if(!_.isEmpty(intervention)){
+              if(cb){
+                this.set('handleResponseAdditionalCallback',cb);
+              }
+              this.fire('global-loading', {message: 'Saving government intervention data...', active:true});
+              this._prepareAndFireRequest((isNew)? 'POST' : 'PATCH', intervention, url)
+            }else {
+              this.fire('toast', {
+                text: 'There is nothing to save. No change detected on this intervention.',
+                showCloseBtn: true
+              });
+            }
+          }
+        },
+        _prepareAndFireRequest: function(method, data, url) {
+          if (!method) {
+            method = 'GET';
+            // reset ajax for GET request
+            this.ajaxEl.set('params', null);
+            this.ajaxEl.set('body', null);
+            this.ajaxEl.set('url', null);
+          }
+          this.ajaxEl.set('method', method);
+          if (typeof data === 'object' && Object.keys(data).length > 0
+              && ['PATCH', 'POST'].indexOf(method) > -1) {
+            this.ajaxEl.set('body', data);
+            this.ajaxEl.set('url', url);
+          }
+          // after body is set the request is automatically triggered
+        },
+        _handleResponse: function(response){
+          this.setIntervention(response.detail);
+          if(typeof this.handleResponseAdditionalCallback === 'function'){
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            // reset callback
+            this.set('handleResponseAdditionalCallback', null);
+          }
+        },
+
+        _interventionIdChanged: function (newId) {
+          if (newId) {
+            this.fire('global-loading', {message: 'Loading government intervention data...', active: true});
+            this._prepareAndFireRequest();
+            this.set('endpoint', this.getEndpoint('governmentsDetails', {id: newId}));
+          }
+        },
+
+        _prepareEndpoint: function (id) {
+          if (id > 0) {
+            // check and prepare request URL
+            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
+              this.set('endpoint', this.getEndpoint('governmentsDetails', {id: id}));
+            }
+          }
+        },
+
+      });
+    })();
+  </script>
