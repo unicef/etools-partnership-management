@@ -57,8 +57,8 @@
           unicefUsersData: {
             type: Array
           }
-        }, 
-        
+        },
+
         query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
@@ -85,14 +85,14 @@
             }
 
             governmentsQueryResult = governmentsQueryResult.filter(function(government) {
-              
+
               government.unicef_focal_point_names = [];
 
               for(var key in government.unicef_focal_points) {
                 government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
-              }                                       
-              
-              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {                
+              }
+
+              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {
                 return false;
               }
 
@@ -116,7 +116,7 @@
 
               if (searchString && searchString.length &&
                   government.number.toLowerCase().indexOf(searchString) < 0 &&
-                  government.partner_name.toLowerCase().indexOf(searchString) < 0) {                
+                  government.partner_name.toLowerCase().indexOf(searchString) < 0) {
                 return false;
               }
 
@@ -127,7 +127,7 @@
                 if (matchSectors && matchSectors.length === 0) {
                   return false;
                 }
-              } 
+              }
 
               if (years.length) {
                 var matchYears = government.years.filter(function(year) {
@@ -139,7 +139,7 @@
               }
 
               return true;
-            });           
+            });
 
             // This special Dexie function allows the work of counting
             // the number of query results to be done in a parallel process,
@@ -169,7 +169,7 @@
             }
           }
         }
-        
+
       });
     })();
   </script>
