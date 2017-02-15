@@ -47,10 +47,10 @@
           <div class="row-v flex-c item-content">
             <div class="row-h">
               <div class="col col-4">
-                <paper-input label="Disaggregate By"></paper-input>
+                <paper-input label="Disaggregate By" value="{{item.disaggregate_by}}"></paper-input>
               </div>
               <div class="col col-8">
-                <paper-input label="Disaggregation Groups"></paper-input>
+                <paper-input label="Disaggregation Groups" value="{{item.disaggregation_groups}}"></paper-input>
               </div>
             </div>
           </div>
@@ -87,7 +87,6 @@
 
         ready: function() {
           this.dataSetModel = {
-            id: null,
             disaggregate_by: null,
             disaggregation_groups: null
           };
@@ -99,6 +98,7 @@
          */
         _addNewDisaggregation: function() {
           this._addElement();
+          this.fire('disaggregation-change');
         }
 
       });

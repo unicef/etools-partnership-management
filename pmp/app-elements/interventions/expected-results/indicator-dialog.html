@@ -53,8 +53,10 @@
       }
 
       #indicator-content {
-        max-height: 700px;
+        max-height: 600px;
         overflow-y: auto;
+        margin: 0 -20px;
+        padding: 0 15px;
       }
 
       .dissaggregation {
@@ -63,27 +65,45 @@
 
     </style>
 
-    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator">
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog">
       <div id="indicator-content">
         <div class="row-h flex-c">
-          <etools-checkable-input type="radio" label="#" label-alignment="right" checked="true"></etools-checkable-input>
-          <etools-checkable-input type="radio" label="%" label-alignment="right"></etools-checkable-input>
-          <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"></etools-checkable-input>
+          <etools-checkable-input type="radio" label="#" label-alignment="right"
+                                  checked="{{unit.numeric}}"
+                                  on-tap="_unitChanged"
+                                  data-unit-to-reset="yesno,percentage"></etools-checkable-input>
+          <etools-checkable-input type="radio" label="%" label-alignment="right"
+                                  checked="{{unit.percentage}}"
+                                  on-tap="_unitChanged"
+                                  data-unit-to-reset="numeric,yesno"></etools-checkable-input>
+          <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
+                                  checked="{{unit.yesno}}"
+                                  on-tap="_unitChanged"
+                                  data-unit-to-reset="numeric,percentage"></etools-checkable-input>
         </div>
 
         <div class="row-h flex-c">
-          <paper-input label="Indicator" value="" placeholder="&#8212;"></paper-input>
+          <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <paper-input label="Baseline" value="" placeholder="&#8212;"></paper-input>
+            <paper-input label="Baseline"
+                         value="{{indicator.baseline}}"
+                         type="number" placeholder="&#8212;">
+            </paper-input>
           </div>
           <div class="col col-3">
-            <paper-input label="Target" value="" placeholder="&#8212;"></paper-input>
+            <paper-input label="Target"
+                         value="{{indicator.target}}"
+                         type="number" placeholder="&#8212;">
+            </paper-input>
           </div>
           <div class="col col-6">
-            <paper-textarea label="Means of Verification" value="" placeholder="&#8212;"></paper-textarea>
+            <paper-textarea label="Means of Verification"
+                            value="{{indicator.means_of_verification}}"
+                            placeholder="&#8212;">
+            </paper-textarea>
           </div>
         </div>
 
@@ -92,7 +112,9 @@
             <paper-toolbar>
               <div class="title">Dissaggregation</div>
             </paper-toolbar>
-            <indicator-dissaggregations data-items="{{indicator.disaggregation_logic}}"></indicator-dissaggregations>
+            <indicator-dissaggregations data-items="{{disaggregations}}"
+                                        on-disaggregation-change="_centerDialog">
+            </indicator-dissaggregations>
           </paper-material>
         </div>
       </div>
@@ -115,21 +137,53 @@
             type: Object,
             value: {
               id: null,
-              indicator: null,
+              name: null,
               baseline: null,
               target: null,
               means_of_verification: null,
-              unit: null,
-              disaggregation_logic: []
+              unit: 'numeric',
+              disaggregation_logic: null
             }
           },
           actionParams: {
             type: Object
+          },
+          unit: {
+            type: Object,
+            value: {
+              numeric: true,
+              percentage: false,
+              yesno: false
+            }
+          },
+          disaggregations: {
+            type: Array,
+            value: []
           }
         },
 
         ready: function() {
 
+        },
+
+        _unitChanged: function(event) {
+          var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
+          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== "") {
+            var unitKeys = unitKeysToReset.split(',');
+            unitKeys.forEach(function(key) {
+              this.set('unit.' + key, false);
+            }.bind(this));
+          }
+        },
+
+        _getActiveUnit: function() {
+          var unit = 'numeric';
+          for (var k in this.unit) {
+            if (this.unit[k] === true) {
+              unit = k;
+            }
+          }
+          return unit;
         },
 
         openIndicatorDialog: function() {
@@ -149,10 +203,74 @@
 
         setIndicatorData: function(data, actionParams) {
           if (!data) {
-            data = this.indicatorModel;
+            data = JSON.parse(JSON.stringify(this.indicatorModel));
+          }
+          this.set('actionParams', actionParams);
+
+          // set unit
+          for (var k in this.unit) {
+            if (k !== data.unit) {
+              this.set('unit.' + k, false);
+            } else {
+              this.set('unit.' + k, true);
+            }
+          }
+          // set disaggregations
+          if (data.disaggregation_logic) {
+            var disaggregationsKeys = Object.keys(data.disaggregation_logic);
+            this.set('disaggregations', []);
+            if (disaggregationsKeys.length) {
+              disaggregationsKeys.forEach(function(key) {
+                this.push('disaggregations', {
+                  disaggregate_by: key,
+                  disaggregation_groups: data.disaggregation_logic[key].join(';')
+                });
+              }.bind(this));
+            }
           }
           this.set('indicator', data);
-          this.set('actionParams', actionParams);
+        },
+
+        _centerDialog: function() {
+          var d = Polymer.dom(this.$.indicatorDialog.root).querySelector('paper-dialog');
+          if (d) {
+            d.center();
+          }
+        },
+
+        _closeIndicatorDialog: function(event) {
+          if (event.detail.confirmed) {
+            // get indicator data
+            this.indicator.unit = this._getActiveUnit();
+            this.indicator.disaggregation_logic = this._prepareDisaggregations();
+            // fire it up :)
+            this.fire('indicator-dialog-close', {
+              indicatorData: this.indicator,
+              actionParams: this.actionParams
+            });
+          } // else, just close
+        },
+
+        _prepareDisaggregations: function() {
+          if (Array.isArray(this.disaggregations) && this.disaggregations.length > 0) {
+            var disaggregationsObj = {};
+            this.disaggregations.forEach(function(d) {
+              var groups = d.disaggregation_groups.split(';').map(function(g) {
+                return g.trim();
+              });
+              disaggregationsObj[d.disaggregate_by] = groups;
+            });
+            return disaggregationsObj;
+          }
+          return null;
+        },
+
+        resetData: function() {
+          this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
+          this.set('unit.numeric', true);
+          this.set('unit.percentage', false);
+          this.set('unit.yesno', false);
+          this.set('disaggregations', []);
         }
 
       });

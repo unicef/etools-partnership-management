@@ -16,7 +16,7 @@
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
-<link rel="import" href="intervention-form/ram-indicator-selector.html">
+<link rel="import" href="expected-results/ram-indicator-selector.html">
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
 
@@ -58,13 +58,15 @@
           <div class="row-v flex-c item-content">
 
               <div class="row-h">
-                <ram-indicator-selector cp-output-id="{{item.cp_output}}"
+                <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
+                                        cp-output-id="{{item.cp_output}}"
                                         selected-cp-indicators-ids="{{item.ram_indicators}}"
                                         already-selected-cpo="[[alreadySelectedCpOutputs]]">
                 </ram-indicator-selector>
               </div>
 
-              <result-link-lower-results data-items="{{item.ll_results}}"
+              <result-link-lower-results id$="lowerResult_[[index]]"
+                                         data-items="{{item.ll_results}}"
                                          edit-mode$="[[editMode]]"
                                          cp-output-id="[[item.cp_output]]"
                                          on-open-indicator-dialog="_openIndicatorDialog">
@@ -139,12 +141,42 @@
           // init indicator dialog data
           this.indicatorDialog = document.createElement('indicator-dialog');
           this.indicatorDialog.setAttribute('id', 'indicatorDialog');
+
+          // attach close handler
+          this.indicatorDialog.addEventListener('indicator-dialog-close', function(event) {
+            this.indicatorDialogDataReceived(event.detail);
+          }.bind(this))
+
           Polymer.dom(document.querySelector('body')).appendChild(this.indicatorDialog);
         },
 
         detached: function() {
           if (this.indicatorDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
+          }
+        },
+
+        /**
+         * Add/update indicators data
+         */
+        indicatorDialogDataReceived: function(data) {
+          var actionParams = data.actionParams;
+          var indicator = data.indicatorData;
+          for (var i=0; i<this.dataItems.length; i++) {
+            //search expected result item by output id
+            if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
+              var indicatorPaths = 'dataItems.' + i + '.ll_results.' +
+                  actionParams.llResultIndex + '.applied_indicators';
+              if (actionParams.appliedIndicatorsIndex !== null) {
+                // we just edited an indicator, replace data in indicators list
+                this.set(indicatorPaths + '.' + actionParams.appliedIndicatorsIndex,
+                    JSON.parse(JSON.stringify(indicator)));
+              } else {
+                // new indicator added
+                this.push(indicatorPaths, indicator);
+              }
+              break; // stop exp res search, already found
+            }
           }
         },
 
@@ -196,10 +228,9 @@
         // open indicator dialog to add or edit indicator
         _openIndicatorDialog: function(event) {
           event.stopImmediatePropagation();
-          console.log(event.detail);
           var actionParams = event.detail;
 
-          if (!actionParams.appliedIndicatorsIndex) {
+          if (actionParams.appliedIndicatorsIndex === null) {
             this.indicatorDialog.setAddLabel();
             this.indicatorDialog.setTitle('Add Indicator');
           } else {
@@ -207,8 +238,34 @@
             this.indicatorDialog.setTitle('Edit Indicator');
           }
 
+          this.indicatorDialog.resetData();
+
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
+        },
+
+        validate: function() {
+          var valid = true;
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
+              if (!cpOutputAndRamIndicatorsSelector.validate()) {
+                valid = false;
+              }
+            }.bind(this));
+          }
+          return valid;
+        },
+
+        resetValidations: function() {
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
+              if (cpOutputAndRamIndicatorsSelector) {
+                cpOutputAndRamIndicatorsSelector.resetValidations();
+              }
+            }.bind(this));
+          }
         }
 
       });

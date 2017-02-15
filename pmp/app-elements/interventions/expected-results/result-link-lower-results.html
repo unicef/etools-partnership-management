@@ -76,6 +76,7 @@
         width: 100%;
         display: inline-block;
         box-sizing: border-box;
+        min-height: 41px;
       }
       .indicator-col .indicator-baseline {
         background-color: #F7EE76; /* TODO: replace with app-theme var */
@@ -120,28 +121,35 @@
                            readonly$="[[!editMode]]"></paper-input>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
-              <template is="dom-repeat" items="[[item.applied_indicators]]" as="indicator" index-as="indicatorIndex">
+              <template is="dom-repeat"
+                        items="[[item.applied_indicators]]"
+                        as="indicator" index-as="indicatorIndex">
                 <div class="row-h">
                   <div class="indicator-nr">
                     <strong>[[_getIndicatorNr(indicatorIndex)]]</strong>
                     <paper-icon-button class="edit-indicator"
                                        on-tap="_editIndicator"
-                                       data-args$="[[indicatorIndex]]"
+                                       data-ind-index$="[[indicatorIndex]]"
+                                       data-result-index$="[[index]]"
                                        icon="create"></paper-icon-button>
                   </div>
                   <div class="indicator-col">
                     <span class="heading">Baseline</span>
                     <span class="indicator-baseline">
-                      [[indicator.baseline]]
+                      [[_displayIndicatorValue(indicator.baseline)]]
                     </span>
                   </div>
                   <div class="indicator-col">
                     <span class="heading">Target</span>
-                    <span class="indicator-target">[[indicator.target]]</span>
+                    <span class="indicator-target">
+                      [[_displayIndicatorValue(indicator.target)]]
+                    </span>
                   </div>
                   <div class="indicator-col flex-c">
                     <span class="heading">Indicator</span>
-                    <span class="content">[[indicator.indicator]]</span>
+                    <span class="content">
+                      [[_displayIndicatorValue(indicator.name)]]
+                    </span>
                   </div>
                 </div>
               </template>
@@ -196,6 +204,14 @@
           };
         },
 
+        _displayIndicatorValue: function(value) {
+          if (typeof value === 'string' && value !== '') {
+            return value;
+          } else {
+            return '-';
+          }
+        },
+
         _getIndicatorNr: function(indicatorIndex) {
           return parseInt(indicatorIndex, 10) + 1;
         },
@@ -212,6 +228,7 @@
         },
 
         _addNewIndicator: function(event) {
+          // build a map (actionParams) to know where to put indicator data at add/edit
           var resultMap = {
             cpOutputId: this.cpOutputId,
             llResultIndex: event.model.index,
@@ -221,8 +238,18 @@
           this.fire('open-indicator-dialog', resultMap);
         },
 
-        _editIndicator: function() {
+        _editIndicator: function(event) {
+          var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
+          var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
+          var indicator = this.dataItems[llResultIndex].applied_indicators[indicatorIndex];
 
+          var resultMap = {
+            cpOutputId: this.cpOutputId,
+            llResultIndex: llResultIndex,
+            indicatorData: indicator,
+            appliedIndicatorsIndex: indicatorIndex
+          };
+          this.fire('open-indicator-dialog', resultMap);
         }
 
       });

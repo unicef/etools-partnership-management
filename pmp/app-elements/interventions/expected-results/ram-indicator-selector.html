@@ -85,7 +85,16 @@
           selectedCpIndicatorsIds: {
             type: Array,
             value: [],
-            notify: true
+            notify: true,
+            observer: '_selectedCpIndicatorsIdsChanged'
+          },
+          firstLoadCpIndicators: {
+            type: Array,
+            value: []
+          },
+          firstLoadCpIndicatorsUse: {
+            type: Boolean,
+            value: true
           },
           alreadySelectedCpo: {
             type: Array,
@@ -99,15 +108,24 @@
 
         ready: function() {
           if (this.cpOutputs.length > 0 && this.cpOutputId) {
+            // set selected cp output when cpOutputs data exists
             this._cpOutputSelected(this.cpOutputId);
           }
         },
 
+        _selectedCpIndicatorsIdsChanged: function(ids) {
+          if (ids.length && this.firstLoadCpIndicatorsUse) {
+            // prepare cp indicators id to be set as selected, used only once, at element init
+            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+            this.set('firstLoadCpIndicatorsUse', false);
+          }
+        },
+
         _cpOutputSelected: function(cpOutputId) {
+				  // select cpOutput by id
           if (!Array.isArray(this.cpOutputs)) {
             return;
           }
-          console.log(cpOutputId);
 				  var cpOutputSelector = this.$.cpOutput;
           if (cpOutputId > 0) {
             var currentCpValue = cpOutputSelector.value;
@@ -120,7 +138,7 @@
           }
         },
 
-        // set selected cp output
+        // set selected cp output on dropdown
         _setSelectedCpOutput: function(id) {
           if (!Array.isArray(this.cpOutputs)) {
             return;
@@ -134,13 +152,24 @@
         },
 
         _cpIndicatorsChanged: function(cpIndicators) {
-				  // indicators list changed, reset selection
-				  this.set('selectedCpIndicatorsIds', []);
-          this.$.indicators.value = [];
-          this.$.indicators.selectedValues = null;
+				  if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
+              Array.isArray(cpIndicators) && cpIndicators.length) {
+				    var selectedCpIndicators = cpIndicators.filter(function(indicator) {
+				      return this.firstLoadCpIndicators.indexOf(indicator.id) > -1;
+            }.bind(this));
+				    // set selected cp indicators (searched by ids) on dropdown
+            this.$.indicators.value = selectedCpIndicators;
+            this.set('firstLoadCpIndicators', []);
+          } else {
+            // indicators list changed, reset selection
+            this.set('selectedCpIndicatorsIds', []);
+            this.$.indicators.value = [];
+            this.$.indicators.selectedValues = null;
+          }
         },
 
         _removeAlreadySelectedCpOs: function(alreadySelectedCpo, cpOutputsLength) {
+				  // prevent having cpoutputs already selected in the current cpOutput selector
 				  if (cpOutputsLength === 0) {
 				    return;
           }
@@ -150,6 +179,22 @@
             }.bind(this));
 				    this.set('cpOutputsOptions', cpOutputsSelectorOptions);
           }.bind(this), 50);
+        },
+
+        validate: function() {
+				  var valid = true;
+				  if(!this.$.cpOutput.validate()) {
+				    valid = false;
+          }
+          if(!this.$.indicators.validate()) {
+            valid = false;
+          }
+          return valid;
+        },
+
+        resetValidations: function() {
+          this.$.cpOutput.invalid = false;
+          this.$.indicators.invalid = false;
         }
 
 			});
