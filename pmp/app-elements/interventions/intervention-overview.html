@@ -58,6 +58,9 @@
           padding: 10px 0 25px;
         }
       }
+      #top-container {
+         margin-bottom: 20px;
+      }
     </style>
 
     <agreement-item-data id="agreement"
@@ -68,7 +71,7 @@
     <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
 
     <div id="pageContent">
-      <etools-content-panel class="content-section" title="">
+      <paper-material elevation="1" id="top-container">
         <div class="row-h flex-c">
           <div class="col col-12 block">
               <iron-label for="cp_outputs_list"> 
@@ -132,9 +135,9 @@
                 </template>  
               </div>              
           </div>
-        </div>
-        
-      </etools-content-panel>
+        </div>        
+      </paper-material>
+
       <etools-content-panel id="monitoring-visits-panel" class="content-section" title="Monitoring Visits">
           <monitoring-visits-list></monitoring-visits-list>
       </etools-content-panel>
