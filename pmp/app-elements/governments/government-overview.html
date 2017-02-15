@@ -1,0 +1,295 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-label/iron-label.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/list-styles.html">
+
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
+
+<dom-module id="government-overview">
+  <template>  
+    <style include="page-layout-styles grid-layout-styles shared-styles list-styles ">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+      }
+      .block {
+        display: block;
+      }
+      .content {
+        margin-top: 4px;
+      }
+      iron-label {
+        color: var(--dark-secondary-text-color);
+        font-size: 90%;
+      }
+      .secondary {
+        color: var(--dark-secondary-text-color);
+      }
+      #top-container {
+         margin-bottom: 20px;
+      }
+      .text-right {
+        margin-left: auto;
+      }
+      .padded-top {
+        padding: 10px 0;
+      }
+      .padded-right {
+        padding-right: 15px;
+      }
+      .grey-box {
+        background-color: #dadada;
+        font-size: 120%;
+      }
+      .yellow-box {
+        background-color: var(--paper-yellow-400);
+        width: 100%;
+        padding: 10px 15px;
+      }
+      .yellow-box + .yellow-box > span {
+        padding-left: 15px;
+      }
+      #implementation-status-panel {
+        --ecp-content: {
+          padding: 10px 0 25px;
+        }
+      }
+    </style>
+    <div id="pageContent">
+      <paper-material elevation="1" id="top-container">
+        <div class="row-h flex-c">
+          <div class="col col-12 block">
+              <iron-label for="cp_outputs_list"> 
+                Cp Output(s)                                
+              </iron-label>
+              <br/>
+              <div class="content" id="cp_outputs_list">
+                <template is="dom-repeat" items="[[cpOutputs]]" as="cpOut">
+                    <strong> [[ cpOut.label ]] </strong> <br/>
+                </template>
+              </div>              
+          </div>
+        </div>       
+        
+        <div class="row-h flex-c">
+          <div class="col col-6 block">
+              <iron-label for="govt_partner"> 
+                Government Partner
+              </iron-label>
+              <br />
+              <div class="content" id="govt_partner">
+                [[partner.label]]
+              </div>
+          </div>
+          <div class="col col-6 block">
+              <iron-label for="country_programme"> 
+                Country Programme
+              </iron-label>
+              <br />
+              <div class="content" id="country_programme">
+                [[countryProgramme.label]]
+              </div>                            
+          </div>
+        </div>        
+      </paper-material>
+      <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
+        <data-table-header id="listHeader" label="Output 2.1: Policy for Inclusive Education" no-collapse>
+          <data-table-column class="col-2" field="fc_number">
+              FC#
+          </data-table-column>
+          <data-table-column class="col-2" field="fc_date" >
+              FC Date
+          </data-table-column>
+          <data-table-column class="col-4" field="fc_title">
+              FC Title
+          </data-table-column>
+          <data-table-column class="col-2" field="actual_ammount">
+              Actual $
+          </data-table-column>
+          <data-table-column class="col-2" field="outstanding_ammount">
+              Outstanding $
+          </data-table-column>
+        </data-table-header>
+
+        <!--<template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">-->
+          <data-table-row no-collapse>
+            <div slot="row-data">
+              <a class="col-data col-2 truncate" href="#" title="0100221155-2">
+                  0100221155-2
+              </a>
+              <span class="col-data col-2 truncate" title="25 Dec 2016">
+                  25 Dec 2016
+              </span>
+              <span class="col-data col-4" title="Lorem ipsum dolor sit amet, consectetuer adipiscing elit">
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit
+              </span>
+              <span class="col-data col-2" title="114,700">
+                  114,700
+              </span>
+              <span class="col-data col-2" title="114,700">
+                  114,700
+              </span>
+            </div>
+          </data-table-row>
+          
+          <div class="row-h flex-c padded-top">
+            <div class="col col-6">
+            </div>
+            <div class="col col-2">
+              <strong class="text-right padded-top"> Output Total </strong>
+            </div>
+            <div class="col col-4 padded-right">
+              <paper-material elevation="1" class="yellow-box"> 
+                <span><strong>18,000,000</strong></span>
+              </paper-material>
+            
+              <paper-material elevation="1" class="yellow-box"> 
+                <span><strong>1,000,000</strong></span>
+              </paper-material>
+            </div>
+          </div>
+
+          <div class="row-h flex-c padded-top grey-box">
+            <div class="col col-6">
+            </div>
+            <div class="col col-2">
+              <strong class="text-right padded-top"> OverallTotal for IP </strong>
+            </div>
+            <div class="col col-4 padded-right">
+              <paper-material elevation="1" class="yellow-box"> 
+                <span><strong>30,000,000</strong></span>
+              </paper-material>
+            
+              <paper-material elevation="1" class="yellow-box"> 
+                <span><strong>1,200,000</strong></span>
+              </paper-material>
+            </div>
+          </div>
+            
+        <!--</template>   -->
+      </etools-content-panel>
+      
+    </div>
+    <div id="sidebar" hidden$="[[!editMode]]">
+        <government-status on-save-partnership="_validateSave"></government-status>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is : "government-overview",
+      behaviors: [
+        pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+        pmpBehaviors.CommonGeneralBehavior,
+        pmpBehaviors.ObjectDatabindBehavior
+      ],
+      observers: [
+        
+      ],
+      properties: {
+        intervention: {
+          type: Object,
+          observer: '_interventionChanged'
+        },
+        allCpOutputs: {
+          type: Array,
+          statePath: 'cpOutputs'
+        },
+        cpOutputs: {
+          type: Array,
+        },
+        allPartners: {
+          type: Array,
+          statePath: 'partnersDropdownData'
+        },
+        partner: {
+          type: Object,
+        },
+        allCountryProgrammes: {
+          type: Array,
+          statePath: 'countryProgrammes',
+        },
+        countryProgramme: {
+          type: Object
+        }
+     },
+
+     ready: function() {
+       console.log('govt overview ready');
+     },
+
+     _init: function() {
+       console.log('govt overview init');
+     },
+
+     _interventionChanged : function(intervention){
+       if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {            
+         this._parseCpOutputs(); 
+         this._findProgramme();
+         this._findPartner(); 
+       }
+       this.fire('global-loading', {active:false});        
+     },
+     _parseCpOutputs: function() {       
+        var cpOutputIds = [];
+        var cpOutputs   = [];
+        console.log('intervention:', this.intervention);
+        
+        this.intervention.implementation_status.forEach(function(elem){
+          cpOutputIds.push(parseInt(elem.cp_output));
+        });
+
+        cpOutputs = this.allCpOutputs.filter(function(elem){
+          return (cpOutputIds.indexOf(elem.value) > -1);
+        });
+        
+        this.set('cpOutputs', cpOutputs);
+
+        // all good so far, but it will help us a lot to have the co output name in the object, so let's add it         
+        
+      },
+
+      _findProgramme: function() {
+        var countryProgrammes = [];
+        var currentCpId = this.intervention.country_programme;
+
+        countryProgrammes = this.allCountryProgrammes.filter(function(elem){
+          return (elem.value == currentCpId);
+        }); 
+
+        this.set('countryProgramme', countryProgrammes.pop());
+      },
+      
+      _findPartner: function() {
+        var partners = [];
+        var currentPartnerId = this.intervention.partner;
+
+        partners = this.allPartners.filter(function(elem){
+          return (elem.value == currentPartnerId);
+        });
+
+        this.set('partner', partners.pop());
+      }
+  })
+  </script>
+</dom-module>
