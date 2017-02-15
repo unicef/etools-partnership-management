@@ -147,12 +147,12 @@
       <div class="row-h flex-c">
         <div class="col col-3">
           <paper-input label="Days From Submission to Signed"
-                       value="[[getDatesDiff(intervention.submission_date, intervention.signed_by_partner_date)]]"
+                       value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
                        placeholder="&#8212;" readonly></paper-input>
         </div>
         <div class="col col-3">
           <paper-input label="Days From Submission to Signed"
-                       value="[[getDatesDiff(intervention.review_date_prc, intervention.signed_by_partner_date)]]"
+                       value="[[getDaysFromReviewToSign(intervention.review_date_prc, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
                        placeholder="&#8212;" readonly></paper-input>
         </div>
       </div>
@@ -221,8 +221,19 @@
           this.fire('global-loading', {active: false});
         },
 
-        getDatesDiff: function(date1, date2) {
-          // TODO: this should calculate diff drom date2 and date1, move it in date-behavior
+        getDaysFromSubmissionToSign: function(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
+          if (typeof dateStr === 'string' && dateStr !== '' &&
+              (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
+              typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
+
+
+
+
+          }
+        },
+
+        getDaysFromReviewToSign: function(reviewDateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
+
         },
 
         _signedByUnicefSelected: function(event) {
