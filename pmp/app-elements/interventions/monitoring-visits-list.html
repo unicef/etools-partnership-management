@@ -20,68 +20,58 @@
   <template>
 
     <style include="shared-styles list-styles grid-layout-styles">
-      :host {
-        @apply(--layout-flex);
+      :host {          
+        @apply(--layout-flex);        
       }
+      
     </style>
 
-    <paper-material id="list" elevation="1">
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="number">
-          Reference #
-        </data-table-column>
-        <data-table-column class="col-2" field="traveler_name" >
-          Traveler
-        </data-table-column>
-        <data-table-column class="col-2" field="traveler_type">
-          Travel Type
-        </data-table-column>
-        <data-table-column class="col-2" field="date" sortable>
-          When
-        </data-table-column>
-        <data-table-column class="col-2" field="locations">
-          Locations
-        </data-table-column>
-        <data-table-column class="col-2" field="status">
-          Status
-        </data-table-column>
-      </data-table-header>
+    <data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
+    <data-table-column class="col-2" field="number">
+        Reference #
+    </data-table-column>
+    <data-table-column class="col-2" field="traveler_name" >
+        Traveler
+    </data-table-column>
+    <data-table-column class="col-2" field="traveler_type">
+        Travel Type
+    </data-table-column>
+    <data-table-column class="col-2" field="date" sortable>
+        When
+    </data-table-column>
+    <data-table-column class="col-2" field="locations">
+        Locations
+    </data-table-column>
+    <data-table-column class="col-2" field="status">
+        Status
+    </data-table-column>
+    </data-table-header>
 
-      <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
-        <data-table-row>
-          <div slot="row-data">
-            <a class="col-data col-2 truncate" href="#" title="[[visit.number]]">
-              [[visit.number]]
-            </a>
-            <span class="col-data col-2 truncate" title="[[visit.traveler_name]]">
-              [[visit.traveler_name]]
-            </span>
-            <span class="col-data col-2" title="[[visit.traveler_type]]">
-              [[visit.traveler_type]]
-            </span>
-            <span class="col-data col-2" title="[[_checkAndShowDate(visit.date)]]">
-              [[_checkAndShowDate(visit.date)]]
-            </span>
-            <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
-              [[getDisplayValue(visit.locations)]]
-            </span>
-            <span class="col-data col-2" title="[[visit.status]]">
-              [[visit.status]]
-            </span>
-          </div>
-        </data-table-row>
-      </template>
+    <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
+    <data-table-row no-collapse>
+        <div slot="row-data">
+        <a class="col-data col-2 truncate" href="#" title="[[visit.number]]">
+            [[visit.number]]
+        </a>
+        <span class="col-data col-2 truncate" title="[[visit.traveler_name]]">
+            [[visit.traveler_name]]
+        </span>
+        <span class="col-data col-2" title="[[visit.traveler_type]]">
+            [[visit.traveler_type]]
+        </span>
+        <span class="col-data col-2" title="[[_checkAndShowDate(visit.date)]]">
+            [[_checkAndShowDate(visit.date)]]
+        </span>
+        <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
+            [[getDisplayValue(visit.locations)]]
+        </span>
+        <span class="col-data col-2" title="[[visit.status]]">
+            [[visit.status]]
+        </span>
+        </div>
+    </data-table-row>
+    </template>
 
-      <data-table-footer
-          page-size="[[pageSize]]"
-          page-number="[[pageNumber]]"
-          total-results="[[totalResults]]"
-          visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
-          on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
-
-    </paper-material>
 
   </template>
 
@@ -99,20 +89,6 @@
         ],
 
         properties: {
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number,
-            value: 1
-          },
-
-          visibleRange: {
-            type: Array
-          },
-
-          pageSize: {
-            type: Number
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -152,7 +128,6 @@
               status: 'completed'
             },
           ];
-          this.totalResults = this.monitoringVisits.length;
         },
 
         _init: function(active) {          

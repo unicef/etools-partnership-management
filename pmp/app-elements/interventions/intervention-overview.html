@@ -53,6 +53,11 @@
         font-weight: bold;
         color: #fff;
       }
+      #monitoring-visits-panel {
+        --ecp-content: {
+          padding: 10px 0 25px;
+        }
+      }
     </style>
 
     <agreement-item-data id="agreement"
@@ -130,7 +135,7 @@
         </div>
         
       </etools-content-panel>
-      <etools-content-panel class="content-section" title="Monitoring Visits">
+      <etools-content-panel id="monitoring-visits-panel" class="content-section" title="Monitoring Visits">
           <monitoring-visits-list></monitoring-visits-list>
       </etools-content-panel>
     </div> <!-- main page content end -->
