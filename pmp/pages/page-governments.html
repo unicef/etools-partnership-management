@@ -120,6 +120,7 @@
         </div>
         <div class="page" name="details">
           <government-details id="details"
+                              new-intervention-model="[[newInterventionModel]]"
                               intervention="[[intervention]]"
                               edit-mode="[[fakePermission]]"
                               on-save-intervention="_saveIntervention"></government-details>
@@ -170,7 +171,7 @@
 //         '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
          '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
          '_updateUrlTab(routeData.tab)',
-         '_observeRouteDataId(routeData.id)'
+         '_observeRouteDataId(routeData.id)',
        ],
 
       ready: function() {
@@ -230,7 +231,7 @@
         if(id!=='new'){
           this.set('selectedInterventionId', id);
         }
-      }
+      },
 
     });
 

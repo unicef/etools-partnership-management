@@ -161,10 +161,6 @@
           type: Array,
           notify: true
         },
-        changeOccurred: {
-          type: Boolean,
-          value: false
-        }
       },
       _getYears: function () {
         var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
@@ -177,12 +173,9 @@
         }
       },
       _handleValueChange: function (e) {
-        this.set('changeOccurred', true);
         var path = 'intervention.' + e.target.id;
         this.set(path, e.detail.selectedValues.value);
-      },
-      attached: function () {
-        this._initSidebar()
+        e.target.invalid= false;
       },
       _deleteResult: function (e) {
         this.splice('intervention.results', e.detail.index, 1);
@@ -200,17 +193,16 @@
           "sections": [],
         }
         this.push('intervention.results', newResult);
-        this.set('changeOccurred', true);
       },
       _validateSave: function(){
         event.stopImmediatePropagation();
         if(_.isEqual(this.intervention,this.originalIntervention)){
-          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true});
+          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true}); // TODO : disable save button when no change detected
         }
         else if(this._interventionIsValid()){
           this.fire('save-intervention', this.intervention);
         }else{
-          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true});
+          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true}); // TODO : scroll missed fields into view
 
         }
       },
@@ -245,7 +237,7 @@
       },
       _interventionChanged : function(intervention){
         if(this._isNewIntervention(intervention)){
-          this.set('isNewIntervention', false);
+          this.set('isNewIntervention', true);
         }
         if(!_.has(this.originalIntervention,'id') || (_.has(this.originalIntervention,'id') && this.intervention.id!== this.originalIntervention.id)){
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
@@ -257,7 +249,12 @@
           return false;
         }
         return true;
-      }
+      },
+      attached: function(){
+        if(_.isEmpty(this.intervention)){
+          this.set('intervention', this.newInterventionModel);
+        }
+      },
     })
   </script>
 </dom-module>
