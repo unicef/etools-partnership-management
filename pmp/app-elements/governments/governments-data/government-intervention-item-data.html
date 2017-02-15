@@ -8,7 +8,8 @@
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
                  on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
+                 ></etools-ajax>
+    <!--on-fail="_handleErrorResponse"-->
   </template>
 
   <script>
@@ -47,7 +48,7 @@
               this._prepareEndpoint(intervention.id);
               url = this.endpoint.url;
             }else{
-              url = this.getEndpoint('governments');
+              url = this.getEndpoint('governments').url;
               isNew = true;
             }
             if(!_.isEmpty(intervention)){
@@ -81,7 +82,7 @@
           // after body is set the request is automatically triggered
         },
         _handleResponse: function(response){
-          this.setIntervention(response.detail);
+          this._setIntervention(response.detail);
           if(typeof this.handleResponseAdditionalCallback === 'function'){
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback

@@ -9,7 +9,8 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -27,170 +28,236 @@
 <link rel="import" href="government-status.html">
 
 <dom-module id="government-details">
-    <template>
-        <style include="app-mixins page-layout-styles shadow repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
-            :host {
-                @apply(--layout-horizontal);
-                width: 100%;
-                --paper-fab-keyboard-focus-background: var(--paper-fab-add-color);
-            }
-            paper-fab {
-                --paper-fab: {
-                    @apply(--paper-fab-btn-green);
-                }
-            }
-            paper-input {
-                width: 100%;
-            }
+  <template>
+    <style
+        include="app-mixins page-layout-styles shadow repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+        --paper-fab-keyboard-focus-background: var(--paper-fab-add-color);
+      }
 
-        </style>
-        <div id="pageContent">
-            <!--Partnership Details-->
-            <etools-content-panel class="content-section" title="Partnership Details">
-                <div class="row-h flex-c">
-                    <div class="col flex-2">
-                        <template is="dom-if" if="[[!editMode]]">
-                            <paper-input
-                                    label="Government Partner"
-                                    value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
-                                    placeholder="&#8212;"
-                                    readonly></paper-input>
-                        </template>
-                        <template is="dom-if" if="[[editMode]]">
-                            <etools-searchable-multiselection-menu id="partner"
-                                                                   starred
-                                                                   label="Government Partner"
-                                                                   placeholder="&#8212;"
-                                                                   options="[[partnersDropdownData]]"
-                                                                   value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
-                                                                   on-value-change="_handleValueChange"
-                                                                   error-message="Please select a partner"
-                                                                   required>
-                            </etools-searchable-multiselection-menu>
-                        </template>
-                    </div>
-                    <div class="col flex">
-                        <template is="dom-if" if="[[!editMode]]">
-                            <paper-input
-                                    label="Country Programme"
-                                    value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
-                                    placeholder="&#8212;"
-                                    readonly></paper-input>
-                        </template>
-                        <template is="dom-if" if="[[editMode]]">
-                            <etools-searchable-multiselection-menu id="country_programme"
-                                                                   label="Country Programme"
-                                                                   placeholder="&#8212;"
-                                                                   options="[[countryProgrammeDropdownData]]"
-                                                                   value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
-                                                                   on-value-change="_handleValueChange"
-                                                                   error-message="Please select a country programme"
-                                                                   required>
-                            </etools-searchable-multiselection-menu>
-                        </template>
-                    </div>
-                    <div class="col">
-                        <paper-input
-                                label="Reference Number"
-                                value="[[intervention.number]]"
-                                placeholder="&#8212;"
-                                readonly></paper-input>
-                    </div>
-                </div>
-            </etools-content-panel>
-            <!--Work Plan Results-->
-            <etools-content-panel class="content-section" title="Work Plan Results">
-                <template is="dom-repeat" items="{{intervention.results}}" as="result">
-                    <government-plan-result result="{{result}}"
-                                            allow-edit="[[editMode]]"
-                                            year-options="[[yearOptions]]"
-                                            index="[[index]]"
-                                            on-delete-confirm="_deleteResult">
-                    </government-plan-result>
-                </template>
-                <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-                    <paper-fab icon="add"
-                               on-tap="_addNewResult"
-                               elevation="5"
-                               title="Add"></paper-fab>
-                </div>
-            </etools-content-panel>
+      paper-fab {
+        --paper-fab: {
+          @apply(--paper-fab-btn-green);
+        }
+      }
+
+      paper-input {
+        width: 100%;
+      }
+
+    </style>
+    <div id="pageContent">
+      <!--Partnership Details-->
+      <etools-content-panel class="content-section" title="Partnership Details">
+        <div class="row-h flex-c">
+          <div class="col flex-2">
+            <template is="dom-if" if="[[!editMode]]">
+              <paper-input
+                  label="Government Partner"
+                  value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
+                  placeholder="&#8212;"
+                  readonly></paper-input>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-searchable-multiselection-menu id="partner"
+                                                     starred
+                                                     label="Government Partner"
+                                                     placeholder="&#8212;"
+                                                     options="[[partnersDropdownData]]"
+                                                     value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
+                                                     on-value-change="_handleValueChange"
+                                                     error-message="Please select a partner"
+                                                     required>
+              </etools-searchable-multiselection-menu>
+            </template>
+          </div>
+          <div class="col flex">
+            <template is="dom-if" if="[[!editMode]]">
+              <paper-input
+                  label="Country Programme"
+                  value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                  placeholder="&#8212;"
+                  readonly></paper-input>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-searchable-multiselection-menu id="country_programme"
+                                                     label="Country Programme"
+                                                     placeholder="&#8212;"
+                                                     options="[[countryProgrammeDropdownData]]"
+                                                     value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
+                                                     on-value-change="_handleValueChange"
+                                                     error-message="Please select a country programme"
+                                                     required>
+              </etools-searchable-multiselection-menu>
+            </template>
+          </div>
+          <div class="col">
+            <paper-input
+                label="Reference Number"
+                value="[[intervention.number]]"
+                placeholder="&#8212;"
+                readonly></paper-input>
+          </div>
         </div>
-            <div id="sidebar" hidden$="[[!editMode]]">
-                <government-status on-save-partnership="_validateSave"></government-status>
-            </div>
-    </template>
+      </etools-content-panel>
+      <!--Work Plan Results-->
+      <etools-content-panel class="content-section" title="Work Plan Results" id="results">
+        <template is="dom-repeat" items="{{intervention.results}}" as="result">
+          <government-plan-result result="{{result}}"
+                                  allow-edit="[[editMode]]"
+                                  year-options="[[yearOptions]]"
+                                  index="[[index]]"
+                                  on-delete-confirm="_deleteResult">
+          </government-plan-result>
+        </template>
+        <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+          <paper-fab icon="add"
+                     on-tap="_addNewResult"
+                     elevation="5"
+                     title="Add"></paper-fab>
+        </div>
+      </etools-content-panel>
+    </div>
+    <div id="sidebar" hidden$="[[!editMode]]">
+      <government-status on-save-intervention="_validateSave"></government-status>
+    </div>
+  </template>
 
-    <script>
-        Polymer({
-            is : "government-details",
-            behaviors: [
-                pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-                pmpBehaviors.CommonGeneralBehavior,
-                pmpBehaviors.ObjectDatabindBehavior
-            ],
-            observers: [
-                    '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
-            ],
-            properties: {
-                intervention: {
-                    type: Object,
-                    notify: true,
-                },
-                editMode : {
-                    type: Boolean,
-                    value: true,
-                },
-                partnersDropdownData: {
-                    type: Array,
-                    statePath: 'partnersDropdownData'
-                },
-                countryProgrammeDropdownData: {
-                    type: Array,
-                    statePath: 'countryProgrammes',
-                },
-                yearOptions: {
-                    type: Array,
-                    notify: true
-                }
-            },
-            _getYears: function () {
-                var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
-                if(!_.isEmpty(cpObject)){
-                    var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year()+1);
-                    years = years.map(function(year){
-                        return _.assign({},{label: year.toString(), value: year})
-                    })
-                    this.set('yearOptions', years);
-                }
-            },
-            _handleValueChange: function (e) {
-                var path = 'intervention.' + e.target.id;
-                this.set(path,e.detail.selectedValues.value);
-            },
-            attached: function () {
-                this._initSidebar()
-            },
-            _deleteResult: function(e){
-                this.splice('intervention.results',e.detail.index,1);
-            },
-            _addNewResult: function(){
-                    var newResult = {
-                        "intervention": "",
-                        "result": "",
-                        "year": "",
-                        "planned_amount": "",
-                        "planned_visits": "",
-                        "result_activities": [],
-                        "unicef_managers": [],
-                        "sectors": [],
-                        "sections": []
-                    }
-                    this.push('intervention.results',newResult);
-            },
-            _initSidebar : function(){
+  <script>
+    Polymer({
+      is: "government-details",
+      behaviors: [
+        pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+        pmpBehaviors.CommonGeneralBehavior,
+        pmpBehaviors.ObjectDatabindBehavior
+      ],
+      observers: [
+        '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
+      ],
+      properties: {
+        intervention: {
+          type: Object,
+          notify: true,
+          observer: '_interventionChanged'
+        },
+        originalIntervention:{
+          type: Object,
+        },
+        editMode: {
+          type: Boolean,
+          value: true,
+        },
+        partnersDropdownData: {
+          type: Array,
+          statePath: 'partnersDropdownData'
+        },
+        countryProgrammeDropdownData: {
+          type: Array,
+          statePath: 'countryProgrammes',
+        },
+        yearOptions: {
+          type: Array,
+          notify: true
+        },
+        changeOccurred: {
+          type: Boolean,
+          value: false
+        }
+      },
+      _getYears: function () {
+        var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
+        if (!_.isEmpty(cpObject)) {
+          var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
+          years = years.map(function (year) {
+            return _.assign({}, {label: year.toString(), value: year})
+          })
+          this.set('yearOptions', years);
+        }
+      },
+      _handleValueChange: function (e) {
+        this.set('changeOccurred', true);
+        var path = 'intervention.' + e.target.id;
+        this.set(path, e.detail.selectedValues.value);
+      },
+      attached: function () {
+        this._initSidebar()
+      },
+      _deleteResult: function (e) {
+        this.splice('intervention.results', e.detail.index, 1);
+      },
+      _addNewResult: function () {
+        var newResult = {
+          "intervention": "",
+          "result": "",
+          "year": "",
+          "planned_amount": "",
+          "planned_visits": "",
+          "result_activities": [],
+          "unicef_managers": [],
+          "sectors": [],
+          "sections": [],
+        }
+        this.push('intervention.results', newResult);
+        this.set('changeOccurred', true);
+      },
+      _validateSave: function(){
+        event.stopImmediatePropagation();
+        if(_.isEqual(this.intervention,this.originalIntervention)){
+          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true});
+        }
+        else if(this._interventionIsValid()){
+          this.fire('save-intervention', this.intervention);
+        }else{
+          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true});
 
-            }
-        })
-    </script>
+        }
+      },
+      _interventionIsValid: function(){
+        var valid = true;
+        // validate partner
+        if(!this.intervention.partner){
+          this.$$("#partner").invalid = true;
+          valid= false;
+        }
+        //validate country programme
+        if(!this.intervention.country_programme){
+          this.$$("#country_programme").invalid = true;
+          valid= false;
+        }
+        //validate results
+        var results = this.$.results.querySelectorAll('government-plan-result');
+        if(results.length){
+          var resultsValid = _.reduce(results, function(isValid,result,i){
+            var validate = result._validateFields('result','year','planned_amount');
+            return isValid && validate;
+          }, true);
+          if(!resultsValid){
+            valid = false;
+          }
+        }
+        return valid;
+      },
+      _initSidebar: function () {
+        // TODO create sticky save button
+
+      },
+      _interventionChanged : function(intervention){
+        if(this._isNewIntervention(intervention)){
+          this.set('isNewIntervention', false);
+        }
+        if(!_.has(this.originalIntervention,'id') || (_.has(this.originalIntervention,'id') && this.intervention.id!== this.originalIntervention.id)){
+          this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
+        }
+        this.fire('global-loading', {active:false});
+      },
+      _isNewIntervention: function(intervention){
+        if(_.isObject(intervention) && !_.isNull(intervention) && _.has(intervention,'id') ){
+          return false;
+        }
+        return true;
+      }
+    })
+  </script>
 </dom-module>

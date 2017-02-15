@@ -386,6 +386,21 @@
                 _activityDeleted: function(e){
                     this.splice('result.result_activities',e.detail.index,1);
                 },
+                _validateFields: function(){
+                  var result = this.result;
+                  var self = this;
+                  return _.reduce(arguments,function(valid,field){
+                    //convert to bool
+                    var exists = (!!result[field]);
+                    if(!exists){
+                        self.$$("#"+field).invalid = true;
+                      }else{
+                      self.$$("#"+field).invalid = false;
+                    }
+                      return valid && exists;
+                    }, true)
+                }
+
             });
         }
         )();
