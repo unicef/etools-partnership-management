@@ -394,7 +394,7 @@
                   var self = this;
                   return _.reduce(arguments,function(valid,field){
                     //convert to bool
-                    var exists = (!!result[field]);
+                    var exists = !!result[field];
                     if(!exists){
                         self.$$("#"+field).invalid = true;
                       }else{
