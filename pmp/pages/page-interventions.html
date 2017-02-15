@@ -49,7 +49,7 @@
 
     <intervention-item-data id="interventionData"
                          intervention="{{intervention}}"
-                         intervention-id="[[routeData.intId]]"></intervention-item-data>
+                         intervention-id="[[selectedInterventionId]]"></intervention-item-data>
 
     <partner-item-data id="partner"
                        partner-id="[[partnerId]]"
@@ -168,6 +168,9 @@
         permissions: {
           type: Object
         },
+        selectedInterventionId: {
+          type: Number
+        },
         intervention: {
           type: Object
         },
@@ -186,6 +189,7 @@
         '_resizeHeader(listActive, tabsActive)',
         '_updateUrlTab(routeData.intTab)',
         '_pageChanged(listActive, routeData.intTab)',
+        '_observeRouteDataId(routeData.intId)'
       ],
 
       _resizeHeader: function() {
@@ -223,6 +227,14 @@
           return 'with-tabs'
         }
         return '';
+      },
+
+      _observeRouteDataId: function(id) {
+        this.set('agreement', null);
+        this.set('partner', null);
+        this.set('partnerId', null);
+        this.set('intervention', null);
+        this.set('selectedInterventionId', id);
       },
 
       _validateAndSaveIntervention: function(event) {

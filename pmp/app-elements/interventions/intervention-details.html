@@ -240,7 +240,7 @@
 
     <etools-content-panel class="content-section" title="Expected results">
       <intervention-expected-results id="expectedResults"
-          data-items="{{resultLinks}}"
+          data-items="{{intervention.result_links}}"
           edit-mode$="[[editMode]]"
           intervention-id="[[intervention.id]]">
       </intervention-expected-results>
@@ -362,33 +362,6 @@
             // this._setYears(intervention.start, intervention.end);
             this.set('interventionRequiredField', true); // TODO: remove this
             //this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-
-            // TODO: remove this test data
-            if (intervention.result_links.length > 0) {
-              for (var i = 0; i < intervention.result_links.length; i++) {
-                intervention.result_links[i].cp_output = (i === 0) ? 125 : intervention.result_links[i].cp_output.id;
-                intervention.result_links[i].ram_indicators = (i === 0) ? [74, 76] : [];
-                if (i === 0) {
-                  intervention.result_links[i].ll_results = [
-                    {
-                      id: 1,
-                      name: 'My indicator name',
-                      applied_indicators: [
-                        {
-                          id: 1,
-                          baseline: "123312",
-                          target: "2000",
-                          name: 'some text here',
-                          unit: 'numeric'
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-              this.set('resultLinks', intervention.result_links)
-            }
-
           } else {
             this.set('interventionRequiredField', false);
           }
