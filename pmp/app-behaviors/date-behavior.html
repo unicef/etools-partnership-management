@@ -73,6 +73,7 @@
     },
 
     getMaxDateStr: function(d1Str, d2Str) {
+      // TODO: optimize this
       var d1 = new Date(d1Str);
       var d2 = new Date(d2Str);
       if (d1.toString() === 'Invalid Date' && d2.toString() !== 'Invalid Date') {
@@ -88,6 +89,10 @@
            return d1Str;
          }
       }
+    },
+
+    isFutureDate: function(dateStr) {
+      return moment.utc().isBefore(moment.utc(new Date(dateStr)));
     }
 
   };

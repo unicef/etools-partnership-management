@@ -15,6 +15,7 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="intervention-amendments.html">
 
 <dom-module id="intervention-review-and-sign">
 
@@ -146,21 +147,24 @@
       </div>
       <div class="row-h flex-c">
         <div class="col col-3">
-          <paper-input label="Days From Submission to Signed"
+          <paper-input label="Days from Submission to Signed"
                        value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
                        placeholder="&#8212;" readonly></paper-input>
         </div>
         <div class="col col-3">
-          <paper-input label="Days From Submission to Signed"
-                       value="[[getDaysFromReviewToSign(intervention.review_date_prc, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
+          <paper-input label="Days from Review to Signed"
+                       value="[[getDaysFromSubmissionToSign(intervention.review_date_prc, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
                        placeholder="&#8212;" readonly></paper-input>
         </div>
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" title="Amendments">
-      Amendments will go here...
-    </etools-content-panel>
+    <template is="dom-if" if="[[_isNotDraft(intervention.status)]]">
+      <etools-content-panel class="content-section" title="Amendments">
+        <intervention-amendments data-items="{{intervention.amendments}}"
+                                 edit-mode$="[[editMode]]"></intervention-amendments>
+      </etools-content-panel>
+    </template>
 
     <etools-content-panel class="content-section" title="Fund Reservetions">
       Fund reservation will go here...
@@ -197,8 +201,11 @@
           agreementAuthorizedOfficers: {
             type: Array,
             value: []
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           }
-
         },
 
         _interventionChanged: function(intervention) {
@@ -226,14 +233,12 @@
               (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
               typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
 
-
-
-
+            var maxSignedDateStr = this.getMaxDateStr(signedByPartnerDateStr, signedByUnicefDateStr);
+            if (maxSignedDateStr !== null && new Date(dateStr).toString() !== 'Invalid Date') {
+              return this.dateDiff(dateStr, maxSignedDateStr);
+            }
           }
-        },
-
-        getDaysFromReviewToSign: function(reviewDateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
-
+          return null;
         },
 
         _signedByUnicefSelected: function(event) {
@@ -266,6 +271,10 @@
             });
           }
           return [];
+        },
+
+        _isNotDraft: function(status) {
+          return status !== 'draft';
         }
 
       });

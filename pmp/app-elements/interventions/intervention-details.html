@@ -205,7 +205,7 @@
         </div>
         <div class="col col-3">
           <div class="expiry-warning">
-            <span>[[_daysUntilExpiry(intervention.start, intervention.end)]]</span>
+            <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
         </div>
       </div>
@@ -359,9 +359,9 @@
         _interventionChanged: function(intervention) {
           console.log('intervention', intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            // this._setYears(intervention.start, intervention.end);
-            this.set('interventionRequiredField', true); // TODO: remove this
-            //this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+            //this.set('interventionRequiredField', true); // TODO: remove this
+            this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+            this._agreementSelected(this.agreement);
           } else {
             this.set('interventionRequiredField', false);
           }
@@ -492,8 +492,8 @@
                 options = this.ssfaDocTypes;
                 break;
               default:
-               options = this.documentTypes;
-               break;
+                options = this.documentTypes;
+                break;
             } 
           }
           this.set('currentDocTypes', options);
@@ -541,10 +541,13 @@
           return valid;
         },
 
-        _daysUntilExpiry: function(start, end) {
-          var diff = this.dateDiff(start, end);
-          if (diff) {
-            return diff + ' days until expiry';
+        _daysUntilExpiry: function(end) {
+          if (this.isFutureDate(end)) {
+            var today = new Date().toString();
+            var diff = this.dateDiff(today, end);
+            if (diff) {
+              return diff + ' days until expiry';
+            }
           }
         }
 
