@@ -83,8 +83,8 @@
               </iron-label>
               <br/>
               <div class="content" id="cp_outputs_list">
-                <template is="dom-repeat" items="[[cpOutputs]]" as="cpOut">
-                    <strong> [[ cpOut.label ]] </strong> <br/>
+                <template is="dom-repeat" items="[[cpOutputNames]]" as="cpOut">
+                    <strong> [[ cpOut ]] </strong> <br/>
                 </template>
               </div>              
           </div>
@@ -112,45 +112,49 @@
         </div>        
       </paper-material>
       <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
-        <data-table-header id="listHeader" label="Output 2.1: Policy for Inclusive Education" no-collapse>
-          <data-table-column class="col-2" field="fc_number">
-              FC#
-          </data-table-column>
-          <data-table-column class="col-2" field="fc_date" >
-              FC Date
-          </data-table-column>
-          <data-table-column class="col-4" field="fc_title">
-              FC Title
-          </data-table-column>
-          <data-table-column class="col-2" field="actual_ammount">
-              Actual $
-          </data-table-column>
-          <data-table-column class="col-2" field="outstanding_ammount">
-              Outstanding $
-          </data-table-column>
-        </data-table-header>
 
-        <!--<template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">-->
-          <data-table-row no-collapse>
-            <div slot="row-data">
-              <a class="col-data col-2 truncate" href="#" title="0100221155-2">
-                  0100221155-2
-              </a>
-              <span class="col-data col-2 truncate" title="25 Dec 2016">
-                  25 Dec 2016
-              </span>
-              <span class="col-data col-4" title="Lorem ipsum dolor sit amet, consectetuer adipiscing elit">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-              </span>
-              <span class="col-data col-2" title="114,700">
-                  114,700
-              </span>
-              <span class="col-data col-2" title="114,700">
-                  114,700
-              </span>
-            </div>
-          </data-table-row>
-          
+  <!-- Start -->
+        <template is="dom-repeat" items="[[intervention.implementation_status]]" as="status">
+
+          <data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
+            <data-table-column class="col-2" field="fc_number">
+                FC#
+            </data-table-column>
+            <data-table-column class="col-2" field="fc_date" >
+                FC Date
+            </data-table-column>
+            <data-table-column class="col-4" field="fc_title">
+                FC Title
+            </data-table-column>
+            <data-table-column class="col-2" field="actual_ammount">
+                Actual $
+            </data-table-column>
+            <data-table-column class="col-2" field="outstanding_ammount">
+                Outstanding $
+            </data-table-column>
+          </data-table-header>
+
+          <template is="dom-repeat" items="[[status.fc_records]]" as="record">
+            <data-table-row no-collapse>
+              <div slot="row-data">
+                <a class="col-data col-2 truncate" href="#" title="[[record.fc_number]]">
+                    [[record.fc_number]]
+                </a>
+                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.fc_date)]]">
+                    [[_checkAndShowDate(record.fc_date)]]
+                </span>
+                <span class="col-data col-4" title="[[record.fc_title]]">
+                    [[record.fc_title]]
+                </span>
+                <span class="col-data col-2" title="[[record.actual]]">
+                    [[record.actual]]
+                </span>
+                <span class="col-data col-2" title="[[record.outstanding]]">
+                    [[record.outstanding]]
+                </span>
+              </div>
+            </data-table-row>
+          </template>
           <div class="row-h flex-c padded-top">
             <div class="col col-6">
             </div>
@@ -159,14 +163,16 @@
             </div>
             <div class="col col-4 padded-right">
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>18,000,000</strong></span>
+                <span><strong>[[ status.actual_sum ]]</strong></span>
               </paper-material>
             
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>1,000,000</strong></span>
+                <span><strong>[[ status.outstanding_sum ]]</strong></span>
               </paper-material>
             </div>
           </div>
+        </template>
+  <!-- End -->
 
           <div class="row-h flex-c padded-top grey-box">
             <div class="col col-6">
@@ -176,11 +182,11 @@
             </div>
             <div class="col col-4 padded-right">
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>30,000,000</strong></span>
+                <span><strong>[[ intervention.actual_total_sum ]]</strong></span>
               </paper-material>
             
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>1,200,000</strong></span>
+                <span><strong>[[ intervention.outstanding_total_sum ]]</strong></span>
               </paper-material>
             </div>
           </div>
@@ -215,8 +221,11 @@
           type: Array,
           statePath: 'cpOutputs'
         },
-        cpOutputs: {
+        cpOutputNames: {
           type: Array,
+        },
+        cpOutputsHelper: {
+          type: Object,
         },
         allPartners: {
           type: Array,
@@ -234,39 +243,30 @@
         }
      },
 
-     ready: function() {
-       console.log('govt overview ready');
-     },
-
-     _init: function() {
-       console.log('govt overview init');
-     },
-
      _interventionChanged : function(intervention){
        if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {            
-         this._parseCpOutputs(); 
+         this._prepareCpOutputs(); 
+         this._prepareInterventionStatusData();
          this._findProgramme();
          this._findPartner(); 
        }
        this.fire('global-loading', {active:false});        
      },
-     _parseCpOutputs: function() {       
-        var cpOutputIds = [];
-        var cpOutputs   = [];
-        console.log('intervention:', this.intervention);
+
+      _prepareCpOutputs: function() {       
+        var cpOutputNames   = [];
+        var cpOutputsHelper = {};      
+        
+        this.allCpOutputs.forEach(function(elem){          
+          cpOutputsHelper[elem.value] = elem.label;                      
+        });
         
         this.intervention.implementation_status.forEach(function(elem){
-          cpOutputIds.push(parseInt(elem.cp_output));
-        });
-
-        cpOutputs = this.allCpOutputs.filter(function(elem){
-          return (cpOutputIds.indexOf(elem.value) > -1);
+          cpOutputNames.push(cpOutputsHelper[elem.cp_output]);
         });
         
-        this.set('cpOutputs', cpOutputs);
-
-        // all good so far, but it will help us a lot to have the co output name in the object, so let's add it         
-        
+        this.set('cpOutputNames', cpOutputNames);
+        this.set('cpOutputsHelper', cpOutputsHelper);
       },
 
       _findProgramme: function() {
@@ -289,7 +289,41 @@
         });
 
         this.set('partner', partners.pop());
-      }
+      },
+
+      _prepareInterventionStatusData: function() {
+        var cpOutputsHelper = this.cpOutputsHelper;
+        var actualIndividualSum = 0;
+        var outstandingIndividualSum = 0;
+        var actualTotalSum = 0;
+        var outstandingTotalSum = 0;      
+
+        this.intervention.implementation_status.forEach(function(elem){
+          actualIndividualSum = 0;
+          outstandingIndividualSum = 0;
+
+          elem.fc_records.forEach(function(record){
+            actualIndividualSum += record.actual;
+            outstandingIndividualSum += record.outstanding;  
+            
+            actualTotalSum += record.actual;
+            outstandingTotalSum += record.outstanding;
+          });         
+          
+          elem.actual_sum = actualIndividualSum;
+          elem.outstanding_sum = outstandingIndividualSum;         
+
+          elem.cp_name = cpOutputsHelper[parseInt(elem.cp_output)];
+        });
+
+        this.set('intervention.actual_total_sum', actualTotalSum);
+        this.set('intervention.outstanding_total_sum', outstandingTotalSum);          
+      },
+
+      _checkAndShowDate: function(dateString) {
+        return this.getDisplayValue(dateString, true);
+      },
+
   })
   </script>
 </dom-module>
