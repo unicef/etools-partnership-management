@@ -62,12 +62,12 @@
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           }
         },
-        _prepareAndFireRequest: function(method, data, url, multipart, experimentalObjBody) {
+        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
           if (!multipart){
             multipart = false;
           }
-          if (!experimentalObjBody){
-            experimentalObjBody = false;
+          if (!prepareMultipartData){
+            prepareMultipartData = false;
           }
           this.ajaxEl.setContentType(null);
           if (!method) {
@@ -77,7 +77,7 @@
             this.ajaxEl.set('body', null);
             this.ajaxEl.set('url', null);
             this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('experimentalObjBody', false);
+            this.ajaxEl.set('prepareMultipartData', false);
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
@@ -87,10 +87,10 @@
             } else {
               this.ajaxEl.set('multiPart', false);
             }
-            if (experimentalObjBody) {
-              this.ajaxEl.set('experimentalObjBody', true);
+            if (prepareMultipartData) {
+              this.ajaxEl.set('prepareMultipartData', true);
             } else {
-              this.ajaxEl.set('experimentalObjBody', false);
+              this.ajaxEl.set('prepareMultipartData', false);
             }
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
@@ -134,17 +134,17 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               var withUpload = false; // used to set multipart prop on etools-ajax
-              var experimentalObjBody = false;
+              var prepareMultipartData = false;
               if (partner.hasOwnProperty('core_values_assessment')) {
                 if (partner.core_values_assessment instanceof File) {
                   withUpload = true;
-                  experimentalObjBody = true;
+                  prepareMultipartData = true;
                 }
               }
               console.log(partner);
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload, experimentalObjBody);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload, prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',
