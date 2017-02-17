@@ -337,8 +337,7 @@
 
         _updateCoreValuesAssessmentOnPartner: function(file) {
           if (typeof this.partner === 'object' && this.partner.hasOwnProperty('core_values_assessment')) {
-            this.set('partner.core_values_assessment', file);
-            console.log(this.partner.core_values_assessment);
+            this.set('partner.core_values_assessment_file', file);
           }
         },
 
@@ -360,22 +359,30 @@
           return true;
         },
         _cleanUpdateData: function(partner) {
-          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
+          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment_file'];
+          if (!partner.core_values_assessment_file) {
+            partner.core_values_assessment_file = null;
+          }
           var changes = {};
           updateableFields.forEach(function(fieldName) {
             if (fieldName === 'shared_with') {
-
-              console.log(this.sharedPartenerSelectedValues);
               var sharedPartners = (this.sharedPartenerSelectedValues.length) ? this.sharedPartenerSelectedValues.map(function(shared) {
                   return shared.label;
                 }) : [];
 
-              console.log(sharedPartners);
-
               if (sharedPartners !== partner.shared_with) {
-                console.log(sharedPartners, partner.shared_with);
                 changes[fieldName] = sharedPartners;
               }
+            } else if (fieldName === 'assessments') {
+              changes[fieldName] = partner.assessments.map(function(assessment) {
+                return {
+                  id: assessment.id,
+                  type: assessment.type,
+                  completed_date: assessment.completed_date,
+                  current: assessment.current,
+                  report_file: (assessment.report_file.length > 0) ? this._getAssessmentRawFile(assessment.report_file[0]) : null
+                };
+              }.bind(this));
             } else {
               if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
                 changes[fieldName] = partner[fieldName];
@@ -384,8 +391,13 @@
           }.bind(this));
 
           return changes;
-
         },
+        _getAssessmentRawFile: function(assessment) {
+          if (assessment && assessment.raw) {
+            return assessment.raw;
+          }
+        },
+
         _validateAndTriggerPartnerSave: function(event) {
           event.stopImmediatePropagation();
           if (!this.editMode) {
