@@ -130,6 +130,29 @@
         },
 
         /**
+         * Update intervention status. In addition set a callback to be called after request is complete.
+         */
+        updateInterventionStatus: function(data, callback) {          
+          if (!data.interventionId) {
+            this.fire('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
+          } else {
+            if (['draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {              
+              // status change is allowed
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
+              this._prepareEndpoint(data.interventionId);
+              this.fire('global-loading', {message: 'Changing intervention status...', active: true});
+              // fire in the hole
+              this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
+            } else {              
+              this.fire('toast', {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+            }
+          }
+        },  
+
+        /**
          * Save intervention data
          */
         saveIntervention: function(intervention, callback) {
@@ -144,7 +167,7 @@
               this._prepareEndpoint(intervention.id);
               url = this.endpoint.url;
             } else {
-              // new agreement, use POST method for the same endpoint
+              // new intervention, use POST method for the same endpoint
               var agreementsEndpoint = this.getEndpoint('interventions');
               url = agreementsEndpoint.url;
               isNew = true;

@@ -125,10 +125,12 @@
             </div>
             <div class="page" name="details">
               <intervention-details id="interventionDetails"
-                                    intervention="{{intervention}}"
+                                    intervention="[[intervention]]"
                                     partner="[[partner]]"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"
                                     selected-partner-id="{{partnerId}}"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
+                                    on-update-intervention-status="_updateInterventionStatus"
+                                    on-save-intervention="_saveIntervention"></intervention-details>
             </div>
             <div class="page" name="review-and-sign">
               <intervention-review-and-sign id="interventionReviewAndSign"
@@ -144,9 +146,12 @@
 
         <!-- sidebar content start -->
         <div id="sidebar" hidden$="[[listActive]]">
-          <intervention-status status="[[intervention.status]]"
-                               on-save-intervention="_validateAndSaveIntervention"
-                               show-save-btn$="[[editMode]]"></intervention-status>
+           <intervention-status status="[[intervention.status]]"
+                                intervention-id$="[[intervention.id]]"
+                                on-save-intervention="_validateAndTriggerInterventionSave"
+                                on-update-intervention-status="_updateInterventionStatus"
+                                show-save-btn$="[[editMode]]"></intervention-status>
+
         </div>
         <!-- sidebar content end -->
       </div>
@@ -253,6 +258,11 @@
         } else {
           this.fire('toast', {text: 'Please review invalid fields data from details tab!', showCloseBtn: true});
         }
+      },
+
+      _updateInterventionStatus: function(event) {
+        event.stopImmediatePropagation();
+        this.$.interventionData.updateInterventionStatus(event.detail);
       },
 
       _hasEditPermissions: function(permissions) {

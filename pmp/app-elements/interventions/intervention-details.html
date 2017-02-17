@@ -259,6 +259,16 @@
                                    years="[[years]]"></intervention-planned-visits>
     </etools-content-panel>
 
+    <!-- sidebar content start -->
+    <div id="sidebar">
+                        
+      <intervention-status status="[[intervention.status]]"
+                           intervention-id$="[[intervention.id]]"
+                           on-save-intervention="_validateAndTriggerInterventionSave"
+                           show-save-btn$="[[editMode]]"></intervention-status>
+    </div>
+    <!-- sidebar content end -->
+
   </template>
 
   <script>

@@ -203,40 +203,40 @@
       <template is="dom-if" if="[[showSaveBtn]]">
         <div class="buttons-section vertical">
 
-          <!--<paper-button class="primary-btn success-btn w100"-->
-                        <!--on-tap="_updateStatus"-->
-                        <!--data-status="draft"-->
-                        <!--hidden$="[[!_statusIs(status, 'cancelled')]]">-->
-            <!--Change to draft-->
-          <!--</paper-button>-->
+          <paper-button class="primary-btn success-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="draft"
+                        hidden$="[[!_statusIs(status, 'cancelled')]]">
+            Change to draft
+          </paper-button>
 
-          <!--<paper-button class="primary-btn danger-btn w100"-->
-                        <!--on-tap="_updateStatus"-->
-                        <!--data-status="cancelled"-->
-                        <!--hidden$="[[_hideCancelBtn(status)]]">-->
-            <!--Cancel-->
-          <!--</paper-button>-->
+          <paper-button class="primary-btn danger-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="cancelled"
+                        hidden$="[[_hideCancelBtn(status)]]">
+            Cancel
+          </paper-button>
 
-          <!--<paper-button class="primary-btn success-btn w100"-->
-                        <!--on-tap="_updateStatus"-->
-                        <!--data-status="active"-->
-                        <!--hidden$="[[_hideActivateBtn(status)]]">-->
-            <!--Activate-->
-          <!--</paper-button>-->
+          <paper-button class="primary-btn success-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="active"
+                        hidden$="[[_hideActivateBtn(status)]]">
+            Activate
+          </paper-button>
 
-          <!--<paper-button class="primary-btn warning-btn w100"-->
-                        <!--on-tap="_updateStatus"-->
-                        <!--data-status="suspended"-->
-                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
-            <!--Suspend-->
-          <!--</paper-button>-->
+          <paper-button class="primary-btn warning-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="suspended"
+                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+            Suspend
+          </paper-button>
 
-          <!--<paper-button class="primary-btn danger-btn w100"-->
-                        <!--on-tap="_updateStatus"-->
-                        <!--data-status="terminated"-->
-                        <!--hidden$="[[_hideSuspendAndTerminateBtns(status)]]">-->
-            <!--Terminate-->
-          <!--</paper-button>-->
+          <paper-button class="primary-btn danger-btn w100"
+                        on-tap="_updateStatus"
+                        data-status="terminated"
+                        hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+            Terminate
+          </paper-button>
 
           <paper-button class="primary-btn w100"
                         on-tap="_triggerInterventionSave">
@@ -261,7 +261,7 @@
         behaviors: [etoolsBehaviors.DynamicDialogBehavior],
 
         properties: {
-          agreementId: {
+          interventionId: {
             type: Number
           },
           newAgreement: {
@@ -305,6 +305,7 @@
         },
 
         _getSecondStatusWrapperClass: function(status) {
+          console.log('status', status);
           if (this._statusIs(status, 'active')
               || this._statusIs(status, 'suspended')
               || this._statusIs(status, 'terminated')) {
@@ -377,12 +378,11 @@
         },
 
         _statusChangeConfirmationCallback: function(event) {
-          console.log('dynamic dialog closed', event.detail);
           if (event.detail.confirmed) {
-//            this.fire('update-agreement-status', {
-//              agreementId: this.agreementId,
-//              status: this.newStatus + ''
-//            });
+            this.fire('update-intervention-status', {
+              interventionId: this.interventionId,
+              status: this.newStatus + ''
+            });
           }
           this.set('newStatus', '');
         },
