@@ -16,6 +16,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="intervention-amendments.html">
+<link rel="import" href="intervention-fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
 
@@ -167,7 +168,9 @@
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservetions">
-      Fund reservation will go here...
+      <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
+                                      fr-numbers-details="[[intervention.fr_numbers_details]]"
+                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -210,7 +213,6 @@
 
         _interventionChanged: function(intervention) {
           // console.log('intervention, review&sign', intervention);
-
           // ensure loading msg close
           this.fire('global-loading', {active: false});
         },
