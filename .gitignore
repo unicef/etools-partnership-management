@@ -5,4 +5,4 @@ bower_components/
 .idea
 *.sublime-project
 *.sublime-workspace.vscode/settings.json
-vscode/*
+.vscode/*
