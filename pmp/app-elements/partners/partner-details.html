@@ -257,8 +257,7 @@
           },
           coreValuesAssessmentFiles: {
             type: Array,
-            value: [],
-            notify: true
+            value: []
           },
           csoTypes: {
             type: Array,
@@ -271,6 +270,8 @@
           originalPartnerData: Object
 
         },
+
+        observers: ['_coreValuesAssessmentFilesChanged(coreValuesAssessmentFiles.length)'],
 
         ready: function() {
 
@@ -337,6 +338,21 @@
           return partnerType;
         },
 
+        _coreValuesAssessmentFilesChanged: function(filesLength) {
+          if (filesLength > 0) {
+            this._updateCoreValuesAssessmentOnPartner(this.coreValuesAssessmentFiles[0].raw);
+          } else {
+            this._updateCoreValuesAssessmentOnPartner(null);
+          }
+        },
+
+        _updateCoreValuesAssessmentOnPartner: function(file) {
+          if (typeof this.partner === 'object' && this.partner.hasOwnProperty('core_values_assessment')) {
+            this.set('partner.core_values_assessment', file);
+            console.log(this.partner.core_values_assessment);
+          }
+        },
+
         _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
           // TODO; see if this values are correct for displaying core values assessment file
           if (_.map(this.partnerTypes, 'value').indexOf(partnerType) >= 0
@@ -356,7 +372,7 @@
           return true;
         },
         _cleanUpdateData: function(partner) {
-          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments'];
+          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
           var changes = {};
           updateableFields.forEach(function(fieldName) {
             if (fieldName === 'shared_with') {
@@ -392,7 +408,6 @@
             partnerChanges.id = this.partner.id;
             console.log('_validateAndTriggerPartnerSave: ', partnerChanges);
             this.fire('save-partner', partnerChanges);
-            
           } else {
             this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           }
