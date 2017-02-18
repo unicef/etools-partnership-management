@@ -55,7 +55,10 @@
                                                        placeholder="&#8212;"
                                                        value="[[_setSector(item.sector, sectors.length)]]"
                                                        options="[[sectors]]"
-                                                       on-value-change="_sectorSelected">
+                                                       on-value-change="_sectorSelected"
+                                                       required$="[[required]]"
+                                                       auto-validate
+                                                       error-message="Please select a sector">
                 </etools-searchable-multiselection-menu>
               </div>
               <div class="col col-9">
@@ -65,7 +68,10 @@
                                                        value="[[_setSectorLocations(item.locations, locations.length)]]"
                                                        options="[[locations]]"
                                                        on-value-change="_locationsSelected"
-                                                       multi>
+                                                       multi
+                                                       required$="[[required]]"
+                                                       auto-validate
+                                                       error-message="Please select sector locations">
                 </etools-searchable-multiselection-menu>
               </div>
             </div>
@@ -106,6 +112,10 @@
           sectors: {
             type: Array,
             statePath: 'sectors'
+          },
+          required: {
+            type: Boolean,
+            value: false
           }
         },
         observers: [
@@ -159,7 +169,7 @@
 
         _setSectorLocations: function(locations) {
           if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
-            var selectedLocationsIds = locations.map(function(location){
+            var selectedLocationsIds = locations.map(function(location) {
               return parseInt(location.id, 10);
             });
             return this.locations.filter(function(l) {
@@ -218,6 +228,42 @@
          */
         _addNewSectorLocation: function() {
           this._addElement();
+        },
+
+        /**
+         * Validation
+         */
+        validate: function() {
+          var valid = true;
+          if (this.dataItems.length === 0) {
+            this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
+          } else {
+            this.dataItems.forEach(function(item, index) {
+              var sectorEl = this.$$('#sector_' + index);
+              var locationsEl = this.$$('#locations_' + index);
+              if (!sectorEl.validate()) {
+                valid = false;
+              }
+              if (!locationsEl.validate()) {
+                valid = false;
+              }
+            }.bind(this));
+          }
+          return valid;
+        },
+
+        /**
+         * Reset any error msg from a previous validation
+         */
+        resetValidations: function() {
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              var sectorEl = this.$$('#sector_' + index);
+              var locationsEl = this.$$('#locations_' + index);
+              sectorEl.invalid = false;
+              locationsEl.invalid = false;
+            }.bind(this));
+          }
         }
 
       });

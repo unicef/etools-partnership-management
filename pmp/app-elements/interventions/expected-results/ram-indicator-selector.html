@@ -1,0 +1,203 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+
+<link rel="import" href="../../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
+
+<dom-module id="ram-indicator-selector">
+  <template>
+    <style include="grid-layout-styles shared-styles">
+      :host {
+        width: 100%;
+      }
+    </style>
+
+    <cp-output-ram-indicators-data ram-indicators="{{cpIndicators}}"
+                                   cp-output-id="[[cpOutputId]]">
+    </cp-output-ram-indicators-data>
+
+    <div class="row-h flex-c">
+      <div class="col col-4">
+        <etools-searchable-multiselection-menu id="cpOutput"
+                                               label="CP Output"
+                                               placeholder="&#8212;"
+                                               options="[[cpOutputsOptions]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
+                                               selected="{{cpOutputId}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Please select CP Output">
+        </etools-searchable-multiselection-menu>
+      </div>
+
+      <div class="col col-8">
+        <etools-searchable-multiselection-menu id="indicators"
+                                               label="CP Indicators(s)"
+                                               placeholder="&#8212;"
+                                               options="[[cpIndicators]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
+                                               selected="{{selectedCpIndicatorsIds}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Please select CP Indicators"
+                                               multi>
+        </etools-searchable-multiselection-menu>
+
+      </div>
+    </div>
+  </template>
+
+	<script>
+		(function() {
+			'use strict';  
+			Polymer({
+				is: 'ram-indicator-selector',
+				behaviors: [
+					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+				],
+				properties: {
+          cpOutputs: {
+            type: Array,
+            statePath: 'unmodifiedCpOutputs'
+          },
+          cpOutputsOptions: {
+            type: Array,
+            value: []
+          },
+          cpOutputId: {
+            type: Number,
+            notify: true,
+            observer: '_cpOutputSelected'
+          },
+          cpIndicators: {
+            type: Array,
+            value: [],
+            observer: '_cpIndicatorsChanged'
+          },
+          selectedCpIndicatorsIds: {
+            type: Array,
+            value: [],
+            notify: true,
+            observer: '_selectedCpIndicatorsIdsChanged'
+          },
+          firstLoadCpIndicators: {
+            type: Array,
+            value: []
+          },
+          firstLoadCpIndicatorsUse: {
+            type: Boolean,
+            value: true
+          },
+          alreadySelectedCpo: {
+            type: Array,
+            value: []
+          }
+				},
+
+        observers: [
+            '_removeAlreadySelectedCpOs(alreadySelectedCpo, cpOutputs.length)'
+        ],
+
+        ready: function() {
+          if (this.cpOutputs.length > 0 && this.cpOutputId) {
+            // set selected cp output when cpOutputs data exists
+            this._cpOutputSelected(this.cpOutputId);
+          }
+        },
+
+        _selectedCpIndicatorsIdsChanged: function(ids) {
+          if (ids.length && this.firstLoadCpIndicatorsUse) {
+            // prepare cp indicators id to be set as selected, used only once, at element init
+            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+            this.set('firstLoadCpIndicatorsUse', false);
+          }
+        },
+
+        _cpOutputSelected: function(cpOutputId) {
+				  // select cpOutput by id
+          if (!Array.isArray(this.cpOutputs)) {
+            return;
+          }
+				  var cpOutputSelector = this.$.cpOutput;
+          if (cpOutputId > 0) {
+            var currentCpValue = cpOutputSelector.value;
+            if (!currentCpValue || (currentCpValue && currentCpValue.id && currentCpValue.id !== cpOutputId)) {
+              // if no cpOut selected or selected cpOut id is different than cpOutputId, update selection
+              this._setSelectedCpOutput(cpOutputId);
+            }
+          } else {
+            cpOutputSelector.value = null;
+          }
+        },
+
+        // set selected cp output on dropdown
+        _setSelectedCpOutput: function(id) {
+          if (!Array.isArray(this.cpOutputs)) {
+            return;
+          }
+				  var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
+				    return cpOut.id === id;
+          })[0];
+				  if (selectedCpOutput) {
+            this.$.cpOutput.value = selectedCpOutput;
+          }
+        },
+
+        _cpIndicatorsChanged: function(cpIndicators) {
+				  if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
+              Array.isArray(cpIndicators) && cpIndicators.length) {
+				    var selectedCpIndicators = cpIndicators.filter(function(indicator) {
+				      return this.firstLoadCpIndicators.indexOf(indicator.id) > -1;
+            }.bind(this));
+				    // set selected cp indicators (searched by ids) on dropdown
+            this.$.indicators.value = selectedCpIndicators;
+            this.set('firstLoadCpIndicators', []);
+          } else {
+            // indicators list changed, reset selection
+            this.set('selectedCpIndicatorsIds', []);
+            this.$.indicators.value = [];
+            this.$.indicators.selectedValues = null;
+          }
+        },
+
+        _removeAlreadySelectedCpOs: function(alreadySelectedCpo, cpOutputsLength) {
+				  // prevent having cpoutputs already selected in the current cpOutput selector
+				  if (cpOutputsLength === 0) {
+				    return;
+          }
+				  this.debounce('removeAlreadySelected', function() {
+				    var cpOutputsSelectorOptions = this.cpOutputs.filter(function(cpO) {
+				      return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
+            }.bind(this));
+				    this.set('cpOutputsOptions', cpOutputsSelectorOptions);
+          }.bind(this), 50);
+        },
+
+        validate: function() {
+				  var valid = true;
+				  if(!this.$.cpOutput.validate()) {
+				    valid = false;
+          }
+          if(!this.$.indicators.validate()) {
+            valid = false;
+          }
+          return valid;
+        },
+
+        resetValidations: function() {
+          this.$.cpOutput.invalid = false;
+          this.$.indicators.invalid = false;
+        }
+
+			});
+		})();
+	</script>
+</dom-module>

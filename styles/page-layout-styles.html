@@ -21,10 +21,13 @@
         @apply(--layout-flex);
       }
 
-      .page {
+      #main, .page {
         @apply(--layout-horizontal);
         @apply(--layout-wrap);
         padding: 25px;
+      }
+      #main .page {
+        padding: 0;
       }
 
       #pageContent {
@@ -32,6 +35,7 @@
       }
 
       #sidebar {
+        @apply(--layout);
         width: 225px;
         padding-left: 25px;
         -webkit-box-sizing: border-box;

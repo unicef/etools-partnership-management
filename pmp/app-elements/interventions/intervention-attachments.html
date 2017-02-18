@@ -17,27 +17,16 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles file-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply(--layout-vertical);
         width: 100%;
       }
     </style>
 
-    <!-- main page content start -->
-    <div id="pageContent">
-      <etools-content-panel class="content-section" title="Attachments">
-        <div class="row-h flex-c">
-          <etools-file id="attachments" files="{{attachments}}" multiple></etools-file>
-        </div>
-      </etools-content-panel>
-    </div> <!-- main page content end -->
-
-    <!-- sidebar content start -->
-    <div id="sidebar">
-      <intervention-status status="[[intervention.status]]"
-                           on-save-intervention="_validateAndSaveAttachements"
-                           show-save-btn$="[[editMode]]"></intervention-status>
-    </div>
-    <!-- sidebar content end -->
+    <etools-content-panel class="content-section" title="Attachments">
+      <div class="row-h flex-c">
+        <etools-file id="attachments" files="{{attachments}}" multiple></etools-file>
+      </div>
+    </etools-content-panel>
 
   </template>
 
@@ -48,9 +37,6 @@
       Polymer({
         is: 'intervention-attachments',
         properties: {
-          intervention: {
-            type: Object,
-          },
           attachments: {
             type: Array,
             value: []

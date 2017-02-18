@@ -40,8 +40,13 @@
         };
       }
 
+      .left-col {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
       .darkbg {
-        padding: 0 15px;
+        padding: 15px;
         background-color: #EDEDED; /* TODO: replace with app-theme var */
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
@@ -98,7 +103,10 @@
                                                label="Local Currency"
                                                placeholder="&#8212;"
                                                options="[[currencies]]"
-                                               on-value-change="_currencyChanged">
+                                               on-value-change="_currencyChanged"
+                                               required$="[[required]]"
+                                               auto-validate
+                                               error-message="Please select the currency">
         </etools-searchable-multiselection-menu>
       </div>
       <template is="dom-repeat" items="{{dataItems}}">
@@ -115,7 +123,7 @@
           <div class="row-v flex-c item-content">
             <div class="row-h">
               <div class="col col-4">
-                <div class="row-h flex-c">
+                <div class="row-h flex-c left-col">
                   <div class="col col-4">
                     <etools-searchable-multiselection-menu id$="year_[[index]]"
                        class="year"
@@ -123,7 +131,10 @@
                        placeholder="&#8212;"
                        value="[[_getSelectedYear(item.year, years.length)]]"
                        options="[[years]]"
-                       on-value-change="_yearChanged">
+                       on-value-change="_yearChanged"
+                       required$="[[required]]"
+                       auto-validate
+                       error-message="Year required">
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
@@ -168,10 +179,12 @@
                 <div class="row-h flex-c">
                   <div class="col col-4"></div>
                   <div class="col col-8">
-                    <paper-input label="CSO Cont. (USD)"
+                    <paper-input id$="partnerContribUsd_[[index]]"
+                      label="CSO Cont. (USD)"
                       value="{{item.partner_contribution}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      error-message="CSO Cont. required">
                     </paper-input>
                   </div>
                 </div>
@@ -179,10 +192,12 @@
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <paper-input label="UNICEF Cash (USD)"
+                    <paper-input id$="unicefCashUsd_[[index]]"
+                      label="UNICEF Cash (USD)"
                       value="{{item.unicef_cash}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      error-message="UNICEF Cash required">
                     </paper-input>
                   </div>
                   <div class="col col-4">
@@ -296,6 +311,10 @@
           localCurrency: {
             type: String,
             value: ''
+          },
+          required: {
+            type: Boolean,
+            value: false
           }
         },
         observers: [
@@ -338,6 +357,43 @@
         _dataItemChange: function(dataItem) {
           if (dataItem.path !== 'dataItems.splices') {
             this._computeTotals(this.dataItems);
+            var path = dataItem.path.split('.');
+            var itemPathName = path[path.length - 1];
+            if (itemPathName === 'partner_contribution' || itemPathName === 'unicef_cash') {
+              // TODO: this validation must be improved
+              var pathValue = parseFloat(dataItem.value);
+              if (isNaN(pathValue)) {
+                pathValue = 0;
+              }
+              var index = path[path.length - 2].replace('#', '');
+              var pContribEl = this.$$('#partnerContribUsd_' + index);
+              var uContribEl = this.$$('#unicefCashUsd_' + index);
+              switch (itemPathName) {
+                case 'partner_contribution':
+                  if (pathValue > 0 && this.required) {
+                    if (pContribEl) {
+                      pContribEl.invalid = false;
+                    }
+                  } else {
+                    if (pContribEl) {
+                      pContribEl.invalid = true;
+                    }
+                  }
+                  break;
+
+                case 'unicef_cash':
+                  if (pathValue > 0 && this.required) {
+                    if (uContribEl) {
+                      uContribEl.invalid = false;
+                    }
+                  } else {
+                    if (uContribEl) {
+                      uContribEl.invalid = true;
+                    }
+                  }
+                  break;
+              }
+            }
           }
         },
 
@@ -450,6 +506,63 @@
          */
         _addNewPlannedBudget: function() {
           this._addElement();
+        },
+
+        // validate fields
+        validate: function() {
+          var valid = true;
+          if (this.dataItems.length > 0) {
+            var currency = this.$.currency;
+            if (!currency.validate()) {
+              valid = false;
+            }
+            this.dataItems.forEach(function(item, index) {
+              var yearEl = this.$$('#year_' + index);
+              if (!yearEl.validate()) {
+                valid = false;
+              }
+              var partnerContributionUsdEl = this.$$('#partnerContribUsd_' + index);
+              var unicefContributionUsdEl = this.$$('#unicefCashUsd_' + index);
+              var pContVal = parseFloat(partnerContributionUsdEl.value);
+              if (isNaN(pContVal)) {
+                pContVal = 0;
+              }
+              var uContVal = parseFloat(unicefContributionUsdEl.value);
+              if (isNaN(uContVal)) {
+                uContVal = 0;
+              }
+              if (pContVal === 0 && this.required) {
+                valid = false;
+                partnerContributionUsdEl.invalid = true;
+              }
+              if (uContVal === 0 && this.required) {
+                valid = false;
+                unicefContributionUsdEl.invalid = true;
+              }
+            }.bind(this));
+          }
+          return valid;
+        },
+
+        // reset validation errors
+        resetValidations: function() {
+          this.$.currency.invalid = false;
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              var yearEl = this.$$('#year_' + index);
+              if (yearEl) {
+                yearEl.set('invalid', false);
+              }
+              var partnerContributionUsdEl = this.$$('#partnerContribUsd_' + index);
+              if (partnerContributionUsdEl) {
+                partnerContributionUsdEl.invalid = false;
+              }
+              var unicefContributionUsdEl = this.$$('#unicefCashUsd_' + index);
+              if (unicefContributionUsdEl) {
+                unicefContributionUsdEl.invalid = false;
+              }
+            }.bind(this));
+          }
         }
 
       });

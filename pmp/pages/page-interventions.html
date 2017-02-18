@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
+<link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
@@ -12,6 +14,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-supplies.html">
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
+<link rel="import" href="../app-elements/interventions/intervention-status.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -48,7 +51,15 @@
 
     <intervention-item-data id="interventionData"
                          intervention="{{intervention}}"
-                         intervention-id="[[routeData.intId]]"></intervention-item-data>
+                         intervention-id="[[selectedInterventionId]]"></intervention-item-data>
+
+    <partner-item-data id="partner"
+                       partner-id="[[partnerId]]"
+                       partner="{{partner}}"></partner-item-data>
+
+    <agreement-item-data id="agreement"
+                         agreement-id="[[intervention.agreement]]"
+                         agreement="{{agreement}}"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
@@ -92,10 +103,6 @@
                 <span class="tab-content">Details</span>
               </paper-tab>
 
-              <paper-tab name="supplies" link>
-                <span class="tab-content">Supplies</span>
-              </paper-tab>
-
               <paper-tab name="review-and-sign" link>
                 <span class="tab-content">Review & Sign</span>
               </paper-tab>
@@ -109,40 +116,49 @@
         </div>
       </div>
 
+      <div id="main">
+        <div id="pageContent">
+          <iron-pages id="interventionsPages"
+                      selected="{{interventionPage}}"
+                      attr-for-selected="name"
+                      fallback-selection="list"
+                      role="main">
 
-      <iron-pages id="interventionsPages"
-                  selected="{{interventionPage}}"
-                  attr-for-selected="name"
-                  fallback-selection="list"
-                  role="main">
-
-        <div class="page" name="list">
-          <interventions-list
-              active="[[listActive]]"
-              url-params="[[interventionsQueryParams]]"></interventions-list>
-        </div>
-        <div class="page" name="overview">
+            <div class="page" name="list">
+              <interventions-list
+                  active="[[listActive]]"
+                  url-params="[[interventionsQueryParams]]"></interventions-list>
+            </div>
+              <div class="page" name="overview">
           <intervention-overview intervention="[[intervention]]"></intervention-overview>
         </div>
-        <div class="page" name="details">
-          <intervention-details intervention="[[intervention]]"
-                                on-save-intervention="_saveIntervention"
-                                edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
-        </div>
-        <div class="page" name="supplies">
-          <intervention-supplies></intervention-supplies>
-        </div>
-        <div class="page" name="review-and-sign">
-          <intervention-review-and-sign intervention="[[intervention]]"
-                                        on-save-intervention="_saveIntervention"
-                                        edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
-        </div>
-        <div class="page" name="attachments">
-          <intervention-attachments on-save-intervention="_saveIntervention"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-attachments>
-        </div>
-      </iron-pages>
+            <div class="page" name="details">
+              <intervention-details id="interventionDetails"
+                                    intervention="{{intervention}}"
+                                    partner="[[partner]]"
+                                    selected-partner-id="{{partnerId}}"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-details>
+            </div>
+            <div class="page" name="review-and-sign">
+              <intervention-review-and-sign id="interventionReviewAndSign"
+                                            intervention="{{intervention}}"
+                                            agreement="[[agreement]]"
+                                            edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
+            </div>
+            <div class="page" name="attachments">
+              <intervention-attachments edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-attachments>
+            </div>
+          </iron-pages>
+        </div> <!-- main page content end -->
 
+        <!-- sidebar content start -->
+        <div id="sidebar" hidden$="[[listActive]]">
+          <intervention-status status="[[intervention.status]]"
+                               on-save-intervention="_validateAndSaveIntervention"
+                               show-save-btn$="[[editMode]]"></intervention-status>
+        </div>
+        <!-- sidebar content end -->
+      </div>
     </app-header-layout>
 
   </template>
@@ -158,12 +174,31 @@
           type: String,
           notify: true
         },
+        permissions: {
+          type: Object
+        },
+        selectedInterventionId: {
+          type: Number
+        },
+        intervention: {
+          type: Object
+        },
+        partner: {
+          type: Object
+        },
+        partnerId: {
+          type: Number
+        },
+        agreement: {
+          type: Object
+        }
       },
 
       observers: [
         '_resizeHeader(listActive, tabsActive)',
         '_updateUrlTab(routeData.intTab)',
         '_pageChanged(listActive, routeData.intTab)',
+        '_observeRouteDataId(routeData.intId)'
       ],
 
       _resizeHeader: function() {
@@ -203,9 +238,40 @@
         return '';
       },
 
-      _saveIntervention: function(event) {
+      _observeRouteDataId: function(id) {
+        this.set('selectedInterventionId', id);
+      },
+
+      _validateAndSaveIntervention: function(event) {
         event.stopImmediatePropagation();
-        this.$.interventionData.saveIntervention(event.detail);
+
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+
+        var interventionDetails = this.$.interventionDetails;
+        var validInterventionDetails = interventionDetails.validate();
+
+        if (validInterventionDetails) {
+          var interventionData = Object.assign({}, this.intervention);
+
+          // on save sector_locations sector prop needs to be sector ID and not the sector obj
+          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
+          // prepare fr numbers
+          if (Array.isArray(interventionData.fr_numbers) && interventionData.fr_numbers.length > 0) {
+            interventionData.fr_numbers = interventionData.fr_numbers.map(function(frNumber) {
+              return frNumber.value;
+            });
+          }
+          console.log('intervention data to be saved', interventionData);
+          this.$.interventionData.saveIntervention(interventionData);
+        } else {
+          var msg = 'Please review invalid fields data!';
+          if (this.interventionPage !== 'details') {
+            msg = 'Please review invalid fields data from details tab!';
+          }
+          this.fire('toast', {text: msg, showCloseBtn: true});
+        }
       },
 
       _hasEditPermissions: function(permissions) {
