@@ -10,6 +10,7 @@
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/governments/governments-list.html">
 <link rel="import" href="../app-elements/governments/government-details.html">
+<link rel="import" href="../app-elements/governments/government-overview.html">
 <link rel="import" href="../app-elements/governments/governments-data/government-intervention-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -124,6 +125,10 @@
                               intervention="[[intervention]]"
                               edit-mode="[[fakePermission]]"
                               on-save-intervention="_saveIntervention"></government-details>
+        </div>
+        <div class="page" name="overview">
+          <government-overview id="overview" 
+                               intervention="[[intervention]]"></government-overview>
         </div>
 
       </iron-pages>
