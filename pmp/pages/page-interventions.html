@@ -8,6 +8,7 @@
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
+<link rel="import" href="../app-elements/interventions/intervention-overview.html">
 <link rel="import" href="../app-elements/interventions/intervention-supplies.html">
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
@@ -83,6 +84,10 @@
                 attr-for-selected="name"
                 noink bottom-item>
 
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
+
               <paper-tab name="details" link>
                 <span class="tab-content">Details</span>
               </paper-tab>
@@ -115,6 +120,9 @@
           <interventions-list
               active="[[listActive]]"
               url-params="[[interventionsQueryParams]]"></interventions-list>
+        </div>
+        <div class="page" name="overview">
+          <intervention-overview intervention="[[intervention]]"></intervention-overview>
         </div>
         <div class="page" name="details">
           <intervention-details intervention="[[intervention]]"
