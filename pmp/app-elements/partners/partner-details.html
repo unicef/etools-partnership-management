@@ -9,6 +9,7 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
@@ -107,7 +108,8 @@
               <etools-searchable-multiselection-menu label="Shared Partner"
                                                      options="[[sharedPartenerValues]]"
                                                      value="{{sharedPartenerSelectedValues}}"
-                                                     multi></etools-searchable-multiselection-menu>
+                                                     multi
+                                                     custom-object-options></etools-searchable-multiselection-menu>
             </template>
           </div>
         </div>
@@ -229,7 +231,8 @@
       Polymer({
         is: 'partner-details',
 
-        behaviors: [
+        behaviors: [        
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior
         ],
@@ -256,6 +259,14 @@
             type: Array,
             value: []
           },
+          csoTypes: {
+            type: Array,
+            statePath: 'csoTypes'
+          },
+          partnerTypes: {
+            type: Array,
+            statePath: 'partnerTypes'
+          },
           originalPartnerData: Object
 
         },
@@ -265,11 +276,12 @@
         ready: function() {
 
           this.set('showCoreValuesAssessmentAttachement', false);
-
           /**
            * TODO: improve shared partners data once the server data is defined and final
            * shared_partner value format ?
            */
+
+          // is this the agencyChoices object from redux?  
           var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'Women',
             'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
             'WB', 'WFP', 'WHO'];
@@ -282,7 +294,6 @@
         },
 
         _partnerChanged: function(partner) {
-          console.log('partner changed', partner)
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             this.contentVisible = true;
             // check & set shared_partner values
@@ -344,11 +355,12 @@
 
         _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
           // TODO; see if this values are correct for displaying core values assessment file
-          if (['Civil Society Organization', 'Civil Society Organisation'].indexOf(partnerType) >= 0
-              && ['National', 'National NGO'].indexOf(csoType) >= 0) {
+          if (_.map(this.partnerTypes, 'value').indexOf(partnerType) >= 0
+              && _.map(this.csoTypes, 'value').indexOf(csoType) >= 0) {
             this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
             return true;
           }
+          
           return false;
         },
 

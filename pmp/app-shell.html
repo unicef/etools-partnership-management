@@ -14,6 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="app-elements/page-header/page-header.html">
+<link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -41,9 +43,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
 <link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
 <link rel="import" href="app-elements/static-common-data/sectors-data.html">
+<link rel="import" href="app-elements/static-common-data/sections-data.html">
 <link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
 <link rel="import" href="app-elements/static-common-data/offices-data.html">
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
+<link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
 
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
@@ -117,11 +121,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <dropdowns-pmp-data></dropdowns-pmp-data>
     <dropdowns-static-data></dropdowns-static-data>
     <sectors-data></sectors-data>
+    <sections-data></sections-data>
     <unicef-users-data></unicef-users-data>
     <offices-data></offices-data>
     <locations-data></locations-data>
     <partners-list-data></partners-list-data>
     <agreement-list-data></agreement-list-data>
+    <country-programmes-data></country-programmes-data>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
@@ -149,6 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
                 <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
                 <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <side-bar-item name="governments" icon="build" href$="[[baseUrl]]governments/list"></side-bar-item>
               </template>
             </iron-selector>
           </div>
@@ -174,6 +181,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            route="[[subroute]]"
                            user="[[user]]"
                            permissions="[[permissions]]">
+
             </page-partners>
             <page-agreements name="agreements"
                              route="[[subroute]]"
@@ -184,16 +192,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 route="[[subroute]]"
                                 permissions="[[permissions]]">
             </page-interventions>
+            <page-governments name="governments"
+                              route="[[subroute]]">
+            </page-governments>
           </template>
           <page-not-found name="not-found"></page-not-found>
 
-        </iron-pages>
-
-        <page-footer></page-footer>
-
-      </app-header-layout>
-
-    </app-drawer-layout>
+          </iron-pages>
+          <page-footer></page-footer>
+        </app-header-layout>
+      </app-drawer-layout>
 
   </template>
 

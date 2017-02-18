@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -42,13 +41,10 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
-    </partners-list-data>
 
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
-                         agreement-id="[[routeData.id]]"></agreement-item-data>
+                         agreement-id="[[selectedAgreementId]]"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -60,12 +56,12 @@
                 <span>Agreements</span>
               </template>
 
-              <template is="dom-if" if="[[_showNewAgreementTitle(agreementPage, agreement)]]">
+              <template is="dom-if" if="[[_showNewAgreementTitle(agreementPage, agreement, agreement.id)]]">
                 <span>Add Agreement</span>
               </template>
 
-              <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement)]]">
-                <span>[[_getAgreementDetailsTitle(agreement)]]</span>
+              <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement, agreement.id)]]">
+                <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
               </template>
 
               </span>
@@ -115,9 +111,7 @@
         <div class="page" name="list">
           <agreements-list id="list"
                            active="[[agreementListActive]]"
-                           url-params="[[agreementQueryParams]]"
-                           partners-dropdown-data="[[partnersDropdownData]]"
-                           agreement-types="[[agreementTypes]]">
+                           url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
@@ -125,14 +119,11 @@
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
-              partners-dropdown-data="[[partnersDropdownData]]"
-              agreement-types="[[agreementTypes]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
       </iron-pages>
-
     </app-header-layout>
 
   </template>
@@ -150,14 +141,8 @@
           notify: true
         },
 
-        partnersDropdownData: {
-          type: Array,
-          notify: true
-        },
-
-        agreementTypes: {
-          type: Array,
-          notify: true
+        selectedAgreementId: {
+          type: Number
         },
 
         newAgreementModel: {
@@ -186,15 +171,10 @@
       observers: [
         '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
+        '_observeRouteDataId(routeData.id)'
       ],
 
       ready: function() {
-        this.set('agreementTypes', [
-          {name: 'MOU', label: 'Momarendum of Understanding'},
-          {name: 'PCA', label: 'Programme Cooperation Agreement'},
-          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
-        ]);
-
 
         // TODO: replace this placeholder data
         // get fake data for testing
@@ -311,7 +291,11 @@
       _goToNewAgreementPage: function() {
         // go to new agreement
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        this.set('selectedAgreementId', 0);
         this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
+      },
+      _observeRouteDataId: function(id) {
+        this.set('selectedAgreementId', id);
       }
 
     });
