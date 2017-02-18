@@ -1,0 +1,168 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
+
+
+<dom-module id="monitoring-visits-list">
+
+  <template>
+
+    <style include="shared-styles list-styles grid-layout-styles">
+      :host {          
+        @apply(--layout-flex);        
+      }
+      
+    </style>
+
+    <data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
+    <data-table-column class="col-2" field="number">
+        Reference #
+    </data-table-column>
+    <data-table-column class="col-2" field="traveler_name" >
+        Traveler
+    </data-table-column>
+    <data-table-column class="col-2" field="traveler_type">
+        Travel Type
+    </data-table-column>
+    <data-table-column class="col-2" field="date" sortable>
+        When
+    </data-table-column>
+    <data-table-column class="col-2" field="locations">
+        Locations
+    </data-table-column>
+    <data-table-column class="col-2" field="status">
+        Status
+    </data-table-column>
+    </data-table-header>
+
+    <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
+    <data-table-row no-collapse>
+        <div slot="row-data">
+        <a class="col-data col-2 truncate" href="#" title="[[visit.number]]">
+            [[visit.number]]
+        </a>
+        <span class="col-data col-2 truncate" title="[[visit.traveler_name]]">
+            [[visit.traveler_name]]
+        </span>
+        <span class="col-data col-2" title="[[visit.traveler_type]]">
+            [[visit.traveler_type]]
+        </span>
+        <span class="col-data col-2" title="[[_checkAndShowDate(visit.date)]]">
+            [[_checkAndShowDate(visit.date)]]
+        </span>
+        <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
+            [[getDisplayValue(visit.locations)]]
+        </span>
+        <span class="col-data col-2" title="[[visit.status]]">
+            [[visit.status]]
+        </span>
+        </div>
+    </data-table-row>
+    </template>
+
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var _interventionsLastNavigated = null;
+
+      Polymer({
+        is: 'monitoring-visits-list',
+
+        behaviors: [
+          pmpBehaviors.CommonGeneralBehavior,          
+        ],
+
+        properties: {
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
+          monitoringVisits: {
+            type: Array
+          },
+        },
+
+        ready: function() {          
+          this.monitoringVisits = [
+            {
+              id: 1,
+              number: '2016/646-3',
+              traveler_name: 'Jane Doe',
+              traveler_type: 'Spot Check',
+              date: '2016-05-05',
+              locations: [],
+              status: 'planned'
+            },
+            {
+              id: 2,
+              number: '2016/646-1',
+              traveler_name: 'John Doe',
+              traveler_type: 'Programmatic Visit',
+              date: '2016-03-03',
+              locations: [],
+              status: 'approved'
+            },
+            {
+              id: 3,
+              number: '2016/646-2',
+              traveler_name: 'Peter Scoodlypooper',
+              traveler_type: 'Spot Check',
+              date: '2016-06-06',
+              locations: [],
+              status: 'completed'
+            },
+          ];
+        },
+
+        _init: function(active) {          
+          console.log('Acilea, Marcico!');
+        
+          this.set('initComplete', false);
+          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          // format of sort param is sort=field.order ex: sort=name.asc
+          var result = {field: 'partner_name', direction: 'asc'};
+          if (parms.sort) {
+            var p = parms.sort.split('.');
+            result = {field: p[0], direction: p[1]};
+          }
+          this.set('initComplete', true);            
+          this.set('sortOrder', result);       
+        },
+
+        _pageSizeSelected: function(e) {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+          this.set('pageSize', parseInt(e.detail.value));
+        },
+
+        _pageNumberChanged: function(e) {
+          this.set('debounceTime', 50);
+          this.set('pageNumber', e.detail.value);
+        },
+        // verify date and prettify or not
+        _checkAndShowDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        },
+      });
+
+    })();
+  </script>
+
+</dom-module>

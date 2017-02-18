@@ -25,7 +25,7 @@
         <etools-content-panel title="Status">
             <div class="buttons-section vertical">
                 <paper-button class="primary-btn w100"
-                              on-tap="_triggerAgreementSave">
+                              on-tap="_triggerSave">
                     Save
                 </paper-button>
             </div>
@@ -37,9 +37,10 @@
     <script>
         Polymer({
             is : "government-status",
-            properties: {
-            
-            },
+            _triggerSave: function(){
+
+              this.fire('save-intervention',{});
+            }
         })
     </script>
 </dom-module>
