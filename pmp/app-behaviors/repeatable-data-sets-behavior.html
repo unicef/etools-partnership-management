@@ -92,6 +92,7 @@
     },
     _handleDeleteResponse: function(event) {
         this._deleteElement();
+        this.elToDeleteIndex = -1;
         this.fire('global-loading', {active: false});
     },
     _handleDeleteError: function(event) {
@@ -123,10 +124,13 @@
 
         } else {
           this._deleteElement();
+          this.elToDeleteIndex = -1;
         }
         
+      } else {
+        this.elToDeleteIndex = -1;
       }
-      this.elToDeleteIndex = -1;
+      
     },
 
     _deleteElement: function() {
