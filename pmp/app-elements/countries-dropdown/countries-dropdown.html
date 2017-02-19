@@ -69,11 +69,12 @@
       }
 
     </style>
-    <template is="dom-if" if="[[countrySelectorVisible]]">
-        <etools-ajax id="ajax"
+      <etools-ajax id="ajax"
                      method="POST"
                      on-success="_handleResponse"
                      on-fail="_handleError"></etools-ajax>
+
+    <template is="dom-if" if="[[countrySelectorVisible]]">
 
         <!-- <iron-icon class$="[[country.imgClass]]" prefix></iron-icon> -->
 
@@ -119,7 +120,7 @@
             this.$.ajax.body = {country: e.detail.item.countryId};
             this.$.ajax.endpoint = this.getEndpoint('changeCountry');
           }
-          this.set('country', this.$.repeat.itemForElement(e.detail.item));
+          // this.set('country', this.$.repeat.itemForElement(e.detail.item));
       },
       _handleResponse: function(res) {
         // TODO: before main refresh... move to base url
@@ -137,7 +138,7 @@
         console.log('TODO: this should be a larger alert.');
         this.$.countriesListbox.selected = this.current;
         this.fire('toast', {text: 'Something went wrong changing your workspace. Please try again'});
-      },
+      }
 
     });
 
