@@ -10,6 +10,7 @@
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -72,6 +73,9 @@
       }
 
     </style>
+     <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
 
     <paper-material elevation="[[elevation]]">
 
@@ -192,8 +196,9 @@
         is: 'assessments-items',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DateBehavior
         ],
 
@@ -202,7 +207,11 @@
             type: Number,
             value: 0
           },
-
+          _deleteEpName: {
+            type: String,
+            value: 'partnerAssessmentDelete',
+            readOnly: true,
+          },
           assessmentTypesOptions: {
             type: Array,
             value: [],

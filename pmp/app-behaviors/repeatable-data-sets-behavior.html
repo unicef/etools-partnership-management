@@ -90,22 +90,54 @@
       this.elToDeleteIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
       this.deleteDialog.opened = true;
     },
-
+    _handleDeleteResponse: function(event) {
+        this._deleteElement();
+        this.fire('global-loading', {active: false});
+    },
+    _handleDeleteError: function(event) {
+        this.fire('global-loading', {active: false});
+        var msg = event.detail.request.detail.request.response;
+        this.fire('toast', {text: msg, showCloseBtn: true});
+    },
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
-        this._deleteElement(this.elToDeleteIndex);
+
+        if (this.dataItems[this.elToDeleteIndex].id) {
+          this.fire('global-loading', {message: 'Deleting items from server...', active: true});
+
+          var deleteAjax = this.$$('#deleteAjax');
+          if ((!deleteAjax) || (!this._deleteEpName)) {
+            console.error('you must define etools-ajax with id "deleteAjax" and ' + 
+             'property _deleteEpName to remove existing records');
+            return;
+          }
+          if (!this.getEndpoint) {
+            console.error('your element must use etoolsConfig.globals behaviour to remove exiting items')
+            return;
+          }
+          deleteAjax.set('method', 'DELETE');
+          deleteAjax.set('endpoint', this.getEndpoint(this._deleteEpName, {id: this.dataItems[this.elToDeleteIndex].id}));
+          console.log(deleteAjax);
+          deleteAjax.set('body', {} );
+
+        } else {
+          this._deleteElement();
+        }
+        
       }
       this.elToDeleteIndex = -1;
     },
 
-    _deleteElement: function(index) {
+    _deleteElement: function() {
+      var index = this.elToDeleteIndex;
       if (!this.editMode) {
         return;
       }
+
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
-        this.fire('delete-confirm',{index:this.elToDeleteIndex})
+        this.fire('delete-confirm', {index:this.elToDeleteIndex})
       }
     },
 
