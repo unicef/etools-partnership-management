@@ -8,7 +8,8 @@
     <etools-file id="files" 
           files="{{attachments}}"
           label="[[label]]"
-          readonly$=[[!editMode]]></etools-file>
+          accept="[[accept]]"
+          readonly$="[[readonly]]""></etools-file>
   </template>
 
   <script>
@@ -26,6 +27,8 @@
         			return [];
         		}
         	},
+          readonly: Boolean,
+          accept:String,
         	label: String,
         	file: {
         		type: Object,

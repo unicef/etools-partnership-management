@@ -36,6 +36,8 @@
             notify: true,
             observer: '_partnerIdChanged'
           },
+          withUpload: Boolean,
+          prepareMultipartData: Boolean,
 
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
@@ -135,18 +137,34 @@
               if (callback) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
-              var withUpload = false; // used to set multipart prop on etools-ajax
-              var prepareMultipartData = false;
+              this.withUpload = false; // used to set multipart prop on etools-ajax
+              this.prepareMultipartData = false;
               if (partner.hasOwnProperty('core_values_assessment')) {
                 if (partner.core_values_assessment instanceof File) {
-                  withUpload = true;
-                  prepareMultipartData = true;
+                  this.withUpload = true;
+                  this.prepareMultipartData = true;
+                } else {
+                   delete partner.core_values_assessment;
                 }
               }
-              console.log(partner);
+              if (partner.hasOwnProperty('assessments')) {
+
+                if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
+
+                  partner.assessments = partner.assessments.map(function(assessment) {
+                      if (assessment.report instanceof File) {
+                        this.withUpload = true;
+                        this.prepareMultipartData = true;
+                      } else {
+                        delete assessment.report;
+                      }
+                      return assessment;
+                  }, this);
+                }
+              }
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload, prepareMultipartData);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, this.withUpload, this.prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',
