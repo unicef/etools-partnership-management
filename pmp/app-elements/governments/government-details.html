@@ -24,7 +24,7 @@
 <link rel="import" href="../../../styles/buttons-styles.html">
 <link rel="import" href="../../../bower_components/paper-styles/shadow.html">
 
-<link rel="import" href="government-plan-result.html">
+<link rel="import" href="government-plan-results.html">
 <link rel="import" href="government-status.html">
 
 <dom-module id="government-details">
@@ -104,13 +104,10 @@
       </etools-content-panel>
       <!--Work Plan Results-->
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
-        <template is="dom-repeat" items="{{intervention.results}}" as="result">
-          <government-plan-result result="{{result}}"
+          <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
                                   allow-edit="[[editMode]]"
-                                  year-options="[[yearOptions]]"
-                                  index="[[index]]">
-          </government-plan-result>
-        </template>
+                                  year-options="[[yearOptions]]">
+          </government-plan-results>
         <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
           <paper-fab icon="add"
                      on-tap="_addNewResult"
@@ -179,7 +176,6 @@
         }
       },
       _addNewResult: function () {
-        console.log('id',this.intervention.id)
         var intervention = this.intervention.id || "";
         var newResult = {
           "intervention": intervention,
@@ -218,19 +214,13 @@
           this.$$("#country_programme").invalid = true;
           valid= false;
         }
-        //validate results
-        var results = this.$.results.querySelectorAll('government-plan-result');
-        if(results.length){
-          var resultsValid = _.reduce(results, function(isValid,result,i){
-            var validate = result._validateFields('result','year','planned_amount','planned_visits');
-            return isValid && validate;
-          }, true);
-          if(!resultsValid){
-            valid = false;
-          }
-        }
-        return valid;
+        var resultsValid= this.$.governmentResults._fieldsAreValid('result','year','planned_amount','planned_visits');
+				if(!resultsValid){
+					valid = false;
+				}
+				return valid;
       },
+
       _initSidebar: function () {
         // TODO create sticky save button
 
