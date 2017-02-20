@@ -38,6 +38,12 @@
               hrps: hrpsData
             }
           },
+          setFileTypes: function(fileTypesData) {
+            return {
+              type: 'SET_FILE_TYPES',
+              fileTypes: fileTypesData
+            };
+          },
           setCpOutputs: function(cpOutputsData) {
             return {
               type: 'SET_CP_OUTPUTS',
@@ -75,6 +81,12 @@
               var preparedHrps = this._prepareDropdownData(response.detail.hrps);
               this.dispatch('setHrps', preparedHrps);
             }
+
+            // set file types value
+            if (Array.isArray(response.detail.file_types) && response.detail.file_types.length > 0) {
+              this.dispatch('setFileTypes', response.detail.file_types);
+            }
+
             // set CP Outputs values
             if (Array.isArray(response.detail.cp_outputs) && response.detail.cp_outputs.length > 0) {
               var preparedCpOutputs = this._prepareDropdownData(response.detail.cp_outputs);
