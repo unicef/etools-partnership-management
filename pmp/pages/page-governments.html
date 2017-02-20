@@ -239,12 +239,10 @@
         }
       },
       _hasEditPermissions: function(permissions) {
-        console.log('permissions', permissions);
-        return true;
-//        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
-//          return true;
-//        }
-//        return false;
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
       }
 
     });
