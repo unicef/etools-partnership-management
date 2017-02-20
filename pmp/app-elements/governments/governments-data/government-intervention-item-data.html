@@ -64,21 +64,6 @@
             }
           }
         },
-        deleteFromIntervention: function(itemName,id,cb){
-          var url = this.getEndpoint('governments').url + 'results/';
-          if(itemName === 'result'){
-           url += id;
-          }else{
-            url += 'activities/'+id;
-          }
-          if(cb){
-            this.set('handleResponseAdditionalCallback',cb);
-          }
-          this.fire('global-loading', {message: 'Deleting government intervention data...', active:true});
-          this._prepareAndFireRequest('DELETE');
-          this.ajaxEl.set('body', {});
-          this.ajaxEl.set('url', url);
-        },
         _prepareAndFireRequest: function(method, data, url) {
           // reset ajax
           this._resetAjax();
