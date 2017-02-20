@@ -408,7 +408,6 @@
         _agreementChanged: function(agreement) {
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             this._clearErrors();
-            this._waitForDataLoad = true;
             if (agreement.id > 0) {
               // prevent wrong new agreement value
               this.set('isNewAgreement', false);
