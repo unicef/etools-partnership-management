@@ -145,7 +145,8 @@
                                             edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
             </div>
             <div class="page" name="attachments">
-              <intervention-attachments edit-mode="[[_hasEditPermissions(permissions)]]" 
+              <intervention-attachments id="intervAttachments" 
+                edit-mode="[[_hasEditPermissions(permissions)]]" 
                 file-model="[[_getAttachmentModel(intervention.id)]]"
                 attachments={{intervention.attachments}}
                 on-delete-file="_deleteAttachment"></intervention-attachments>
@@ -242,6 +243,8 @@
 
       _observeRouteDataId: function(id) {
         this.set('selectedInterventionId', id);
+        // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
+        this.$.intervAttachments.set('preparedAttachments', false);
       },
 
       _validateAndSaveIntervention: function(event) {
@@ -268,7 +271,6 @@
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {
-              console.log(attachment.raw);
               return {
                 id: attachment.id,
                 intervention: attachment.intervention,
@@ -277,7 +279,7 @@
               };
             });
           }
-
+          // TODO: remove console.log
           console.log('intervention data to be saved', interventionData);
           this.$.interventionData.saveIntervention(interventionData);
         } else {
@@ -305,6 +307,7 @@
       },
 
       _deleteAttachment: function(event) {
+        // TODO:  remove console.log ater attachment delete is implemented
         console.log('attachment to delete: ', event.detail);
         this.fire('toast', {text: 'Delete file not implemented yet! '
           + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
