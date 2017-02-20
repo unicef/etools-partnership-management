@@ -91,14 +91,14 @@
       this.deleteDialog.opened = true;
     },
     _handleDeleteResponse: function(event) {
-      this._deleteElement();
-      this.elToDeleteIndex = -1;
-      this.fire('global-loading', {active: false});
+        this._deleteElement();
+        this.elToDeleteIndex = -1;
+        this.fire('global-loading', {active: false});
     },
     _handleDeleteError: function(event) {
-      this.fire('global-loading', {active: false});
-      var msg = event.detail.request.detail.request.response;
-      this.fire('toast', {text: msg, showCloseBtn: true});
+        this.fire('global-loading', {active: false});
+        var msg = event.detail.request.detail.request.response;
+        this.fire('toast', {text: msg, showCloseBtn: true});
     },
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
@@ -109,8 +109,8 @@
 
           var deleteAjax = this.$$('#deleteAjax');
           if ((!deleteAjax) || (!this._deleteEpName)) {
-            console.error('you must define etools-ajax with id "deleteAjax" and ' +
-                'property _deleteEpName to remove existing records');
+            console.error('you must define etools-ajax with id "deleteAjax" and ' + 
+             'property _deleteEpName to remove existing records');
             return;
           }
           if (!this.getEndpoint) {
@@ -119,17 +119,18 @@
           }
           deleteAjax.set('method', 'DELETE');
           deleteAjax.set('endpoint', this.getEndpoint(this._deleteEpName, {id: this.dataItems[this.elToDeleteIndex].id}));
+          console.log(deleteAjax);
           deleteAjax.set('body', {} );
 
         } else {
           this._deleteElement();
           this.elToDeleteIndex = -1;
         }
-
+        
       } else {
         this.elToDeleteIndex = -1;
       }
-
+      
     },
 
     _deleteElement: function() {

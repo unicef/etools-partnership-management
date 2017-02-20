@@ -37,7 +37,7 @@
             observer: '_agreementIdChanged'
           },
 
-          handleResponseAdditionalCallback: Object,
+          handleSuccResponseAdditionalCallback: Object,
           ajaxEl: Object
 
         },
@@ -60,10 +60,10 @@
         _handleResponse: function(response) {
           this._setAgreement(response.detail);
           // call additional callback, if any
-          if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+          if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
+            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
-            this.set('handleResponseAdditionalCallback', null);
+            this.set('handleSuccResponseAdditionalCallback', null);
           }
         },
 
@@ -115,7 +115,8 @@
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
             } else {
-              this.fire('toast', {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+              this.fire('toast', 
+                {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
             }
           }
         },
@@ -123,7 +124,7 @@
         /**
          * Save agreement data
          */
-        saveAgreement: function(agreement, callback) {
+        saveAgreement: function(agreement, succCallback) {
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
@@ -146,8 +147,8 @@
             }
             if (Object.keys(agreement).length > 0) {
               // set additional callback if any
-              if (callback) {
-                this.set('handleResponseAdditionalCallback', callback);
+              if (succCallback) {
+                this.set('handleSuccResponseAdditionalCallback', succCallback);
               }
               this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole
@@ -194,6 +195,7 @@
               }
             }
             this.fire('toast', {text: errorMessage, showCloseBtn: true});
+            this.fire('agreement-save-error', errors);
           }
         }
 

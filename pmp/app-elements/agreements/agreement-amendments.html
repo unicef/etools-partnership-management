@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -41,6 +42,9 @@
       }
 
     </style>
+    <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
@@ -133,11 +137,17 @@
         is: 'agreement-amendments',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.DateBehavior
         ],
 
         properties: {
+          _deleteEpName: {
+            type: String,
+            value: 'agreementAmendmentsDelete',
+            readOnly: true,
+          },
           partner: {
             type: Object
           },
