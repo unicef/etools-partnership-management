@@ -67,17 +67,38 @@
          * Set the method of the request and the body.
          * Used for unsafe requests (PATCH/POST).
          */
-        _prepareAndFireRequest: function(method, data, url) {
+        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
+          if (!multipart){
+            multipart = false;
+          }
+          if (!prepareMultipartData){
+            prepareMultipartData = false;
+          }
+          this.ajaxEl.setContentType(null);
           if (!method) {
             method = 'GET';
             // reset ajax for GET request
             this.ajaxEl.set('params', null);
             this.ajaxEl.set('body', null);
             this.ajaxEl.set('url', null);
+            this.ajaxEl.set('multiPart', false);
+            this.ajaxEl.set('prepareMultipartData', false);
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
               && ['PATCH', 'POST'].indexOf(method) > -1) {
+            
+            if (multipart) {
+              this.ajaxEl.set('multiPart', true);
+            } else {
+              this.ajaxEl.set('multiPart', false);
+            }
+            if (prepareMultipartData) {
+              this.ajaxEl.set('prepareMultipartData', true);
+            } else {
+              this.ajaxEl.set('prepareMultipartData', false);
+            }
+
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
@@ -129,6 +150,20 @@
           }
         },
 
+        _hasFiles: function(list, property) {
+          if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
+            return false;
+          }
+          var hasF = false;
+          for(var i = 0; i < list.length; i++) {
+            if (list[i][property] instanceof File) {
+              hasF = true;
+              break;
+            }
+          }
+          return hasF;
+        },
+
         /**
          * Save intervention data
          */
@@ -158,9 +193,17 @@
               if (callback) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
+
+              var withUpload = false; // used to set multipart prop on etools-ajax
+              var prepareMultipartData = false;
+              if (this._hasFiles(intervention.attachments, 'attachment')) {
+                withUpload = true;
+                prepareMultipartData = true;
+              }
+
               this.fire('global-loading', {message: 'Saving intervention data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url, withUpload, prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this intervention.',
