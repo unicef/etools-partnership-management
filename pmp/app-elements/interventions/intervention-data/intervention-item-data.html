@@ -163,6 +163,9 @@
           }
           return hasF;
         },
+        _fileField: function(intervention, property) {
+          return intervention[property] instanceof File
+        },
 
         /**
          * Save intervention data
@@ -197,6 +200,10 @@
               var withUpload = false; // used to set multipart prop on etools-ajax
               var prepareMultipartData = false;
               if (this._hasFiles(intervention.attachments, 'attachment')) {
+                withUpload = true;
+                prepareMultipartData = true;
+              }
+              if (this._fileField(intervention, 'prc_review_document')) {
                 withUpload = true;
                 prepareMultipartData = true;
               }
