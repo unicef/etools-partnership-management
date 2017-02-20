@@ -160,7 +160,6 @@
                   }, this);
                 }
               }
-              console.log(partner);
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
               this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, this.withUpload, this.prepareMultipartData);
