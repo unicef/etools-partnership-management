@@ -143,6 +143,8 @@
                 if (partner.core_values_assessment instanceof File) {
                   this.withUpload = true;
                   this.prepareMultipartData = true;
+                } else {
+                   delete partner.core_values_assessment;
                 }
               }
               if (partner.hasOwnProperty('assessments')) {
