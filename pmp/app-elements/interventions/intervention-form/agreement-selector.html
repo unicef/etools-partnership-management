@@ -22,7 +22,8 @@
                                                selected="{{partnerId}}"
                                                update-selected no-change-event
                                                required auto-validate
-                                               error-message="Partner is required">
+                                               error-message="Partner is required"
+                                               readonly$="[[!editMode]]">
         </etools-searchable-multiselection-menu>
       </div>
 
@@ -37,7 +38,8 @@
                                                selected="{{agreementId}}"
                                                update-selected no-change-event
                                                required auto-validate
-                                               error-message="Agreement required">
+                                               error-message="Agreement required"
+                                               readonly$="[[!editMode]]">
         </etools-searchable-multiselection-menu>
 
       </div>
@@ -79,6 +81,10 @@
             type: Object,
             value: null,
             notify: true
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           }
 				},
 				_agreementChanged: function(agreementId) {
@@ -98,7 +104,8 @@
           });
           this.set('selectedAgreement', agreement);
 
-          if (this.partnerId !== agreement.partner) {
+          if (agreement && typeof agreement === 'object' 
+              && agreement.partner && this.partnerId !== agreement.partner) {
             var partner = _.find(this.partnersDropdownData, function(partner) {
               return partner.id === agreement.partner;
             });

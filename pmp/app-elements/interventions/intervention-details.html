@@ -72,7 +72,8 @@
           <agreement-selector id="agreementSelector"
             agreement-id="{{intervention.agreement}}"
             partner-id="{{selectedPartnerId}}"
-            selected-agreement="{{agreement}}"></agreement-selector>
+            selected-agreement="{{agreement}}" 
+            edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
           <etools-searchable-multiselection-menu id="documentType"
@@ -85,7 +86,8 @@
                                                  data-path="document_type"
                                                  hide-search
                                                  required auto-validate
-                                                 error-message="Document type is required">
+                                                 error-message="Document type is required"
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -105,7 +107,8 @@
                      char-counter
                      maxlength="256"
                      required auto-validate
-                     error-message="Please add a title"></paper-input>
+                     error-message="Please add a title"
+                     readonly$="[[!editMode]]"></paper-input>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
@@ -117,7 +120,8 @@
                                                  on-value-change="_esmmValueChanged"
                                                  data-path="offices"
                                                  multi required auto-validate
-                                                 error-message="Please select intervention's office(s)">
+                                                 error-message="Please select intervention's office(s)"
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-6">
@@ -131,7 +135,8 @@
                                                  multi
                                                  required$="[[interventionRequiredField]]"
                                                  auto-validate
-                                                 error-message="Please select UNICEF focal points">
+                                                 error-message="Please select UNICEF focal points"
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
       </div>
@@ -147,7 +152,8 @@
              multi
              required$="[[interventionRequiredField]]"
              auto-validate
-             error-message="Please select partner focal points">
+             error-message="Please select partner focal points"
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
       </div>
@@ -162,7 +168,8 @@
                                                  value="[[_getEsmmValue('hrp', intervention.hrp)]]"
                                                  options="[[hrps]]"
                                                  on-value-change="_esmmValueChanged"
-                                                 data-path="hrp">
+                                                 data-path="hrp"
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -175,13 +182,19 @@
                        placeholder="&#8212;"
                        required$="[[interventionRequiredField]]"
                        auto-validate
-                       error-message="Please select start date">
-            <etools-datepicker-button prefix
+                       error-message="Please select start date"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">           
+              <etools-datepicker-button prefix
                                       id="intStartDate"
                                       date="[[prepareDate(intervention.start)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.start}}"
                                       no-init show-clear-btn></etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
         <div class="col col-3">
@@ -194,13 +207,19 @@
                        placeholder="&#8212;"
                        required$="[[interventionRequiredField]]"
                        auto-validate
-                       error-message="Please select end date">
-            <etools-datepicker-button prefix
+                       error-message="Please select end date"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">     
+              <etools-datepicker-button prefix
                                       id="intEndDate"
                                       date="[[prepareDate(intervention.end)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.end}}"
                                       no-init show-clear-btn></etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
         <div class="col col-3">
@@ -219,7 +238,8 @@
                         maxlength="256"
                         required$="[[interventionRequiredField]]"
                         auto-validate
-                        error-message="Please enter population focus content"></paper-textarea>
+                        error-message="Please enter population focus content"
+                        readonly$="[[!editMode]]"></paper-textarea>
       </div>
       <div class="row-h flex-c">
         <paper-material elevation="0">
@@ -332,7 +352,8 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           }
         },
 
@@ -368,6 +389,12 @@
 
           // ensure loading msg close
           this.fire('global-loading', {active: false});
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
         },
 
         _setYears: function(interventionStart, interventionEnd) {
