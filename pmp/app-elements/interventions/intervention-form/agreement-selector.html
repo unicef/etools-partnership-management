@@ -1,10 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
-
-<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -12,7 +6,6 @@
 
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-
 
 <dom-module id="agreement-selector">
   <template>
@@ -22,8 +15,14 @@
         <etools-searchable-multiselection-menu id="partner"
                                                label="Partner Organization"
                                                placeholder="&#8212;"
-                                               on-value-change="_partnerSelected"
-                                               options="[[partnersDropdownData]]">
+                                               options="[[partnersDropdownData]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
+                                               selected="{{partnerId}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Partner is required">
         </etools-searchable-multiselection-menu>
       </div>
 
@@ -32,7 +31,13 @@
                                                label="Agreement"
                                                placeholder="&#8212;"
                                                options="[[filteredAgreements]]"
-                                               on-value-change="_agreementSelected">
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="agreement_number"
+                                               selected="{{agreementId}}"
+                                               update-selected no-change-event
+                                               required auto-validate
+                                               error-message="Agreement required">
         </etools-searchable-multiselection-menu>
 
       </div>
@@ -59,68 +64,101 @@
 					},
 					partnersDropdownData: {
 						type: Array,
-						statePath: 'partnersDropdownData'
+						statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
 					},
 					agreements: {
 						type: Array,
 						statePath: 'agreementsList'
 					},
-					agreementsDropdownData: {
-						type: Array,
-						statePath: 'agreementsDropdownData'
-					},
-                    partnerId: {
+          partnerId: {
 					  type: Number,
-                      notify: true
-                    }
-				},
-				_agreementSelected: function(event) {
-					if (isNaN(event.detail.selectedValues.value)) {return;}
-					this.set('agreementId', event.detail.selectedValues.value);
-				},
-				_findAgreementOption: function(agreementId) {
-					return _.find(this.filteredAgreements, function(obj) {return obj.value === agreementId;});
+            notify: true,
+            observer: '_partnerSelected'
+          },
+          selectedAgreement: {
+            type: Object,
+            value: null,
+            notify: true
+          }
 				},
 				_agreementChanged: function(agreementId) {
-					if (isNaN(agreementId)) { return; }
 					var partnerSelector = this.$.partner;
+					var agreementSelector = this.$.agreements;
+          if (!agreementId) {
+            partnerSelector.value = null,
+            agreementSelector.value === null;
+            this.set('filteredAgreements', []);
+            this.set('selectedAgreement', null);
+            return;
+          }
 
-					// this means we're setting this for the first time
-					if (!partnerSelector.value) {
-						// find the partner associated with this agreement
-						var agreement = _.find(this.agreements, function(obj) {
-						  return obj.id === agreementId;
-						});
-						
-						// find value to set on partners
-						var partnerValue = _.find(this.partnersDropdownData, function(obj) {
-						  return obj.value === agreement.partner;
-						});
+          // find the partner associated with this agreement
+          var agreement = _.find(this.agreements, function(agreement) {
+            return agreement.id === agreementId;
+          });
+          this.set('selectedAgreement', agreement);
 
-						// set partner to be selected:
-						partnerSelector.set('value', partnerValue);
-            this.set('partnerId', partnerValue.value);
-						
-						this._filterAgreements(partnerValue.value);
-						var agreementOption = this._findAgreementOption(agreementId);
-						this.$.agreements.set('value', this._findAgreementOption(agreementId));
-					}
+          if (this.partnerId !== agreement.partner) {
+            var partner = _.find(this.partnersDropdownData, function(partner) {
+              return partner.id === agreement.partner;
+            });
+            if (!partner) {
+              this.fire('toast', { text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+              this._resetSelectorData(partnerSelector, agreementSelector);
+              return;
+            }
+            partnerSelector.set('value', partner);
+            this.set('partnerId', partner.id);
+          }
 				},
 				_filterAgreements: function(partnerId) {
 					this.$.agreements.set('value', null);
+          if (!partnerId) {
+            this.set('filteredAgreements', []);
+            return;
+          }
+
+          if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId)  {
+            this.set('selectedAgreement', null);
+          }
+
 					// set filtered agreements based on this
-					var agreements = _.filter(this.agreements, function(obj) {
-					  return obj.partner === partnerId;
+					var agreements = _.filter(this.agreements, function(agreement) {
+					  return agreement.partner === partnerId &&
+                ['suspended', 'terminated'].indexOf(agreement.status) === -1;
 					});
-					this.set('filteredAgreements', agreements.map(function(p) {
-						return {value: p.id, label: p.agreement_number};
-					}));
+					this.set('filteredAgreements', agreements);
+          this.$.agreements.set('value', this.selectedAgreement);
 				},
-				_partnerSelected: function(event) {
+				_partnerSelected: function(partnerId) {
 					// clear agreementSelection
-					this._filterAgreements(event.detail.selectedValues.value);
-					this.set('partnerId', event.detail.selectedValues.value);
-				}
+					this._filterAgreements(partnerId);
+				},
+
+        _resetSelectorData: function(partnerDropdown, agreementDropdown) {
+          this.set('agreementId', null);
+          this.set('partnerId', null);
+          partnerDropdown.set('value', []);
+          agreementDropdown.set('value', []);
+        },
+
+        resetValidations: function() {
+          this.$.agreements.invalid = false;
+          this.$.partner.invalid = false;
+        },
+
+        validate: function() {
+          var valid = true;
+          if (!this.agreementId) {
+            valid = false;
+            this.$.agreements.invalid = true;
+          }
+          if (!this.partnerId) {
+            valid = false;
+            this.$.partner.invalid = true;
+          }
+          return valid;
+        }
 
 			});
 		})();

@@ -6,3 +6,6 @@ bower_components/
 *.sublime-project
 *.sublime-workspace.vscode/
 .vscode/settings.json
+
+*.sublime-workspace.vscode/settings.json
+vscode/*

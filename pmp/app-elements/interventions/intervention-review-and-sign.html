@@ -7,6 +7,7 @@
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -15,9 +16,8 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-
-<link rel="import" href="../agreements/agreement-data/agreement-item-data.html">
-<link rel="import" href="intervention-status.html">
+<link rel="import" href="intervention-amendments.html">
+<link rel="import" href="intervention-fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
 
@@ -25,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles file-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply(--layout-vertical);
         width: 100%;
       }
       paper-input {
@@ -33,158 +33,149 @@
       }
     </style>
 
-    <agreement-item-data id="agreement"
-                         agreement-id="[[intervention.agreement]]"
-                         agreement="{{interventionAgreement}}"></agreement-item-data>
+    <etools-content-panel class="content-section" title="Signatures & Dates">
+      <div class="row-h flex-c">
+        <div class="col col-3">
+          <!-- Document Start Date -->
+          <paper-input id="submissionDateField"
+                       label="Document Submission Date"
+                       value="[[prettyDate(intervention.submission_date)]]"
+                       on-down="openDatePicker"
+                       data-selector="submissionDate"
+                       placeholder="&#8212;">
+            <etools-datepicker-button prefix
+                                      id="submissionDate"
+                                      date="[[prepareDate(intervention.submission_date)]]"
+                                      format="YYYY-MM-DD"
+                                      pretty-date="{{intervention.submission_date}}"
+                                      no-init show-clear-btn></etools-datepicker-button>
+          </paper-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-3">
+          <!-- Submission Date to PRC -->
+          <paper-input id="submissionDatePrcField"
+                       label="Submission Date to PRC"
+                       value="[[prettyDate(intervention.submission_date_prc)]]"
+                       on-down="openDatePicker"
+                       data-selector="submissionDatePrc"
+                       placeholder="&#8212;">
+            <etools-datepicker-button prefix
+                                      id="submissionDatePrc"
+                                      date="[[prepareDate(intervention.submission_date_prc)]]"
+                                      format="YYYY-MM-DD"
+                                      pretty-date="{{intervention.submission_date_prc}}"
+                                      no-init show-clear-btn></etools-datepicker-button>
+          </paper-input>
+        </div>
+        <div class="col col-3">
+          <!-- Review Date by PRC -->
+          <paper-input id="reviewDatePrcField"
+                       label="Review Date by PRC"
+                       value="[[prettyDate(intervention.review_date_prc)]]"
+                       on-down="openDatePicker"
+                       data-selector="reviewDatePrc"
+                       placeholder="&#8212;">
+            <etools-datepicker-button prefix
+                                      id="reviewDatePrc"
+                                      date="[[prepareDate(intervention.review_date_prc)]]"
+                                      format="YYYY-MM-DD"
+                                      pretty-date="{{intervention.review_date_prc}}"
+                                      no-init show-clear-btn></etools-datepicker-button>
+          </paper-input>
+        </div>
+        <div class="col col-6 file-container space-left">
+          <!-- PRC Review Document -->
+          <etools-single-file label="PRC Review Document"
+                        internal-file=[[intervention.prc_review_document_file]]
+                        file={{intervention.prc_review_document}}
 
-    <!-- main page content start -->
-    <div id="pageContent">
-      <etools-content-panel class="content-section" title="Signatures & Dates">
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <!-- Document Start Date -->
-            <paper-input id="submissionDateField"
-                         label="Document Submission Date"
-                         value="[[prettyDate(intervention.submission_date)]]"
-                         on-down="openDatePicker"
-                         data-selector="submissionDate"
-                         placeholder="&#8212;">
-              <etools-datepicker-button prefix
-                                        id="submissionDate"
-                                        date="[[prepareDate(intervention.submission_date)]]"
-                                        format="YYYY-MM-DD"
-                                        pretty-date="{{intervention.submission_date}}"
-                                        no-init show-clear-btn></etools-datepicker-button>
-            </paper-input>
-          </div>
+                       accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <!-- Submission Date to PRC -->
-            <paper-input id="submissionDatePrcField"
-                         label="Submission Date to PRC"
-                         value="[[prettyDate(intervention.submission_date_prc)]]"
-                         on-down="openDatePicker"
-                         data-selector="submissionDatePrc"
-                         placeholder="&#8212;">
-              <etools-datepicker-button prefix
-                                        id="submissionDatePrc"
-                                        date="[[prepareDate(intervention.submission_date_prc)]]"
-                                        format="YYYY-MM-DD"
-                                        pretty-date="{{intervention.submission_date_prc}}"
-                                        no-init show-clear-btn></etools-datepicker-button>
-            </paper-input>
-          </div>
-          <div class="col col-3">
-            <!-- Review Date by PRC -->
-            <paper-input id="reviewDatePrcField"
-                         label="Review Date by PRC"
-                         value="[[prettyDate(intervention.review_date_prc)]]"
-                         on-down="openDatePicker"
-                         data-selector="reviewDatePrc"
-                         placeholder="&#8212;">
-              <etools-datepicker-button prefix
-                                        id="reviewDatePrc"
-                                        date="[[prepareDate(intervention.review_date_prc)]]"
-                                        format="YYYY-MM-DD"
-                                        pretty-date="{{intervention.review_date_prc}}"
-                                        no-init show-clear-btn></etools-datepicker-button>
-            </paper-input>
-          </div>
-          <div class="col col-6 file-container space-left">
-            <!-- PRC Review Document -->
-            <etools-file label="PRC Review Document"
-                         accept=".doc,.docx,.pdf,.jpg,.png"></etools-file>
-          </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <!-- Signed By Partner Authorized Officer -->
+          <etools-searchable-multiselection-menu id="signedByAuthorizedOfficer"
+             label="Signed By Partner Authorized Officer"
+             placeholder="&#8212;"
+             value="[[_setSignedByAuthOfficer(intervention.partner_authorized_officer_signatory, agreementAuthorizedOfficers.length)]]"
+             options="[[agreementAuthorizedOfficers]]"
+             on-value-change="_signedByAuthOfficerSelected">
+          </etools-searchable-multiselection-menu>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <!-- Signed By Partner Authorized Officer -->
-            <etools-searchable-multiselection-menu id="signedByAuthorizedOfficer"
-               label="Signed By Partner Authorized Officer"
-               placeholder="&#8212;"
-               value="[[_setSignedByAuthOfficer(intervention.partner_authorized_officer_signatory, agreementAuthorizedOfficers.length)]]"
-               options="[[agreementAuthorizedOfficers]]"
-               on-value-change="_signedByAuthOfficerSelected">
-            </etools-searchable-multiselection-menu>
-          </div>
-          <div class="col col-3">
-            <!-- Signed by Partner Date -->
-            <paper-input id="signedByPartnerDateField"
-                         label="Signed by Partner Date"
-                         value="[[prettyDate(intervention.signed_by_partner_date)]]"
-                         on-down="openDatePicker"
-                         data-selector="signedByPartnerDate"
-                         placeholder="&#8212;">
-              <etools-datepicker-button prefix
-                                        id="signedByPartnerDate"
-                                        date="[[prepareDate(intervention.signed_by_partner_date)]]"
-                                        format="YYYY-MM-DD"
-                                        pretty-date="{{intervention.signed_by_partner_date}}"
-                                        no-init show-clear-btn></etools-datepicker-button>
-            </paper-input>
-          </div>
+        <div class="col col-3">
+          <!-- Signed by Partner Date -->
+          <paper-input id="signedByPartnerDateField"
+                       label="Signed by Partner Date"
+                       value="[[prettyDate(intervention.signed_by_partner_date)]]"
+                       on-down="openDatePicker"
+                       data-selector="signedByPartnerDate"
+                       placeholder="&#8212;">
+            <etools-datepicker-button prefix
+                                      id="signedByPartnerDate"
+                                      date="[[prepareDate(intervention.signed_by_partner_date)]]"
+                                      format="YYYY-MM-DD"
+                                      pretty-date="{{intervention.signed_by_partner_date}}"
+                                      no-init show-clear-btn></etools-datepicker-button>
+          </paper-input>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <!-- Signed by UNICEF -->
-            <etools-searchable-multiselection-menu id="signedByUnicef"
-               label="Signed by UNICEF"
-               placeholder="&#8212;"
-               value="[[_setSignedByUnicef(intervention.unicef_signatory, unicefUsersData.length)]]"
-               options="[[unicefUsersData]]"
-               on-value-change="_signedByUnicefSelected">
-            </etools-searchable-multiselection-menu>
-          </div>
-          <div class="col col-3">
-            <!-- Signed by UNICEF Date -->
-            <paper-input id="signedByUnicefDateField"
-                         label="Signed by UNICEF Date"
-                         value="[[prettyDate(intervention.signed_by_unicef_date)]]"
-                         on-down="openDatePicker"
-                         data-selector="signedByUnicefDate"
-                         placeholder="&#8212;">
-              <etools-datepicker-button prefix
-                                        id="signedByUnicefDate"
-                                        date="[[prepareDate(intervention.signed_by_unicef_date)]]"
-                                        format="YYYY-MM-DD"
-                                        pretty-date="{{intervention.signed_by_unicef_date}}"
-                                        no-init show-clear-btn></etools-datepicker-button>
-            </paper-input>
-          </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <!-- Signed by UNICEF -->
+          <etools-searchable-multiselection-menu id="signedByUnicef"
+             label="Signed by UNICEF"
+             placeholder="&#8212;"
+             value="[[_setSignedByUnicef(intervention.unicef_signatory, unicefUsersData.length)]]"
+             options="[[unicefUsersData]]"
+             on-value-change="_signedByUnicefSelected">
+          </etools-searchable-multiselection-menu>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <paper-input label="Days From Submission to Signed"
-                         value="[[getDatesDiff(intervention.submission_date, intervention.signed_by_partner_date)]]"
-                         placeholder="&#8212;" readonly></paper-input>
-          </div>
-          <div class="col col-3">
-            <paper-input label="Days From Submission to Signed"
-                         value="[[getDatesDiff(intervention.review_date_prc, intervention.signed_by_partner_date)]]"
-                         placeholder="&#8212;" readonly></paper-input>
-          </div>
+        <div class="col col-3">
+          <!-- Signed by UNICEF Date -->
+          <paper-input id="signedByUnicefDateField"
+                       label="Signed by UNICEF Date"
+                       value="[[prettyDate(intervention.signed_by_unicef_date)]]"
+                       on-down="openDatePicker"
+                       data-selector="signedByUnicefDate"
+                       placeholder="&#8212;">
+            <etools-datepicker-button prefix
+                                      id="signedByUnicefDate"
+                                      date="[[prepareDate(intervention.signed_by_unicef_date)]]"
+                                      format="YYYY-MM-DD"
+                                      pretty-date="{{intervention.signed_by_unicef_date}}"
+                                      no-init show-clear-btn></etools-datepicker-button>
+          </paper-input>
         </div>
-      </etools-content-panel>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-3">
+          <paper-input label="Days from Submission to Signed"
+                       value="[[getDaysFromSubmissionToSign(intervention.submission_date, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
+                       placeholder="&#8212;" readonly></paper-input>
+        </div>
+        <div class="col col-3">
+          <paper-input label="Days from Review to Signed"
+                       value="[[getDaysFromSubmissionToSign(intervention.review_date_prc, intervention.signed_by_partner_date, intervention.signed_by_unicef_date)]]"
+                       placeholder="&#8212;" readonly></paper-input>
+        </div>
+      </div>
+    </etools-content-panel>
 
+    <template is="dom-if" if="[[_isNotDraft(intervention.status)]]">
       <etools-content-panel class="content-section" title="Amendments">
-        Amendments will go here...
+        <intervention-amendments data-items="{{intervention.amendments}}"
+                                 edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
+    </template>
 
-      <etools-content-panel class="content-section" title="Found Reservetions">
-        Found reservation will go here...
-      </etools-content-panel>
-
-    </div> <!-- main page content end -->
-
-    <!-- sidebar content start -->
-    <div id="sidebar">
-      <intervention-status status="[[intervention.status]]"
-                           on-save-intervention="_validateAndSaveSignedData"
-                           show-save-btn$="[[editMode]]"></intervention-status>
-    </div>
-    <!-- sidebar content end -->
-
+    <etools-content-panel class="content-section" title="Fund Reservetions">
+      <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
+                                      fr-numbers-details="[[intervention.fr_numbers_details]]"
+                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
+    </etools-content-panel>
 
   </template>
 
@@ -209,26 +200,28 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          interventionAgreement: {
+          agreement: {
             type: Object,
             value: null,
-            observer: '_interventionAgreementChanged'
+            observer: '_agreementChanged'
           },
           agreementAuthorizedOfficers: {
             type: Array,
             value: []
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           }
-
         },
 
         _interventionChanged: function(intervention) {
           // console.log('intervention, review&sign', intervention);
-
           // ensure loading msg close
           this.fire('global-loading', {active: false});
         },
 
-        _interventionAgreementChanged: function(agreement) {
+        _agreementChanged: function(agreement) {
           if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
             var authorizedOfficerData = agreement.authorized_officers.map(function(officer) {
               return {
@@ -238,31 +231,20 @@
             });
             this.set('agreementAuthorizedOfficers', authorizedOfficerData);
           }
+          this.fire('global-loading', {active: false});
         },
 
-        _validateAndSaveSignedData: function(event) {
-          event.stopImmediatePropagation();
-          if (!this.editMode) {
-            return;
+        getDaysFromSubmissionToSign: function(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
+          if (typeof dateStr === 'string' && dateStr !== '' &&
+              (typeof signedByPartnerDateStr === 'string' && signedByPartnerDateStr !== '' ||
+              typeof signedByUnicefDateStr === 'string' && signedByUnicefDateStr !== '')) {
+
+            var maxSignedDateStr = this.getMaxDateStr(signedByPartnerDateStr, signedByUnicefDateStr);
+            if (maxSignedDateStr !== null && new Date(dateStr).toString() !== 'Invalid Date') {
+              return this.dateDiff(dateStr, maxSignedDateStr);
+            }
           }
-
-          var signedAndReviewData = {
-            id: this.intervention.id,
-            submission_date: this.intervention.submission_date,
-            submission_date_prc: this.intervention.submission_date_prc,
-            review_date_prc: this.intervention.review_date_prc,
-            prc_review_document: this.intervention.prc_review_document,
-            signed_by_partner_date: this.intervention.signed_by_partner_date,
-            signed_by_unicef_date: this.intervention.signed_by_unicef_date,
-            partner_authorized_officer_signatory: this.intervention.partner_authorized_officer_signatory,
-            unicef_signatory: this.intervention.unicef_signatory
-          };
-
-          this.fire('save-intervention', signedAndReviewData);
-        },
-
-        getDatesDiff: function(date1, date2) {
-          // TODO: this should calculate diff drom date2 and date1, move it in date-behavior
+          return null;
         },
 
         _signedByUnicefSelected: function(event) {
@@ -295,6 +277,10 @@
             });
           }
           return [];
+        },
+
+        _isNotDraft: function(status) {
+          return status !== 'draft';
         }
 
       });

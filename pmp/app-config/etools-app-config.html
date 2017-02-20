@@ -243,14 +243,18 @@ App global configuration
           exp: 6 * 60 * 60 * 1000,
           cachingKey: 'sections'
       },
-      governmentIntResultDelete : {
-        template : "/api/v2/government_interventions/results/<%=id%>/"
+      ramIndicators: {
+        template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
-      governmentResultActivityDelete: {
-        template : "/api/v2/government_interventions/results/activities/<%=id%>/"
-      },
+			governmentIntResultDelete : {
+				template : "/api/v2/government_interventions/results/<%=id%>/"
+			},
+			governmentResultActivityDelete: {
+				template : "/api/v2/government_interventions/results/activities/<%=id%>/"
+			},
 
-    };
+
+		};
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
     /* jshint ignore:end */

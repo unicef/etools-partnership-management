@@ -93,6 +93,12 @@
               type: 'SET_PARTNERS',
               partnersData: partnersData
             };
+          },
+          setCivilSocietyOrganizationPartners: function(csoPartners) {
+            return {
+              type: 'SET_CSO_PARTNERS',
+              csoPartners: csoPartners
+            }
           }
         },
 
@@ -109,7 +115,11 @@
             this.dispatch('setPartners', res.detail);
             var preparedData = [];
             var filteredData = [];
+            var civilSocietyOrganizationPartners = [];
             res.detail.forEach(function(p) {
+              if (p.partner_type === 'Civil Society Organization') {
+                civilSocietyOrganizationPartners.push(p);
+              }
               if (!p.hidden) {
                 preparedData.push({
                   value: p.id,
@@ -125,6 +135,7 @@
             });
             this.dispatch('setPartnersDropdown', preparedData);
             this.dispatch('setPartnersFilteredDropdown', filteredData);
+            this.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
           }
         },
 
