@@ -10,6 +10,8 @@
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
+<link rel="import" href="../app-elements/interventions/intervention-overview.html">
+<link rel="import" href="../app-elements/interventions/intervention-supplies.html">
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
@@ -93,6 +95,10 @@
                 attr-for-selected="name"
                 noink bottom-item>
 
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
+
               <paper-tab name="details" link>
                 <span class="tab-content">Details</span>
               </paper-tab>
@@ -123,6 +129,9 @@
                   active="[[listActive]]"
                   url-params="[[interventionsQueryParams]]"></interventions-list>
             </div>
+              <div class="page" name="overview">
+          <intervention-overview intervention="[[intervention]]"></intervention-overview>
+        </div>
             <div class="page" name="details">
               <intervention-details id="interventionDetails"
                                     intervention="[[intervention]]"
@@ -253,10 +262,20 @@
 
           // on save sector_locations sector prop needs to be sector ID and not the sector obj
           interventionData.sector_locations = interventionDetails.prepareSectorLocations();
+          // prepare fr numbers
+          if (Array.isArray(interventionData.fr_numbers) && interventionData.fr_numbers.length > 0) {
+            interventionData.fr_numbers = interventionData.fr_numbers.map(function(frNumber) {
+              return frNumber.value;
+            });
+          }
           console.log('intervention data to be saved', interventionData);
           this.$.interventionData.saveIntervention(interventionData);
         } else {
-          this.fire('toast', {text: 'Please review invalid fields data from details tab!', showCloseBtn: true});
+          var msg = 'Please review invalid fields data!';
+          if (this.interventionPage !== 'details') {
+            msg = 'Please review invalid fields data from details tab!';
+          }
+          this.fire('toast', {text: msg, showCloseBtn: true});
         }
       },
 
