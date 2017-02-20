@@ -100,16 +100,10 @@
           this.ajaxEl.set('url', null);
         },
         _handleResponse: function(response){
-          if(_.has(response,'detail.id')){
-            this._setIntervention(response.detail);
-          }
+          this._setIntervention(response.detail);
           if(typeof this.handleResponseAdditionalCallback === 'function'){
-             if(_.has(response,'detail.id')){
-               this.handleResponseAdditionalCallback.bind(this, response.detail)();
-             }else{
-               this.set('handleResponseAdditionalCallback', null);
-               window.location.reload();
-             }
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            this.set('handleResponseAdditionalCallback', null);
             // reset callback
           }
         },

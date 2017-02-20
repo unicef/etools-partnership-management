@@ -178,15 +178,6 @@
           e.target.invalid= false;
         }
       },
-      _deleteResult: function (e) {
-        e.stopImmediatePropagation();
-       console.log('edetail', e.detail)
-        this.fire('save-intervention', e.detail);
-      },
-//      _deleteActivity: function(e) {
-//        e.stopImmediatePropagation();
-//        this.fire('save-intervention', {activity: e.detail.activity});
-//      },
       _addNewResult: function () {
         console.log('id',this.intervention.id)
         var intervention = this.intervention.id || "";

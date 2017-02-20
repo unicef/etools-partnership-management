@@ -242,7 +242,13 @@ App global configuration
           url : '/api/sections',
           exp: 6 * 60 * 60 * 1000,
           cachingKey: 'sections'
-      }
+      },
+      governmentIntResultDelete : {
+        template : "/api/v2/government_interventions/results/<%=id%>/"
+      },
+      governmentResultActivityDelete: {
+        template : "/api/v2/government_interventions/results/activities/<%=id%>/"
+      },
 
     };
     /* jshint ignore:start */

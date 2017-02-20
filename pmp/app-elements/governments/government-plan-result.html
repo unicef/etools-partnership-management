@@ -8,6 +8,7 @@
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/object-databind-behavior.html">
@@ -78,6 +79,9 @@
                 width: auto;
             }
         </style>
+      <etools-ajax id="deleteAjax"
+                   on-success="_handleDeleteResponse"
+                   on-fail="_handleDeleteError"></etools-ajax>
         <div class="layout horizontal">
             <!--Remove button and divider-->
             <div class="layout vertical">
@@ -328,7 +332,8 @@
                 behaviors: [
                     pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
                     pmpBehaviors.RepeatableDataSetsBehavior,
-                    pmpBehaviors.ObjectDatabindBehavior
+                    pmpBehaviors.ObjectDatabindBehavior,
+                    etoolsAppConfig.globals
                 ],
                 listeners: {
                     'delete-confirm': '_deleteItem'

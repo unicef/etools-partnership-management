@@ -195,11 +195,6 @@
         e.stopImmediatePropagation();
         if(_.has(e.detail,'intervention')){
           this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved)
-        }else if(_.has(e.detail,'result')){
-          console.log('result id deleting: ', e.detail.result)
-          this.$.interventionData.deleteFromIntervention('result',e.detail.result,this._interventionSaved)
-        }else{
-          this.$.interventionData.deleteFromIntervention('activity',e.detail.activity,this._interventionSaved)
         }
       },
       _interventionSaved: function(intervention) {
