@@ -64,12 +64,12 @@
             this._prepareAndFireRequest(null);
           }
         },
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
+        _prepareAndFireRequest: function(method, data, url, multipart, customMultipartData) {
           if (!multipart){
             multipart = false;
           }
-          if (!prepareMultipartData){
-            prepareMultipartData = false;
+          if (!customMultipartData){
+            customMultipartData = false;
           }
           this.ajaxEl.setContentType(null);
           if (!method) {
@@ -79,20 +79,20 @@
             this.ajaxEl.set('body', null);
             this.ajaxEl.set('url', null);
             this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
+            this.ajaxEl.set('customMultipartData', false);
           }
           this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
+          if (((typeof data === 'object' && Object.keys(data).length > 0) || (data instanceof FormData))
               && ['PATCH', 'POST'].indexOf(method) > -1) {
             if (multipart) {
               this.ajaxEl.set('multiPart', true);
             } else {
               this.ajaxEl.set('multiPart', false);
             }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
+            if (customMultipartData) {
+              this.ajaxEl.set('customMultipartData', true);
             } else {
-              this.ajaxEl.set('prepareMultipartData', false);
+              this.ajaxEl.set('customMultipartData', false);
             }
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
@@ -109,6 +109,42 @@
             this.set('handleResponseAdditionalCallback', null);
           }
         },
+
+        _preparePartnerMultipartFormData: function(partnerData, exceptionsList) {
+          var body = new FormData();
+          Object.keys(partnerData).forEach(function(key) {
+            var data = partnerData[key];
+            if (exceptionsList.indexOf(key) === -1) {
+              body.append(key, JSON.stringify(data));
+            } else {
+              // setup form data array, that can be
+              if (Array.isArray(data) && data.length > 0) {
+                // array of objects (assessments)
+                data.forEach(function(d, index) {
+                  Object.keys(d).forEach(function(dKey) {
+                    body.append(key + '[' + index + '][' + dKey + ']', d[dKey]);
+                  });
+                });
+              } else {
+                // empty assessments array, core values assessment File
+                body.append(key, data);
+              }
+            }
+          });
+          return body;
+        },
+
+        _checkForAssessmentsFiles: function(assessments) {
+          var hasF = false;
+          for(var i = 0; i < assessments.length; i++) {
+            if (assessments[i].report_file instanceof File || assessments[i].report_file instanceof Blob) {
+              hasF = true;
+              break;
+            }
+          }
+          return hasF;
+        },
+
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
@@ -136,17 +172,25 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               var withUpload = false; // used to set multipart prop on etools-ajax
-              var prepareMultipartData = false;
-              if (partner.hasOwnProperty('core_values_assessment')) {
-                if (partner.core_values_assessment instanceof File) {
-                  withUpload = true;
-                  prepareMultipartData = true;
-                }
+              var customMultipartData = false;
+              var partnerFormDataData = null;
+              if ((partner.hasOwnProperty('core_values_assessment_file')
+                  && partner.core_values_assessment_file instanceof File)
+                  || this._checkForAssessmentsFiles(partner.assessments)) {
+
+                withUpload = true;
+                customMultipartData = true;
+
+                // prepare partner multipart data using FormData
+                partnerFormDataData = this._preparePartnerMultipartFormData(partner,
+                    ['core_values_assessment_file', 'assessments']);
               }
-              console.log(partner);
+              console.log('data to update', (withUpload ? partnerFormDataData : partner));
+
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, withUpload, prepareMultipartData);
+              this._prepareAndFireRequest(((isNew) ? 'POST' : 'PATCH'),
+                  (withUpload ? partnerFormDataData : partner), url, withUpload, customMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',
