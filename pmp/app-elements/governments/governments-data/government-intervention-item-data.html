@@ -64,13 +64,26 @@
             }
           }
         },
+        deleteFromIntervention: function(itemName,id,cb){
+          var url = this.getEndpoint('governments').url + 'results/';
+          if(itemName === 'result'){
+           url += id;
+          }else{
+            url += 'activities/'+id;
+          }
+          if(cb){
+            this.set('handleResponseAdditionalCallback',cb);
+          }
+          this.fire('global-loading', {message: 'Deleting government intervention data...', active:true});
+          this._prepareAndFireRequest('DELETE');
+          this.ajaxEl.set('body', {});
+          this.ajaxEl.set('url', url);
+        },
         _prepareAndFireRequest: function(method, data, url) {
+          // reset ajax
+          this._resetAjax();
           if (!method) {
             method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
@@ -78,14 +91,26 @@
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
+
           // after body is set the request is automatically triggered
         },
+        _resetAjax: function(){
+          this.ajaxEl.set('params', null);
+          this.ajaxEl.set('body', null);
+          this.ajaxEl.set('url', null);
+        },
         _handleResponse: function(response){
-          this._setIntervention(response.detail);
+          if(_.has(response,'detail.id')){
+            this._setIntervention(response.detail);
+          }
           if(typeof this.handleResponseAdditionalCallback === 'function'){
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+             if(_.has(response,'detail.id')){
+               this.handleResponseAdditionalCallback.bind(this, response.detail)();
+             }else{
+               this.set('handleResponseAdditionalCallback', null);
+               window.location.reload();
+             }
             // reset callback
-            this.set('handleResponseAdditionalCallback', null);
           }
         },
 
@@ -110,7 +135,7 @@
           var errors = response.detail.request.detail.request.response;
           if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
             // TODO: improve etools-ajax on-fail event data model (received errors)
-            var errorMessage = 'An error occurred during agreement save!';
+            var errorMessage = 'An error occurred during save!';
             if (errors) {
               var errorMessages = ['Errors occurred:\n'];
               if (Array.isArray(errors) && errors.length > 0) {

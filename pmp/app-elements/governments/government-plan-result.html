@@ -90,6 +90,7 @@
                         <paper-icon-button class="action delete"
                                            on-tap="_openDeleteConfirmation"
                                            data-args$="[[index]]"
+                                           item-type="result"
                                            hidden$="[[!editMode]]"
                                            icon="cancel">
                         </paper-icon-button>
@@ -268,6 +269,7 @@
                                         <paper-icon-button class="action delete-activity"
                                                            on-tap="_openDeleteConfirmation"
                                                            data-args$="[[index]]"
+                                                           item-type="activity"
                                                            hidden$="[[!editMode]]"
                                                            icon="cancel">
                                         </paper-icon-button>
@@ -329,7 +331,7 @@
                     pmpBehaviors.ObjectDatabindBehavior
                 ],
                 listeners: {
-                    'delete-confirm': '_activityDeleted'
+                    'delete-confirm': '_deleteItem'
                 },
                 properties: {
                     result: {
@@ -386,8 +388,14 @@
                     var updatedResult = this._getUpdatedObject(path,newObj,this.result);
                     this.set('result',updatedResult);
                 },
-                _activityDeleted: function(e){
-                    this.splice('result.result_activities',e.detail.index,1);
+                _deleteItem: function(e){
+                  e.stopImmediatePropagation();
+                  if(e.detail.type === 'result'){
+                    this.fire('save-intervention', {result: this.result.id})
+                  }else {
+                    var id = this.result.result_activities[e.target.index].id;
+                    this.fire('save-intervention',{activity: id});
+                  }
                 },
                 _validateFields: function(){
                   var result = this.result;

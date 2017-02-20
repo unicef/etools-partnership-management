@@ -108,8 +108,7 @@
           <government-plan-result result="{{result}}"
                                   allow-edit="[[editMode]]"
                                   year-options="[[yearOptions]]"
-                                  index="[[index]]"
-                                  on-delete-confirm="_deleteResult">
+                                  index="[[index]]">
           </government-plan-result>
         </template>
         <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
@@ -151,7 +150,7 @@
         },
         partnersDropdownData: {
           type: Array,
-          statePath: 'partnersDropdownData'
+          statePath: 'partnersFilteredDropdownData'
         },
         countryProgrammeDropdownData: {
           type: Array,
@@ -173,16 +172,26 @@
         }
       },
       _handleValueChange: function (e) {
-        var path = 'intervention.' + e.target.id;
-        this.set(path, e.detail.selectedValues.value);
-        e.target.invalid= false;
+        if(!_.isNull(e.detail.seledValues)){
+          var path = 'intervention.' + e.target.id;
+          this.set(path, e.detail.selectedValues.value);
+          e.target.invalid= false;
+        }
       },
       _deleteResult: function (e) {
-        this.splice('intervention.results', e.detail.index, 1);
+        e.stopImmediatePropagation();
+       console.log('edetail', e.detail)
+        this.fire('save-intervention', e.detail);
       },
+//      _deleteActivity: function(e) {
+//        e.stopImmediatePropagation();
+//        this.fire('save-intervention', {activity: e.detail.activity});
+//      },
       _addNewResult: function () {
+        console.log('id',this.intervention.id)
+        var intervention = this.intervention.id || "";
         var newResult = {
-          "intervention": "",
+          "intervention": intervention,
           "result": "",
           "year": "",
           "planned_amount": "",
@@ -200,7 +209,7 @@
           this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true}); // TODO : disable save button when no change detected
         }
         else if(this._interventionIsValid()){
-          this.fire('save-intervention', this.intervention);
+          this.fire('save-intervention', {intervention: this.intervention});
         }else{
           this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true}); // TODO : scroll missed fields into view
 
@@ -222,7 +231,7 @@
         var results = this.$.results.querySelectorAll('government-plan-result');
         if(results.length){
           var resultsValid = _.reduce(results, function(isValid,result,i){
-            var validate = result._validateFields('result','year','planned_amount');
+            var validate = result._validateFields('result','year','planned_amount','planned_visits');
             return isValid && validate;
           }, true);
           if(!resultsValid){
@@ -240,11 +249,6 @@
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
         this.fire('global-loading', {active:false});
-      },
-      attached: function(){
-        if(_.isEmpty(this.intervention)){
-          this.set('intervention', this.newInterventionModel);
-        }
       },
     })
   </script>

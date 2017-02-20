@@ -123,7 +123,7 @@
           <government-details id="details"
                               new-intervention-model="[[newInterventionModel]]"
                               intervention="[[intervention]]"
-                              edit-mode="[[fakePermission]]"
+                              edit-mode="[[_hasEditPermissions(permissions)]]"
                               on-save-intervention="_saveIntervention"></government-details>
         </div>
         <div class="page" name="overview">
@@ -169,7 +169,6 @@
         selectedInterventionId: {
           type: Number
         },
-        fakePermission: true,
       },
 
        observers: [
@@ -194,9 +193,16 @@
       },
       _saveIntervention: function (e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.saveIntervention(e.detail, this._newInterventionSaved)
+        if(_.has(e.detail,'intervention')){
+          this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved)
+        }else if(_.has(e.detail,'result')){
+          console.log('result id deleting: ', e.detail.result)
+          this.$.interventionData.deleteFromIntervention('result',e.detail.result,this._interventionSaved)
+        }else{
+          this.$.interventionData.deleteFromIntervention('activity',e.detail.activity,this._interventionSaved)
+        }
       },
-      _newInterventionSaved: function(intervention) {
+      _interventionSaved: function(intervention) {
         this.fire('update-main-path', {path: 'governments/' + intervention.id + '/details'});
       },
       _pageChanged : function (governmentListActive, tab, newInterventionActive) {
@@ -218,8 +224,8 @@
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
-      _goToNewGovernmentPage: function(e){
-        this.set('intervention', this.newInterventionModel);
+      _goToNewGovernmentPage: function(){
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', 0);
         this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
         if(_.isEmpty(this.intervention.results)){
@@ -237,8 +243,18 @@
           this.set('selectedInterventionId', id);
         }
       },
+      _hasEditPermissions: function(permissions) {
+        console.log('permissions', permissions);
+        return true;
+//        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+//          return true;
+//        }
+//        return false;
+      }
 
     });
 
   </script>
 </dom-module>
+
+//TODO 1. save after error, delete function
