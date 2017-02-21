@@ -244,7 +244,7 @@
 
         _calculateMinimumRequirements: function() {
           
-          var ratingLowOrModerale = (this.partner.rating == 'Low' || this.partner.rating == 'Moderate');
+          var ratingLowOrModerale = (this.partner.rating === 'Low' || this.partner.rating === 'Moderate');
           var cashTransferred = this.partner.total_ct_cy;
           var programmeVisits = 0; 
           var spotChecks = 0;   
