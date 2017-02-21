@@ -145,6 +145,21 @@
         /**
          * Save agreement data
          */
+         _hasFiles: function(list, property) {
+          if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
+            return false;
+          }
+          var hasF = false;
+          for(var i = 0; i < list.length; i++) {
+            if (list[i][property] instanceof File) {
+              hasF = true;
+            }
+            else {
+              delete list[i][property];
+            }
+          }
+          return hasF;
+        },
         saveAgreement: function(agreement, succCallback) {
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
@@ -180,6 +195,10 @@
                 } else {
                    delete agreement.attached_agreement;
                 }
+              }
+              if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
+                this.withUpload = true;
+                this.prepareMultipartData = true;
               }
               this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole

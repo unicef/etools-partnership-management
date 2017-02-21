@@ -7,12 +7,14 @@
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/object-databind-behavior.html">
+
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -81,7 +83,9 @@
       }
 
     </style>
-
+    <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -187,6 +191,7 @@
         is: 'agreement-amendment-types',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
@@ -196,6 +201,11 @@
         ],
 
         properties: {
+          _deleteEpName: {
+            type: String,
+            value: 'agreementAmendmentsTypeDelete',
+            readOnly: true,
+          },
           partner: {
             type: Object
           },
