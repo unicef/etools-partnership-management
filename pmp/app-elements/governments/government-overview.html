@@ -244,7 +244,11 @@
      },
 
      _interventionChanged : function(intervention){
-       if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {            
+       if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {    
+         if(!intervention.implementation_status){
+           this.set('intervention.implementation_status', []);
+         }
+
          this._prepareCpOutputs(); 
          this._prepareInterventionStatusData();
          this._findProgramme();
