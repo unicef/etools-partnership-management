@@ -329,6 +329,10 @@
             type: Array,
             statePath: 'countryProgrammes'
           },
+          csvQueryString: {
+            type: String,
+            notify: true
+          },
 
         },
 
@@ -380,7 +384,8 @@
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
-            },{
+            },
+            {
               filterName: 'Years',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
@@ -408,7 +413,6 @@
           this.set('selectedSectors', parms.sector ? this._setSelectedSectors(parms.sector) : []);
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
-          this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
           this.set('selectedYears', parms.year ? this._setSelectedYears(parms.year) : []);
 
           // format of sort param is sort=field.order ex: sort=name.asc
@@ -452,6 +456,7 @@
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          this.set('csvQueryString', this._buildCsvQueryString());
           var qs = this._buildQueryString();
 
           if (qs !== _governmentsLastNavigated) {
@@ -528,7 +533,7 @@
           }
           if (this.q && this.q.length) {
             out.push('q=' + this.q);
-          }
+          } 
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
@@ -561,9 +566,34 @@
               return year.label;
             }).join('|'));
           }
-
+          
           return out.join('&');
         },
+
+        _buildCsvQueryString: function() {
+          var out = [];
+
+          // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
+          //   out.push('country_programme=' + this.selectedCpOutputs.pop());
+          // }
+
+          if (this.selectedPartners && this.selectedPartners.length) {
+            out.push('partner=' + this.selectedPartners.pop().value);
+          }
+          if (this.selectedSectors && this.selectedSectors.length) {
+            out.push('sector=' + this.selectedSectors.pop().value);
+          }
+          if (this.selectedYears && this.selectedYears.length) {
+            out.push('year=' + this.selectedYears.pop().value);
+          }
+          if(this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
+            out.push('unicef_focal_point=' + this.selectedUnicefFocalPoints.pop().value);
+          }
+
+          out.push('format=csv');
+          return out.join('&');
+        },
+        
 
         // Run when partners-data is fully loaded
         // Maps array of partner ids to multiselect compatible {value, label} format
