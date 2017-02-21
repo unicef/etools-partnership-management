@@ -243,7 +243,7 @@
 
       _getTopContentAdditionalClass: function(interventionPage) {
         if (this._showPageTabs(interventionPage)) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       },
@@ -294,7 +294,8 @@
               }
             });
           }
-          // if prc_review_document is null we need to delete the property otherwise the file gets deleted from the backend
+          // if prc_review_document is null we need to delete the property otherwise the 
+          // file gets deleted from the backend
           if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
             delete interventionData.prc_review_document;
           }

@@ -457,7 +457,7 @@
         },
 
         _resetDropdown: function(selector, clearOptions) {
-          if (!clearOptions) clearOptions = false;
+          if (!clearOptions) {clearOptions = false;}
           var field = this.fieldValidationReset(selector);
           if (field) {
             field.value = [];
