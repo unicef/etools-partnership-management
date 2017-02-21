@@ -13,6 +13,7 @@
 <link rel="import" href="../data-table/data-table-header.html">
 <link rel="import" href="../data-table/data-table-column.html">
 <link rel="import" href="../data-table/data-table-row.html">
+<link rel="import" href="intervention-data/monitoring-visits-data.html">
 
 
 <dom-module id="monitoring-visits-list">
@@ -25,15 +26,15 @@
       }
       
     </style>
-
+    <monitoring-visits-data monitoring-visits="{{monitoringVisits}}" intervention-id="[[interventionId]]"></monitoring-visits-data>
     <data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
-    <data-table-column class="col-2" field="number">
+    <data-table-column class="col-2" field="reference_number">
         Reference #
     </data-table-column>
-    <data-table-column class="col-2" field="traveler_name" >
+    <data-table-column class="col-2" field="primary_traveler" >
         Traveler
     </data-table-column>
-    <data-table-column class="col-2" field="traveler_type">
+    <data-table-column class="col-2" field="travel_type">
         Travel Type
     </data-table-column>
     <data-table-column class="col-2" field="date" sortable>
@@ -50,14 +51,14 @@
     <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
     <data-table-row no-collapse>
         <div slot="row-data">
-        <a class="col-data col-2 truncate" href="#" title="[[visit.number]]">
-            [[visit.number]]
+        <a class="col-data col-2 truncate" href="#" title="[[visit.reference_number]]">
+            [[visit.reference_number]]
         </a>
-        <span class="col-data col-2 truncate" title="[[visit.traveler_name]]">
-            [[visit.traveler_name]]
+        <span class="col-data col-2 truncate" title="[[visit.primary_traveler]]">
+            [[visit.primary_traveler]]
         </span>
-        <span class="col-data col-2" title="[[visit.traveler_type]]">
-            [[visit.traveler_type]]
+        <span class="col-data col-2" title="[[visit.travel_type]]">
+            [[visit.travel_type]]
         </span>
         <span class="col-data col-2" title="[[_checkAndShowDate(visit.date)]]">
             [[_checkAndShowDate(visit.date)]]
@@ -96,8 +97,12 @@
           monitoringVisits: {
             type: Array
           },
+          interventionId: {
+            type: Number,
+          }
         },
 
+<<<<<<< Updated upstream
         ready: function() {          
           this.monitoringVisits = [
             {
@@ -133,6 +138,9 @@
         _init: function(active) {          
           console.log('Acilea, Marcico!');
         
+=======
+        _init: function(active) {
+>>>>>>> Stashed changes
           this.set('initComplete', false);
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);

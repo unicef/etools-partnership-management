@@ -1,0 +1,111 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="monitoring-visits-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"
+                 on-fail="_handleErrorResponse"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'monitoring-visits-data',
+        behaviors: [etoolsAppConfig.globals],
+        properties: {
+          monitoringVisits: {
+            type: Array,
+            notify: true
+          },
+
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
+
+          ajaxEl: Object
+
+        },
+
+        attached: function() {
+          this.ajaxEl = this.$.ajax;
+        },
+
+        _interventionIdChanged: function(newId) {
+          if (newId) {
+            this.fire('global-loading', {message: 'Loading ram indicators data...', active: true});
+            this._prepareAndFireRequest();
+            this.set('endpoint', this.getEndpoint('monitoringVisits', {id: newId}));
+          }
+        },
+
+        /**
+         * Handle received data from request
+         */
+        _handleResponse: function(response) {
+          this.set('monitoringVisits', response.detail);
+          this.fire('global-loading', {active: false});
+        },
+
+        /**
+         * Set the method of the request and the body.
+         * Used for unsafe requests (PATCH/POST).
+         */
+        _prepareAndFireRequest: function() {
+          if (!this.ajaxEl) {
+            this.ajaxEl = this.$.ajax;
+          }
+          this.ajaxEl.set('params', null);
+          this.ajaxEl.set('body', null);
+          this.ajaxEl.set('url', null);
+          this.ajaxEl.set('method', 'GET');
+        },
+
+        // TODO:  refactor this, add it in a behavior
+        _handleErrorResponse: function(response) {
+          this.fire('global-loading', {active: false});
+          var errors = response.detail.request.detail.request.response;
+          if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
+            // TODO: improve etools-ajax on-fail event data model (received errors)
+            var errorMessage = 'An error occurred during agreement save!';
+            if (errors) {
+              var errorMessages = ["Errors occurred:\n"];
+              if (Array.isArray(errors) && errors.length > 0) {
+                errors.forEach(function(err) {
+                  errorMessages.push(err + "\n");
+                });
+              } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
+                for (var errField in errors) {
+                  if (typeof errors[errField] === 'string') {
+                    errorMessages.push('Field ' + errField + ' - ' + errors[errField] + "\n");
+                  } else if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
+                    for (var errF in errors[errField]) {
+                      errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + "\n");
+                    }
+                  } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
+                    errors[errField].forEach(function(err) {
+                      errorMessages.push(err + "\n");
+                    });
+                  }
+                }
+              }
+              if (errorMessages.length > 1) {
+                errorMessage = errorMessages.join('');
+              }
+            }
+            this.fire('toast', {text: errorMessage, showCloseBtn: true});
+          }
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>
