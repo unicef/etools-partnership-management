@@ -290,7 +290,11 @@
           initComplete: {
             type: Boolean,
             value: false
-          }
+          },
+          csvQueryString: {
+            type: String, 
+            notify: true
+          },
         },
 
         observers: [
@@ -374,7 +378,10 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
+          
+          this.set('csvQueryString', this._buildCsvQueryString());
           var qs = this._buildQueryString();
+
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
             // update URL
@@ -437,6 +444,26 @@
           if (this.showHidden) {
             out.push('hidden=true');
           }
+          return out.join('&');
+        },
+
+        _buildCsvQueryString: function() {       
+          var out= [];  
+
+          if (this.q && this.q.length) {
+            out.push('search=' + this.q);
+          }
+          if (this.partnerType && this.partnerType.length) {
+            out.push('partner_type=' + this.partnerType);
+          }
+          if (this.csoType && this.csoType.length) {
+            out.push('cso_type=' + this.csoType);
+          }
+          if (this.showHidden) {
+            out.push('hidden=true');
+          }
+
+          out.push('format=csv');
           return out.join('&');
         },
 

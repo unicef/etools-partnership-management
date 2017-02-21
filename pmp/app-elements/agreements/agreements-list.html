@@ -334,7 +334,11 @@
           agreementStatuses: {
             type: Array,
             statePath: 'agreementStatuses'
-          }
+          },
+          csvQueryString: {
+            type: String, 
+            notify: true
+          },
 
         },
 
@@ -455,7 +459,10 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
+          
+          this.set('csvQueryString', this._buildCsvQueryString()); 
           var qs = this._buildQueryString();
+
           if (qs !== _lastNavigated) {
             _lastNavigated = qs;
             // update URL
@@ -527,6 +534,32 @@
             out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
           }
 
+          return out.join('&');
+        },
+
+        _buildCsvQueryString: function() {        
+          var out= [];
+
+          if (this.agreementType && this.agreementType.length) {
+            out.push('agreement_type=' + this.agreementType);
+          }
+          if (this.agreementStatus && this.agreementStatus.length) {
+            out.push('status=' + this.agreementStatus);
+          }
+          if (this.selectedPartners && this.selectedPartners.length) {
+            out.push('partner_name=' + this.selectedPartners.pop().label);
+          }
+          if (this.startDate && this.startDate.length) {
+            out.push('start=' + this.startDate);
+          }
+          if (this.endDate && this.endDate.length) {
+            out.push('end=' + this.endDate);
+          }
+          if (this.q && this.q.length) {
+            out.push('search=' + this.q);
+          }
+
+          out.push('format=csv');
           return out.join('&');
         },
 
