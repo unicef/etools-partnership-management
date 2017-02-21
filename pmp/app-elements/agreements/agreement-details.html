@@ -431,9 +431,9 @@
             this._resetSignedByValidations();
 
             // set signed by dropdown value; 
-            this._setSignedByPartnerDropdownValue(agreement.partner_manager);
+            //this._setSignedByPartnerDropdownValue(agreement.partner_manager);
             // set signed by unicef value; 
-            this._setSignedByUnicefDropdownValue(agreement.signed_by);
+            //this._setSignedByUnicefDropdownValue(agreement.signed_by);
             // reset authorized officers invalid messages
             this._resetOfficersField();
 
@@ -457,7 +457,7 @@
         },
 
         _resetDropdown: function(selector, clearOptions) {
-          if (!clearOptions) clearOptions = false;
+          if (!clearOptions) {clearOptions = false;}
           var field = this.fieldValidationReset(selector);
           if (field) {
             field.value = [];
@@ -964,7 +964,7 @@
             // prevent the possibility of checking 2 different agreements
             var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'attached_agreement',
               'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
-              'authorized_officers'];
+              'authorized_officers', 'amendments'];
             // TODO: include amendments to above array with proper checkings
             availableChangingFields.forEach(function(fieldName) {
               if (fieldName === 'authorized_officers') {
@@ -977,7 +977,7 @@
                   (this.agreement.attached_agreement instanceof File)) {
                     changes.attached_agreement = this.agreement.attached_agreement;
                 }
-            } else if (fieldName === 'agreements') {
+            } else if (fieldName === 'amendments') {
                 changes[fieldName] = this.agreement[fieldName];
               } else {
                 if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
