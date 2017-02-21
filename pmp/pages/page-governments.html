@@ -66,17 +66,20 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href$="/api/v2/government_interventions/?[[csvQueryString]]">
+                  <paper-button>                  
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button> 
+                </a>
               </div>
-              <div class="top-content-action">
+              <!-- Print Functionality Pending Implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
+              </div>-->
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
                   <iron-icon icon="add"></iron-icon>
@@ -116,6 +119,7 @@
           <governments-list id="list"
                            active="[[governmentListActive]]"
                            url-params="[[governmentQueryParams]]"
+                           csv-query-string="{{csvQueryString}}"
                            partners-dropdown-data="[[partnersDropdownData]]">
           </governments-list>
         </div>
@@ -169,6 +173,10 @@
         selectedInterventionId: {
           type: Number
         },
+        csvQueryString: {
+          type: String
+        },
+        fakePermission: true,
       },
 
        observers: [

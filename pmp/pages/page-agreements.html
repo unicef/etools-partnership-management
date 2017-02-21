@@ -69,17 +69,20 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href="/api/v2/agreements/?[[csvQueryString]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>
               </div>
-              <div class="top-content-action">
+             <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
+              </div>-->
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
@@ -112,6 +115,7 @@
         <div class="page" name="list">
           <agreements-list id="list"
                            active="[[agreementListActive]]"
+                           csv-query-string="{{csvQueryString}}"
                            url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
@@ -166,7 +170,10 @@
             signed_by: null,
             partner_manager: null
           }
-        }
+        },
+        csvQueryString: {
+          type: String
+        },
 
       },
 
