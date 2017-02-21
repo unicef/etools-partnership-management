@@ -12,6 +12,7 @@
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -98,6 +99,7 @@
                                                      label="Amendment Type"
                                                      placeholder="&#8212;"
                                                      options="[[_amendmentTypes]]"
+                                                     value="[[_mapItemFromValue(item.type,_amendmentTypes)]]"
                                                      on-value-change="_amendmentTypeSelected"
                                                      error-message="Please select amendment type"
                                                      custom-object-options>
@@ -121,7 +123,7 @@
               this field supposed to be maped with that data as a dropdown ... ???? ...
               will remain as text until it's clarified -->
               <paper-input id$="bankInfo_[[index]]"
-                           hidden="[[!showAmendmentTypeBankInfo(item.amendment_type)]]"
+                           hidden="[[!showAmendmentTypeBankInfo(item.type)]]"
                            label="New Bank Account"
                            placeholder="&#8212;"
                            value="{{item.bank_info}}"
@@ -129,14 +131,14 @@
               </paper-input>
 
               <!-- Legal name of IP -->
-              <paper-input hidden="[[!showAmendmentTypeLegalNameOfIp(item.amendment_type)]]"
+              <paper-input hidden="[[!showAmendmentTypeLegalNameOfIp(item.type)]]"
                            label="Full Name of Implementing Partner"
                            value="[[item.legal_name_of_ip]]"
                            readonly>
               </paper-input>
 
               <!-- End Date -->
-              <paper-input hidden="[[!showAmendmentTypeExtensionProgrammeCycle(item.amendment_type)]]"
+              <paper-input hidden="[[!showAmendmentTypeExtensionProgrammeCycle(item.type)]]"
                            label="CP Cycle End Date"
                            value="[[prettyDate(_countryProgrammeCycleEndDate)]]"
                            readonly>
@@ -144,7 +146,7 @@
 
               <!-- Additional Clauses -->
               <paper-textarea id$="additionalClause_[[index]]"
-                              hidden="[[!showAmendmentTypeAdditionalClauses(item.amendment_type)]]"
+                              hidden="[[!showAmendmentTypeAdditionalClauses(item.type)]]"
                               label="Additional Clauses"
                               placeholder="&#8212;"
                               value="{{item.additional_clauses}}"
@@ -153,7 +155,7 @@
 
               <!-- Change Existing Clauses -->
               <paper-textarea id$="existingClauseAmended_[[index]]"
-                              hidden="[[!showAmendmentTypeExistingClauseAmended(item.amendment_type)]]"
+                              hidden="[[!showAmendmentTypeExistingClauseAmended(item.type)]]"
                               label="Clause Change"
                               placeholder="&#8212;"
                               value="{{item.existing_clause_amended}}"
@@ -189,7 +191,8 @@
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
           pmpBehaviors.AgreementAmendmentsBehavior,
-          pmpBehaviors.DateBehavior
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.ObjectDatabindBehavior
         ],
 
         properties: {
@@ -210,9 +213,9 @@
         ready: function() {
           // TODO: refactor this data model, might not have the same properties with the API data
           this.dataSetModel = {
-            amendment_type_id: null,
-            amendment_type: null,
-            officer_id: null,
+            id: null,
+            type: null,
+            officer: null,
             bank_info: null,
             legal_name_of_ip: null,
             cp_cycle_end: null,
@@ -244,7 +247,7 @@
             var lastAmendmentTypeIndex = this.dataItems.length - 1;
             var lastAmendmentType = this.dataItems[lastAmendmentTypeIndex];
 
-            if (lastAmendmentType.amendment_type === null) {
+            if (lastAmendmentType.type === null) {
               this._invalidAmendmentTypeField(true, '#amendmentType_' + lastAmendmentTypeIndex);
             } else {
               var validation = this.validAmendmentType(lastAmendmentType, lastAmendmentTypeIndex);
@@ -270,42 +273,42 @@
             var item = this.get(itemPath);
             var itemIndex = this.dataItems.indexOf(item);
 
-            if (this.showAmendmentTypeLegalNameOfIp(item.amendment_type)) {
+            if (this.showAmendmentTypeLegalNameOfIp(item.type)) {
               this.set(itemPath + '.legal_name_of_ip', this.partner.name);
               this._resetPaths(itemIndex, ['legal_name_of_ip']);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
 
-            if (this.showAmendmentTypeExtensionProgrammeCycle(item.amendment_type)) {
+            if (this.showAmendmentTypeExtensionProgrammeCycle(item.type)) {
               this.set(itemPath + '.cp_cycle_end', this._countryProgrammeCycleEndDate);
               this._resetPaths(itemIndex, ['cp_cycle_end']);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
 
-            if (this.showAmendmentTypeOfficer(item.amendment_type)) {
-              this._resetPaths(itemIndex, ['officer_id']);
-              if (item.officer_id > 0) {
+            if (this.showAmendmentTypeOfficer(item.type)) {
+              this._resetPaths(itemIndex, ['officer']);
+              if (item.officer > 0) {
                 this._invalidAmendmentTypeField(false, '#officersDropdown_' + itemIndex);
               }
             }
 
-            if (this.showAmendmentTypeBankInfo(item.amendment_type)) {
+            if (this.showAmendmentTypeBankInfo(item.type)) {
               this._resetPaths(itemIndex, ['bank_info']);
               if (item.bank_info !== null || item.bank_info !== '') {
                 this._invalidAmendmentTypeField(false, '#bankInfo_' + itemIndex);
               }
             }
 
-            if (this.showAmendmentTypeAdditionalClauses(item.amendment_type)) {
+            if (this.showAmendmentTypeAdditionalClauses(item.type)) {
               this._resetPaths(itemIndex, ['additional_clauses']);
               if (item.additional_clauses !== null || item.additional_clauses !== '') {
                 this._invalidAmendmentTypeField(false, '#additionalClause_' + itemIndex);
               }
             }
 
-            if (this.showAmendmentTypeExistingClauseAmended(item.amendment_type)) {
+            if (this.showAmendmentTypeExistingClauseAmended(item.type)) {
               this._resetPaths(itemIndex, ['existing_clause_amended']);
               if (item.existing_clause_amended !== null || item.existing_clause_amended !== '') {
                 this._invalidAmendmentTypeField(false, '#existingClauseAmended_' + itemIndex);
@@ -321,7 +324,7 @@
         _resetPaths: function(index, exceptions) {
           if (index > 0) {
             Object.keys(this.dataSetModel).forEach(function(property) {
-              if (exceptions.indexOf(property) === -1 && property !== 'amendment_type') {
+              if (exceptions.indexOf(property) === -1 && property !== 'type') {
                 this.set('dataItems.' + index + '.' + property, null);
               }
             }.bind(this));
@@ -349,7 +352,7 @@
           } else {
             this._invalidAmendmentTypeField(true, amendmentTypeId);
           }
-          this.set('dataItems.' + event.model.index + '.amendment_type', selectedAmendmentType);
+          this.set('dataItems.' + event.model.index + '.type', selectedAmendmentType);
           this.fire('amendment-selected', {type: selectedAmendmentType});
         },
 
@@ -361,7 +364,7 @@
           if (event.detail.selectedValues !== null) {
             officerId = event.detail.selectedValues.value;
           }
-          this.set('dataItems.' + event.model.index + '.officer_id', officerId);
+          this.set('dataItems.' + event.model.index + '.officer', officerId);
         },
 
         /**

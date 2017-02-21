@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
@@ -68,7 +69,7 @@
             <!-- new, unsaved amendment, edit mode -->
             <template is="dom-if" if="[[_canBeRemoved(index)]]">
               <div class="row-h">
-                <div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_agreement.length)]]">
+                <div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_amendment)]]">
                   <paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>
                     <!-- Auto-generated PCA Amendment -->
                     <label aria-hidden="true">Auto-generated PCA Amendment</label>
@@ -86,19 +87,21 @@
                                placeholder="&#8212;"
                                on-down="openDatePicker"
                                data-selector$="datePicker[[index]]"
-                               invalid="[[_requireSignedDate(item.signed_agreement.length, item.signed_date, index, item.amendment_types.length)]]"
                                error-message="Please select signed date">
                     <etools-datepicker-button prefix
                                               id$="datePicker[[index]]"
-                                              json-date="{{item.signed_date}}"
+                                              date="[[prepareDate(item.signed_date)]"
+                                              format="YYYY-MM-DD"
+                                              pretty-date="{{item.signed_date}}"
                                               no-init show-clear-btn></etools-datepicker-button>
                   </paper-input>
                 </div>
                 <div class="col col-6 file-container space-left">
                   <!-- Signed Agreement -->
-                  <etools-file label="Signed Agreement"
-                               files="{{item.signed_agreement}}"
-                               accept=".doc,.docx,.pdf,.jpg,.png"></etools-file>
+                  <etools-single-file label="Signed Amendment"
+                               file="{{item.signed_amendment}}"
+                               file-internal="{{item.signed_amendment_file}}}"
+                               accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
                 </div>
               </div>
 
@@ -139,7 +142,9 @@
         behaviors: [
           etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.DateBehavior
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.AgreementsCommonBehavior,
+          pmpBehaviors.ObjectDatabindBehavior
         ],
 
         properties: {
@@ -172,7 +177,7 @@
         _canBeRemoved: function(index) {
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
-          if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {
+          if (amendment && isNaN(amendmentId) === false && amendmentId > 0 && amendment.singed_ammendment) {
             // amendment already saved (has an id assigned)
             return false;
           }
@@ -199,7 +204,7 @@
          */
         _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
-              && (amendmentItem.signed_agreement.length === 0)
+              && (amendmentItem.signed_amendment)
               && (amendmentItem.amendment_types.length === 0
               || (amendmentItem.amendment_types.length > 0
               && this._hasAmendmentTypesSelected(index) === false));
@@ -225,8 +230,8 @@
         /**
          * Check if amendment signed date is required
          */
-        _requireSignedDate: function(signedAgreementFilesLength, date, index) {
-          if (signedAgreementFilesLength > 0 || this._hasAmendmentTypesSelected(index)) {
+        _requireSignedDate: function(signedAmendment, date, index) {
+          if (signedAmendment || this._hasAmendmentTypesSelected(index)) {
             if (date === null || date === '') {
               return true;
             }
@@ -237,8 +242,8 @@
         /**
          *  TODO: to be revised
          */
-        _hideGenerateBtn: function(signedAgreementFilesLength) {
-          if (signedAgreementFilesLength > 0) {
+        _hideGenerateBtn: function(signedAmendment) {
+          if (signedAmendment) {
             return true;
           }
           return false;
@@ -269,7 +274,7 @@
         _amendmentTypeSelected: function(event) {
           var amendmentIndex = event.model.index;
           var amendment = this.dataItems[amendmentIndex];
-          this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_agreement.length,
+          this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_amendment,
               amendment.signed_date, amendmentIndex);
         }
 

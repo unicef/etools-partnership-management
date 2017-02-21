@@ -69,14 +69,14 @@ keep amendments element small and easy to understand
         <div class="row-h">
           <!-- Amendment Type -->
           <paper-input label="Amendment Type"
-                       value="[[amendmentType.amendment_type]]"
+                       value="[[amendmentType.type]]"
                        readonly>
           </paper-input>
         </div>
 
         <div class="row-h">
 
-          <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.amendment_type)]]">
+          <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.type)]]">
             <!-- Officer -->
             <paper-input label="Officer"
                          value="[[getOfficerName(amendmentType.officer_id)]]"
@@ -84,7 +84,7 @@ keep amendments element small and easy to understand
             </paper-input>
           </template>
 
-          <template is="dom-if" if="[[showAmendmentTypeBankInfo(amendmentType.amendment_type)]]">
+          <template is="dom-if" if="[[showAmendmentTypeBankInfo(amendmentType.type)]]">
             <!-- Bank information -->
             <paper-input label="New Bank Account"
                          value="[[amendmentType.bank_info]]"
@@ -92,7 +92,7 @@ keep amendments element small and easy to understand
             </paper-input>
           </template>
 
-          <template is="dom-if" if="[[showAmendmentTypeLegalNameOfIp(amendmentType.amendment_type)]]">
+          <template is="dom-if" if="[[showAmendmentTypeLegalNameOfIp(amendmentType.type)]]">
             <!-- Legal name of IP -->
             <paper-input label="Full Name of Implementing Partner"
                          value="[[amendmentType.legal_name_of_ip]]"
@@ -101,7 +101,7 @@ keep amendments element small and easy to understand
           </template>
 
           <template is="dom-if"
-                    if="[[showAmendmentTypeExtensionProgrammeCycle(amendmentType.amendment_type)]]">
+                    if="[[showAmendmentTypeExtensionProgrammeCycle(amendmentType.type)]]">
             <!-- End Date -->
             <paper-input label="CP Cycle End Date"
                          value="[[prettyDate(amendmentType.cp_cycle_end)]]"
@@ -109,7 +109,7 @@ keep amendments element small and easy to understand
             </paper-input>
           </template>
 
-          <template is="dom-if" if="[[showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)]]">
+          <template is="dom-if" if="[[showAmendmentTypeAdditionalClauses(amendmentType.type)]]">
             <!-- Additional Clauses -->
             <paper-textarea label="Additional Clauses"
                             value="[[amendmentType.additional_clauses]]"
@@ -117,7 +117,7 @@ keep amendments element small and easy to understand
             </paper-textarea>
           </template>
 
-          <template is="dom-if" if="[[showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)]]">
+          <template is="dom-if" if="[[showAmendmentTypeExistingClauseAmended(amendmentType.type)]]">
             <!-- Change Existing Clauses -->
             <paper-textarea label="Clause Change"
                             value="[[amendmentType.existing_clause_amended]]"
