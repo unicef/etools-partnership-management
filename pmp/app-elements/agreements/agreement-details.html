@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
@@ -17,6 +18,7 @@
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
 
 <link rel="import" href="../partners/partners-data/partner-item-data.html">
 
@@ -41,9 +43,14 @@
     </style>
 
     <partner-item-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-item-data>
-
+    
     <!-- main page content start -->
     <div id="pageContent">
+    <etools-content-panel class="content-section" title="Errors Saving Agreement" hidden$="[[!errorBoxVisible]]">
+        <template is="dom-repeat" items=[[serverErrors]]>
+          <p>[[item]]</p>
+        </template>
+    </etools-content-panel>
       <etools-content-panel class="content-section" title="Agreement Details">
         <div class="row-h flex-c">
           <div class="col col-6">
@@ -56,9 +63,10 @@
             </template>
             <template is="dom-if" if="[[_allowFieldEditing('partnerName', agreement.status)]]">
               <etools-searchable-multiselection-menu id="partner"
-                                                     label="Partner Name"
+                                                     label="Government Partner"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
+                                                     value="[[_mapItemFromId(agreement.partner,partnersDropdownData)]]"
                                                      on-value-change="_partnerSelected"
                                                      error-message="Please select a partner"
                                                      required>
@@ -80,6 +88,7 @@
                                                      options="[[agreementTypes]]"
                                                      custom-object-options
                                                      hide-search
+                                                     value="[[_mapItemFromValue(agreement.agreement_type,agreementTypes)]]"
                                                      on-value-change="_agreementTypeSelected"
                                                      error-message="Please select agreement type"
                                                      required>
@@ -148,7 +157,7 @@
           <div class="col col-6">
             <paper-input-container class="form-field-wrapper secondary-btn-wrapper"
                                    always-float-label
-                                   hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement)]]">
+                                   hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement_file)]]">
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
               <paper-button class="paper-input-input secondary-btn">
@@ -172,6 +181,7 @@
                                                      label="Signed By Partner"
                                                      placeholder="&#8212;"
                                                      options="[[preparedOfficersDropdownData]]"
+                                                     value="[[_mapItemFromId(agreement.partner_signatory.id,preparedOfficersDropdownData)]]"
                                                      on-value-change="_signedByPartnerSelected"
                                                      error-message="Please select authorized officer"
                                                      required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
@@ -210,7 +220,7 @@
             <!-- Signed By UNICEF -->
             <template is="dom-if" if="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]">
               <paper-input label="Signed By UNICEF"
-                           value="[[_getPartnerManagerName(agreement.unicef_signatory)]]"
+                           value="[[_getPartnerName(agreement.unicef_signatory)]]"
                            placeholder="&#8212;"
                            readonly></paper-input>
             </template>
@@ -219,6 +229,8 @@
                                                      label="Signed By UNICEF"
                                                      placeholder="&#8212;"
                                                      options="[[unicefStaff]]"
+                                                     value="[[_mapItemFromId(agreement.unicef_signatory.id,unicefStaff)]]"
+                                                     update-selected 
                                                      on-value-change="_signedByUnicefSelected"
                                                      error-message="Please select UNICEF staff"
                                                      required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -253,10 +265,12 @@
           </div>
         </div>
         <div class="row-h flex-c">
-          <etools-file files="[[_signedAgreementFiles]]"
+          <etools-single-file 
+                       file="{{agreement.attached_agreement}}"
+                       internal-file="[[agreement.attached_agreement_file]]"
                        label="Signed Agreement"
                        accept=".doc,.docx,.pdf,.jpg,.png"
-                       readonly$="[[!editMode]]"></etools-file>
+                       readonly$="[[!editMode]]"></etools-single-file>
         </div>
       </etools-content-panel>
 
@@ -305,7 +319,8 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.AgreementsCommonBehavior
+          pmpBehaviors.AgreementsCommonBehavior,
+          pmpBehaviors.ObjectDatabindBehavior
         ],
 
         properties: {
@@ -352,6 +367,14 @@
           amendments: {
             type: Array,
             value: []
+          },
+          serverErrors: {
+            type: Array,
+            observer: '_newErrors'
+          },
+          errorBoxVisible: {
+            type: Boolean,
+            value: false
           }
         },
 
@@ -361,75 +384,6 @@
         ],
 
         ready: function() {
-//          this.set('amendments', [
-//            {
-//              id: 1,
-//              signed_date: '2015-07-28',
-//              signed_agreement: 'https://pbs.twimg.com/profile_images/616542814319415296/McCTpH_E.jpg',
-//              amendment_types: [
-//                {
-//                  amendment_type_id: 1,
-//                  amendment_type: 'Change Authorized Officer',
-//                  officer_id: 342,// staff member id
-//                  bank_info: null,
-//                  legal_name_of_ip: null,
-//                  cp_cycle_end: null,
-//                  additional_clauses: null,
-//                  existing_clause_amended: null
-//                },
-//                {
-//                  amendment_type_id: 2,
-//                  amendment_type: 'Banking Information',
-//                  officer_id: null,
-//                  bank_info: 'Bank of Lebanon: #3234234',
-//                  legal_name_of_ip: null,
-//                  cp_cycle_end: null,
-//                  additional_clauses: null,
-//                  existing_clause_amended: null
-//                },
-//                {
-//                  amendment_type_id: 3,
-//                  amendment_type: 'Change in Legal Name of Implementing Partner',
-//                  officer_id: null,
-//                  bank_info: null,
-//                  legal_name_of_ip: 'Some partner full name',
-//                  cp_cycle_end: null,
-//                  additional_clauses: null,
-//                  existing_clause_amended: null
-//                },
-//                {
-//                  amendment_type_id: 3,
-//                  amendment_type: 'Extension of Country Programme Cycle',
-//                  officer_id: null,
-//                  bank_info: null,
-//                  legal_name_of_ip: null,
-//                  cp_cycle_end: '2018-08-30',
-//                  additional_clauses: null,
-//                  existing_clause_amended: null
-//                },
-//                {
-//                  amendment_type_id: 5,
-//                  amendment_type: 'Additional Clause',
-//                  officer_id: null,
-//                  bank_info: null,
-//                  legal_name_of_ip: null,
-//                  cp_cycle_end: null,
-//                  additional_clauses: 'Some Additional Clause text...',
-//                  existing_clause_amended: null
-//                },
-//                {
-//                  amendment_type_id: 6,
-//                  amendment_type: 'Amend Existing Clause',
-//                  officer_id: null,
-//                  bank_info: null,
-//                  legal_name_of_ip: null,
-//                  cp_cycle_end: null,
-//                  additional_clauses: null,
-//                  existing_clause_amended: 'Existing clause amended text...'
-//                }
-//              ]
-//            }
-//          ]);
 
         },
 
@@ -453,6 +407,7 @@
          */
         _agreementChanged: function(agreement) {
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
+            this._clearErrors();
             if (agreement.id > 0) {
               // prevent wrong new agreement value
               this.set('isNewAgreement', false);
@@ -466,7 +421,7 @@
               this.set('_showAmendments', false);
             }
             // prepare attached agreement data
-            this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
+            // this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
             // check for partners dropdown selected values; reset invalid state
             this._partnersDropdownChanged(this.partnersDropdownData.length);
             // check agreement type dropdown selected value; reset invalid state
@@ -488,7 +443,7 @@
             // new agreement, update status to draft
             this._setDraftStatus(this.editMode, this.isNewAgreement);
 
-            this.set('_signedAgreementFiles',[]);
+            // this.set('_signedAgreementFiles',[]);
             this._resetDropdown('#partner');
             this._resetDropdown('#agreementType');
             this._resetDropdown('#signedByUnicef');
@@ -1007,7 +962,7 @@
           var changes = {};
           if (this.agreement && this.agreement.id === this.originalAgreementData.id) {
             // prevent the possibility of checking 2 different agreements
-            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end',
+            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'attached_agreement',
               'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
               'authorized_officers'];
             // TODO: include amendments to above array with proper checkings
@@ -1017,7 +972,12 @@
                 changes[fieldName] = this.agreement.authorized_officers.map(function(officer) {
                   return officer.id;
                 });
-              } else if (fieldName === 'agreements') {
+              } else if (fieldName === 'attached_agreement') {
+                if ((this.agreement.hasOwnProperty('attached_agreement')) && 
+                  (this.agreement.attached_agreement instanceof File)) {
+                    changes.attached_agreement = this.agreement.attached_agreement;
+                }
+            } else if (fieldName === 'agreements') {
                 changes[fieldName] = this.agreement[fieldName];
               } else {
                 if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
@@ -1028,12 +988,16 @@
           }
           return changes;
         },
-
+        _clearErrors: function(){
+          this.errorBoxVisible = false;
+          this.set('serverErrors', null);
+        },
         /**
          * Save agreement if all fields are validated
          */
         _validateAndTriggerAgreementSave: function(event) {
           event.stopImmediatePropagation();
+          this._clearErrors();
           if (!this.editMode) {
             return;
           }
@@ -1063,7 +1027,7 @@
             }),
             agreement_type: agreement.agreement_type,
             // TODO set attached_agreement after etools-file flow is decided
-            // attached_agreement: null,
+            attached_agreement: agreement.attached_agreement,
             start: agreement.start,
             end: agreement.end,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
@@ -1073,6 +1037,15 @@
             signed_by: agreement.signed_by,
             partner_manager: agreement.partner_manager
           };
+        },
+        _newErrors: function(errors) {
+          //check if errors else
+          if (Array.isArray(errors)) {
+            this.errorBoxVisible = errors.length > 0;
+          } else {
+            this._clearErrors();
+          }
+          
         }
 
       });

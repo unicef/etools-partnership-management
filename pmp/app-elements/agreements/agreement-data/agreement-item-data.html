@@ -36,8 +36,10 @@
             notify: true,
             observer: '_agreementIdChanged'
           },
+          withUpload: Boolean,
+          prepareMultipartData: Boolean,
 
-          handleResponseAdditionalCallback: Object,
+          handleSuccResponseAdditionalCallback: Object,
           ajaxEl: Object
 
         },
@@ -60,10 +62,10 @@
         _handleResponse: function(response) {
           this._setAgreement(response.detail);
           // call additional callback, if any
-          if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+          if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
+            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
-            this.set('handleResponseAdditionalCallback', null);
+            this.set('handleSuccResponseAdditionalCallback', null);
           }
         },
 
@@ -71,17 +73,36 @@
          * Set the method of the request and the body.
          * Used for unsafe requests (PATCH/POST).
          */
-        _prepareAndFireRequest: function(method, data, url) {
+       _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
+          if (!multipart){
+            multipart = false;
+          }
+          if (!prepareMultipartData){
+            prepareMultipartData = false;
+          }
+          this.ajaxEl.setContentType(null);
           if (!method) {
             method = 'GET';
             // reset ajax for GET request
             this.ajaxEl.set('params', null);
             this.ajaxEl.set('body', null);
             this.ajaxEl.set('url', null);
+            this.ajaxEl.set('multiPart', false);
+            this.ajaxEl.set('prepareMultipartData', false);
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
               && ['PATCH', 'POST'].indexOf(method) > -1) {
+            if (multipart) {
+              this.ajaxEl.set('multiPart', true);
+            } else {
+              this.ajaxEl.set('multiPart', false);
+            }
+            if (prepareMultipartData) {
+              this.ajaxEl.set('prepareMultipartData', true);
+            } else {
+              this.ajaxEl.set('prepareMultipartData', false);
+            }
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
@@ -115,7 +136,8 @@
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
             } else {
-              this.fire('toast', {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+              this.fire('toast', 
+                {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
             }
           }
         },
@@ -123,7 +145,7 @@
         /**
          * Save agreement data
          */
-        saveAgreement: function(agreement, callback) {
+        saveAgreement: function(agreement, succCallback) {
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
@@ -146,12 +168,22 @@
             }
             if (Object.keys(agreement).length > 0) {
               // set additional callback if any
-              if (callback) {
-                this.set('handleResponseAdditionalCallback', callback);
+              if (succCallback) {
+                this.set('handleSuccResponseAdditionalCallback', succCallback);
+              }
+              this.withUpload = false; // used to set multipart prop on etools-ajax
+              this.prepareMultipartData = false;
+              if (agreement.hasOwnProperty('attached_agreement')) {
+                if (agreement.attached_agreement instanceof File) {
+                  this.withUpload = true;
+                  this.prepareMultipartData = true;
+                } else {
+                   delete agreement.attached_agreement;
+                }
               }
               this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', agreement, url);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', agreement, url, this.withUpload, this.prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',
@@ -194,6 +226,7 @@
               }
             }
             this.fire('toast', {text: errorMessage, showCloseBtn: true});
+            this.fire('agreement-save-error', errors);
           }
         }
 

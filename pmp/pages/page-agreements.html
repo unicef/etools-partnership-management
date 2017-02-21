@@ -44,7 +44,8 @@
 
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
-                         agreement-id="[[selectedAgreementId]]"></agreement-item-data>
+                         agreement-id="[[selectedAgreementId]]"
+                         on-agreement-save-error="_newAgreementErrors"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -120,6 +121,7 @@
         </div>
         <div class="page" name="details">
           <agreement-details
+              id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
@@ -180,6 +182,7 @@
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
         '_observeRouteDataId(routeData.id)'
       ],
+
 
       ready: function() {
 
@@ -289,6 +292,10 @@
        */
       _newAgreementSaved: function(agreement) {
         this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+      },
+      _newAgreementErrors: function(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementDetails.set('serverErrors', event.detail);
       },
 
       /**

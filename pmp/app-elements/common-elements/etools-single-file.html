@@ -1,0 +1,65 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+
+<dom-module id="etools-single-file">
+
+  <template>
+    <etools-file id="files" 
+          files="{{attachments}}"
+          label="[[label]]"
+          accept="[[accept]]"
+          readonly$="[[readonly]]""></etools-file>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-single-file',
+        behaviors: [etoolsAppConfig.globals, pmpBehaviors.CommonGeneralBehavior],
+        properties: {
+        	attachments: {
+        		type: Array,
+        		value: function() {
+        			return [];
+        		}
+        	},
+          readonly: Boolean,
+          accept:String,
+        	label: String,
+        	file: {
+        		type: Object,
+        		notify: true,
+        	},
+        	internalFile: {
+        		type: Object,
+        		observer: '_fileChanged'
+        	},
+        },
+    	observers: ['_attachmentChanged(attachments.length)'],
+
+        _fileChanged: function(intr) {
+        	if (this.internalFile) {
+
+        		this.set('attachments', this.prepareEtoolsFileDataFromUrl(this.internalFile));
+        	}
+        },
+        _attachmentChanged: function(filesLength) {
+        	if (filesLength > 0) {
+        		if (this.attachments[0].raw instanceof File){
+        			this.set('file', this.attachments[0].raw)
+        		} else {
+        			this.set('file', null)
+        		}
+	        } else {
+	            this.set('file', null)
+	        }		
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

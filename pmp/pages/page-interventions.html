@@ -11,7 +11,6 @@
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
 <link rel="import" href="../app-elements/interventions/intervention-overview.html">
-<link rel="import" href="../app-elements/interventions/intervention-supplies.html">
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
@@ -150,7 +149,11 @@
                                             edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
             </div>
             <div class="page" name="attachments">
-              <intervention-attachments edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-attachments>
+              <intervention-attachments id="intervAttachments"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                file-model="[[_getAttachmentModel(intervention.id)]]"
+                attachments={{intervention.attachments}}
+                on-delete-file="_deleteAttachment"></intervention-attachments>
             </div>
           </iron-pages>
         </div> <!-- main page content end -->
@@ -247,6 +250,8 @@
 
       _observeRouteDataId: function(id) {
         this.set('selectedInterventionId', id);
+        // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
+        this.$.intervAttachments.set('preparedAttachments', false);
       },
 
       _validateAndSaveIntervention: function(event) {
@@ -270,6 +275,30 @@
               return frNumber.value;
             });
           }
+          // prepare attachments
+          if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
+            interventionData.attachments = interventionData.attachments.map(function(attachment) {
+              
+              var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
+              if (!_sendAttachmentFile && attachment.id) {
+                return {
+                  id: attachment.id
+                };
+              } else {
+                return {
+                  id: attachment.id,
+                  intervention: attachment.intervention,
+                  type: attachment.type,
+                  attachment: attachment.raw
+                };
+              }
+            });
+          }
+          // if prc_review_document is null we need to delete the property otherwise the file gets deleted from the backend
+          if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
+            delete interventionData.prc_review_document;
+          }
+
           console.log('intervention data to be saved', interventionData);
           this.$.interventionData.saveIntervention(interventionData);
         } else {
@@ -286,6 +315,21 @@
           return true;
         }
         return false;
+      },
+
+      _getAttachmentModel: function(interventionId) {
+        return {
+          id: null,
+          intervention: interventionId ? interventionId : null,
+          type: null 
+        };
+      },
+
+      _deleteAttachment: function(event) {
+        // TODO:  remove console.log ater attachment delete is implemented
+        console.log('attachment to delete: ', event.detail);
+        this.fire('toast', {text: 'Delete file not implemented yet! '
+          + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
       }
 
     });

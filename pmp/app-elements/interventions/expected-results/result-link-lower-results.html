@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
@@ -102,7 +103,9 @@
       }
 
     </style>
-
+      <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -187,10 +190,16 @@
         is: 'result-link-lower-results',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
 
         properties: {
+          _deleteEpName: {
+            type: String,
+            value: 'lowerResultsDelete',
+            readOnly: true,
+          },
           cpOutputId: {
             type: Number
           }

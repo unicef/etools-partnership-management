@@ -10,6 +10,8 @@
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -72,6 +74,9 @@
       }
 
     </style>
+     <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
 
     <paper-material elevation="[[elevation]]">
 
@@ -155,12 +160,14 @@
                   <div class="row-h no-overflow">
                     <!-- Report file -->
                     <div class="file-wrapper">
-                      <etools-file files="{{item.report_file}}"
+                      <etools-single-file 
+                                   file="{{item.report}}"
+                                   internal-file="{{item.report_file}}"
                                    label="Report"
                                    readonly="[[!editMode]]"
                                    accept=".doc,.docx,.pdf,.jpg,.png"
-                                   invalid$="[[!_isValid('reportFile', item.type, item.completed_date, item.report_file.length)]]"
-                                   error-message="Please select the report file"></etools-file>
+                                   invalid$="[[!_isValid('reportFile', item.type, item.completed_date, item.report)]]"
+                                   error-message="Please select the report file"></etools-single-file>
                     </div>
                   </div>
                 </div>
@@ -192,8 +199,9 @@
         is: 'assessments-items',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DateBehavior
         ],
 
@@ -202,7 +210,11 @@
             type: Number,
             value: 0
           },
-
+          _deleteEpName: {
+            type: String,
+            value: 'partnerAssessmentDelete',
+            readOnly: true,
+          },
           assessmentTypesOptions: {
             type: Array,
             value: [],
@@ -245,19 +257,19 @@
 
         _dataHasChanged: function(dataItems) {
           // prepare data for assessment reports
-          if (Array.isArray(dataItems) && dataItems.length > 0) {
-            dataItems.forEach(function(item, index) {
-              if ((typeof item.report === 'string' && item.report !== '')
-                  && (!Array.isArray(item.report_file) || (Array.isArray(item.report_file)
-                  && item.report_file.length === 0))) {
-                this.set('dataItems.' + index + '.report_file', [{
-                  id: 'report_file_' + index,
-                  file_name: item.report.substr(item.report.lastIndexOf('/') + 1),
-                  path: item.report
-                }]);
-              }
-            }.bind(this));
-          }
+          // if (Array.isArray(dataItems) && dataItems.length > 0) {
+          //   dataItems.forEach(function(item, index) {
+          //     if ((typeof item.report === 'string' && item.report !== '')
+          //         && (!Array.isArray(item.report_file) || (Array.isArray(item.report_file)
+          //         && item.report_file.length === 0))) {
+          //       this.set('dataItems.' + index + '.report_file', [{
+          //         id: 'report_file_' + index,
+          //         file_name: item.report.substr(item.report.lastIndexOf('/') + 1),
+          //         path: item.report
+          //       }]);
+          //     }
+          //   }.bind(this));
+          // }
         },
 
         _basisForRiskRatingChanged: function(event) {
@@ -278,7 +290,7 @@
           return typeof value !== 'undefined' && value !== null && value !== '';
         },
 
-        _isValid: function(field, assessmentType, completedDate, reportFileLength) {
+        _isValid: function(field, assessmentType, completedDate, reportFile) {
           var valid = true;
           switch (field) {
             case 'assessmentType':
@@ -292,7 +304,7 @@
               }
               break;
             case 'reportFile':
-              if (reportFileLength === 0 && (this._notEmpty(assessmentType) || this._notEmpty(completedDate))) {
+              if (reportFile instanceof File) {
                 valid = false;
               }
               break;
