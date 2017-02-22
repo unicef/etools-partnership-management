@@ -18,6 +18,15 @@
                         return  _.find(collection, {value:item})})  :
                             _.find(collection, {value:id})
         },
+        _mapItemFromValue : function(id,collection, getLabelOnly){
+            if(_.isEmpty(collection)){
+                return
+            }
+            return getLabelOnly ? _.find(collection, {value:id}).label :
+                    Array.isArray(id) ? _.map(id, function(item){
+                        return  _.find(collection, {value:item})})  :
+                            _.find(collection, {value:id})
+        },
         _displayMultiple: function(id, collection){
             var entries = this._mapItemFromId(id, collection)
             if (Array.isArray(entries)){

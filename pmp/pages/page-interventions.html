@@ -68,19 +68,22 @@
               PD/SSFA ToRs
             </h1>
             <div class="top-content-actions-wrapper">
-              <div class="top-content-action">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+              <div class="top-content-action"  hidden$="[[!listActive]]">
+                <a target="_blank" href$="/api/v2/interventions/?[[csvQueryString]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>  
               </div>
-              <div class="top-content-action">
+              <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action"  hidden$="[[!listActive]]">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
-              <div class="top-content-action">
+              </div>-->
+              <div class="top-content-action"  hidden$="[[!listActive]]">
                 <paper-button class="primary-btn with-prefix">
                   <iron-icon icon="add"></iron-icon>
                   Add new PD/SSFA ToR
@@ -126,6 +129,7 @@
             <div class="page" name="list">
               <interventions-list
                   active="[[listActive]]"
+                  csv-query-string="{{csvQueryString}}"
                   url-params="[[interventionsQueryParams]]"></interventions-list>
             </div>
               <div class="page" name="overview">
@@ -145,8 +149,8 @@
                                             edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
             </div>
             <div class="page" name="attachments">
-              <intervention-attachments id="intervAttachments" 
-                edit-mode="[[_hasEditPermissions(permissions)]]" 
+              <intervention-attachments id="intervAttachments"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
                 file-model="[[_getAttachmentModel(intervention.id)]]"
                 attachments={{intervention.attachments}}
                 on-delete-file="_deleteAttachment"></intervention-attachments>
@@ -194,7 +198,10 @@
         },
         agreement: {
           type: Object
-        }
+        },
+        csvQueryString: {
+          type: String
+        },
       },
 
       observers: [
@@ -236,7 +243,7 @@
 
       _getTopContentAdditionalClass: function(interventionPage) {
         if (this._showPageTabs(interventionPage)) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       },
@@ -271,15 +278,28 @@
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {
-              return {
-                id: attachment.id,
-                intervention: attachment.intervention,
-                type: attachment.type,
-                attachment: (attachment.raw instanceof File) ? attachment.raw : (attachment.path ? attachment.path : null)
-              };
+              
+              var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
+              if (!_sendAttachmentFile && attachment.id) {
+                return {
+                  id: attachment.id
+                };
+              } else {
+                return {
+                  id: attachment.id,
+                  intervention: attachment.intervention,
+                  type: attachment.type,
+                  attachment: attachment.raw
+                };
+              }
             });
           }
-          // TODO: remove console.log
+          // if prc_review_document is null we need to delete the property otherwise the 
+          // file gets deleted from the backend
+          if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
+            delete interventionData.prc_review_document;
+          }
+
           console.log('intervention data to be saved', interventionData);
           this.$.interventionData.saveIntervention(interventionData);
         } else {

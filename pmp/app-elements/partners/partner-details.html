@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -129,11 +130,17 @@
           </div>
           <div class="col col-4 no-overflow">
             <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
-              <etools-file files="{{coreValuesAssessmentFiles}}"
+              <!-- <etools-file files="{{coreValuesAssessmentFiles}}"
                            label="Core Values Assessment"
                            readonly$="[[!editMode]]"
                            accept=".doc,.docx,.pdf,.jpg,.png">
-              </etools-file>
+              </etools-file> -->
+              <etools-single-file file="{{partner.core_values_assessment}}"
+                           internal-file="{{partner.core_values_assessment_file}}"
+                           label="Core Values Assessment"
+                           readonly$="[[!editMode]]"
+                           accept=".doc,.docx,.pdf,.jpg,.png">
+              </etools-single-file>
             </div>
           </div>
           <div class="col col-4"></div>
@@ -271,7 +278,7 @@
 
         },
 
-        observers: ['_coreValuesAssessmentFilesChanged(coreValuesAssessmentFiles.length)'],
+        //observers: ['_coreValuesAssessmentFilesChanged(coreValuesAssessmentFiles.length)'],
 
         ready: function() {
 
@@ -301,7 +308,7 @@
 
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
-                this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment));
+                this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment_file));
             this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
           } else {
             this.contentVisible = false;
@@ -338,35 +345,35 @@
           return partnerType;
         },
 
-        _coreValuesAssessmentFilesChanged: function(filesLength) {
-          if (filesLength > 0) {
-            this._updateCoreValuesAssessmentOnPartner(this.coreValuesAssessmentFiles[0].raw);
-          } else {
-            this._updateCoreValuesAssessmentOnPartner(null);
-          }
-        },
+        // _coreValuesAssessmentFilesChanged: function(filesLength) {
+        //   if (filesLength > 0) {
+        //     this._updateCoreValuesAssessmentOnPartner(this.coreValuesAssessmentFiles[0].raw);
+        //   } else {
+        //     this._updateCoreValuesAssessmentOnPartner(null);
+        //   }
+        // },
 
-        _updateCoreValuesAssessmentOnPartner: function(file) {
-          if (typeof this.partner === 'object' && this.partner.hasOwnProperty('core_values_assessment')) {
-            this.set('partner.core_values_assessment', file);
-            console.log(this.partner.core_values_assessment);
-          }
-        },
+        // _updateCoreValuesAssessmentOnPartner: function(file) {
+        //   if (typeof this.partner === 'object' && this.partner.hasOwnProperty('core_values_assessment')) {
+        //     this.set('partner.core_values_assessment', file);
+        //     console.log(this.partner.core_values_assessment);
+        //   }
+        // },
 
         _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
           // TODO; see if this values are correct for displaying core values assessment file
           if (_.map(this.partnerTypes, 'value').indexOf(partnerType) >= 0
               && _.map(this.csoTypes, 'value').indexOf(csoType) >= 0) {
-            this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
+            //this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
             return true;
           }
           
           return false;
         },
 
-        _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
-          this.set('coreValuesAssessmentFiles', this.prepareEtoolsFileDataFromUrl(partnerCoreValuesAssessment));
-        },
+        // _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
+        //   this.set('coreValuesAssessmentFiles', this.prepareEtoolsFileDataFromUrl(partnerCoreValuesAssessment));
+        // },
         _validatePartner: function() {
           //TODO: validation goes here
           return true;
@@ -375,7 +382,14 @@
           var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
           var changes = {};
           updateableFields.forEach(function(fieldName) {
-            if (fieldName === 'shared_with') {
+            if (fieldName === 'assessments') {
+                changes[fieldName] = partner[fieldName];
+            } else if (fieldName === 'core_values_assessment') {
+                if ((partner.hasOwnProperty('core_values_assessment')) && 
+                  (partner.core_values_assessment instanceof File)) {
+                    changes.core_values_assessment = partner.core_values_assessment;
+                }
+            } else if (fieldName === 'shared_with') {
 
               console.log(this.sharedPartenerSelectedValues);
               var sharedPartners = (this.sharedPartenerSelectedValues.length) ? this.sharedPartenerSelectedValues.map(function(shared) {

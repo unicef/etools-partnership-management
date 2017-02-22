@@ -176,6 +176,21 @@ App global configuration
       agreementDetails: {
         template: '/api/v2/agreements/<%=id%>/',
       },
+      partnerAssessmentDelete: {
+        template: '/api/v2/partners/assessments/<%=id%>/',
+      },
+      interventionResultLinkDelete: {
+        template: '/api/v2/interventions/results/<%=id%>/',
+      },
+      agreementAmendmentsDelete: {
+        template: '/api/v2/agreements/amendments/<%=id%>/',
+      },
+      agreementAmendmentsTypeDelete:  {
+        template: '/api/v2/agreements/amendments/types/<%=id%>/',
+      },
+      lowerResultsDelete:  {
+        template: '/api/v2/reports/lower_results/<%=id%>/',
+      },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
         exp: 6 * 60 * 60 * 1000, // 6h
@@ -245,9 +260,16 @@ App global configuration
       },
       ramIndicators: {
         template: '/api/v2/reports/results/<%=id%>/indicators/',
-      }
+      },
+			governmentIntResultDelete : {
+				template : "/api/v2/government_interventions/results/<%=id%>/"
+			},
+			governmentResultActivityDelete: {
+				template : "/api/v2/government_interventions/results/activities/<%=id%>/"
+			},
 
-    };
+
+		};
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
     /* jshint ignore:end */
