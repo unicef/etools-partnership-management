@@ -547,7 +547,7 @@
             out.push('status=' + this.agreementStatus);
           }
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partner_name=' + this.selectedPartners.pop().label);
+            out.push('partner_name=' + this.selectedPartners[0].label);
           }
           if (this.startDate && this.startDate.length) {
             out.push('start=' + this.startDate);

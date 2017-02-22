@@ -574,20 +574,20 @@
           var out = [];
 
           // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   out.push('country_programme=' + this.selectedCpOutputs.pop());
+          //   out.push('country_programme=' + this.selectedCpOutputs[0]);
           // }
 
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partner=' + this.selectedPartners.pop().value);
+            out.push('partner=' + this.selectedPartners[0].value);
           }
           if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + this.selectedSectors.pop().value);
+            out.push('sector=' + this.selectedSectors[0].value);
           }
           if (this.selectedYears && this.selectedYears.length) {
-            out.push('year=' + this.selectedYears.pop().value);
+            out.push('year=' + this.selectedYears[0].value);
           }
           if(this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            out.push('unicef_focal_point=' + this.selectedUnicefFocalPoints.pop().value);
+            out.push('unicef_focal_point=' + this.selectedUnicefFocalPoints[0].value);
           }
 
           out.push('format=csv');
