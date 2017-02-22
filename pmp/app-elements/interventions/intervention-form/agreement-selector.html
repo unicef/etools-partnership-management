@@ -92,7 +92,7 @@
 					var agreementSelector = this.$.agreements;
           if (!agreementId) {
             partnerSelector.value = null,
-            agreementSelector.value === null;
+            agreementSelector.value = null;
             this.set('filteredAgreements', []);
             this.set('selectedAgreement', null);
             return;

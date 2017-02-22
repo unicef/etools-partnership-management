@@ -421,7 +421,8 @@
          */
         _canBeRemoved: function(index) {
           var plannedBudget = this.dataItems[index];
-          var plannedBudget = parseInt(plannedBudget.id, 10);
+          plannedBudget = parseInt(plannedBudget.id, 10);
+          
           if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
             // planned budget already saved (has an id assigned)
             return false;
