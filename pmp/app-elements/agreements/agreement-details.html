@@ -160,10 +160,12 @@
                                    hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement_file)]]">
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
-              <paper-button class="paper-input-input secondary-btn">
-                <iron-icon icon="refresh"></iron-icon>
-                GENERATE PCA
-              </paper-button>
+              <a target="_blank" href="/api/v2/agreements/[[agreement.id]]/pdf/">
+                <paper-button class="paper-input-input secondary-btn">
+                  <iron-icon icon="refresh"></iron-icon>
+                  GENERATE PCA
+                </paper-button>
+              </a>
             </paper-input-container>
           </div>
         </div>
