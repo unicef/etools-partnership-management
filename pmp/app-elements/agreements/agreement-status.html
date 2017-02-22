@@ -330,8 +330,8 @@
         },
 
         _showActive: function(status) {
-          if (this._statusIs('active')
-              || (!this._statusIs('suspended') && !this._statusIs('terminated'))) {
+          if (this._statusIs(status, 'active')
+              || (!this._statusIs(status, 'suspended') && !this._statusIs(status, 'terminated'))) {
             return true;
           }
           return false;
