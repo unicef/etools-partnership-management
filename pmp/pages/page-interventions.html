@@ -45,8 +45,14 @@
     <app-route
         route="{{route}}"
         pattern="interventions/:intId/:intTab"
-        active="{{tabsActive}}"
+        active="{{intervDetailsActive}}"
         data="{{routeData}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="interventions/new/:intTab"
+        active="{{newInterventionActive}}"
+        data="{{routeDataNewInterv}}"></app-route>
 
     <intervention-item-data id="interventionData"
                          intervention="{{intervention}}"
@@ -84,7 +90,7 @@
                 </paper-button>
               </div>-->
               <div class="top-content-action"  hidden$="[[!listActive]]">
-                <paper-button class="primary-btn with-prefix">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                   <iron-icon icon="add"></iron-icon>
                   Add new PD/SSFA ToR
                 </paper-button>
@@ -93,7 +99,7 @@
           </div>
           <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
-                selected="{{routeData.intTab}}"
+                selected="{{activeTab}}"
                 attr-for-selected="name"
                 noink bottom-item>
 
@@ -202,12 +208,21 @@
         csvQueryString: {
           type: String
         },
+        newInterventionModel: {
+          type: Object,
+          value: null
+        },
+        activeTab: {
+          type: String,
+          observer: '_activeTabChanged'
+        }
       },
 
       observers: [
-        '_resizeHeader(listActive, tabsActive)',
+        '_resizeHeader(listActive, intervDetailsActive, newInterventionActive)',
         '_updateUrlTab(routeData.intTab)',
-        '_pageChanged(listActive, routeData.intTab)',
+        '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
+        '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)'
       ],
 
@@ -215,26 +230,61 @@
         this.$$('app-header-layout').notifyResize();
       },
 
+      _activeTabChanged: function(activeTab) {
+        if (activeTab) {
+          if (this.newInterventionActive) {
+            this.set('routeDataNewInterv.intTab', activeTab);
+          } else {
+            this.set('routeData.intTab', activeTab);
+          }
+        }
+      },
+
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
+        }
+        this._updateUrl();
+      },
+
+      _updateUrlTabNewInterv: function(newIntervTab) {
+        if (!newIntervTab) {
+          return;
+        }
+        this._updateUrl();
+      },
+
+      _updateUrl: function() {
+        if (!this.activeTab) {
+          this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
         this.debounce('debounce-url-tab-update', function() {
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
 
-      _getActivePage: function(listActive, intTab) {
-        if (listActive) {
-          return 'list';
-        } else {
-          return intTab;
+      _getActivePage: function(listActive, intervDetailsActive, newInterventionActive) {
+        var page = 'list';
+        if (listActive === false) {
+          if (newInterventionActive) {
+            // return new intervention page tab name
+            page =  this.routeDataNewInterv.intTab;
+          } else {
+            // return intervention details page tab name
+            page = this.routeData.intTab;
+          }
         }
+        return page;
       },
 
-      _pageChanged: function(listActive, intTab) {
-        var activePage = this._getActivePage(listActive, intTab);
-        this.set('interventionPage', activePage);
+      _pageChanged: function(listActive, intervDetailsActive, newInterventionActive) {
+        this.debounce('pageChange', function() {
+          var activePage = this._getActivePage(listActive, intervDetailsActive, newInterventionActive);
+          if (activePage === 'list') {
+            this.set('activeTab', 'details');
+          }
+          this.set('interventionPage', activePage);
+        }.bind(this), 50);
       },
 
       _showPageTabs: function(interventionPage) {
@@ -249,6 +299,10 @@
       },
 
       _observeRouteDataId: function(id) {
+        id = parseInt(id, 10);
+        if (isNaN(id)) {
+          id = null;
+        }
         this.set('selectedInterventionId', id);
         // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
         this.$.intervAttachments.set('preparedAttachments', false);
@@ -300,7 +354,8 @@
             delete interventionData.prc_review_document;
           }
 
-          console.log('intervention data to be saved', interventionData);
+          // TODO: remove console.log
+          // console.log('intervention data to be saved', interventionData);
           this.$.interventionData.saveIntervention(interventionData);
         } else {
           var msg = 'Please review invalid fields data!';
@@ -327,10 +382,16 @@
       },
 
       _deleteAttachment: function(event) {
-        // TODO:  remove console.log ater attachment delete is implemented
-        console.log('attachment to delete: ', event.detail);
+        // TODO:  remove after attachment delete is implemented
         this.fire('toast', {text: 'Delete file not implemented yet! '
           + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
+      },
+
+      _goToNewInterventionPage: function(event) {
+        // go to new intervention
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        this.set('selectedInterventionId', null);
+        this.fire('update-main-path', {path: 'interventions/new/details'}, {bubbles: false});
       }
 
     });
