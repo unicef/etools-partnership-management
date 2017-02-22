@@ -176,7 +176,7 @@
 
             <div class="row-h">
               <div class="col col-4">
-                <div class="row-h flex-c">
+                <div class="row-h flex-c left-col">
                   <div class="col col-4"></div>
                   <div class="col col-8">
                     <paper-input id$="partnerContribUsd_[[index]]"
@@ -299,14 +299,7 @@
           },
           currencies: {
             type: Array,
-            statePath: function(state) {
-              return state.currencies.map(function(currency, index) {
-                return {
-                  value: (index + 1),
-                  label: currency.value
-                };
-              });
-            }
+            statePath: 'currencies'
           },
           localCurrency: {
             type: String,
