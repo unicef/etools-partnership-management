@@ -354,9 +354,9 @@
 										var validate = _.reduce(fields, function (valid, field) {
 											var exists = !!self.dataItems[i][field];
 											if (!exists) {
-												Polymer.dom(result).querySelector("#" + field).invalid = true;
+												Polymer.dom(result).querySelector('#' + field).invalid = true;
 											} else {
-												Polymer.dom(result).querySelector("#" + field).invalid = false;
+												Polymer.dom(result).querySelector('#' + field).invalid = false;
 											}
 											return valid && exists;
 										}, true);

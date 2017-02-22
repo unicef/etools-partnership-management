@@ -123,7 +123,7 @@
 
   <script>
     Polymer({
-      is: "government-details",
+      is: 'government-details',
       behaviors: [
         pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
         pmpBehaviors.CommonGeneralBehavior,
@@ -163,8 +163,8 @@
         if (!_.isEmpty(cpObject)) {
           var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
           years = years.map(function (year) {
-            return _.assign({}, {label: year.toString(), value: year})
-          })
+            return _.assign({}, {label: year.toString(), value: year});
+          });
           this.set('yearOptions', years);
         }
       },
@@ -176,18 +176,18 @@
         }
       },
       _addNewResult: function () {
-        var intervention = this.intervention.id || "";
+        var intervention = this.intervention.id || '';
         var newResult = {
-          "intervention": intervention,
-          "result": "",
-          "year": "",
-          "planned_amount": "",
-          "planned_visits": "",
-          "result_activities": [],
-          "unicef_managers": [],
-          "sectors": [],
-          "sections": [],
-        }
+          'intervention': intervention,
+          'result': '',
+          'year': '',
+          'planned_amount': '',
+          'planned_visits': '',
+          'result_activities': [],
+          'unicef_managers': [],
+          'sectors': [],
+          'sections': [],
+        };
         this.push('intervention.results', newResult);
       },
       _validateSave: function(){
@@ -206,12 +206,12 @@
         var valid = true;
         // validate partner
         if(!this.intervention.partner){
-          this.$$("#partner").invalid = true;
+          this.$$('#partner').invalid = true;
           valid= false;
         }
         //validate country programme
         if(!this.intervention.country_programme){
-          this.$$("#country_programme").invalid = true;
+          this.$$('#country_programme').invalid = true;
           valid= false;
         }
         var resultsValid= this.$.governmentResults._fieldsAreValid('result','year','planned_amount','planned_visits');
@@ -231,6 +231,6 @@
         }
         this.fire('global-loading', {active:false});
       },
-    })
+    });
   </script>
 </dom-module>

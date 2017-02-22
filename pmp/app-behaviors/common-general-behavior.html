@@ -9,7 +9,7 @@
      * Ex: partners and agreements lists data values.
      */
     getDisplayValue: function(value, isDate, separator) {
-      if (typeof value === 'string' && value != '') {
+      if (typeof value === 'string' && value !== '') {
         if (isDate) {
           return this.prettyDate(value);
         } else {

@@ -50,12 +50,12 @@
         _attachmentChanged: function(filesLength) {
         	if (filesLength > 0) {
         		if (this.attachments[0].raw instanceof File){
-        			this.set('file', this.attachments[0].raw)
+        			this.set('file', this.attachments[0].raw);
         		} else {
-        			this.set('file', null)
+        			this.set('file', null);
         		}
 	        } else {
-	            this.set('file', null)
+	            this.set('file', null);
 	        }		
         }
       });
