@@ -127,9 +127,9 @@
                       errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + '\n');
                     }
                   } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                    errors[errField].forEach(function(err) {
-                      errorMessages.push(err + '\n');
-                    });
+                    for(var key in errors[errField]) {
+                      errorMessages.push(errors[errField][key] + '\n');
+                    }
                   }
                 }
               }

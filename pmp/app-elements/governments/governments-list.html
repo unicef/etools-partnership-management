@@ -764,7 +764,7 @@
 
           var years = _.range(minYear, maxYear+1);
           years = years.map(function(year){
-            return _.assign({},{label: year.toString(), value: year})
+            return _.assign({},{label: year.toString(), value: year});
           });
 
           this.set('years', years);

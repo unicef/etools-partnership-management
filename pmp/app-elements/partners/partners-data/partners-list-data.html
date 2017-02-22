@@ -98,7 +98,7 @@
             return {
               type: 'SET_CSO_PARTNERS',
               csoPartners: csoPartners
-            }
+            };
           }
         },
 
@@ -126,7 +126,7 @@
                   label: p.name
                 });
               }
-              if (!p.hidden && p.partner_type === "Government") {
+              if (!p.hidden && p.partner_type === 'Government') {
                 filteredData.push({
                   value: p.id,
                   label: p.name
