@@ -18,48 +18,56 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
 <link rel="import" href="../agreements/agreement-data/agreement-item-data.html">
-  
+
 <dom-module id="intervention-overview">
 
   <template>
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply(--layout-vertical);
         width: 100%;
       }
+
       .block {
         display: block;
       }
+
       .content {
         margin-top: 8px;
       }
+
       iron-label {
         color: var(--dark-secondary-text-color);
       }
+
       .secondary {
         color: var(--dark-secondary-text-color);
       }
+
       .blue {
-        color: var(--paper-blue-500);        
+        color: var(--paper-blue-500);
       }
+
       .sector-label {
-        white-space: nowrap;        
+        white-space: nowrap;
         height: 19px;
         text-align: center;
         padding: 7px 10px;
         background-color: #FF9640; /* TODO: replace with app-theme var */
-        text-transform: capitalize;        
+        text-transform: capitalize;
         font-weight: bold;
         color: #fff;
       }
+
       #monitoring-visits-panel {
         --ecp-content: {
           padding: 10px 0 25px;
         }
       }
+
       #top-container {
-         margin-bottom: 20px;
+        margin-bottom: 20px;
       }
     </style>
 
@@ -67,88 +75,79 @@
                          agreement-id="[[intervention.agreement]]"
                          agreement="{{interventionAgreement}}"></agreement-item-data>
 
-
     <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
 
-    <div id="pageContent">
-      <paper-material elevation="1" id="top-container">
-        <div class="row-h flex-c">
-          <div class="col col-12 block">
-              <iron-label for="cp_outputs_list"> 
-                Cp Output(s)                                
-              </iron-label>
-              <br/>
-              <div class="content" id="cp_outputs_list">
-                <template is="dom-repeat" items="[[cpOutputs]]" as="cpOut">
-                    <strong> [[ cpOut ]] </strong> <br/>
-                </template>
-              </div>              
+    <paper-material elevation="1" id="top-container">
+      <div class="row-h flex-c">
+        <div class="col col-12 block">
+          <iron-label for="cp_outputs_list">
+            Cp Output(s)
+          </iron-label>
+          <br/>
+          <div class="content" id="cp_outputs_list">
+            <template is="dom-repeat" items="[[cpOutputs]]" as="cpOut">
+              <strong> [[ cpOut ]] </strong> <br/>
+            </template>
           </div>
         </div>
+      </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-12 block">
-              <iron-label for="document_title"> 
-                Document Title
-              </iron-label>
-              <br />
-              <div class="content" id="document_title">
-                [[ intervention.title ]]                 
-              </div>              
-              
-              <div class="secondary"> 
-                Under <strong class="blue">[[interventionAgreement.agreement_type]]</strong> with <strong class="blue">[[intervention.partner]]</strong> 
-              </div>
+      <div class="row-h flex-c">
+        <div class="col col-12 block">
+          <iron-label for="document_title">
+            Document Title
+          </iron-label>
+          <br/>
+          <div class="content" id="document_title">
+            [[ intervention.title ]]
+          </div>
+
+          <div class="secondary">
+            Under <strong class="blue">[[interventionAgreement.agreement_type]]</strong> with <strong class="blue">[[intervention.partner]]</strong>
           </div>
         </div>
+      </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-12 block">
-              <iron-label for="intervention_locations"> 
-                Locations
-              </iron-label>
-              <br />
-              <div class="content" id="intervention_locations">
-                <iron-icon icon="maps:place"></iron-icon> [[ getDisplayValue(locations) ]]                               
-              </div>              
+      <div class="row-h flex-c">
+        <div class="col col-12 block">
+          <iron-label for="intervention_locations">
+            Locations
+          </iron-label>
+          <br/>
+          <div class="content" id="intervention_locations">
+            <iron-icon icon="maps:place"></iron-icon>
+            [[ getDisplayValue(locations) ]]
           </div>
         </div>
-        
-        <div class="row-h flex-c">
-          <div class="col col-6 block">
-              <iron-label for="interventions_timeline"> 
-                Timeline
-              </iron-label>
-              <br />
-              <div class="content" id="interventions_timeline">
-                [[_checkAndShowDate(interventionAgreement.start)]] - [[_checkAndShowDate(interventionAgreement.end)]]
-              </div>              
+      </div>
+
+      <div class="row-h flex-c">
+        <div class="col col-6 block">
+          <iron-label for="interventions_timeline">
+            Timeline
+          </iron-label>
+          <br/>
+          <div class="content" id="interventions_timeline">
+            [[_checkAndShowDate(interventionAgreement.start)]] - [[_checkAndShowDate(interventionAgreement.end)]]
           </div>
-          <div class="col col-6 block">
-              <iron-label for="interventions_sectors"> 
-                Sectors
-              </iron-label>
-              <br />
-              <div class="content" id="interventions_sectors">
-                <template is="dom-repeat" items="[[sectors]]" as="sector">
-                  <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.label]]</span>
-                </template>  
-              </div>              
+        </div>
+        <div class="col col-6 block">
+          <iron-label for="interventions_sectors">
+            Sectors
+          </iron-label>
+          <br/>
+          <div class="content" id="interventions_sectors">
+            <template is="dom-repeat" items="[[sectors]]" as="sector">
+              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.label]]</span>
+            </template>
           </div>
-        </div>        
-      </paper-material>
+        </div>
+      </div>
+    </paper-material>
 
-      <etools-content-panel id="monitoring-visits-panel" class="content-section" title="Monitoring Visits">
-          <monitoring-visits-list></monitoring-visits-list>
-      </etools-content-panel>
-    </div> <!-- main page content end -->
-
-    <!-- sidebar content start -->
-    <div id="sidebar">
-      <intervention-status status="[[intervention.status]]"></intervention-status>
-    </div>
-    <!-- sidebar content end -->
-
+    <etools-content-panel id="monitoring-visits-panel" class="content-section" title="Monitoring Visits">
+      <monitoring-visits-list intervention-id="[[intervention.id]]"></monitoring-visits-list>
+    </etools-content-panel>
 
   </template>
 
@@ -186,48 +185,17 @@
             type: Array
           },
           allSectors: {
-            type: Array,             
+            type: Array,
             statePath: 'sectors'
           },
           sectors: {
             type: Array
           },
         },
-        ready: function() {
-          this.monitoringVisits = [
-            {
-              id: 1,
-              number: '2016/646-3',
-              traveler_name: 'Jane Doe',
-              traveler_type: 'Spot Check',
-              date: '2016-05-05',
-              locations: [],
-              status: 'planned'
-            },
-            {
-              id: 2,
-              number: '2016/646-1',
-              traveler_name: 'John Doe',
-              traveler_type: 'Programmatic Visit',
-              date: '2016-03-03',
-              locations: [],
-              status: 'approved'
-            },
-            {
-              id: 3,
-              number: '2016/646-2',
-              traveler_name: 'Peter Scoodlypooper',
-              traveler_type: 'Spot Check',
-              date: '2016-06-06',
-              locations: [],
-              status: 'completed'
-            },
-          ];
 
-        },
-        _interventionChanged: function(intervention) {          
-          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {            
-            this._parseCpOutputs();  
+        _interventionChanged: function(intervention) {
+          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+            this._parseCpOutputs();
             this._parseLocationsAndSectors();
           }
 
@@ -245,13 +213,13 @@
             ids[res.cp_output.id] = true;
           });
 
-          for(var id in ids) {
+          for (var id in ids) {
             uniqueIds.push(parseInt(id));
           }
 
-          this.allCpOutputs.forEach(function(cpo){           
-            if(uniqueIds.indexOf(cpo.value) > -1) {
-              cpOutputs.push(cpo.label);  
+          this.allCpOutputs.forEach(function(cpo) {
+            if (uniqueIds.indexOf(cpo.value) > -1) {
+              cpOutputs.push(cpo.label);
             }
           });
 
@@ -263,21 +231,21 @@
           var sectorIds = [];
           var sectors = [];
 
-          this.intervention.sector_locations.forEach(function(locLvl1){
-            locLvl1.locations.forEach(function(locLvl2){
+          this.intervention.sector_locations.forEach(function(locLvl1) {
+            locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });
             sectorIds.push(locLvl1.sector.id);
-          });                   
+          });
 
-          sectors = this.allSectors.filter(function(elem){            
+          sectors = this.allSectors.filter(function(elem) {
             return (sectorIds.indexOf(elem.value) > -1);
           });
 
           this.set('sectors', sectors);
           this.set('locations', sectorLocations);
         },
-        
+
         _checkAndShowDate: function(dateString) {
           return this.getDisplayValue(dateString, true);
         },
