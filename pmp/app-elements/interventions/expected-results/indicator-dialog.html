@@ -168,7 +168,7 @@
 
         _unitChanged: function(event) {
           var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
-          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== "") {
+          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== '') {
             var unitKeys = unitKeysToReset.split(',');
             unitKeys.forEach(function(key) {
               this.set('unit.' + key, false);

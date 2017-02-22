@@ -264,10 +264,12 @@
         this.allCpOutputs.forEach(function(elem){          
           cpOutputsHelper[elem.value] = elem.label;                      
         });
-        
-        this.intervention.implementation_status.forEach(function(elem){
-          cpOutputNames.push(cpOutputsHelper[elem.cp_output]);
-        });
+        if(_.has(this.intervention,'implementation_status')){
+          this.intervention.implementation_status.forEach(function(elem){
+            cpOutputNames.push(cpOutputsHelper[elem.cp_output]);
+          });
+        }
+
         
         this.set('cpOutputNames', cpOutputNames);
         this.set('cpOutputsHelper', cpOutputsHelper);
@@ -300,25 +302,29 @@
         var actualIndividualSum = 0;
         var outstandingIndividualSum = 0;
         var actualTotalSum = 0;
-        var outstandingTotalSum = 0;      
+        var outstandingTotalSum = 0;
 
-        this.intervention.implementation_status.forEach(function(elem){
-          actualIndividualSum = 0;
-          outstandingIndividualSum = 0;
+        if(_.has(this.intervention,'implementation_status')){
+          this.intervention.implementation_status.forEach(function(elem){
+            actualIndividualSum = 0;
+            outstandingIndividualSum = 0;
 
-          elem.fc_records.forEach(function(record){
-            actualIndividualSum += record.actual;
-            outstandingIndividualSum += record.outstanding;  
-            
-            actualTotalSum += record.actual;
-            outstandingTotalSum += record.outstanding;
-          });         
-          
-          elem.actual_sum = actualIndividualSum;
-          elem.outstanding_sum = outstandingIndividualSum;         
+            elem.fc_records.forEach(function(record){
+              actualIndividualSum += record.actual;
+              outstandingIndividualSum += record.outstanding;
 
-          elem.cp_name = cpOutputsHelper[parseInt(elem.cp_output)];
-        });
+              actualTotalSum += record.actual;
+              outstandingTotalSum += record.outstanding;
+            });
+
+            elem.actual_sum = actualIndividualSum;
+            elem.outstanding_sum = outstandingIndividualSum;
+
+            elem.cp_name = cpOutputsHelper[parseInt(elem.cp_output)];
+          });
+        }
+
+
 
         this.set('intervention.actual_total_sum', actualTotalSum);
         this.set('intervention.outstanding_total_sum', outstandingTotalSum);          

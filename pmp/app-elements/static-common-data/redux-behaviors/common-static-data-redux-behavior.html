@@ -4,7 +4,7 @@
   var initialDropdownPmpData = {
     hrps: [],
     supplyItems: [],
-    // fileTypes: [],
+    fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
     unmodifiedCpOutputs: [],
@@ -19,7 +19,6 @@
     agreementsDropdownData: [],
     partnersDropdownData: [],
     agreementsList: [],
-    currencies: [],
     agencyChoices: [],
     agreementAmendmentTypes: [],
     csoTypes: [],
@@ -41,6 +40,11 @@
       case 'SET_HRPS':
         // console.log('set hrps data...', action.hrps);
         return Object.assign({}, state, { hrps: action.hrps });
+
+      case 'SET_FILE_TYPES':
+        // console.log('set fileTypes data...', action.fileTypes);
+        return Object.assign({}, state, { fileTypes: action.fileTypes });
+
 
       case 'SET_CP_OUTPUTS':
         // console.log('set cp_outputs data...', action.cpOutputs);

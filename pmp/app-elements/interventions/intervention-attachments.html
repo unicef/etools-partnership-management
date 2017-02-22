@@ -4,6 +4,9 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -19,12 +22,61 @@
       :host {
         @apply(--layout-vertical);
         width: 100%;
+
+        --etools-file-label: {
+          display: none;
+        };
+
+        --ecp-content: {
+          padding: 0 0 25px;
+        };
+
+      }
+
+      #attachments {
+        --etools-file-upload-button-paper-btn: {
+          font-weight: bold;
+          padding: 5px 10px;
+          background-color: #3A94FF; /* TODO: replace with app-theme var */
+        };
+
+        --etools-file-upload-button: {
+          color: #fff !important; /* TODO: replace with app-theme var */
+          max-width: 200px;
+          margin-left: 25px;
+          margin-top: 25px !important;
+        };
+
+        --etools-file-area-with-type: {
+          padding: 15px 25px;
+        };
+      }
+
+      #no-attach-warning {
+        display: inline-block;
+        width: 100%;
+        padding: 20px 25px;
+        position: absolute;
+      }
+      #no-attach-warning p {
+        margin: 0;
       }
     </style>
 
     <etools-content-panel class="content-section" title="Attachments">
+
+      <div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>
+        <p>There are no attachments added.</p>
+      </div>
+
       <div class="row-h flex-c">
-        <etools-file id="attachments" files="{{attachments}}" multiple></etools-file>
+        <etools-file id="attachments" 
+          files="{{attachments}}" 
+          file-model="[[fileModel]]" 
+          file-types=[[fileTypes]]
+          label="Attachments" 
+          multiple activate-file-types use-delete-events
+          readonly$=[[!editMode]]></etools-file>
       </div>
     </etools-content-panel>
 
@@ -36,24 +88,84 @@
 
       Polymer({
         is: 'intervention-attachments',
+
+         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.CommonGeneralBehavior,
+        ],
+
         properties: {
           attachments: {
             type: Array,
-            value: []
+            value: [],
+            notify: true,
+            observer: '_attachmentsChanged'
+          },
+          fileTypes: {
+            type: Array,
+            statePath: 'fileTypes'
+          },
+          fileModel: {
+            type: Object,
+            value: null
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          preparedAttachments: {
+            type: Boolean,
+            value: false
           }
         },
 
-        _validateAndSaveAttachements: function(event) {
-          event.stopImmediatePropagation();
-          if (!this.editMode) {
-            return;
+        _attachmentsChanged: function(attachments) {
+          if (Array.isArray(attachments) && attachments.length > 0 && !this._hasPath(attachments[0]) && !this.preparedAttachments) {
+            // this should run only one time when attachments(intervention.attachments) are provided
+            this.set('preparedAttachments', true);
+            this.set('attachments', attachments.map(function(attachment) {
+              return {
+                id: attachment.id,
+                intervention: attachment.intervention,
+                type: attachment.type,
+                attachment_file: attachment.attachment_file ? attachment.attachment_file : null,
+                attachment: null,
+                file_name: this._getFileName(attachment),
+                path: this._getPath(attachment)
+              };
+            }.bind(this)));  
+            console.log('prepared attachments', this.attachments);
           }
+        },
 
-          // TODO: implement intervention attachments save
-          this.fire('toast', {text: 'Save attachements feature not implemented!', showCloseBtn: true});
+        _getPath: function(attachment) {
+          if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
+            return attachment.attachment_file;
+          }
+          if (typeof attachment.attachment === 'string' && attachment.attachment !== '') {
+            return attachment.attachment;
+          }
+          return null;
+        },
 
-          // this.fire('save-intervention', interventionAttachmntsData);
-        }
+        _getFileName: function(attachment) {
+          if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
+            return this.getFileNameFromURL(attachment.attachment_file);
+          }
+          if (typeof attachment.attachment === 'string' && attachment.attachment !== '') {
+            return this.getFileNameFromURL(attachment.attachment);
+          }
+          return null;
+        },
+
+        _hasPath: function(file) {
+          return typeof file.path === 'string' && file.path !== '';
+        },
+
+        _hideNoAttachmentsWarning: function(length) {
+          return length > 0;
+        },
+        
       });
 
     })();

@@ -66,17 +66,20 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href$="/api/v2/government_interventions/?[[csvQueryString]]">
+                  <paper-button>                  
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button> 
+                </a>
               </div>
-              <div class="top-content-action">
+              <!-- Print Functionality Pending Implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
+              </div>-->
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
                   <iron-icon icon="add"></iron-icon>
@@ -116,6 +119,7 @@
           <governments-list id="list"
                            active="[[governmentListActive]]"
                            url-params="[[governmentQueryParams]]"
+                           csv-query-string="{{csvQueryString}}"
                            partners-dropdown-data="[[partnersDropdownData]]">
           </governments-list>
         </div>
@@ -123,7 +127,7 @@
           <government-details id="details"
                               new-intervention-model="[[newInterventionModel]]"
                               intervention="[[intervention]]"
-                              edit-mode="[[fakePermission]]"
+                              edit-mode="[[_hasEditPermissions(permissions)]]"
                               on-save-intervention="_saveIntervention"></government-details>
         </div>
         <div class="page" name="overview">
@@ -169,6 +173,9 @@
         selectedInterventionId: {
           type: Number
         },
+        csvQueryString: {
+          type: String
+        },
         fakePermission: true,
       },
 
@@ -194,9 +201,11 @@
       },
       _saveIntervention: function (e) {
         e.stopImmediatePropagation();
-        this.$.interventionData.saveIntervention(e.detail, this._newInterventionSaved)
+        if(_.has(e.detail,'intervention')){
+          this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved)
+        }
       },
-      _newInterventionSaved: function(intervention) {
+      _interventionSaved: function(intervention) {
         this.fire('update-main-path', {path: 'governments/' + intervention.id + '/details'});
       },
       _pageChanged : function (governmentListActive, tab, newInterventionActive) {
@@ -218,8 +227,8 @@
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
-      _goToNewGovernmentPage: function(e){
-        this.set('intervention', this.newInterventionModel);
+      _goToNewGovernmentPage: function(){
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', 0);
         this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
         if(_.isEmpty(this.intervention.results)){
@@ -237,8 +246,16 @@
           this.set('selectedInterventionId', id);
         }
       },
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
+      }
 
     });
 
   </script>
 </dom-module>
+
+//TODO 1. save after error, delete function

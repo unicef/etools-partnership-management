@@ -6,24 +6,35 @@
         // Behavior for managing object structure for objects or arrays of objects being
         // passed from and to etools-searchable-multiselect-menu .
         // These functions are based on the { value : xxx , label : yyyy } structure
-        _mapItemFromId : function(id,collection, getLabelOnly){
+        _mapItemFromId : function(id,  collection, getLabelOnly) {
             if(_.isEmpty(collection)){
-                return
+                return;
             }
             if(typeof id === 'string'){
-                id = parseInt(id)
+                id = parseInt(id);
             }
+            //TODO: refactor this, it's too complex to be an in-line statement 
             return getLabelOnly ? _.find(collection, {value:id}).label :
-                    Array.isArray(id) ? _.map(id, function(item){
+                    Array.isArray(id) ? _.map(id, function(item) {
+                        return  _.find(collection, {value:item})
+                    }): _.find(collection, {value:id});
+        },
+        _mapItemFromValue : function(id, collection, getLabelOnly){
+            if(_.isEmpty(collection)){
+                return;
+            }
+            //TODO: refactor this, it's too complex to be an in-line statement 
+            return getLabelOnly ? _.find(collection, {value:id}).label :
+                    Array.isArray(id) ? _.map(id, function(item) {
                         return  _.find(collection, {value:item})})  :
-                            _.find(collection, {value:id})
+                            _.find(collection, {value:id});
         },
         _displayMultiple: function(id, collection){
             var entries = this._mapItemFromId(id, collection)
             if (Array.isArray(entries)){
                 return _.map(entries, function(e){
-                    return e.label
-                }).join(', ')
+                    return e.label;
+                }).join(', ');
             }
             return entries.label;
         },
@@ -33,7 +44,7 @@
                 var pluckedVals = _.map(value,'value');
                 var newObj = {};
                 newObj[prop] = pluckedVals;
-                return _.assign({},oldObj, newObj)
+                return _.assign({},oldObj, newObj);
             }
             var newObj = {};
             newObj[prop] = _.has(value,'value') ? value.value : value;

@@ -44,7 +44,8 @@
 
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
-                         agreement-id="[[selectedAgreementId]]"></agreement-item-data>
+                         agreement-id="[[selectedAgreementId]]"
+                         on-agreement-save-error="_newAgreementErrors"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -68,17 +69,20 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href="/api/v2/agreements/?[[csvQueryString]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>
               </div>
-              <div class="top-content-action">
+             <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
+              </div>-->
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
@@ -111,11 +115,13 @@
         <div class="page" name="list">
           <agreements-list id="list"
                            active="[[agreementListActive]]"
+                           csv-query-string="{{csvQueryString}}"
                            url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
           <agreement-details
+              id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
@@ -164,7 +170,10 @@
             signed_by: null,
             partner_manager: null
           }
-        }
+        },
+        csvQueryString: {
+          type: String
+        },
 
       },
 
@@ -255,7 +264,7 @@
        */
       _getTopContentAdditionalClass: function(activePage) {
         if (this._showPageTabs(activePage)) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       },
@@ -282,6 +291,10 @@
        */
       _newAgreementSaved: function(agreement) {
         this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+      },
+      _newAgreementErrors: function(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementDetails.set('serverErrors', event.detail);
       },
 
       /**

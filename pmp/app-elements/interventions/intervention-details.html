@@ -394,7 +394,7 @@
                 start++;
               }
               this.set('years', years);
-            }.bind(this), 50)
+            }.bind(this), 50);
           }
         },
 
@@ -521,14 +521,14 @@
                 id: sectorLocation.id,
                 sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
                 locations: this._prepareLocationsForSave(sectorLocation.locations)
-              }
+              };
             }.bind(this));
           }
           return [];
         },
 
         _prepareLocationsForSave: function(locations) {
-          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length == 0)) {
+          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length === 0)) {
             return [];
           }
           return locations.map(function(location) {
