@@ -294,6 +294,7 @@
           var valid = true;
           switch (field) {
             case 'assessmentType':
+              // What's reportFileLength? Doesn't seem to be defined anywhere
               if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) || reportFileLength > 0)) {
                 valid = false;
               }

@@ -156,7 +156,7 @@
           // attach close handler
           this.indicatorDialog.addEventListener('indicator-dialog-close', function(event) {
             this.indicatorDialogDataReceived(event.detail);
-          }.bind(this))
+          }.bind(this));
 
           Polymer.dom(document.querySelector('body')).appendChild(this.indicatorDialog);
         },
