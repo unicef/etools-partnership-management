@@ -261,15 +261,17 @@ App global configuration
       ramIndicators: {
         template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
-			governmentIntResultDelete : {
-				template : "/api/v2/government_interventions/results/<%=id%>/"
-			},
-			governmentResultActivityDelete: {
-				template : "/api/v2/government_interventions/results/activities/<%=id%>/"
-			},
+      governmentIntResultDelete : {
+        template : "/api/v2/government_interventions/results/<%=id%>/"
+      },
+      governmentResultActivityDelete: {
+        template : "/api/v2/government_interventions/results/activities/<%=id%>/"
+      },
+      monitoringVisits: {
+        template: '/api/t2f/travels/activities/<%=id%>/',
+      },
 
-
-		};
+    };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
     /* jshint ignore:end */
