@@ -9,7 +9,10 @@
           files="{{attachments}}"
           label="[[label]]"
           accept="[[accept]]"
-          readonly$="[[readonly]]"></etools-file>
+          readonly$="[[readonly]]"
+          invalid$="[[invalid]]" 
+          error-message=[[errorMessage]]>
+    </etools-file>
   </template>
 
   <script>
@@ -21,42 +24,50 @@
         is: 'etools-single-file',
         behaviors: [etoolsAppConfig.globals, pmpBehaviors.CommonGeneralBehavior],
         properties: {
-        	attachments: {
-        		type: Array,
-        		value: function() {
-        			return [];
-        		}
-        	},
+          attachments: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          },
           readonly: Boolean,
           accept:String,
-        	label: String,
-        	file: {
-        		type: Object,
-        		notify: true,
-        	},
-        	internalFile: {
-        		type: Object,
-        		observer: '_fileChanged'
-        	},
+          label: String,
+          file: {
+            type: Object,
+            notify: true,
+          },
+          internalFile: {
+            type: Object,
+            observer: '_fileChanged'
+          },
+          invalid: {
+            type: Boolean,
+            value: false
+          },
+          errorMessage: {
+            type: String,
+            value: 'Please select a file'
+          }
         },
-    	observers: ['_attachmentChanged(attachments.length)'],
+      observers: ['_attachmentChanged(attachments.length)'],
 
         _fileChanged: function(intr) {
-        	if (this.internalFile) {
+          if (this.internalFile) {
 
-        		this.set('attachments', this.prepareEtoolsFileDataFromUrl(this.internalFile));
-        	}
+            this.set('attachments', this.prepareEtoolsFileDataFromUrl(this.internalFile));
+          }
         },
         _attachmentChanged: function(filesLength) {
-        	if (filesLength > 0) {
-        		if (this.attachments[0].raw instanceof File){
-        			this.set('file', this.attachments[0].raw)
-        		} else {
-        			this.set('file', null)
-        		}
-	        } else {
-	            this.set('file', null)
-	        }		
+          if (filesLength > 0) {
+            if (this.attachments[0].raw instanceof File){
+              this.set('file', this.attachments[0].raw)
+            } else {
+              this.set('file', null)
+            }
+          } else {
+              this.set('file', null)
+          }
         }
       });
     })();

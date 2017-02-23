@@ -73,6 +73,14 @@
         visibility: hidden;
       }
 
+      etools-single-file {
+        width: 100%;
+      }
+
+      .row-h.file-container {
+        padding-bottom: 15px;
+      }
+
     </style>
      <etools-ajax id="deleteAjax"
                  on-success="_handleDeleteResponse"
@@ -117,21 +125,20 @@
                                                                options="[[assessmentTypesOptions]]"
                                                                value="[[_getAssessmentType(item)]]"
                                                                on-value-change="_assessmentTypeSelected"
-                                                               invalid$="[[!_isValid('assessmentType', item.type, item.completed_date, item.report_file.length)]]"
                                                                error-message="Assessment type is required"
-                                                               custom-object-options>
+                                                               custom-object-options>                                                               
                         </etools-searchable-multiselection-menu>
                       </template>
                     </div>
                     <div class="col col-4">
                       <!-- Date submitted -->
-                      <paper-input label="Date of Report"
+                      <paper-input id$="dateSubmited_[[index]]"
+                                   label="Date of Report"
                                    value="[[prettyDate(item.completed_date)]]"
                                    placeholder="&#8212;"
                                    on-down="openDatePicker"
                                    data-selector$="completedDate_[[index]]"
                                    readonly$="[[!editMode]]"
-                                   invalid$="[[!_isValid('dateOfReport', item.type, item.completed_date, item.report_file.length)]]"
                                    error-message="Date of report is required">
                         <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
                         <etools-datepicker-button id$="completedDate_[[index]]"
@@ -157,18 +164,16 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row-h no-overflow">
+                  <div class="row-h file-container">
                     <!-- Report file -->
-                    <div class="file-wrapper">
-                      <etools-single-file 
-                                   file="{{item.report}}"
-                                   internal-file="{{item.report_file}}"
-                                   label="Report"
-                                   readonly="[[!editMode]]"
-                                   accept=".doc,.docx,.pdf,.jpg,.png"
-                                   invalid$="[[!_isValid('reportFile', item.type, item.completed_date, item.report)]]"
-                                   error-message="Please select the report file"></etools-single-file>
-                    </div>
+                    <etools-single-file 
+                                  id$="report_[[index]]"
+                                  file="{{item.report}}"
+                                  internal-file="{{item.report_file}}"
+                                  label="Report"
+                                  readonly="[[!editMode]]"
+                                  accept=".doc,.docx,.pdf,.jpg,.png"
+                                  error-message="Please select the report file"></etools-single-file>
                   </div>
                 </div>
               </div>
@@ -222,7 +227,10 @@
           },
         },
 
-        observers: ['_dataHasChanged(dataItems)'],
+        observers: [
+          '_dataHasChanged(dataItems)',
+          '_assessmentPropertyChanged(dataItems.*)'
+        ],
 
         ready: function() {
           this.dataSetModel = {
@@ -272,6 +280,22 @@
           // }
         },
 
+        _assessmentPropertyChanged: function(dataPath) {
+          if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' && dataPath.path !== 'dataItems.length') {
+            var path = dataPath.path.split('.');
+            var index = path[path.length - 2].replace('#', '');
+            var fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
+            fields.forEach(function(fieldSelector) {
+              var fieldEl = this.$$(fieldSelector);
+              if (fieldEl) {
+                var fieldName = fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
+                fieldEl.invalid = !this._isValid(fieldName, this.dataItems[index].type, 
+                  this.dataItems[index].completed_date, this.dataItems[index].report, this.dataItems[index].report_file.length);
+              }
+            }.bind(this));
+          }
+        },
+
         _basisForRiskRatingChanged: function(event) {
           if (!this.editMode) {
             return;
@@ -290,22 +314,21 @@
           return typeof value !== 'undefined' && value !== null && value !== '';
         },
 
-        _isValid: function(field, assessmentType, completedDate, reportFile) {
+        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength) {
           var valid = true;
           switch (field) {
             case 'assessmentType':
-              // What's reportFileLength? Doesn't seem to be defined anywhere
-              if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) || reportFileLength > 0)) {
+              if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) || reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
-            case 'dateOfReport':
-              if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) || reportFileLength > 0)) {
+            case 'dateSubmited':
+              if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) || reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
-            case 'reportFile':
-              if (reportFile instanceof File) {
+            case 'report':
+              if (reportFile instanceof File === false && (this._notEmpty(assessmentType) || this._notEmpty(completedDate))) {
                 valid = false;
               }
               break;
