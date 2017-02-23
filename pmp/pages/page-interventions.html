@@ -163,7 +163,8 @@
                                     partner="[[partner]]"
                                     selected-partner-id="{{partnerId}}"
                                     new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]">
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"
+                                    on-update-intervention-status="_updateInterventionStatus">
               </intervention-details>
             </div>
             <div class="page" name="review-and-sign">
@@ -178,7 +179,7 @@
               <intervention-attachments id="intervAttachments"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 file-model="[[_getAttachmentModel(intervention.id)]]"
-                attachments={{intervention.attachments}}
+                attachments="{{intervention.attachments}}"
                 on-delete-file="_deleteAttachment"
                 new-intervention="[[_newIntervention(newInterventionActive)]]">
               </intervention-attachments>
@@ -188,9 +189,12 @@
 
         <!-- sidebar content start -->
         <div id="sidebar" hidden$="[[listActive]]">
-          <intervention-status status="[[intervention.status]]"
-                               on-save-intervention="_validateAndSaveIntervention"
-                               show-save-btn$="[[editMode]]"></intervention-status>
+           <intervention-status status="[[intervention.status]]"
+                                intervention-id$="[[intervention.id]]"
+                                on-save-intervention="_validateAndSaveIntervention"
+                                on-update-intervention-status="_updateInterventionStatus"
+                                show-save-btn$="[[editMode]]"></intervention-status>
+
         </div>
         <!-- sidebar content end -->
       </div>
@@ -425,6 +429,11 @@
           }
           this.fire('toast', {text: msg, showCloseBtn: true});
         }
+      },
+
+      _updateInterventionStatus: function(event) {
+        event.stopImmediatePropagation();
+        this.$.interventionData.updateInterventionStatus(event.detail);
       },
 
       _hasEditPermissions: function(permissions) {
