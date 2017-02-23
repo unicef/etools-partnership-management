@@ -137,7 +137,7 @@
         </div>
             <div class="page" name="details">
               <intervention-details id="interventionDetails"
-                                    intervention="[[intervention]]"
+                                    intervention="{{intervention}}"
                                     partner="[[partner]]"
                                     edit-mode="[[_hasEditPermissions(permissions)]]"
                                     selected-partner-id="{{partnerId}}"
@@ -164,7 +164,7 @@
         <div id="sidebar" hidden$="[[listActive]]">
            <intervention-status status="[[intervention.status]]"
                                 intervention-id$="[[intervention.id]]"
-                                on-save-intervention="_validateAndTriggerInterventionSave"
+                                on-save-intervention="_validateAndSaveIntervention"
                                 on-update-intervention-status="_updateInterventionStatus"
                                 show-save-btn$="[[editMode]]"></intervention-status>
 
