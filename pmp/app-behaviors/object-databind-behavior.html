@@ -13,21 +13,25 @@
             if(typeof id === 'string'){
                 id = parseInt(id);
             }
+            /* jshint ignore:start */
             //TODO: refactor this, it's too complex to be an in-line statement 
             return getLabelOnly ? _.find(collection, {value:id}).label :
                     Array.isArray(id) ? _.map(id, function(item) {
                         return  _.find(collection, {value:item})
                     }): _.find(collection, {value:id});
+            /* jshint ignore:end */                    
         },
         _mapItemFromValue : function(id, collection, getLabelOnly){
             if(_.isEmpty(collection)){
                 return;
             }
+            /* jshint ignore:start */
             //TODO: refactor this, it's too complex to be an in-line statement 
             return getLabelOnly ? _.find(collection, {value:id}).label :
                     Array.isArray(id) ? _.map(id, function(item) {
                         return  _.find(collection, {value:item})})  :
                             _.find(collection, {value:id});
+            /* jshint ignore:end */                            
         },
         _displayMultiple: function(id, collection){
             var entries = this._mapItemFromId(id, collection)

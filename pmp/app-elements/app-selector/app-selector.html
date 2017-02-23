@@ -124,17 +124,16 @@
             behaviors: [
                 etoolsAppConfig.globals,
             ],
-            toggleMenu: function(){
+            toggleMenu: function() {
                 this.$.selector.toggle();
                 if (this.opened) {
                     this.opened = '';
-                }
-                else {
+                } else {
                     this.opened = 'icon-opened';
                 }
             },
-            goToPage: function (e) {
-                window.location.href = this.baseSite+'/' + e.target.id + '/';
+            goToPage: function(e) {
+                window.location.href = this.baseSite + '/' + e.target.id + '/';
             },
         });
     </script>

@@ -153,12 +153,13 @@
         filters = [];
       }
       if (Array.isArray(filters) && filters.length > 0) {
+        var i;
         filters.forEach(function(filter) {
           // check available filters
           if (this._validateFilterSelectedValue(filter.selectedValue)) {
             var foundInAvailable = false;
             if (this.availableListFilterOptions.length > 0) {
-              for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+              for (i = 0; i < this.availableListFilterOptions.length; i++) {
                 var workingFilterOption = this.availableListFilterOptions[i];                
                 if (workingFilterOption.filterName === filter.filterName) {
                   if (workingFilterOption.type === 'esmm' || workingFilterOption.type === 'dropdown') {
@@ -179,7 +180,7 @@
             // search it in selected filters lists and update selected value0
             if (!foundInAvailable) {
               if (this.selectedFilters.length > 0) {
-                for (var i = 0; i < this.selectedFilters.length; i++) {
+                for (i = 0; i < this.selectedFilters.length; i++) {
                   if (this.selectedFilters[i].filterName === filter.filterName) {
                     if (this.selectedFilters[i].type === 'esmm' || this.selectedFilters[i].type === 'dropdown') {
                       // update esmm dropdown selection
