@@ -357,7 +357,6 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log('intervention', intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             //this.set('interventionRequiredField', true); // TODO: remove this
             this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
@@ -466,7 +465,6 @@
         },
 
         _partnerSelected: function(partner) {
-          console.log('intervention partner', partner);
           if (partner && partner.staff_members) {
             // prepare selected partner staff members data
             this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
