@@ -45,8 +45,14 @@
     <app-route
         route="{{route}}"
         pattern="interventions/:intId/:intTab"
-        active="{{tabsActive}}"
+        active="{{intervDetailsActive}}"
         data="{{routeData}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="interventions/new/:intTab"
+        active="{{newInterventionActive}}"
+        data="{{routeDataNewInterv}}"></app-route>
 
     <intervention-item-data id="interventionData"
                          intervention="{{intervention}}"
@@ -65,7 +71,15 @@
         <div class="top-content">
           <div class="top-content-row title-row">
             <h1 main-title>
-              PD/SSFA ToRs
+              <template is="dom-if" if="[[listActive]]">
+                PD/SSFA ToRs
+              </template>
+              <template is="dom-if" if="[[newInterventionActive]]">
+                Add Programme Document or PD/SSFA ToRs
+              </template>
+              <template is="dom-if" if="[[intervDetailsActive]]">
+                [[_getInterventionDetailsTitle(intervention)]]
+              </template>
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action"  hidden$="[[!listActive]]">
@@ -83,8 +97,8 @@
                   Print
                 </paper-button>
               </div>-->
-              <div class="top-content-action"  hidden$="[[!listActive]]">
-                <paper-button class="primary-btn with-prefix">
+              <div class="top-content-action"  hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                   <iron-icon icon="add"></iron-icon>
                   Add new PD/SSFA ToR
                 </paper-button>
@@ -93,13 +107,14 @@
           </div>
           <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
             <paper-tabs
-                selected="{{routeData.intTab}}"
+                selected="{{activeTab}}"
                 attr-for-selected="name"
                 noink bottom-item>
-
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+              </template>
 
               <paper-tab name="details" link>
                 <span class="tab-content">Details</span>
@@ -130,32 +145,44 @@
               <interventions-list
                   active="[[listActive]]"
                   csv-query-string="{{csvQueryString}}"
-                  url-params="[[interventionsQueryParams]]"></interventions-list>
+                  url-params="[[interventionsQueryParams]]">
+              </interventions-list>
             </div>
+
+            <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
               <div class="page" name="overview">
-          <intervention-overview intervention="[[intervention]]"></intervention-overview>
-        </div>
+                <intervention-overview intervention="[[intervention]]"
+                                       intervention-agreement="[[agreement]]">
+                </intervention-overview>
+              </div>
+            </template>
+
             <div class="page" name="details">
               <intervention-details id="interventionDetails"
                                     intervention="{{intervention}}"
                                     partner="[[partner]]"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]"
                                     selected-partner-id="{{partnerId}}"
-                                    on-update-intervention-status="_updateInterventionStatus"
-                                    on-save-intervention="_saveIntervention"></intervention-details>
+                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"
+                                    on-update-intervention-status="_updateInterventionStatus">
+              </intervention-details>
             </div>
             <div class="page" name="review-and-sign">
               <intervention-review-and-sign id="interventionReviewAndSign"
                                             intervention="{{intervention}}"
                                             agreement="[[agreement]]"
-                                            edit-mode="[[_hasEditPermissions(permissions)]]"></intervention-review-and-sign>
+                                            new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                            edit-mode="[[_hasEditPermissions(permissions)]]">
+              </intervention-review-and-sign>
             </div>
             <div class="page" name="attachments">
               <intervention-attachments id="intervAttachments"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 file-model="[[_getAttachmentModel(intervention.id)]]"
-                attachments={{intervention.attachments}}
-                on-delete-file="_deleteAttachment"></intervention-attachments>
+                attachments="{{intervention.attachments}}"
+                on-delete-file="_deleteAttachment"
+                new-intervention="[[_newIntervention(newInterventionActive)]]">
+              </intervention-attachments>
             </div>
           </iron-pages>
         </div> <!-- main page content end -->
@@ -207,39 +234,124 @@
         csvQueryString: {
           type: String
         },
+        newInterventionModel: {
+          type: Object,
+          value: {
+            id: null,
+            agreement: null,
+            document_type: null,
+            hrp: null,
+            number: null,
+            prc_review_document_file: null,
+            title: null,
+            status: 'draft',
+            start: null,
+            end: null,
+            submission_date_prc: null,
+            review_date_prc: null,
+            submission_date: null,
+            prc_review_document: null,
+            signed_by_unicef_date: null,
+            signed_by_partner_date: null,
+            unicef_signatory: null,
+            unicef_focal_points: [],
+            partner_focal_points: [],
+            partner_authorized_officer_signatory: null,
+            offices: [],
+            fr_numbers: null,
+            planned_visits: [],
+            population_focus: null,
+            sector_locations: [],
+            planned_budget: [],
+            result_links: [],
+            amendments: [],
+            attachments: [],
+            distributions: []
+          }
+        },
+        activeTab: {
+          type: String,
+          observer: '_activeTabChanged'
+        }
       },
 
       observers: [
-        '_resizeHeader(listActive, tabsActive)',
+        '_resizeHeader(listActive, intervDetailsActive, newInterventionActive)',
+        /**
+         * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
+         * both dependencies because all observer dependecies need to be defined for the observer to work
+         */
         '_updateUrlTab(routeData.intTab)',
-        '_pageChanged(listActive, routeData.intTab)',
+        '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
+        '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)'
       ],
 
+      ready: function() {
+        if (this.newInterventionActive) {
+          this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        }
+      },
+
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
+      },
+
+      _activeTabChanged: function(activeTab) {
+        if (activeTab) {
+          if (this.newInterventionActive) {
+            this.set('routeDataNewInterv.intTab', activeTab);
+          } else {
+            this.set('routeData.intTab', activeTab);
+          }
+        }
       },
 
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
         }
+        this._updateUrl();
+      },
+
+      _updateUrlTabNewInterv: function(newIntervTab) {
+        if (!newIntervTab) {
+          return;
+        }
+        this._updateUrl();
+      },
+
+      _updateUrl: function() {
+        if (!this.activeTab) {
+          this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
+        }
         this.debounce('debounce-url-tab-update', function() {
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
 
-      _getActivePage: function(listActive, intTab) {
-        if (listActive) {
-          return 'list';
-        } else {
-          return intTab;
+      _getActivePage: function(listActive, intervDetailsActive, newInterventionActive) {
+        var page = 'list';
+        if (listActive === false) {
+          if (newInterventionActive) {
+            // return new intervention page tab name
+            page =  this.routeDataNewInterv.intTab;
+          } else {
+            // return intervention details page tab name
+            page = this.routeData.intTab;
+          }
         }
+        return page;
       },
 
-      _pageChanged: function(listActive, intTab) {
-        var activePage = this._getActivePage(listActive, intTab);
-        this.set('interventionPage', activePage);
+      _pageChanged: function(listActive, intervDetailsActive, newInterventionActive) {
+        this.debounce('pageChange', function() {
+          var activePage = this._getActivePage(listActive, intervDetailsActive, newInterventionActive);
+          if (activePage === 'list') {
+            this.set('activeTab', 'details');
+          }
+          this.set('interventionPage', activePage);
+        }.bind(this), 50);
       },
 
       _showPageTabs: function(interventionPage) {
@@ -254,6 +366,10 @@
       },
 
       _observeRouteDataId: function(id) {
+        id = parseInt(id, 10);
+        if (isNaN(id)) {
+          id = null;
+        }
         this.set('selectedInterventionId', id);
         // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
         this.$.intervAttachments.set('preparedAttachments', false);
@@ -305,8 +421,7 @@
             delete interventionData.prc_review_document;
           }
 
-          console.log('intervention data to be saved', interventionData);
-          this.$.interventionData.saveIntervention(interventionData);
+          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
         } else {
           var msg = 'Please review invalid fields data!';
           if (this.interventionPage !== 'details') {
@@ -337,10 +452,53 @@
       },
 
       _deleteAttachment: function(event) {
-        // TODO:  remove console.log ater attachment delete is implemented
-        console.log('attachment to delete: ', event.detail);
+        // TODO:  remove after attachment delete is implemented
         this.fire('toast', {text: 'Delete file not implemented yet! '
           + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
+      },
+
+      _goToNewInterventionPage: function(event) {
+        // go to new intervention
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        this.set('selectedInterventionId', null);
+        this.fire('update-main-path', {path: 'interventions/new/details'}, {bubbles: false});
+      },
+
+      _newIntervention: function(newInterventionActive) {
+        return newInterventionActive === true;
+      },
+
+      /**
+       * Go to details page once the new intervention has been saved
+       */
+      _newInterventionSaved: function(intervention) {
+        this.fire('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+      },
+
+      /**
+       * Get intervention details page title: 'partner name: intervention number'
+       */
+      _getInterventionDetailsTitle: function(intervention) {
+        var title = '';
+        if (intervention) {
+          if (intervention.partner) {
+            title += intervention.partner + ': ';
+          }
+          if (intervention.number) {
+            title += intervention.number;
+          }
+        }
+        return title;
+      },
+
+      _showAddNewIntervBtn: function(listActive, permissions) {
+        if (listActive && this._hasEditPermissions(permissions)) {
+          return true;
+        }
+        return false;
       }
 
     });

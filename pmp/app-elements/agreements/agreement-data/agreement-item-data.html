@@ -142,9 +142,7 @@
           }
         },
 
-        /**
-         * Save agreement data
-         */
+
          _hasFiles: function(list, property) {
           if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
             return false;
@@ -160,6 +158,10 @@
           }
           return hasF;
         },
+
+        /**
+         * Save agreement data
+         */
         saveAgreement: function(agreement, succCallback) {
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});

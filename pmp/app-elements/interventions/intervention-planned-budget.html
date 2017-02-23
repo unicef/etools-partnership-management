@@ -95,6 +95,10 @@
       #currency {
         width: auto;
       }
+
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -106,7 +110,8 @@
                                                on-value-change="_currencyChanged"
                                                required$="[[required]]"
                                                auto-validate
-                                               error-message="Please select the currency">
+                                               error-message="Please select the currency"
+                                               readonly$="[[!editMode]]">
         </etools-searchable-multiselection-menu>
       </div>
       <template is="dom-repeat" items="{{dataItems}}">
@@ -116,7 +121,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -134,14 +139,16 @@
                        on-value-change="_yearChanged"
                        required$="[[required]]"
                        auto-validate
-                       error-message="Year required">
+                       error-message="Year required"
+                       readonly$="[[!editMode]]">
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
                     <paper-input label="CSO Cont. (Local)"
                       value="{{item.partner_contribution_local}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                 </div>
@@ -152,14 +159,16 @@
                     <paper-input label="UNICEF Cash (Local)"
                       value="{{item.unicef_cash_local}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                   <div class="col col-4">
                     <paper-input label="UNICEF Supply (Local)"
                       value="{{item.in_kind_amount_local}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                   <div class="col col-4">
@@ -176,7 +185,7 @@
 
             <div class="row-h">
               <div class="col col-4">
-                <div class="row-h flex-c">
+                <div class="row-h flex-c left-col">
                   <div class="col col-4"></div>
                   <div class="col col-8">
                     <paper-input id$="partnerContribUsd_[[index]]"
@@ -184,7 +193,8 @@
                       value="{{item.partner_contribution}}"
                       type="number"
                       placeholder="&#8212;"
-                      error-message="CSO Cont. required">
+                      error-message="CSO Cont. required"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                 </div>
@@ -197,14 +207,16 @@
                       value="{{item.unicef_cash}}"
                       type="number"
                       placeholder="&#8212;"
-                      error-message="UNICEF Cash required">
+                      error-message="UNICEF Cash required"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                   <div class="col col-4">
                     <paper-input label="UNICEF Supply (USD)"
                       value="{{item.in_kind_amount}}"
                       type="number"
-                      placeholder="&#8212;">
+                      placeholder="&#8212;"
+                      readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
                   <div class="col col-4">
@@ -299,14 +311,7 @@
           },
           currencies: {
             type: Array,
-            statePath: function(state) {
-              return state.currencies.map(function(currency, index) {
-                return {
-                  value: (index + 1),
-                  label: currency.value
-                };
-              });
-            }
+            statePath: 'currencies'
           },
           localCurrency: {
             type: String,
@@ -315,6 +320,11 @@
           required: {
             type: Boolean,
             value: false
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
           }
         },
         observers: [
@@ -370,25 +380,25 @@
               var uContribEl = this.$$('#unicefCashUsd_' + index);
               switch (itemPathName) {
                 case 'partner_contribution':
-                  if (pathValue > 0 && this.required) {
-                    if (pContribEl) {
-                      pContribEl.invalid = false;
+                  if (this.required) {
+                    if (pathValue === 0 && pContribEl && pContribEl.invalid === false) {
+                      pContribEl.invalid = true;
                     }
                   } else {
-                    if (pContribEl) {
-                      pContribEl.invalid = true;
+                    if (pContribEl && pContribEl.invalid === true) {
+                      pContribEl.invalid = false;
                     }
                   }
                   break;
 
                 case 'unicef_cash':
-                  if (pathValue > 0 && this.required) {
-                    if (uContribEl) {
-                      uContribEl.invalid = false;
+                  if (this.required) {
+                    if (pathValue === 0 && uContribEl && uContribEl.invalid === false) {
+                      uContribEl.invalid = true;
                     }
                   } else {
-                    if (uContribEl) {
-                      uContribEl.invalid = true;
+                    if (uContribEl && uContribEl.invalid === true) {
+                      uContribEl.invalid = false;
                     }
                   }
                   break;
@@ -426,7 +436,10 @@
         /**
          * The planned budget row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index) {
+        _canBeRemoved: function(index, editMode) {
+          if (!editMode) {
+            return false;
+          }
           var plannedBudget = this.dataItems[index];
           plannedBudget = parseInt(plannedBudget.id, 10);
           
@@ -563,6 +576,12 @@
                 unicefContributionUsdEl.invalid = false;
               }
             }.bind(this));
+          }
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
           }
         }
 

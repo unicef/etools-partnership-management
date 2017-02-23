@@ -32,6 +32,10 @@
       .item-container {
         padding: 15px 0;
       }
+
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -42,7 +46,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -58,7 +62,8 @@
                                                        on-value-change="_sectorSelected"
                                                        required$="[[required]]"
                                                        auto-validate
-                                                       error-message="Please select a sector">
+                                                       error-message="Please select a sector"
+                                                       readonly$="[[!editMode]]">
                 </etools-searchable-multiselection-menu>
               </div>
               <div class="col col-9">
@@ -71,7 +76,8 @@
                                                        multi
                                                        required$="[[required]]"
                                                        auto-validate
-                                                       error-message="Please select sector locations">
+                                                       error-message="Please select sector locations"
+                                                       readonly$="[[!editMode]]">
                 </etools-searchable-multiselection-menu>
               </div>
             </div>
@@ -213,7 +219,10 @@
         /**
          * The sector location row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index) {
+        _canBeRemoved: function(index, editMode) {
+          if (!editMode) {
+            return false;
+          }
           var sectorLocationsItem = this.dataItems[index];
           var sectorLocationsItemId = parseInt(sectorLocationsItem.id, 10);
           if (sectorLocationsItemId && isNaN(sectorLocationsItemId) === false && sectorLocationsItemId > 0) {
@@ -235,9 +244,12 @@
          */
         validate: function() {
           var valid = true;
-          if (this.dataItems.length === 0) {
+          if (this.dataItems.length === 0 && this.required) {
             this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
           } else {
+            if (!this.required) {
+              return valid;
+            }
             this.dataItems.forEach(function(item, index) {
               var sectorEl = this.$$('#sector_' + index);
               var locationsEl = this.$$('#locations_' + index);
@@ -259,9 +271,13 @@
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
               var sectorEl = this.$$('#sector_' + index);
+              if (sectorEl) {
+                sectorEl.invalid = false;
+              }
               var locationsEl = this.$$('#locations_' + index);
-              sectorEl.invalid = false;
-              locationsEl.invalid = false;
+              if (locationsEl) {
+                locationsEl.invalid = false;
+              }
             }.bind(this));
           }
         }

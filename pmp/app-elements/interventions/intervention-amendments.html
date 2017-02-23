@@ -36,6 +36,10 @@
         };
       }
 
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
+
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -46,7 +50,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -65,7 +69,7 @@
                                                          required="[[_amendmentTypeRequired(item.signed_date, item.signed_amendment_file.length)]]"
                                                          auto-validate
                                                          error-message="Type is required"
-                                                         readonly="[[!_canBeRemoved(index)]]">
+                                                         readonly="[[!_canBeRemoved(index, editMode)]]">
                   </etools-searchable-multiselection-menu>
                 </div>
                 <div class="col col-3">
@@ -79,11 +83,11 @@
                                required="[[_requireSignedDate(item.signed_amendment_file.length, item.type)]]"
                                auto-validate
                                error-message="Please select signed date"
-                               readonly$="[[!_canBeRemoved(index)]]">
-                    <template is="dom-if" if="[[!_canBeRemoved(index)]]">
+                               readonly$="[[!_canBeRemoved(index, editMode)]]">
+                    <template is="dom-if" if="[[!_canBeRemoved(index, editMode)]]">
                       <iron-icon prefix icon="date-range"></iron-icon>
                     </template>
-                    <template is="dom-if" if="[[_canBeRemoved(index)]]">
+                    <template is="dom-if" if="[[_canBeRemoved(index, editMode)]]">
                       <etools-datepicker-button prefix
                                                 id$="datePicker[[index]]"
                                                 json-date="{{item.signed_date}}"
@@ -99,7 +103,7 @@
                                files="{{item.signed_amendment_file}}"
                                accept=".doc,.docx,.pdf,.jpg,.png"
                                error-message="Attachment required"
-                               readonly="[[!_canBeRemoved(index)]]"></etools-file>
+                               readonly="[[!_canBeRemoved(index, editMode)]]"></etools-file>
                 </div>
               </div>
 
@@ -138,6 +142,11 @@
           amendmentTypes: {
             type: Array,
             statePath: 'interventionAmendmentTypes'
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
           }
         },
 
@@ -152,6 +161,12 @@
             signed_amendment_file: [],
             amendment_number: null
           };
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
         },
 
         _dataHasChanged: function(dataItems) {
@@ -213,7 +228,10 @@
         /**
          * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index) {
+        _canBeRemoved: function(index, editMode) {
+          if (!editMode) {
+            return false;
+          }
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
           if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {

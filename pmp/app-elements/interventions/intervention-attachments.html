@@ -116,6 +116,9 @@
           preparedAttachments: {
             type: Boolean,
             value: false
+          },
+          newIntervention: {
+            type: Boolean
           }
         },
 
@@ -134,7 +137,6 @@
                 path: this._getPath(attachment)
               };
             }.bind(this)));  
-            console.log('prepared attachments', this.attachments);
           }
         },
 
