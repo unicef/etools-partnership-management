@@ -424,25 +424,25 @@
         },
 
         _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function () {
+          this.debounce('updateShownFilters', function() {
 
             var filtersValues = [
               {
                 filterName: 'Agreement Type',
                 selectedValue: this.agreementType
-              }, 
+              },
               {
                 filterName: 'Agreement Status',
                 selectedValue: this.agreementStatus
-              }, 
+              },
               {
                 filterName: 'Partner',
                 selectedValue: this.selectedPartners
-              }, 
+              },
               {
                 filterName: 'Starts After',
                 selectedValue: this.startDate
-              }, 
+              },
               {
                 filterName: 'Ends Before',
                 selectedValue: this.endDate
@@ -451,8 +451,7 @@
             this.updateShownFilters(filtersValues);
 
           }.bind(this), 500);
-        },
-        
+        },       
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
@@ -538,7 +537,7 @@
         },
 
         _buildCsvQueryString: function() {        
-          var out= [];
+          var out = [];
 
           if (this.agreementType && this.agreementType.length) {
             out.push('agreement_type=' + this.agreementType);
@@ -625,7 +624,6 @@
             return new Date(date);
           }
         },
-
 
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {

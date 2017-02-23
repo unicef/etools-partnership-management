@@ -6,28 +6,32 @@
         // Behavior for managing object structure for objects or arrays of objects being
         // passed from and to etools-searchable-multiselect-menu .
         // These functions are based on the { value : xxx , label : yyyy } structure
-        _mapItemFromId : function(id,  collection, getLabelOnly) {
+        _mapItemFromId: function(id, collection, getLabelOnly) {
             if(_.isEmpty(collection)){
                 return;
             }
             if(typeof id === 'string'){
                 id = parseInt(id);
             }
+            /* jshint ignore:start */
             //TODO: refactor this, it's too complex to be an in-line statement 
             return getLabelOnly ? _.find(collection, {value:id}).label :
                     Array.isArray(id) ? _.map(id, function(item) {
                         return  _.find(collection, {value:item})
                     }): _.find(collection, {value:id});
+            /* jshint ignore:end */                    
         },
         _mapItemFromValue : function(id, collection, getLabelOnly){
             if(_.isEmpty(collection)){
                 return;
             }
+            /* jshint ignore:start */
             //TODO: refactor this, it's too complex to be an in-line statement 
             return getLabelOnly ? _.find(collection, {value:id}).label :
                     Array.isArray(id) ? _.map(id, function(item) {
                         return  _.find(collection, {value:item})})  :
                             _.find(collection, {value:id});
+            /* jshint ignore:end */                            
         },
         _displayMultiple: function(id, collection){
             var entries = this._mapItemFromId(id, collection)

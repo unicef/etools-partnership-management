@@ -114,27 +114,27 @@
     </template>
     <script>
         Polymer({
-            is : 'app-selector',
-            properties : {
+            is: 'app-selector',
+            properties: {
                 opened: {
                     type: String,
-                    value: "",
+                    value: '',
                 },
                            },
-            behaviors : [
+            behaviors: [
                 etoolsAppConfig.globals,
             ],
-            toggleMenu : function(){
+            toggleMenu: function() {
                 this.$.selector.toggle();
                 if (this.opened) {
-                    this.opened = "";
+                    this.opened = '';
+                } else {
+                    this.opened = 'icon-opened';
                 }
-                else
-                    this.opened = 'icon-opened'
             },
-            goToPage : function (e) {
-                window.location.href = this.baseSite+'/' + e.target.id + '/';
+            goToPage: function(e) {
+                window.location.href = this.baseSite + '/' + e.target.id + '/';
             },
-        })
+        });
     </script>
 </dom-module>

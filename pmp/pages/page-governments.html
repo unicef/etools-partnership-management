@@ -194,31 +194,35 @@
         ]);
 
       },
-      _getActivePage: function(listActive,tab,isNew) {
-        var result = listActive? 'list' :
-                isNew ? 'details' : tab;
-        return result;
+      _getActivePage: function(listActive, tab, isNew) {
+        switch (true) {
+          case(listActive):
+            return 'list';
+          case(isNew):
+            return 'details';
+          default: 
+            return tab;
+        }
       },
-      _saveIntervention: function (e) {
+      _saveIntervention: function(e) {
         e.stopImmediatePropagation();
-        if(_.has(e.detail,'intervention')){
-          this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved)
+        if (_.has(e.detail, 'intervention')) {
+          this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved);
         }
       },
       _interventionSaved: function(intervention) {
         this.fire('update-main-path', {path: 'governments/' + intervention.id + '/details'});
       },
-      _pageChanged : function (governmentListActive, tab, newInterventionActive) {
-        var activePage = this._getActivePage(governmentListActive,tab, newInterventionActive)
-        this.set('governmentsPage', activePage)
+      _pageChanged: function(governmentListActive, tab, newInterventionActive) {
+        var activePage = this._getActivePage(governmentListActive, tab, newInterventionActive);
+        this.set('governmentsPage', activePage);
       },
-      _getTabsActive: function(tabsActive,newInterventionActive){
-        if(tabsActive || newInterventionActive){
+      _getTabsActive: function(tabsActive, newInterventionActive) {
+        if (tabsActive || newInterventionActive) {
           return true;
         }
         return false;
       },
-
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
@@ -227,13 +231,13 @@
           this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
         }.bind(this), 50);
       },
-      _goToNewGovernmentPage: function(){
+      _goToNewGovernmentPage: function() {
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', 0);
         this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
-        if(_.isEmpty(this.intervention.results)){
+        if (_.isEmpty(this.intervention.results)) {
           this.$.details._addNewResult();
-        };
+        }
       },
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
@@ -241,8 +245,8 @@
         }
         return '';
       },
-      _observeRouteDataId: function(id){
-        if(id!=='new'){
+      _observeRouteDataId: function(id) {
+        if (id !== 'new') {
           this.set('selectedInterventionId', id);
         }
       },

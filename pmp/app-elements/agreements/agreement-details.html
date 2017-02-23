@@ -557,7 +557,7 @@
               });
               if (selectedPartner.length) {
                 this.async(function() {
-                  if(!partnersField) {
+                  if (!partnersField) {
                     partnersField = this.fieldValidationReset('#partner');
                   }
                   if (partnersField) {
@@ -990,7 +990,7 @@
           }
           return changes;
         },
-        _clearErrors: function(){
+        _clearErrors: function() {
           this.errorBoxVisible = false;
           this.set('serverErrors', null);
         },
