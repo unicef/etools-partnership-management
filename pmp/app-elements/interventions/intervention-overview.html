@@ -17,7 +17,6 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
-<link rel="import" href="../agreements/agreement-data/agreement-item-data.html">
 
 <dom-module id="intervention-overview">
 
@@ -71,11 +70,10 @@
       }
     </style>
 
-    <agreement-item-data id="agreement"
-                         agreement-id="[[intervention.agreement]]"
-                         agreement="{{interventionAgreement}}"></agreement-item-data>
-
-    <partner-item-data id="partner" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partner"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}">
+    </partner-item-data>
 
     <paper-material elevation="1" id="top-container">
       <div class="row-h flex-c">
@@ -194,7 +192,7 @@
         },
 
         _interventionChanged: function(intervention) {
-          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          if (intervention && typeof intervention === 'object' && parseInt(intervention.id, 10) > 0) {
             this._parseCpOutputs();
             this._parseLocationsAndSectors();
           }
@@ -216,14 +214,15 @@
           for (var id in ids) {
             uniqueIds.push(parseInt(id));
           }
+          if (Array.isArray(this.allCpOutputs) && this.allCpOutputs.length > 0) {
+            this.allCpOutputs.forEach(function(cpo) {
+              if (uniqueIds.indexOf(cpo.value) > -1) {
+                cpOutputs.push(cpo.label);
+              }
+            });
 
-          this.allCpOutputs.forEach(function(cpo) {
-            if (uniqueIds.indexOf(cpo.value) > -1) {
-              cpOutputs.push(cpo.label);
-            }
-          });
-
-          this.set('cpOutputs', cpOutputs);
+            this.set('cpOutputs', cpOutputs);
+          }
         },
 
         _parseLocationsAndSectors: function() {

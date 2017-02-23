@@ -31,8 +31,10 @@
                                                option-label="name"
                                                selected="{{cpOutputId}}"
                                                update-selected no-change-event
-                                               required auto-validate
-                                               error-message="Please select CP Output">
+                                               required$="[[required]]"
+                                               auto-validate
+                                               error-message="Please select CP Output"
+                                               readonly$="[[!editMode]]">
         </etools-searchable-multiselection-menu>
       </div>
 
@@ -46,9 +48,11 @@
                                                option-label="name"
                                                selected="{{selectedCpIndicatorsIds}}"
                                                update-selected no-change-event
-                                               required auto-validate
+                                               required$="[[required]]"
+                                               auto-validate
                                                error-message="Please select CP Indicators"
-                                               multi>
+                                               multi
+                                               readonly$="[[!editMode]]">
         </etools-searchable-multiselection-menu>
 
       </div>
@@ -99,6 +103,10 @@
           alreadySelectedCpo: {
             type: Array,
             value: []
+          },
+          editMode: {
+            type: Boolean,
+            value: false
           }
 				},
 

@@ -42,13 +42,20 @@
                        value="[[prettyDate(intervention.submission_date)]]"
                        on-down="openDatePicker"
                        data-selector="submissionDate"
-                       placeholder="&#8212;">
-            <etools-datepicker-button prefix
-                                      id="submissionDate"
-                                      date="[[prepareDate(intervention.submission_date)]]"
-                                      format="YYYY-MM-DD"
-                                      pretty-date="{{intervention.submission_date}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
+                       placeholder="&#8212;"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-datepicker-button prefix
+                                        id="submissionDate"
+                                        date="[[prepareDate(intervention.submission_date)]]"
+                                        format="YYYY-MM-DD"
+                                        pretty-date="{{intervention.submission_date}}"
+                                        no-init show-clear-btn>
+              </etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
       </div>
@@ -60,13 +67,20 @@
                        value="[[prettyDate(intervention.submission_date_prc)]]"
                        on-down="openDatePicker"
                        data-selector="submissionDatePrc"
-                       placeholder="&#8212;">
-            <etools-datepicker-button prefix
+                       placeholder="&#8212;"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-datepicker-button prefix
                                       id="submissionDatePrc"
                                       date="[[prepareDate(intervention.submission_date_prc)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.submission_date_prc}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
+                                      no-init show-clear-btn>
+              </etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
         <div class="col col-3">
@@ -76,22 +90,29 @@
                        value="[[prettyDate(intervention.review_date_prc)]]"
                        on-down="openDatePicker"
                        data-selector="reviewDatePrc"
-                       placeholder="&#8212;">
-            <etools-datepicker-button prefix
+                       placeholder="&#8212;"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-datepicker-button prefix
                                       id="reviewDatePrc"
                                       date="[[prepareDate(intervention.review_date_prc)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.review_date_prc}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
+                                      no-init show-clear-btn>
+              </etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
         <div class="col col-6 file-container space-left">
           <!-- PRC Review Document -->
           <etools-single-file label="PRC Review Document"
-                        internal-file=[[intervention.prc_review_document_file]]
-                        file={{intervention.prc_review_document}}
-
-                       accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
+                              internal-file=[[intervention.prc_review_document_file]]
+                              file={{intervention.prc_review_document}}
+                              accept=".doc,.docx,.pdf,.jpg,.png"
+                              readonly$="[[!editMode]]"></etools-single-file>
         </div>
       </div>
       <div class="row-h flex-c">
@@ -102,7 +123,8 @@
              placeholder="&#8212;"
              value="[[_setSignedByAuthOfficer(intervention.partner_authorized_officer_signatory, agreementAuthorizedOfficers.length)]]"
              options="[[agreementAuthorizedOfficers]]"
-             on-value-change="_signedByAuthOfficerSelected">
+             on-value-change="_signedByAuthOfficerSelected"
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -112,13 +134,20 @@
                        value="[[prettyDate(intervention.signed_by_partner_date)]]"
                        on-down="openDatePicker"
                        data-selector="signedByPartnerDate"
-                       placeholder="&#8212;">
-            <etools-datepicker-button prefix
+                       placeholder="&#8212;"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-datepicker-button prefix
                                       id="signedByPartnerDate"
                                       date="[[prepareDate(intervention.signed_by_partner_date)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.signed_by_partner_date}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
+                                      no-init show-clear-btn>
+              </etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
       </div>
@@ -130,7 +159,8 @@
              placeholder="&#8212;"
              value="[[_setSignedByUnicef(intervention.unicef_signatory, unicefUsersData.length)]]"
              options="[[unicefUsersData]]"
-             on-value-change="_signedByUnicefSelected">
+             on-value-change="_signedByUnicefSelected"
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -140,13 +170,20 @@
                        value="[[prettyDate(intervention.signed_by_unicef_date)]]"
                        on-down="openDatePicker"
                        data-selector="signedByUnicefDate"
-                       placeholder="&#8212;">
-            <etools-datepicker-button prefix
+                       placeholder="&#8212;"
+                       readonly$="[[!editMode]]">
+            <template is="dom-if" if="[[!editMode]]">
+              <iron-icon prefix icon="date-range"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[editMode]]">
+              <etools-datepicker-button prefix
                                       id="signedByUnicefDate"
                                       date="[[prepareDate(intervention.signed_by_unicef_date)]]"
                                       format="YYYY-MM-DD"
                                       pretty-date="{{intervention.signed_by_unicef_date}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
+                                      no-init show-clear-btn>
+              </etools-datepicker-button>
+            </template>
           </paper-input>
         </div>
       </div>
@@ -211,7 +248,17 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
+          },
+          newIntervention: {
+            type: Boolean
+          }
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
           }
         },
 

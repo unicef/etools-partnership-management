@@ -253,16 +253,14 @@
           </intervention-sector-locations>
         </paper-material>
       </div>
-      <div class="row-h flex-c">
-
-      </div>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" title="Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
           edit-mode$="[[editMode]]"
-          intervention-id="[[intervention.id]]">
+          intervention-id="[[intervention.id]]"
+          required$="[[interventionRequiredField]]">
       </intervention-expected-results>
     </etools-content-panel>
 
@@ -274,7 +272,8 @@
                                    required$="[[interventionRequiredField]]"></intervention-planned-budget>
     </etools-content-panel>
     <etools-content-panel class="content-section" title="Planned Visits">
-      <intervention-planned-visits data-items="{{intervention.planned_visits}}"
+      <intervention-planned-visits id="plannedVisits"
+                                   data-items="{{intervention.planned_visits}}"
                                    edit-mode$="[[editMode]]"
                                    years="[[years]]"></intervention-planned-visits>
     </etools-content-panel>
@@ -354,6 +353,13 @@
             type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          newIntervention: {
+            type: Boolean,
+            observer: 'newInterventionFlagChanged'
+          },
+          fieldsResetted: {
+            type: Boolean
           }
         },
 
@@ -378,17 +384,38 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log('intervention', intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            //this.set('interventionRequiredField', true); // TODO: remove this
             this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
             this._agreementSelected(this.agreement);
+            this.set('fieldsResetted', false);
+            this.newInterventionFlagChanged();
           } else {
             this.set('interventionRequiredField', false);
           }
 
           // ensure loading msg close
           this.fire('global-loading', {active: false});
+        },
+
+        newInterventionFlagChanged: function() {
+          if (this.intervention && !this.fieldsResetted) {
+            this._resetValidations();
+          }
+        },
+
+        _resetValidations: function() {
+          var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+            'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
+          fields.forEach(function(field) {
+            this.fieldValidationReset('#' + field);
+          }.bind(this));
+
+          var elements = ['agreementSelector', 'sectorLocations', 'expectedResults',
+            'plannedBudget', 'plannedVisits'];
+          elements.forEach(function(el) {
+            this.elementValidationReset('#' + el);
+          }.bind(this));
+          this.set('fieldsResetted', true);
         },
 
         _editModeChanged: function(newValue, oldValue) {
@@ -493,7 +520,6 @@
         },
 
         _partnerSelected: function(partner) {
-          console.log('intervention partner', partner);
           if (partner && partner.staff_members) {
             // prepare selected partner staff members data
             this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {

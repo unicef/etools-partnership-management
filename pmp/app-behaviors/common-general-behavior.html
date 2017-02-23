@@ -87,10 +87,22 @@
     fieldValidationReset: function(selector) {
       var field = this.$$(selector);
       if (field) {
-        field.invalid = false;
+        field.set('invalid', false);
       }
       return field;
-    }
+    },
+
+    /**
+     * Reset element validations
+     * The element must have resetValidations method
+     */
+    elementValidationReset: function(selector) {
+      var elem = this.$$(selector);
+      if (elem && typeof elem.resetValidations === 'function') {
+        elem.resetValidations();
+      }
+      return elem;
+    },
 
   };
 

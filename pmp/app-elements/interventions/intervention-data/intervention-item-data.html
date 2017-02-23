@@ -192,8 +192,8 @@
               delete intervention.id;
             }
             if (Object.keys(intervention).length > 0) {
-              // set additional callback if any
-              if (callback) {
+              // set additional callback if any and only if is new intervention
+              if (callback && isNew) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
 
