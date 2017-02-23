@@ -9,7 +9,10 @@
           files="{{attachments}}"
           label="[[label]]"
           accept="[[accept]]"
-          readonly$="[[readonly]]"></etools-file>
+          readonly$="[[readonly]]"
+					invalid$="[[invalid]]" 
+					error-message=[[errorMessage]]>
+		</etools-file>
   </template>
 
   <script>
@@ -38,6 +41,14 @@
         		type: Object,
         		observer: '_fileChanged'
         	},
+					invalid: {
+						type: Boolean,
+						value: false
+					},
+					errorMessage: {
+						type: String,
+						value: 'Please select a file'
+					}
         },
     	observers: ['_attachmentChanged(attachments.length)'],
 
