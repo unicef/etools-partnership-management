@@ -315,6 +315,10 @@
             type: String,
             value: ''
           },
+          localCurrencyId: {
+            type: Number,
+            observer: '_localCurrencyIdChanged'
+          },
           required: {
             type: Boolean,
             value: false
@@ -323,11 +327,16 @@
             type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
           }
         },
         observers: [
             '_dataItemsChanged(dataItems)',
-            '_dataItemChange(dataItems.*)'
+            '_dataItemChange(dataItems.*)',
+            '_initSelectedCurrency(dataItems, currencies)'
         ],
 
         ready: function() {
@@ -340,25 +349,51 @@
             unicef_cash_local:0,
             in_kind_amount_local: 0,
             year: null,
-            total: 0
+            total: 0,
+            currency: null
           };
-
-          // TODO: setup curencies, fake data for now
-          this.set('currencies', [
-            {
-              value: 1,
-              label: 'LBP'
-            },
-            {
-              value: 2,
-              label: 'USD'
-            }
-          ]);
         },
 
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
+          }
+        },
+
+        _interventionIdChanged: function(intervId) {
+          this.set('localCurrencyId', null);
+          this.set('localCurrency', null);
+          this.set('dataSetModel.currency', null);
+          this._setCurrencyDropdownValue(null);
+          this._initSelectedCurrency(this.dataItems, this.currencies);
+        },
+
+        _initSelectedCurrency: function(dataItems, currencies) {
+          this.debounce('initSelectedCurrency', function() {
+            if (Array.isArray(dataItems) && dataItems.length > 0 &&
+                Array.isArray(currencies) && currencies.length > 0) {
+              // check and set the currency
+              if (dataItems[0].currency) {
+                // dataItems[0].currency should be the currency ID
+                var currency = currencies.filter(function(c) {
+                  return parseInt(c.value, 10) === parseInt(dataItems[0].currency, 10);
+                })[0];
+                if (currency) {
+                  this.set('localCurrencyId', currency.value);
+                  this.set('localCurrency', currency.label);
+                  this.set('dataSetModel.currency', currency.value);
+                  this._setCurrencyDropdownValue(currency);
+                }
+              }
+            }
+          }.bind(this), 50);
+        },
+
+        _setCurrencyDropdownValue: function(currency) {
+          // set selected currency dropdown value
+          var currencyDropdown = this.$.currency;
+          if (currencyDropdown) {
+            currencyDropdown.set('value', currency);
           }
         },
 
@@ -438,10 +473,27 @@
           this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
 
+        _localCurrencyIdChanged: function(currencyId) {
+          if (!currencyId) {
+            currencyId = null;
+          }
+          if (this.dataItems instanceof Array && this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item) {
+              item.currency = currencyId;
+            });
+          }
+          this.set('dataSetModel.currency', currencyId);
+        },
+
         _currencyChanged: function(event) {
-          var currencySelected = (event.detail.selectedValues && event.detail.selectedValues.label)
-              ? event.detail.selectedValues.label : null;
-          this.set('localCurrency', currencySelected);
+          var currencyNameSelected = null;
+          var currencyIdSelected = null;
+          if (event.detail.selectedValues && event.detail.selectedValues.label) {
+            currencyNameSelected = event.detail.selectedValues.label;
+            currencyIdSelected = event.detail.selectedValues.value;
+          }
+          this.set('localCurrency', currencyNameSelected);
+          this.set('localCurrencyId', currencyIdSelected);
         },
 
         _getPlannedBudgetTotal: function(val1, val2, currency) {
