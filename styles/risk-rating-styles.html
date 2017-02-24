@@ -37,28 +37,24 @@
           color: #fff;
           background-color: #ea4022; /* TODO: replace with app-theme var */
         };
-      }
-      .risk-rating-field {
-        width: auto;
-      }
-      .risk-rating-field.unavailable {
-        --paper-input-container-input: {
+        --risk-rating-unavailable {
           @apply(--risk-rating-field);
-          background-color: rgba(255, 255, 255, 0);
+          background-color: rgba(255, 255, 255, 0); /* TODO: replace with app-theme var */
           color: var(--dark-primary-text-color);
           text-align: left;
           text-transform: capitalize;
           padding-left: 0;
         };
-      }
-      .risk-rating-field.non-assessed {
-        --paper-input-container-input: {
+        --risk-rating-not-assessed {
           @apply(--risk-rating-field);
           background-color: #eeeeee; /* TODO: replace with app-theme var */
           color: var(--dark-secondary-text-color);
         };
       }
-      
+      .risk-rating-field {
+        width: auto;
+      }
+
       span.risk-rating-field.low {
           @apply(--risk-rating-low);
       }
@@ -86,12 +82,30 @@
         };
       }
 
-      .risk-rating-field.significant {
+      span.risk-rating-field.significant {
         @apply(--risk-rating-significant);
       }
       .risk-rating-field.significant {
         --paper-input-container-input: {
           @apply(--risk-rating-significant);
+        };
+      }
+
+      span.risk-rating-field.unavailable {        
+        @apply(--risk-rating-unavailable);
+      }
+      .risk-rating-field.unavailable {
+        --paper-input-container-input: {
+          @apply(--risk-rating-unavailable);
+        };
+      }
+
+      span.risk-rating-field.non-assessed {
+          @apply(--risk-rating-not-assessed);
+      }
+      .risk-rating-field.non-assessed {
+        --paper-input-container-input: {
+          @apply(--risk-rating-not-assessed);
         };
       }
 
