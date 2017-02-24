@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <link rel="icon" href="/images/favicon.ico">
 
     <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="/manifest.json">
+    <!-- <link rel="manifest" href="/manifest.json"> -->
 
     <!-- See https://goo.gl/qRE0vM -->
     <meta name="theme-color" content="#2E3AA1">
@@ -47,6 +47,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-tap-highlight" content="no">
 
     <script>
+      UserVoice = window.UserVoice || [];
+      (function () {
+        var uv = document.createElement('script');
+        uv.type = 'text/javascript';
+        uv.async = true;
+        uv.src = '//widget.uservoice.com/s74dylVlP3CUCbVw6famA.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(uv, s)
+      })();
+      UserVoice.push(['addTrigger', {}]);
       // Setup Polymer options
       window.Polymer = {
         dom: 'shadow',
