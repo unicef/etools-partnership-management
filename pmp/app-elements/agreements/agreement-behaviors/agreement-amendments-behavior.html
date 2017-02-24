@@ -19,28 +19,35 @@
       return [];
     },
 
+    _checkAndPrepareAmendmentTypeStr: function(typeStr) {
+      if (typeof typeStr === 'string') {
+        return typeStr.toLowerCase();
+      }
+      return '';
+    },
+
     showAmendmentTypeOfficer: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Change Authorized Officer';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change authorized officer';
     },
 
     showAmendmentTypeBankInfo: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Banking Information';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change banking info';
     },
 
     showAmendmentTypeLegalNameOfIp: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Change in Legal Name of Implementing Partner';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change ip name';
     },
 
     showAmendmentTypeExtensionProgrammeCycle: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Extension of Country Programme Cycle';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'cp extension';
     },
 
     showAmendmentTypeAdditionalClauses: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Additional Clause';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'additional clause';
     },
 
     showAmendmentTypeExistingClauseAmended: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Amend Existing Clause';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'amend existing clause';
     },
 
     validAmendmentType: function(amendmentType, index) {

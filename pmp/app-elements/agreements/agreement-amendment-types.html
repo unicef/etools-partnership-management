@@ -59,6 +59,10 @@
         color: #929292 /* TODO: replace with app-theme var */
       }
 
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
+
       .add-amendment-type-wrapper {
         margin-top: 25px;
       }
@@ -115,7 +119,7 @@
               <etools-searchable-multiselection-menu id$="officersDropdown_[[index]]"
                                                      label="Officer"
                                                      placeholder="&#8212;"
-                                                     options="[[preparedDropdownOfficersData]]"
+                                                     options="[[partnerAuthorizedOfficers]]"
                                                      hidden="[[!showAmendmentTypeOfficer(item.amendment_type)]]"
                                                      on-value-change="_officerSelected"
                                                      error-message="Please select an officer">
@@ -138,13 +142,6 @@
               <paper-input hidden="[[!showAmendmentTypeLegalNameOfIp(item.type)]]"
                            label="Full Name of Implementing Partner"
                            value="[[item.legal_name_of_ip]]"
-                           readonly>
-              </paper-input>
-
-              <!-- End Date -->
-              <paper-input hidden="[[!showAmendmentTypeExtensionProgrammeCycle(item.type)]]"
-                           label="CP Cycle End Date"
-                           value="[[prettyDate(_countryProgrammeCycleEndDate)]]"
                            readonly>
               </paper-input>
 
@@ -206,11 +203,11 @@
             value: 'agreementAmendmentsTypeDelete',
             readOnly: true,
           },
-          partner: {
-            type: Object
+          partnerName: {
+            type: String
           },
           partnerAuthorizedOfficers: {
-            type: Array, // partner staff members
+            type: Array, // partner staff members without agreement authorized officers
           },
           _amendmentTypes: {
             type: Array,
@@ -233,18 +230,6 @@
             existing_clause_amended: null
           };
           this.set('editMode', true);
-          // this.set('_amendmentTypes', [
-          //   {value: 1, label: 'Change in Legal Name of Implementing Partner'},
-          //   {value: 2, label: 'Extension of Country Programme Cycle'},
-          //   {value: 3, label: 'Change Authorized Officer'},
-          //   {value: 4, label: 'Banking Information'},
-          //   {value: 5, label: 'Additional Clause'},
-          //   {value: 6, label: 'Amend Existing Clause'}
-          // ]);
-
-          // TODO: get countryProgrammeCycle from patner/API ?
-          this._countryProgrammeCycleEndDate = '2017-07-25';
-          this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
         },
 
         /**
@@ -284,15 +269,14 @@
             var itemIndex = this.dataItems.indexOf(item);
 
             if (this.showAmendmentTypeLegalNameOfIp(item.type)) {
-              this.set(itemPath + '.legal_name_of_ip', this.partner.name);
+              this.set(itemPath + '.legal_name_of_ip', this.partnerName);
               this._resetPaths(itemIndex, ['legal_name_of_ip']);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
 
             if (this.showAmendmentTypeExtensionProgrammeCycle(item.type)) {
-              this.set(itemPath + '.cp_cycle_end', this._countryProgrammeCycleEndDate);
-              this._resetPaths(itemIndex, ['cp_cycle_end']);
+              this._resetPaths(itemIndex, []);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
