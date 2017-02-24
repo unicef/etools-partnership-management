@@ -193,7 +193,6 @@
                       value="{{item.partner_contribution}}"
                       type="number"
                       placeholder="&#8212;"
-                      error-message="CSO Cont. required"
                       readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
@@ -207,7 +206,6 @@
                       value="{{item.unicef_cash}}"
                       type="number"
                       placeholder="&#8212;"
-                      error-message="UNICEF Cash required"
                       readonly$="[[!editMode]]">
                     </paper-input>
                   </div>
@@ -335,12 +333,12 @@
         ready: function() {
           this.dataSetModel = {
             id: null,
-            partner_contribution: null,
-            unicef_cash: null,
-            in_kind_amount: null,
-            partner_contribution_local: null,
-            unicef_cash_local: null,
-            in_kind_amount_local: null,
+            partner_contribution: 0,
+            unicef_cash: 0,
+            in_kind_amount: 0,
+            partner_contribution_local: 0,
+            unicef_cash_local:0,
+            in_kind_amount_local: 0,
             year: null,
             total: 0
           };
@@ -366,44 +364,8 @@
 
         _dataItemChange: function(dataItem) {
           if (dataItem.path !== 'dataItems.splices') {
-            this._computeTotals(this.dataItems);
-            var path = dataItem.path.split('.');
-            var itemPathName = path[path.length - 1];
-            if (itemPathName === 'partner_contribution' || itemPathName === 'unicef_cash') {
-              // TODO: this validation must be improved
-              var pathValue = parseFloat(dataItem.value);
-              if (isNaN(pathValue)) {
-                pathValue = 0;
-              }
-              var index = path[path.length - 2].replace('#', '');
-              var pContribEl = this.$$('#partnerContribUsd_' + index);
-              var uContribEl = this.$$('#unicefCashUsd_' + index);
-              switch (itemPathName) {
-                case 'partner_contribution':
-                  if (this.required) {
-                    if (pathValue === 0 && pContribEl && pContribEl.invalid === false) {
-                      pContribEl.invalid = true;
-                    }
-                  } else {
-                    if (pContribEl && pContribEl.invalid === true) {
-                      pContribEl.invalid = false;
-                    }
-                  }
-                  break;
 
-                case 'unicef_cash':
-                  if (this.required) {
-                    if (pathValue === 0 && uContribEl && uContribEl.invalid === false) {
-                      uContribEl.invalid = true;
-                    }
-                  } else {
-                    if (uContribEl && uContribEl.invalid === true) {
-                      uContribEl.invalid = false;
-                    }
-                  }
-                  break;
-              }
-            }
+            this._computeTotals(this.dataItems);
           }
         },
 
@@ -533,25 +495,7 @@
             this.dataItems.forEach(function(item, index) {
               var yearEl = this.$$('#year_' + index);
               if (!yearEl.validate()) {
-                valid = false;
-              }
-              var partnerContributionUsdEl = this.$$('#partnerContribUsd_' + index);
-              var unicefContributionUsdEl = this.$$('#unicefCashUsd_' + index);
-              var pContVal = parseFloat(partnerContributionUsdEl.value);
-              if (isNaN(pContVal)) {
-                pContVal = 0;
-              }
-              var uContVal = parseFloat(unicefContributionUsdEl.value);
-              if (isNaN(uContVal)) {
-                uContVal = 0;
-              }
-              if (pContVal === 0 && this.required) {
-                valid = false;
-                partnerContributionUsdEl.invalid = true;
-              }
-              if (uContVal === 0 && this.required) {
-                valid = false;
-                unicefContributionUsdEl.invalid = true;
+                  valid = false;
               }
             }.bind(this));
           }
@@ -565,15 +509,7 @@
             this.dataItems.forEach(function(item, index) {
               var yearEl = this.$$('#year_' + index);
               if (yearEl) {
-                yearEl.set('invalid', false);
-              }
-              var partnerContributionUsdEl = this.$$('#partnerContribUsd_' + index);
-              if (partnerContributionUsdEl) {
-                partnerContributionUsdEl.invalid = false;
-              }
-              var unicefContributionUsdEl = this.$$('#unicefCashUsd_' + index);
-              if (unicefContributionUsdEl) {
-                unicefContributionUsdEl.invalid = false;
+                  yearEl.set('invalid', false);
               }
             }.bind(this));
           }
