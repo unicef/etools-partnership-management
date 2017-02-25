@@ -2,10 +2,17 @@
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.AgreementAmendmentsBehavior = {
 
-    getOfficerName: function(officerId) {
-      // officerId === staff member id
-      // TODO: get officer date by id and return it's name
-      return 'John Doe Jr.';
+    getOfficerName: function(officerId, staffMembers) {
+      console.log('test ', officerId, staffMembers)
+      if (staffMembers instanceof Array && staffMembers.length > 0) {
+        var officer = staffMembers.filter(function(o) {
+          return parseInt(o.id, 10) === parseInt(officerId, 10);
+        })[0];
+        if (officer) {
+          return officer.name;
+        }
+      }
+      return 'Officer not found in staff members list'
     },
 
     prepareAttachementFile: function(filePath) {

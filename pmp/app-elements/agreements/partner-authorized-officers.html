@@ -133,9 +133,9 @@
             var selected = selectedOfficers.map(function(officer) {
               return {
                 id: officer.id,
-                name: officer.first_name + ' ' + officer.last_name
-              }
-            });
+                name: this._computeName(officer)
+              };
+            }.bind(this));
             this.set('_selectedDropdownOfficers', selected);
             this._selectedOfficersValuesAlreadyInit = true;
           } else {

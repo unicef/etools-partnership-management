@@ -120,7 +120,10 @@
                                                      label="Officer"
                                                      placeholder="&#8212;"
                                                      options="[[partnerAuthorizedOfficers]]"
-                                                     hidden="[[!showAmendmentTypeOfficer(item.amendment_type)]]"
+                                                     custom-object-options
+                                                     option-value="id"
+                                                     option-label="name"
+                                                     hidden="[[!showAmendmentTypeOfficer(item.type)]]"
                                                      on-value-change="_officerSelected"
                                                      error-message="Please select an officer">
               </etools-searchable-multiselection-menu>
@@ -130,13 +133,13 @@
               <!-- TODO: it seems bank information from partner details was removed from specs ...
               this field supposed to be maped with that data as a dropdown ... ???? ...
               will remain as text until it's clarified -->
-              <paper-input id$="bankInfo_[[index]]"
+              <!--<paper-input id$="bankInfo_[[index]]"
                            hidden="[[!showAmendmentTypeBankInfo(item.type)]]"
                            label="New Bank Account"
                            placeholder="&#8212;"
                            value="{{item.bank_info}}"
                            error-message="Please select bank information">
-              </paper-input>
+              </paper-input>-->
 
               <!-- Legal name of IP -->
               <paper-input hidden="[[!showAmendmentTypeLegalNameOfIp(item.type)]]"
@@ -291,7 +294,8 @@
             if (this.showAmendmentTypeBankInfo(item.type)) {
               this._resetPaths(itemIndex, ['bank_info']);
               if (item.bank_info !== null || item.bank_info !== '') {
-                this._invalidAmendmentTypeField(false, '#bankInfo_' + itemIndex);
+                // TODO: remove this if field banck info will not be used
+                // this._invalidAmendmentTypeField(false, '#bankInfo_' + itemIndex);
               }
             }
 
@@ -356,8 +360,10 @@
         _officerSelected: function(event) {
           var officerId = null;
           if (event.detail.selectedValues !== null) {
-            officerId = event.detail.selectedValues.value;
+            officerId = event.detail.selectedValues.id;
           }
+          // get officer name
+          // TODO: we could also send officer's id, depends on how this will be implemented on backend
           this.set('dataItems.' + event.model.index + '.officer', officerId);
         },
 

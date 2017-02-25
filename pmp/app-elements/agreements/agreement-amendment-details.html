@@ -55,7 +55,7 @@ keep amendments element small and easy to understand
       <div class="col col-9">
         <!-- Signed Amendment -->
         <etools-file label="Signed Amendment"
-                     files="[[prepareAttachementFile(amendment.signed_agreement)]]"
+                     files="[[prepareAttachementFile(amendment.signed_amendment_file)]]"
                      readonly>
         </etools-file>
       </div>
@@ -79,15 +79,7 @@ keep amendments element small and easy to understand
           <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.type)]]">
             <!-- Officer -->
             <paper-input label="Officer"
-                         value="[[getOfficerName(amendmentType.officer_id)]]"
-                         readonly>
-            </paper-input>
-          </template>
-
-          <template is="dom-if" if="[[showAmendmentTypeBankInfo(amendmentType.type)]]">
-            <!-- Bank information -->
-            <paper-input label="New Bank Account"
-                         value="[[amendmentType.bank_info]]"
+                         value="[[getOfficerName(amendmentType.officer, staffMembers, staffMembers.length)]]"
                          readonly>
             </paper-input>
           </template>
@@ -146,6 +138,9 @@ keep amendments element small and easy to understand
         properties: {
           amendment: {
             type: Object
+          },
+          staffMembers: {
+            type: Array
           }
         }
 

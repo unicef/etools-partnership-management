@@ -67,7 +67,8 @@
 
             <!-- already saved amendment, readonly -->
             <template is="dom-if" if="[[!_canBeRemoved(index, editMode)]]">
-              <agreement-amendment-details amendment="[[item]]"></agreement-amendment-details>
+              <agreement-amendment-details amendment="[[item]]" 
+                staff-members="[[staffMembers]]"></agreement-amendment-details>
             </template>
 
             <!-- new, unsaved amendment, edit mode -->
@@ -166,8 +167,11 @@
           partnerAuthorizedOfficers: {
             type: Array,
             notify: true
-          }
+          },
+          staffMembers: Array
         },
+
+        observers: ['_signedDateChanged(dataItems.*)'],
 
         ready: function() {
           this.dataSetModel = {
@@ -187,7 +191,7 @@
           }
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
-          if (amendment && isNaN(amendmentId) === false && amendmentId > 0 && amendment.singed_ammendment) {
+          if (amendment && isNaN(amendmentId) === false && amendmentId > 0 && amendment.signed_amendment) {
             // amendment already saved (has an id assigned)
             return false;
           }
@@ -287,6 +291,19 @@
           var amendment = this.dataItems[amendmentIndex];
           this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_amendment,
               amendment.signed_date, amendmentIndex);
+        },
+
+        _signedDateChanged: function(data) {
+          var path = data.path.slice(data.path.lastIndexOf('.') + 1);
+          var ind = data.path.slice(data.path.indexOf('#') + 1);
+          var index = ind.slice(0, ind.indexOf('.'));
+          if (path === 'signed_date') {
+            // reset invalid state is field is not empty
+            var signedDateEl = this.$$('#signedDate_' + index);
+            if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
+              signedDateEl.invalid = false;
+            }
+          }
         }
 
       });

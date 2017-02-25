@@ -237,7 +237,6 @@
                                                      placeholder="&#8212;"
                                                      options="[[unicefStaff]]"
                                                      value="[[_mapItemFromId(agreement.unicef_signatory.id,unicefStaff)]]"
-                                                     update-selected 
                                                      on-value-change="_signedByUnicefSelected"
                                                      error-message="Please select UNICEF staff"
                                                      required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -295,6 +294,7 @@
         <!-- Amendments -->
         <etools-content-panel class="content-section" title$="Amendments ([[agreement.amendments.length]])">
           <agreement-amendments data-items="{{agreement.amendments}}"
+                                staff-members="[[staffMembers]]"
                                 partner-name="[[agreement.partner_name]]"
                                 partner-authorized-officers="[[_getAuthorizedOfficers(staffMembers, agreement.authorized_officers)]]"
                                 edit-mode$="[[editMode]]"></agreement-amendments>
@@ -650,7 +650,7 @@
         _signedByPartnerSelected: function(event) {
           var selectedOfficer = event.detail.selectedValues;
           if (selectedOfficer !== null) {
-            this.set('agreement.partner_manager', selectedOfficer.value);
+            this.set('agreement.partner_manager', selectedOfficer.id);
             this.async(function() {
               this.$$('#signedByPartner').invalid = false;
             });
