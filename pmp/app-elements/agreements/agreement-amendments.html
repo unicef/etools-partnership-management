@@ -223,7 +223,7 @@
          */
         _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
-              && (amendmentItem.signed_amendment)
+              && (amendmentItem.signed_agreement)
               && (amendmentItem.amendment_types.length === 0
               || (amendmentItem.amendment_types.length > 0
               && this._hasAmendmentTypesSelected(index) === false));
