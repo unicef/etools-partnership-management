@@ -3,7 +3,6 @@
   pmpBehaviors.AgreementAmendmentsBehavior = {
 
     getOfficerName: function(officerId, staffMembers) {
-      console.log('test ', officerId, staffMembers)
       if (staffMembers instanceof Array && staffMembers.length > 0) {
         var officer = staffMembers.filter(function(o) {
           return parseInt(o.id, 10) === parseInt(officerId, 10);
