@@ -63,7 +63,7 @@
             </template>
             <template is="dom-if" if="[[_allowFieldEditing('partnerName', agreement.status)]]">
               <etools-searchable-multiselection-menu id="partner"
-                                                     label="Government Partner"
+                                                     label="Partner Name"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
                                                      value="[[_mapItemFromId(agreement.partner,partnersDropdownData)]]"
