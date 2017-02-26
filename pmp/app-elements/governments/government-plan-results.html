@@ -101,14 +101,14 @@
 						<div class="col col-6">
 							<template is="dom-if" if="[[editMode]]">
 								<etools-searchable-multiselection-menu id="result"
-																											 label="CP Output"
-																											 index="[[index]]"
-																											 placeholder="&#8212;"
-																											 options="[[cpOutputDropdownData]]"
-																											 on-value-change="_handleValueChange"
-																											 value="[[_mapItemFromId(result.result,cpOutputDropdownData)]]"
-																											 error-message="Please select a CP Output"
-																											 required>
+												 label="CP Output"
+												 index="[[index]]"
+												 placeholder="&#8212;"
+												 options="[[cpOutputDropdownData]]"
+												 on-value-change="_handleValueChange"
+												 value="[[_mapItemFromId(result.result,cpOutputDropdownData)]]"
+												 error-message="Please select a CP Output"
+												 required>
 								</etools-searchable-multiselection-menu>
 							</template>
 							<template is="dom-if" if="[[!editMode]]">
@@ -123,16 +123,16 @@
 						<div class="col">
 							<template is="dom-if" if="[[editMode]]">
 								<etools-searchable-multiselection-menu id="year"
-																											 label="Year"
-																											 index="[[index]]"
-																											 class="fixed-width"
-																											 placeholder="&#8212;"
-																											 options="[[yearOptions]]"
-																											 on-value-change="_handleValueChange"
-																											 value="[[_mapItemFromId(result.year,yearOptions)]]"
-																											 error-message="Please select a year"
-																											 disabled="[[_yearsEmpty(yearOptions)]]"
-																											 required>
+														 label="Year"
+														 index="[[index]]"
+														 class="fixed-width"
+														 placeholder="&#8212;"
+														 options="[[yearOptions]]"
+														 on-value-change="_handleValueChange"
+														 value="[[_mapItemFromId(result.year,yearOptions)]]"
+														 error-message="Please select a year"
+														 disabled="[[_yearsEmpty(yearOptions)]]"
+														 required>
 								</etools-searchable-multiselection-menu>
 							</template>
 							<template is="dom-if" if="[[!editMode]]">
