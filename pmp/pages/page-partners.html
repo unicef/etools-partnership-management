@@ -37,7 +37,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data id="partnerData" partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partnerData" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
@@ -132,12 +132,16 @@
         csvQueryString: {
           type: String
         },
+        selectedPartnerId: {
+          type: Number
+        }
       },
 
       observers: [
         '_resizeHeader(tabsActive)',
         '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, routeData.tab)'
+        '_pageChanged(listActive, routeData.tab)',
+        '_observeRouteDataId(routeData.id)'
       ],
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
@@ -187,6 +191,10 @@
         event.stopImmediatePropagation();
         this.$.partnerData.savePartner(event.detail);
       },
+
+      _observeRouteDataId: function(id) {
+        this.set('selectedPartnerId', id);
+      }
 
     });
 
