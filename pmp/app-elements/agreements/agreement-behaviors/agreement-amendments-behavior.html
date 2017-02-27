@@ -2,10 +2,16 @@
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.AgreementAmendmentsBehavior = {
 
-    getOfficerName: function(officerId) {
-      // officerId === staff member id
-      // TODO: get officer date by id and return it's name
-      return 'John Doe Jr.';
+    getOfficerName: function(officerId, staffMembers) {
+      if (staffMembers instanceof Array && staffMembers.length > 0) {
+        var officer = staffMembers.filter(function(o) {
+          return parseInt(o.id, 10) === parseInt(officerId, 10);
+        })[0];
+        if (officer) {
+          return officer.name;
+        }
+      }
+      return 'Officer not found in staff members list'
     },
 
     prepareAttachementFile: function(filePath) {
@@ -19,54 +25,54 @@
       return [];
     },
 
+    _checkAndPrepareAmendmentTypeStr: function(typeStr) {
+      if (typeof typeStr === 'string') {
+        return typeStr.toLowerCase();
+      }
+      return '';
+    },
+
     showAmendmentTypeOfficer: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Change Authorized Officer';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change authorized officer';
     },
 
     showAmendmentTypeBankInfo: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Banking Information';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change banking info';
     },
 
     showAmendmentTypeLegalNameOfIp: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Change in Legal Name of Implementing Partner';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'change ip name';
     },
 
     showAmendmentTypeExtensionProgrammeCycle: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Extension of Country Programme Cycle';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'cp extension';
     },
 
     showAmendmentTypeAdditionalClauses: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Additional Clause';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'additional clause';
     },
 
     showAmendmentTypeExistingClauseAmended: function(amendmentTypeStr) {
-      return amendmentTypeStr === 'Amend Existing Clause';
+      return this._checkAndPrepareAmendmentTypeStr(amendmentTypeStr) === 'amend existing clause';
     },
 
     validAmendmentType: function(amendmentType, index) {
       var validation = {result: true, elementId: null};
-      if (this.showAmendmentTypeOfficer(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeOfficer(amendmentType.type)) {
         if (amendmentType.officer_id === null) {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('officersDropdown_' + index) : null;
         }
       }
 
-      if (this.showAmendmentTypeBankInfo(amendmentType.amendment_type)) {
-        if (amendmentType.bank_info === null || amendmentType.bank_info === '') {
-          validation.result = false;
-          validation.elementId = (index >= 0) ? ('bankInfo_' + index) : null;
-        }
-      }
-
-      if (this.showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeAdditionalClauses(amendmentType.type)) {
         if (amendmentType.additional_clauses === null || amendmentType.additional_clauses === '') {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('additionalClause_' + index) : null;
         }
       }
 
-      if (this.showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeExistingClauseAmended(amendmentType.type)) {
         if (amendmentType.existing_clause_amended === null || amendmentType.existing_clause_amended === '') {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('existingClauseAmended_' + index) : null;
