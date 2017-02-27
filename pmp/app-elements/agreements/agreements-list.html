@@ -237,7 +237,8 @@
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
-          pmpBehaviors.ListFiltersBehavior
+          pmpBehaviors.ListFiltersBehavior,
+          etoolsAppConfig.globals
         ],
 
         properties: {
@@ -335,7 +336,7 @@
             type: Array,
             statePath: 'agreementStatuses'
           },
-          csvQueryString: {
+          csvDownloadUrl: {
             type: String, 
             notify: true
           },
@@ -460,7 +461,7 @@
             return;
           }
           
-          this.set('csvQueryString', this._buildCsvQueryString()); 
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
           if (qs !== _lastNavigated) {
@@ -537,30 +538,35 @@
           return out.join('&');
         },
 
-        _buildCsvQueryString: function() {        
-          var out= [];
+        _buildCsvDownloadUrl: function() {        
+          var queryString = '';
+          var endpointUrl = '';
+          var params = [];
 
           if (this.agreementType && this.agreementType.length) {
-            out.push('agreement_type=' + this.agreementType);
+            params.push('agreement_type=' + this.agreementType);
           }
           if (this.agreementStatus && this.agreementStatus.length) {
-            out.push('status=' + this.agreementStatus);
+            params.push('status=' + this.agreementStatus);
           }
           if (this.selectedPartners && this.selectedPartners.length) {
-            out.push('partner_name=' + this.selectedPartners[0].label);
+            params.push('partner_name=' + this.selectedPartners[0].label);
           }
           if (this.startDate && this.startDate.length) {
-            out.push('start=' + this.startDate);
+            params.push('start=' + this.startDate);
           }
           if (this.endDate && this.endDate.length) {
-            out.push('end=' + this.endDate);
+            params.push('end=' + this.endDate);
           }
           if (this.q && this.q.length) {
-            out.push('search=' + this.q);
+            params.push('search=' + this.q);
           }
 
-          out.push('format=csv');
-          return out.join('&');
+          params.push('format=csv');
+          queryString = params.join('&');
+          endpointUrl = this.getEndpoint('agreements').url;
+          
+          return endpointUrl + '?' + queryString;
         },
 
         // Convert ids from URL into array of ids

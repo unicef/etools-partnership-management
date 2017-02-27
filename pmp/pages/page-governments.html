@@ -66,7 +66,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
-                <a target="_blank" href$="/api/v2/government_interventions/?[[csvQueryString]]">
+                <a target="_blank" href$="[[csvDownloadUrl]]">
                   <paper-button>                  
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -119,7 +119,7 @@
           <governments-list id="list"
                            active="[[governmentListActive]]"
                            url-params="[[governmentQueryParams]]"
-                           csv-query-string="{{csvQueryString}}"
+                           csv-download-url="{{csvDownloadUrl}}"
                            partners-dropdown-data="[[partnersDropdownData]]">
           </governments-list>
         </div>
@@ -173,7 +173,7 @@
         selectedInterventionId: {
           type: Number
         },
-        csvQueryString: {
+        csvDownloadUrl: {
           type: String
         },
         fakePermission: true,
