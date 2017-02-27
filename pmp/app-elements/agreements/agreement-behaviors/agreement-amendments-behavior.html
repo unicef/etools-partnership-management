@@ -58,28 +58,21 @@
 
     validAmendmentType: function(amendmentType, index) {
       var validation = {result: true, elementId: null};
-      if (this.showAmendmentTypeOfficer(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeOfficer(amendmentType.type)) {
         if (amendmentType.officer_id === null) {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('officersDropdown_' + index) : null;
         }
       }
 
-      if (this.showAmendmentTypeBankInfo(amendmentType.amendment_type)) {
-        if (amendmentType.bank_info === null || amendmentType.bank_info === '') {
-          validation.result = false;
-          validation.elementId = (index >= 0) ? ('bankInfo_' + index) : null;
-        }
-      }
-
-      if (this.showAmendmentTypeAdditionalClauses(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeAdditionalClauses(amendmentType.type)) {
         if (amendmentType.additional_clauses === null || amendmentType.additional_clauses === '') {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('additionalClause_' + index) : null;
         }
       }
 
-      if (this.showAmendmentTypeExistingClauseAmended(amendmentType.amendment_type)) {
+      if (this.showAmendmentTypeExistingClauseAmended(amendmentType.type)) {
         if (amendmentType.existing_clause_amended === null || amendmentType.existing_clause_amended === '') {
           validation.result = false;
           validation.elementId = (index >= 0) ? ('existingClauseAmended_' + index) : null;

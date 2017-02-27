@@ -13,8 +13,6 @@
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
-
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -107,10 +105,12 @@
                                                      label="Amendment Type"
                                                      placeholder="&#8212;"
                                                      options="[[_amendmentTypes]]"
-                                                     value="[[_mapItemFromValue(item.type,_amendmentTypes)]]"
-                                                     on-value-change="_amendmentTypeSelected"
-                                                     error-message="Please select amendment type"
-                                                     custom-object-options>
+                                                     custom-object-options
+                                                     selected="{{item.type}}"
+                                                     update-selected dynamic-align
+                                                     required auto-validate
+                                                     hide-search
+                                                     error-message="Please select amendment type">
               </etools-searchable-multiselection-menu>
             </div>
 
@@ -119,12 +119,14 @@
               <etools-searchable-multiselection-menu id$="officersDropdown_[[index]]"
                                                      label="Officer"
                                                      placeholder="&#8212;"
+                                                     hidden="[[!showAmendmentTypeOfficer(item.type)]]"
                                                      options="[[partnerAuthorizedOfficers]]"
                                                      custom-object-options
                                                      option-value="id"
                                                      option-label="name"
-                                                     hidden="[[!showAmendmentTypeOfficer(item.type)]]"
-                                                     on-value-change="_officerSelected"
+                                                     selected="{{item.officer}}"
+                                                     update-selected dynamic-align
+                                                     required auto-validate
                                                      error-message="Please select an officer">
               </etools-searchable-multiselection-menu>
 
@@ -196,8 +198,7 @@
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
           pmpBehaviors.AgreementAmendmentsBehavior,
-          pmpBehaviors.DateBehavior,
-          pmpBehaviors.ObjectDatabindBehavior
+          pmpBehaviors.DateBehavior
         ],
 
         properties: {
@@ -271,6 +272,10 @@
             var item = this.get(itemPath);
             var itemIndex = this.dataItems.indexOf(item);
 
+            if (item.type) {
+              this.fire('amendment-selected', {type: item.type});
+            }
+
             if (this.showAmendmentTypeLegalNameOfIp(item.type)) {
               this.set(itemPath + '.legal_name_of_ip', this.partnerName);
               this._resetPaths(itemIndex, ['legal_name_of_ip']);
@@ -339,39 +344,13 @@
         },
 
         /**
-         * When a amendment type is selected or not, validate this field and notify parent, to revalidate signed date
-         */
-        _amendmentTypeSelected: function(event) {
-          var selectedAmendmentType = null;
-          var amendmentTypeId = '#amendmentType_' + event.model.index;
-          if (event.detail.selectedValues !== null) {
-            selectedAmendmentType = event.detail.selectedValues.value;
-            this._invalidAmendmentTypeField(false, amendmentTypeId);
-          } else {
-            this._invalidAmendmentTypeField(true, amendmentTypeId);
-          }
-          this.set('dataItems.' + event.model.index + '.type', selectedAmendmentType);
-          this.fire('amendment-selected', {type: selectedAmendmentType});
-        },
-
-        /**
-         * Handle officer selection
-         */
-        _officerSelected: function(event) {
-          var officerId = null;
-          if (event.detail.selectedValues !== null) {
-            officerId = event.detail.selectedValues.id;
-          }
-          // get officer name
-          // TODO: we could also send officer's id, depends on how this will be implemented on backend
-          this.set('dataItems.' + event.model.index + '.officer', officerId);
-        },
-
-        /**
          * Set invalid value of the amendment type field
          */
         _invalidAmendmentTypeField: function(value, selector) {
-          this.$$(selector).invalid = value;
+          var el = this.$$(selector);
+          if (el) {
+            el.invalid = value;
+          }
         },
 
       });
