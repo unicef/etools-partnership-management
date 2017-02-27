@@ -10,6 +10,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
 
 
 
@@ -20,7 +21,7 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles list-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -80,7 +81,7 @@
       .hact-body .row-h {
         padding: 8px;
       }
-      .hact-body .row-h .col {
+      .center-text {
         align-items: center;
         justify-content: center;     
         text-align: center;        
@@ -150,14 +151,14 @@
         </div>    
         <div class="hact-body">
           <div class="row-h">
-            <div class="col col-2"> 
+            <div class="col col-2 center-text"> 
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
-            <div class="col col-2"> $[[partner.total_ct_cp]] </div>
-            <div class="col col-2 block">  $[[partner.total_ct_cy]] <br> <small>out of $[[partner.hact_values.planned_cash_transfer]] planned </small> </div>
-            <div class="col col-2"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
-            <div class="col col-2"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
-            <div class="col col-2"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
+            <div class="col col-2 center-text"> $[[partner.total_ct_cp]] </div>
+            <div class="col col-2 center-text block">  $[[partner.total_ct_cy]] <br> <small>out of $[[partner.hact_values.planned_cash_transfer]] planned </small> </div>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
           </div>
         </div>
       
@@ -170,14 +171,21 @@
           </div>
         </div>
         <div class="hact-body">
-          <template is="dom-repeat" items="[[partner.partnerships]]" as="partnership">
+          <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
               <div class="col col-6 block"> 
-                <strong><a href="interventions/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
+                <template is="dom-if" if="[[partnership.government_intervention]]">
+                  <strong><a href="governments/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
+                </template>
+                <template is="dom-if" if="[[!partnership.government_intervention]]">
+                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a> <br>
+                </template>
+                <div>
                 [[partnership.title]]
+                </div>
               </div>
-              <div class="col col-2"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
-              <div class="col col-4"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
+              <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
+              <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
             </div>
           </template>
         </div>

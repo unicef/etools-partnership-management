@@ -13,8 +13,6 @@
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
-
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -57,6 +55,10 @@
 
       .action.delete:not(:hover) {
         color: #929292 /* TODO: replace with app-theme var */
+      }
+
+      .action.delete[disabled] {
+        visibility: hidden;
       }
 
       .add-amendment-type-wrapper {
@@ -103,10 +105,12 @@
                                                      label="Amendment Type"
                                                      placeholder="&#8212;"
                                                      options="[[_amendmentTypes]]"
-                                                     value="[[_mapItemFromValue(item.type,_amendmentTypes)]]"
-                                                     on-value-change="_amendmentTypeSelected"
-                                                     error-message="Please select amendment type"
-                                                     custom-object-options>
+                                                     custom-object-options
+                                                     selected="{{item.type}}"
+                                                     update-selected dynamic-align
+                                                     required auto-validate
+                                                     hide-search
+                                                     error-message="Please select amendment type">
               </etools-searchable-multiselection-menu>
             </div>
 
@@ -115,9 +119,14 @@
               <etools-searchable-multiselection-menu id$="officersDropdown_[[index]]"
                                                      label="Officer"
                                                      placeholder="&#8212;"
-                                                     options="[[preparedDropdownOfficersData]]"
-                                                     hidden="[[!showAmendmentTypeOfficer(item.amendment_type)]]"
-                                                     on-value-change="_officerSelected"
+                                                     hidden="[[!showAmendmentTypeOfficer(item.type)]]"
+                                                     options="[[partnerAuthorizedOfficers]]"
+                                                     custom-object-options
+                                                     option-value="id"
+                                                     option-label="name"
+                                                     selected="{{item.officer}}"
+                                                     update-selected dynamic-align
+                                                     required auto-validate
                                                      error-message="Please select an officer">
               </etools-searchable-multiselection-menu>
 
@@ -126,25 +135,18 @@
               <!-- TODO: it seems bank information from partner details was removed from specs ...
               this field supposed to be maped with that data as a dropdown ... ???? ...
               will remain as text until it's clarified -->
-              <paper-input id$="bankInfo_[[index]]"
+              <!--<paper-input id$="bankInfo_[[index]]"
                            hidden="[[!showAmendmentTypeBankInfo(item.type)]]"
                            label="New Bank Account"
                            placeholder="&#8212;"
                            value="{{item.bank_info}}"
                            error-message="Please select bank information">
-              </paper-input>
+              </paper-input>-->
 
               <!-- Legal name of IP -->
               <paper-input hidden="[[!showAmendmentTypeLegalNameOfIp(item.type)]]"
                            label="Full Name of Implementing Partner"
                            value="[[item.legal_name_of_ip]]"
-                           readonly>
-              </paper-input>
-
-              <!-- End Date -->
-              <paper-input hidden="[[!showAmendmentTypeExtensionProgrammeCycle(item.type)]]"
-                           label="CP Cycle End Date"
-                           value="[[prettyDate(_countryProgrammeCycleEndDate)]]"
                            readonly>
               </paper-input>
 
@@ -196,8 +198,7 @@
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
           pmpBehaviors.AgreementAmendmentsBehavior,
-          pmpBehaviors.DateBehavior,
-          pmpBehaviors.ObjectDatabindBehavior
+          pmpBehaviors.DateBehavior
         ],
 
         properties: {
@@ -206,11 +207,11 @@
             value: 'agreementAmendmentsTypeDelete',
             readOnly: true,
           },
-          partner: {
-            type: Object
+          partnerName: {
+            type: String
           },
           partnerAuthorizedOfficers: {
-            type: Array, // partner staff members
+            type: Array, // partner staff members without agreement authorized officers
           },
           _amendmentTypes: {
             type: Array,
@@ -233,18 +234,6 @@
             existing_clause_amended: null
           };
           this.set('editMode', true);
-          // this.set('_amendmentTypes', [
-          //   {value: 1, label: 'Change in Legal Name of Implementing Partner'},
-          //   {value: 2, label: 'Extension of Country Programme Cycle'},
-          //   {value: 3, label: 'Change Authorized Officer'},
-          //   {value: 4, label: 'Banking Information'},
-          //   {value: 5, label: 'Additional Clause'},
-          //   {value: 6, label: 'Amend Existing Clause'}
-          // ]);
-
-          // TODO: get countryProgrammeCycle from patner/API ?
-          this._countryProgrammeCycleEndDate = '2017-07-25';
-          this.prepareDropdownOfficersData(this.partnerAuthorizedOfficers);
         },
 
         /**
@@ -283,16 +272,19 @@
             var item = this.get(itemPath);
             var itemIndex = this.dataItems.indexOf(item);
 
+            if (item.type) {
+              this.fire('amendment-selected', {type: item.type});
+            }
+
             if (this.showAmendmentTypeLegalNameOfIp(item.type)) {
-              this.set(itemPath + '.legal_name_of_ip', this.partner.name);
+              this.set(itemPath + '.legal_name_of_ip', this.partnerName);
               this._resetPaths(itemIndex, ['legal_name_of_ip']);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
 
             if (this.showAmendmentTypeExtensionProgrammeCycle(item.type)) {
-              this.set(itemPath + '.cp_cycle_end', this._countryProgrammeCycleEndDate);
-              this._resetPaths(itemIndex, ['cp_cycle_end']);
+              this._resetPaths(itemIndex, []);
               // reset selected officers
               this._resetOfficersDropdownSelection(itemIndex);
             }
@@ -307,7 +299,8 @@
             if (this.showAmendmentTypeBankInfo(item.type)) {
               this._resetPaths(itemIndex, ['bank_info']);
               if (item.bank_info !== null || item.bank_info !== '') {
-                this._invalidAmendmentTypeField(false, '#bankInfo_' + itemIndex);
+                // TODO: remove this if field banck info will not be used
+                // this._invalidAmendmentTypeField(false, '#bankInfo_' + itemIndex);
               }
             }
 
@@ -351,37 +344,13 @@
         },
 
         /**
-         * When a amendment type is selected or not, validate this field and notify parent, to revalidate signed date
-         */
-        _amendmentTypeSelected: function(event) {
-          var selectedAmendmentType = null;
-          var amendmentTypeId = '#amendmentType_' + event.model.index;
-          if (event.detail.selectedValues !== null) {
-            selectedAmendmentType = event.detail.selectedValues.value;
-            this._invalidAmendmentTypeField(false, amendmentTypeId);
-          } else {
-            this._invalidAmendmentTypeField(true, amendmentTypeId);
-          }
-          this.set('dataItems.' + event.model.index + '.type', selectedAmendmentType);
-          this.fire('amendment-selected', {type: selectedAmendmentType});
-        },
-
-        /**
-         * Handle officer selection
-         */
-        _officerSelected: function(event) {
-          var officerId = null;
-          if (event.detail.selectedValues !== null) {
-            officerId = event.detail.selectedValues.value;
-          }
-          this.set('dataItems.' + event.model.index + '.officer', officerId);
-        },
-
-        /**
          * Set invalid value of the amendment type field
          */
         _invalidAmendmentTypeField: function(value, selector) {
-          this.$$(selector).invalid = value;
+          var el = this.$$(selector);
+          if (el) {
+            el.invalid = value;
+          }
         },
 
       });

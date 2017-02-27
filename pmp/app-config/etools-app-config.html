@@ -207,6 +207,9 @@ App global configuration
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
       },
+      partnerStaffMembers: {
+        template: '/api/v2/partners/<%=id%>/staff-members/',
+      },
       interventions: {
         url: '/api/v2/interventions/',
         exp: 5 * 60 * 1000, // 5min

@@ -47,6 +47,9 @@
                                                label="Officers"
                                                placeholder="Select authorized officers"
                                                options="[[officersDropdownData]]"
+                                               custom-object-options
+                                               option-value="id"
+                                               option-label="name"
                                                value="[[_selectedDropdownOfficers]]"
                                                on-value-change="_officersSelected"
                                                error-message="Please select authorized officers"
@@ -95,10 +98,6 @@
             observer: '_dropdownOptionsChanged'
           },
 
-          availableOfficers: {
-            type: Array
-          },
-
           editMode: {
             type: Boolean,
             value: false
@@ -133,10 +132,10 @@
           if (Array.isArray(selectedOfficers) && selectedOfficers.length > 0) {
             var selected = selectedOfficers.map(function(officer) {
               return {
-                value: officer.id,
-                label: officer.first_name + ' ' + officer.last_name
-              }
-            });
+                id: officer.id,
+                name: this._computeName(officer)
+              };
+            }.bind(this));
             this.set('_selectedDropdownOfficers', selected);
             this._selectedOfficersValuesAlreadyInit = true;
           } else {
@@ -165,9 +164,9 @@
           var selectedOfficersData = event.detail.selectedValues;
           if (selectedOfficersData !== null) {
             var officersSelectedIds = selectedOfficersData.map(function(selectedOfficer) {
-              return selectedOfficer.value;
+              return selectedOfficer.id;
             });
-            var selected = this.availableOfficers.filter(function(officer) {
+            var selected = this.officersDropdownData.filter(function(officer) {
               return officersSelectedIds.indexOf(officer.id) > -1;
             });
             this.set('selectedOfficers', selected);
@@ -207,6 +206,9 @@
         },
 
         _computeName: function(officer) {
+          if (officer && officer.name) {
+            return officer.name;
+          }
           return officer.first_name + ' ' + officer.last_name;
         }
 
