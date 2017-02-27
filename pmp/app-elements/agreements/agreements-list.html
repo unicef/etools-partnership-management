@@ -156,13 +156,16 @@
 
       <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <data-table-column class="col-2" field="agreement_number" sortable>
-          Agreement Number #
+          Reference Number #
         </data-table-column>
         <data-table-column class="col-4" field="partner_name" sortable>
           Partner Full Name
         </data-table-column>
         <data-table-column class="col-2" field="partner_type">
           Type
+        </data-table-column>
+        <data-table-column class="col-2" field="partner_status">
+          Status
         </data-table-column>
         <data-table-column class="flex-c" field="start" sortable>
           Start Date
@@ -186,6 +189,9 @@
             </span>
             <span class="col-data col-2">
                 [[getDisplayValue(agreement.agreement_type)]]
+            </span>
+            <span class="col-data col-2 capitalize">
+                [[getDisplayValue(agreement.status)]]
             </span>
             <span class="col-data flex-c">
                 [[_checkAndShowAgreementDate(agreement.start)]]
