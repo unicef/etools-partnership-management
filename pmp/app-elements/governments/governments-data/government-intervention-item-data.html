@@ -86,6 +86,9 @@
         },
         _handleResponse: function(response){
           this._setIntervention(response.detail);
+          // update the government interventions list in dexieDB
+          etoolsAppConfig.db.table('governments').put(response.detail);
+
           if(typeof this.handleResponseAdditionalCallback === 'function'){
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
             this.set('handleResponseAdditionalCallback', null);

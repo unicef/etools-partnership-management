@@ -67,7 +67,7 @@
             <div class="row-h">
               <div class="col col-4">
                 <!-- Title -->
-                <paper-input label="Title"
+                <paper-input label="Position"
                              value="{{item.title}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
@@ -167,7 +167,7 @@
           last_name: null,
           phone: null,
           email: null,
-          active: false
+          active: true
         };
       },
 
@@ -247,7 +247,8 @@
       _addNewStaffMember: function() {
         if (this.editMode) {
           var lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
-          if (!this._notEmpty(lastStaffMemberAdded.title)
+          if (lastStaffMemberAdded
+              && !this._notEmpty(lastStaffMemberAdded.title)
               && !this._notEmpty(lastStaffMemberAdded.first_name)
               && !this._notEmpty(lastStaffMemberAdded.last_name)
               && !this._notEmpty(lastStaffMemberAdded.phone)

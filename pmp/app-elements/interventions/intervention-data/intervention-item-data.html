@@ -55,6 +55,8 @@
          */
         _handleResponse: function(response) {
           this._setIntervention(response.detail);
+          // update the interventions list in dexieDB
+          etoolsAppConfig.db.table('interventions').put(response.detail);
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();

@@ -104,6 +104,9 @@
 
         _handleResponse: function(response) {
           this._setPartner(response.detail);
+          // update the partners list in dexieDB
+          etoolsAppConfig.db.table('partners').put(response.detail);
+
           this.fire('global-loading', {active: false});
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();

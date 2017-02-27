@@ -117,7 +117,7 @@
             var filteredData = [];
             var civilSocietyOrganizationPartners = [];
             res.detail.forEach(function(p) {
-              if (p.partner_type === 'Civil Society Organization') {
+              if (!p.hidden && p.partner_type === 'Civil Society Organization') {
                 civilSocietyOrganizationPartners.push(p);
               }
               if (!p.hidden) {
