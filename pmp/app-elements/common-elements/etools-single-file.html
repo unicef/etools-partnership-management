@@ -59,8 +59,9 @@
 
         _fileChanged: function(intr) {
           if (this.internalFile) {
-
             this.set('attachments', this.prepareEtoolsFileDataFromUrl(this.internalFile));
+          } else {
+            this.set('attachments', []);
           }
         },
         _attachmentChanged: function(filesLength) {

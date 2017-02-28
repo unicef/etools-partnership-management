@@ -10,7 +10,6 @@
      * Ex: partners and agreements lists data values.
      */
     getDisplayValue: function(value, isDate, separator, skipSpaces) {
-      console.log(value, isDate, separator, skipSpaces);
       if (typeof value === 'string' && value != '') {
         if (isDate) {
           return this.prettyDate(value);

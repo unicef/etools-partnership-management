@@ -67,7 +67,8 @@
             <div class="row-h">
               <div class="col col-4">
                 <!-- Title -->
-                <paper-input label="Position"
+                <paper-input id$="title_[[index]]"
+                             label="Position"
                              value="{{item.title}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
@@ -77,7 +78,8 @@
               </div>
               <div class="col col-4">
                 <!-- First Name -->
-                <paper-input label="First Name"
+                <paper-input id$="firstName_[[index]]"
+                             label="First Name"
                              value="{{item.first_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
@@ -87,7 +89,8 @@
               </div>
               <div class="col col-4">
                 <!-- Last Name -->
-                <paper-input label="Last Name"
+                <paper-input id$="lastName_[[index]]"
+                             label="Last Name"
                              value="{{item.last_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
@@ -99,7 +102,8 @@
             <div class="row-h">
               <div class="col col-4">
                 <!-- Phone number -->
-                <paper-input label="Phone number"
+                <paper-input id$="phone_[[index]]"
+                             label="Phone number"
                              value="{{item.phone}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
@@ -110,7 +114,8 @@
               </div>
               <div class="col col-4">
                 <!-- Email address -->
-                <paper-input label="E-mail address"
+                <paper-input id$="email_[[index]]"
+                             label="E-mail address"
                              value="{{item.email}}"
                              placeholder="&#8212;"
                              readonly$="[[!_canBeRemoved(index)]]"
@@ -247,18 +252,47 @@
       _addNewStaffMember: function() {
         if (this.editMode) {
           var lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
-          if (lastStaffMemberAdded
-              && !this._notEmpty(lastStaffMemberAdded.title)
-              && !this._notEmpty(lastStaffMemberAdded.first_name)
-              && !this._notEmpty(lastStaffMemberAdded.last_name)
-              && !this._notEmpty(lastStaffMemberAdded.phone)
-              && !this._notEmpty(lastStaffMemberAdded.email)) {
+          if (this._emptyStaffMemberData(lastStaffMemberAdded)) {
             this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
           }
         }
       },
+
+      _emptyStaffMemberData: function(member) {
+        return member
+            && !this._notEmpty(member.title)
+            && !this._notEmpty(member.first_name)
+            && !this._notEmpty(member.last_name)
+            && !this._notEmpty(member.phone)
+            && !this._notEmpty(member.email);
+      },
+
+      validate: function() {
+        var valid = true;
+        if (this.dataItems instanceof Array && this.dataItems.length > 0) {
+          for (var j = 0; j < this.dataItems.length; j++) {
+            if (this._emptyStaffMemberData(this.dataItems[j])) {
+              valid = false;
+              break;
+            }
+            var fields = ['#title_' + j, '#firstName_' + j, '#lastName_' + j,
+              '#phone_' + j, '#email_' + j];
+            for (var i = 0; i < fields.length; i++) {
+              var fieldEl = this.$$(fields[i]);
+              if (fieldEl && fieldEl.invalid) {
+                valid = false;
+                break;
+              }
+            }
+            if (!valid) {
+              break;
+            }
+          }
+        }
+        return valid;
+      }
 
     });
   </script>

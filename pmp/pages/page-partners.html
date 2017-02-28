@@ -37,7 +37,10 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data id="partnerData" partner-id="[[selectedPartnerId]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error"></partner-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
@@ -102,9 +105,10 @@
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details  partner="[[partner]]"
-                            edit-mode="[[_hasEditPermissions(permissions)]]"
-                            on-save-partner="_savePartner"></partner-details>
+          <partner-details id="partnerDetails"
+                           partner="[[partner]]"
+                           edit-mode="[[_hasEditPermissions(permissions)]]"
+                           on-save-partner="_savePartner"></partner-details>
         </div>
       </iron-pages>
 
@@ -143,6 +147,11 @@
         '_pageChanged(listActive, routeData.tab)',
         '_observeRouteDataId(routeData.id)'
       ],
+
+      listeners: {
+        'partner-save-error': '_partnerSaveError'
+      },
+
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -194,6 +203,14 @@
 
       _observeRouteDataId: function(id) {
         this.set('selectedPartnerId', id);
+      },
+
+      _partnerSaveError: function(event) {
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.$.partnerDetails.set('serverErrors', event.detail);
+        }
+
       }
 
     });
