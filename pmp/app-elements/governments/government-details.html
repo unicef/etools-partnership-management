@@ -61,16 +61,16 @@
                   readonly></paper-input>
             </template>
             <template is="dom-if" if="[[editMode]]">
-              <etools-searchable-multiselection-menu id="partner"
-                                                     starred
-                                                     label="Government Partner"
-                                                     placeholder="&#8212;"
+              
+              <etools-searchable-multiselection-menu label="Government Partner"
                                                      options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.partner}}"
+                                                     update-selected
                                                      error-message="Please select a partner"
+                                                     dynamic-align
                                                      required>
               </etools-searchable-multiselection-menu>
+              
             </template>
           </div>
           <div class="col flex">
@@ -82,13 +82,12 @@
                   readonly></paper-input>
             </template>
             <template is="dom-if" if="[[editMode]]">
-              <etools-searchable-multiselection-menu id="country_programme"
-                                                     label="Country Programme"
-                                                     placeholder="&#8212;"
+              <etools-searchable-multiselection-menu label="Country Programme"                                                     
                                                      options="[[countryProgrammeDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.country_programme}}"
+                                                     update-selected
                                                      error-message="Please select a country programme"
+                                                     dynamic-align
                                                      required>
               </etools-searchable-multiselection-menu>
             </template>
@@ -167,14 +166,7 @@
           })
           this.set('yearOptions', years);
         }
-      },
-      _handleValueChange: function (e) {
-        if(!_.isNull(e.detail.seledValues)){
-          var path = 'intervention.' + e.target.id;
-          this.set(path, e.detail.selectedValues.value);
-          e.target.invalid= false;
-        }
-      },
+      },     
       _addNewResult: function () {
         var intervention = this.intervention.id || "";
         var newResult = {
@@ -192,12 +184,12 @@
       },
       _validateSave: function(){
         event.stopImmediatePropagation();
-        if(_.isEqual(this.intervention,this.originalIntervention)){
+        if (_.isEqual(this.intervention,this.originalIntervention)){
           this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true}); // TODO : disable save button when no change detected
         }
-        else if(this._interventionIsValid()){
+        else if (this._interventionIsValid()) {
           this.fire('save-intervention', {intervention: this.intervention});
-        }else{
+        } else {
           this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true}); // TODO : scroll missed fields into view
 
         }
