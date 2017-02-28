@@ -231,7 +231,8 @@
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
-          pmpBehaviors.ListFiltersBehavior
+          pmpBehaviors.ListFiltersBehavior,
+          etoolsAppConfig.globals
         ],
 
         properties: {
@@ -363,7 +364,7 @@
             type: Array,
             observer: '_filtersChanged'
           },
-          csvQueryString: {
+          csvDownloadUrl: {
             type: String, 
             notify: true
           },
@@ -531,7 +532,7 @@
             return;
           }
           
-          this.set('csvQueryString', this._buildCsvQueryString());          
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());          
           var qs = this._buildQueryString();
         
           if (qs !== _interventionsLastNavigated) {
@@ -664,41 +665,46 @@
           return out.join('&');
         },
         
-        _buildCsvQueryString: function() {        
-          var out= [];
+        _buildCsvDownloadUrl: function() {        
+          var queryString = '';
+          var endpointUrl = '';
+          var params = [];
 
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
-            out.push('document_type=' + this.selectedDocumentTypes[0].value);
+            params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
           // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   out.push('country_programme=' + this.selectedCpOutputs[0].value);
+          //   params.push('country_programme=' + this.selectedCpOutputs[0].value);
           // }
           if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + this.selectedSectors[0].value);
+            params.push('sector=' + this.selectedSectors[0].value);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
-            out.push('status=' + this.selectedStatuses[0].value);
+            params.push('status=' + this.selectedStatuses[0].value);
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            out.push('unicef_focal_points=' + encodeURIComponent(this.selectedUnicefFocalPoints.map(function(focalPt) {
+            params.push('unicef_focal_points=' + encodeURIComponent(this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
             })));
           }
           if (this.selectedOffices && this.selectedOffices.length) {
-            out.push('office=' + this.selectedOffices[0].value);
+            params.push('office=' + this.selectedOffices[0].value);
           }
           if (this.startDate && this.startDate.length) {
-            out.push('start=' + this.prettyDate(this.startDate, 'YYYY-MM-DD'));
+            params.push('start=' + this.prettyDate(this.startDate, 'YYYY-MM-DD'));
           }
           if (this.endDate && this.endDate.length) {
-            out.push('end=' + this.prettyDate(this.endDate, 'YYYY-MM-DD'));
+            params.push('end=' + this.prettyDate(this.endDate, 'YYYY-MM-DD'));
           }
           if (this.q && this.q.length) {
-            out.push('search=' + this.q);
+            params.push('search=' + this.q);
           }
 
-          out.push('format=csv');
-          return out.join('&');
+          params.push('format=csv');
+          queryString = params.join('&');
+          endpointUrl = this.getEndpoint('interventions').url;
+          
+          return endpointUrl + '?' + queryString;
         },
 
         _setSelectedOffices: function(officesStr) {

@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 
@@ -150,12 +151,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
 
           <div class="nav-menu">
-            <iron-selector selected="[[page]]" attr-for-selected="name" selectable="side-bar-item" role="navigation">
+            <iron-selector selected="[[page]]" attr-for-selected="menu-name" selectable="side-bar-item" role="navigation">
               <template is="dom-if" if="[[permissions.loggedInDefault]]">
-                <side-bar-item name="partners" icon="description" href$="[[baseUrl]]partners/list"></side-bar-item>
-                <side-bar-item name="agreements" icon="book" href$="[[baseUrl]]agreements/list"></side-bar-item>
-                <side-bar-item name="interventions" icon="build" href$="[[baseUrl]]interventions/list"></side-bar-item>
-                <side-bar-item name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
+                <side-bar-item menu-name="partners" name="partners" icon="social:people" href$="[[baseUrl]]partners/list"></side-bar-item>
+                <side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>
+                <side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
               </template>
             </iron-selector>
           </div>

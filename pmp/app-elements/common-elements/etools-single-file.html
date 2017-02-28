@@ -5,6 +5,11 @@
 <dom-module id="etools-single-file">
 
   <template>
+    <style>
+      :host {
+        max-width: 100%;
+      }
+    </style>
     <etools-file id="files" 
           files="{{attachments}}"
           label="[[label]]"

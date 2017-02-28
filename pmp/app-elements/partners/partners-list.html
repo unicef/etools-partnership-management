@@ -216,7 +216,8 @@
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          pmpBehaviors.CommonGeneralBehavior,
+          etoolsAppConfig.globals
         ],
 
         properties: {
@@ -291,7 +292,7 @@
             type: Boolean,
             value: false
           },
-          csvQueryString: {
+          csvDownloadUrl: {
             type: String, 
             notify: true
           },
@@ -379,7 +380,7 @@
             return;
           }
           
-          this.set('csvQueryString', this._buildCsvQueryString());
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
           if (qs !== _partnersLastNavigated) {
@@ -447,24 +448,29 @@
           return out.join('&');
         },
 
-        _buildCsvQueryString: function() {       
-          var out= [];  
-
+        _buildCsvDownloadUrl: function() {       
+          var queryString = '';
+          var endpointUrl = '';
+          var params = [];  
+          
           if (this.q && this.q.length) {
-            out.push('search=' + this.q);
+            params.push('search=' + this.q);
           }
           if (this.partnerType && this.partnerType.length) {
-            out.push('partner_type=' + this.partnerType);
+            params.push('partner_type=' + this.partnerType);
           }
           if (this.csoType && this.csoType.length) {
-            out.push('cso_type=' + this.csoType);
+            params.push('cso_type=' + this.csoType);
           }
           if (this.showHidden) {
-            out.push('hidden=true');
+            params.push('hidden=true');
           }
 
-          out.push('format=csv');
-          return out.join('&');
+          params.push('format=csv');
+          queryString = params.join('&');
+          endpointUrl = this.getEndpoint('partners').url;
+          
+          return endpointUrl + '?' + queryString;
         },
 
         _sortOrderChanged: function(e) {

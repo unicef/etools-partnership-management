@@ -20,7 +20,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/object-databind-behavior.html">
 
-<link rel="import" href="../partners/partners-data/partner-item-data.html">
+<link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
 <link rel="import" href="partner-authorized-officers.html">
@@ -40,9 +40,15 @@
         width: 100%;
       }
 
+      .content-section[hidden] + .content-section {
+        margin-top: 0;
+      }
+
     </style>
 
-    <partner-item-data partner-id="[[agreement.partner]]" partner="{{partner}}"></partner-item-data>
+    <partner-staff-members-data partner-id="[[agreement.partner]]"
+                                prepared-staff-members-data="{{staffMembers}}">
+    </partner-staff-members-data>
     
     <!-- main page content start -->
     <div id="pageContent">
@@ -66,7 +72,7 @@
                                                      label="Partner Name"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(agreement.partner,partnersDropdownData)]]"
+                                                     value="[[_mapItemFromId(agreement.partner, partnersDropdownData)]]"
                                                      on-value-change="_partnerSelected"
                                                      error-message="Please select a partner"
                                                      required>
@@ -155,9 +161,10 @@
             </template>
           </div>
           <div class="col col-6">
-            <paper-input-container class="form-field-wrapper secondary-btn-wrapper"
-                                   always-float-label
-                                   hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement_file)]]">
+            <paper-input-container
+                class="form-field-wrapper secondary-btn-wrapper"
+                always-float-label
+                hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
               <a target="_blank" href="/api/v2/agreements/[[agreement.id]]/pdf/">
@@ -182,8 +189,10 @@
               <etools-searchable-multiselection-menu id="signedByPartner"
                                                      label="Signed By Partner"
                                                      placeholder="&#8212;"
-                                                     options="[[preparedOfficersDropdownData]]"
-                                                     value="[[_mapItemFromId(agreement.partner_signatory.id,preparedOfficersDropdownData)]]"
+                                                     options="[[staffMembers]]"
+                                                     custom-object-options
+                                                     option-value="id"
+                                                     option-label="name"
                                                      on-value-change="_signedByPartnerSelected"
                                                      error-message="Please select authorized officer"
                                                      required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
@@ -232,7 +241,6 @@
                                                      placeholder="&#8212;"
                                                      options="[[unicefStaff]]"
                                                      value="[[_mapItemFromId(agreement.unicef_signatory.id,unicefStaff)]]"
-                                                     update-selected 
                                                      on-value-change="_signedByUnicefSelected"
                                                      error-message="Please select UNICEF staff"
                                                      required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -268,11 +276,11 @@
         </div>
         <div class="row-h flex-c">
           <etools-single-file 
-                       file="{{agreement.attached_agreement}}"
-                       internal-file="[[agreement.attached_agreement_file]]"
-                       label="Signed Agreement"
-                       accept=".doc,.docx,.pdf,.jpg,.png"
-                       readonly$="[[!editMode]]"></etools-single-file>
+             file="{{agreement.attached_agreement}}"
+             internal-file="[[agreement.attached_agreement_file]]"
+             label="Signed Agreement"
+             accept=".doc,.docx,.pdf,.jpg,.png"
+             readonly$="[[!editMode]]"></etools-single-file>
         </div>
       </etools-content-panel>
 
@@ -280,8 +288,7 @@
       <etools-content-panel class="content-section" title$="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
         <partner-authorized-officers id="authorizedOfficers"
            selected-officers="{{agreement.authorized_officers}}"
-           available-officers="[[partner.staff_members]]"
-           officers-dropdown-data="[[preparedOfficersDropdownData]]"
+           officers-dropdown-data="[[staffMembers]]"
            edit-mode="[[_allowFieldEditing('officers', agreement.status)]]"
            required$="[[_signedByValuesFilledAndValid(agreement.signed_by, agreement.signed_by_unicef_date, agreement.partner_manager, agreement.signed_by_partner_date)]]">
         </partner-authorized-officers>
@@ -289,10 +296,11 @@
 
       <template is="dom-if" if="[[_showAmendments]]">
         <!-- Amendments -->
-        <etools-content-panel class="content-section" title$="Amendments ([[amendments.length]])">
+        <etools-content-panel class="content-section" title$="Amendments ([[agreement.amendments.length]])">
           <agreement-amendments data-items="{{agreement.amendments}}"
-                                partner="[[partner]]"
-                                partner-authorized-officers="[[preparedOfficersDropdownData]]"
+                                staff-members="[[staffMembers]]"
+                                partner-name="[[agreement.partner_name]]"
+                                partner-authorized-officers="[[_getAuthorizedOfficers(staffMembers, agreement.authorized_officers)]]"
                                 edit-mode$="[[editMode]]"></agreement-amendments>
         </etools-content-panel>
       </template>
@@ -333,7 +341,6 @@
           },
           partner: {
             type: Object,
-            observer: '_partnerChanged'
           },
           editMode: {
             type: Boolean,
@@ -353,9 +360,8 @@
             type: Array,
             statePath: 'agreementTypes'
           },
-          preparedOfficersDropdownData: {
-            type: Array,
-            value: []
+          staffMembers: {
+            type: Array
           },
           unicefStaff: {
             type: Array,
@@ -382,7 +388,8 @@
 
         observers: [
           '_partnersDropdownChanged(partnersDropdownData.length)',
-          '_agreementFieldChanged(agreement.*)'
+          '_agreementFieldChanged(agreement.*)',
+          '_staffMembersChanged(staffMembers.length)'
         ],
 
         ready: function() {
@@ -433,7 +440,7 @@
             this._resetSignedByValidations();
 
             // set signed by dropdown value; 
-            //this._setSignedByPartnerDropdownValue(agreement.partner_manager);
+            this._setSignedByPartnerDropdownValue(agreement.partner_manager);
             // set signed by unicef value; 
             //this._setSignedByUnicefDropdownValue(agreement.signed_by);
             // reset authorized officers invalid messages
@@ -604,8 +611,9 @@
           }
         },
 
-        _showGenerateReportBtn: function(type, attachment) {
-          return type === 'PCA' && attachment === null;
+        _showGenerateReportBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
+          return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
+              (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
         },
 
         /**
@@ -627,18 +635,13 @@
         },
 
         /**
-         * When partner data is received, update partnerName, needed for page title
+         * Update signed by partner dropdonw valuewhen partner staff members data is received
          */
-        _partnerChanged: function(partner) {
-          if (partner && Array.isArray(partner.staff_members) && partner.staff_members.length > 0) {
-            var partnerStaff = partner.staff_members.map(function(staffMember) {
-              return {
-                value: staffMember.id,
-                label: staffMember.first_name + ' ' + staffMember.last_name
-              };
-            });
-            this.set('preparedOfficersDropdownData', partnerStaff);
-
+        _staffMembersChanged: function(staffMembersLength) {
+          if (!staffMembersLength) {
+            return;
+          }
+          if (Array.isArray(this.staffMembers) && this.staffMembers.length > 0) {
             if (this.agreement && this.agreement.partner_manager) {
               this._setSignedByPartnerDropdownValue(this.agreement.partner_manager);
             }
@@ -651,7 +654,7 @@
         _signedByPartnerSelected: function(event) {
           var selectedOfficer = event.detail.selectedValues;
           if (selectedOfficer !== null) {
-            this.set('agreement.partner_manager', selectedOfficer.value);
+            this.set('agreement.partner_manager', selectedOfficer.id);
             this.async(function() {
               this.$$('#signedByPartner').invalid = false;
             });
@@ -691,20 +694,21 @@
          */
         _setSignedByPartnerDropdownValue: function(partnerStaffId) {
           var signedByPField = this.fieldValidationReset('#signedByPartner');
-          if (partnerStaffId && Array.isArray(this.preparedOfficersDropdownData)
-              && this.preparedOfficersDropdownData.length > 0
-              && this._allowFieldEditing('signedByPartner', this.agreement.status)) {
+          if (partnerStaffId && Array.isArray(this.staffMembers)
+              && this.staffMembers.length > 0) {
             this.debounce('setSelectedSignedByPartner', function() {
               partnerStaffId = parseInt(partnerStaffId, 10);
-              var selected = this.preparedOfficersDropdownData.filter(function(staff) {
-                return parseInt(staff.value, 0) === partnerStaffId;
-              });
-              if (selected.length) {
+              var selected = this.staffMembers.filter(function(staff) {
+                return parseInt(staff.id, 10) === partnerStaffId;
+              })[0];
+              if (selected) {
                 this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', selected);
+              } else {
+                this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', null);
               }
             }.bind(this), 50);
           } else {
-            this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', []);
+            this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', null);
           }
         },
 
@@ -1048,6 +1052,22 @@
             this._clearErrors();
           }
           
+        },
+
+        _getAuthorizedOfficers: function(staffMembers, agreementAuthorizedOfficers) {
+          if (Array.isArray(staffMembers) && staffMembers.length > 0) {
+            if (Array.isArray(agreementAuthorizedOfficers) && agreementAuthorizedOfficers.length > 0) {
+              var agreementAuthorizedOfficersIds = agreementAuthorizedOfficers.map(function(authOfficer) {
+                return parseInt(authOfficer.id, 10);
+              });
+              return staffMembers.filter(function(sm) {
+                return agreementAuthorizedOfficersIds.indexOf(parseInt(sm.id, 10)) === -1;
+              });
+            } else {
+              return staffMembers;
+            }
+          }
+          return [];
         }
 
       });

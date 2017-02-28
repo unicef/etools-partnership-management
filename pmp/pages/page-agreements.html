@@ -69,7 +69,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <a target="_blank" href="/api/v2/agreements/?[[csvQueryString]]">
+                <a target="_blank" href="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -115,7 +115,7 @@
         <div class="page" name="list">
           <agreements-list id="list"
                            active="[[agreementListActive]]"
-                           csv-query-string="{{csvQueryString}}"
+                           csv-download-url="{{csvDownloadUrl}}"
                            url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
@@ -171,7 +171,7 @@
             partner_manager: null
           }
         },
-        csvQueryString: {
+        csvDownloadUrl: {
           type: String
         },
 

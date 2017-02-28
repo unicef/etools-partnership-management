@@ -83,7 +83,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action"  hidden$="[[!listActive]]">
-                <a target="_blank" href$="/api/v2/interventions/?[[csvQueryString]]">
+                <a target="_blank" href="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -144,7 +144,7 @@
             <div class="page" name="list">
               <interventions-list
                   active="[[listActive]]"
-                  csv-query-string="{{csvQueryString}}"
+                  csv-download-url="{{csvDownloadUrl}}"
                   url-params="[[interventionsQueryParams]]">
               </interventions-list>
             </div>
@@ -231,7 +231,7 @@
         agreement: {
           type: Object
         },
-        csvQueryString: {
+        csvDownloadUrl: {
           type: String
         },
         newInterventionModel: {

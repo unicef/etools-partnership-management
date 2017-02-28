@@ -53,7 +53,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!listActive]]">
-                <a target="_blank" href="/api/v2/partners/?[[csvQueryString]]">
+                <a target="_blank" href="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -96,7 +96,7 @@
                   role="main">
 
         <div class="page" name="list">
-          <partners-list id="list" active="[[listActive]]" csv-query-string="{{csvQueryString}}" url-params="[[queryParams]]"></partners-list>
+          <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
           <partner-overview partner="[[partner]]"></partner-overview>
@@ -129,7 +129,7 @@
         routeData: {
           type: Object,
         },
-        csvQueryString: {
+        csvDownloadUrl: {
           type: String
         },
         selectedPartnerId: {
