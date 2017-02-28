@@ -319,6 +319,7 @@
           var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
           var changes = {};
           updateableFields.forEach(function(fieldName) {
+            // TODO: improve this
             if (fieldName === 'assessments') {
               changes[fieldName] = partner[fieldName];
             } else if (fieldName === 'core_values_assessment') {
