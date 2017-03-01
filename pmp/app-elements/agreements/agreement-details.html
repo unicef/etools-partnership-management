@@ -9,7 +9,9 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../common-elements/etools-error-messages-box.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -18,8 +20,8 @@
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
-<link rel="import" href="../../app-behaviors/object-databind-behavior.html">
 
+<link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
@@ -35,13 +37,15 @@
       :host {
         @apply(--layout-horizontal);
         width: 100%;
-      }
-      paper-input {
-        width: 100%;
+
+        --esmm-list-wrapper: {
+          max-height: 400px;
+        }
       }
 
-      .content-section[hidden] + .content-section {
-        margin-top: 0;
+      paper-input,
+      etools-date-input {
+        width: 100%;
       }
 
     </style>
@@ -49,57 +53,48 @@
     <partner-staff-members-data partner-id="[[agreement.partner]]"
                                 prepared-staff-members-data="{{staffMembers}}">
     </partner-staff-members-data>
-    
+
     <!-- main page content start -->
     <div id="pageContent">
-    <etools-content-panel class="content-section" title="Errors Saving Agreement" hidden$="[[!errorBoxVisible]]">
-        <template is="dom-repeat" items=[[serverErrors]]>
-          <p>[[item]]</p>
-        </template>
-    </etools-content-panel>
+
+      <etools-error-messages-box id="errorsBox"
+                                 title="Errors Saving Agreement"
+                                 errors="{{serverErrors}}"></etools-error-messages-box>
+
       <etools-content-panel class="content-section" title="Agreement Details">
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Partner name -->
-            <template is="dom-if" if="[[!_allowFieldEditing('partnerName', agreement.status)]]">
-              <paper-input label="Partner Name"
-                           value="[[agreement.partner_name]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('partnerName', agreement.status)]]">
-              <etools-searchable-multiselection-menu id="partner"
-                                                     label="Partner Name"
-                                                     placeholder="&#8212;"
-                                                     options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(agreement.partner, partnersDropdownData)]]"
-                                                     on-value-change="_partnerSelected"
-                                                     error-message="Please select a partner"
-                                                     required>
-              </etools-searchable-multiselection-menu>
-            </template>
+            <etools-searchable-multiselection-menu
+                id="partner"
+                label="Partner Name"
+                placeholder="&#8212;"
+                options="[[partnersDropdownData]]"
+                custom-object-options
+                selected="{{agreement.partner}}"
+                update-selected
+                dynamic-align
+                readonly$="[[!_allowFieldEditing('partnerName', agreement.status)]]"
+                error-message="Please select a partner"
+                required>
+            </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
             <!-- Agreement Type -->
-            <template is="dom-if" if="[[!_allowFieldEditing('agreementType', agreement.status)]]">
-              <paper-input label="Agreement Type"
-                           value="[[agreement.agreement_type]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('agreementType', agreement.status)]]">
-              <etools-searchable-multiselection-menu id="agreementType"
-                                                     label="Agreement Type"
-                                                     placeholder="&#8212;"
-                                                     options="[[agreementTypes]]"
-                                                     custom-object-options
-                                                     hide-search
-                                                     value="[[_mapItemFromValue(agreement.agreement_type,agreementTypes)]]"
-                                                     on-value-change="_agreementTypeSelected"
-                                                     error-message="Please select agreement type"
-                                                     required>
-              </etools-searchable-multiselection-menu>
-            </template>
+            <etools-searchable-multiselection-menu
+                id="agreementType"
+                label="Agreement Type"
+                placeholder="&#8212;"
+                options="[[agreementTypes]]"
+                custom-object-options
+                selected="{{agreement.agreement_type}}"
+                update-selected
+                dynamic-align
+                hide-search
+                readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
+                error-message="Please select agreement type"
+                required>
+            </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
             <!-- Reference Number -->
@@ -112,53 +107,23 @@
         <div class="row-h flex-c">
           <div class="col col-3">
             <!-- Start date -->
-            <template is="dom-if" if="[[!_allowFieldEditing('startDate', agreement.status)]]">
-              <paper-input label="Start date"
-                           value$="[[prettyDate(agreement.start)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('startDate', agreement.status)]]">
-              <paper-input label="Start date"
-                           id="startDateField"
-                           value="[[prettyDate(agreement.start)]]"
-                           on-down="openDatePicker"
-                           data-selector="startDate"
-                           placeholder="&#8212;">
-                <etools-datepicker-button prefix
-                                          id="startDate"
-                                          date="[[prepareDate(agreement.start)]]"
-                                          format="YYYY-MM-DD"
-                                          pretty-date="{{agreement.start}}"
-                                          no-init show-clear-btn></etools-datepicker-button>
-              </paper-input>
-            </template>
+            <etools-date-input id="startDateField"
+                               label="Start date"
+                               value="{{agreement.start}}"
+                               readonly$="[[!_allowFieldEditing('startDate', agreement.status)]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
           </div>
           <div class="col col-3">
             <!-- End date -->
-            <template is="dom-if" if="[[!_allowFieldEditing('endDate', agreement.status)]]">
-              <paper-input label="End date"
-                           value$="[[prettyDate(agreement.end)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('endDate', agreement.status)]]">
-              <paper-input id="endDateField"
-                           label="End date"
-                           value="[[prettyDate(agreement.end)]]"
-                           on-down="openDatePicker"
-                           data-selector="endDate"
-                           placeholder="&#8212;"
-                           error-message="Please select end date"
-                           required$="[[validateStringValue(agreement.start)]]">
-                <etools-datepicker-button prefix
-                                          id="endDate"
-                                          date="[[prepareDate(agreement.end)]]"
-                                          format="YYYY-MM-DD"
-                                          pretty-date="{{agreement.end}}"
-                                          no-init show-clear-btn></etools-datepicker-button>
-              </paper-input>
-            </template>
+            <etools-date-input id="endDateField"
+                               label="End date"
+                               value="{{agreement.end}}"
+                               readonly$="[[!_allowFieldEditing('endDate', agreement.status)]]"
+                               error-message="Please select end date"
+                               required$="[[validateStringValue(agreement.start)]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
           </div>
           <div class="col col-6">
             <paper-input-container
@@ -179,122 +144,85 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By Partner -->
-            <template is="dom-if" if="[[!_allowFieldEditing('signedByPartner', agreement.status)]]">
-              <paper-input label="Signed By Partner"
-                           value="[[_getPartnerName(agreement.partner_signatory)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('signedByPartner', agreement.status)]]">
-              <etools-searchable-multiselection-menu id="signedByPartner"
-                                                     label="Signed By Partner"
-                                                     placeholder="&#8212;"
-                                                     options="[[staffMembers]]"
-                                                     custom-object-options
-                                                     option-value="id"
-                                                     option-label="name"
-                                                     on-value-change="_signedByPartnerSelected"
-                                                     error-message="Please select authorized officer"
-                                                     required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
-              </etools-searchable-multiselection-menu>
-            </template>
+            <etools-searchable-multiselection-menu
+                id="signedByPartner"
+                label="Signed By Partner"
+                placeholder="&#8212;"
+                options="[[staffMembers]]"
+                custom-object-options
+                option-value="id"
+                option-label="name"
+                selected="{{agreement.partner_manager}}"
+                update-selected
+                dynamic-align
+                readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]"
+                error-message="Please select a partner"
+                required$="[[validateStringValue(agreement.signed_by_partner_date)]]" show-logs>
+            </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
             <!-- Signed By Partner Date -->
-            <template is="dom-if" if="[[!_allowFieldEditing('signedByPartnerDate', agreement.status)]]">
-              <paper-input label="Signed By Partner Date"
-                           value$="[[prettyDate(agreement.signed_by_partner_date)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('signedByPartnerDate', agreement.status)]]">
-              <paper-input id="signedByPartnerDateField"
-                           label="Signed By Partner Date"
-                           value="[[prettyDate(agreement.signed_by_partner_date)]]"
-                           on-down="openDatePicker"
-                           data-selector="signedByPartnerDate"
-                           placeholder="&#8212;"
-                           error-message="Please select signed by partner date"
-                           required$="[[validateIdValue(agreement.partner_manager)]]">
-                <etools-datepicker-button prefix
-                                          id="signedByPartnerDate"
-                                          date="[[prepareDate(agreement.signed_by_partner_date)]]"
-                                          format="YYYY-MM-DD"
-                                          pretty-date="{{agreement.signed_by_partner_date}}"
-                                          no-init show-clear-btn></etools-datepicker-button>
-              </paper-input>
-            </template>
+            <etools-date-input id="signedByPartnerDateField"
+                               label="Signed By Partner Date"
+                               value="{{agreement.signed_by_partner_date}}"
+                               readonly$="[[!_allowFieldEditing('signedByPartnerDate', agreement.status)]]"
+                               error-message="Please select signed by partner date"
+                               required$="[[validateIdValue(agreement.partner_manager)]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
           </div>
         </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By UNICEF -->
-            <template is="dom-if" if="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]">
-              <paper-input label="Signed By UNICEF"
-                           value="[[_getPartnerName(agreement.unicef_signatory)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('signedByUnicef', agreement.status)]]">
-              <etools-searchable-multiselection-menu id="signedByUnicef"
-                                                     label="Signed By UNICEF"
-                                                     placeholder="&#8212;"
-                                                     options="[[unicefStaff]]"
-                                                     value="[[_mapItemFromId(agreement.unicef_signatory.id,unicefStaff)]]"
-                                                     on-value-change="_signedByUnicefSelected"
-                                                     error-message="Please select UNICEF staff"
-                                                     required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
-              </etools-searchable-multiselection-menu>
-            </template>
+            <etools-searchable-multiselection-menu
+                id="signedByUnicef"
+                label="Signed By UNICEF"
+                placeholder="&#8212;"
+                options="[[unicefStaff]]"
+                custom-object-options
+                selected="{{agreement.signed_by}}"
+                update-selected
+                dynamic-align
+                readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
+                error-message="Please select UNICEF staff"
+                required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
+            </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
             <!-- Signed By UNICEF Date -->
-            <template is="dom-if" if="[[!_allowFieldEditing('signedByUnicefDate', agreement.status)]]">
-              <paper-input label="Signed By UNICEF Date"
-                           value$="[[prettyDate(agreement.signed_by_unicef_date)]]"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[_allowFieldEditing('signedByUnicefDate', agreement.status)]]">
-              <paper-input id="signedByUnicefDateField"
-                           label="Signed By UNICEF Date"
-                           value="[[prettyDate(agreement.signed_by_unicef_date)]]"
-                           on-down="openDatePicker"
-                           data-selector="signedByUnicefDate"
-                           placeholder="&#8212;"
-                           error-message="Please select signed by UNICEF date"
-                           required$="[[validateIdValue(agreement.signed_by)]]">
-                <etools-datepicker-button prefix
-                                          id="signedByUnicefDate"
-                                          date="[[prepareDate(agreement.signed_by_unicef_date)]]"
-                                          format="YYYY-MM-DD"
-                                          pretty-date="{{agreement.signed_by_unicef_date}}"
-                                          no-init show-clear-btn></etools-datepicker-button>
-              </paper-input>
-            </template>
+            <etools-date-input id="signedByUnicefDateField"
+                               label="Signed By UNICEF Date"
+                               value="{{agreement.signed_by_unicef_date}}"
+                               readonly$="[[!_allowFieldEditing('signedByUnicefDate', agreement.status)]]"
+                               error-message="Please select signed by UNICEF date"
+                               required$="[[validateIdValue(agreement.signed_by)]]"
+                               no-init show-clear-btn>
+            </etools-date-input>
           </div>
         </div>
         <div class="row-h flex-c">
-          <etools-single-file 
-             file="{{agreement.attached_agreement}}"
-             internal-file="[[agreement.attached_agreement_file]]"
-             label="Signed Agreement"
-             accept=".doc,.docx,.pdf,.jpg,.png"
-             readonly$="[[!editMode]]"></etools-single-file>
+          <etools-single-file
+              file="{{agreement.attached_agreement}}"
+              internal-file="[[agreement.attached_agreement_file]]"
+              label="Signed Agreement"
+              accept=".doc,.docx,.pdf,.jpg,.png"
+              readonly$="[[!editMode]]"></etools-single-file>
         </div>
       </etools-content-panel>
 
       <!-- Partner Authorized Officers (partner staff members) -->
-      <etools-content-panel class="content-section" title$="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
+      <etools-content-panel class="content-section"
+                            title$="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
         <partner-authorized-officers id="authorizedOfficers"
-           selected-officers="{{agreement.authorized_officers}}"
-           officers-dropdown-data="[[staffMembers]]"
-           edit-mode="[[_allowFieldEditing('officers', agreement.status)]]"
-           required$="[[_signedByValuesFilledAndValid(agreement.signed_by, agreement.signed_by_unicef_date, agreement.partner_manager, agreement.signed_by_partner_date)]]">
+                                     selected-officers="{{agreement.authorized_officers}}"
+                                     officers-dropdown-data="[[staffMembers]]"
+                                     edit-mode="[[_allowFieldEditing('officers', agreement.status)]]"
+                                     required$="[[_signedByValuesFilledAndValid(agreement.signed_by, agreement.signed_by_unicef_date, agreement.partner_manager, agreement.signed_by_partner_date)]]">
         </partner-authorized-officers>
       </etools-content-panel>
 
-      <template is="dom-if" if="[[_showAmendments]]">
+      <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
         <!-- Amendments -->
         <etools-content-panel class="content-section" title$="Amendments ([[agreement.amendments.length]])">
           <agreement-amendments data-items="{{agreement.amendments}}"
@@ -329,8 +257,7 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.AgreementsCommonBehavior,
-          pmpBehaviors.ObjectDatabindBehavior
+          pmpBehaviors.AgreementsCommonBehavior
         ],
 
         properties: {
@@ -338,9 +265,6 @@
             type: Object,
             notify: true,
             observer: '_agreementChanged'
-          },
-          partner: {
-            type: Object,
           },
           editMode: {
             type: Boolean,
@@ -365,8 +289,7 @@
           },
           unicefStaff: {
             type: Array,
-            statePath: 'unicefUsersData',
-            observer: '_unicefStaffChanged'
+            statePath: 'unicefUsersData'
           },
           originalAgreementData: {
             type: Object,
@@ -378,23 +301,15 @@
           },
           serverErrors: {
             type: Array,
-            observer: '_newErrors'
+            value: []
           },
-          errorBoxVisible: {
-            type: Boolean,
-            value: false
-          }
+          oldSelectedPartnerId: Number
         },
 
         observers: [
-          '_partnersDropdownChanged(partnersDropdownData.length)',
           '_agreementFieldChanged(agreement.*)',
-          '_staffMembersChanged(staffMembers.length)'
+          '_partnerChanged(agreement.partner)'
         ],
-
-        ready: function() {
-
-        },
 
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);
@@ -410,39 +325,37 @@
           }
         },
 
+        _showAmendments: function(type, status) {
+          if (type === 'PCA' && status !== 'draft') {
+            return true;
+          }
+          return false;
+        },
+
         /**
          * When agreement data is changed we need to check and prepare attached agreement file and
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
+          this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
-            this._clearErrors();
             if (agreement.id > 0) {
               // prevent wrong new agreement value
               this.set('isNewAgreement', false);
             }
 
-            // this.set('_showAmendments', true);
+            this.set('oldSelectedPartnerId', agreement.partner);
 
-            if (agreement.agreement_type === 'PCA' && agreement.status !== 'draft') {
-              this.set('_showAmendments', true);
-            } else {
-              this.set('_showAmendments', false);
-            }
             // prepare attached agreement data
             // this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
             // check for partners dropdown selected values; reset invalid state
-            this._partnersDropdownChanged(this.partnersDropdownData.length);
             // check agreement type dropdown selected value; reset invalid state
-            this._setAgreementTypeDropdownValue(agreement.agreement_type);
 
             // reset invalid state for signed by values
             this._resetSignedByValidations();
 
-            // set signed by dropdown value; 
-            this._setSignedByPartnerDropdownValue(agreement.partner_manager);
+
             // set signed by unicef value; 
-            //this._setSignedByUnicefDropdownValue(agreement.signed_by);
             // reset authorized officers invalid messages
             this._resetOfficersField();
 
@@ -466,7 +379,9 @@
         },
 
         _resetDropdown: function(selector, clearOptions) {
-          if (!clearOptions) {clearOptions = false;}
+          if (!clearOptions) {
+            clearOptions = false;
+          }
           var field = this.fieldValidationReset(selector);
           if (field) {
             field.value = [];
@@ -479,11 +394,11 @@
         },
 
         _resetSignedByValidations: function() {
-            this.fieldValidationReset('#endDateField');
-            this.fieldValidationReset('#signedByPartner');
-            this.fieldValidationReset('#signedByPartnerDateField');
-            this.fieldValidationReset('#signedByUnicef');
-            this.fieldValidationReset('#signedByUnicefDateField');
+          this.fieldValidationReset('#endDateField');
+          this.fieldValidationReset('#signedByPartner');
+          this.fieldValidationReset('#signedByPartnerDateField');
+          this.fieldValidationReset('#signedByUnicef');
+          this.fieldValidationReset('#signedByUnicefDateField');
         },
 
         _resetOfficersField: function() {
@@ -506,7 +421,7 @@
           if (!this.editMode) {
             return false;
           }
-          if (this.isNewAgreement || (agreementStatus && this._isDraft())) {
+          if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
             return true;
           }
           return false;
@@ -520,226 +435,14 @@
           var allowEdit = false;
           if (['partnerName', 'agreementType', 'startDate', 'endDate', 'signedByPartner',
                 'signedByUnicef', 'signedByPartnerDate', 'signedByUnicefDate', 'officers'].indexOf(fieldName) > -1) {
-              allowEdit = this._allowEdit(agreementStatus);
+            allowEdit = this._allowEdit(agreementStatus);
           }
-
           return allowEdit;
-        },
-
-        /**
-         * Get partner id from dropdown selection and add it to agreement
-         */
-        _partnerSelected: function(event) {
-          var selectedPartner = event.detail.selectedValues;
-          if (selectedPartner !== null) {
-            this.set('agreement.partner', selectedPartner.value);
-            this.async(function() {
-              this.$$('#partner').invalid = false;
-            });
-          }
-        },
-
-        /**
-         * When partners dropdown data is received, check for agreement selected partner
-         */
-        _partnersDropdownChanged: function(partnersDropdownDataLength) {
-          if (partnersDropdownDataLength) {
-            this._setPartnerDropdownSelectedValue();
-          } else {
-            this.fieldValidationReset('#partner');
-          }
-        },
-
-        /**
-         * Init partners dropdown selected value
-         */
-        _setPartnerDropdownSelectedValue: function() {
-          this.debounce('setPartnersDropdownValue', function() {
-            var partnersField = this.fieldValidationReset('#partner');
-            if (!this.isNewAgreement && this.agreement && this.agreement.partner
-                && this._allowFieldEditing('partnerName', this.agreement.status)) {
-              var agreementPartnerId = parseInt(this.agreement.partner, 10);
-              var selectedPartner = this.partnersDropdownData.filter(function(partner) {
-                return parseInt(partner.value, 10) === agreementPartnerId;
-              });
-              if (selectedPartner.length) {
-                this.async(function() {
-                  if(!partnersField) {
-                    partnersField = this.fieldValidationReset('#partner');
-                  }
-                  if (partnersField) {
-                    partnersField.value = selectedPartner;
-                  }
-                });
-              }
-            }
-          }.bind(this), 50);
-        },
-
-        /**
-         * Get agreement type string from dropdown selection and add it to the agreement
-         */
-        _agreementTypeSelected: function(event) {
-          var selectedType = event.detail.selectedValues;
-          if (selectedType !== null) {
-            this.set('agreement.agreement_type', selectedType.value);
-            this.async(function() {
-              this.$$('#agreementType').invalid = false;
-            });
-          }
-        },
-
-        /**
-         * Set agreement type selected value
-         */
-        _setAgreementTypeDropdownValue: function(agreementType) {
-          var agreementTypeField = this.fieldValidationReset('#agreementType');
-          if (agreementType && this._allowFieldEditing('agreementType', this.agreement.status)) {
-            var type = this.agreementTypes.filter(function(type) {
-              return type.value === agreementType;
-            });
-            if (type.length) {
-              this.async(function() {
-                if (!agreementTypeField) {
-                  agreementTypeField = this.$$('#agreementType');
-                }
-                if (agreementTypeField) {
-                  agreementTypeField.value = type;
-                }
-              });
-            }
-          }
         },
 
         _showGenerateReportBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
           return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
               (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
-        },
-
-        /**
-         * Get signed by partner name
-         */
-        _getPartnerName: function(partner) {
-          if (partner && partner.id) {
-            return partner.first_name + ' ' + partner.last_name;
-          }
-        },
-
-        /**
-         * Get partner manager name
-         */
-        _getPartnerManagerName: function(partnerManager) {
-          if (partnerManager && partnerManager.user_id) {
-            return partnerManager.full_name;
-          }
-        },
-
-        /**
-         * Update signed by partner dropdonw valuewhen partner staff members data is received
-         */
-        _staffMembersChanged: function(staffMembersLength) {
-          if (!staffMembersLength) {
-            return;
-          }
-          if (Array.isArray(this.staffMembers) && this.staffMembers.length > 0) {
-            if (this.agreement && this.agreement.partner_manager) {
-              this._setSignedByPartnerDropdownValue(this.agreement.partner_manager);
-            }
-          }
-        },
-
-        /**
-         * Handling signed by partner selection. The partner id is needed and must be assigned to agreement.
-         */
-        _signedByPartnerSelected: function(event) {
-          var selectedOfficer = event.detail.selectedValues;
-          if (selectedOfficer !== null) {
-            this.set('agreement.partner_manager', selectedOfficer.id);
-            this.async(function() {
-              this.$$('#signedByPartner').invalid = false;
-            });
-          }
-        },
-
-        /**
-         * Handling signed by unicef selection. The partner manager id is needed and must be assigned to agreement.
-         */
-        _signedByUnicefSelected: function(event) {
-          var selectedUnicefStaff = event.detail.selectedValues;
-          if (selectedUnicefStaff !== null) {
-            this.set('agreement.signed_by', selectedUnicefStaff.value);
-            this.async(function() {
-              this.$$('#signedByUnicef').invalid = false;
-            });
-          }
-        },
-
-        /**
-         * Update esmm dropdown
-         */
-        _updateSignedByEsmmDropdown: function(esmm, selector, selectedValue) {
-          this.async(function() {
-            if (!esmm) {
-              esmm = this.fieldValidationReset(selector);
-            }
-            if (esmm) {
-              esmm.value = selectedValue;
-            }
-          });
-        },
-
-        /**
-         * Check is there is a selected signed by partner value when agreement data is received
-         * and set it on the dropdown
-         */
-        _setSignedByPartnerDropdownValue: function(partnerStaffId) {
-          var signedByPField = this.fieldValidationReset('#signedByPartner');
-          if (partnerStaffId && Array.isArray(this.staffMembers)
-              && this.staffMembers.length > 0) {
-            this.debounce('setSelectedSignedByPartner', function() {
-              partnerStaffId = parseInt(partnerStaffId, 10);
-              var selected = this.staffMembers.filter(function(staff) {
-                return parseInt(staff.id, 10) === partnerStaffId;
-              })[0];
-              if (selected) {
-                this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', selected);
-              } else {
-                this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', null);
-              }
-            }.bind(this), 50);
-          } else {
-            this._updateSignedByEsmmDropdown(signedByPField, '#signedByPartner', null);
-          }
-        },
-
-        _setSignedByUnicefDropdownValue: function(unicefStaffId) {
-          var signedByUField = this.fieldValidationReset('#signedByUnicef');
-          if (unicefStaffId && Array.isArray(this.unicefStaff)
-              && this.unicefStaff.length > 0
-              && this._allowFieldEditing('signedByUnicef', this.agreement.status)) {
-            this.debounce('setSelectedSignedByUnicef', function() {
-              unicefStaffId = parseInt(unicefStaffId, 10);
-              var selected = this.unicefStaff.filter(function(staff) {
-                return parseInt(staff.value, 0) === unicefStaffId;
-              });
-              if (selected.length) {
-                this._updateSignedByEsmmDropdown(signedByUField, '#signedByUnicef', selected);
-              }
-            }.bind(this), 50);
-          } else {
-            this._updateSignedByEsmmDropdown(signedByUField, '#signedByUnicef', []);
-          }
-        },
-
-        /**
-         * Unicef staff data has changed observer
-         */
-        _unicefStaffChanged: function(unicefStaff) {
-          if (Array.isArray(unicefStaff) && unicefStaff.length > 0) {
-            if (this.agreement && this.agreement.signed_by) {
-              this._setSignedByUnicefDropdownValue(this.agreement.signed_by);
-            }
-          }
         },
 
         /**
@@ -752,6 +455,18 @@
               || this.validateIdValue(signedByPartnerStaffId)
               || this.validateStringValue(signedByPartnerDate);
 
+        },
+
+        _partnerChanged: function(currentPartnerId) {
+          if (currentPartnerId !== this.oldSelectedPartnerId) {
+            // partner not set or changed, reset related fields
+            this.set('agreement.partner_manager', null);
+            this.set('staffMembers', []);
+            this.set('agreement.authorized_officers', []);
+            this.fieldValidationReset('#signedByPartnerDateField', true);
+            this._resetOfficersField();
+            this.set('oldSelectedPartnerId', currentPartnerId);
+          }
         },
 
         /**
@@ -771,8 +486,12 @@
               this._validateSignedByUnicefFields(this.agreement.signed_by, this.agreement.signed_by_unicef_date);
             } else if (agreementProperty.path === 'agreement.partner_manager'
                 || agreementProperty.path === 'agreement.signed_by_partner_date') {
-              this._validateSignedByPartnerFields(this.agreement.partner_manager, 
-                this.agreement.signed_by_partner_date);
+              this._validateSignedByPartnerFields(this.agreement.partner_manager,
+                  this.agreement.signed_by_partner_date);
+            } else if (agreementProperty.path === 'agreement.partner') {
+              this.fieldValidationReset('#partner');
+            } else if (agreementProperty.path === 'agreement.agreement_type') {
+              this.fieldValidationReset('#agreementType');
             }
           }
 
@@ -967,6 +686,17 @@
         _getCurrentChanges: function() {
           var changes = {};
           if (this.agreement && this.agreement.id === this.originalAgreementData.id) {
+            // check for missing start date
+            if (!(typeof this.agreement.start === 'string' && this.agreement.changes !== '')) {
+              var maxDateStr = this.getMaxDateStr(this.agreement.signed_by_partner_date,
+                  this.agreement.signed_by_unicef_date);
+              if (maxDateStr) {
+                this.set('agreement.start', maxDateStr);
+                this.fire('toast', {text: '\'Start date\' has been set to latest date between' +
+                  ' \'Signed By Partner Date\' and \'Signed By UNICEF Date\'', showCloseBtn: true});
+              }
+            }
+
             // prevent the possibility of checking 2 different agreements
             var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'attached_agreement',
               'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
@@ -979,11 +709,11 @@
                   return officer.id;
                 });
               } else if (fieldName === 'attached_agreement') {
-                if ((this.agreement.hasOwnProperty('attached_agreement')) && 
-                  (this.agreement.attached_agreement instanceof File)) {
-                    changes.attached_agreement = this.agreement.attached_agreement;
+                if ((this.agreement.hasOwnProperty('attached_agreement')) &&
+                    (this.agreement.attached_agreement instanceof File)) {
+                  changes.attached_agreement = this.agreement.attached_agreement;
                 }
-            } else if (fieldName === 'amendments') {
+              } else if (fieldName === 'amendments') {
                 changes[fieldName] = this.agreement[fieldName];
               } else {
                 if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
@@ -994,16 +724,11 @@
           }
           return changes;
         },
-        _clearErrors: function(){
-          this.errorBoxVisible = false;
-          this.set('serverErrors', null);
-        },
         /**
          * Save agreement if all fields are validated
          */
         _validateAndTriggerAgreementSave: function(event) {
           event.stopImmediatePropagation();
-          this._clearErrors();
           if (!this.editMode) {
             return;
           }
@@ -1032,7 +757,6 @@
               return officer.id;
             }),
             agreement_type: agreement.agreement_type,
-            // TODO set attached_agreement after etools-file flow is decided
             attached_agreement: agreement.attached_agreement,
             start: agreement.start,
             end: agreement.end,
@@ -1043,15 +767,6 @@
             signed_by: agreement.signed_by,
             partner_manager: agreement.partner_manager
           };
-        },
-        _newErrors: function(errors) {
-          //check if errors else
-          if (Array.isArray(errors)) {
-            this.errorBoxVisible = errors.length > 0;
-          } else {
-            this._clearErrors();
-          }
-          
         },
 
         _getAuthorizedOfficers: function(staffMembers, agreementAuthorizedOfficers) {

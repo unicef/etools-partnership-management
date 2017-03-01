@@ -206,6 +206,7 @@
       },
 
       _partnerSaveError: function(event) {
+        event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.$.partnerDetails.set('serverErrors', event.detail);

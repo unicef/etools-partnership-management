@@ -35,9 +35,9 @@
             this.push('serverErrors', 'Errors occurred:');
           }
           if (Array.isArray(errors) && errors.length > 0) {
-            errors.forEach(function(err) {
-              this.push('serverErrors', err);
-            });
+            for (var err in errors) {
+              this.push('serverErrors', errors[err]);
+            }
           } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
             for (var errField in errors) {
               if (typeof errors[errField] === 'string') {
