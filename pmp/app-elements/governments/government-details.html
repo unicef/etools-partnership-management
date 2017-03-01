@@ -131,6 +131,7 @@
       ],
       observers: [
         '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
+         '_init(active)'
       ],
       properties: {
         intervention: {
@@ -158,6 +159,13 @@
           notify: true
         },
       },
+      _init : function(active) {
+        if(active) {
+          if (_.isEmpty(this.intervention)) {
+            this.fire('details-refresh');
+          }
+        }
+      },
       _getYears: function () {
         var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
         if (!_.isEmpty(cpObject)) {
@@ -176,7 +184,7 @@
         }
       },
       _addNewResult: function () {
-        var intervention = this.intervention.id || "";
+        var intervention = _.get(this.intervention,'id') || "";
         var newResult = {
           "intervention": intervention,
           "result": "",
