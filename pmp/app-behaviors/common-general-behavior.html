@@ -61,7 +61,7 @@
     },
 
     getFileNameFromURL: function(url) {
-      return _.last(url.split('/')).split('?').shift();
+      return _.head(url.split('?')).split('/').pop();
     },
 
     /**
