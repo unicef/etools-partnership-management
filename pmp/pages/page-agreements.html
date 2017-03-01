@@ -45,7 +45,7 @@
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
                          agreement-id="[[selectedAgreementId]]"
-                         on-agreement-save-error="_newAgreementErrors"></agreement-item-data>
+                         error-event-name="agreement-save-error"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -183,14 +183,11 @@
         '_observeRouteDataId(routeData.id)'
       ],
 
+      listeners: {
+        'agreement-save-error': '_agreementSaveErrors'
+      },
+
       ready: function() {
-
-        // TODO: replace this placeholder data
-        // get fake data for testing
-        // TODO: remove this after API si used
-        //var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
-        //this.set('agreement', localSavedAgreement);
-
         // TODO: remove this
         if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
@@ -292,9 +289,12 @@
       _newAgreementSaved: function(agreement) {
         this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       },
-      _newAgreementErrors: function(event) {
+      _agreementSaveErrors: function(event) {
         event.stopImmediatePropagation();
-        this.$.agreementDetails.set('serverErrors', event.detail);
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.$.agreementDetails.set('serverErrors', event.detail);
+        }
       },
 
       /**
