@@ -10,13 +10,13 @@
         max-width: 100%;
       }
     </style>
-    <etools-file id="files" 
-          files="{{attachments}}"
-          label="[[label]]"
-          accept="[[accept]]"
-          readonly$="[[readonly]]"
-          invalid$="[[invalid]]" 
-          error-message=[[errorMessage]]>
+    <etools-file id="files"
+                 files="{{attachments}}"
+                 label="[[label]]"
+                 accept="[[accept]]"
+                 readonly$="[[readonly]]"
+                 invalid$="[[invalid]]"
+                 error-message=[[errorMessage]]>
     </etools-file>
   </template>
 
@@ -36,7 +36,7 @@
             }
           },
           readonly: Boolean,
-          accept:String,
+          accept: String,
           label: String,
           file: {
             type: Object,
@@ -55,7 +55,10 @@
             value: 'Please select a file'
           }
         },
-      observers: ['_attachmentChanged(attachments.length)'],
+        observers: [
+          '_attachmentChanged(attachments.length)',
+          '_fileReplaced(attachments.*)'
+        ],
 
         _fileChanged: function(intr) {
           if (this.internalFile) {
@@ -66,13 +69,20 @@
         },
         _attachmentChanged: function(filesLength) {
           if (filesLength > 0) {
-            if (this.attachments[0].raw instanceof File){
-              this.set('file', this.attachments[0].raw)
+            if (this.attachments[0].raw instanceof File) {
+              this.set('file', this.attachments[0].raw);
             } else {
-              this.set('file', null)
+              this.set('file', null);
             }
           } else {
-              this.set('file', null)
+            this.set('file', null);
+          }
+        },
+
+        _fileReplaced: function(data) {
+          if (data.path === 'attachments.#0') {
+            // file changed
+            this._attachmentChanged(this.attachments.length);
           }
         }
       });

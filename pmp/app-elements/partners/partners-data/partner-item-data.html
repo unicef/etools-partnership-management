@@ -76,6 +76,9 @@
           if (!prepareMultipartData){
             prepareMultipartData = false;
           }
+          if (!this.ajaxEl) {
+            this.ajaxEl = this.$.ajax;
+          }
           this.ajaxEl.setContentType(null);
           if (!method) {
             method = 'GET';
