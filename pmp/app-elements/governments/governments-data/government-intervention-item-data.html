@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="government-intervention-item-data">
 
@@ -18,7 +19,7 @@
       Polymer({
 
         is: 'government-intervention-item-data',
-        behaviors: [etoolsAppConfig.globals],
+        behaviors: [etoolsAppConfig.globals, pmpBehaviors.EtoolsStaticCommonDataReduxBehavior],
         properties: {
           intervention: {
             type: Object,
@@ -30,6 +31,19 @@
             notify: true,
             observer: '_interventionIdChanged'
           },
+          allSectors: {
+            type: Array, 
+            statePath: 'sectors'
+          },
+          allCountryProgrammes: {
+            type: Array, 
+            statePath: 'countryProgrammes'
+          },
+          allPartners: {
+            type: Array, 
+            statePath: 'partners'
+          },
+
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
         },
@@ -42,21 +56,21 @@
           } else {
             var url = null;
             var isNew = false;
-            if(_.has(intervention, 'id')){
+            if (_.has(intervention, 'id')) {
               //PATCH endpoint
               this._prepareEndpoint(intervention.id);
               url = this.endpoint.url;
-            }else{
+            } else {
               url = this.getEndpoint('governments').url;
               isNew = true;
             }
-            if(!_.isEmpty(intervention)){
+            if (!_.isEmpty(intervention)) {
               if(cb){
                 this.set('handleResponseAdditionalCallback',cb);
               }
               this.fire('global-loading', {message: 'Saving government intervention data...', active:true});
               this._prepareAndFireRequest((isNew)? 'POST' : 'PATCH', intervention, url);
-            }else {
+            } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this intervention.',
                 showCloseBtn: true
@@ -87,7 +101,9 @@
         _handleResponse: function(response){
           this._setIntervention(response.detail);
           // update the government interventions list in dexieDB
-          etoolsAppConfig.db.table('governments').put(response.detail);
+          
+          var mappedResponse = this._formatResponseDataForDexie(response.detail);
+          etoolsAppConfig.db.table('governments').put(mappedResponse);
 
           if(typeof this.handleResponseAdditionalCallback === 'function'){
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
@@ -145,8 +161,66 @@
             }
             this.fire('toast', {text: errorMessage, showCloseBtn: true});
           }
-        }
+        },
+        _formatResponseDataForDexie: function(responseDetail) {
+          var dexieObject = {};
+          var sectorIds = [];
+          var key;
 
+          dexieObject.id     = responseDetail.id;
+          dexieObject.number = responseDetail.number;
+          dexieObject.partner = responseDetail.partner;
+          dexieObject.created_at = responseDetail.created_at;
+          dexieObject.country_programme = responseDetail.country_programme;
+          dexieObject.years = [];
+          dexieObject.sectors = [];
+          dexieObject.cp_outputs = [];
+          dexieObject.unicef_focal_points = [];
+
+          responseDetail.results.forEach(function(responseElement) {            
+            dexieObject.years = this._pushIfNew(dexieObject.years, responseElement.year);
+            dexieObject.cp_outputs = this._pushIfNew(dexieObject.cp_outputs, responseElement.result);
+
+            for (key in responseElement.unicef_managers) {
+              dexieObject.unicef_focal_points = this._pushIfNew(dexieObject.unicef_focal_points, responseElement.unicef_managers[key]);
+            }
+
+            for (key in responseElement.sectors) {
+              sectorIds = this._pushIfNew(sectorIds, responseElement.sectors[key]);
+            }
+          }.bind(this));
+
+          sectorIds.forEach(function(sectorId) {
+            for(key in this.allSectors) {
+              var workingSector = this.allSectors[key];
+
+              if(workingSector.value === sectorId) {
+                dexieObject.sectors.push(workingSector.label);
+              }
+            }
+          }.bind(this));
+                                       
+          this.allPartners.forEach(function(partner) {
+            if (partner.id === dexieObject.partner) {
+              dexieObject.partner_name = partner.name;
+            }
+          });
+                                       
+          this.allCountryProgrammes.forEach(function(country_programme) {
+            if (country_programme.value === dexieObject.country_programme) {
+              dexieObject.country_programme_name = country_programme.label;
+            }
+          });
+
+          return dexieObject;          
+        },
+
+        _pushIfNew: function(array, value) {
+          if (array.indexOf(value) < 0) {
+            array.push(value);
+          }
+          return array;
+        }
       });
     })();
   </script>
