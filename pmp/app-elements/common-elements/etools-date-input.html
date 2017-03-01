@@ -1,0 +1,114 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+
+<link rel="import" href="../../app-behaviors/date-behavior.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="etools-date-input">
+
+  <template>
+    <style include="shared-styles">
+      :host {
+        width: 235px;
+        @apply(--etools-date-input);
+      }
+      /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
+      then include it in shared-styles(do not use shared-styles here) */
+    </style>
+
+    <paper-input label="[[label]]"
+                 value="[[prettyDate(value)]]"
+                 placeholder="[[placeholder]]"
+                 on-down="openDatePicker"
+                 data-selector="datePickerButton"
+                 disabled$="[[disabled]]"
+                 readonly$="[[readonly]]"
+                 required$="[[required]]"
+                 invalid$="[[invalid]]"
+                 error-message="[[errorMessage]]">
+      <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
+      <etools-datepicker-button id="datePickerButton"
+                                prefix
+                                format="[[format]]"
+                                pretty-date="{{value}}"
+                                json-date="{{jsonValue}}"
+                                date="[[prepareDate(value)]]"
+                                is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
+                                hidden$="[[readonly]]"
+                                no-init$="[[noInit]]"
+                                show-clear-btn$="[[showClearBtn]]">
+      </etools-datepicker-button>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-date-input',
+        behaviors: [
+          pmpBehaviors.DateBehavior
+        ],
+        properties: {
+          label: String,
+          value: {
+            value: null,
+            notify: true
+          },
+          jsonValue: {
+            value: null,
+            notify: true
+          },
+          placeholder: {
+            type: String,
+            value: '—'
+          },
+          noInit: Boolean,
+          showClearBtn: Boolean,
+          readonly: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_readonlyStateChange'
+          },
+          disabled: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+          },
+          required: Boolean,
+          autoValidate: Boolean,
+          invalid: {
+            type: Boolean,
+            value: false
+          },
+          errorMessage: {
+            type: String,
+            value: 'Please select a date'
+          },
+          format: {
+            type: String,
+            value: 'YYYY-MM-DD'
+          }
+        },
+
+        _readonlyStateChange: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
+        },
+
+        _disabledDatepicker: function(readonly, disabled) {
+          return readonly || disabled;
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>
