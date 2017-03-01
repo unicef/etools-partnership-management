@@ -2,13 +2,13 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
+<link rel="import" href="../common-elements/etools-error-messages-box.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -40,8 +40,7 @@
         }
       }
 
-      paper-input,
-      paper-dropdown-menu {
+      paper-input {
         width: 100%;
       }
 
@@ -56,6 +55,10 @@
     </style>
     <!-- main page content start -->
     <div id="pageContent">
+
+      <etools-error-messages-box id="errorsBox"
+                                 title="Errors Saving Partner"
+                                 errors="{{serverErrors}}"></etools-error-messages-box>
 
       <etools-content-panel class="content-section" title="Partner Details">
         <div class="row-h flex-c">
@@ -99,19 +102,15 @@
           </div>
           <div class="col col-4">
             <!-- Shared partner -->
-            <template is="dom-if" if="[[!editMode]]">
-              <paper-input label="Shared Partner"
-                           value="{{sharedPartenerSelectedValuesString}}"
-                           placeholder="&#8212;"
-                           readonly></paper-input>
-            </template>
-            <template is="dom-if" if="[[editMode]]">
-              <etools-searchable-multiselection-menu label="Shared Partner"
-                                                     options="[[sharedPartenerValues]]"
-                                                     value="{{sharedPartenerSelectedValues}}"
-                                                     multi
-                                                     custom-object-options></etools-searchable-multiselection-menu>
-            </template>
+            <etools-searchable-multiselection-menu label="Shared Partner"
+                                                   options="[[sharedPartenerValues]]"
+                                                   selected="{{partner.shared_with}}"
+                                                   custom-object-options
+                                                   update-selected
+                                                   dynamic-align
+                                                   readonly$="[[!editMode]]"
+                                                   multi>
+            </etools-searchable-multiselection-menu>
           </div>
         </div>
 
@@ -120,7 +119,7 @@
             <!-- Last accessed date -->
             <paper-input label="Date last assessed"
                          name="core_values_assessment_date"
-                         value="{{partner.core_values_assessment_date}}"
+                         value="[[prettyDate(partner.core_values_assessment_date)]]"
                          placeholder="&#8212;"
                          readonly>
               <div prefix>
@@ -130,11 +129,6 @@
           </div>
           <div class="col col-4 no-overflow">
             <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
-              <!-- <etools-file files="{{coreValuesAssessmentFiles}}"
-                           label="Core Values Assessment"
-                           readonly$="[[!editMode]]"
-                           accept=".doc,.docx,.pdf,.jpg,.png">
-              </etools-file> -->
               <etools-single-file file="{{partner.core_values_assessment}}"
                            internal-file="{{partner.core_values_assessment_file}}"
                            label="Core Values Assessment"
@@ -193,14 +187,14 @@
           <div class="col col-4">
             <!-- Type of assessment -->
             <paper-input label="Assessment Type"
-                         value="{{partner.type_of_assessment}}"
+                         value="[[partner.type_of_assessment]]"
                          placeholder="&#8212;"
                          readonly></paper-input>
           </div>
           <div class="col col-4">
             <!--Date last assessed-->
             <paper-input label="Date of Report"
-                         value="{{partner.last_assessment_date}}"
+                         value="[[prettyDate(partner.last_assessment_date)]]"
                          placeholder="&#8212;"
                          readonly>
               <div prefix>
@@ -212,13 +206,13 @@
 
         <!-- Assessments section -->
         <div class="assessments">
-          <assessments-items data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
+          <assessments-items id="assessmentsList" data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
         </div>
       </etools-content-panel>
 
       <!-- Staff Members section-->
       <etools-content-panel class="content-section" title$="Staff Members ([[partner.staff_members.length]])" show-expand-btn>
-        <staff-members data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
+        <staff-members id="staffMembersList" data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
     </div> <!-- main page content end -->
@@ -258,14 +252,6 @@
             type: Boolean,
             value: false
           },
-          contentVisible: {
-            type: Boolean,
-            value: false
-          },
-          coreValuesAssessmentFiles: {
-            type: Array,
-            value: []
-          },
           csoTypes: {
             type: Array,
             statePath: 'csoTypes'
@@ -274,67 +260,29 @@
             type: Array,
             statePath: 'partnerTypes'
           },
-          originalPartnerData: Object
-
-        },
-
-        //observers: ['_coreValuesAssessmentFilesChanged(coreValuesAssessmentFiles.length)'],
-
-        ready: function() {
-
-          this.set('showCoreValuesAssessmentAttachement', false);
-          /**
-           * TODO: improve shared partners data once the server data is defined and final
-           * shared_partner value format ?
-           */
-
-          // is this the agencyChoices object from redux?  
-          var sharedPartnersRealValues = ['DPKO', 'ECA', 'ECLAC', 'ESCWA', 'FAO', 'ILO', 'IOM', 'OHCHR', 'Women',
-            'UNAIDS', 'UNDP', 'UNESCO', 'UNFPA', 'UN-Habitat', 'UNHCR', 'UNODC', 'UNOPS', 'UNRWA', 'UNSC', 'UNU',
-            'WB', 'WFP', 'WHO'];
-
-          var sharedPartnersPreparedValues = [];
-          sharedPartnersRealValues.forEach(function(val, index) {
-            sharedPartnersPreparedValues.push({value: index, label: val});
-          });
-          this.set('sharedPartenerValues', sharedPartnersPreparedValues);
-        },
-
-        _partnerChanged: function(partner) {
-          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
-            this.contentVisible = true;
-            // check & set shared_partner values
-            this._setSharedPartnerValues();
-
-            // decide if we should show core values assessment attachment
-            this.set('showCoreValuesAssessmentAttachment',
-                this._showCoreValueAssessment(partner.partner_type, partner.cso_type, partner.core_values_assessment_file));
-            this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
-          } else {
-            this.contentVisible = false;
+          originalPartnerData: Object,
+          sharedPartenerValues: {
+            type: Array,
+            statePath: 'agencyChoices'
+          },
+          showCoreValuesAssessmentAttachment: {
+            type: Boolean,
+            value: false
+          },
+          serverErrors: {
+            type: Array,
+            value: []
           }
         },
 
-        /**
-         * Check partner shared_partner value and prepare it to be displayed
-         */
-        _setSharedPartnerValues: function() {
-          if (this.editMode) {
-            // edit mode
-            var sharedPartnersSelectedVal = this.sharedPartenerValues.filter(function(sharedPartnerV) {
-              if (Array.isArray(this.partner.shared_with) && this.partner.shared_with.length > 0) {
-                if (this.partner.shared_with.indexOf(sharedPartnerV.label) > -1) {
-                  return sharedPartnerV;
-                }
-              }
-              return sharedPartnerV.label === this.partner.shared_partner;
-            }.bind(this));
-            this.set('sharedPartenerSelectedValues', sharedPartnersSelectedVal);
-          } else {
-            // readonly mode
-            if (Array.isArray(this.partner.shared_with) && this.partner.shared_with.length > 0) {
-              this.set('sharedPartenerSelectedValuesString', this.partner.shared_with.join(', '));
-            }
+        _partnerChanged: function(partner) {
+          this.set('serverErrors', []);
+          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+            // decide if we should show core values assessment attachment
+            this.set('showCoreValuesAssessmentAttachment',
+                this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
+            // keep a copy of loaded partner to be able to check changed data
+            this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
           }
         },
 
@@ -345,72 +293,48 @@
           return partnerType;
         },
 
-        // _coreValuesAssessmentFilesChanged: function(filesLength) {
-        //   if (filesLength > 0) {
-        //     this._updateCoreValuesAssessmentOnPartner(this.coreValuesAssessmentFiles[0].raw);
-        //   } else {
-        //     this._updateCoreValuesAssessmentOnPartner(null);
-        //   }
-        // },
-
-        // _updateCoreValuesAssessmentOnPartner: function(file) {
-        //   if (typeof this.partner === 'object' && this.partner.hasOwnProperty('core_values_assessment')) {
-        //     this.set('partner.core_values_assessment', file);
-        //     console.log(this.partner.core_values_assessment);
-        //   }
-        // },
-
-        _showCoreValueAssessment: function(partnerType, csoType, partnerCoreValuesAssessment) {
-          // TODO; see if this values are correct for displaying core values assessment file
-          if (_.map(this.partnerTypes, 'value').indexOf(partnerType) >= 0
-              && _.map(this.csoTypes, 'value').indexOf(csoType) >= 0) {
-            //this._prepareCoreValueAssessmentFileDetails(partnerCoreValuesAssessment);
+        /**
+         * Show core values assessment attachment only if partner type is 'Civil Society Organization'
+         * and cso_type is 'National'
+         */
+        _showCoreValueAssessment: function(partnerType, csoType) {
+          if (partnerType === 'Civil Society Organization' && csoType === 'National') {
             return true;
           }
-          
           return false;
         },
 
-        // _prepareCoreValueAssessmentFileDetails: function(partnerCoreValuesAssessment) {
-        //   this.set('coreValuesAssessmentFiles', this.prepareEtoolsFileDataFromUrl(partnerCoreValuesAssessment));
-        // },
         _validatePartner: function() {
-          //TODO: validation goes here
-          return true;
+          var valid = true;
+          if (!this.$.assessmentsList.validate()) {
+            valid = false;
+          }
+          if (!this.$.staffMembersList.validate()) {
+            valid = false;
+          }
+          return valid;
         },
+
         _cleanUpdateData: function(partner) {
           var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
           var changes = {};
           updateableFields.forEach(function(fieldName) {
+            // TODO: improve this
             if (fieldName === 'assessments') {
-                changes[fieldName] = partner[fieldName];
+              changes[fieldName] = partner[fieldName];
             } else if (fieldName === 'core_values_assessment') {
-                if ((partner.hasOwnProperty('core_values_assessment')) && 
-                  (partner.core_values_assessment instanceof File)) {
-                    changes.core_values_assessment = partner.core_values_assessment;
-                }
-            } else if (fieldName === 'shared_with') {
-
-              console.log(this.sharedPartenerSelectedValues);
-              var sharedPartners = (this.sharedPartenerSelectedValues.length) ? this.sharedPartenerSelectedValues.map(function(shared) {
-                  return shared.label;
-                }) : [];
-
-              console.log(sharedPartners);
-
-              if (sharedPartners !== partner.shared_with) {
-                console.log(sharedPartners, partner.shared_with);
-                changes[fieldName] = sharedPartners;
+              if ((partner.hasOwnProperty('core_values_assessment')) &&
+                (partner.core_values_assessment instanceof File)) {
+                  changes.core_values_assessment = partner.core_values_assessment;
               }
             } else {
-              if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
+              if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
+                // used stringify to make sure values are different (ex: array properties)
                 changes[fieldName] = partner[fieldName];
               }
             }
           }.bind(this));
-
           return changes;
-
         },
         _validateAndTriggerPartnerSave: function(event) {
           event.stopImmediatePropagation();
@@ -420,10 +344,10 @@
           if (this._validatePartner()) {
             var partnerChanges = this._cleanUpdateData(this.partner);
             partnerChanges.id = this.partner.id;
-            console.log('_validateAndTriggerPartnerSave: ', partnerChanges);
             this.fire('save-partner', partnerChanges);
           } else {
-            this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+            this.fire('toast', {text: 'Please check assessments and staff members ' +
+              'invalid fields or empty data rows!', showCloseBtn: true});
           }
 
         }

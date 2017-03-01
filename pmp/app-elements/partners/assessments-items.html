@@ -7,14 +7,15 @@
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
+<link rel="import" href="../common-elements/etools-date-input.html">
+
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
@@ -123,33 +124,22 @@
                         <etools-searchable-multiselection-menu id$="assessmentType_[[index]]"
                                                                label="Assessment Type"
                                                                options="[[assessmentTypesOptions]]"
-                                                               value="[[_getAssessmentType(item)]]"
-                                                               on-value-change="_assessmentTypeSelected"
-                                                               error-message="Assessment type is required"
-                                                               custom-object-options>                                                               
+                                                               selected="{{item.type}}"
+                                                               custom-object-options
+                                                               update-selected
+                                                               dynamic-align
+                                                               error-message="Assessment type is required">
                         </etools-searchable-multiselection-menu>
                       </template>
                     </div>
                     <div class="col col-4">
                       <!-- Date submitted -->
-                      <paper-input id$="dateSubmited_[[index]]"
-                                   label="Date of Report"
-                                   value="[[prettyDate(item.completed_date)]]"
-                                   placeholder="&#8212;"
-                                   on-down="openDatePicker"
-                                   data-selector$="completedDate_[[index]]"
-                                   readonly$="[[!editMode]]"
-                                   error-message="Date of report is required">
-                        <iron-icon prefix icon="date-range" hidden$="[[editMode]]"></iron-icon>
-                        <etools-datepicker-button id$="completedDate_[[index]]"
-                                                  suffix
-                                                  format="YYYY-MM-DD"
-                                                  pretty-date="{{item.completed_date}}"
-                                                  is-disabled="[[!editMode]]"
-                                                  hidden$="[[!editMode]]"
-                                                  no-init show-clear-btn>
-                        </etools-datepicker-button>
-                      </paper-input>
+                      <etools-date-input id$="dateSubmited_[[index]]"
+                                         label="Date of Report"
+                                         value="{{item.completed_date}}"
+                                         readonly$="[[!editMode]]"
+                                         error-message="Date of report is required"
+                                         no-init show-clear-btn></etools-date-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
@@ -237,62 +227,26 @@
             type: null,
             completed_date: null,
             current: false,
-            report_file: []
+            report: null,
+            report_file: ''
           };      
         },
-        _getAssessmentType: function(item) {
-          var type = item.type;
-          var selectedType = null;
-          if (typeof type === 'string' && type !== '') {
-            // capitalize value
-            //type = type.replace(/\b\w/g, function(l) { return l.toUpperCase() });
-            selectedType = this.assessmentTypesOptions.filter(function(option) {
-              return option.label === type;
-            });
-          }
-          return selectedType;
-        },
-
-        _assessmentTypeSelected: function(event) {
-          if (event.model && event.model.index >= 0) {
-            var selectedAssessmentType = null;
-            if (event.detail.selectedValues !== null) {
-              selectedAssessmentType = event.detail.selectedValues.label;
-            }
-            this.set('dataItems.' + event.model.index + '.type', selectedAssessmentType);
-          }
-        },
-
+        /**
+         * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
+         * we can make it common in the behavior
+         */
         _dataHasChanged: function(dataItems) {
-          // prepare data for assessment reports
-          // if (Array.isArray(dataItems) && dataItems.length > 0) {
-          //   dataItems.forEach(function(item, index) {
-          //     if ((typeof item.report === 'string' && item.report !== '')
-          //         && (!Array.isArray(item.report_file) || (Array.isArray(item.report_file)
-          //         && item.report_file.length === 0))) {
-          //       this.set('dataItems.' + index + '.report_file', [{
-          //         id: 'report_file_' + index,
-          //         file_name: item.report.substr(item.report.lastIndexOf('/') + 1),
-          //         path: item.report
-          //       }]);
-          //     }
-          //   }.bind(this));
-          // }
+          if (!Array.isArray(dataItems)) {
+            this.set('dataItems', []);
+          }
         },
 
         _assessmentPropertyChanged: function(dataPath) {
-          if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' && dataPath.path !== 'dataItems.length') {
+          if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
+              dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
             var path = dataPath.path.split('.');
             var index = path[path.length - 2].replace('#', '');
-            var fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
-            fields.forEach(function(fieldSelector) {
-              var fieldEl = this.$$(fieldSelector);
-              if (fieldEl) {
-                var fieldName = fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
-                fieldEl.invalid = !this._isValid(fieldName, this.dataItems[index].type, 
-                  this.dataItems[index].completed_date, this.dataItems[index].report, this.dataItems[index].report_file.length);
-              }
-            }.bind(this));
+            this._validateAssessment(index);
           }
         },
 
@@ -318,17 +272,20 @@
           var valid = true;
           switch (field) {
             case 'assessmentType':
-              if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) || reportFileLength > 0 || reportFile instanceof File)) {
+              if (!this._notEmpty(assessmentType) && (this._notEmpty(completedDate) ||
+                  reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
             case 'dateSubmited':
-              if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) || reportFileLength > 0 || reportFile instanceof File)) {
+              if (!this._notEmpty(completedDate) && (this._notEmpty(assessmentType) ||
+                  reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
               break;
             case 'report':
-              if (reportFile instanceof File === false && (this._notEmpty(assessmentType) || this._notEmpty(completedDate))) {
+              if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||
+                  this._notEmpty(completedDate))) {
                 valid = false;
               }
               break;
@@ -336,17 +293,70 @@
           return valid;
         },
 
+        _hasReport: function(report, reportFileLength) {
+          return report instanceof File || reportFileLength > 0;
+        },
+
         _addNewAssessment: function() {
           if (this.editMode) {
             var lastAssessmentAdded = this._getLastDataItem();
-            if (lastAssessmentAdded && lastAssessmentAdded.type === null
-                && lastAssessmentAdded.completed_date === null
-                && lastAssessmentAdded.report_file.length === 0) {
+            if (this._emptyAssessment(lastAssessmentAdded)) {
               this.fire('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
             } else {
               this._addElement();
             }
           }
+        },
+
+        validate: function() {
+          var valid = true;
+          if (this.dataItems instanceof Array && this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              if (!this._emptyAssessment(item)) {
+                if (!this._validateAssessment(index)) {
+                  valid = false;
+                }
+              } else {
+                valid = false;
+              }
+            }.bind(this));
+          }
+          return valid;
+        },
+
+        _validateAssessment: function(index) {
+          var valid = true;
+          var fields = ['#assessmentType_' + index, '#dateSubmited_' + index, '#report_' + index];
+
+          fields.forEach(function(fieldSelector) {
+            var fieldEl = this.$$(fieldSelector);
+            if (fieldEl) {
+              var fieldName = this._getFileTypeForValidation(fieldSelector);
+              var validField = this._isValid(fieldName, this.dataItems[index].type,
+                  this.dataItems[index].completed_date, this.dataItems[index].report,
+                  this.dataItems[index].report_file.length);
+              fieldEl.invalid = !validField;
+              if (!validField) {
+                valid = false;
+              }
+            }
+          }.bind(this));
+
+          return valid;
+        },
+
+        _emptyAssessment: function(assessment) {
+          return assessment && assessment.type === null
+              && assessment.completed_date === null
+              && assessment.report_file.length === 0
+              && assessment.report instanceof File === false;
+        },
+
+        _getFileTypeForValidation: function(fieldSelector) {
+          if (typeof fieldSelector === 'string' && fieldSelector !== '') {
+            return fieldSelector.slice(1).slice(0, fieldSelector.indexOf('_') - 1);
+          }
+          return '';
         }
 
       });
