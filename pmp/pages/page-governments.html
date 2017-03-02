@@ -125,7 +125,8 @@
         </div>
         <div class="page" name="details">
           <government-details id="details"
-                              new-intervention-model="[[newInterventionModel]]"
+                              active="[[newInterventionActive]]"
+]                             on-details-refresh="_goToNewGovernmentPage"
                               intervention="[[intervention]]"
                               edit-mode="[[_hasEditPermissions(permissions)]]"
                               on-save-intervention="_saveIntervention"></government-details>

@@ -350,32 +350,21 @@
 
             this.set('oldSelectedPartnerId', agreement.partner);
 
-            // prepare attached agreement data
-            // this.set('_signedAgreementFiles', this.prepareEtoolsFileDataFromUrl(agreement.attached_agreement));
-            // check for partners dropdown selected values; reset invalid state
-            // check agreement type dropdown selected value; reset invalid state
-
             // reset invalid state for signed by values
             this._resetSignedByValidations();
 
-
-            // set signed by unicef value; 
             // reset authorized officers invalid messages
             this._resetOfficersField();
 
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
           } else {
-            // new agreement, update status to draft
+            // new agreement, update status to draft and reset fields
             this._setDraftStatus(this.editMode, this.isNewAgreement);
-
-            // this.set('_signedAgreementFiles',[]);
             this._resetDropdown('#partner');
             this._resetDropdown('#agreementType');
             this._resetDropdown('#signedByUnicef');
             this._resetDropdown('#signedByPartner', true);
-            // TODO: Reset new agreement fields if an agreement was selected previously
-            // reset validations in case are shown
             this._resetSignedByValidations();
             this._resetOfficersField();
           }
@@ -743,7 +732,6 @@
               // we also need the id
               changedAgreementProperties.id = this.agreement.id;
               // fire update agreement
-              console.log('changes to be saved: ', changedAgreementProperties);
               this.fire('save-agreement', changedAgreementProperties);
             } else {
               this.fire('save-agreement', this._prepareNewAgreementDataForSave(this.agreement));
