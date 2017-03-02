@@ -55,8 +55,11 @@
          */
         _handleResponse: function(response) {
           this._setIntervention(response.detail);
+          
           // update the interventions list in dexieDB
-          etoolsAppConfig.db.table('interventions').put(response.detail);
+          var mappedResponse = this._formatResponseDataForDexie(response.detail);
+          etoolsAppConfig.db.table('interventions').put(mappedResponse);
+
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
@@ -244,7 +247,42 @@
               });
             }
           }
-        }
+        },
+
+        _formatResponseDataForDexie: function(responseDetail) {        
+          var dexieObject = {};
+          dexieObject.sectors = [];
+          dexieObject.cp_outputs = [];
+          dexieObject.unicef_budget = 0;
+          dexieObject.cso_contribution = 0;
+          
+          dexieObject.id = responseDetail.id;
+          dexieObject.hrp = responseDetail.hrp;
+          dexieObject.end = responseDetail.end;
+          dexieObject.title = responseDetail.title;
+          dexieObject.start = responseDetail.start;
+          dexieObject.status = responseDetail.status;
+          dexieObject.number = responseDetail.number;
+          dexieObject.offices = responseDetail.offices;
+          dexieObject.partner_name = responseDetail.partner;
+          dexieObject.document_type = responseDetail.document_type;
+          dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
+
+          responseDetail.planned_budget.forEach(function(elem) {
+            dexieObject.unicef_budget += parseInt(elem.unicef_cash);
+            dexieObject.cso_contribution += parseInt(elem.partner_contribution);
+          });
+
+          responseDetail.sector_locations.forEach(function(elem) {
+            dexieObject.sectors.push(elem.sector.name);
+          });
+
+          responseDetail.result_links.forEach(function(elem) {
+            dexieObject.cp_outputs.push(elem.cp_output);
+          });          
+
+          return dexieObject;          
+        },
 
       });
     })();
