@@ -220,7 +220,7 @@
           <paper-button class="primary-btn success-btn w100"
                         on-tap="_updateStatus"
                         data-status="active"
-                        hidden$="[[_hideActivateBtn(status)]]">
+                        hidden$="[[_hideActivateBtn(status, interventionAgreementStatus)]]">
             Activate
           </paper-button>
 
@@ -263,6 +263,9 @@
         properties: {
           interventionId: {
             type: Number
+          },
+          interventionAgreementStatus: {
+            type: String
           },
           newAgreement: {
             type: Boolean,
@@ -348,7 +351,10 @@
           return true;
         },
 
-        _hideActivateBtn: function(status) {
+        _hideActivateBtn: function(status, interventionAgreementStatus) {
+          if (interventionAgreementStatus === 'suspended') {
+            return true;
+          }
           if (this._statusIs(status, 'suspended')) {
             return false;
           }
@@ -401,6 +407,10 @@
             }
           }
           if (newStatus === 'active' || newStatus === 'suspended' || newStatus === 'terminated') {
+            if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
+              // prevent changing status from suspended to active is the agreement status is suspended
+              return false;
+            }
             if (this.newAgreement || (this.status !== 'active' && this.status !== 'suspended'
                 && this.status !== 'terminated')) {
               return false;

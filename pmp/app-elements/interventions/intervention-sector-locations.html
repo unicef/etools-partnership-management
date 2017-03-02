@@ -46,7 +46,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode)]]"
+                                 disabled="[[!editMode]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -214,22 +214,6 @@
             }
           }
           return selected;
-        },
-
-        /**
-         * The sector location row data can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
-            return false;
-          }
-          var sectorLocationsItem = this.dataItems[index];
-          var sectorLocationsItemId = parseInt(sectorLocationsItem.id, 10);
-          if (sectorLocationsItemId && isNaN(sectorLocationsItemId) === false && sectorLocationsItemId > 0) {
-            // sector location item already saved (has an id assigned)
-            return false;
-          }
-          return true;
         },
 
         /**

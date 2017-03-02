@@ -20,7 +20,8 @@
                                                option-value="id"
                                                option-label="name"
                                                selected="{{partnerId}}"
-                                               update-selected no-change-event
+                                               update-selected
+                                               dynamic-align
                                                required auto-validate
                                                error-message="Partner is required"
                                                readonly$="[[!editMode]]">
@@ -36,7 +37,8 @@
                                                option-value="id"
                                                option-label="agreement_number"
                                                selected="{{agreementId}}"
-                                               update-selected no-change-event
+                                               update-selected
+                                               dynamic-align
                                                required auto-validate
                                                error-message="Agreement required"
                                                readonly$="[[!editMode]]">
@@ -85,18 +87,19 @@
           editMode: {
             type: Boolean,
             value: false
-          }
+          },
+          interventionId: Number
 				},
 				_agreementChanged: function(agreementId) {
 					var partnerSelector = this.$.partner;
 					var agreementSelector = this.$.agreements;
-          if (!agreementId) {
-            partnerSelector.value = null,
-            agreementSelector.value = null;
-            this.set('filteredAgreements', []);
-            this.set('selectedAgreement', null);
-            return;
-          }
+//          if (!agreementId) {
+//            partnerSelector.value = null,
+//            agreementSelector.value = null;
+//            this.set('filteredAgreements', []);
+//            this.set('selectedAgreement', null);
+//            return;
+//          }
 
           // find the partner associated with this agreement
           var agreement = _.find(this.agreements, function(agreement) {
@@ -111,15 +114,15 @@
             });
             if (!partner) {
               this.fire('toast', { text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
-              this._resetSelectorData(partnerSelector, agreementSelector);
+              // this._resetSelectorData(partnerSelector, agreementSelector);
               return;
             }
-            partnerSelector.set('value', partner);
             this.set('partnerId', partner.id);
           }
 				},
+
 				_filterAgreements: function(partnerId) {
-					this.$.agreements.set('value', null);
+					// this.$.agreements.set('value', null);
           if (!partnerId) {
             this.set('filteredAgreements', []);
             return;
@@ -127,27 +130,34 @@
 
           if (this.selectedAgreement && this.selectedAgreement.partner !== partnerId)  {
             this.set('selectedAgreement', null);
+            this.set('agreementId', null);
           }
 
 					// set filtered agreements based on this
 					var agreements = _.filter(this.agreements, function(agreement) {
-					  return agreement.partner === partnerId &&
-                ['suspended', 'terminated'].indexOf(agreement.status) === -1;
-					});
+					  if (this.interventionId > 0) {
+					    // existing intervention
+              return agreement.partner === partnerId;
+            } else {
+					    // new intervention
+              return agreement.partner === partnerId &&
+                  ['suspended', 'terminated'].indexOf(agreement.status) === -1;
+            }
+
+					}.bind(this));
 					this.set('filteredAgreements', agreements);
-          this.$.agreements.set('value', this.selectedAgreement);
 				},
 				_partnerSelected: function(partnerId) {
 					// clear agreementSelection
 					this._filterAgreements(partnerId);
 				},
 
-        _resetSelectorData: function(partnerDropdown, agreementDropdown) {
-          this.set('agreementId', null);
-          this.set('partnerId', null);
-          partnerDropdown.set('value', []);
-          agreementDropdown.set('value', []);
-        },
+//        _resetSelectorData: function(partnerDropdown, agreementDropdown) {
+//          this.set('agreementId', null);
+//          this.set('partnerId', null);
+//          partnerDropdown.set('value', []);
+//          agreementDropdown.set('value', []);
+//        },
 
         resetValidations: function() {
           this.$.agreements.invalid = false;
