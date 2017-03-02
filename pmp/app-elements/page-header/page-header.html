@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
 <link rel="import" href="../app-selector/app-selector.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
+<link rel="import" href="../profile-modal/profile-modal.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -29,7 +30,7 @@
         color: var(--light-primary-text-color);
       }
 
-      etools-page-refresh {
+      etools-page-refresh, profile-modal {
         color: #BCC1C6; /* TODO: replace with app-theme var */
       }
 
@@ -79,6 +80,7 @@
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
+        <profile-modal></profile-modal>
         <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
     </app-toolbar>
