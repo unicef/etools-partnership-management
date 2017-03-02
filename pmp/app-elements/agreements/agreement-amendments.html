@@ -9,6 +9,7 @@
 
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
+<link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
@@ -19,7 +20,6 @@
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
 <link rel="import" href="agreement-amendment-details.html">
 <link rel="import" href="agreement-amendment-types.html">
@@ -40,6 +40,11 @@
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
+      }
+
+      .file-wrapper {
+        width: 450px;
+        max-width: 100%;
       }
 
     </style>
@@ -84,29 +89,23 @@
                     <!--</paper-button>-->
                   <!--</paper-input-container>-->
                 <!--</div>-->
-                <div class="col col-3">
+                <div class="col col-4">
                   <!-- Signed Date -->
-                  <paper-input id$="signedDate_[[index]]"
-                               label="Signed Date"
-                               value="[[prettyDate(item.signed_date)]]"
-                               placeholder="&#8212;"
-                               on-down="openDatePicker"
-                               data-selector$="datePicker[[index]]"
-                               error-message="Please select signed date">
-                    <etools-datepicker-button prefix
-                                              id$="datePicker[[index]]"
-                                              date="[[prepareDate(item.signed_date)]"
-                                              format="YYYY-MM-DD"
-                                              pretty-date="{{item.signed_date}}"
-                                              no-init show-clear-btn></etools-datepicker-button>
-                  </paper-input>
+                  <etools-date-input id$="signedDate_[[index]]"
+                                     label="Signed Date"
+                                     value="{{item.signed_date}}"
+                                     error-message="Please select signed date"
+                                     no-init show-clear-btn>
+                  </etools-date-input>
                 </div>
-                <div class="col col-6 file-container space-left">
+                <div class="col col-8 file-container">
                   <!-- Signed Agreement -->
-                  <etools-single-file label="Signed Amendment"
+                  <div class="file-wrapper">
+                    <etools-single-file label="Signed Amendment"
                                file="{{item.signed_amendment}}"
                                internal-file="{{item.signed_amendment_file}}"
                                accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
+                  </div>
                 </div>
               </div>
 
@@ -147,9 +146,7 @@
         behaviors: [
           etoolsAppConfig.globals,
           pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.AgreementsCommonBehavior,
-          pmpBehaviors.ObjectDatabindBehavior
+          pmpBehaviors.AgreementsCommonBehavior
         ],
 
         properties: {

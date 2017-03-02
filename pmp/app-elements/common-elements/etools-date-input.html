@@ -19,7 +19,8 @@
       then include it in shared-styles(do not use shared-styles here) */
     </style>
 
-    <paper-input label="[[label]]"
+    <paper-input id="dateInput"
+                 label="[[label]]"
                  value="[[prettyDate(value)]]"
                  placeholder="[[placeholder]]"
                  on-down="openDatePicker"
@@ -28,6 +29,7 @@
                  readonly$="[[readonly]]"
                  required$="[[required]]"
                  invalid$="[[invalid]]"
+                 auto-validate$="[[autoValidate]]"
                  error-message="[[errorMessage]]">
       <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
       <etools-datepicker-button id="datePickerButton"
@@ -38,10 +40,10 @@
                                 date="[[prepareDate(value)]]"
                                 is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
                                 hidden$="[[readonly]]"
-                                no-init$="[[noInit]]"
-                                show-clear-btn$="[[showClearBtn]]">
+                                no-init="[[noInit]]"
+                                show-clear-btn="[[showClearBtn]]">
       </etools-datepicker-button>
-
+    </paper-input>
   </template>
 
   <script>
@@ -81,11 +83,20 @@
             value: false,
             reflectToAttribute: true,
           },
-          required: Boolean,
-          autoValidate: Boolean,
+          required: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          autoValidate: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
           invalid: {
             type: Boolean,
-            value: false
+            value: false,
+            reflectToAttribute: true
           },
           errorMessage: {
             type: String,
@@ -105,6 +116,10 @@
 
         _disabledDatepicker: function(readonly, disabled) {
           return readonly || disabled;
+        },
+
+        validate: function() {
+          return this.$.dateInput.validate();
         }
 
       });

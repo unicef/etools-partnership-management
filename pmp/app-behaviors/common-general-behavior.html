@@ -88,10 +88,17 @@
     /**
      * Reset field validation
      */
-    fieldValidationReset: function(selector) {
+    fieldValidationReset: function(selector, useValidate) {
+      if (!useValidate) {
+        useValidate = false;
+      }
       var field = this.$$(selector);
       if (field) {
-        field.set('invalid', false);
+        if (useValidate) {
+          field.validate();
+        } else {
+          field.set('invalid', false);
+        }
       }
       return field;
     },
