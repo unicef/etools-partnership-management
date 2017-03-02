@@ -29,8 +29,6 @@
     "etools-ajax": "^1.0.0",
     "paper-styles": "^1.1.4",
     "paper-dropdown-menu": "^1.4.1",
-    "paper-dialog": "^1.1.0",
-    "iron-overlay-behavior ": "^1.0.0",
     "etools-dropdown": "^1.0.4",
     "etools-dexiejs": "^1.0.0",
     "paper-toast": "^1.3.0",

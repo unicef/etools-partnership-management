@@ -205,21 +205,6 @@
                   job_title: '',
                   phone_number: '',
             }
-          },
-          actionParams: {
-            type: Object
-          },
-          unit: {
-            type: Object,
-            value: {
-              numeric: true,
-              percentage: false,
-              yesno: false
-            }
-          },
-          disaggregations: {
-            type: Array,
-            value: []
           }
         },
 
@@ -232,57 +217,10 @@
           this.set('availableCountryIds', availableCountryIds);
         },
 
-        _unitChanged: function(event) {
-          var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
-          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== '') {
-            var unitKeys = unitKeysToReset.split(',');
-            unitKeys.forEach(function(key) {
-              this.set('unit.' + key, false);
-            }.bind(this));
-          }
-        },
-
-        _getActiveUnit: function() {
-          var unit = 'numeric';
-          for (var k in this.unit) {
-            if (this.unit[k] === true) {
-              unit = k;
-            }
-          }
-          return unit;
-        },
-
         openUserProfileDialog: function() {
           this.$.userProfileDialog.opened = true;
         },
        
-        setTitle: function(title) {
-          this.$.userProfileDialog.dialogTitle = title;
-        },
-
-        setProfileData: function(data, actionParams) {
-          if (!data) {
-            data = JSON.parse(JSON.stringify(this.userProfileModel));
-          }
-          this.set('actionParams', actionParams);
-
-          
-          // set disaggregations
-          if (data.disaggregation_logic) {
-            var disaggregationsKeys = Object.keys(data.disaggregation_logic);
-            this.set('disaggregations', []);
-            if (disaggregationsKeys.length) {
-              disaggregationsKeys.forEach(function(key) {
-                this.push('disaggregations', {
-                  disaggregate_by: key,
-                  disaggregation_groups: data.disaggregation_logic[key].join(';')
-                });
-              }.bind(this));
-            }
-          }
-          this.set('profile', data);
-        },
-
         _centerDialog: function() {
           var d = Polymer.dom(this.$.userProfileDialog.root).querySelector('paper-dialog');
           if (d) {
@@ -292,39 +230,15 @@
 
         _closeUserProfileDialog: function(event) {
           if (event.detail.confirmed) {
-            // get profile data
-            this.profile.unit = this._getActiveUnit();
-            this.profile.disaggregation_logic = this._prepareDisaggregations();
-            // fire it up :)
             this.fire('user-profile-dialog-close', {
-              profileData: this.profile,
-              actionParams: this.actionParams
+              profileData: this.profile
             });
-          } // else, just close
-        },
-
-        _prepareDisaggregations: function() {
-          if (Array.isArray(this.disaggregations) && this.disaggregations.length > 0) {
-            var disaggregationsObj = {};
-            this.disaggregations.forEach(function(d) {
-              var groups = d.disaggregation_groups.split(';').map(function(g) {
-                return g.trim();
-              });
-              disaggregationsObj[d.disaggregate_by] = groups;
-            });
-            return disaggregationsObj;
           }
-          return null;
         },
 
         resetData: function() {
           this.set('profile', JSON.parse(JSON.stringify(this.userProfileModel)));
-          this.set('unit.numeric', true);
-          this.set('unit.percentage', false);
-          this.set('unit.yesno', false);
-          this.set('disaggregations', []);
         }
-
       });
     })();
   </script>
