@@ -97,7 +97,6 @@
             <paper-input
                 id="number"
                 label="Reference Number"
-                on-change="_handleValueChange"
                 value="{{intervention.number}}"
                 placeholder="&#8212;"></paper-input>
           </div>
@@ -231,11 +230,6 @@
           this.$$("#country_programme").invalid = true;
           valid = false;
         }
-        if (!this.intervention.number) {
-          this.$$('#number').invalid = true;
-          valid = false;
-        }
-
         var resultsValid = this.$.governmentResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
         if (!resultsValid) {
           valid = false;
