@@ -400,7 +400,10 @@
         var interventionDetails = this.$.interventionDetails;
         var validInterventionDetails = interventionDetails.validate();
 
-        if (validInterventionDetails) {
+        var reviewAndSign = this.$.interventionReviewAndSign;
+        var validReviewAndSign = reviewAndSign.validate();
+
+        if (validInterventionDetails && validReviewAndSign) {
           var interventionData = Object.assign({}, this.intervention);
 
           // on save sector_locations sector prop needs to be sector ID and not the sector obj
@@ -438,12 +441,21 @@
 
           this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
         } else {
-          var msg = 'Please review invalid fields data!';
-          if (this.interventionPage !== 'details') {
-            msg = 'Please review invalid fields data from details tab!';
-          }
-          this.fire('toast', {text: msg, showCloseBtn: true});
+          this._showErrorsWarning(validInterventionDetails, validReviewAndSign);
         }
+      },
+
+      _showErrorsWarning: function(validDetails, validReviewAndSign) {
+        var msg = 'Please review invalid fields data';
+        var tabs = [];
+        if (validDetails === false) {
+          tabs.push('DETAILS');
+        }
+        if (validReviewAndSign === false) {
+          tabs.push('REVIEW & SIGN');
+        }
+        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '!';
+        this.fire('toast', {text: msg, showCloseBtn: true});
       },
 
       _updateInterventionStatus: function(event) {

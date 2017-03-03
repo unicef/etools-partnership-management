@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
@@ -37,6 +38,10 @@
         visibility: hidden;
       }
     </style>
+
+    <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
@@ -106,6 +111,7 @@
         is: 'intervention-sector-locations',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
@@ -122,6 +128,11 @@
           required: {
             type: Boolean,
             value: false
+          },
+          _deleteEpName: {
+            type: String,
+            value: 'sectorLocationsDelete',
+            readOnly: true,
           }
         },
         observers: [

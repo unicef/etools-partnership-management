@@ -207,6 +207,10 @@
                 withUpload = true;
                 prepareMultipartData = true;
               }
+              if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
+                withUpload = true;
+                prepareMultipartData = true;
+              }
 
               this.fire('global-loading', {message: 'Saving intervention data...', active: true});
               // fire in the hole
