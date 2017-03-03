@@ -5,6 +5,8 @@
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
 <link rel="import" href="../app-selector/app-selector.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
+<link rel="import" href="../user-profile-dialog/user-profile-dialog.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -29,7 +31,7 @@
         color: var(--light-primary-text-color);
       }
 
-      etools-page-refresh {
+      etools-page-refresh, #profile {
         color: #BCC1C6; /* TODO: replace with app-theme var */
       }
 
@@ -79,6 +81,7 @@
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
+         <paper-icon-button id="profile" icon="social:person" role="button" on-tap="_openUserProfileDialog" aria-disabled="false"></paper-icon-button>
         <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
     </app-toolbar>
@@ -94,7 +97,8 @@
           },
           user: {
             type: Object,
-          }
+          },
+          userProfileDialog: Object
         },
         observers: [
           '_updateCountriesList(user.profile.countries_available)'
@@ -125,7 +129,29 @@
             return {id: arrayItem.id, name: arrayItem.name, imgClass: this._getFlagIconClass(arrayItem.business_area_code)};
           }.bind(this));
           this.set('countries', arrayObj);
+          },
+        ready: function() {
+          // init indicator dialog data
+          this.userProfileDialog = document.createElement('user-profile-dialog');
+          this.userProfileDialog.setAttribute('id', 'userProfileDialog');
+
+          // this hack is here because elemets added this way can't trigger global events, but they can listen to them
+          this.userProfileDialog.addEventListener('hacky-global-loading', function(event) {
+              this.fire('global-loading', event.detail);
+          }.bind(this), false);
+
+          Polymer.dom(document.querySelector('body')).appendChild(this.userProfileDialog);
+        },
+
+        detached: function() {
+          if (this.userProfileDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.userProfileDialog);
           }
+        },
+        // open indicator dialog to add or edit indicator
+        _openUserProfileDialog: function(event) {
+          this.userProfileDialog.openUserProfileDialog();
+        },
         });
     })();
   </script>
