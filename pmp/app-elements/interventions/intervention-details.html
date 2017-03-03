@@ -8,7 +8,6 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -17,6 +16,9 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../common-elements/etools-date-input.html">
+
 <link rel="import" href="intervention-form/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
@@ -72,19 +74,20 @@
           <agreement-selector id="agreementSelector"
             agreement-id="{{intervention.agreement}}"
             partner-id="{{selectedPartnerId}}"
-            selected-agreement="{{agreement}}" 
+            selected-agreement="{{agreement}}"
+            intervention-id="[[intervention.id]]"
             edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
           <etools-searchable-multiselection-menu id="documentType"
                                                  label="Document Type"
                                                  placeholder="&#8212;"
-                                                 value="[[_getEsmmValue('document_type', intervention.document_type)]]"
                                                  options="[[currentDocTypes]]"
                                                  custom-object-options
-                                                 on-value-change="_esmmValueChanged"
-                                                 data-path="document_type"
+                                                 selected="{{intervention.document_type}}"
+                                                 update-selected
                                                  hide-search
+                                                 dynamic-align
                                                  required auto-validate
                                                  error-message="Document type is required"
                                                  readonly$="[[!editMode]]">
@@ -115,10 +118,11 @@
           <etools-searchable-multiselection-menu id="unicefOffices"
                                                  label="UNICEF Office(s)"
                                                  placeholder="&#8212;"
-                                                 value="[[_getEsmmValue('offices', intervention.offices)]]"
                                                  options="[[offices]]"
-                                                 on-value-change="_esmmValueChanged"
-                                                 data-path="offices"
+                                                 custom-object-options
+                                                 selected="{{intervention.offices}}"
+                                                 update-selected
+                                                 dynamic-align
                                                  multi required auto-validate
                                                  error-message="Please select intervention's office(s)"
                                                  readonly$="[[!editMode]]">
@@ -126,12 +130,13 @@
         </div>
         <div class="col col-6">
           <etools-searchable-multiselection-menu id="unicefFocalPts"
-                                                 label="UNICEF Focal Points(s)"
+                                                 label="UNICEF Focal Point(s)"
                                                  placeholder="&#8212;"
-                                                 value="[[_getEsmmValue('unicef_focal_points', intervention.unicef_focal_points)]]"
                                                  options="[[unicefUsersData]]"
-                                                 on-value-change="_esmmValueChanged"
-                                                 data-path="unicef_focal_points"
+                                                 custom-object-options
+                                                 selected="{{intervention.unicef_focal_points}}"
+                                                 update-selected
+                                                 dynamic-align
                                                  multi
                                                  required$="[[interventionRequiredField]]"
                                                  auto-validate
@@ -143,84 +148,62 @@
       <div class="row-h flex-c">
         <div class="col col-6">
           <etools-searchable-multiselection-menu id="partnerFocalPts"
-             label="Partner Focal Points(s)"
-             placeholder="&#8212;"
-             value="[[_getEsmmValue('partner_focal_points', intervention.partner_focal_points, partnerStaffMembersDropdownData.length)]]"
-             options="[[partnerStaffMembersDropdownData]]"
-             on-value-change="_esmmValueChanged"
-             data-path="partner_focal_points"
-             multi
-             required$="[[interventionRequiredField]]"
-             auto-validate
-             error-message="Please select partner focal points"
-             readonly$="[[!editMode]]">
+                                                 label="Partner Focal Point(s)"
+                                                 placeholder="&#8212;"
+                                                 options="[[partnerStaffMembers]]"
+                                                 custom-object-options
+                                                 option-value="id"
+                                                 option-label="name"
+                                                 selected="{{intervention.partner_focal_points}}"
+                                                 update-selected
+                                                 dynamic-align
+                                                 multi
+                                                 required$="[[interventionRequiredField]]"
+                                                 auto-validate
+                                                 error-message="Please select partner focal points"
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
       </div>
-
     </etools-content-panel>
+
     <etools-content-panel class="content-section" title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
           <etools-searchable-multiselection-menu id="hrps"
                                                  label="In response to an HRP, Select"
                                                  placeholder="&#8212;"
-                                                 value="[[_getEsmmValue('hrp', intervention.hrp)]]"
                                                  options="[[hrps]]"
-                                                 on-value-change="_esmmValueChanged"
-                                                 data-path="hrp"
+                                                 custom-object-options
+                                                 selected="{{intervention.hrp}}"
+                                                 update-selected
+                                                 dynamic-align
                                                  readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
           <!-- Start date -->
-          <paper-input id="intStart"
-                       label="Start date"
-                       value="[[prettyDate(intervention.start)]]"
-                       on-down="openDatePicker"
-                       data-selector="intStartDate"
-                       placeholder="&#8212;"
-                       required$="[[interventionRequiredField]]"
-                       auto-validate
-                       error-message="Please select start date"
-                       readonly$="[[!editMode]]">
-            <template is="dom-if" if="[[!editMode]]">
-              <iron-icon prefix icon="date-range"></iron-icon>
-            </template>
-            <template is="dom-if" if="[[editMode]]">           
-              <etools-datepicker-button prefix
-                                      id="intStartDate"
-                                      date="[[prepareDate(intervention.start)]]"
-                                      format="YYYY-MM-DD"
-                                      pretty-date="{{intervention.start}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
-            </template>
-          </paper-input>
+          <etools-date-input id="intStart"
+                             label="Start date"
+                             value="{{intervention.start}}"
+                             readonly$="[[!editMode]]"
+                             error-message="Please select start date"
+                             required$="[[nterventionRequiredField]]"
+                             auto-validate
+                             no-init show-clear-btn>
+          </etools-date-input>
         </div>
         <div class="col col-3">
           <!-- End date -->
-          <paper-input id="intEnd"
-                       label="End date"
-                       value="[[prettyDate(intervention.end)]]"
-                       on-down="openDatePicker"
-                       data-selector="intEndDate"
-                       placeholder="&#8212;"
-                       required$="[[interventionRequiredField]]"
-                       auto-validate
-                       error-message="Please select end date"
-                       readonly$="[[!editMode]]">
-            <template is="dom-if" if="[[!editMode]]">
-              <iron-icon prefix icon="date-range"></iron-icon>
-            </template>
-            <template is="dom-if" if="[[editMode]]">     
-              <etools-datepicker-button prefix
-                                      id="intEndDate"
-                                      date="[[prepareDate(intervention.end)]]"
-                                      format="YYYY-MM-DD"
-                                      pretty-date="{{intervention.end}}"
-                                      no-init show-clear-btn></etools-datepicker-button>
-            </template>
-          </paper-input>
+          <etools-date-input id="intEnd"
+                             label="End date"
+                             value="{{intervention.end}}"
+                             readonly$="[[!editMode]]"
+                             error-message="Please select end date"
+                             required$="[[nterventionRequiredField]]"
+                             auto-validate
+                             no-init show-clear-btn>
+          </etools-date-input>
         </div>
         <div class="col col-3">
           <div class="expiry-warning">
@@ -235,7 +218,7 @@
                         value="{{intervention.population_focus}}"
                         placeholder="&#8212;"
                         char-counter
-                        maxlength="256"
+                        maxlength="130"
                         required$="[[interventionRequiredField]]"
                         auto-validate
                         error-message="Please enter population focus content"
@@ -300,13 +283,10 @@
           },
           selectedPartnerId: {
             type: Number,
-            notify: true
+            notify: true,
+            observer: '_selectedPartnerIdChanged'
           },
-          partner: {
-            type: Object,
-            observer: '_partnerSelected'
-          },
-          partnerStaffMembersDropdownData: {
+          partnerStaffMembers: {
             type: Array,
             value: []
           },
@@ -386,8 +366,12 @@
 
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-            this._agreementSelected(this.agreement);
+            if (intervention.id > 0) {
+              this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+              this._agreementSelected(this.agreement);
+            } else {
+              this.set('selectedPartnerId', null);
+            }
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           } else {
@@ -405,13 +389,15 @@
         },
 
         _resetValidations: function() {
+          this.$.agreementSelector.resetValidations();
+          this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['agreementSelector', 'sectorLocations', 'expectedResults',
+          var elements = ['sectorLocations', 'expectedResults',
             'plannedBudget', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
@@ -444,91 +430,12 @@
           }
         },
 
-        _esmmValueChanged: function(event) {
-          var esmmField = Polymer.dom(event).localTarget;
-          var dataPath = esmmField.getAttribute('data-path');
-          var dataToUse = esmmField.getAttribute('data-to-use');
-          if (esmmField.multi) {
-            // multiselection
-            var selectedValues = [];
-            var optionsSelected = event.detail.selectedValues;
-            if (Array.isArray(optionsSelected)) {
-              selectedValues = optionsSelected.map(function(option) {
-                if (dataToUse && dataToUse === 'label') {
-                  return option.label;
-                } else {
-                  return option.value;
-                }
-              });
-            }
-            this.set('intervention.' + dataPath, selectedValues);
-          } else {
-            // single selection
-            var optionSelected = event.detail.selectedValues;
-            var selectedOpt = null;
-            if (optionSelected !== null && typeof optionSelected === 'object' && 
-              optionSelected.hasOwnProperty('value')) {
-              if (dataToUse && dataToUse === 'label') {
-                selectedOpt = optionSelected.label;
-              } else {
-                selectedOpt = optionSelected.value;
-              }
-            }
-            this.set('intervention.' + dataPath, selectedOpt);
-          }
-        },
+        _selectedPartnerIdChanged: function(id, oldId) {
 
-        _getEsmmValue: function(dataPath, selectedValues, other) {
-          switch (dataPath) {
-            case 'document_type':
-              if (typeof selectedValues === 'string' && selectedValues !== '') {
-                return this.currentDocTypes.filter(function(type) {
-                  return type.value === selectedValues;
-                });
-              }
-              break;
-            case 'offices':
-              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
-                return this.offices.filter(function(office) {
-                  return selectedValues.indexOf(office.value) > -1;
-                });
-              }
-              break;
-            case 'unicef_focal_points':
-              if (Array.isArray(selectedValues) && selectedValues.length > 0) {
-                return this.unicefUsersData.filter(function(user) {
-                  return selectedValues.indexOf(user.value) > -1;
-                });
-              }
-              break;
-            case 'partner_focal_points':
-              if (Array.isArray(selectedValues) && selectedValues.length > 0 && other) {
-                var selected = this.partnerStaffMembersDropdownData.filter(function(staffMember) {
-                  return selectedValues.indexOf(staffMember.value) > -1;
-                });
-                return selected;
-              }
-              break;
-            case 'hrp':
-              var hrpId = parseInt(selectedValues, 10);
-              if (!isNaN(hrpId)) {
-                return this.hrps.filter(function(hrp) {
-                  return hrp.value === hrpId;
-                });
-              }
-              break;
-          }
-        },
-
-        _partnerSelected: function(partner) {
-          if (partner && partner.staff_members) {
-            // prepare selected partner staff members data
-            this.set('partnerStaffMembersDropdownData', partner.staff_members.map(function(staffMember) {
-              return {
-                value: parseInt(staffMember.id),
-                label: staffMember.first_name + ' ' + staffMember.last_name
-              };
-            }));
+          if (typeof oldId === 'number' && id !== oldId) {
+            // reset partner focal points options and value
+            this.set('intervention.partner_focal_points', []);
+            this.set('partnerStaffMembers', []);
           }
         },
 

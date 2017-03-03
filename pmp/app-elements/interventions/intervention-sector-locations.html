@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
@@ -38,6 +39,10 @@
       }
     </style>
 
+    <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
+
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -46,7 +51,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode)]]"
+                                 disabled="[[!editMode]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -106,6 +111,7 @@
         is: 'intervention-sector-locations',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
@@ -122,6 +128,11 @@
           required: {
             type: Boolean,
             value: false
+          },
+          _deleteEpName: {
+            type: String,
+            value: 'sectorLocationsDelete',
+            readOnly: true,
           }
         },
         observers: [
@@ -214,22 +225,6 @@
             }
           }
           return selected;
-        },
-
-        /**
-         * The sector location row data can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
-            return false;
-          }
-          var sectorLocationsItem = this.dataItems[index];
-          var sectorLocationsItemId = parseInt(sectorLocationsItem.id, 10);
-          if (sectorLocationsItemId && isNaN(sectorLocationsItemId) === false && sectorLocationsItemId > 0) {
-            // sector location item already saved (has an id assigned)
-            return false;
-          }
-          return true;
         },
 
         /**
