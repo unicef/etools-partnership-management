@@ -26,9 +26,8 @@
     handleErrorResponse: function(response) {
       this.fire('global-loading', {active: false});
       var errors = response.detail.request.detail.request.response;
+      var errorMessage = this.globalMessage;
       if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
-        // TODO: improve etools-ajax on-fail event data model (received errors)
-        var errorMessage = this.globalMessage;
         this.set('serverErrors', []);
         if (errors) {
           if (this.useToastEvent) {
@@ -54,18 +53,18 @@
             }
           }
         }
+      }
 
-        if (this.useToastEvent) {
-          if (this.serverErrors.length > 1) {
-            errorMessage = this.serverErrors.join('\n');
-          }
-          this.fire('toast', {text: errorMessage, showCloseBtn: true});
+      if (this.useToastEvent) {
+        if (this.serverErrors.length > 1) {
+          errorMessage = this.serverErrors.join('\n');
+        }
+        this.fire('toast', {text: errorMessage, showCloseBtn: true});
+      } else {
+        if (this.serverErrors.length === 0) {
+          this._fireAjaxErrorEvent(errorMessage);
         } else {
-          if (this.serverErrors.length === 0) {
-            this._fireAjaxErrorEvent(errorMessage);
-          } else {
-            this._fireAjaxErrorEvent(this.serverErrors);
-          }
+          this._fireAjaxErrorEvent(this.serverErrors);
         }
       }
     },

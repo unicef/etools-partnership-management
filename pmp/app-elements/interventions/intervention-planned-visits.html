@@ -63,9 +63,11 @@
                 </etools-searchable-multiselection-menu>
               </div>
               <div class="col col-3">
+                <!-- TODO: min="0" not enought, re-check and restrict to values >= 0 -->
                 <paper-input label="Programmatic Visits"
                              value="{{item.programmatic}}"
                              type="number"
+                             min="0"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]">
                 </paper-input>
@@ -74,6 +76,7 @@
                 <paper-input label="Spot Checks"
                              value="{{item.spot_checks}}"
                              type="number"
+                             min="0"
                              hidden
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]">
@@ -83,6 +86,7 @@
                 <paper-input label="Audit"
                              value="{{item.audit}}"
                              type="number"
+                             min="0"
                              hidden
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]">

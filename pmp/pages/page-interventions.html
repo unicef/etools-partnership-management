@@ -4,9 +4,11 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
+
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
-<link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
+<link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="../app-elements/interventions/interventions-list.html">
 <link rel="import" href="../app-elements/interventions/intervention-details.html">
@@ -55,12 +57,13 @@
         data="{{routeDataNewInterv}}"></app-route>
 
     <intervention-item-data id="interventionData"
-                         intervention="{{intervention}}"
-                         intervention-id="[[selectedInterventionId]]"></intervention-item-data>
+                            intervention="{{intervention}}"
+                            intervention-id="[[selectedInterventionId]]"
+                            error-event-name="intervention-save-error"></intervention-item-data>
 
-    <partner-item-data id="partner"
-                       partner-id="[[partnerId]]"
-                       partner="{{partner}}"></partner-item-data>
+    <partner-staff-members-data partner-id="[[partnerId]]"
+                                prepared-staff-members-data="{{partnerStaffMembers}}">
+    </partner-staff-members-data>
 
     <agreement-item-data id="agreement"
                          agreement-id="[[intervention.agreement]]"
@@ -135,6 +138,11 @@
 
       <div id="main">
         <div id="pageContent">
+
+          <etools-error-messages-box id="errorsBox"
+                                     title="Errors Saving PD/SSFA ToR"
+                                     errors="{{serverErrors}}"></etools-error-messages-box>
+
           <iron-pages id="interventionsPages"
                       selected="{{interventionPage}}"
                       attr-for-selected="name"
@@ -160,7 +168,7 @@
             <div class="page" name="details">
               <intervention-details id="interventionDetails"
                                     intervention="{{intervention}}"
-                                    partner="[[partner]]"
+                                    partner-staff-members="[[partnerStaffMembers]]"
                                     selected-partner-id="{{partnerId}}"
                                     new-intervention="[[_newIntervention(newInterventionActive)]]"
                                     edit-mode="[[_hasEditPermissions(permissions)]]"
@@ -191,6 +199,7 @@
         <div id="sidebar" hidden$="[[listActive]]">
            <intervention-status status="[[intervention.status]]"
                                 intervention-id$="[[intervention.id]]"
+                                intervention-agreement-status="[[agreement.status]]"
                                 on-save-intervention="_validateAndSaveIntervention"
                                 on-update-intervention-status="_updateInterventionStatus"
                                 show-save-btn$="[[editMode]]"></intervention-status>
@@ -222,9 +231,7 @@
         intervention: {
           type: Object
         },
-        partner: {
-          type: Object
-        },
+        partnerStaffMembers: Array,
         partnerId: {
           type: Number
         },
@@ -272,6 +279,10 @@
         activeTab: {
           type: String,
           observer: '_activeTabChanged'
+        },
+        serverErrors: {
+          type: Array,
+          value: []
         }
       },
 
@@ -286,6 +297,10 @@
         '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)'
       ],
+
+      listeners: {
+        'intervention-save-error': '_interventionSaveErrors'
+      },
 
       ready: function() {
         if (this.newInterventionActive) {
@@ -385,7 +400,10 @@
         var interventionDetails = this.$.interventionDetails;
         var validInterventionDetails = interventionDetails.validate();
 
-        if (validInterventionDetails) {
+        var reviewAndSign = this.$.interventionReviewAndSign;
+        var validReviewAndSign = reviewAndSign.validate();
+
+        if (validInterventionDetails && validReviewAndSign) {
           var interventionData = Object.assign({}, this.intervention);
 
           // on save sector_locations sector prop needs to be sector ID and not the sector obj
@@ -423,12 +441,21 @@
 
           this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
         } else {
-          var msg = 'Please review invalid fields data!';
-          if (this.interventionPage !== 'details') {
-            msg = 'Please review invalid fields data from details tab!';
-          }
-          this.fire('toast', {text: msg, showCloseBtn: true});
+          this._showErrorsWarning(validInterventionDetails, validReviewAndSign);
         }
+      },
+
+      _showErrorsWarning: function(validDetails, validReviewAndSign) {
+        var msg = 'Please review invalid fields data';
+        var tabs = [];
+        if (validDetails === false) {
+          tabs.push('DETAILS');
+        }
+        if (validReviewAndSign === false) {
+          tabs.push('REVIEW & SIGN');
+        }
+        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '!';
+        this.fire('toast', {text: msg, showCloseBtn: true});
       },
 
       _updateInterventionStatus: function(event) {
@@ -499,6 +526,14 @@
           return true;
         }
         return false;
+      },
+
+      _interventionSaveErrors: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.set('serverErrors', event.detail);
+        }
       }
 
     });

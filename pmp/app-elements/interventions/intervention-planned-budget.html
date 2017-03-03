@@ -139,6 +139,7 @@
                        on-value-change="_yearChanged"
                        required$="[[required]]"
                        auto-validate
+                       dynamic-align
                        error-message="Year required"
                        readonly$="[[!editMode]]">
                     </etools-searchable-multiselection-menu>
@@ -220,7 +221,7 @@
                   <div class="col col-4">
                     <paper-input label="UNICEF Total (USD)"
                       class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, localCurrency)]]"
+                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, 'USD')]]"
                       placeholder="&#8212;"
                       readonly>
                     </paper-input>
