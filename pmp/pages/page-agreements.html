@@ -83,7 +83,7 @@
                   Print
                 </paper-button>
               </div>-->
-              <div class="top-content-action" hidden$="[[!agreementListActive]]">
+              <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
                   Add New Agreement
@@ -146,6 +146,9 @@
           type: String,
           notify: true
         },
+        permissions: {
+          type: Object
+        },
 
         selectedAgreementId: {
           type: Number
@@ -198,6 +201,12 @@
         this.$$('app-header-layout').notifyResize();
       },
 
+      _showNewAgreementAddButton: function(agreementListActive, permissions) {
+        if (!agreementListActive || !permissions.partnershipManager) {
+          return false;
+        }
+        return true;
+      },
       // get active page name
       _getActivePage: function(listActive, newAgreementActive, detailsActive) {
         var page = 'list'; // default

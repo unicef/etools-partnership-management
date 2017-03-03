@@ -54,14 +54,9 @@ App global configuration
           'userInfoMenu',
           'viewPartnerDetails',
           'viewAgreementDetails',
-          'viewInterventionDetails'
+          'viewInterventionDetails',
         ],
-        partnerOnlyPermissions: ['interventionsMenu'],
-        partnerPermissions: ['interventionsMenu'],
-        managementPermissions: [
-          'statsMenu',
-          'editPartnerDetails',
-          'editAgreementDetails',
+        unicefUserPermissions: [
           'editInterventionDetails'
         ],
         superPermissions: [
@@ -75,6 +70,17 @@ App global configuration
           'editAgreementDetails',
           'viewInterventionDetails',
           'editInterventionDetails'
+        ],
+        partnershipManagerPermissions: [
+          'partnershipManager',
+          'editPartnerDetails',
+          'editAgreementDetails',
+        ],
+        PMEPermissions: [
+          'PME'
+        ],
+        ICTPermissions: [
+          'ICT'
         ]
       }
     };
