@@ -97,6 +97,7 @@
             <paper-input
                 id="number"
                 label="Reference Number"
+                on-change="_handleValueChange"
                 value="{{intervention.number}}"
                 placeholder="&#8212;"></paper-input>
           </div>
@@ -104,10 +105,10 @@
       </etools-content-panel>
       <!--Work Plan Results-->
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
-          <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
-                                  allow-edit="[[editMode]]"
-                                  year-options="[[yearOptions]]">
-          </government-plan-results>
+        <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
+                                 allow-edit="[[editMode]]"
+                                 year-options="[[yearOptions]]">
+        </government-plan-results>
         <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
           <paper-fab icon="add"
                      on-tap="_addNewResult"
@@ -131,7 +132,7 @@
       ],
       observers: [
         '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
-         '_init(active)'
+        '_init(active)'
       ],
       properties: {
         intervention: {
@@ -139,7 +140,7 @@
           notify: true,
           observer: '_interventionChanged'
         },
-        originalIntervention:{
+        originalIntervention: {
           type: Object,
         },
         editMode: {
@@ -159,32 +160,34 @@
           notify: true
         },
       },
-      _init : function(active) {
-        if(active) {
+      _init: function(active) {
+        if (active) {
           if (_.isEmpty(this.intervention)) {
             this.fire('details-refresh');
           }
         }
       },
-      _getYears: function () {
+      _getYears: function() {
         var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
         if (!_.isEmpty(cpObject)) {
           var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
-          years = years.map(function (year) {
+          years = years.map(function(year) {
             return _.assign({}, {label: year.toString(), value: year})
           })
           this.set('yearOptions', years);
         }
       },
-      _handleValueChange: function (e) {
-        if(!_.isNull(e.detail.seledValues)){
+      _handleValueChange: function(e) {
+        if (_.has(e,'detail.selectedValues')) {
           var path = 'intervention.' + e.target.id;
           this.set(path, e.detail.selectedValues.value);
-          e.target.invalid= false;
+          e.target.invalid = false;
+        }else if(e.target.value){
+          e.target.invalid = false;
         }
       },
-      _addNewResult: function () {
-        var intervention = _.get(this.intervention,'id') || "";
+      _addNewResult: function() {
+        var intervention = _.get(this.intervention, 'id') || "";
         var newResult = {
           "intervention": intervention,
           "result": "",
@@ -198,46 +201,51 @@
         }
         this.push('intervention.results', newResult);
       },
-      _validateSave: function(){
+      _validateSave: function() {
         event.stopImmediatePropagation();
-        if(_.isEqual(this.intervention,this.originalIntervention)){
-          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn:true}); // TODO : disable save button when no change detected
+        if (_.isEqual(this.intervention, this.originalIntervention)) {
+          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true}); // TODO : disable save button when no change detected
         }
-        else if(this._interventionIsValid()){
+        else if (this._interventionIsValid()) {
           this.fire('save-intervention', {intervention: this.intervention});
-        }else{
-          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn:true}); // TODO : scroll missed fields into view
+        } else {
+          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn: true}); // TODO : scroll missed fields into view
 
         }
       },
-      _interventionIsValid: function(){
+      _interventionIsValid: function() {
         var valid = true;
-        // validate partner
-        if(!this.intervention.partner){
+        // validate Partnership Details
+        if (!this.intervention.partner) {
           this.$$("#partner").invalid = true;
           valid = false;
         }
-        //validate country programme
-        if(!this.intervention.country_programme){
+        if (!this.intervention.country_programme) {
           this.$$("#country_programme").invalid = true;
           valid = false;
         }
-        var resultsValid= this.$.governmentResults._fieldsAreValid('result','year','planned_amount','planned_visits', 'number');
-				if(!resultsValid){
-					valid = false;
-				}
-				return valid;
+        if (!this.intervention.number) {
+          this.$$('#number').invalid = true;
+          valid = false;
+        }
+
+        var resultsValid = this.$.governmentResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
+        if (!resultsValid) {
+          valid = false;
+        }
+        console.log('returning valid: ',valid);
+        return valid;
       },
 
-      _initSidebar: function () {
+      _initSidebar: function() {
         // TODO create sticky save button
 
       },
-      _interventionChanged : function(intervention){
-        if(!_.has(this.originalIntervention,'id') || (_.has(this.originalIntervention,'id') && this.intervention.id!== this.originalIntervention.id)){
+      _interventionChanged: function(intervention) {
+        if (!_.has(this.originalIntervention, 'id') || (_.has(this.originalIntervention, 'id') && this.intervention.id !== this.originalIntervention.id)) {
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
-        this.fire('global-loading', {active:false});
+        this.fire('global-loading', {active: false});
       },
     })
   </script>

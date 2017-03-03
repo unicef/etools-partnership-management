@@ -6,9 +6,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
-
-<link rel="import"
-			href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -152,7 +150,8 @@
 										label="Planned Cash Transfers in USD"
 										index="[[index]]"
 										value="{{result.planned_amount}}"
-										placeholder="&#8212;"
+                    on-change="_handleInputChange"
+                    placeholder="&#8212;"
 										required>
 								</paper-input>
 							</template>
@@ -175,7 +174,8 @@
 										label="# of Planned Visits"
 										index="[[index]]"
 										value="{{result.planned_visits}}"
-										placeholder="&#8212;">
+                    on-change="_handleInputChange"
+                    placeholder="&#8212;">
 								</paper-input>
 							</template>
 							<template is="dom-if" if="[[!editMode]]">
@@ -337,6 +337,11 @@
 							this.set(dataItemsPath, updatedResult);
 							e.target.invalid = false;
 						},
+            _handleInputChange: function(e) {
+						  if (e.target.value) {
+						    e.target.invalid = false;
+              }
+            },
 						_addActivity: function (e) {
 							var activitiesPath = 'dataItems.'+e.target.index+'.result_activities';
 							this.push(activitiesPath, {
@@ -350,7 +355,7 @@
 							// looping through result elements and  setting to invalid any with no value assigned
 							var results = Polymer.dom(this.root).querySelectorAll('.resultItem');
 							if(results.length) {
-								return _.reduce(results, function(isValid,result,i){
+								return fieldsValid = _.reduce(results, function(isValid,result,i){
 										var validate = _.reduce(fields, function (valid, field) {
 											var exists = !!self.dataItems[i][field];
 											if (!exists) {
@@ -358,13 +363,11 @@
 											} else {
 												Polymer.dom(result).querySelector("#" + field).invalid = false;
 											}
+											console.log('field ',field, 'is valid?', exists)
 											return valid && exists;
 										}, true);
-
 										return isValid && validate;
-								});
-
-
+								}, true);
 							}
 							return true;
 						},
