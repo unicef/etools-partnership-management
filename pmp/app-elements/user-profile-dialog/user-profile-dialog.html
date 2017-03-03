@@ -10,7 +10,7 @@
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html"> 
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="user-profile-data/user-profile-data.html">
 
 <dom-module id="user-profile-dialog">
@@ -61,7 +61,7 @@
 
     </style>
 
-    <etools-dialog id="userProfileDialog" size="lg" dialog-title="My Profile" on-close="_closeUserProfileDialog">      
+    <etools-dialog id="userProfileDialog" size="lg" dialog-title="My Profile" on-close="_closeUserProfileDialog">
       <div id="profile-content">
         <div class="row-h flex-c">
           <div class="col col-6">
@@ -77,9 +77,8 @@
                                                placeholder="&#8212;"
                                                selected="{{profile.office}}"
                                                options="[[allOffices]]"
-                                               update-selected 
+                                               update-selected
                                                no-change-event
-                                               required="true"
                                                auto-validate
                                                error-message="Please select an office">
             </etools-searchable-multiselection-menu>
@@ -90,14 +89,13 @@
                                                placeholder="&#8212;"
                                                selected="{{profile.section}}"
                                                options="[[allSections]]"
-                                               update-selected 
+                                               update-selected
                                                no-change-event
-                                               required="true"
                                                auto-validate
                                                error-message="Please select a section">
             </etools-searchable-multiselection-menu>
           </div>
-        </div>          
+        </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <paper-input label="Job title" value="{{profile.job_title}}" placeholder="&#8212;"></paper-input>
@@ -106,14 +104,14 @@
             <paper-input label="Phone number" value="{{profile.phone_number}}" placeholder="&#8212;"></paper-input>
           </div>
         </div>
-        <div class="row-h flex-c">  
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-searchable-multiselection-menu id="supervisor"
                                                label="My supervisor"
                                                placeholder="&#8212;"
                                                selected="[[profile.supervisor]]"
                                                options="[[allUsers]]"
-                                               update-selected 
+                                               update-selected
                                                no-change-event
                                                auto-validate
                                                readonly>
@@ -125,15 +123,14 @@
                                                placeholder="&#8212;"
                                                selected="{{profile.oic}}"
                                                options="[[allUsers]]"
-                                               update-selected 
+                                               update-selected
                                                no-change-event
-                                               required="true"
                                                auto-validate
                                                error-message="Please select an OIC">
             </etools-searchable-multiselection-menu>
           </div>
         </div>
-        <div class="row-h flex-c">  
+        <div class="row-h flex-c">
           <div class="col col-12">
             <etools-searchable-multiselection-menu id="workspaces"
                                                label="Available workspaces"
@@ -143,14 +140,14 @@
                                                custom-object-options
                                                update-selected
                                                option-value="id"
-                                               option-label="name"                                               
+                                               option-label="name"
                                                no-change-event
                                                multi
                                                readonly>
             </etools-searchable-multiselection-menu>
           </div>
         </div>
-        <div class="row-h flex-c">  
+        <div class="row-h flex-c">
           <div class="col col-12">
             <etools-searchable-multiselection-menu id="groups"
                                                label="My Groups"
@@ -160,7 +157,7 @@
                                                custom-object-options
                                                update-selected
                                                option-value="id"
-                                               option-label="name"                                               
+                                               option-label="name"
                                                no-change-event
                                                multi
                                                readonly>
@@ -168,9 +165,9 @@
           </div>
         </div>
         </div>
-        <div class="row-h flex-c">  
+        <div class="row-h flex-c">
           <div class="col col-12">
-            <etools-searchable-multiselection-menu id="groups"
+            <etools-searchable-multiselection-menu id="supervisees"
                                                label="My supervisees"
                                                placeholder="&#8212;"
                                                selected="[[profile.supervisees]]"
@@ -178,15 +175,15 @@
                                                custom-object-options
                                                update-selected
                                                option-value="id"
-                                               option-label="name"                                               
+                                               option-label="name"
                                                no-change-event
                                                multi
                                                readonly>
             </etools-searchable-multiselection-menu>
           </div>
         </div>
-       
-       
+
+
       </div>
     </etools-dialog>
     <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
@@ -204,19 +201,19 @@
             type: Object
           },
           allOffices: {
-            type: Object, 
+            type: Object,
             statePath: 'offices'
           },
           allSections: {
-            type: Object, 
+            type: Object,
             statePath: 'sections'
           },
           allUsers: {
-            type: Object, 
+            type: Object,
             statePath: 'unicefUsersData'
           },
-          availableCountryIds: Array, 
-          availableGroups: Array, 
+          availableCountryIds: Array,
+          availableGroups: Array,
           userProfileModel: {
             type: Object,
             value: {
@@ -240,7 +237,7 @@
           if(!this.profile) {
             var profile = _.assign({}, this.userProfileModel);
             this.set('profile', this.userProfileModel);
-          }         
+          }
         },
 
         openUserProfileDialog: function() {
@@ -255,7 +252,7 @@
         _closeUserProfileDialog: function(event) {
           if (event.detail.confirmed) {
             this.saveData();
-          } 
+          }
         },
         _mapIds: function() {
           var availableCountryIds = _.map(this.profile.countries_available, 'id');
