@@ -64,32 +64,32 @@
         background-color: #EDEDED; /* TODO: replace with app-theme var */
         -webkit-border-radius: 8px;
         -moz-border-radius: 8px;
-        border-radius: 8px;        
+        border-radius: 8px;
       }
-      
+
       .hact-heading .row-h {
         padding: 8px;
       }
       .hact-heading .row-h .col {
-        justify-content: center;             
-      } 
+        justify-content: center;
+      }
       .hact-body {
         @apply(--layout-vertical);
-        margin-top: 20px;        
+        margin-top: 20px;
       }
-      
+
       .hact-body .row-h {
         padding: 8px;
       }
       .center-text {
         align-items: center;
-        justify-content: center;     
-        text-align: center;        
+        justify-content: center;
+        text-align: center;
       }
       .row-h + .row-h {
         margin-top: 0;
         border-top: 1px solid var(--dark-divider-color);
-      }      
+      }
       .full-width {
         width: 100%
       }
@@ -98,27 +98,27 @@
       }
       .cancelled {
         text-transform: uppercase;
-        color: var(--paper-red-500);        
+        color: var(--paper-red-500);
       }
       .suspended {
         text-transform: uppercase;
-        color: var(--paper-orange-500);        
+        color: var(--paper-orange-500);
       }
       .draft {
         text-transform: uppercase;
-        color: var(--paper-yellow-700);        
+        color: var(--paper-yellow-700);
       }
       .active {
         text-transform: uppercase;
-        color: var(--paper-green-500);        
+        color: var(--paper-green-500);
       }
       .implemented {
         text-transform: uppercase;
-        color: var(--paper-blue-500);        
+        color: var(--paper-blue-500);
       }
       .terminated {
         text-transform: uppercase;
-        color: var(--paper-purple-500);        
+        color: var(--paper-purple-500);
       }
       .block {
         display: block;
@@ -132,13 +132,13 @@
     <!-- partner overview content goes here... -->
     <div id="pageContent">
 
-      <etools-content-panel class="content-section" title="HACT Assurance & Partnerships">        
+      <etools-content-panel class="content-section" title="HACT Assurance & Partnerships">
         <div class="hact-heading">
           <div class="row-h">
             <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
             <div class="col col-2"><strong> PROG.VISIT </strong></div>
             <div class="col col-2"><strong> SPOT CHECK </strong></div>
-            <div class="col col-2"><strong> AUDIT </strong></div>            
+            <div class="col col-2"><strong> AUDIT </strong></div>
           </div>
           <div class="row-h">
             <div class="col col-2"> Risk Rating </div>
@@ -146,12 +146,12 @@
             <div class="col col-2"> Current Year </div>
             <div class="col col-2"> Done / M.R. </div>
             <div class="col col-2"> Done / M.R. </div>
-            <div class="col col-2"> Done / M.R. </div>            
+            <div class="col col-2"> Done / M.R. </div>
           </div>
-        </div>    
+        </div>
         <div class="hact-body">
           <div class="row-h">
-            <div class="col col-2 center-text"> 
+            <div class="col col-2 center-text">
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
             <div class="col col-2 center-text"> $[[partner.total_ct_cp]] </div>
@@ -161,19 +161,19 @@
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
           </div>
         </div>
-      
+
 
         <div class="hact-heading">
           <div class="row-h">
             <div class="col col-6"> Partnership </div>
-            <div class="col col-2"> Status </div>            
+            <div class="col col-2"> Status </div>
             <div class="col col-4"> Timeline </div>
           </div>
         </div>
         <div class="hact-body">
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
-              <div class="col col-6 block"> 
+              <div class="col col-6 block">
                 <template is="dom-if" if="[[partnership.government_intervention]]">
                   <strong><a href="governments/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
                 </template>
@@ -189,7 +189,7 @@
             </div>
           </template>
         </div>
-      </etools-content-panel>    
+      </etools-content-panel>
 
     </div> <!-- main page content end -->
 
@@ -207,7 +207,7 @@
       Polymer({
         is: 'partner-overview',
 
-        behaviors: [        
+        behaviors: [
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior
         ],
@@ -238,12 +238,12 @@
           mrSpotChecks: {
             type: Number,
             value: 0
-          }         
+          }
         },
 
         _partnerChanged: function(partner) {
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
-            this.contentVisible = true;                                   
+            this.contentVisible = true;
             this._calculateMinimumRequirements();
           } else {
             this.contentVisible = false;
@@ -251,21 +251,21 @@
         },
 
         _calculateMinimumRequirements: function() {
-          
+
           var ratingLowOrModerale = (this.partner.rating === 'Low' || this.partner.rating === 'Moderate');
           var cashTransferred = this.partner.total_ct_cy;
-          var programmeVisits = 0; 
-          var spotChecks = 0;   
+          var programmeVisits = 0;
+          var spotChecks = 0;
 
           switch(true) {
 
             case (cashTransferred <= 50000):
-              programmeVisits = 1;              
+              programmeVisits = 1;
               break;
 
             case (50000 < cashTransferred <= 100000):
               programmeVisits = 1;
-              spotChecks = 1;  
+              spotChecks = 1;
               break;
 
             case (100000 < cashTransferred <= 350000 && ratingLowOrModerale):
@@ -287,7 +287,7 @@
               programmeVisits = 4;
               spotChecks = 3;
               break;
-          }  
+          }
 
           this.set('mrProgVisits', programmeVisits);
           this.set('mrSpotChecks', spotChecks);

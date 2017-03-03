@@ -208,7 +208,7 @@
           var cpOutputs = [];
 
           resultLinks.forEach(function(res) {
-            ids[res.cp_output.id] = true;
+            ids[res.cp_output] = true;
           });
 
           for (var id in ids) {
@@ -237,10 +237,12 @@
             sectorIds.push(locLvl1.sector.id);
           });
 
-          sectors = this.allSectors.filter(function(elem) {
-            return (sectorIds.indexOf(elem.value) > -1);
-          });
-
+          sectors = [];
+          if (Array.isArray(this.allSectors) && this.allSectors.length > 0) {
+            sectors = this.allSectors.filter(function(elem) {
+              return (sectorIds.indexOf(elem.value) > -1);
+            });
+          }
           this.set('sectors', sectors);
           this.set('locations', sectorLocations);
         },

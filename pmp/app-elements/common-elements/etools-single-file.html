@@ -1,23 +1,31 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 
 <dom-module id="etools-single-file">
 
   <template>
-    <style>
+    <style include="file-styles">
       :host {
-        max-width: 100%;
+        @apply(--layout-horizontal);
+        width: 100%;
+        min-height: 62px;
+      }
+      #file-wrapper {
+        width: 100%;
       }
     </style>
-    <etools-file id="files"
-                 files="{{attachments}}"
-                 label="[[label]]"
-                 accept="[[accept]]"
-                 readonly$="[[readonly]]"
-                 invalid$="[[invalid]]"
-                 error-message=[[errorMessage]]>
-    </etools-file>
+    <div id="file-wrapper" class="file-container">
+      <etools-file id="files"
+                   files="{{attachments}}"
+                   label="[[label]]"
+                   accept="[[accept]]"
+                   readonly$="[[readonly]]"
+                   invalid$="[[invalid]]"
+                   error-message=[[errorMessage]]>
+      </etools-file>
+    </div>
   </template>
 
   <script>
@@ -27,7 +35,7 @@
       Polymer({
 
         is: 'etools-single-file',
-        behaviors: [etoolsAppConfig.globals, pmpBehaviors.CommonGeneralBehavior],
+        behaviors: [pmpBehaviors.CommonGeneralBehavior],
         properties: {
           attachments: {
             type: Array,

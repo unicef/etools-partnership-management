@@ -179,7 +179,7 @@
                 id="signedByUnicef"
                 label="Signed By UNICEF"
                 placeholder="&#8212;"
-                options="[[unicefStaff]]"
+                options="[[unicefSeniorStaff]]"
                 custom-object-options
                 selected="{{agreement.signed_by}}"
                 update-selected
@@ -290,6 +290,10 @@
           unicefStaff: {
             type: Array,
             statePath: 'unicefUsersData'
+          },
+          unicefSeniorStaff: {
+            type: Array,
+            statePath: 'signedByUnicefUsers'
           },
           originalAgreementData: {
             type: Object,

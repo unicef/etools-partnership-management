@@ -1,6 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+
 <dom-module id="intervention-item-data">
 
   <template>
@@ -8,7 +10,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
                  on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
+                 on-fail="handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -18,7 +20,10 @@
       Polymer({
 
         is: 'intervention-item-data',
-        behaviors: [etoolsAppConfig.globals],
+        behaviors: [
+          etoolsAppConfig.globals,
+          pmpBehaviors.AjaxServerErrorsBehavior
+        ],
         properties: {
 
           intervention: {
@@ -55,8 +60,11 @@
          */
         _handleResponse: function(response) {
           this._setIntervention(response.detail);
+          
           // update the interventions list in dexieDB
-          etoolsAppConfig.db.table('interventions').put(response.detail);
+          var mappedResponse = this._formatResponseDataForDexie(response.detail);
+          etoolsAppConfig.db.table('interventions').put(mappedResponse);
+
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
@@ -70,11 +78,14 @@
          * Used for unsafe requests (PATCH/POST).
          */
         _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart){
+          if (!multipart) {
             multipart = false;
           }
-          if (!prepareMultipartData){
+          if (!prepareMultipartData) {
             prepareMultipartData = false;
+          }
+          if (!this.ajaxEl) {
+            this.ajaxEl = this.$.ajax;
           }
           this.ajaxEl.setContentType(null);
           if (!method) {
@@ -89,7 +100,7 @@
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
               && ['PATCH', 'POST'].indexOf(method) > -1) {
-            
+
             if (multipart) {
               this.ajaxEl.set('multiPart', true);
             } else {
@@ -105,42 +116,6 @@
             this.ajaxEl.set('url', url);
           }
           // after body is set the request is automatically triggered
-        },
-
-        // TODO:  refactor this, add it in a behavior
-        _handleErrorResponse: function(response) {
-          this.fire('global-loading', {active: false});
-          var errors = response.detail.request.detail.request.response;
-          if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
-            // TODO: improve etools-ajax on-fail event data model (received errors)
-            var errorMessage = 'An error occurred during agreement save!';
-            if (errors) {
-              var errorMessages = ['Errors occurred:\n'];
-              if (Array.isArray(errors) && errors.length > 0) {
-                errors.forEach(function(err) {
-                  errorMessages.push(err + '\n');
-                });
-              } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
-                for (var errField in errors) {
-                  if (typeof errors[errField] === 'string') {
-                    errorMessages.push('Field ' + errField + ' - ' + errors[errField] + '\n');
-                  } else if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
-                    for (var errF in errors[errField]) {
-                      errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + '\n');
-                    }
-                  } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                    for(var key in errors[errField]) {
-                      errorMessages.push(errors[errField][key] + '\n');
-                    }
-                  }
-                }
-              }
-              if (errorMessages.length > 1) {
-                errorMessage = errorMessages.join('');
-              }
-            }
-            this.fire('toast', {text: errorMessage, showCloseBtn: true});
-          }
         },
 
         _prepareEndpoint: function(interventionId) {
@@ -160,7 +135,8 @@
           for (var i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
-              break;
+            } else {
+              delete list[i][property]
             }
           }
           return hasF;
@@ -172,11 +148,11 @@
         /**
          * Update intervention status. In addition set a callback to be called after request is complete.
          */
-        updateInterventionStatus: function(data, callback) {          
+        updateInterventionStatus: function(data, callback) {
           if (!data.interventionId) {
             this.fire('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
           } else {
-            if (['draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {              
+            if (['draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
               // status change is allowed
               // set additional callback if any
               if (callback) {
@@ -186,11 +162,14 @@
               this.fire('global-loading', {message: 'Changing intervention status...', active: true});
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
-            } else {              
-              this.fire('toast', {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
+            } else {
+              this.fire('toast', {
+                text: 'Changing status to \'' + data.status + '\' is not allowed!',
+                showCloseBtn: true
+              });
             }
           }
-        },  
+        },
 
         /**
          * Save intervention data
@@ -231,12 +210,19 @@
               if (this._fileField(intervention, 'prc_review_document')) {
                 withUpload = true;
                 prepareMultipartData = true;
+              } else {
+                delete intervention.prc_review_document
+              }
+
+              if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
+                withUpload = true;
+                prepareMultipartData = true;
               }
 
               this.fire('global-loading', {message: 'Saving intervention data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', 
-                intervention, url, withUpload, prepareMultipartData);
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
+                  intervention, url, withUpload, prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this intervention.',
@@ -244,7 +230,42 @@
               });
             }
           }
-        }
+        },
+
+        _formatResponseDataForDexie: function(responseDetail) {        
+          var dexieObject = {};
+          dexieObject.sectors = [];
+          dexieObject.cp_outputs = [];
+          dexieObject.unicef_budget = 0;
+          dexieObject.cso_contribution = 0;
+          
+          dexieObject.id = responseDetail.id;
+          dexieObject.hrp = responseDetail.hrp;
+          dexieObject.end = responseDetail.end;
+          dexieObject.title = responseDetail.title;
+          dexieObject.start = responseDetail.start;
+          dexieObject.status = responseDetail.status;
+          dexieObject.number = responseDetail.number;
+          dexieObject.offices = responseDetail.offices;
+          dexieObject.partner_name = responseDetail.partner;
+          dexieObject.document_type = responseDetail.document_type;
+          dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
+
+          responseDetail.planned_budget.forEach(function(elem) {
+            dexieObject.unicef_budget += parseInt(elem.unicef_cash);
+            dexieObject.cso_contribution += parseInt(elem.partner_contribution);
+          });
+
+          responseDetail.sector_locations.forEach(function(elem) {
+            dexieObject.sectors.push(elem.sector.name);
+          });
+
+          responseDetail.result_links.forEach(function(elem) {
+            dexieObject.cp_outputs.push(elem.cp_output);
+          });          
+
+          return dexieObject;          
+        },
 
       });
     })();

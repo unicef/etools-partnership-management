@@ -276,7 +276,9 @@ App global configuration
       monitoringVisits: {
         template: '/api/t2f/travels/activities/<%=id%>/',
       },
-
+      sectorLocationsDelete : {
+        template : "/api/v2/interventions/sector-locations/<%=id%>/"
+      }
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
