@@ -1,0 +1,44 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+
+<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+
+<dom-module id="user-profile-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 on-success="_handleResponse"></etools-ajax>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'user-profile-data',
+
+      behaviors: [pmpBehaviors.DataElementBehavior],
+
+      properties: {
+
+        endpointName: {
+          type: String,
+          value: 'myProfile'
+        },
+        userProfile: {
+          type: Object,
+          notify: true
+        }
+
+      },
+      _handleResponse: function(response) {
+        this.set('userProfile', response.detail);
+      }
+
+    });
+
+  </script>
+
+</dom-module>
