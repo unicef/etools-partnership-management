@@ -81,6 +81,11 @@
             permissionsList.defaultPermissions.forEach(function(perm) {
               _permissions[perm] = true;
             });
+            if (this._findGroup('UNICEF User')) {
+              permissionsList.unicefUserPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
+            }
             if (this._findGroup('Partnership Manager')) {
               permissionsList.partnershipManagerPermissions.forEach(function(perm) {
                 _permissions[perm] = true;

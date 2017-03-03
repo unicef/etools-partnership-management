@@ -179,6 +179,7 @@
             <div class="page" name="review-and-sign">
               <intervention-review-and-sign id="interventionReviewAndSign"
                                             intervention="{{intervention}}"
+                                            permissions="[[permissions]]"
                                             agreement="[[agreement]]"
                                             new-intervention="[[_newIntervention(newInterventionActive)]]"
                                             edit-mode="[[_hasEditPermissions(permissions)]]">
@@ -187,6 +188,8 @@
             <div class="page" name="attachments">
               <intervention-attachments id="intervAttachments"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
+                permissions="[[permissions]]"
+                intervention="[[intervention]]"
                 file-model="[[_getAttachmentModel(intervention.id)]]"
                 attachments="{{intervention.attachments}}"
                 on-delete-file="_deleteAttachment"

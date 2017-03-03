@@ -76,7 +76,7 @@
           file-types=[[fileTypes]]
           label="Attachments" 
           multiple activate-file-types use-delete-events
-          readonly$=[[!editMode]]></etools-file>
+          readonly$=[[!attachmentEditMode]]></etools-file>
       </div>
     </etools-content-panel>
 
@@ -95,6 +95,10 @@
         ],
 
         properties: {
+          intervention: {
+            type: Object,
+            observer: '_setNewEditMode'
+          },
           attachments: {
             type: Array,
             value: [],
@@ -139,7 +143,20 @@
             }.bind(this)));  
           }
         },
+        _setNewEditMode: function() {
+          if (!this.editMode) {
+            this.set('attachmentEditMode', this.editMode);
+            return;
+          };
+          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
+                (!this.intervention.status || this.intervention.status !== 'draft')) {
+            this.set('attachmentEditMode', false);
+          } else {
+            this.set('attachmentEditMode', true);
+          }
 
+
+        },
         _getPath: function(attachment) {
           if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
             return attachment.attachment_file;
