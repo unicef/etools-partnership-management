@@ -22,7 +22,6 @@
       behaviors: [pmpBehaviors.DataElementBehavior],
 
       properties: {
-
         endpointName: {
           type: String,
           value: 'myProfile'
@@ -33,9 +32,48 @@
         }
 
       },
+      ready: function() {
+        //   this.set(endpoint, this.getEndpoint(this.endpointName)); 
+      },
       _handleResponse: function(response) {
         this.set('userProfile', response.detail);
-      }
+      },
+
+      saveProfile: function (profile) {        
+        if (_.isEmpty(profile)) {
+            return;
+        }
+        // var endpoint = this.getEndpoint(this.endpointName);
+        var url = this.endpoint.url;
+    
+        if (!_.isEmpty(profile)) {                              
+          this.fire('global-loading', {message: 'Saving profile data...', active: true});
+          this._prepareAndFireRequest('PATCH', profile, url);
+        } else {          
+          this.fire('toast', {
+            text: 'There is nothing to save. No change detected on your profile.',
+            showCloseBtn: true
+          });
+        }        
+      },
+      _prepareAndFireRequest: function(method, data, url) {
+        // reset ajax
+        this._resetAjax();
+        if (!method) {
+          method = 'GET';
+        }
+        this.$.ajax.set('method', method);
+        if (typeof data === 'object' && Object.keys(data).length > 0
+            && ['PATCH', 'POST'].indexOf(method) > -1) {
+          this.$.ajax.set('body', data);
+          this.$.ajax.set('url', url);
+        }
+      },
+      _resetAjax: function(){
+        this.$.ajax.set('params', null);
+        this.$.ajax.set('body', null);
+        this.$.ajax.set('url', null);
+      },
 
     });
 

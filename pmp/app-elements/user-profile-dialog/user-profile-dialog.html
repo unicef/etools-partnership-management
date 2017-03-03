@@ -189,7 +189,7 @@
        
       </div>
     </etools-dialog>
-    <user-profile-data user-profile="{{profile}}"></user-profile-data>
+    <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
   </template>
 
   <script>
@@ -254,10 +254,8 @@
         },
         _closeUserProfileDialog: function(event) {
           if (event.detail.confirmed) {
-            this.fire('user-profile-dialog-close', {
-              profileData: this.profile
-            });
-          }
+            this.saveData();
+          } 
         },
         _mapIds: function() {
           var availableCountryIds = _.map(this.profile.countries_available, 'id');
@@ -268,7 +266,11 @@
         },
         resetData: function() {
           this.set('profile', JSON.parse(JSON.stringify(this.userProfileModel)));
-        }
+        },
+        saveData: function() {
+          console.log('is it me you are looking for?');
+          this.$.userProfileData.saveProfile(this.profile);
+        },
       });
     })();
   </script>
