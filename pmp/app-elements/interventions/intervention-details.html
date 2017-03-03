@@ -366,8 +366,12 @@
 
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-            this._agreementSelected(this.agreement);
+            if (intervention.id > 0) {
+              this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+              this._agreementSelected(this.agreement);
+            } else {
+              this.set('selectedPartnerId', null);
+            }
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           } else {
@@ -385,13 +389,15 @@
         },
 
         _resetValidations: function() {
+          this.$.agreementSelector.resetValidations();
+          this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['agreementSelector', 'sectorLocations', 'expectedResults',
+          var elements = ['sectorLocations', 'expectedResults',
             'plannedBudget', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
@@ -428,7 +434,6 @@
 
           if (typeof oldId === 'number' && id !== oldId) {
             // reset partner focal points options and value
-            console.log(id, oldId);
             this.set('intervention.partner_focal_points', []);
             this.set('partnerStaffMembers', []);
           }

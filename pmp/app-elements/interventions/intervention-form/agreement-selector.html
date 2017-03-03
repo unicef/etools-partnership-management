@@ -160,8 +160,8 @@
 //        },
 
         resetValidations: function() {
-          this.$.agreements.invalid = false;
-          this.$.partner.invalid = false;
+          this.$.agreements.resetInvalidState();
+          this.$.partner.resetInvalidState();
         },
 
         validate: function() {
