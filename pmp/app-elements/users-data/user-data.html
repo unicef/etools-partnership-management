@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
 
 <link rel="import" href="../../app-behaviors/data-element-behavior.html">
 
@@ -24,7 +25,8 @@
 
         is: 'user-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior],
+        behaviors: [pmpBehaviors.DataElementBehavior, 
+                    etoolsAppConfig.globals],
 
         properties: {
 
@@ -37,6 +39,10 @@
             type: Object,
             readOnly: true,
             notify: true
+          },
+          userGroups: {
+            type: Array,
+            readOnly: true
           },
 
           permissions: {
@@ -52,6 +58,9 @@
           this._setUserData(res.detail);
         },
 
+        _findGroup: function(groupName) {
+          return _.find(this.userGroups, function(grp){ return grp.name === groupName})
+        },
         _handleError: function(rsp, err) {
           console.log(rsp);
           console.log(err);
@@ -63,28 +72,29 @@
           var _user = data;
           var _permissions = {};
 
+          this._setUser(_user);
           var permissionsList = this.getAllPermissions();
 
           if (!_.isEmpty(data)) {
+            this._setUserGroups(_user.groups)
+
             permissionsList.defaultPermissions.forEach(function(perm) {
               _permissions[perm] = true;
             });
-            if (!_user.is_staff) {
-              permissionsList.partnerOnlyPermissions.forEach(function(perm) {
+            if (this._findGroup('Partnership Manager')) {
+              permissionsList.partnershipManagerPermissions.forEach(function(perm) {
                 _permissions[perm] = true;
               });
-            } else {
-              // user is not partner but staff:
-              permissionsList.managementPermissions.forEach(function(perm) {
+            }
+            if (this._findGroup('PME')) {
+              permissionsList.PMEPermissions.forEach(function(perm) {
                 _permissions[perm] = true;
               });
-
-              if (_user.profile.partner_staff_member) {
-                // staff that has faked partnership by setting partner_staff_member on their profile
-                permissionsList.partnerPermissions.forEach(function(perm) {
-                  _permissions[perm] = true;
-                });
-              }
+            }
+            if (this._findGroup('ICT')) {
+              permissionsList.ICTPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
             }
           } else {
             //for testing
@@ -92,7 +102,6 @@
               _permissions[perm] = true;
             });
           }
-          this._setUser(_user);
           this._setPermissions(_permissions);
         }
 
