@@ -135,11 +135,6 @@
           this.userProfileDialog = document.createElement('user-profile-dialog');
           this.userProfileDialog.setAttribute('id', 'userProfileDialog');
 
-          // attach close handler
-          this.userProfileDialog.addEventListener('user-profile-dialog-close', function(event) {
-            this.userProfileDialogDataReceived(event.detail);
-          }.bind(this));
-
           // this hack is here because elemets added this way can't trigger global events, but they can listen to them
           this.userProfileDialog.addEventListener('hacky-global-loading', function(event) {
               this.fire('global-loading', event.detail);
@@ -152,9 +147,6 @@
           if (this.userProfileDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.userProfileDialog);
           }
-        },
-        userProfileDialogDataReceived: function(data) {
-          console.log('userProfileDialogDataReceived');
         },
         // open indicator dialog to add or edit indicator
         _openUserProfileDialog: function(event) {
