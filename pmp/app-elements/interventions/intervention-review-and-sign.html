@@ -39,7 +39,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!signEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -50,7 +50,7 @@
           <etools-date-input id="submissionDatePrcField"
                              label="Submission Date to PRC"
                              value="{{intervention.submission_date_prc}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!signEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -59,7 +59,7 @@
           <etools-date-input id="reviewDatePrcField"
                              label="Review Date by PRC"
                              value="{{intervention.review_date_prc}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!signEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -69,7 +69,7 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[!editMode]]"></etools-single-file>
+                              readonly$="[[!signEditMode]]"></etools-single-file>
         </div>
       </div>
       <div class="row-h flex-c">
@@ -82,7 +82,7 @@
              selected="{{intervention.partner_authorized_officer_signatory}}"
              update-selected
              dynamic-align
-             readonly$="[[!editMode]]">
+             readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -90,7 +90,7 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!signEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -105,7 +105,7 @@
              selected="{{intervention.unicef_signatory}}"
              update-selected
              dynamic-align
-             readonly$="[[!editMode]]">
+             readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -113,7 +113,7 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!signEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -136,14 +136,14 @@
       <etools-content-panel class="content-section" title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[editMode]]"></intervention-amendments>
+                                 edit-mode$="[[signEditMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
+                                      edit-mode$="[[signEditMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -183,6 +183,10 @@
             value: false,
             observer: '_editModeChanged'
           },
+          signEditMode: {
+            type: Boolean,
+            value: false
+          },
           newIntervention: {
             type: Boolean
           }
@@ -196,7 +200,22 @@
 
         _interventionChanged: function(intervention) {
           // ensure loading msg close
+          this._setNewEditMode();
           this.fire('global-loading', {active: false});
+        },
+        _setNewEditMode: function() {
+          if (!this.editMode) {
+            this.set('signEditMode', this.editMode);
+            return;
+          };
+          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
+                (!this.intervention.status || this.intervention.status !== 'draft')) {
+            this.set('signEditMode', false);
+          } else {
+            this.set('signEditMode', true);
+          }
+
+
         },
 
         _agreementChanged: function(agreement) {
