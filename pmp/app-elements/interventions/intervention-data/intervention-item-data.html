@@ -132,7 +132,8 @@
           for (var i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
-              break;
+            } else {
+              delete list[i][property]
             }
           }
           return hasF;
@@ -206,7 +207,10 @@
               if (this._fileField(intervention, 'prc_review_document')) {
                 withUpload = true;
                 prepareMultipartData = true;
+              } else {
+                delete intervention.prc_review_document
               }
+
               if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
                 withUpload = true;
                 prepareMultipartData = true;
