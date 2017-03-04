@@ -17,6 +17,7 @@
 
       app-toolbar {
         padding: 0 16px 0 0;
+        background-color: var(--nonprod-header-color, #233944);
       }
 
       div[main-title] {
@@ -62,6 +63,10 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
+      #second-logo {
+        height: 32px;
+        width: auto;
+      }
 
       @media (min-width: 850px) {
         #menuButton {
@@ -76,8 +81,7 @@
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div class="titlebar content-align">
         <app-selector id="selector"></app-selector>
-        <img src="../../../images/etools_logo_icon.png">
-        eTools
+        <img id="second-logo" src="../../../images/etools-logo-color-white.svg">
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
@@ -141,6 +145,15 @@
           }.bind(this), false);
 
           Polymer.dom(document.querySelector('body')).appendChild(this.userProfileDialog);
+
+          var location = window.location.href;
+          var production = 'etools.unicef.com';
+
+          // If not production environment, changing header color to red
+          if (location.indexOf(production) === -1) {
+            this.customStyle['--nonprod-header-color'] = '#A73838';
+            this.updateStyles();
+          }
         },
 
         detached: function() {
