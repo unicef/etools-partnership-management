@@ -73,6 +73,18 @@
           padding: 10px 0 25px;
         }
       }
+
+      .implementation-status-no-fc { 
+        padding: 0 24px;
+      }
+      .no-fc-output-name {
+        width: 100%;
+        height: 64px;
+        line-height: 64px;
+        font-size: 20px;
+        color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
+        @apply(--header-title);
+      }
     </style>
     <div id="pageContent">
       <paper-material elevation="1" id="top-container">
@@ -115,7 +127,7 @@
 
   <!-- Start -->
         <template is="dom-repeat" items="[[intervention.implementation_status]]" as="status">
-
+         <template is="dom-if" if="[[_fcs_exist(status.fc_records)]]">
           <data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
             <data-table-column class="col-2" field="fc_number">
                 FC#
@@ -127,7 +139,7 @@
                 FC Title
             </data-table-column>
             <data-table-column class="col-2" field="actual_ammount">
-                Actual $
+                Commitment Amount $
             </data-table-column>
             <data-table-column class="col-2" field="outstanding_ammount">
                 Outstanding $
@@ -135,22 +147,24 @@
           </data-table-header>
 
           <template is="dom-repeat" items="[[status.fc_records]]" as="record">
+
             <data-table-row no-collapse>
               <div slot="row-data">
                 <a class="col-data col-2 truncate" href="#" title="[[record.fc_number]]">
-                    [[record.fc_number]]
+                    [[record.fc_ref_number]]
                 </a>
                 <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.fc_date)]]">
-                    [[_checkAndShowDate(record.fc_date)]]
+                    [[_checkAndShowDate(record.due_date)]]
                 </span>
                 <span class="col-data col-4" title="[[record.fc_title]]">
-                    [[record.fc_title]]
+                    [[record.line_item_text]]
                 </span>
                 <span class="col-data col-2" title="[[record.actual]]">
-                    [[record.actual]]
+                    [[record.commitment_amount]]
                 </span>
                 <span class="col-data col-2" title="[[record.outstanding]]">
-                    [[record.outstanding]]
+                    <!-- [[record.outstanding]] -->
+                    Missing
                 </span>
               </div>
             </data-table-row>
@@ -167,11 +181,22 @@
               </paper-material>
             
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>[[ status.outstanding_sum ]]</strong></span>
+                <!-- <span><strong>[[ status.outstanding_sum ]]</strong></span> -->
+                <span><strong>Missing</strong></span>
               </paper-material>
             </div>
           </div>
+          </template>
+          <template is="dom-if" if="[[!_fcs_exist(status.fc_records)]]">
+            <div class="implementation-status-no-fc" 
+                  hidden$="[[_fcs_exist(status.fc_records]]">
+                    <span class="no-fc-output-name">{{status.cp_name}}:</span> 
+                    <br> 
+                    <span class="no-fc-message">No FCs Available</span>
+            </div>
+          </template>
         </template>
+        
   <!-- End -->
 
           <div class="row-h flex-c padded-top grey-box">
@@ -186,7 +211,8 @@
               </paper-material>
             
               <paper-material elevation="1" class="yellow-box"> 
-                <span><strong>[[ intervention.outstanding_total_sum ]]</strong></span>
+                <!-- <span><strong>[[ intervention.outstanding_total_sum ]]</strong></span> -->
+                <span><strong>Missing</strong></span>
               </paper-material>
             </div>
           </div>
@@ -264,7 +290,7 @@
         this.allCpOutputs.forEach(function(elem){          
           cpOutputsHelper[elem.value] = elem.label;                      
         });
-        if(_.has(this.intervention,'implementation_status')){
+        if(_.has(this.intervention, 'implementation_status')){
           this.intervention.implementation_status.forEach(function(elem){
             cpOutputNames.push(cpOutputsHelper[elem.cp_output]);
           });
@@ -273,6 +299,12 @@
         
         this.set('cpOutputNames', cpOutputNames);
         this.set('cpOutputsHelper', cpOutputsHelper);
+      },
+      _fcs_exist: function(fc_records) {
+        if ((!Array.isArray(fc_records)) || (fc_records.length === 0)) {
+          return false;
+        }
+        return true;
       },
 
       _findProgramme: function() {
@@ -304,17 +336,17 @@
         var actualTotalSum = 0;
         var outstandingTotalSum = 0;
 
-        if(_.has(this.intervention,'implementation_status')){
-          this.intervention.implementation_status.forEach(function(elem){
+        if (_.has(this.intervention,'implementation_status')) {
+          this.intervention.implementation_status.forEach(function(elem) {
             actualIndividualSum = 0;
             outstandingIndividualSum = 0;
 
-            elem.fc_records.forEach(function(record){
-              actualIndividualSum += record.actual;
-              outstandingIndividualSum += record.outstanding;
+            elem.fc_records.forEach(function(record) {
+              actualIndividualSum += parseFloat(record.commitment_amount);
+              outstandingIndividualSum += parseFloat(record.outstanding);
 
-              actualTotalSum += record.actual;
-              outstandingTotalSum += record.outstanding;
+              actualTotalSum += parseFloat(record.commitment_amount);
+              outstandingTotalSum += parseFloat(record.outstanding);
             });
 
             elem.actual_sum = actualIndividualSum;
@@ -323,8 +355,6 @@
             elem.cp_name = cpOutputsHelper[parseInt(elem.cp_output)];
           });
         }
-
-
 
         this.set('intervention.actual_total_sum', actualTotalSum);
         this.set('intervention.outstanding_total_sum', outstandingTotalSum);          
