@@ -206,6 +206,7 @@
       },
       _setNewEditMode: function() {
           this.set('governmentEditMode', this.editMode);
+          this.updateStyles();
       },
       _validateSave: function(){
         event.stopImmediatePropagation();

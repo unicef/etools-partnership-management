@@ -101,7 +101,7 @@
           <etools-searchable-multiselection-menu id="signedByUnicef"
              label="Signed by UNICEF"
              placeholder="&#8212;"
-             options="[[unicefUsersData]]"
+             options="[[signedByUnicefUsers]]"
              selected="{{intervention.unicef_signatory}}"
              update-selected
              dynamic-align
@@ -169,6 +169,10 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
+          signedByUnicefUsers: {
+            type: Array,
+            statePath: 'signedByUnicefUsers'
+          },
           agreement: {
             type: Object,
             value: null,
@@ -214,6 +218,7 @@
           } else {
             this.set('signEditMode', true);
           }
+          this.updateStyles();
 
 
         },
