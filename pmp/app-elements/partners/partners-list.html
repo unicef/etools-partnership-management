@@ -14,6 +14,7 @@
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
@@ -47,7 +48,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
-                        fire-data-loaded>
+                        fire-data-loaded show-loading>
     </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -69,13 +70,14 @@
             <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
             <paper-dropdown-menu label$="[[filter.filterName]]" noink>
               <paper-menu class="dropdown-content"
-                          attr-for-selected="text-content"
+                          attr-for-selected="name"
                           on-iron-select="filterValueChanged"
                           on-iron-deselect="filterValueChanged"
                           data-filter-path$="[[filter.path]]"
-                          on-iron-activate="_dropdownSelected">
+                          on-iron-activate="_dropdownSelected"
+                          selected=[[filter.alreadySelected]]>
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
-                  <paper-item>[[filterOption]]</paper-item>
+                  <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -211,9 +213,11 @@
         is: 'partners-list',
 
         behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          pmpBehaviors.CommonGeneralBehavior,
+          etoolsAppConfig.globals
         ],
 
         properties: {
@@ -228,6 +232,16 @@
             type: String,
             notify: true,
             observer: '_qChanged'
+          },
+
+          csoTypes: {
+            type: Array,
+            statePath: 'csoTypes'
+          },
+          
+          partnerTypes: {
+            type: Array,
+            statePath: 'partnerTypes'
           },
 
           partnerType: {
@@ -269,11 +283,24 @@
           forceDataRefresh: {
             type: Boolean,
             value: false
-          }
+          },
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
+          csvDownloadUrl: {
+            type: String, 
+            notify: true
+          },
         },
 
         observers: [
-          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden)',
+          '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
+            'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -288,12 +315,16 @@
           this.initListFiltersData([
             {
               filterName: 'Partner Type',
-              selectionOptions: ['Bilateral / Multilateral', 'Civil Society Organization', 'Government', 'UN Agency'],
+              type: 'dropdown',
+              alreadySelected: null,
+              selectionOptions: _.map(this.partnerTypes, 'value'),
               path: 'partnerType'
             },
             {
               filterName: 'CSO Type',
-              selectionOptions: ['Academic Institution', 'Community Based Organization', 'International', 'National'],
+              alreadySelected: null,
+              type: 'dropdown',
+              selectionOptions: _.map(this.csoTypes, 'value'),
               path: 'csoType'
             }
           ]);
@@ -307,6 +338,7 @@
           if (!active || !parms) {
             return;
           }
+          this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
           this.set('partnerType', parms.partner_type ? parms.partner_type : '');
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
@@ -319,25 +351,52 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
+
           this.set('sortOrder', result);
-          //this.$.listHeader.sortOrder = result;
+          this.set('initComplete', true);
+
+          this._updateSelectedFiltersValues();         
         },
 
+        _updateSelectedFiltersValues: function(){
+          this.debounce('updateShownFilters', function () {
+            var filtersValues = [
+              {
+                filterName: 'Partner Type',
+                selectedValue: this.partnerType
+              },
+              {
+                filterName: 'CSO Type',
+                selectedValue: this.csoType
+              }                           
+            ];            
+            this.updateShownFilters(filtersValues);
+
+          }.bind(this), 100);
+        },
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
+          
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
+
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
             // update URL
             this.updateAppState('partners/list', qs, true);
-            // filter partners
-            this._filterPartnersData();
+            // filter partners, but only after data has been loaded
+            if (this.requiredDataLoaded) {
+              this._filterPartnersData();
+            }
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
               this.updateAppState('partners/list', qs, false);
             }
-            if (this.forceDataRefresh) {
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter partners data
               // this will only execute when partners-loaded event is received
               this._filterPartnersData();
@@ -389,6 +448,31 @@
           return out.join('&');
         },
 
+        _buildCsvDownloadUrl: function() {       
+          var queryString = '';
+          var endpointUrl = '';
+          var params = [];  
+          
+          if (this.q && this.q.length) {
+            params.push('search=' + this.q);
+          }
+          if (this.partnerType && this.partnerType.length) {
+            params.push('partner_type=' + this.partnerType);
+          }
+          if (this.csoType && this.csoType.length) {
+            params.push('cso_type=' + this.csoType);
+          }
+          if (this.showHidden) {
+            params.push('hidden=true');
+          }
+
+          params.push('format=csv');
+          queryString = params.join('&');
+          endpointUrl = this.getEndpoint('partners').url;
+          
+          return endpointUrl + '?' + queryString;
+        },
+
         _sortOrderChanged: function(e) {
           this.set('debounceTime', 150);
           this.set('sortOrder', e.detail);
@@ -427,17 +511,14 @@
 
         // List fade in fade out effect
         _partnersChanged: function(filteredPartners) {
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-            var partnersList = this.$$('#partners');
-            if (partnersList && Array.isArray(partnersList.data) && partnersList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }, 50);
+          var classList = this.$.list.classList;
+          if (filteredPartners instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _computeName: function(name, shortName) {
-          return this.getDisplayValue([shortName, name], false, ' / ');
+          return this.getDisplayValue([shortName, name], false, ' / ', true);
         },
 
         _computeType: function(csoType, partnerType) {
@@ -453,12 +534,12 @@
         // When the list data rows are changing check and close any details opened
         _listDataChanged: function() {
           var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
               }
-            });
+            }
           }
         },
 
@@ -468,11 +549,15 @@
          */
         _requiredDataHasBeenLoaded: function(event) {
           event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0) {
+          if (typeof this.filteredPartners === 'undefined' ||
+              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger partners filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
           this._init(this.active);
+          this.fire('global-loading', {active: false});
         },
 
       });

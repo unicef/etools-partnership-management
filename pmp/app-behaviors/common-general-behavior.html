@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="date-behavior.html">
+<link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.CommonGeneralBehaviorImpl = {
@@ -8,7 +9,7 @@
      * Prepare and return the string value we have to display on the interface.
      * Ex: partners and agreements lists data values.
      */
-    getDisplayValue: function(value, isDate, separator) {
+    getDisplayValue: function(value, isDate, separator, skipSpaces) {
       if (typeof value === 'string' && value != '') {
         if (isDate) {
           return this.prettyDate(value);
@@ -18,6 +19,9 @@
       } else if (Array.isArray(value) && value.length > 0) {
         if (!separator) {
           separator = ', ';
+        }
+        if (skipSpaces) {
+          return _.without(value, undefined, '', null).join(separator);
         }
         return value.join(separator);
       } else if (typeof value === 'number') {
@@ -57,7 +61,7 @@
     },
 
     getFileNameFromURL: function(url) {
-      return url.substr(url.lastIndexOf('/') + 1);
+      return _.head(url.split('?')).split('/').pop();
     },
 
     /**
@@ -84,13 +88,32 @@
     /**
      * Reset field validation
      */
-    fieldValidationReset: function(selector) {
+    fieldValidationReset: function(selector, useValidate) {
+      if (!useValidate) {
+        useValidate = false;
+      }
       var field = this.$$(selector);
       if (field) {
-        field.invalid = false;
+        if (useValidate) {
+          field.validate();
+        } else {
+          field.set('invalid', false);
+        }
       }
       return field;
-    }
+    },
+
+    /**
+     * Reset element validations
+     * The element must have resetValidations method
+     */
+    elementValidationReset: function(selector) {
+      var elem = this.$$(selector);
+      if (elem && typeof elem.resetValidations === 'function') {
+        elem.resetValidations();
+      }
+      return elem;
+    },
 
   };
 

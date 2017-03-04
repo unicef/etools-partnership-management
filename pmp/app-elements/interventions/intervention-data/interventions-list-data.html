@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
 <dom-module id="interventions-list-data">
 
@@ -53,6 +54,13 @@
             type: Object,
             value: null
           }
+        },
+
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading interventions data...', active: true});
+          }
+          this._elementReady();
         },
 
         query: function(field, order, searchString, documentTypes, cpOutputs,
@@ -136,20 +144,21 @@
                   return false;
                 }
               }
-
+              
               if (startDate && startDate.length &&
-                  (!intervention.start || intervention.start < startDate)) {
+                  (!intervention.start || moment(intervention.start).isBefore(startDate))) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!intervention.end || intervention.end > endDate)) {
+                  (!intervention.end || moment(intervention.end).isAfter(endDate))) {
                 return false;
               }
 
               if (searchString && searchString.length &&
                   intervention.title.toLowerCase().indexOf(searchString) < 0 &&
-                  intervention.partner_name.toLowerCase().indexOf(searchString) < 0) {
+                  intervention.partner_name.toLowerCase().indexOf(searchString) < 0 &&
+                  intervention.number.toLowerCase().indexOf(searchString) < 0) {
                 return false;
               }
 

@@ -1,4 +1,19 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/risk-rating-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+
+
+
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -6,9 +21,182 @@
 
   <template>
 
-    <style include="shared-styles"></style>
+    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles list-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
 
-    partner overview content goes here...
+        --etools-checkable-input-label: {
+          padding-bottom: 2px;
+        }
+      }
+
+      paper-input,
+      paper-dropdown-menu {
+        width: 100%;
+      }
+
+      paper-material paper-toolbar {
+        --paper-toolbar-height: 40px;
+        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar: {
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+        };
+        --paper-toolbar-title: {
+          @apply(--nested-content-panel-title);
+          margin-left: 0;
+        };
+      }
+
+      .assessments {
+        margin-top: 20px;
+      }
+
+      #core-values-assessment {
+        width: 100%;
+      }
+
+      .hact-heading {
+        @apply(--layout-vertical);
+        margin-top: 20px;
+        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+      }
+
+      .hact-heading .row-h {
+        padding: 8px;
+      }
+      .hact-heading .row-h .col {
+        justify-content: center;
+      }
+      .hact-body {
+        @apply(--layout-vertical);
+        margin-top: 20px;
+      }
+
+      .hact-body .row-h {
+        padding: 8px;
+      }
+      .center-text {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .row-h + .row-h {
+        margin-top: 0;
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .full-width {
+        width: 100%
+      }
+      .green {
+        color: var(--paper-green-500);
+      }
+      .cancelled {
+        text-transform: uppercase;
+        color: var(--paper-red-500);
+      }
+      .suspended {
+        text-transform: uppercase;
+        color: var(--paper-orange-500);
+      }
+      .draft {
+        text-transform: uppercase;
+        color: var(--paper-yellow-700);
+      }
+      .active {
+        text-transform: uppercase;
+        color: var(--paper-green-500);
+      }
+      .implemented {
+        text-transform: uppercase;
+        color: var(--paper-blue-500);
+      }
+      .terminated {
+        text-transform: uppercase;
+        color: var(--paper-purple-500);
+      }
+      .block {
+        display: block;
+      }
+      small {
+        color: var(--dark-secondary-text-color);
+      }
+
+    </style>
+
+    <!-- partner overview content goes here... -->
+    <div id="pageContent">
+
+      <etools-content-panel class="content-section" title="HACT Assurance & Partnerships">
+        <div class="hact-heading">
+          <div class="row-h">
+            <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
+            <div class="col col-2"><strong> PROG.VISIT </strong></div>
+            <div class="col col-2"><strong> SPOT CHECK </strong></div>
+            <div class="col col-2"><strong> AUDIT </strong></div>
+          </div>
+          <div class="row-h">
+            <div class="col col-2"> Risk Rating </div>
+            <div class="col col-2"> Current CP Cycle </div>
+            <div class="col col-2"> Current Year </div>
+            <div class="col col-2"> Done / M.R. </div>
+            <div class="col col-2"> Done / M.R. </div>
+            <div class="col col-2"> Done / M.R. </div>
+          </div>
+        </div>
+        <div class="hact-body">
+          <div class="row-h">
+            <div class="col col-2 center-text">
+              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
+            </div>
+            <div class="col col-2 center-text"> $[[partner.total_ct_cp]] </div>
+            <div class="col col-2 center-text block">  $[[partner.total_ct_cy]] <br> <small>out of $[[partner.hact_values.planned_cash_transfer]] planned </small> </div>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
+          </div>
+        </div>
+
+
+        <div class="hact-heading">
+          <div class="row-h">
+            <div class="col col-6"> Partnership </div>
+            <div class="col col-2"> Status </div>
+            <div class="col col-4"> Timeline </div>
+          </div>
+        </div>
+        <div class="hact-body">
+          <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
+            <div class="row-h">
+              <div class="col col-6 block">
+                <template is="dom-if" if="[[partnership.government_intervention]]">
+                  <strong><a href="governments/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
+                </template>
+                <template is="dom-if" if="[[!partnership.government_intervention]]">
+                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a> <br>
+                </template>
+                <div>
+                [[partnership.title]]
+                </div>
+              </div>
+              <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
+              <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
+            </div>
+          </template>
+        </div>
+      </etools-content-panel>
+
+    </div> <!-- main page content end -->
+
+    <!-- sidebar content start -->
+    <div id="sidebar">
+      <partner-status on-save-partner="_validateAndTriggerPartnerSave" partner="[[partner]]"></partner-status>
+    </div>
 
   </template>
 
@@ -18,6 +206,98 @@
 
       Polymer({
         is: 'partner-overview',
+
+        behaviors: [
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.RiskRatingBehavior
+        ],
+
+        properties: {
+          user: Object,
+          permissions: Object,
+
+          partner: {
+            type: Object,
+            value: {},
+            notify: true,
+            observer: '_partnerChanged'
+          },
+          contentVisible: {
+            type: Boolean,
+            value: false
+          },
+          coreValuesAssessmentFiles: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          mrProgVisits: {
+            type: Number,
+            value: 0
+          },
+          mrSpotChecks: {
+            type: Number,
+            value: 0
+          }
+        },
+
+        _partnerChanged: function(partner) {
+          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+            this.contentVisible = true;
+            this._calculateMinimumRequirements();
+          } else {
+            this.contentVisible = false;
+          }
+        },
+
+        _calculateMinimumRequirements: function() {
+
+          var ratingLowOrModerale = (this.partner.rating === 'Low' || this.partner.rating === 'Moderate');
+          var cashTransferred = this.partner.total_ct_cy;
+          var programmeVisits = 0;
+          var spotChecks = 0;
+
+          switch(true) {
+
+            case (cashTransferred <= 50000):
+              programmeVisits = 1;
+              break;
+
+            case (50000 < cashTransferred <= 100000):
+              programmeVisits = 1;
+              spotChecks = 1;
+              break;
+
+            case (100000 < cashTransferred <= 350000 && ratingLowOrModerale):
+              programmeVisits = 1;
+              spotChecks = 1;
+              break;
+
+            case (100000 < cashTransferred <= 350000 && !ratingLowOrModerale):
+              programmeVisits = 2;
+              spotChecks = 2;
+              break;
+
+            case (3500000 < cashTransferred && ratingLowOrModerale):
+              programmeVisits = 2;
+              spotChecks = 1;
+              break;
+
+            case (3500000 < cashTransferred && !ratingLowOrModerale):
+              programmeVisits = 4;
+              spotChecks = 3;
+              break;
+          }
+
+          this.set('mrProgVisits', programmeVisits);
+          this.set('mrSpotChecks', spotChecks);
+        },
+
+        // verify date and prettify or not
+        _checkAndShowDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        },
+
       });
 
     })();

@@ -1,0 +1,177 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+
+<dom-module id="governments-list-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="governments"
+                 on-success="_handleResponse"></etools-ajax>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'governments-list-data',
+
+        behaviors: [pmpBehaviors.DataElementBehavior],
+
+        properties: {
+
+          endpointName: {
+            type: String,
+            value: 'governments'
+          },
+
+          dataLoadedEventName: {
+            type: String,
+            value: 'governments-loaded'
+          },
+
+          filteredGovernments: {
+            type: Array,
+            readOnly: true,
+            notify: true
+          },
+
+          totalResults: {
+            type: Number,
+            readOnly: true,
+            notify: true
+          },
+
+          currentQuery: {
+            type: Object,
+            value: null
+          },
+
+          unicefUsersData: {
+            type: Array
+          }
+        },
+
+        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
+
+          // If an active query transaction exists, abort it and start
+          // a new one
+
+          if (this.currentQuery) {
+            this.currentQuery.abort();
+          }
+
+          var _this = this;
+
+          this.db.transaction('r', this.db.governments, function() {
+            this.currentQuery = Dexie.currentTransaction;
+
+            var governmentsQueryResult = _this.db.governments;
+
+            if (field) {
+              // note: null values don't appear in result set of sort
+              governmentsQueryResult = governmentsQueryResult.orderBy(field);
+            }
+
+            if (order === 'desc') {
+              governmentsQueryResult = governmentsQueryResult.reverse();
+            }
+
+            governmentsQueryResult = governmentsQueryResult.filter(function(government) {
+
+              government.unicef_focal_point_names = [];
+
+              for(var key in government.unicef_focal_points) {
+                government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
+              }
+
+              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {
+                return false;
+              }
+
+              if (unicefFocalPoints.length) {
+                var matchUnicefFocalPoints = government.unicef_focal_points.filter(function(fPt) {
+                  return unicefFocalPoints.indexOf(fPt) > -1;
+                });
+                if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
+                  return false;
+                }
+              }
+
+              if (cpOutputs.length) {
+                var matchCpOut = government.cp_outputs.filter(function(cpOut) {
+                  return cpOutputs.indexOf(cpOut) > -1;
+                });
+                if (matchCpOut && matchCpOut.length === 0) {
+                  return false;
+                }
+              }
+
+              if (searchString && searchString.length &&
+                  government.number.toLowerCase().indexOf(searchString) < 0 &&
+                  government.partner_name.toLowerCase().indexOf(searchString) < 0) {
+                return false;
+              }
+
+              if (sectors.length) {
+                var matchSectors = government.sectors.filter(function(sector) {
+                  return sectors.indexOf(sector) > -1;
+                });
+                if (matchSectors && matchSectors.length === 0) {
+                  return false;
+                }
+              }
+
+              if (years.length) {
+                var matchYears = government.years.filter(function(year) {
+                  return years.indexOf(year) > -1;
+                });
+                if (matchYears && matchYears.length === 0) {
+                  return false;
+                }
+              }
+
+              return true;
+            });
+
+            // This special Dexie function allows the work of counting
+            // the number of query results to be done in a parallel process,
+            // instead of blocking the main query
+            Dexie.ignoreTransaction(function() {
+              governmentsQueryResult.count(function(count) {
+                _this._setTotalResults(count);
+              });
+            });
+
+            return governmentsQueryResult
+                .offset((pageNumber - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+
+          }).then(function(result) {
+            _this._setFilteredGovernments(result);
+          }).catch(function(error) {
+            console.error('Error querying interventions: ' + error);
+          });
+        },
+
+        getUserNameFromId: function(Id) {
+          for (var i=0; i < this.unicefUsersData.length; i++) {
+            if (this.unicefUsersData[i].value === Id) {
+              return this.unicefUsersData[i].label;
+            }
+          }
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

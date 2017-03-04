@@ -8,11 +8,11 @@
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
-
+<link rel="import" href="../app-elements/governments/government-details.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-
+<link rel="import" href="../app-config/etools-app-config.html">
 <dom-module id="page-partners">
 
   <template>
@@ -37,7 +37,10 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data id="partnerData" partner-id="[[routeData.id]]" partner="{{partner}}"></partner-item-data>
+    <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error"></partner-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
@@ -53,17 +56,20 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!listActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href="[[csvDownloadUrl]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>
               </div>
-              <div class="top-content-action">
+              <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
+              </div>-->
             </div>
           </div>
           <template is="dom-if" if="[[tabsActive]]">
@@ -93,19 +99,19 @@
                   role="main">
 
         <div class="page" name="list">
-          <partners-list id="list" active="[[listActive]]" url-params="[[queryParams]]"></partners-list>
+          <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}" url-params="[[queryParams]]"></partners-list>
         </div>
         <div class="page" name="overview">
           <partner-overview partner="[[partner]]"></partner-overview>
         </div>
         <div class="page" name="details">
-          <partner-details 
-              partner="[[partner]]" 
-              edit-mode="[[_hasEditPermissions(permissions)]]"
-              on-save-partner="_savePartner">      
-          </partner-details>
+          <partner-details id="partnerDetails"
+                           partner="[[partner]]"
+                           edit-mode="[[_hasEditPermissions(permissions)]]"
+                           on-save-partner="_savePartner"></partner-details>
         </div>
       </iron-pages>
+
 
     </app-header-layout>
 
@@ -126,14 +132,26 @@
         },
         routeData: {
           type: Object,
+        },
+        csvDownloadUrl: {
+          type: String
+        },
+        selectedPartnerId: {
+          type: Number
         }
       },
 
       observers: [
         '_resizeHeader(tabsActive)',
         '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, routeData.tab)'
+        '_pageChanged(listActive, routeData.tab)',
+        '_observeRouteDataId(routeData.id)'
       ],
+
+      listeners: {
+        'partner-save-error': '_partnerSaveError'
+      },
+
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -182,6 +200,19 @@
         event.stopImmediatePropagation();
         this.$.partnerData.savePartner(event.detail);
       },
+
+      _observeRouteDataId: function(id) {
+        this.set('selectedPartnerId', id);
+      },
+
+      _partnerSaveError: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.$.partnerDetails.set('serverErrors', event.detail);
+        }
+
+      }
 
     });
 

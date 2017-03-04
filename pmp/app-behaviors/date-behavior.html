@@ -49,6 +49,50 @@
           datePicker.open = true;
         }
       }
+    },
+
+    /**
+     * Diff between 2 dates
+     */
+    dateDiff: function(firstDateString, secondDateString, unit) {
+      if (!unit) {
+        unit = 'days';
+      }
+      if (typeof firstDateString === 'string' && firstDateString !== '' &&
+          typeof secondDateString === 'string' && secondDateString !== '') {
+        var firstDate = new Date(firstDateString);
+        var secondDate = new Date(secondDateString);
+
+        if (firstDate.toString() !== 'Invalid Date' && secondDate.toString() !== 'Invalid Date') {
+          var mFirstDate = moment.utc(firstDate);
+          var mSecondDate = moment.utc(secondDate);
+          return mSecondDate.diff(mFirstDate, unit)
+        }
+      }
+      return null;
+    },
+
+    getMaxDateStr: function(d1Str, d2Str) {
+      // TODO: optimize this
+      var d1 = new Date(d1Str);
+      var d2 = new Date(d2Str);
+      if (d1.toString() === 'Invalid Date' && d2.toString() !== 'Invalid Date') {
+        return d2Str;
+      } else if (d1.toString() !== 'Invalid Date' && d2.toString() === 'Invalid Date') {
+        return d1Str;
+      } else if (d1.toString() === 'Invalid Date' && d2.toString() === 'Invalid Date') {
+         return null;
+      } else {
+         if (moment.utc(d1).isSameOrBefore(d2)) {
+           return d2Str;
+         } else {
+           return d1Str;
+         }
+      }
+    },
+
+    isFutureDate: function(dateStr) {
+      return moment.utc().isBefore(moment.utc(new Date(dateStr)));
     }
 
   };

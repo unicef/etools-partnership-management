@@ -1,0 +1,77 @@
+{
+  "id": 3739,
+  "profile": {
+    "office": "New York",
+    "section": "Enginnering",
+    "country_name": "UAT",
+    "countries_available": [
+      {
+        "id": 1,
+        "name": "Global",
+        "business_area_code": "0"
+      },
+      {
+        "id": 2,
+        "name": "UAT",
+        "business_area_code": "0"
+      },
+      {
+        "id": 9,
+        "name": "Lebanon",
+        "business_area_code": "2490"
+      },
+      {
+        "id": 10,
+        "name": "Syria Cross Border",
+        "business_area_code": "234R"
+      },
+      {
+        "id": 11,
+        "name": "Syria",
+        "business_area_code": "4140"
+      },
+      {
+        "id": 12,
+        "name": "Sudan",
+        "business_area_code": "4020"
+      },
+      {
+        "id": 27,
+        "name": "Indonesia",
+        "business_area_code": "2070"
+      }
+    ],
+    "guid": null,
+    "partner_staff_member": null,
+    "job_title": "",
+    "phone_number": "",
+    "installation_id": null,
+    "staff_id": null,
+    "org_unit_code": null,
+    "org_unit_name": null,
+    "post_number": null,
+    "post_title": null,
+    "vendor_number": null,
+    "section_code": null,
+    "country": 2,
+    "country_override": 2,
+    "supervisor": null,
+    "oic": null
+  },
+  "full_name": "Adrian Hangan",
+  "t2f": {
+    "roles": [
+      "Anyone"
+    ],
+    "travel_count": 0
+  },
+  "last_login": "2017-01-28T07:08:10.516689Z",
+  "is_superuser": true,
+  "username": "adi@unicef.org",
+  "first_name": "Adrian",
+  "last_name": "Hangan",
+  "email": "adi@unicef.org",
+  "is_staff": true,
+  "is_active": true,
+  "date_joined": "2016-12-21T15:04:10Z"
+}

@@ -19,7 +19,8 @@ App global configuration
       agreements: 'id, name, agreement_number, partner_name, start, end',
       interventions: 'id, number, partner_name, document_type, ' +
         'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
-      user: 'id'
+      user: 'id',
+      governments: 'number, country_programme, country_programme_name, cp_outputs, partner, partner_name, sectors, unicef_focal_points, years'
     });
 
     var etoolsAppConfig = {
@@ -53,14 +54,9 @@ App global configuration
           'userInfoMenu',
           'viewPartnerDetails',
           'viewAgreementDetails',
-          'viewInterventionDetails'
+          'viewInterventionDetails',
         ],
-        partnerOnlyPermissions: ['interventionsMenu'],
-        partnerPermissions: ['interventionsMenu'],
-        managementPermissions: [
-          'statsMenu',
-          'editPartnerDetails',
-          'editAgreementDetails',
+        unicefUserPermissions: [
           'editInterventionDetails'
         ],
         superPermissions: [
@@ -74,24 +70,46 @@ App global configuration
           'editAgreementDetails',
           'viewInterventionDetails',
           'editInterventionDetails'
+        ],
+        partnershipManagerPermissions: [
+          'partnershipManager',
+          'editPartnerDetails',
+          'editAgreementDetails',
+        ],
+        PMEPermissions: [
+          'PME'
+        ],
+        ICTPermissions: [
+          'ICT'
         ]
       }
     };
 
     var localEps = {
+//      changeCountry: {
+//        url: '/users/api/changecountry/'
+//      },
+      // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
+      unicefUsers: {
+        url: '../../data/users-api.json',
+        exp: 60 * 60 * 1000, // 1h
+        cachingKey: 'unicefUsers'
+      },
       user: {
-        url: '/users/api/profile/',
+        url: '../../data/users-api-profile.json',
         exp: 30 * 60 * 1000, // 30min
         cachingKey: 'user'
       },
       agreements: {
-        //template: '/management/api/stats/agreements/',
         url: '../../data/agreements.json',
         exp: 30 * 60 * 1000, // 30min
         cachingKey: 'agreements'
       },
+      agreementDetails: {
+        url: '../../data/agreement-details.json',
+      },
       countries: {
-        url: '../../data/countries.json',
+        url: '../../data/countries.json', // API request receives a 404 for now
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'countries'
       },
@@ -99,6 +117,45 @@ App global configuration
         url: '../../data/partners.json',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'partners'
+      },
+      partnerDetails: {
+        url: '../../data/partner_details.json',
+        // exp: 6 * 1000, // 6 sec
+        // if this caching key is missing then the data will be cached with the url as key
+        // cachingKey: 'partnerDetails'
+      },
+      interventions: {
+        url: '../../data/interventions.json',
+        exp: 5 * 60 * 1000, // 5min
+        cachingKey: 'interventions'
+      },
+      interventionDetails: {
+        url: '../../data/intervention-detail.json',
+      },
+      dropdownsPmp: {
+        url: '../../data/dropdowns-pmp.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsPmp'
+      },
+      dropdownsStatic: {
+        url: '../../data/dropdowns-static.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'dropdownsStatic'
+      },
+      sectors: {
+        url: '../../data/sectors.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'sectors'
+      },
+      locations: {
+        url: '../../data/locations-lite.json',
+        exp: 60 * 60 * 60 * 1000, // 60h
+        cachingKey: 'locations'
+      },
+      offices: {
+        url: '../../data/offices.json',
+        exp: 6 * 60 * 60 * 1000, // 6h
+        cachingKey: 'offices'
       }
     };
 
@@ -125,6 +182,24 @@ App global configuration
       agreementDetails: {
         template: '/api/v2/agreements/<%=id%>/',
       },
+      partnerAssessmentDelete: {
+        template: '/api/v2/partners/assessments/<%=id%>/',
+      },
+      interventionResultLinkDelete: {
+        template: '/api/v2/interventions/results/<%=id%>/',
+      },
+      agreementAmendmentsDelete: {
+        template: '/api/v2/agreements/amendments/<%=id%>/',
+      },
+      agreementAmendmentsTypeDelete:  {
+        template: '/api/v2/agreements/amendments/types/<%=id%>/',
+      },
+      lowerResultsDelete:  {
+        template: '/api/v2/reports/lower_results/<%=id%>/',
+      },
+      myProfile:  {
+        template: '/api/v2/users/myprofile/',
+      },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
         exp: 6 * 60 * 60 * 1000, // 6h
@@ -140,6 +215,9 @@ App global configuration
         // exp: 6 * 1000, // 6 sec
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
+      },
+      partnerStaffMembers: {
+        template: '/api/v2/partners/<%=id%>/staff-members/',
       },
       interventions: {
         url: '/api/v2/interventions/',
@@ -165,7 +243,7 @@ App global configuration
         cachingKey: 'sectors'
       },
       locations: {
-        url: '/api/locations/',
+        url: '/api/locations',
         exp: 60 * 60 * 60 * 1000, // 60h
         cachingKey: 'locations'
       },
@@ -173,8 +251,40 @@ App global configuration
         url: '/api/offices',
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'offices'
+      },
+      governments: {
+        cachingKey: 'governments',
+        exp: 5 * 60 * 1000, // 5min
+        url : '/api/v2/government_interventions/'
+      },
+      governmentsDetails: {
+        template : '/api/v2/government_interventions/<%=id%>/'
+      },
+      countryProgrammes: {
+        cachingKey: 'countryProgrammes',
+        exp: 5 * 60 * 1000, // 5min
+        url : '/api/v2/reports/countryprogramme/'
+      },
+      sections: {
+          url : '/api/sections',
+          exp: 6 * 60 * 60 * 1000,
+          cachingKey: 'sections'
+      },
+      ramIndicators: {
+        template: '/api/v2/reports/results/<%=id%>/indicators/',
+      },
+      governmentIntResultDelete : {
+        template : '/api/v2/government_interventions/results/<%=id%>/'
+      },
+      governmentResultActivityDelete: {
+        template : '/api/v2/government_interventions/results/activities/<%=id%>/'
+      },
+      monitoringVisits: {
+        template: '/api/t2f/travels/activities/<%=id%>/',
+      },
+      sectorLocationsDelete : {
+        template : '/api/v2/interventions/sector-locations/<%=id%>/'
       }
-
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;

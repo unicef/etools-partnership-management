@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
@@ -32,7 +33,15 @@
       .item-container {
         padding: 15px 0;
       }
+
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
     </style>
+
+    <etools-ajax id="deleteAjax"
+                 on-success="_handleDeleteResponse"
+                 on-fail="_handleDeleteError"></etools-ajax>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
@@ -42,7 +51,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!editMode]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -55,7 +64,11 @@
                                                        placeholder="&#8212;"
                                                        value="[[_setSector(item.sector, sectors.length)]]"
                                                        options="[[sectors]]"
-                                                       on-value-change="_sectorSelected">
+                                                       on-value-change="_sectorSelected"
+                                                       required$="[[required]]"
+                                                       auto-validate
+                                                       error-message="Please select a sector"
+                                                       readonly$="[[!editMode]]">
                 </etools-searchable-multiselection-menu>
               </div>
               <div class="col col-9">
@@ -65,7 +78,11 @@
                                                        value="[[_setSectorLocations(item.locations, locations.length)]]"
                                                        options="[[locations]]"
                                                        on-value-change="_locationsSelected"
-                                                       multi>
+                                                       multi
+                                                       required$="[[required]]"
+                                                       auto-validate
+                                                       error-message="Please select sector locations"
+                                                       readonly$="[[!editMode]]">
                 </etools-searchable-multiselection-menu>
               </div>
             </div>
@@ -94,6 +111,7 @@
         is: 'intervention-sector-locations',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
@@ -106,6 +124,15 @@
           sectors: {
             type: Array,
             statePath: 'sectors'
+          },
+          required: {
+            type: Boolean,
+            value: false
+          },
+          _deleteEpName: {
+            type: String,
+            value: 'sectorLocationsDelete',
+            readOnly: true,
           }
         },
         observers: [
@@ -159,7 +186,7 @@
 
         _setSectorLocations: function(locations) {
           if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
-            var selectedLocationsIds = locations.map(function(location){
+            var selectedLocationsIds = locations.map(function(location) {
               return parseInt(location.id, 10);
             });
             return this.locations.filter(function(l) {
@@ -201,23 +228,53 @@
         },
 
         /**
-         * The sector location row data can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        _canBeRemoved: function(index) {
-          var sectorLocationsItem = this.dataItems[index];
-          var sectorLocationsItemId = parseInt(sectorLocationsItem.id, 10);
-          if (sectorLocationsItemId && isNaN(sectorLocationsItemId) === false && sectorLocationsItemId > 0) {
-            // sector location item already saved (has an id assigned)
-            return false;
-          }
-          return true;
-        },
-
-        /**
          * Validate last added sector location and if is not empty add a new one
          */
         _addNewSectorLocation: function() {
           this._addElement();
+        },
+
+        /**
+         * Validation
+         */
+        validate: function() {
+          var valid = true;
+          if (this.dataItems.length === 0 && this.required) {
+            this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
+          } else {
+            if (!this.required) {
+              return valid;
+            }
+            this.dataItems.forEach(function(item, index) {
+              var sectorEl = this.$$('#sector_' + index);
+              var locationsEl = this.$$('#locations_' + index);
+              if (!sectorEl.validate()) {
+                valid = false;
+              }
+              if (!locationsEl.validate()) {
+                valid = false;
+              }
+            }.bind(this));
+          }
+          return valid;
+        },
+
+        /**
+         * Reset any error msg from a previous validation
+         */
+        resetValidations: function() {
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(item, index) {
+              var sectorEl = this.$$('#sector_' + index);
+              if (sectorEl) {
+                sectorEl.invalid = false;
+              }
+              var locationsEl = this.$$('#locations_' + index);
+              if (locationsEl) {
+                locationsEl.invalid = false;
+              }
+            }.bind(this));
+          }
         }
 
       });

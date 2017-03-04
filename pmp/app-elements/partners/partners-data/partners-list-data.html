@@ -65,6 +65,11 @@
             notify: true
           },
 
+          partnersFilteredDropdownData: {
+            type: Array,
+            notify: true
+          },
+
           prepareDropdownData: {
             type: Boolean,
             value: false
@@ -77,28 +82,61 @@
               partnersDropdownData: partnersDropdownData
             };
           },
+          setPartnersFilteredDropdown: function(partnersFilteredDropdownData) {
+            return {
+              type: 'SET_PARTNERS_FILTERED_DROPDOWN',
+              partnersFilteredDropdownData: partnersFilteredDropdownData
+            };
+          },
           setPartners: function(partnersData) {
             return {
               type: 'SET_PARTNERS',
               partnersData: partnersData
             };
+          },
+          setCivilSocietyOrganizationPartners: function(csoPartners) {
+            return {
+              type: 'SET_CSO_PARTNERS',
+              csoPartners: csoPartners
+            };
           }
         },
 
-        observers: ['_dataChanged(data.length)'],
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading partners data...', active: true});
+          }
+          this._elementReady();
+        },
 
         _handleMyResponse: function(res) {
           this._handleResponse(res);
-          this.dispatch('setPartners', res.detail);
-          var preparedData = res.detail.map(function(p) {
+          if (res.detail && res.detail.length) {
+            this.dispatch('setPartners', res.detail);
+            var preparedData = [];
+            var filteredData = [];
+            var civilSocietyOrganizationPartners = [];
+            res.detail.forEach(function(p) {
+              if (!p.hidden && p.partner_type === 'Civil Society Organization') {
+                civilSocietyOrganizationPartners.push(p);
+              }
               if (!p.hidden) {
-                return {
+                preparedData.push({
                   value: p.id,
                   label: p.name
-                };
-            }
-          });
-          this.dispatch('setPartnersDropdown', preparedData);
+                });
+              }
+              if (!p.hidden && p.partner_type === 'Government') {
+                filteredData.push({
+                  value: p.id,
+                  label: p.name
+                });
+              }
+            });
+            this.dispatch('setPartnersDropdown', preparedData);
+            this.dispatch('setPartnersFilteredDropdown', filteredData);
+            this.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
+          }
         },
 
         query: function(field, order, searchString, partnerType, csoType,
@@ -171,28 +209,6 @@
           }).catch(function(error) {
             console.error('Error querying partners: ' + error);
           });
-        },
-
-        _setPartnersDropdownData: function(partners) {
-          var preparedData = [];
-          if (partners.length > 0) {
-            // TODO: decide how are we gonna get this data ... if it remains like this cache it using dexiejs db
-            preparedData = partners.map(function(p) {
-              if (!p.hidden) {
-                return {
-                  value: p.id,
-                  label: p.name
-                };
-              }
-            });
-          }
-          this.set('partnersDropdownData', preparedData);
-        },
-
-        _dataChanged: function() {
-          if (this.prepareDropdownData) {
-            this._setPartnersDropdownData(this.data);
-          }
         }
 
       });

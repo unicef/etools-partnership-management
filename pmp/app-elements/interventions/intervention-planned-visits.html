@@ -31,6 +31,10 @@
       paper-input {
         width: 100%;
       }
+
+      .action.delete[disabled] {
+        visibility: hidden;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -41,7 +45,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -54,28 +58,38 @@
                                                        placeholder="&#8212;"
                                                        value="[[_getSelectedYear(item.year, years.length)]]"
                                                        options="[[years]]"
-                                                       on-value-change="_yearChanged">
+                                                       on-value-change="_yearChanged"
+                                                       readonly$="[[!editMode]]">
                 </etools-searchable-multiselection-menu>
               </div>
               <div class="col col-3">
+                <!-- TODO: min="0" not enought, re-check and restrict to values >= 0 -->
                 <paper-input label="Programmatic Visits"
                              value="{{item.programmatic}}"
                              type="number"
-                             placeholder="&#8212;">
+                             min="0"
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
               <div class="col col-3">
                 <paper-input label="Spot Checks"
                              value="{{item.spot_checks}}"
                              type="number"
-                             placeholder="&#8212;">
+                             min="0"
+                             hidden
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
               <div class="col col-3">
                 <paper-input label="Audit"
                              value="{{item.audit}}"
                              type="number"
-                             placeholder="&#8212;">
+                             min="0"
+                             hidden
+                             placeholder="&#8212;"
+                             readonly$="[[!editMode]]">
                 </paper-input>
               </div>
             </div>
@@ -111,6 +125,11 @@
           years: {
             type: Array,
             value: []
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
           }
         },
         observers: [
@@ -127,6 +146,12 @@
           };
         },
 
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
+        },
+
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
@@ -136,7 +161,10 @@
         /**
          * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index) {
+        _canBeRemoved: function(index, editMode) {
+          if (!editMode) {
+            return false;
+          }
           var plannedVisit = this.dataItems[index];
           var plannedVisitId = parseInt(plannedVisit.id, 10);
           if (plannedVisitId && isNaN(plannedVisitId) === false && plannedVisitId > 0) {

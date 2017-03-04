@@ -1,0 +1,78 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+
+<dom-module id="partner-staff-members-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleStaffMembersResponse"></etools-ajax>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'partner-staff-members-data',
+
+        behaviors: [
+          etoolsAppConfig.globals
+        ],
+
+        properties: {
+          endpointName: {
+            type: String,
+            value: 'partnerStaffMembers'
+          },
+          partnerId: {
+            type: Number,
+            value: 0,
+            observer: '_partnerIdChanged'
+          },
+          staffMembers: {
+            type: Array,
+            value: []
+          },
+          preparedStaffMembersData: {
+            type: Array,
+            notify: true
+          },
+        },
+
+        _partnerIdChanged: function(newId) {
+          if (newId > 0) {
+            // reset data
+            this.set('data', []);
+            this.set('preparedStaffMembersData', []);
+            // set the endpoint
+            this.fire('global-loading', {message: 'Loading partner staff members data...', active: true});
+            this.$.ajax.set('endpoint', this.getEndpoint(this.endpointName, {id: newId}));
+          } else {
+            this.$.ajax.set('url', null);
+          }
+        },
+
+        _handleStaffMembersResponse: function(res) {
+          this.set('staffMembers', res.detail);
+          if (res.detail instanceof Array && res.detail.length) {
+            var preparedStaffMembers = res.detail.map(function(staffMember) {
+              return {
+                id: staffMember.id,
+                name: staffMember.first_name + ' ' + staffMember.last_name
+              };
+            });
+            this.set('preparedStaffMembersData', preparedStaffMembers);
+          }
+          this.fire('global-loading', {active: false});
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

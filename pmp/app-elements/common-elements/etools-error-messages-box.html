@@ -1,0 +1,105 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
+
+<dom-module id="etools-error-messages-box">
+
+  <template>
+    <style include="buttons-styles">
+      :host {
+        @apply(--layout-horizontal);
+        @apply(--layout-flex);
+        @apply(--etools-error-messages-box);
+      }
+      :host([hidden]) {
+        display: none;
+      }
+      etools-content-panel {
+        width: 100%;
+      }
+      .errors-box {
+        margin-bottom: 25px;
+      }
+
+      .errors-box {
+        /* TODO: replace colors with app-theme variables */
+        --ecp-header-bg: #E54F2E;
+        --ecp-content: {
+          color: #a94442;
+          background-color: #f2dede;
+          border-color: #ebccd1;
+        };
+      }
+
+      ul {
+        padding: 0 0 0 20px;
+        margin: 0;
+      }
+      .errors-box-actions {
+        margin-top: 20px;
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+      paper-button {
+        margin: 0;
+      }
+    </style>
+
+    <etools-content-panel class="errors-box" title="[[title]]">
+      <ul>
+        <template is="dom-repeat" items=[[errors]]>
+          <li>[[item]]</li>
+        </template>
+      </ul>
+
+      <div class="errors-box-actions">
+        <paper-button class="primary-btn danger-btn"
+                      on-tap="_resetErrors"
+                      hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
+          Ok
+        </paper-button>
+      </div>
+    </etools-content-panel>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-error-messages-box',
+
+        properties: {
+          title: String,
+          errors: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          hidden: {
+            type: Boolean,
+            computed: '_errorsLengthChanged(errors)',
+            reflectToAttribute: true
+          }
+        },
+
+        _errorsLengthChanged: function(errors) {
+          if (!errors || (errors && !errors.length)) {
+            return true;
+          }
+          return false;
+        },
+
+        _resetErrors: function() {
+          this.set('errors', []);
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

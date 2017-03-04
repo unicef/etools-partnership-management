@@ -20,11 +20,20 @@
       fireDataLoaded: {
         type: Boolean,
         value: false
+      },
+
+      showLoading: {
+        type: Boolean,
+        value: false
       }
 
     },
 
     ready: function() {
+      this._elementReady();
+    },
+
+    _elementReady: function() {
       if (!this.endpointName) {
         console.warn('Please specify an endpointName property');
       } else {

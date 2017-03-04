@@ -1,0 +1,100 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+<dom-module id="etools-single-file">
+
+  <template>
+    <style include="file-styles">
+      :host {
+        @apply(--layout-horizontal);
+        width: 100%;
+        min-height: 62px;
+      }
+      #file-wrapper {
+        width: 100%;
+      }
+    </style>
+    <div id="file-wrapper" class="file-container">
+      <etools-file id="files"
+                   files="{{attachments}}"
+                   label="[[label]]"
+                   accept="[[accept]]"
+                   readonly$="[[readonly]]"
+                   invalid$="[[invalid]]"
+                   error-message=[[errorMessage]]>
+      </etools-file>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-single-file',
+        behaviors: [pmpBehaviors.CommonGeneralBehavior],
+        properties: {
+          attachments: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          },
+          readonly: Boolean,
+          accept: String,
+          label: String,
+          file: {
+            type: Object,
+            notify: true,
+          },
+          internalFile: {
+            type: Object,
+            observer: '_fileChanged'
+          },
+          invalid: {
+            type: Boolean,
+            value: false
+          },
+          errorMessage: {
+            type: String,
+            value: 'Please select a file'
+          }
+        },
+        observers: [
+          '_attachmentChanged(attachments.length)',
+          '_fileReplaced(attachments.*)'
+        ],
+
+        _fileChanged: function(intr) {
+          if (this.internalFile) {
+            this.set('attachments', this.prepareEtoolsFileDataFromUrl(this.internalFile));
+          } else {
+            this.set('attachments', []);
+          }
+        },
+        _attachmentChanged: function(filesLength) {
+          if (filesLength > 0) {
+            if (this.attachments[0].raw instanceof File) {
+              this.set('file', this.attachments[0].raw);
+            } else {
+              this.set('file', null);
+            }
+          } else {
+            this.set('file', null);
+          }
+        },
+
+        _fileReplaced: function(data) {
+          if (data.path === 'attachments.#0') {
+            // file changed
+            this._attachmentChanged(this.attachments.length);
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

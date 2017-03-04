@@ -3,8 +3,7 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-
-<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
+<link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -42,13 +41,11 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <partners-list-data partners-dropdown-data="{{partnersDropdownData}}"
-                        prepare-dropdown-data>
-    </partners-list-data>
 
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
-                         agreement-id="[[routeData.id]]"></agreement-item-data>
+                         agreement-id="[[selectedAgreementId]]"
+                         error-event-name="agreement-save-error"></agreement-item-data>
 
     <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -60,30 +57,33 @@
                 <span>Agreements</span>
               </template>
 
-              <template is="dom-if" if="[[_showNewAgreementTitle(agreementPage, agreement)]]">
+              <template is="dom-if" if="[[_showNewAgreementTitle(agreementPage, agreement, agreement.id)]]">
                 <span>Add Agreement</span>
               </template>
 
-              <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement)]]">
-                <span>[[_getAgreementDetailsTitle(agreement)]]</span>
+              <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement, agreement.id)]]">
+                <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
               </template>
 
               </span>
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
+                <a target="_blank" href="[[csvDownloadUrl]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>
               </div>
-              <div class="top-content-action">
+             <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action">
                 <paper-button>
                   <iron-icon icon="print"></iron-icon>
                   Print
                 </paper-button>
-              </div>
-              <div class="top-content-action" hidden$="[[!agreementListActive]]">
+              </div>-->
+              <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
                 <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                   <iron-icon icon="add"></iron-icon>
                   Add New Agreement
@@ -115,24 +115,21 @@
         <div class="page" name="list">
           <agreements-list id="list"
                            active="[[agreementListActive]]"
-                           url-params="[[agreementQueryParams]]"
-                           partners-dropdown-data="[[partnersDropdownData]]"
-                           agreement-types="[[agreementTypes]]">
+                           csv-download-url="{{csvDownloadUrl}}"
+                           url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
           <agreement-details
+              id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
-              partners-dropdown-data="[[partnersDropdownData]]"
-              agreement-types="[[agreementTypes]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
       </iron-pages>
-
     </app-header-layout>
 
   </template>
@@ -149,15 +146,12 @@
           type: String,
           notify: true
         },
-
-        partnersDropdownData: {
-          type: Array,
-          notify: true
+        permissions: {
+          type: Object
         },
 
-        agreementTypes: {
-          type: Array,
-          notify: true
+        selectedAgreementId: {
+          type: Number
         },
 
         newAgreementModel: {
@@ -179,29 +173,24 @@
             signed_by: null,
             partner_manager: null
           }
-        }
+        },
+        csvDownloadUrl: {
+          type: String
+        },
 
       },
 
       observers: [
         '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
+        '_observeRouteDataId(routeData.id)'
       ],
 
+      listeners: {
+        'agreement-save-error': '_agreementSaveErrors'
+      },
+
       ready: function() {
-        this.set('agreementTypes', [
-          {name: 'MOU', label: 'Momarendum of Understanding'},
-          {name: 'PCA', label: 'Programme Cooperation Agreement'},
-          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
-        ]);
-
-
-        // TODO: replace this placeholder data
-        // get fake data for testing
-        // TODO: remove this after API si used
-        //var localSavedAgreement = JSON.parse(localStorage.getItem('newAgreement'));
-        //this.set('agreement', localSavedAgreement);
-
         // TODO: remove this
         if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
@@ -212,6 +201,12 @@
         this.$$('app-header-layout').notifyResize();
       },
 
+      _showNewAgreementAddButton: function(agreementListActive, permissions) {
+        if (!agreementListActive || !permissions.partnershipManager) {
+          return false;
+        }
+        return true;
+      },
       // get active page name
       _getActivePage: function(listActive, newAgreementActive, detailsActive) {
         var page = 'list'; // default
@@ -275,7 +270,7 @@
        */
       _getTopContentAdditionalClass: function(activePage) {
         if (this._showPageTabs(activePage)) {
-          return 'with-tabs'
+          return 'with-tabs';
         }
         return '';
       },
@@ -303,6 +298,13 @@
       _newAgreementSaved: function(agreement) {
         this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       },
+      _agreementSaveErrors: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.$.agreementDetails.set('serverErrors', event.detail);
+        }
+      },
 
       /**
        * Go to new agreement page, it's just tha same details page with an empty agreement
@@ -311,7 +313,11 @@
       _goToNewAgreementPage: function() {
         // go to new agreement
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        this.set('selectedAgreementId', 0);
         this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
+      },
+      _observeRouteDataId: function(id) {
+        this.set('selectedAgreementId', id);
       }
 
     });
