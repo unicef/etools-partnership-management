@@ -1,0 +1,119 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+
+<link rel="import" href="../../app-behaviors/data-element-behavior.html">
+
+<dom-module id="user-data">
+
+  <template>
+
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="user"
+                 on-success="_handleResponse"
+                 on-fail="_handleError"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'user-data',
+
+        behaviors: [pmpBehaviors.DataElementBehavior, 
+                    etoolsAppConfig.globals],
+
+        properties: {
+
+          endpointName: {
+            type: String,
+            value: 'user'
+          },
+
+          user: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          userGroups: {
+            type: Array,
+            readOnly: true
+          },
+
+          permissions: {
+            type: Object,
+            readOnly: true,
+            notify: true,
+          }
+
+        },
+
+        _handleResponse: function(res) {
+          // TODO: check response to make sure it contains a valid user
+          this._setUserData(res.detail);
+        },
+
+        _findGroup: function(groupName) {
+          return _.find(this.userGroups, function(grp){ return grp.name === groupName})
+        },
+        _handleError: function(rsp, err) {
+          console.log(rsp);
+          console.log(err);
+          this._setUser(null);
+          this._setPermissions(null);
+        },
+
+        _setUserData: function(data) {
+          var _user = data;
+          var _permissions = {};
+
+          this._setUser(_user);
+          var permissionsList = this.getAllPermissions();
+
+          if (!_.isEmpty(data)) {
+            this._setUserGroups(_user.groups)
+
+            permissionsList.defaultPermissions.forEach(function(perm) {
+              _permissions[perm] = true;
+            });
+            if (this._findGroup('UNICEF User')) {
+              permissionsList.unicefUserPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
+            }
+            if (this._findGroup('Partnership Manager')) {
+              permissionsList.partnershipManagerPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
+            }
+            if (this._findGroup('PME')) {
+              permissionsList.PMEPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
+            }
+            if (this._findGroup('ICT')) {
+              permissionsList.ICTPermissions.forEach(function(perm) {
+                _permissions[perm] = true;
+              });
+            }
+          } else {
+            //for testing
+            permissionsList.superPermissions.forEach(function(perm) {
+              _permissions[perm] = true;
+            });
+          }
+          this._setPermissions(_permissions);
+        }
+
+      });
+
+    })();
+
+  </script>
+
+</dom-module>

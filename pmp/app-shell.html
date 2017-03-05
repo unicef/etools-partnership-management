@@ -1,0 +1,410 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="app-elements/page-header/page-header.html">
+<link rel="import" href="app-elements/page-footer/page-footer.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+
+<link rel="import" href="../scripts/polyfils/es6-polyfils.html">
+
+<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
+
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+
+<link rel="import" href="app-config/etools-app-config.html">
+<link rel="import" href="app-elements/users-data/user-data.html">
+<link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
+<link rel="import" href="app-elements/page-header/page-header.html">
+<link rel="import" href="app-elements/page-footer/page-footer.html">
+<link rel="import" href="app-behaviors/notification-toasts-behavior.html">
+
+<link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
+<link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
+
+<link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
+<link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
+<link rel="import" href="app-elements/static-common-data/sectors-data.html">
+<link rel="import" href="app-elements/static-common-data/sections-data.html">
+<link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
+<link rel="import" href="app-elements/static-common-data/offices-data.html">
+<link rel="import" href="app-elements/static-common-data/locations-data.html">
+<link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
+
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="../styles/page-layout-styles.html">
+<link rel="import" href="../styles/app-theme.html">
+
+<dom-module id="app-shell">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles  iron-flex iron-flex-alignment">
+
+      :host {
+        display: block;
+      }
+
+      app-drawer {
+        z-index: 100;
+        --app-drawer-width: 220px;
+        --app-drawer-content-container: {
+            background-color: var(--light-theme-content-color);
+        };
+      }
+
+      app-toolbar {
+        background-color: #0099FF;
+        color: white;
+        --app-toolbar-font-size: 16px;
+      }
+
+      .side-nav-wrapper {
+        @apply(--layout-vertical);
+
+        height: 100%;
+        overflow-y: var(--side-bar-scrolling);
+        overflow-x: hidden;
+        border-right: 1px solid var(--dark-divider-color);
+      }
+
+      .side-nav-wrapper .header {
+        min-height: 60px;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      #etools-logo {
+        height: 50%;
+        width: 60%;
+      }
+      .uppercase {
+        text-transform: uppercase;
+      }
+
+      #unicef-logo {
+        height: 100%;
+        width: 60%;
+      }
+
+      #app-select {
+        margin-left: auto;
+        width: 47px;
+        height: 47px;
+      }
+      
+      .side-nav-wrapper .nav-menu {
+        padding: 8px 0;
+      }
+
+      .side-nav-wrapper .divider {
+        margin: 8px 0;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+      .nav-menu, .flexy {
+        @apply(--layout-flex);
+      }
+      .secondary-header {
+        color: var(--gray-dark);
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 12px;
+        border-top: 1px solid var(--gray-lighter);
+      }
+      .warning-toast-dismiss-btn {
+        text-transform: none;
+        color: #eeff41; /* TODO: replace with a var from above */
+      }
+      .last-one {
+        margin-bottom: 10px;
+      }
+      .lighter-item {
+        --dark-icon-color: var(--gray-light);
+        --dark-primary-text-color: var(--gray-light);
+      }
+
+    </style>
+
+    <!-- get static data -->
+    <dropdowns-pmp-data></dropdowns-pmp-data>
+    <dropdowns-static-data></dropdowns-static-data>
+    <sectors-data></sectors-data>
+    <sections-data></sections-data>
+    <unicef-users-data></unicef-users-data>
+    <offices-data></offices-data>
+    <locations-data></locations-data>
+    <partners-list-data></partners-list-data>
+    <agreement-list-data></agreement-list-data>
+    <country-programmes-data></country-programmes-data>
+
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
+
+    <app-location route="{{route}}"></app-location>
+
+    <app-route
+        route="{{route}}"
+        pattern$="[[baseUrl]]:page"
+        data="{{routeData}}"></app-route>
+
+    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
+
+      <!-- Drawer content -->
+      <app-drawer id="drawer" transition-duration="350">
+
+        <div class="side-nav-wrapper">
+
+          <app-toolbar class="header uppercase">
+            Partnership <br>
+            Management
+          </app-toolbar>
+
+          <div class="nav-menu layout vertical">
+            <iron-selector selected="[[page]]" attr-for-selected="menu-name" selectable="side-bar-item" role="navigation">
+              <template is="dom-if" if="[[permissions.loggedInDefault]]">
+                <side-bar-item menu-name="partners" name="partners" icon="social:people" href$="[[baseUrl]]partners/list"></side-bar-item>
+                <side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>
+                <side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>
+                <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
+              </template>
+            </iron-selector>
+          
+            <div class="flexy"></div>
+
+            <div class="secondary-header">eTools Community Channels</div>
+            <side-bar-item name="Knowledge base" class="lighter-item" icon="maps:local-library" href="https://etools.uservoice.com"></side-bar-item>
+            <side-bar-item name="Discussion" class="lighter-item" icon="icons:question-answer" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"></side-bar-item>
+            <side-bar-item name="Information" class="lighter-item last-one" icon="icons:info" href="http://etools.unicefresults.org"></side-bar-item>
+          </div>  
+        </div>
+
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout fullbleed has-scrolling-region>
+        <app-header  fixed shadow>
+          <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
+        </app-header>
+        <iron-pages id="pages"
+                    selected="[[page]]"
+                    attr-for-selected="name"
+                    fallback-selection="not-found"
+                    role="main">
+
+          <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
+            <page-partners name="partners"
+                           on-dom-change="_pagesStamped"
+                           route="[[subroute]]"
+                           user="[[user]]"
+                           permissions="[[permissions]]">
+
+            </page-partners>
+            <page-agreements name="agreements"
+                             route="[[subroute]]"
+                             user="[[user]]"
+                             permissions="[[permissions]]">
+            </page-agreements>
+            <page-interventions name="interventions"
+                                route="[[subroute]]"
+                                permissions="[[permissions]]">
+            </page-interventions>
+            <page-governments name="governments"
+                              route="[[subroute]]"
+                              permissions="[[permissions]]">
+            </page-governments>
+          </template>
+          <page-not-found name="not-found"></page-not-found>
+
+          </iron-pages>
+          <page-footer></page-footer>
+        </app-header-layout>
+      </app-drawer-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'app-shell',
+
+      properties: {
+
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+        route: {
+          type: Object
+        },
+        _pagesAvailable: {
+          type: Boolean,
+          value: false
+        },
+        narrow: {
+          type: Boolean,
+          reflectToAttribute: true
+        },
+        baseUrl: String,
+        initialLoad: {
+            type: Boolean,
+            value: true
+        },
+        permissions: {
+            type: Object,
+            value: null
+        },
+        subroute: {
+          type: Object
+        }
+
+      },
+
+      behaviors: [
+        etoolsAppConfig.globals,
+        pmpBehaviors.NotificationToastsBehavior,
+        etoolsBehaviors.LoadingBehavior
+      ],
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+        '_permissionsPagesStamped(permissions, _pagesAvailable)'
+      ],
+
+      listeners: {
+        'global-loading': '_handleLoading',
+        'drawer': 'toggleDrawer',
+        '404': '_pageNotFound',
+        'update-main-path': '_updateMainPath',
+        'forbidden': '_onForbidden'
+        },
+
+      _onForbidden: function(event) {
+        console.error('unauthorized');
+        window.location.href = this.loginPath;
+      },
+
+      ready: function() {
+        // create loading element, used for global loading
+        this.globalLoadingElement = this.createLoading();
+        this.fire('global-loading', {message: 'Loading data...', active: true});
+      },
+
+      attached: function() {
+        // for some reason the "$=" will make basePath undefined, we need to use a local property
+        this.baseUrl = this.basePath;
+
+        //if (this.route.path === this.baseUrl) {
+        //  this.set('route.path', this.baseUrl + 'partners/list');
+        //}
+      },
+      detached: function() {
+        // clean: remove global loading element if the app-shell is detached
+        this.removeLoading(this.globalLoadingElement);
+      },
+
+      _updateMainPath: function(event) {
+        if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
+          // set route.path only if received path is different
+          this.set('route.path', this.baseUrl + event.detail.path);
+          this.set('route.__queryParams', null);
+        }
+        event.stopPropagation();
+      },
+      _permissionsPagesStamped: function(permissions, _pagesAvailable) {
+        if (!permissions || !_pagesAvailable) {
+            return;
+        }
+        if ((this.route.path === this.baseUrl || this.route.path === '/') &&
+            permissions.loggedInDefault) {
+          // setting the default path
+          this.set('route.path', this.baseUrl + 'partners/list');
+        } else if (this.initialLoad) {
+          // reseting the page as the pages might not have been stamped
+          this._routePageChanged(this.routeData.page);
+        }
+
+        this.initialLoad = false;
+      },
+      toggleDrawer: function() {
+        this.$.drawer.toggle();
+      },
+
+      _routePageChanged: function(page) {
+        if ((this.route) && (this.baseUrl)) {
+          var subroute = JSON.parse(JSON.stringify(this.route));
+          subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
+          this.set('subroute', subroute);
+        }
+        
+        if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
+          this.set('page', (page || 'partners'));
+        } else {
+          //console.log('No permissions yet or page hasn\'t stampped', page);
+        }
+      },
+
+      _pageChanged: function(page) {
+        var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._pageNotFound, true);
+      },
+
+      _pageNotFound: function() {
+        this.page = 'not-found';
+        this.fire('toast', {text: 'Oops you hit a 404!'});
+      },
+
+      _pagesStamped: function() {
+        if (!this._pagesAvailable) {
+          this.$.privatePages.render();
+          this._pagesAvailable = true;
+        }
+      },
+
+      /**
+       * Show loading when data is requested from server, or save is in progress...
+       */
+      _handleLoading: function(event) {
+        event.stopImmediatePropagation();
+        this.debounce('showGlobalLoading', function() {
+          if (this.globalLoadingElement) {
+            var loadingMsg = 'Loading...';
+            if (event.detail && typeof event.detail.message === 'string' && event.detail.message !== '') {
+              loadingMsg = event.detail.message;
+            }
+            this.globalLoadingElement.loadingText = loadingMsg;
+            var isActive = (event.detail.active === true) ? true : false;
+            this.globalLoadingElement.active = isActive;
+          }
+        }, 50);
+      }
+
+    });
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,153 @@
+<!--
+Nothing is editable in this element, we only use it to display amendment data and
+keep amendments element small and easy to understand
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+
+<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+
+<link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+
+
+<dom-module id="agreement-amendment-details">
+  <template>
+    <style include="grid-layout-styles shared-styles file-styles">
+
+      :host {
+        display: block;
+        width: 100%;
+      }
+
+      .row-h.notes {
+        font-style: italic;
+        margin-top: 0;
+      }
+
+      .amendment-type-item + .amendment-type-item {
+        margin-top: 15px;
+      }
+
+      paper-input, paper-textarea {
+        width: 100%;
+      }
+
+      .amendment-type-item .row-h {
+        margin-top: 0;
+      }
+
+    </style>
+
+    <div class="row-h">
+      <div class="col col-4">
+        <!-- Signed Date -->
+        <paper-input label="Signed Date"
+                     value="[[prettyDate(amendment.signed_date)]]"
+                     readonly>
+        </paper-input>
+      </div>
+      <div class="col col-8 file-container space-left">
+        <!-- Signed Amendment -->
+        <etools-file label="Signed Amendment"
+                     files="[[prepareAttachementFile(amendment.signed_amendment_file)]]"
+                     readonly>
+        </etools-file>
+      </div>
+    </div>
+
+    <template is="dom-repeat" items="[[amendment.amendment_types]]" as="amendmentType"
+              index-as="amendmentTypeIndex">
+
+      <div class="amendment-type-item">
+
+        <div class="row-h">
+          <div class="col col-4">
+            <!-- Amendment Type -->
+            <paper-input label="Amendment Type"
+                        value="[[amendmentType.type]]"
+                        readonly>
+            </paper-input>
+          </div>
+
+          <div class="col col-8">
+
+            <template is="dom-if" if="[[showAmendmentTypeOfficer(amendmentType.type)]]">
+              <!-- Officer -->
+              <paper-input label="Officer"
+                          value="[[getOfficerName(amendmentType.officer, staffMembers, staffMembers.length)]]"
+                          readonly>
+              </paper-input>
+            </template>
+
+            <template is="dom-if" if="[[showAmendmentTypeLegalNameOfIp(amendmentType.type)]]">
+              <!-- Legal name of IP -->
+              <paper-input label="Full Name of Implementing Partner"
+                          value="[[amendmentType.legal_name_of_ip]]"
+                          readonly>
+              </paper-input>
+            </template>
+
+            <template is="dom-if"
+                      if="[[showAmendmentTypeExtensionProgrammeCycle(amendmentType.type)]]">
+              <!-- End Date -->
+              <paper-input label="CP Cycle End Date"
+                          value="[[prettyDate(amendmentType.cp_cycle_end)]]"
+                          readonly>
+              </paper-input>
+            </template>
+
+            <template is="dom-if" if="[[showAmendmentTypeAdditionalClauses(amendmentType.type)]]">
+              <!-- Additional Clauses -->
+              <paper-textarea label="Additional Clauses"
+                              value="[[amendmentType.additional_clauses]]"
+                              readonly>
+              </paper-textarea>
+            </template>
+
+            <template is="dom-if" if="[[showAmendmentTypeExistingClauseAmended(amendmentType.type)]]">
+              <!-- Change Existing Clauses -->
+              <paper-textarea label="Clause Change"
+                              value="[[amendmentType.existing_clause_amended]]"
+                              readonly>
+              </paper-textarea>
+            </template>
+
+          </div>
+        </div>
+      </div>
+
+    </template>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'agreement-amendment-details',
+
+        behaviors: [
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.AgreementAmendmentsBehavior
+        ],
+
+        properties: {
+          amendment: {
+            type: Object
+          },
+          staffMembers: {
+            type: Array
+          }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

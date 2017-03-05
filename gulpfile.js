@@ -16,6 +16,11 @@ const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
 const argv = require('yargs').argv;
 
+// const $ = {
+//   useref: require('gulp-useref'),
+//   replace: require('gulp-replace')
+// }
+
 // Got problems? Try logging 'em
 // use -l to activate plylogs
 if (argv.l) {
@@ -31,7 +36,7 @@ global.config = {
   appName: 'app',
   polymerJsonPath: path.join(process.cwd(), 'polymer.json'),
   build: {
-    rootDirectory: 'build',
+    rootDirectory: 'build/pmp',
     bundledDirectory: 'bundled',
     unbundledDirectory: 'unbundled',
     // Accepts either 'bundled', 'unbundled', or 'both'
@@ -46,9 +51,10 @@ global.config = {
   // Service Worker precache options based on
   // https://github.com/GoogleChrome/sw-precache#options-parameter
   swPrecacheConfig: {
+    replacePrefix: '/pmp/',
     navigateFallback: '/index.html'
   },
-  sourceCodeDirectory: './src'
+  sourceCodeDirectory: './pmp'
 };
 
 // Change global config if building into eTools
@@ -85,8 +91,10 @@ var log = function (message) {
 
 function source() {
   return project.splitSource()
-  // Add your own build tasks here!
-    .pipe(gulpif('**/*.html', html.lint())).on('end', log('Linted HTML'))
+  // // Add your own build tasks here!
+    //.pipe(gulpif('**/*index*.js', html.productionBasePath())).on('end', log('Replaced Base'))
+    .pipe(gulpif('**/*.html', html.lint()))
+    .on('end', log('Linted HTML'))
     .pipe(gulpif('**/*.html', html.minify())).on('end', log('Minified HTML'))
 
     // lint CSS not working correctly. Not seeing temporary css files
@@ -96,7 +104,7 @@ function source() {
     .pipe(gulpif('**/*.js', javascript.lint())).on('end', log('Linted Javascript'))
     .pipe(gulpif('**/*.js', javascript.minify())).on('end', log('Minified Javascript'))
 
-    .pipe(gulpif('**/*.{png,gif,jpg,svg}', images.minify())).on('end', log('Minified Images'))
+    .pipe(gulpif('**/*.{gif,jpg,svg}', images.minify())).on('end', log('Minified Images'))
 
     .pipe(project.rejoin()); // Call rejoin when you're finished
 }

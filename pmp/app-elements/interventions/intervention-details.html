@@ -1,0 +1,544 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../common-elements/etools-date-input.html">
+
+<link rel="import" href="intervention-form/agreement-selector.html">
+
+<link rel="import" href="intervention-planned-budget.html">
+<link rel="import" href="intervention-expected-results.html">
+<link rel="import" href="intervention-planned-visits.html">
+<link rel="import" href="intervention-sector-locations.html">
+<link rel="import" href="intervention-status.html">
+
+<dom-module id="intervention-details">
+
+  <template>
+
+    <style include="page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply(--layout-vertical);
+        width: 100%;
+      }
+      paper-input,
+      paper-textarea,
+      agreement-selector,
+      paper-material {
+        width: 100%;
+      }
+
+      paper-material {
+        padding: 0;
+      }
+      paper-material paper-toolbar {
+        --paper-toolbar-height: 40px;
+        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar: {
+          -webkit-border-radius: 8px;
+          -moz-border-radius: 8px;
+          border-radius: 8px;
+        };
+        --paper-toolbar-title: {
+          @apply(--nested-content-panel-title);
+          margin-left: 0;
+        };
+      }
+      .expiry-warning {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+        @apply(--layout-end-justified);
+        padding-bottom: 12px;
+        color: #ea4022; /* TODO: replace with app-theme var */
+      }
+    </style>
+
+    <etools-content-panel class="content-section" title="Partnership Information">
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <agreement-selector id="agreementSelector"
+            agreement-id="{{intervention.agreement}}"
+            partner-id="{{selectedPartnerId}}"
+            selected-agreement="{{agreement}}"
+            intervention-id="[[intervention.id]]"
+            edit-mode$="[[detailsEditMode]]"></agreement-selector>
+        </div>
+        <div class="col col-3">
+          <etools-searchable-multiselection-menu id="documentType"
+                                                 label="Document Type"
+                                                 placeholder="&#8212;"
+                                                 options="[[currentDocTypes]]"
+                                                 custom-object-options
+                                                 selected="{{intervention.document_type}}"
+                                                 update-selected
+                                                 hide-search
+                                                 dynamic-align
+                                                 required auto-validate
+                                                 error-message="Document type is required"
+                                                 readonly$="[[!detailsEditMode]]">
+          </etools-searchable-multiselection-menu>
+        </div>
+        <div class="col col-3">
+          <!-- Reference Number -->
+          <paper-input label="Reference Number"
+                       value="[[intervention.number]]"
+                       placeholder="&#8212;"
+                       disabled></paper-input>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Title -->
+        <paper-input id="title"
+                     label="Title"
+                     value="{{intervention.title}}"
+                     placeholder="&#8212;"
+                     char-counter
+                     maxlength="256"
+                     required auto-validate
+                     error-message="Please add a title"
+                     readonly$="[[!detailsEditMode]]"></paper-input>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <etools-searchable-multiselection-menu id="unicefOffices"
+                                                 label="UNICEF Office(s)"
+                                                 placeholder="&#8212;"
+                                                 options="[[offices]]"
+                                                 custom-object-options
+                                                 selected="{{intervention.offices}}"
+                                                 update-selected
+                                                 dynamic-align
+                                                 multi required auto-validate
+                                                 error-message="Please select intervention's office(s)"
+                                                 readonly$="[[!detailsEditMode]]">
+          </etools-searchable-multiselection-menu>
+        </div>
+        <div class="col col-6">
+          <etools-searchable-multiselection-menu id="unicefFocalPts"
+                                                 label="UNICEF Focal Point(s)"
+                                                 placeholder="&#8212;"
+                                                 options="[[unicefUsersData]]"
+                                                 custom-object-options
+                                                 selected="{{intervention.unicef_focal_points}}"
+                                                 update-selected
+                                                 dynamic-align
+                                                 multi
+                                                 required$="[[interventionRequiredField]]"
+                                                 auto-validate
+                                                 error-message="Please select UNICEF focal points"
+                                                 readonly$="[[!detailsEditMode]]">
+          </etools-searchable-multiselection-menu>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <div class="col col-6">
+          <etools-searchable-multiselection-menu id="partnerFocalPts"
+                                                 label="Partner Focal Point(s)"
+                                                 placeholder="&#8212;"
+                                                 options="[[partnerStaffMembers]]"
+                                                 custom-object-options
+                                                 option-value="id"
+                                                 option-label="name"
+                                                 selected="{{intervention.partner_focal_points}}"
+                                                 update-selected
+                                                 dynamic-align
+                                                 multi
+                                                 required$="[[interventionRequiredField]]"
+                                                 auto-validate
+                                                 error-message="Please select partner focal points"
+                                                 readonly$="[[!detailsEditMode]]">
+          </etools-searchable-multiselection-menu>
+        </div>
+      </div>
+    </etools-content-panel>
+
+    <etools-content-panel class="content-section" title="PD or SSFA Details">
+      <div class="row-h flex-c">
+        <div class="col col-3">
+          <etools-searchable-multiselection-menu id="hrps"
+                                                 label="In response to an HRP, Select"
+                                                 placeholder="&#8212;"
+                                                 options="[[hrps]]"
+                                                 custom-object-options
+                                                 selected="{{intervention.hrp}}"
+                                                 update-selected
+                                                 dynamic-align
+                                                 readonly$="[[!detailsEditMode]]">
+          </etools-searchable-multiselection-menu>
+        </div>
+        <div class="col col-3">
+          <!-- Start date -->
+          <etools-date-input id="intStart"
+                             label="Start date"
+                             value="{{intervention.start}}"
+                             readonly$="[[!detailsEditMode]]"
+                             error-message="Please select start date"
+                             required$="[[nterventionRequiredField]]"
+                             auto-validate
+                             no-init show-clear-btn>
+          </etools-date-input>
+        </div>
+        <div class="col col-3">
+          <!-- End date -->
+          <etools-date-input id="intEnd"
+                             label="End date"
+                             value="{{intervention.end}}"
+                             readonly$="[[!detailsEditMode]]"
+                             error-message="Please select end date"
+                             required$="[[nterventionRequiredField]]"
+                             auto-validate
+                             no-init show-clear-btn>
+          </etools-date-input>
+        </div>
+        <div class="col col-3">
+          <div class="expiry-warning">
+            <span>[[_daysUntilExpiry(intervention.end)]]</span>
+          </div>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Population Focus -->
+        <paper-textarea id="populationFocus"
+                        label="Population Focus"
+                        value="{{intervention.population_focus}}"
+                        placeholder="&#8212;"
+                        char-counter
+                        maxlength="130"
+                        required$="[[interventionRequiredField]]"
+                        auto-validate
+                        error-message="Please enter population focus content"
+                        readonly$="[[!detailsEditMode]]"></paper-textarea>
+      </div>
+      <div class="row-h flex-c">
+        <paper-material elevation="0">
+          <paper-toolbar>
+            <div class="title">Sector Locations</div>
+          </paper-toolbar>
+          <intervention-sector-locations id="sectorLocations"
+                                         data-items="{{intervention.sector_locations}}"
+                                         edit-mode$="[[detailsEditMode]]"
+                                         required$="[[interventionRequiredField]]">
+          </intervention-sector-locations>
+        </paper-material>
+      </div>
+    </etools-content-panel>
+
+    <etools-content-panel class="content-section" title="Expected results">
+      <intervention-expected-results id="expectedResults"
+          data-items="{{intervention.result_links}}"
+          edit-mode$="[[detailsEditMode]]"
+          intervention-id="[[intervention.id]]"
+          required$="[[interventionRequiredField]]">
+      </intervention-expected-results>
+    </etools-content-panel>
+
+    <etools-content-panel class="content-section" title="Planned Budget">
+      <intervention-planned-budget id="plannedBudget"
+                                   data-items="{{intervention.planned_budget}}"
+                                   intervention-id="[[intervention.id]]"
+                                   edit-mode$="[[detailsEditMode]]"
+                                   years="[[years]]"
+                                   required$="[[interventionRequiredField]]"></intervention-planned-budget>
+    </etools-content-panel>
+    <etools-content-panel class="content-section" title="Planned Visits">
+      <intervention-planned-visits id="plannedVisits"
+                                   data-items="{{intervention.planned_visits}}"
+                                   edit-mode$="[[detailsEditMode]]"
+                                   years="[[years]]"></intervention-planned-visits>
+    </etools-content-panel>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'intervention-details',
+
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.CommonGeneralBehavior
+        ],
+
+        properties: {
+          intervention: {
+            type: Object,
+            observer: '_interventionChanged'
+          },
+          permissions: {
+            type: Object
+          },
+          selectedPartnerId: {
+            type: Number,
+            notify: true,
+            observer: '_selectedPartnerIdChanged'
+          },
+          partnerStaffMembers: {
+            type: Array,
+            value: []
+          },
+          documentTypes: {
+            type: Array,
+            statePath: 'interventionDocTypes'
+          },
+          pcaDocTypes: {
+            type: Array,
+            value: []
+          },
+          ssfaDocTypes: {
+            type: Array,
+            value: []
+          }, 
+          currentDocTypes: {
+            type: Array,
+            value: []
+          },
+          offices: {
+            type: Array,
+            statePath: 'offices'
+          },
+          unicefUsersData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+          hrps: {
+            type: Array,
+            statePath: 'hrps'
+          },
+          years: {
+            type: Array,
+            value: []
+          },
+          agreement: {
+            type: Object,
+            value: null
+          },
+          interventionRequiredField: {
+            type: Boolean,
+            value: false
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
+          },
+          detailsEditMode: {
+            type: Boolean,
+            value: false
+          },
+          newIntervention: {
+            type: Boolean,
+            observer: 'newInterventionFlagChanged'
+          },
+          fieldsResetted: {
+            type: Boolean
+          }
+        },
+
+        observers: [
+          '_agreementSelected(agreement)',
+          '_setYears(intervention.start, intervention.end)'
+        ],
+
+        ready: function() {
+          var pcaTypes = [];
+          var ssfaTypes = [];
+          this.documentTypes.forEach(function(type) {
+            if (type.value !== 'SSFA') {
+              pcaTypes.push(type);
+            }
+            if (type.value === 'SSFA') {
+              ssfaTypes.push(type);
+            }
+          });
+          this.set('pcaDocTypes', pcaTypes);
+          this.set('ssfaDocTypes', ssfaTypes);
+        },
+
+        _interventionChanged: function(intervention) {
+          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+            this._setNewEditMode();
+            if (intervention.id > 0) {
+              this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
+              this._agreementSelected(this.agreement);
+            } else {
+              this.set('selectedPartnerId', null);
+            }
+            this.set('fieldsResetted', false);
+            this.newInterventionFlagChanged();
+          } else {
+            this.set('interventionRequiredField', false);
+          }
+
+          // ensure loading msg close
+          this.fire('global-loading', {active: false});
+        },
+
+        newInterventionFlagChanged: function() {
+          if (this.intervention && !this.fieldsResetted) {
+            this._resetValidations();
+          }
+        },
+
+        _resetValidations: function() {
+          this.$.agreementSelector.resetValidations();
+          this.$.documentType.resetInvalidState();
+          var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+            'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
+          fields.forEach(function(field) {
+            this.fieldValidationReset('#' + field);
+          }.bind(this));
+
+          var elements = ['sectorLocations', 'expectedResults',
+            'plannedBudget', 'plannedVisits'];
+          elements.forEach(function(el) {
+            this.elementValidationReset('#' + el);
+          }.bind(this));
+          this.set('fieldsResetted', true);
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
+        },
+        _setNewEditMode: function() {
+          if (!this.editMode) {
+            this.set('detailsEditMode', this.editMode);
+            return;
+          };
+          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
+                (!this.intervention.status || this.intervention.status !== 'draft')) {
+            this.set('detailsEditMode', false);
+          } else {
+            this.set('detailsEditMode', true);
+
+          }
+          this.updateStyles();
+
+
+        },
+
+        _setYears: function(interventionStart, interventionEnd) {
+          if (typeof interventionStart === 'string' && interventionStart !== ''
+              && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            this.debounce('setInterventionYears', function() {
+              var start = parseInt(interventionStart.substr(0, 4), 10);
+              var end = parseInt(interventionEnd.substr(0, 4), 10);
+              var years = [];
+              while (start <= end) {
+                years.push({
+                  value: start,
+                  label: start
+                });
+                start++;
+              }
+              this.set('years', years);
+            }.bind(this), 50);
+          }
+        },
+
+        _selectedPartnerIdChanged: function(id, oldId) {
+
+          if (typeof oldId === 'number' && id !== oldId) {
+            // reset partner focal points options and value
+            this.set('intervention.partner_focal_points', []);
+            this.set('partnerStaffMembers', []);
+          }
+        },
+
+        /**
+         * When an agreement is selected then check it's type and update document types dropdown
+         */
+        _agreementSelected: function(agreement) {
+          var options = this.documentTypes;
+          if (agreement && agreement.agreement_type) {
+            switch (agreement.agreement_type) {
+              case 'PCA':
+                options = this.pcaDocTypes;
+                break;
+              case 'SSFA':
+                options = this.ssfaDocTypes;
+                break;
+              default:
+                options = this.documentTypes;
+                break;
+            } 
+          }
+          this.set('currentDocTypes', options);
+        },
+
+        /**
+         * Some interventions fields are required only if status is active or implemented
+         */
+        _requiredInterventionField: function(status) {
+          return status === 'active' || status === 'implemented';
+        },
+
+        prepareSectorLocations: function() {
+          if (this.intervention.sector_locations.length > 0) {
+            return this.intervention.sector_locations.map(function(sectorLocation) {
+              return {
+                id: sectorLocation.id,
+                sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
+                locations: this._prepareLocationsForSave(sectorLocation.locations)
+              };
+            }.bind(this));
+          }
+          return [];
+        },
+
+        _prepareLocationsForSave: function(locations) {
+          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length === 0)) {
+            return [];
+          }
+          return locations.map(function(location) {
+            return location.id;
+          });
+        },
+
+        validate: function() {
+          var valid = true;
+          var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+            'partnerFocalPts', 'intStart', 'intEnd', 'populationFocus', 'sectorLocations',
+            'plannedBudget', 'expectedResults'];
+          fields.forEach(function(field) {
+            if (!this.$$('#' + field).validate()) {
+              valid = false;
+            }
+          }.bind(this));
+          return valid;
+        },
+
+        _daysUntilExpiry: function(end) {
+          if (this.isFutureDate(end)) {
+            var today = new Date().toString();
+            var diff = this.dateDiff(today, end);
+            if (diff) {
+              return diff + ' days until expiry';
+            }
+          }
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

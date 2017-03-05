@@ -1,33 +1,69 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <!-- shared styles for all views -->
 <!-- not for styling index.html or pmp-shell -->
+
+<link rel="import" href="app-mixins.html">
 
 <dom-module id="shared-styles">
   <template>
     <style>
+      *[hidden] {
+        display: none !important;
+      }
 
       h1 {
-        font-size: 30px;
+        font-size: 25px;
         margin: 16px 0;
         color: var(--primary-text-color);
       }
 
       a {
-        text-decoration: none;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        color: var(--accent-color);
+        text-decoration: inherit;
+        color: inherit;
+      }
+
+      a:focus {
+        outline: inherit;
+      }
+
+      app-toolbar {
+        height: var(--toolbar-height);
+      }
+
+      #tabs {
+        height: 48px;
+      }
+
+      paper-tabs {
+        color: var(--light-primary-text-color);
+        --paper-tabs: {
+          font-size: 14px;
+          font-weight: 500;
+          text-transform: uppercase;
+        };
+      }
+
+      paper-tabs > * {
+        --paper-tab-ink: var(--accent-color);
+        --paper-tab-content-unselected: {
+          color: var(--light-secondary-text-color);
+        };
+      }
+
+      .tab-link {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+
+      paper-item {
+        font-size: 15px;
+        white-space: nowrap;
+      }
+
+      paper-material {
+        padding: 15px 20px;
+        background-color: var(--primary-background-color);
       }
 
       iron-icon.dark {
@@ -36,6 +72,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       iron-icon.light {
         --iron-icon-fill-color: var(--light-icon-color);
+      }
+
+      paper-icon-button.dark {
+        color: var(--dark-icon-color);
+        --paper-icon-button-ink-color: var(--dark-ink-color);
+      }
+
+      paper-icon-button.light {
+        color: var(--light-icon-color);
+        --paper-icon-button-ink-color: var(--light-ink-color);
+      }
+
+      .dropdown-with-clear-btn paper-icon-button.clear,
+      .dropdown-with-clear-btn paper-icon-button.remove,
+      paper-icon-button.remove-field.remove {
+        width: 35px;
+        height: 35px;
+        top: 10px;
+      }
+
+      .dropdown-with-clear-btn paper-icon-button.remove,
+      paper-icon-button.remove-field.remove {
+        color: #ea4022 /* TODO: replace with app-theme var */
+      }
+
+      .dropdown-with-clear-btn {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      paper-input {
+        --paper-input-prefix: {
+          margin-top: -5px;
+          margin-right: 10px;
+          color: var(--dark-secondary-text-color);
+        };
+        --paper-input-suffix: {
+          margin-top: -5px;
+          margin-left: 10px;
+          color: var(--dark-secondary-text-color);
+        };
+      }
+      paper-dropdown-menu paper-item {
+        cursor: pointer;
+      }
+
+      /* paper input readonly state */
+      paper-input[readonly],
+      paper-textarea[readonly],
+      .form-field-wrapper {
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        };
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+        --paper-input-char-counter: {
+          display: none;
+        };
+        width: 100%;
+      }
+
+      etools-searchable-multiselection-menu {
+        --esmm-readonly-input-container-underline: {
+          display: none;
+        };
+      }
+
+      paper-input.right-to-left {
+        text-align: right;
+        --paper-input-container-input: {
+          direction: rtl;
+          unicode-bidi: bidi-override;
+        }
+      }
+
+      .custom-field-wrapper {
+        padding: 8px 0;
+      }
+
+      .custom-field-wrapper etools-checkable-input {
+        --etools-checkable-input-label: {
+          margin-top: 1px;
+        }
+      }
+
+      /* responsive css rules */
+      @media (min-width: 850px) {
+
       }
 
     </style>

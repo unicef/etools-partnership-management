@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="page-not-found">
+
+  <template>
+
+    <style include="shared-styles">
+
+      :host {
+        display: block;
+      }
+
+      a {
+        color: var(--accent-color);
+      }
+
+    </style>
+
+    <app-header-layout has-scrolling-region>
+
+      <app-header fixed shadow>
+
+        <app-toolbar>
+          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+          <div main-title>404</div>
+        </app-toolbar>
+
+      </app-header>
+
+      <div id="pageContent">
+        <paper-material elevation="1">
+          <a href="/pmp/partners/list">Head back home.</a>
+        </paper-material>
+      </div>
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-not-found',
+
+      openDrawer: function() {
+        this.fire('drawer');
+      },
+
+    });
+
+  </script>
+
+</dom-module>

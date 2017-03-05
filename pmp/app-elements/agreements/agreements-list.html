@@ -1,0 +1,708 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+<link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-styles.html">
+<link rel="import" href="../../../styles/partner-status-styles.html">
+
+<link rel="import" href="agreement-data/agreement-list-data.html">
+<link rel="import" href="../partners/partners-data/partners-list-data.html">
+
+<link rel="import" href="../data-table/data-table-footer.html">
+<link rel="import" href="../data-table/data-table-header.html">
+<link rel="import" href="../data-table/data-table-column.html">
+<link rel="import" href="../data-table/data-table-row.html">
+
+<dom-module id="agreements-list">
+
+  <template>
+
+    <style include="shared-styles list-styles grid-layout-styles">
+    </style>
+
+    <agreement-list-data id="agreements"
+                         filtered-agreements="{{filteredAgreements}}"
+                         total-results="{{totalResults}}"
+                         on-agreements-loaded="_requiredDataHasBeenLoaded"
+                         fire-data-loaded show-loading>
+    </agreement-list-data>
+
+    <paper-material id="listControls" elevation="1">
+
+      <div class="wrap-controls">
+
+        <paper-input id="query"
+                     type="search"
+                     placeholder="Search"
+                     autocomplete="off"
+                     value="[[q]]"
+                     on-keyup="_onSearch"
+                     on-search="_onSearch">
+          <iron-icon icon="search" prefix></iron-icon>
+        </paper-input>
+
+        <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
+
+          <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
+            <div class="dropdown-with-clear-btn">
+              <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
+              <paper-dropdown-menu label$="[[filter.filterName]]" noink>
+                <paper-menu class="dropdown-content"
+                            attr-for-selected="name"
+                            on-iron-select="filterValueChanged"
+                            on-iron-deselect="filterValueChanged"
+                            data-filter-path$="[[filter.path]]"
+                            on-iron-activate="_dropdownSelected"
+                            selected=[[filter.alreadySelected]]>
+                  <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
+                    <paper-item name="[[filterOption.value]]">[[filterOption.label]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-dropdown-menu>
+              <paper-icon-button class="remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
+            <div class="filter esmm">
+              <etools-searchable-multiselection-menu
+                  label="[[filter.filterName]]"
+                  placeholder="&#8212;"
+                  disabled$="[[!filter.selectionOptions.length]"
+                  options="[[filter.selectionOptions]]"
+                  value="[[filter.alreadySelected]]"
+                  multi="[[filter.multiple]]"
+                  on-value-change="esmmValueChanged"
+                  data-filter-path$="[[filter.path]]"
+                  custom-object-options></etools-searchable-multiselection-menu>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
+            <div class="filter">
+              <paper-input label="[[filter.filterName]]"
+                           value="[[prettyDate(filter.dateSelected)]]"
+                           on-down="openDatePicker"
+                           data-selector$="datepicker_[[filter.path]]">
+                <etools-datepicker-button prefix
+                                          id$="datepicker_[[filter.path]]"
+                                          date="[[prepareDate(filter.dateSelected)]]"
+                                          format="D MMM YYYY"
+                                          data-filter-path$="[[filter.path]]"
+                                          on-date-has-changed="_filterDateHasChanged"
+                                          no-init show-clear-btn fire-date-has-changed>
+                </etools-datepicker-button>
+                </paper-icon-button>
+              </paper-input>
+              <paper-icon-button suffix class="remove-field remove" icon="cancel"
+                                 on-tap="removeFilter"
+                                 data-filter-name$="[[filter.filterName]]"
+                                 data-reset-path$="[[filter.path]]">
+              </paper-icon-button>
+            </div>
+          </template>
+
+        </template>
+
+      </div>
+
+      <div class="fixed-controls">
+
+        <div class="filters-divider"></div>
+
+        <paper-menu-button id="filterMenu">
+          <paper-button class="button dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
+          <paper-menu class="dropdown-content">
+            <template is="dom-repeat" items="[[availableListFilterOptions]]">
+              <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+            </template>
+          </paper-menu>
+        </paper-menu-button>
+
+      </div>
+
+    </paper-material>
+
+    <paper-material id="list" elevation="1">
+
+      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <data-table-column class="col-2" field="agreement_number" sortable>
+          Reference Number #
+        </data-table-column>
+        <data-table-column class="col-4" field="partner_name" sortable>
+          Partner Full Name
+        </data-table-column>
+        <data-table-column class="col-2" field="partner_type">
+          Type
+        </data-table-column>
+        <data-table-column class="col-2" field="partner_status">
+          Status
+        </data-table-column>
+        <data-table-column class="flex-c" field="start" sortable>
+          Start Date
+        </data-table-column>
+        <data-table-column class="flex-c" field="end" sortable>
+          End Date
+        </data-table-column>
+      </data-table-header>
+
+      <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" as="agreement" initial-count="10" on-dom-change="_listDataChanged">
+        <data-table-row details-opened="[[detailsOpened]]">
+          <div slot="row-data">
+
+            <a class="col-data col-2 truncate"
+               href="agreements/[[agreement.id]]/details"
+               title="[[getDisplayValue(agreement.agreement_number)]]">
+              [[getDisplayValue(agreement.agreement_number)]]
+            </a>
+            <span class="col-data col-4 truncate" title="[[getDisplayValue(agreement.partner_name)]]">
+                [[getDisplayValue(agreement.partner_name)]]
+            </span>
+            <span class="col-data col-2">
+                [[getDisplayValue(agreement.agreement_type)]]
+            </span>
+            <span class="col-data col-2 capitalize">
+                [[getDisplayValue(agreement.status)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.start)]]
+            </span>
+            <span class="col-data flex-c">
+                [[_checkAndShowAgreementDate(agreement.end)]]
+            </span>
+
+          </div>
+          <div slot="row-data-details">
+
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By Partner Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_partner_date)]]</span>
+            </div>
+            <div class="row-details-content col-2">
+              <span class="rdc-title">Signed By UNICEF Date</span>
+              <span>[[_checkAndShowAgreementDate(agreement.signed_by_unicef_date)]]</span>
+            </div>
+
+          </div>
+        </data-table-row>
+      </template>
+
+      <data-table-footer
+          page-size="[[pageSize]]"
+          page-number="[[pageNumber]]"
+          total-results="[[totalResults]]"
+          visible-range="{{visibleRange}}"
+          on-page-size-changed="_pageSizeSelected"
+          on-page-number-changed="_pageNumberChanged">
+      </data-table-footer>
+
+    </paper-material>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var _lastNavigated = null;
+
+      Polymer({
+
+        is: 'agreements-list',
+
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.DropdownBehavior,
+          pmpBehaviors.ListFiltersBehavior,
+          etoolsAppConfig.globals
+        ],
+
+        properties: {
+
+          filteredAgreements: {
+            type: Array,
+            notify: true,
+            observer: '_agreementsChanged'
+          },
+
+          q: {
+            type: String,
+            notify: true,
+            observer: '_qChanged'
+          },
+
+          agreementType: {
+            type: String
+          },
+
+          agreementStatus: {
+            type: String,
+          },
+
+          selectedPartners: {
+            type: Array,
+            observer: '_selectedPartnersChanged'
+          },
+
+          startDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          endDate: {
+            type: String,
+            observer: '_dateChanged'
+          },
+
+          sortOrder: Object,
+
+          pageNumber: {
+            type: Number
+          },
+
+          totalPages: {
+            type: Number
+          },
+
+          visibleRange: {
+            type: Array
+          },
+
+          pageSize: {
+            type: Number
+          },
+
+          debounceTime: {
+            type: Number,
+            value: 50
+          },
+
+          urlParams: {
+            type: Object
+          },
+
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'partnersDropdownData'
+          },
+
+          detailsOpened: Boolean,
+
+          active: Boolean,
+
+          forceDataRefresh: {
+            type: Boolean,
+            value: false
+          },
+
+          requiredDataLoaded: {
+            type: Boolean,
+            value: false
+          },
+          initComplete: {
+            type: Boolean,
+            value: false
+          },
+
+          agreementTypes: {
+            type: Array,
+            statePath: 'agreementTypes'
+          },
+          agreementStatuses: {
+            type: Array,
+            statePath: 'agreementStatuses'
+          },
+          csvDownloadUrl: {
+            type: String, 
+            notify: true
+          },
+
+        },
+
+        listeners: {
+          'sort-changed': '_sortOrderChanged',
+        },
+
+        observers: [
+
+          '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+            'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
+          '_init(active)'
+        ],
+
+        ready: function() {
+          this.$.list.classList.add('hidden');
+
+          // init list filter options
+          this.initListFiltersData([
+            {
+              filterName: 'Agreement Type',
+              type: 'dropdown',
+              selectionOptions: this.agreementTypes,
+              alreadySelected: null,
+              path: 'agreementType'
+            },
+            {
+              filterName: 'Agreement Status',
+              type: 'dropdown',
+              selectionOptions: this.agreementStatuses,
+              alreadySelected: null,
+              path: 'agreementStatus'
+            },
+             {
+              filterName: 'Partner',
+              type: 'esmm', // etools-searchable-multiselection-menu
+              multiple: true,
+              selectionOptions: this.partnersDropdownData,
+              alreadySelected: [],
+              path: 'selectedPartners'
+            },
+            {
+              filterName: 'Starts After',
+              type: 'datepicker', // etools-datepicker
+              dateSelected: '',
+              path: 'startDate'
+            },
+            {
+              filterName: 'Ends Before',
+              type: 'datepicker', // etools-datepicker
+              dateSelected: '',
+              path: 'endDate'
+            }
+          ]);
+        },
+
+        // Input: URL query params
+        // Initializes the properties of the list at page load
+        // to the params interpretted from the URL string.
+        _init: function(active) {
+          var parms = this.urlParams;
+          if (!active || !parms) {
+            return;
+          }
+          this.set('initComplete', false);
+          this.set('q', parms.q ? parms.q : '');
+          this.set('agreementType', parms.type ? parms.type : '');
+          this.set('agreementStatus', parms.status ? parms.status : '');
+          this.set('selectedPartners', parms.partners ? this._getPartners(parms.partners) : []);
+          this.set('startDate', parms.start ? parms.start : '');
+          this.set('endDate', parms.end ? parms.end : '');
+          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          // format of sort param is sort=field.order ex: sort=name.asc
+          var result = {field: 'partner_name', direction: 'asc'};
+          if (parms.sort) {
+            var p = parms.sort.split('.');
+            result = {field: p[0], direction: p[1]};
+          }
+          this.set('sortOrder', result);
+          this.set('initComplete', true);
+          this._updateSelectedFiltersValues();
+        },
+
+        _updateSelectedFiltersValues: function() {
+          this.debounce('updateShownFilters', function () {
+
+            var filtersValues = [
+              {
+                filterName: 'Agreement Type',
+                selectedValue: this.agreementType
+              }, 
+              {
+                filterName: 'Agreement Status',
+                selectedValue: this.agreementStatus
+              }, 
+              {
+                filterName: 'Partner',
+                selectedValue: this.selectedPartners
+              }, 
+              {
+                filterName: 'Starts After',
+                selectedValue: this.startDate
+              }, 
+              {
+                filterName: 'Ends Before',
+                selectedValue: this.endDate
+              },                           
+            ];            
+            this.updateShownFilters(filtersValues);
+
+          }.bind(this), 500);
+        },
+        
+
+        // Updates URL state with new query string, and launches query
+        _updateURL: function() {
+          if (!this.requiredDataLoaded || !this.initComplete) {
+            return;
+          }
+          
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+          var qs = this._buildQueryString();
+
+          if (qs !== _lastNavigated) {
+            _lastNavigated = qs;
+            // update URL
+            this.updateAppState('agreements/list', qs, true);
+            // filter agreements
+            if (this.requiredDataLoaded) {
+              this._filterAgreementsData();
+            }
+          } else {
+            if (location.search === '') {
+              // only update URL query string, without location change event being fired(no page refresh)
+              this.updateAppState('agreements/list', qs, false);
+            }
+            if (this.forceDataRefresh && this.requiredDataLoaded) {
+              // refilter agreements data
+              // this will only execute when agreements-loaded event is received
+              this._filterAgreementsData();
+              this.set('forceDataRefresh', false);
+            }
+          }
+        },
+
+        _filterAgreementsData: function() {
+          // Query is debounced with a debounce time
+          // set depending on what action the user takes
+          this.debounce('query', function() {
+            this.$.agreements.query(
+                this.sortOrder.field,
+                this.sortOrder.direction,
+                this.q.toLowerCase(),
+                this.agreementType,
+                this.agreementStatus,
+                _.map(this.selectedPartners, 'label'),
+                this.startDate,
+                this.endDate,
+                this.pageNumber,
+                this.pageSize);
+          }, this.debounceTime);
+        },
+
+        // Outputs the query string for the list
+        _buildQueryString: function() {
+          var out = [];
+          if (this.pageNumber && this.pageNumber > 1) {
+            out.push('page=' + this.pageNumber);
+          }
+          if (this.pageSize) {
+            out.push('size=' + this.pageSize);
+          }
+          if (this.q && this.q.length) {
+            out.push('q=' + this.q);
+          }
+          if (this.agreementType && this.agreementType.length) {
+            out.push('type=' + this.agreementType);
+          }
+          if (this.agreementStatus && this.agreementStatus.length) {
+            out.push('status=' + this.agreementStatus);
+          }
+          if (this.selectedPartners && this.selectedPartners.length) {
+            out.push('partners=' + _.map(this.selectedPartners, 'value').join('|'));
+          }
+          if (this.startDate && this.startDate.length) {
+            out.push('start=' + this.startDate);
+          }
+          if (this.endDate && this.endDate.length) {
+            out.push('end=' + this.endDate);
+          }
+          if (this.sortOrder && this.sortOrder.field && this.sortOrder.direction) {
+            out.push('sort=' + this.sortOrder.field + '.' + this.sortOrder.direction);
+          }
+
+          return out.join('&');
+        },
+
+        _buildCsvDownloadUrl: function() {        
+          var queryString = '';
+          var endpointUrl = '';
+          var params = [];
+
+          if (this.agreementType && this.agreementType.length) {
+            params.push('agreement_type=' + this.agreementType);
+          }
+          if (this.agreementStatus && this.agreementStatus.length) {
+            params.push('status=' + this.agreementStatus);
+          }
+          if (this.selectedPartners && this.selectedPartners.length) {
+            params.push('partner_name=' + this.selectedPartners[0].label);
+          }
+          if (this.startDate && this.startDate.length) {
+            params.push('start=' + this.startDate);
+          }
+          if (this.endDate && this.endDate.length) {
+            params.push('end=' + this.endDate);
+          }
+          if (this.q && this.q.length) {
+            params.push('search=' + this.q);
+          }
+
+          params.push('format=csv');
+          queryString = params.join('&');
+          endpointUrl = this.getEndpoint('agreements').url;
+          
+          return endpointUrl + '?' + queryString;
+        },
+
+        // Convert ids from URL into array of ids
+        _getPartners: function(urlIds) {
+          var urlIdsArr = urlIds.split('|');
+          if (urlIdsArr.length) {
+            var partnerIds = urlIdsArr.map(function(id) {
+              return parseInt(id, 10);
+            });
+            return this._getPartnersByIds(partnerIds);
+          }
+          return [];
+        },
+
+        // get partners by ids
+        _getPartnersByIds: function(partnerIds) {
+          if (partnerIds instanceof Array && partnerIds.length) {
+            var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
+              return partnerIds.indexOf(partner.value) > -1;
+            });
+            return _selectedPartners;
+          }
+          return [];
+        },
+
+        _onSearch: function() {
+          this.q = this.$.query.value;
+        },
+
+        _qChanged: function(q) {
+          this.set('debounceTime', 300);
+          this.set('pageNumber', 1);
+        },
+
+        _pageSizeSelected: function(e) {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+          this.set('pageSize', parseInt(e.detail.value));
+        },
+
+        _pageNumberChanged: function(e) {
+          this.set('debounceTime', 50);
+          this.set('pageNumber', e.detail.value);
+        },
+
+        _dropdownSelected: function() {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+        },
+
+        _selectedPartnersChanged: function() {
+          this.set('debounceTime', 200);
+          this.set('pageNumber', 1);
+        },
+
+        _dateChanged: function(date) {
+          this.set('pageNumber', 1);
+        },
+
+        _convertToDate: function(date) {
+          if (date && date.length) {
+            return new Date(date);
+          }
+        },
+
+
+//        _addDays: function(date, numDays) {
+//          if (date instanceof Date && date !== 'Invalid Date') {
+//            date.setDate(date.getDate() + numDays);
+//            return date;
+//          }
+//        },
+//
+//        _subtractDayString: function(dateString) {
+//          if (dateString && dateString.length) {
+//            return this._addDays(this._convertToDate(dateString), -1).toISOString();
+//          } else {
+//            return dateString;
+//          }
+//        },
+
+        // List fade in fade out effect
+        _agreementsChanged: function(filteredAgreements) {
+          var classList = this.$.list.classList;
+          if (filteredAgreements instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
+        },
+
+        // TODO: refactor this, it is identical with partner-lists _listDataChanged
+        _listDataChanged: function(event) {
+          var rows = this.$.list.querySelectorAll('data-table-row');
+          if (rows && rows.length) {
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].detailsOpened) {
+                rows[i].set('detailsOpened', false);
+              }
+            }
+          }
+        },
+
+        // verify date and prettify or not
+        _checkAndShowAgreementDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        },
+
+        _sortOrderChanged: function(e) {
+          this.set('debounceTime', 150);
+          this.set('sortOrder', e.detail);
+        },
+
+        /**
+         * At page refresh Dexie DBs might be wiped out and filteredAgreements will be empty.
+         * Because of this we need to refilter after agreements data is saved locally.
+         */
+        _requiredDataHasBeenLoaded: function(event) {
+          event.stopImmediatePropagation();
+          if (typeof this.filteredAgreements === 'undefined' ||
+              (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0)) {
+            this.set('forceDataRefresh',  true);
+          }
+          // recheck params to trigger agreements filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
+          this._init(this.active);
+          this.fire('global-loading', {active: false});
+        },
+
+      });
+    })();
+  </script>
+
+</dom-module>

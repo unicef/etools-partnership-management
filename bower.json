@@ -1,7 +1,7 @@
 {
-  "name": "Etools frontend template - based on polymer starter kit 2",
+  "name": "pmp",
   "authors": [
-    "The eTools team"
+    "The eTools Team"
   ],
   "private": true,
   "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
@@ -23,14 +23,30 @@
     "iron-ajax": "^1.4.3",
     "paper-input": "^1.1.19",
     "iron-input": "^1.0.10",
+    "iron-label": "^1.0.2",
     "iron-meta": "^1.1.2",
     "iron-icons": "^1.1.3",
     "etools-ajax": "^1.0.0",
     "paper-styles": "^1.1.4",
     "paper-dropdown-menu": "^1.4.1",
-    "etools-dropdown": "^1.0.0",
+    "etools-dropdown": "^1.0.4",
     "etools-dexiejs": "^1.0.0",
-    "paper-toast": "^1.3.0"
+    "paper-toast": "^1.3.0",
+    "paper-tabs": "^1.6.2",
+    "paper-listbox": "^1.1.2",
+    "paper-toggle-button": "^1.2.1",
+    "etools-datepicker": "^1.0.0",
+    "etools-checkable-input": "^1.0.0",
+    "etools-content-panel": "^1.0.1",
+    "iron-form": "PolymerElements/iron-form#^1.1.4",
+    "etools-page-refresh": "^1.0.0",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",
+    "paper-fab": "PolymerElements/paper-fab#^1.2.1",
+    "etools-dialog": "^1.0.0",
+    "etools-loading": "^1.0.3",
+    "etools-searchable-multiselection-menu": "^1.0.2",
+    "etools-file": "^1.0.0",
+    "polymer-redux": "^0.3.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

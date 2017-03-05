@@ -1,0 +1,547 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
+
+<link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
+<link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
+<link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
+
+<link rel="import" href="../app-elements/interventions/interventions-list.html">
+<link rel="import" href="../app-elements/interventions/intervention-details.html">
+<link rel="import" href="../app-elements/interventions/intervention-overview.html">
+<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
+<link rel="import" href="../app-elements/interventions/intervention-attachments.html">
+<link rel="import" href="../app-elements/interventions/intervention-status.html">
+<link rel="import" href="../app-config/etools-app-config.html">
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+<dom-module id="page-interventions">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles buttons-styles">
+
+      :host {
+        display: block;
+      }
+
+      .list-page {
+        max-width: 920px;
+        margin: 20px auto;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="interventions/list"
+        query-params="{{interventionsQueryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="interventions/:intId/:intTab"
+        active="{{intervDetailsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="interventions/new/:intTab"
+        active="{{newInterventionActive}}"
+        data="{{routeDataNewInterv}}"></app-route>
+
+    <intervention-item-data id="interventionData"
+                            intervention="{{intervention}}"
+                            intervention-id="[[selectedInterventionId]]"
+                            error-event-name="intervention-save-error"></intervention-item-data>
+
+    <partner-staff-members-data partner-id="[[partnerId]]"
+                                prepared-staff-members-data="{{partnerStaffMembers}}">
+    </partner-staff-members-data>
+
+    <agreement-item-data id="agreement"
+                         agreement-id="[[intervention.agreement]]"
+                         agreement="{{agreement}}"></agreement-item-data>
+
+    <app-header-layout>
+      <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+              <template is="dom-if" if="[[listActive]]">
+                PD/SSFA ToRs
+              </template>
+              <template is="dom-if" if="[[newInterventionActive]]">
+                Add Programme Document or PD/SSFA ToRs
+              </template>
+              <template is="dom-if" if="[[intervDetailsActive]]">
+                [[_getInterventionDetailsTitle(intervention)]]
+              </template>
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action"  hidden$="[[!listActive]]">
+                <a target="_blank" href="[[csvDownloadUrl]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>  
+              </div>
+              <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action"  hidden$="[[!listActive]]">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>-->
+              <div class="top-content-action"  hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
+                  <iron-icon icon="add"></iron-icon>
+                  Add new PD/SSFA ToR
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
+            <paper-tabs
+                selected="{{activeTab}}"
+                attr-for-selected="name"
+                noink bottom-item>
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+              </template>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Details</span>
+              </paper-tab>
+
+              <paper-tab name="review-and-sign" link>
+                <span class="tab-content">Review & Sign</span>
+              </paper-tab>
+
+              <paper-tab name="attachments" link>
+                <span class="tab-content">Attachments</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </div>
+      </div>
+
+      <div id="main">
+        <div id="pageContent">
+
+          <etools-error-messages-box id="errorsBox"
+                                     title="Errors Saving PD/SSFA ToR"
+                                     errors="{{serverErrors}}"></etools-error-messages-box>
+
+          <iron-pages id="interventionsPages"
+                      selected="{{interventionPage}}"
+                      attr-for-selected="name"
+                      fallback-selection="list"
+                      role="main">
+
+            <div class="page" name="list">
+              <interventions-list
+                  active="[[listActive]]"
+                  csv-download-url="{{csvDownloadUrl}}"
+                  url-params="[[interventionsQueryParams]]">
+              </interventions-list>
+            </div>
+
+            <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+              <div class="page" name="overview">
+                <intervention-overview intervention="[[intervention]]"
+                                       intervention-agreement="[[agreement]]">
+                </intervention-overview>
+              </div>
+            </template>
+
+            <div class="page" name="details">
+              <intervention-details id="interventionDetails"
+                                    permissions="[[permissions]]"
+                                    intervention="{{intervention}}"
+                                    partner-staff-members="[[partnerStaffMembers]]"
+                                    selected-partner-id="{{partnerId}}"
+                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                    edit-mode="[[_hasEditPermissions(permissions)]]"
+                                    on-update-intervention-status="_updateInterventionStatus">
+              </intervention-details>
+            </div>
+            <div class="page" name="review-and-sign">
+              <intervention-review-and-sign id="interventionReviewAndSign"
+                                            intervention="{{intervention}}"
+                                            permissions="[[permissions]]"
+                                            agreement="[[agreement]]"
+                                            new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                            edit-mode="[[_hasEditPermissions(permissions)]]">
+              </intervention-review-and-sign>
+            </div>
+            <div class="page" name="attachments">
+              <intervention-attachments id="intervAttachments"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                permissions="[[permissions]]"
+                intervention="[[intervention]]"
+                file-model="[[_getAttachmentModel(intervention.id)]]"
+                attachments="{{intervention.attachments}}"
+                on-delete-file="_deleteAttachment"
+                new-intervention="[[_newIntervention(newInterventionActive)]]">
+              </intervention-attachments>
+            </div>
+          </iron-pages>
+        </div> <!-- main page content end -->
+
+        <!-- sidebar content start -->
+        <div id="sidebar" hidden$="[[listActive]]">
+           <intervention-status status="[[intervention.status]]"
+                                intervention-id$="[[intervention.id]]"
+                                intervention-agreement-status="[[agreement.status]]"
+                                on-save-intervention="_validateAndSaveIntervention"
+                                on-update-intervention-status="_updateInterventionStatus"
+                                show-save-btn$="[[editMode]]"></intervention-status>
+
+        </div>
+        <!-- sidebar content end -->
+      </div>
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-interventions',
+
+      properties: {
+        interventionPage: {
+          type: String,
+          notify: true
+        },
+        permissions: {
+          type: Object
+        },
+        selectedInterventionId: {
+          type: Number
+        },
+        intervention: {
+          type: Object
+        },
+        partnerStaffMembers: Array,
+        partnerId: {
+          type: Number
+        },
+        agreement: {
+          type: Object
+        },
+        csvDownloadUrl: {
+          type: String
+        },
+        newInterventionModel: {
+          type: Object,
+          value: {
+            id: null,
+            agreement: null,
+            document_type: null,
+            hrp: null,
+            number: null,
+            prc_review_document_file: null,
+            title: null,
+            status: 'draft',
+            start: null,
+            end: null,
+            submission_date_prc: null,
+            review_date_prc: null,
+            submission_date: null,
+            prc_review_document: null,
+            signed_by_unicef_date: null,
+            signed_by_partner_date: null,
+            unicef_signatory: null,
+            unicef_focal_points: [],
+            partner_focal_points: [],
+            partner_authorized_officer_signatory: null,
+            offices: [],
+            fr_numbers: null,
+            planned_visits: [],
+            population_focus: null,
+            sector_locations: [],
+            planned_budget: [],
+            result_links: [],
+            amendments: [],
+            attachments: [],
+            distributions: []
+          }
+        },
+        activeTab: {
+          type: String,
+          observer: '_activeTabChanged'
+        },
+        serverErrors: {
+          type: Array,
+          value: []
+        }
+      },
+
+      observers: [
+        '_resizeHeader(listActive, intervDetailsActive, newInterventionActive)',
+        /**
+         * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
+         * both dependencies because all observer dependecies need to be defined for the observer to work
+         */
+        '_updateUrlTab(routeData.intTab)',
+        '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
+        '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
+        '_observeRouteDataId(routeData.intId)'
+      ],
+
+      listeners: {
+        'intervention-save-error': '_interventionSaveErrors'
+      },
+
+      ready: function() {
+        if (this.newInterventionActive) {
+          this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        }
+      },
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
+      },
+
+      _activeTabChanged: function(activeTab) {
+        if (activeTab) {
+          if (this.newInterventionActive) {
+            this.set('routeDataNewInterv.intTab', activeTab);
+          } else {
+            this.set('routeData.intTab', activeTab);
+          }
+        }
+      },
+
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this._updateUrl();
+      },
+
+      _updateUrlTabNewInterv: function(newIntervTab) {
+        if (!newIntervTab) {
+          return;
+        }
+        this._updateUrl();
+      },
+
+      _updateUrl: function() {
+        if (!this.activeTab) {
+          this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
+      },
+
+      _getActivePage: function(listActive, intervDetailsActive, newInterventionActive) {
+        var page = 'list';
+        if (listActive === false) {
+          if (newInterventionActive) {
+            // return new intervention page tab name
+            page =  this.routeDataNewInterv.intTab;
+          } else {
+            // return intervention details page tab name
+            page = this.routeData.intTab;
+          }
+        }
+        return page;
+      },
+
+      _pageChanged: function(listActive, intervDetailsActive, newInterventionActive) {
+        this.debounce('pageChange', function() {
+          var activePage = this._getActivePage(listActive, intervDetailsActive, newInterventionActive);
+          if (activePage === 'list') {
+            this.set('activeTab', 'details');
+          }
+          this.set('interventionPage', activePage);
+        }.bind(this), 50);
+      },
+
+      _showPageTabs: function(interventionPage) {
+        return interventionPage !== 'list';
+      },
+
+      _getTopContentAdditionalClass: function(interventionPage) {
+        if (this._showPageTabs(interventionPage)) {
+          return 'with-tabs';
+        }
+        return '';
+      },
+
+      _observeRouteDataId: function(id) {
+        id = parseInt(id, 10);
+        if (isNaN(id)) {
+          id = null;
+        }
+        this.set('selectedInterventionId', id);
+        // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
+        this.$.intervAttachments.set('preparedAttachments', false);
+      },
+
+      _validateAndSaveIntervention: function(event) {
+        event.stopImmediatePropagation();
+
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+
+        var interventionDetails = this.$.interventionDetails;
+        var validInterventionDetails = interventionDetails.validate();
+
+        var reviewAndSign = this.$.interventionReviewAndSign;
+        var validReviewAndSign = reviewAndSign.validate();
+
+        if (validInterventionDetails && validReviewAndSign) {
+          var interventionData = Object.assign({}, this.intervention);
+
+          // on save sector_locations sector prop needs to be sector ID and not the sector obj
+          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
+          // prepare fr numbers
+          if (Array.isArray(interventionData.fr_numbers) && interventionData.fr_numbers.length > 0) {
+            interventionData.fr_numbers = interventionData.fr_numbers.map(function(frNumber) {
+              return frNumber.value;
+            });
+          }
+          // prepare attachments
+          if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
+            interventionData.attachments = interventionData.attachments.map(function(attachment) {
+              
+              var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
+              if (!_sendAttachmentFile && attachment.id) {
+                return {
+                  id: attachment.id
+                };
+              } else {
+                return {
+                  id: attachment.id,
+                  intervention: attachment.intervention,
+                  type: attachment.type,
+                  attachment: attachment.raw
+                };
+              }
+            });
+          }
+          // if prc_review_document is null we need to delete the property otherwise the 
+          // file gets deleted from the backend
+          if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
+            delete interventionData.prc_review_document;
+          }
+
+          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+        } else {
+          this._showErrorsWarning(validInterventionDetails, validReviewAndSign);
+        }
+      },
+
+      _showErrorsWarning: function(validDetails, validReviewAndSign) {
+        var msg = 'Please review invalid fields data';
+        var tabs = [];
+        if (validDetails === false) {
+          tabs.push('DETAILS');
+        }
+        if (validReviewAndSign === false) {
+          tabs.push('REVIEW & SIGN');
+        }
+        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '!';
+        this.fire('toast', {text: msg, showCloseBtn: true});
+      },
+
+      _updateInterventionStatus: function(event) {
+        event.stopImmediatePropagation();
+        this.$.interventionData.updateInterventionStatus(event.detail);
+      },
+
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
+      },
+
+      _getAttachmentModel: function(interventionId) {
+        return {
+          id: null,
+          intervention: interventionId ? interventionId : null,
+          type: null 
+        };
+      },
+
+      _deleteAttachment: function(event) {
+        // TODO:  remove after attachment delete is implemented
+        this.fire('toast', {text: 'Delete file not implemented yet! '
+          + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
+      },
+
+      _goToNewInterventionPage: function(event) {
+        // go to new intervention
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        this.set('selectedInterventionId', null);
+        this.fire('update-main-path', {path: 'interventions/new/details'}, {bubbles: false});
+      },
+
+      _newIntervention: function(newInterventionActive) {
+        return newInterventionActive === true;
+      },
+
+      /**
+       * Go to details page once the new intervention has been saved
+       */
+      _newInterventionSaved: function(intervention) {
+        this.fire('update-main-path', {path: 'interventions/' + intervention.id + '/details'});
+      },
+
+      /**
+       * Get intervention details page title: 'partner name: intervention number'
+       */
+      _getInterventionDetailsTitle: function(intervention) {
+        var title = '';
+        if (intervention) {
+          if (intervention.partner) {
+            title += intervention.partner + ': ';
+          }
+          if (intervention.number) {
+            title += intervention.number;
+          }
+        }
+        return title;
+      },
+
+      _showAddNewIntervBtn: function(listActive, permissions) {
+        if (listActive && this._hasEditPermissions(permissions)) {
+          return true;
+        }
+        return false;
+      },
+
+      _interventionSaveErrors: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.set('serverErrors', event.detail);
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>

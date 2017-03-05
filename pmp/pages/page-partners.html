@@ -1,0 +1,221 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
+<link rel="import" href="../app-elements/partners/partners-list.html">
+<link rel="import" href="../app-elements/partners/partner-overview.html">
+<link rel="import" href="../app-elements/partners/partner-details.html">
+<link rel="import" href="../app-elements/governments/government-details.html">
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../app-config/etools-app-config.html">
+<dom-module id="page-partners">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="partners/list"
+        query-params="{{queryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="partners/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error"></partner-item-data>
+
+    <app-header-layout>
+      <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+              <template is="dom-if" if="[[listActive]]">
+                <span>Partners</span>
+              </template>
+              <template is="dom-if" if="[[tabsActive]]">
+                <span>[[partner.name]]</span>
+              </template>
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!listActive]]">
+                <a target="_blank" href="[[csvDownloadUrl]]">
+                  <paper-button>
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button>
+                </a>
+              </div>
+              <!-- Print functionality pending implementation -->
+              <!--<div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>-->
+            </div>
+          </div>
+          <template is="dom-if" if="[[tabsActive]]">
+            <div class="top-content-row">
+              <paper-tabs
+                  selected="{{routeData.tab}}"
+                  attr-for-selected="name" noink bottom-item>
+
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+
+                <paper-tab name="details" link>
+                  <span class="tab-content">Partner Details</span>
+                </paper-tab>
+
+              </paper-tabs>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <iron-pages id="partnersPages"
+                  selected="{{partnerPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}" url-params="[[queryParams]]"></partners-list>
+        </div>
+        <div class="page" name="overview">
+          <partner-overview partner="[[partner]]"></partner-overview>
+        </div>
+        <div class="page" name="details">
+          <partner-details id="partnerDetails"
+                           partner="[[partner]]"
+                           edit-mode="[[_hasEditPermissions(permissions)]]"
+                           on-save-partner="_savePartner"></partner-details>
+        </div>
+      </iron-pages>
+
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-partners',
+
+      properties: {
+        user: {
+          type: Object
+        },
+        partnerPage: {
+          type: String,
+        },
+        routeData: {
+          type: Object,
+        },
+        csvDownloadUrl: {
+          type: String
+        },
+        selectedPartnerId: {
+          type: Number
+        }
+      },
+
+      observers: [
+        '_resizeHeader(tabsActive)',
+        '_updateUrlTab(routeData.tab)',
+        '_pageChanged(listActive, routeData.tab)',
+        '_observeRouteDataId(routeData.id)'
+      ],
+
+      listeners: {
+        'partner-save-error': '_partnerSaveError'
+      },
+
+      _resizeHeader: function() {
+        this.$$('app-header-layout').notifyResize();
+      },
+
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('partnerPage', activePage);
+      },
+
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editPartnerDetails === true) {
+          return true;
+        }
+        return false;
+      },
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
+      },
+
+      _getPartnerPageTitle: function(listActive, partnerName) {
+        if (listActive) {
+          return 'Partners';
+        }
+        return partnerName;
+      },
+      _getTopContentAdditionalClass: function(listActive) {
+        if (!listActive) {
+          return 'with-tabs';
+        }
+        return '';
+      },
+      _savePartner: function(event) {
+        event.stopImmediatePropagation();
+        this.$.partnerData.savePartner(event.detail);
+      },
+
+      _observeRouteDataId: function(id) {
+        this.set('selectedPartnerId', id);
+      },
+
+      _partnerSaveError: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.$.partnerDetails.set('serverErrors', event.detail);
+        }
+
+      }
+
+    });
+
+  </script>
+
+</dom-module>

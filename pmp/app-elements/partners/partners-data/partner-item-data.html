@@ -1,0 +1,190 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+
+<dom-module id="partner-item-data">
+
+  <template>
+    <etools-ajax id="ajax"
+                 endpoint="[[endpoint]]"
+                 caching-storage="dexie"
+                 on-success="_handleResponse"
+                 on-fail="handleErrorResponse"></etools-ajax>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'partner-item-data',
+        behaviors: [
+          etoolsAppConfig.globals,
+          pmpBehaviors.AjaxServerErrorsBehavior
+        ],
+        properties: {
+
+          partner: {
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          endpoint: {
+            type: Object,
+            reflectToAttribute: true
+          },
+
+          partnerId: {
+            type: Number,
+            notify: true,
+            observer: '_partnerIdChanged'
+          },
+          withUpload: Boolean,
+          prepareMultipartData: Boolean,
+
+          handleResponseAdditionalCallback: Object,
+          ajaxEl: Object
+
+        },
+        attached: function() {
+          this.ajaxEl = this.$.ajax;
+        },
+        _prepareEndpoint: function(partnerId) {
+          if (partnerId > 0) {
+            // prepare request endpoint
+            this.set('endpoint', this.getEndpoint('partnerDetails', {id: partnerId}));
+          }
+        },
+        _partnerIdChanged: function(newId) {
+          if (newId) {
+            // set an empty partner
+            this._setPartner({});
+            // set the new endpoint
+            this.fire('global-loading', {message: 'Loading partner data...', active: true});
+            this._prepareAndFireRequest();
+            this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
+          } else {
+            this._prepareAndFireRequest(null);
+          }
+        },
+        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
+          if (!multipart){
+            multipart = false;
+          }
+          if (!prepareMultipartData){
+            prepareMultipartData = false;
+          }
+          if (!this.ajaxEl) {
+            this.ajaxEl = this.$.ajax;
+          }
+          this.ajaxEl.setContentType(null);
+          if (!method) {
+            method = 'GET';
+            // reset ajax for GET request
+            this.ajaxEl.set('params', null);
+            this.ajaxEl.set('body', null);
+            this.ajaxEl.set('url', null);
+            this.ajaxEl.set('multiPart', false);
+            this.ajaxEl.set('prepareMultipartData', false);
+          }
+          this.ajaxEl.set('method', method);
+          if (typeof data === 'object' && Object.keys(data).length > 0
+              && ['PATCH', 'POST'].indexOf(method) > -1) {
+            if (multipart) {
+              this.ajaxEl.set('multiPart', true);
+            } else {
+              this.ajaxEl.set('multiPart', false);
+            }
+            if (prepareMultipartData) {
+              this.ajaxEl.set('prepareMultipartData', true);
+            } else {
+              this.ajaxEl.set('prepareMultipartData', false);
+            }
+            this.ajaxEl.set('body', data);
+            this.ajaxEl.set('url', url);
+          }
+          // after body is set the request is automatically triggered
+        },
+
+        _handleResponse: function(response) {
+          this._setPartner(response.detail);
+          // update the partners list in dexieDB
+          etoolsAppConfig.db.table('partners').put(response.detail);
+
+          this.fire('global-loading', {active: false});
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            // reset callback
+            this.set('handleResponseAdditionalCallback', null);
+          }
+        },
+        savePartner: function(partner, callback) {
+          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
+            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+          } else {
+            var url = null;
+            var isNew = false;
+
+            if (partner.id) {
+              // prepare PATCH endpoint
+              this._prepareEndpoint(partner.id);
+              url = this.endpoint.url;
+            } else {
+              // new partner, use POST method for the same endpoint
+              var partnersEndpoint = this.getEndpoint('partners');
+              url = partnersEndpoint.url;
+              isNew = true;
+            }
+            // remove id from data
+            if (partner.id) {
+              delete partner.id;
+            }
+            if (Object.keys(partner).length > 0) {
+              // set additional callback if any
+              if (callback) {
+                this.set('handleResponseAdditionalCallback', callback);
+              }
+              this.withUpload = false; // used to set multipart prop on etools-ajax
+              this.prepareMultipartData = false;
+              if (partner.hasOwnProperty('core_values_assessment')) {
+                if (partner.core_values_assessment instanceof File) {
+                  this.withUpload = true;
+                  this.prepareMultipartData = true;
+                } else {
+                   delete partner.core_values_assessment;
+                }
+              }
+              if (partner.hasOwnProperty('assessments')) {
+
+                if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
+
+                  partner.assessments = partner.assessments.map(function(assessment) {
+                      if (assessment.report instanceof File) {
+                        this.withUpload = true;
+                        this.prepareMultipartData = true;
+                      } else {
+                        delete assessment.report;
+                      }
+                      return assessment;
+                  }, this);
+                }
+              }
+              this.fire('global-loading', {message: 'Saving partner data...', active: true});
+              // fire in the hole
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, this.withUpload, this.prepareMultipartData);
+            } else {
+              this.fire('toast', {
+                text: 'There is nothing to save. No change detected on this partner.',
+                showCloseBtn: true
+              });
+            }
+          }
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>

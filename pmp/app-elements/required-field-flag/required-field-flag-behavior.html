@@ -1,0 +1,41 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="required-field-flag.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.RequiredFieldFlagBehavior = {
+
+    /*
+     Example for esmm dropdown
+
+     // add required field flag to the label for the fields
+     // that are required without depending on other fields values
+     var requiredDropdownElements = Polymer.dom(this.root).querySelectorAll('#partner, #agreementType');
+     if (requiredDropdownElements.length > 0) {
+       requiredDropdownElements.forEach(function(element) {
+         setTimeout(function() {
+           this.addRequiredFieldFlag([Polymer.dom(element.root).querySelector('#singleSelectionDropdown')]);
+         }.bind(this), 0);
+      }.bind(this));
+     }
+     */
+
+    addRequiredFieldFlag: function(requiredElements, labelSelector, labelElementsProvided) {
+      if (requiredElements.length > 0) {
+        if (!labelSelector && !labelElementsProvided) {
+          labelSelector = 'label[for="input"]';
+        }
+        requiredElements.forEach(function(element) {
+          var requiredFlag = document.createElement('required-field-flag');
+          if (labelElementsProvided === true) {
+            element.appendChild(requiredFlag);
+          } else {
+            var elementLabel = Polymer.dom(element.root).querySelector(labelSelector);
+            elementLabel.appendChild(requiredFlag);
+          }
+
+        });
+      }
+    }
+
+  };
+</script>

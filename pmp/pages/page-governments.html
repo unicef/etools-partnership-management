@@ -1,0 +1,262 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../app-config/etools-app-config.html">
+
+
+<!-- Replace these with something more apppriate -->
+<link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
+<link rel="import" href="../app-elements/governments/governments-list.html">
+<link rel="import" href="../app-elements/governments/government-details.html">
+<link rel="import" href="../app-elements/governments/government-overview.html">
+<link rel="import" href="../app-elements/governments/governments-data/government-intervention-item-data.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+
+<dom-module id="page-governments">
+
+  <template>
+
+    <style include="page-layout-styles shared-styles buttons-styles">
+
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="governments/list"
+        query-params="{{governmentQueryParams}}"
+        active="{{governmentListActive}}">    
+    </app-route>
+
+    <app-route
+            route="{{route}}"
+            pattern="governments/:id/:tab"
+            active="{{tabsActive}}"
+            data="{{routeData}}"></app-route>
+    <app-route
+            route="{{route}}"
+            pattern="governments/new/details"
+            active="{{newInterventionActive}}"
+    ></app-route>
+  	<government-intervention-item-data id="interventionData"
+                                       intervention="{{intervention}}"
+                                       intervention-id="[[selectedInterventionId]]"></government-intervention-item-data>
+  	<app-header-layout>
+
+      <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
+        <div class="top-content">
+          <div class="top-content-row title-row">
+            <h1 main-title>
+              <template is="dom-if" if="[[governmentListActive]]">
+                <span> Government in simple </span>
+              </template>
+              <template is="dom-if" if="[[newInterventionActive]]">
+                <span>Add New Goverment in Simple</span>
+              </template>
+              <span hidden$="[[governmentListActive]]">[[intervention.number]]</span>
+            </h1>
+            <div class="top-content-actions-wrapper">
+              <div class="top-content-action" hidden$="[[!governmentListActive]]">
+                <a target="_blank" href$="[[csvDownloadUrl]]">
+                  <paper-button>                  
+                    <iron-icon icon="file-download"></iron-icon>
+                    Export
+                  </paper-button> 
+                </a>
+              </div>
+              <!-- Print Functionality Pending Implementation -->
+              <!--<div class="top-content-action">
+                <paper-button>
+                  <iron-icon icon="print"></iron-icon>
+                  Print
+                </paper-button>
+              </div>-->
+              <div class="top-content-action" hidden$="[[!governmentListActive]]">
+                <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
+                  <iron-icon icon="add"></iron-icon>
+                  Add New Government in simple
+                </paper-button>
+              </div>
+            </div>
+          </div>
+          <template is="dom-if" if="[[_getTabsActive(tabsActive,newInterventionActive)]]">
+            <div class="top-content-row">
+              <paper-tabs
+                      selected="{{routeData.tab}}"
+                      attr-for-selected="name"
+                      noink bottom-item
+                      fallback-selection="details">
+
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+                <paper-tab name="details" link>
+                  <span class="tab-content">Government Details</span>
+                </paper-tab>
+              </paper-tabs>
+            </div>
+          </template>
+
+        </div>
+      </div>
+
+      <iron-pages id="governmentsPages"
+                  selected="{{governmentsPage}}"
+                  attr-for-selected="name"
+                  fallback-selection="list"
+                  role="main">
+
+        <div class="page" name="list">
+          <governments-list id="list"
+                           active="[[governmentListActive]]"
+                           url-params="[[governmentQueryParams]]"
+                           csv-download-url="{{csvDownloadUrl}}"
+                           partners-dropdown-data="[[partnersDropdownData]]">
+          </governments-list>
+        </div>
+        <div class="page" name="details">
+          <government-details id="details"
+                              active="[[newInterventionActive]]"
+                              on-details-refresh="_goToNewGovernmentPage"
+                              intervention="[[intervention]]"
+                              edit-mode="[[_hasEditPermissions(permissions)]]"
+                              on-save-intervention="_saveIntervention"></government-details>
+        </div>
+        <div class="page" name="overview">
+          <government-overview id="overview" 
+                               intervention="[[intervention]]"></government-overview>
+        </div>
+
+      </iron-pages>
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-governments',
+
+      properties: {
+
+        governmentsPage: {
+          type: String,
+          notify: true
+        },        
+
+        partnersDropdownData: {
+          type: Array,
+          notify: true
+        },
+
+        agreementTypes: {
+          type: Array,
+          notify: true
+        },
+        newInterventionModel: {
+          type: Object,
+          value: {
+            results: [],
+            partner: null,
+            country_programme: null
+          }
+        },
+        selectedInterventionId: {
+          type: Number
+        },
+        csvDownloadUrl: {
+          type: String
+        },
+        fakePermission: true,
+      },
+
+       observers: [
+//         '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
+         '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
+         '_updateUrlTab(routeData.tab)',
+         '_observeRouteDataId(routeData.id)',
+       ],
+
+      ready: function() {
+        this.set('agreementTypes', [
+          {name: 'MOU', label: 'Momarendum of Understanding'},
+          {name: 'PCA', label: 'Programme Cooperation Agreement'},
+          {name: 'SSFA', label: 'Small Scale Funding Agreement'}
+        ]);
+
+      },
+      _getActivePage: function(listActive,tab,isNew) {
+        var result = listActive? 'list' :
+                isNew ? 'details' : tab;
+        return result;
+      },
+      _saveIntervention: function (e) {
+        e.stopImmediatePropagation();
+        if(_.has(e.detail,'intervention')){
+          this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved)
+        }
+      },
+      _interventionSaved: function(intervention) {
+        this.fire('update-main-path', {path: 'governments/' + intervention.id + '/details'});
+      },
+      _pageChanged : function (governmentListActive, tab, newInterventionActive) {
+        var activePage = this._getActivePage(governmentListActive,tab, newInterventionActive)
+        this.set('governmentsPage', activePage)
+      },
+      _getTabsActive: function(tabsActive,newInterventionActive){
+        if(tabsActive || newInterventionActive){
+          return true;
+        }
+        return false;
+      },
+
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+        }.bind(this), 50);
+      },
+      _goToNewGovernmentPage: function(){
+        this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
+        this.set('selectedInterventionId', 0);
+        this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
+        if(_.isEmpty(this.intervention.results)){
+          this.$.details._addNewResult();
+        };
+      },
+      _getTopContentAdditionalClass: function(listActive) {
+        if (!listActive) {
+          return 'with-tabs';
+        }
+        return '';
+      },
+      _observeRouteDataId: function(id){
+        if(id!=='new'){
+          this.set('selectedInterventionId', id);
+        }
+      },
+      _hasEditPermissions: function(permissions) {
+        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+          return true;
+        }
+        return false;
+      }
+
+    });
+
+  </script>
+</dom-module>
+
+//TODO 1. save after error, delete function
