@@ -172,7 +172,7 @@
             <span class="col-data flex-c">
                 [[getDisplayValue(intervention.status)]]
             </span>
-            <span class="col-data col-2 truncate" title="[[getDisplayValue(intervention.title)]]">
+            <span class="col-data col-2" title="[[getDisplayValue(intervention.title)]]">
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
@@ -365,7 +365,7 @@
             observer: '_filtersChanged'
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
         },
@@ -531,10 +531,10 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
-          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());          
+
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
-        
+
           if (qs !== _interventionsLastNavigated) {
             _interventionsLastNavigated = qs;
             // update URL
@@ -664,8 +664,8 @@
 
           return out.join('&');
         },
-        
-        _buildCsvDownloadUrl: function() {        
+
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -703,7 +703,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('interventions').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
