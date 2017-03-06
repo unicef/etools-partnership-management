@@ -147,7 +147,9 @@
     },
     // update shown filters
     updateShownFilters: function(filters) {
-      if (!filters) filters = [];
+      if (!filters) {
+        filters = [];
+      }
       if (Array.isArray(filters) && filters.length > 0) {
         filters.forEach(function(filter) {
           // check available filters

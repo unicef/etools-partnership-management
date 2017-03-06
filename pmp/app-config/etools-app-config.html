@@ -33,6 +33,7 @@ App global configuration
         baseSite: window.location.origin,
         basePath: (window.location.port === '8080') ? '/' : '/pmp/',
         serverBackend: (window.location.port !== '8080'),
+        loginPath: window.location.origin + '/login/',
 
         getEndpoint: function(endpointName, data) {
           var endpoint = JSON.parse(JSON.stringify(etoolsAppConfig.endpoints[endpointName]));
@@ -197,6 +198,9 @@ App global configuration
       lowerResultsDelete:  {
         template: '/api/v2/reports/lower_results/<%=id%>/',
       },
+      myProfile:  {
+        template: '/api/v2/users/myprofile/',
+      },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
         exp: 6 * 60 * 60 * 1000, // 6h
@@ -250,17 +254,17 @@ App global configuration
         cachingKey: 'offices'
       },
       governments: {
-        cachingKey: "governments",
+        cachingKey: 'governments',
         exp: 5 * 60 * 1000, // 5min
-        url : "/api/v2/government_interventions/"
+        url : '/api/v2/government_interventions/'
       },
       governmentsDetails: {
-        template : "/api/v2/government_interventions/<%=id%>/"
+        template : '/api/v2/government_interventions/<%=id%>/'
       },
       countryProgrammes: {
-        cachingKey: "countryProgrammes",
+        cachingKey: 'countryProgrammes',
         exp: 5 * 60 * 1000, // 5min
-        url : "/api/v2/reports/countryprogramme/"
+        url : '/api/v2/reports/countryprogramme/'
       },
       sections: {
           url : '/api/sections',
@@ -271,16 +275,16 @@ App global configuration
         template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
       governmentIntResultDelete : {
-        template : "/api/v2/government_interventions/results/<%=id%>/"
+        template : '/api/v2/government_interventions/results/<%=id%>/'
       },
       governmentResultActivityDelete: {
-        template : "/api/v2/government_interventions/results/activities/<%=id%>/"
+        template : '/api/v2/government_interventions/results/activities/<%=id%>/'
       },
       monitoringVisits: {
         template: '/api/t2f/travels/activities/<%=id%>/',
       },
       sectorLocationsDelete : {
-        template : "/api/v2/interventions/sector-locations/<%=id%>/"
+        template : '/api/v2/interventions/sector-locations/<%=id%>/'
       }
     };
     /* jshint ignore:start */
