@@ -140,7 +140,7 @@
         <data-table-column class="flex-c" field="document_type">
           Document Type
         </data-table-column>
-        <data-table-column class="flex-c" field="status">
+        <data-table-column class="flex-c capitalize" field="status">
           Status
         </data-table-column>
         <data-table-column class="col-2" field="title">
@@ -365,7 +365,7 @@
             observer: '_filtersChanged'
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
         },
@@ -531,10 +531,10 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
-          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());          
+
+          this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
-        
+
           if (qs !== _interventionsLastNavigated) {
             _interventionsLastNavigated = qs;
             // update URL
@@ -664,8 +664,8 @@
 
           return out.join('&');
         },
-        
-        _buildCsvDownloadUrl: function() {        
+
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -703,7 +703,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('interventions').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
