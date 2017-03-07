@@ -11,6 +11,9 @@
       }
 
       :host {
+        --row-width: {
+          width: calc(100% - 96px);
+        }
         display: block;
         border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
       }
@@ -30,6 +33,7 @@
       }
 
       paper-material ::slotted(*) {
+        @apply(--row-width);
         text-overflow: ellipsis;
       }
 
@@ -94,6 +98,7 @@
         this.$.wrapper.style.padding = '0 24px';
         this.$.iconWrapper.style.display = 'none';
         this.customStyle['--hover-setting'] = 'background : transparent';
+        this.customStyle['--row-width'] = 'width : 100%';
         this.updateStyles();
       }
 
