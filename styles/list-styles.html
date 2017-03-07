@@ -126,6 +126,10 @@
         opacity: 0;
       }
 
+      *[slot="row-data"] {
+        margin-top: 14px;
+        margin-bottom: 14px;
+      }
       *[slot="row-data"],
       *[slot="row-data-details"] {
         @apply(--layout-horizontal);
@@ -135,7 +139,7 @@
       *[slot="row-data"] .col-data {
         display: inline-flex;
         line-height: 24px;
-        /*height: 24px;*/
+        align-items: center;
       }
 
       *[slot="row-data"] .truncate {
@@ -143,6 +147,8 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-top: auto;
+        margin-bottom: auto;
       }
 
       data-table-column,
