@@ -93,7 +93,7 @@
                                                  readonly$="[[!detailsEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" title="[[intervention.number]]">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
@@ -304,7 +304,7 @@
           ssfaDocTypes: {
             type: Array,
             value: []
-          }, 
+          },
           currentDocTypes: {
             type: Array,
             value: []
@@ -479,7 +479,7 @@
               default:
                 options = this.documentTypes;
                 break;
-            } 
+            }
           }
           this.set('currentDocTypes', options);
         },
