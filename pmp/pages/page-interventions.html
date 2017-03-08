@@ -495,7 +495,7 @@
         }
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', null);
-        this.fire('update-main-path', {path: 'interventions/new/details'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'interventions/new/details'});
       },
 
       _newIntervention: function(newInterventionActive) {
