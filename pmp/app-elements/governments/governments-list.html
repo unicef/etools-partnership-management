@@ -223,6 +223,7 @@
           q: {
             type: String,
             notify: true,
+            value: '',
             observer: '_qChanged'
           },
 
@@ -231,7 +232,10 @@
             statePath: 'interventionStatuses'
           },
 
-          sortOrder: Object,
+          sortOrder: {
+            type: Object,
+            value: {field: 'partner_name', direction: 'asc'}
+          },
 
           pageNumber: {
             type: Number
