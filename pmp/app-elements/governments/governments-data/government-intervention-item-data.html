@@ -33,15 +33,15 @@
             observer: '_interventionIdChanged'
           },
           allSectors: {
-            type: Array, 
+            type: Array,
             statePath: 'sectors'
           },
           allCountryProgrammes: {
-            type: Array, 
+            type: Array,
             statePath: 'countryProgrammes'
           },
           allPartners: {
-            type: Array, 
+            type: Array,
             statePath: 'partners'
           },
 
@@ -101,16 +101,18 @@
         },
         _handleResponse: function(response){
           this._setIntervention(response.detail);
+
           // update the government interventions list in dexieDB
-          
           var mappedResponse = this._formatResponseDataForDexie(response.detail);
           etoolsAppConfig.db.table('governments').put(mappedResponse);
 
-          if(typeof this.handleResponseAdditionalCallback === 'function'){
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
             this.set('handleResponseAdditionalCallback', null);
             // reset callback
           }
+
+          this.fire('response-received', {});
         },
 
         _interventionIdChanged: function (newId) {
@@ -178,7 +180,7 @@
           dexieObject.cp_outputs = [];
           dexieObject.unicef_focal_points = [];
 
-          responseDetail.results.forEach(function(responseElement) {            
+          responseDetail.results.forEach(function(responseElement) {
             dexieObject.years = this._pushIfNew(dexieObject.years, responseElement.year);
             dexieObject.cp_outputs = this._pushIfNew(dexieObject.cp_outputs, responseElement.result);
 
@@ -200,20 +202,20 @@
               }
             }
           }.bind(this));
-                                       
+
           this.allPartners.forEach(function(partner) {
             if (partner.id === dexieObject.partner) {
               dexieObject.partner_name = partner.name;
             }
           });
-                                       
+
           this.allCountryProgrammes.forEach(function(country_programme) {
             if (country_programme.value === dexieObject.country_programme) {
               dexieObject.country_programme_name = country_programme.label;
             }
           });
 
-          return dexieObject;          
+          return dexieObject;
         },
 
         _pushIfNew: function(array, value) {
