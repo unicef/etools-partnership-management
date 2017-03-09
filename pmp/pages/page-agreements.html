@@ -314,7 +314,7 @@
         // go to new agreement
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         this.set('selectedAgreementId', 0);
-        this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'agreements/new-agreement'});
       },
       _observeRouteDataId: function(id) {
         this.set('selectedAgreementId', id);
