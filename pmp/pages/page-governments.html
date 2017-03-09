@@ -232,7 +232,7 @@
       _goToNewGovernmentPage: function(){
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', 0);
-        this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'governments/new/details'});
         if(_.isEmpty(this.intervention.results)){
           this.$.details._addNewResult();
         };
