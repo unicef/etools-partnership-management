@@ -31,14 +31,14 @@
           assert.equal(agreementsPages.is, 'page-agreements');
         });
 
-        test('Check new agreement page', function(done) {
-          agreementsPages.set('agreementPage', 'new-agreement');
-          agreementsPages.set('route.path', '/new-agreement');
-          flush(function() {
-            assert.equal(agreementsPages.agreementPage, 'new-agreement');
-            done();
-          });
-        });
+//        test('Check new agreement page', function(done) {
+//          agreementsPages.set('agreementPage', 'new-agreement');
+//          agreementsPages.set('route.path', '/new-agreement');
+//          flush(function() {
+//            assert.equal(agreementsPages.agreementPage, 'new-agreement');
+//            done();
+//          });
+//        });
 
         // TODO: more tests will be done later (after app functionality is completed)
 
