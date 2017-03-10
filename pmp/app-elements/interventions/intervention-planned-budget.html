@@ -2,7 +2,9 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-amount-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
@@ -30,12 +32,12 @@
           @apply(--paper-fab-btn-green);
         };
       }
-      paper-input {
+      etools-currency-amount-input {
         width: 100%;
       }
 
-      paper-input.total-input {
-        --paper-input-container-input: {
+      etools-currency-amount-input.total-input {
+        --etools-currency-container-input: {
           font-weight: bold;
         };
       }
@@ -145,40 +147,40 @@
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
-                    <paper-input label="CSO Cont. (Local)"
+                    <etools-currency-amount-input label="CSO Cont. (Local)"
                       value="{{item.partner_contribution_local}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <paper-input label="UNICEF Cash (Local)"
+                    <etools-currency-amount-input label="UNICEF Cash (Local)"
                       value="{{item.unicef_cash_local}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Supply (Local)"
+                    <etools-currency-amount-input label="UNICEF Supply (Local)"
                       value="{{item.in_kind_amount_local}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Total (Local)"
-                      class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
-                      placeholder="&#8212;"
-                      readonly>
-                    </paper-input>
+                    <paper-input-container class="form-field-wrapper" always-float-label>
+                      <label aria-hidden="true">UNICEF Total (Local)</label>
+                      <span class="paper-input-input">
+                        [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
+                      </span>
+                    </paper-input-container>
                   </div>
                 </div>
               </div>
@@ -189,42 +191,42 @@
                 <div class="row-h flex-c left-col">
                   <div class="col col-4"></div>
                   <div class="col col-8">
-                    <paper-input id$="partnerContribUsd_[[index]]"
+                    <etools-currency-amount-input id$="partnerContribUsd_[[index]]"
                       label="CSO Cont. (USD)"
                       value="{{item.partner_contribution}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <paper-input id$="unicefCashUsd_[[index]]"
+                    <etools-currency-amount-input id$="unicefCashUsd_[[index]]"
                       label="UNICEF Cash (USD)"
                       value="{{item.unicef_cash}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Supply (USD)"
+                    <etools-currency-amount-input label="UNICEF Supply (USD)"
                       value="{{item.in_kind_amount}}"
                       type="number"
                       placeholder="&#8212;"
                       readonly$="[[!editMode]]">
-                    </paper-input>
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Total (USD)"
-                      class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, 'USD')]]"
-                      placeholder="&#8212;"
-                      readonly>
-                    </paper-input>
+                    <paper-input-container class="form-field-wrapper" always-float-label>
+                      <label aria-hidden="true">UNICEF Total (USD)</label>
+                      <span class="paper-input-input">
+                        [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] [[localCurrency]]
+                      </span>
+                    </paper-input-container>
                   </div>
                 </div>
               </div>
@@ -242,8 +244,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[_localUnicefTotal]] [[localCurrency]]</span>
-                <span>[[_usdUnicefTotal]] USD</span>
+                <span>[[displayCurrencyAmount(_localUnicefTotal)]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdUnicefTotal)]] USD</span>
               </div>
             </div>
           </div>
@@ -254,8 +256,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[_localCsoTotal]] [[localCurrency]]</span>
-                <span>[[_usdCsoTotal]] USD</span>
+                <span>[[displayCurrencyAmount(_localCsoTotal)]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdCsoTotal)]] USD</span>
               </div>
             </div>
           </div>
@@ -284,7 +286,8 @@
 
         behaviors: [
           pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsBehaviors.EtoolsCurrencyBehavior
         ],
 
         properties: {
@@ -511,6 +514,10 @@
             return t + ' ' + currency;
           }
           return t;
+        },
+
+        _getPlannedBudgetTotalFormatted: function(val1, val2) {
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0');
         },
 
         _yearAlreadySelected: function(year, dropdownIdx) {
