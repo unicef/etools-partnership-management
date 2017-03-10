@@ -142,7 +142,7 @@
                 [[getDisplayValue(partner.vendor_number)]]
               </a>
               <span class="col-data flex-3">
-                <span class="truncate">[[_computeName(partner.name, partner.short_name)]]</span>
+                <span>[[_computeName(partner.name, partner.short_name)]]</span>
 
                 <span class="sm-status-wrapper" hidden$="[[!partner.deleted_flag]]">
                   <span class="marked-for-deletion">
@@ -238,7 +238,7 @@
             type: Array,
             statePath: 'csoTypes'
           },
-          
+
           partnerTypes: {
             type: Array,
             statePath: 'partnerTypes'
@@ -293,7 +293,7 @@
             value: false
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
         },
@@ -355,7 +355,7 @@
           this.set('sortOrder', result);
           this.set('initComplete', true);
 
-          this._updateSelectedFiltersValues();         
+          this._updateSelectedFiltersValues();
         },
 
         _updateSelectedFiltersValues: function(){
@@ -368,8 +368,8 @@
               {
                 filterName: 'CSO Type',
                 selectedValue: this.csoType
-              }                           
-            ];            
+              }
+            ];
             this.updateShownFilters(filtersValues);
 
           }.bind(this), 100);
@@ -379,7 +379,7 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
+
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
@@ -448,11 +448,11 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {       
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
-          var params = [];  
-          
+          var params = [];
+
           if (this.q && this.q.length) {
             params.push('search=' + this.q);
           }
@@ -469,7 +469,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('partners').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
