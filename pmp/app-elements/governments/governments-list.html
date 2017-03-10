@@ -38,6 +38,7 @@
     <style include="shared-styles list-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
+        width: 100%;
       }
     </style>
 
@@ -180,7 +181,7 @@
 
           </div>
         </data-table-row>
-      </template> 
+      </template>
 
       <data-table-footer
           page-size="[[pageSize]]"
@@ -222,6 +223,7 @@
           q: {
             type: String,
             notify: true,
+            value: '',
             observer: '_qChanged'
           },
 
@@ -230,7 +232,10 @@
             statePath: 'interventionStatuses'
           },
 
-          sortOrder: Object,
+          sortOrder: {
+            type: Object,
+            value: {field: 'partner_name', direction: 'asc'}
+          },
 
           pageNumber: {
             type: Number
@@ -535,7 +540,7 @@
           }
           if (this.q && this.q.length) {
             out.push('q=' + this.q);
-          } 
+          }
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
@@ -568,7 +573,7 @@
               return year.label;
             }).join('|'));
           }
-          
+
           return out.join('&');
         },
 
@@ -597,10 +602,10 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('governments').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
-        
+
 
         // Run when partners-data is fully loaded
         // Maps array of partner ids to multiselect compatible {value, label} format

@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
@@ -154,8 +155,8 @@
             <div class="col col-2 center-text">
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
-            <div class="col col-2 center-text"> $[[partner.total_ct_cp]] </div>
-            <div class="col col-2 center-text block">  $[[partner.total_ct_cy]] <br> <small>out of $[[partner.hact_values.planned_cash_transfer]] planned </small> </div>
+            <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0')]] </div>
+            <div class="col col-2 center-text block">  $[[displayCurrencyAmount(partner.total_ct_cy, '0')]] <br> <small>out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0')]] planned </small> </div>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
@@ -165,7 +166,8 @@
 
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-6"> Partnership </div>
+            <div class="col col-4"> Partnership </div>
+            <div class="col col-2"> Total Planned Budget </div>
             <div class="col col-2"> Status </div>
             <div class="col col-4"> Timeline </div>
           </div>
@@ -173,7 +175,7 @@
         <div class="hact-body">
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
-              <div class="col col-6 block">
+              <div class="col col-4 block">
                 <template is="dom-if" if="[[partnership.government_intervention]]">
                   <strong><a href="governments/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
                 </template>
@@ -184,6 +186,7 @@
                 [[partnership.title]]
                 </div>
               </div>
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0')]] </div>
               <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
               <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
             </div>
@@ -209,9 +212,12 @@
 
         behaviors: [
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.RiskRatingBehavior
+          pmpBehaviors.RiskRatingBehavior,
+          etoolsBehaviors.EtoolsCurrencyBehavior
         ],
-
+        observers: [
+          '_prepareInterventionData(partner.interventions.*)'
+        ],
         properties: {
           user: Object,
           permissions: Object,
@@ -291,6 +297,19 @@
 
           this.set('mrProgVisits', programmeVisits);
           this.set('mrSpotChecks', spotChecks);
+        },
+
+        _prepareInterventionData: function() {
+          for(var key1 in this.partner.interventions) {
+            var intervention = this.partner.interventions[key1];
+            var total = 0;
+
+            for(var key2 in intervention.planned_budget) {
+              total += parseFloat(intervention.planned_budget[key2].total);
+            }
+
+            intervention.total_planned_budget = total;
+          }
         },
 
         // verify date and prettify or not

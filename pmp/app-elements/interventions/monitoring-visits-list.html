@@ -21,13 +21,13 @@
   <template>
 
     <style include="shared-styles list-styles grid-layout-styles">
-      :host {          
-        @apply(--layout-flex);        
+      :host {
+        @apply(--layout-flex);
       }
       .monitoring-visits-warning {
         padding: 0 20px;
       }
-      
+
     </style>
     <monitoring-visits-data monitoring-visits="{{monitoringVisits}}"
                             intervention-id="[[interventionId]]">
@@ -73,7 +73,7 @@
             <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
                 [[getDisplayValue(visit.locations)]]
             </span>
-            <span class="col-data col-2" title="[[visit.status]]">
+            <span class="col-data col-2 capitalize" title="[[visit.status]]">
                 [[visit.status]]
             </span>
           </div>
@@ -96,7 +96,7 @@
         is: 'monitoring-visits-list',
 
         behaviors: [
-          pmpBehaviors.CommonGeneralBehavior,          
+          pmpBehaviors.CommonGeneralBehavior,
         ],
 
         properties: {
@@ -126,8 +126,8 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
-          this.set('initComplete', true);            
-          this.set('sortOrder', result);       
+          this.set('initComplete', true);
+          this.set('sortOrder', result);
         },
 
         _pageSizeSelected: function(e) {
@@ -141,7 +141,7 @@
           this.set('pageNumber', e.detail.value);
 
         },
-        _init: function(active) {                  
+        _init: function(active) {
           this.set('initComplete', false);
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
@@ -151,8 +151,8 @@
             var p = parms.sort.split('.');
             result = {field: p[0], direction: p[1]};
           }
-          this.set('initComplete', true);            
-          this.set('sortOrder', result);       
+          this.set('initComplete', true);
+          this.set('sortOrder', result);
         },
 
         _pageSizeSelected: function(e) {

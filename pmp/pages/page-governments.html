@@ -34,7 +34,7 @@
         route="{{route}}"
         pattern="governments/list"
         query-params="{{governmentQueryParams}}"
-        active="{{governmentListActive}}">    
+        active="{{governmentListActive}}">
     </app-route>
 
     <app-route
@@ -49,7 +49,8 @@
     ></app-route>
   	<government-intervention-item-data id="interventionData"
                                        intervention="{{intervention}}"
-                                       intervention-id="[[selectedInterventionId]]"></government-intervention-item-data>
+                                       intervention-id="[[selectedInterventionId]]"
+                                       on-response-received="_refreshGovernmentsList"></government-intervention-item-data>
   	<app-header-layout>
 
       <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
@@ -67,10 +68,10 @@
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!governmentListActive]]">
                 <a target="_blank" href$="[[csvDownloadUrl]]">
-                  <paper-button>                  
+                  <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
-                  </paper-button> 
+                  </paper-button>
                 </a>
               </div>
               <!-- Print Functionality Pending Implementation -->
@@ -132,7 +133,7 @@
                               on-save-intervention="_saveIntervention"></government-details>
         </div>
         <div class="page" name="overview">
-          <government-overview id="overview" 
+          <government-overview id="overview"
                                intervention="[[intervention]]"></government-overview>
         </div>
 
@@ -152,7 +153,7 @@
         governmentsPage: {
           type: String,
           notify: true
-        },        
+        },
 
         partnersDropdownData: {
           type: Array,
@@ -231,7 +232,7 @@
       _goToNewGovernmentPage: function(){
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', 0);
-        this.fire('update-main-path', {path: 'governments/new/details'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'governments/new/details'});
         if(_.isEmpty(this.intervention.results)){
           this.$.details._addNewResult();
         };
@@ -252,6 +253,9 @@
           return true;
         }
         return false;
+      },
+      _refreshGovernmentsList: function() {
+        this.$.list._filterGovernmentsData();
       }
 
     });
