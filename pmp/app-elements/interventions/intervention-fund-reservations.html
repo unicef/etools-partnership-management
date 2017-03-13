@@ -4,12 +4,14 @@
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <dom-module id="intervention-fund-reservations">
   <template>
@@ -79,33 +81,29 @@
               <div class="row-h">
                 <div class="col col-4 left-col">
                   <!-- Grant -->
-                  <paper-input-container class="form-field-wrapper" always-float-label>
-                    <label aria-hidden="true">Grant</label>
-                    <span class="paper-input-input">[[itemDetail.grant_number]]</span>
-                  </paper-input-container>
+                  <etools-form-element-wrapper label="Grant">
+                    [[itemDetail.grant_number]]
+                  </etools-form-element-wrapper>
                 </div>
                 <div class="col col-8">
                   <div class="row-h flex-c darkbg">
                     <div class="col col-4">
                       <!-- WBS -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">WBS</label>
-                        <span class="paper-input-input">[[itemDetail.wbs]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="WBS">
+                        [[itemDetail.wbs]]
+                      </etools-form-element-wrapper>
                     </div>
                     <div class="col col-4">
                       <!-- FC Type -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">FC Type</label>
-                        <span class="paper-input-input">[[itemDetail.fc_type]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="FC Type">
+                        [[itemDetail.fc_type]]
+                      </etools-form-element-wrapper>
                     </div>
                     <div class="col col-4">
                       <!-- FC Reference -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">FC Reference</label>
-                        <span class="paper-input-input">[[itemDetail.fc_ref_number]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="FC Reference">
+                        [[itemDetail.fc_ref_number]]
+                      </etools-form-element-wrapper>
                     </div>
                   </div>
                 </div>
@@ -117,24 +115,21 @@
                   <div class="row-h flex-c darkbg">
                     <div class="col col-4">
                       <!-- Agreement Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Agreement Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.agreement_amount]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="Agreement Amount">
+                        $ [[displayCurrencyAmount(itemDetail.agreement_amount, '0')]]
+                      </etools-form-element-wrapper>
                     </div>
                     <div class="col col-4">
                       <!-- Commitment Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Commitment Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.commitment_amount]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="Commitment Amount">
+                        $ [[displayCurrencyAmount(itemDetail.commitment_amount, '0')]]
+                      </etools-form-element-wrapper>
                     </div>
                     <div class="col col-4">
                       <!-- Expenditure Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Expenditure Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.expenditure_amount]]</span>
-                      </paper-input-container>
+                      <etools-form-element-wrapper label="Expenditure Amount">
+                        $ [[displayCurrencyAmount(itemDetail.expenditure_amount, '0')]]
+                      </etools-form-element-wrapper>
                     </div>
                   </div>
                 </div>
@@ -156,7 +151,7 @@
 
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                 on-tap="_addNewFundReservationt"
+                 on-tap="_addNewFundReservation"
                  title="Add"></paper-fab>
     </div>
 
@@ -170,6 +165,7 @@
         is: 'intervention-fund-reservations',
 
         behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
 
@@ -223,7 +219,7 @@
         /**
          * Add new fund reservation
          */
-        _addNewFundReservationt: function() {
+        _addNewFundReservation: function() {
           this._addElement();
         },
 

@@ -20,7 +20,7 @@
       Polymer({
 
         is: 'monitoring-visits-data',
-        behaviors: [etoolsAppConfig.globals],
+        behaviors: [etoolsAppConfig.globals, pmpBehaviors.AjaxServerErrorsBehavior],
         properties: {
           monitoringVisits: {
             type: Array,

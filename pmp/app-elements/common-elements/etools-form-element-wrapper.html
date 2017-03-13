@@ -1,0 +1,45 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="etools-form-element-wrapper">
+
+  <template>
+    <style include="shared-styles">
+      :host {
+        width: 100%;
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        };
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+      }
+    </style>
+
+    <paper-input-container always-float-label>
+      <label aria-hidden="true">[[label]]</label>
+      <div class="paper-input-input">
+        <slot></slot>
+      </div>
+    </paper-input-container>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'etools-form-element-wrapper',
+        properties: {
+          label: String
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

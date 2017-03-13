@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <dom-module id="intervention-planned-budget">
   <template>
@@ -175,12 +176,9 @@
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input-container class="form-field-wrapper" always-float-label>
-                      <label aria-hidden="true">UNICEF Total (Local)</label>
-                      <span class="paper-input-input">
-                        [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
-                      </span>
-                    </paper-input-container>
+                    <etools-form-element-wrapper label="UNICEF Total (Local)">
+                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
+                    </etools-form-element-wrapper>
                   </div>
                 </div>
               </div>
@@ -221,12 +219,9 @@
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input-container class="form-field-wrapper" always-float-label>
-                      <label aria-hidden="true">UNICEF Total (USD)</label>
-                      <span class="paper-input-input">
-                        [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] [[localCurrency]]
-                      </span>
-                    </paper-input-container>
+                    <etools-form-element-wrapper label="UNICEF Total (USD)">
+                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] [[localCurrency]]
+                    </etools-form-element-wrapper>
                   </div>
                 </div>
               </div>
@@ -244,8 +239,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localUnicefTotal)]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdUnicefTotal)]] USD</span>
+                <span>[[displayCurrencyAmount(_localUnicefTotal, '0')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0')]] USD</span>
               </div>
             </div>
           </div>
@@ -256,8 +251,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localCsoTotal)]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdCsoTotal)]] USD</span>
+                <span>[[displayCurrencyAmount(_localCsoTotal, '0')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdCsoTotal, '0')]] USD</span>
               </div>
             </div>
           </div>
