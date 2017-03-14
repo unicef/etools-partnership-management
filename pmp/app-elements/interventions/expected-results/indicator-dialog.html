@@ -4,6 +4,9 @@
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../bower_components/etools-checkable-input/etools-checkable-input.html">
@@ -88,10 +91,34 @@
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <paper-input label="Baseline"
-                         value="{{indicator.baseline}}"
-                         type="number" placeholder="&#8212;">
-            </paper-input>
+            <template is="dom-if" if="[[unit.numeric]]">
+              <paper-input label="Baseline"
+                           value="{{indicator.baseline}}"
+                           type="number"
+                           placeholder="&#8212;">
+              </paper-input>
+            </template>
+            <template is="dom-if" if="[[unit.percentage]]">
+              <paper-input label="Baseline"
+                           value="{{indicator.baseline}}"
+                           type="number"
+                           min="0"
+                           max="100"
+                           on-change="_onChange"
+                           allowed-pattern="[0-9\.]"
+                           placeholder="&#8212;">
+              </paper-input>
+            </template>
+            <template is="dom-if" if="[[unit.yesno]]">
+              <paper-dropdown-menu label="Baseline" noink>
+                <paper-menu class="dropdown-content"
+                            attr-for-selected="name"
+                            selected="{{indicator.baseline}}">
+                  <paper-item name="yes">Yes</paper-item>
+                  <paper-item name="no">No</paper-item>
+                </paper-menu>
+              </paper-dropdown-menu>
+            </template>
           </div>
           <div class="col col-3">
             <paper-input label="Target"

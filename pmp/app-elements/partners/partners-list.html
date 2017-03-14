@@ -75,7 +75,7 @@
                           on-iron-deselect="filterValueChanged"
                           data-filter-path$="[[filter.path]]"
                           on-iron-activate="_dropdownSelected"
-                          selected=[[filter.alreadySelected]]>
+                          selected="[[filter.alreadySelected]]">
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                   <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
