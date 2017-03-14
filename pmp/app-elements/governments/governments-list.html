@@ -679,15 +679,12 @@
           return [];
         },
 
-        _governmentsChanged: function() {
+        _governmentsChanged: function(governmentsData) {
           // List fade in fade out effect
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-          var governmentsList = this.$$('#governments');
-          if (governmentsList && Array.isArray(governmentsList.data) && governmentsList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }.bind(this), 300);
+          this.$$('#list').classList.add('hidden');
+          if (governmentsData && Array.isArray(governmentsData) && governmentsData.length > 0) {
+            this.$$('#list').classList.remove('hidden');
+          }
         },
 
         _qChanged: function(q) {
