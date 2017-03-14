@@ -67,6 +67,7 @@
           if (this.showLoading) {
             this.fire('global-loading', {message: 'Loading governement interventions data...', active: true});
           }
+          this._elementReady();
         },
 
         query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
