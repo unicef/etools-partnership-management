@@ -31,6 +31,9 @@
         @apply(--layout-horizontal);
         width: 100%;
       }
+      #pageContent {
+        max-width: calc(100% - 225px);
+      }
       .block {
         display: block;
       }
@@ -48,7 +51,11 @@
          margin-bottom: 20px;
       }
       .text-right {
-        margin-left: auto;
+         margin-left: auto;
+      }
+      .text-flex-right {
+         text-align: right;
+         justify-content: flex-end;
       }
       .padded-top {
         padding: 10px 0;
@@ -87,6 +94,13 @@
         font-size: 20px;
         color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
         @apply(--header-title);
+      }
+
+      div[slot="row-data"] {
+        max-width: calc(100% - 60px);
+      }
+      data-table-header {
+        padding-right: 35px;
       }
     </style>
     <div id="pageContent">
@@ -151,10 +165,10 @@
             <data-table-column class="col-4" field="fc_title">
                 FC Title
             </data-table-column>
-            <data-table-column class="col-2" field="actual_ammount">
+            <data-table-column class="col-2 text-flex-right" field="actual_ammount">
                 Commitment Amount $
             </data-table-column>
-            <data-table-column class="col-2" field="outstanding_ammount">
+            <data-table-column class="col-2 text-flex-right" field="outstanding_ammount">
                 Outstanding $
             </data-table-column>
           </data-table-header>
@@ -172,19 +186,21 @@
 
             <data-table-row no-collapse>
               <div slot="row-data">
-                <a class="col-data col-2 truncate" href="#" title="[[record.fc_number]]">
-                    [[record.fc_ref_number]]
-                </a>
-                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.fc_date)]]">
+                <span class="col-data col-2 truncate">
+                  <a href="#" title="[[record.fc_ref_number]]">
+                      [[record.fc_ref_number]]
+                  </a>
+                </span>
+                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.due_date)]]">
                     [[_checkAndShowDate(record.due_date)]]
                 </span>
-                <span class="col-data col-4" title="[[record.fc_title]]">
+                <span class="col-data col-4" title="[[record.line_item_text]]">
                     [[record.line_item_text]]
                 </span>
-                <span class="col-data col-2" title="[[record.actual]]">
+                <span class="col-data col-2 text-flex-right" title="[[record.commitment_amount]]">
                     [[record.commitment_amount]]
                 </span>
-                <span class="col-data col-2" title="[[record.outstanding]]">
+                <span class="col-data col-2 text-flex-right" title="[[record.outstanding]]">
                      Coming soon
                      <!--[[record.outstanding]]-->
                 </span>
@@ -198,11 +214,11 @@
               <strong class="text-right padded-top"> Output Total </strong>
             </div>
             <div class="col col-4 padded-right">
-              <paper-material elevation="1" class="yellow-box">
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <span><strong>[[ status.actual_sum ]]</strong></span>
               </paper-material>
 
-              <paper-material elevation="1" class="yellow-box">
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <strong>Coming soon</strong>
                 <!--<span><strong>[[ status.outstanding_sum ]]</strong></span>-->
               </paper-material>
@@ -228,10 +244,10 @@
               <strong class="text-right padded-top">Overall Total for Government Partner </strong>
             </div>
             <div class="col col-4 padded-right">
-              <paper-material elevation="1" class="yellow-box">
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <span><strong>[[ intervention.actual_total_sum ]]</strong></span>
               </paper-material>
-              <paper-material elevation="1" class="yellow-box">
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <strong>Coming soon</strong>
                  <!--<span><strong>[[ intervention.outstanding_total_sum ]]</strong></span>-->
               </paper-material>
@@ -292,8 +308,20 @@
 
      _interventionChanged : function() {
        if (this.intervention && typeof this.intervention === 'object' && Object.keys(this.intervention).length > 0) {
-         if(!this.intervention.implementation_status){
-           this.set('intervention.implementation_status', []);
+         if(true || !this.intervention.implementation_status ) {
+           this.set('intervention.implementation_status', [
+                  {
+                    "cp_output": 1,
+                    "fc_records": [
+                        {
+                            "fc_ref_number": "REF NUMBER 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                            "due_date": "2017-01-01",
+                            "line_item_text": "Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah ",
+                            "commitment_amount": 123123123123100
+                        }
+                    ]
+                }
+              ]);
          }
 
          this._prepareCpOutputs();
@@ -349,7 +377,7 @@
         var actualTotalSum = 0;
         var outstandingTotalSum = 0;
 
-        if (_.has(this.intervention,'implementation_status')) {
+        if (_.has(this.intervention, 'implementation_status')) {
           this.intervention.implementation_status.forEach(function(elem) {
             actualIndividualSum = 0;
             outstandingIndividualSum = 0;
