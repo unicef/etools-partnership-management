@@ -184,11 +184,9 @@
 
             <data-table-row no-collapse>
               <div slot="row-data">
-                <span class="col-data col-2 truncate">
-                  <a href="#" title="[[record.fc_ref_number]]">
-                      [[record.fc_ref_number]]
-                  </a>
-                </span>
+                <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
+                    [[record.fc_ref_number]]
+                </a>
                 <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.due_date)]]">
                     [[_checkAndShowDate(record.due_date)]]
                 </span>
@@ -198,7 +196,7 @@
                 <span class="col-data col-2 text-flex-right" title="[[record.commitment_amount]]">
                     [[record.commitment_amount]]
                 </span>
-                <span class="col-data col-2 text-flex-right" title="[[record.outstanding]]">
+                <span class="col-data col-2 text-flex-right" title="Coming soon">
                      Coming soon
                      <!--[[record.outstanding]]-->
                 </span>
@@ -251,8 +249,6 @@
               </paper-material>
             </div>
           </div>
-
-        <!--</template>   -->
     </etools-content-panel>
 
     </div>
@@ -303,7 +299,7 @@
 
      _interventionChanged : function() {
        if (this.intervention && typeof this.intervention === 'object' && Object.keys(this.intervention).length > 0) {
-         if(true || !this.intervention.implementation_status ) {
+         if (!this.intervention.implementation_status ) {
            this.set('intervention.implementation_status', []);
          }
 
