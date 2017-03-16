@@ -187,7 +187,6 @@
                 // we just edited an indicator, replace data in indicators list
                 this.set(indicatorPaths + '.' + actionParams.appliedIndicatorsIndex,
                     JSON.parse(JSON.stringify(indicator)));
-                console.log(this.get(indicatorPaths + '.' + actionParams.appliedIndicatorsIndex));
               } else {
                 // new indicator added
                 this.push(indicatorPaths, indicator);
