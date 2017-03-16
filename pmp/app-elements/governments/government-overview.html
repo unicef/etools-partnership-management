@@ -57,6 +57,11 @@
          text-align: right;
          justify-content: flex-end;
       }
+      data-table-column.text-flex-right,
+      .col-data.text-flex-right {
+         padding-right: 0 !important;
+         padding-left: 15px;
+      }
       .padded-top {
         padding: 10px 0;
       }
@@ -96,12 +101,6 @@
         @apply(--header-title);
       }
 
-      div[slot="row-data"] {
-        max-width: calc(100% - 60px);
-      }
-      data-table-header {
-        padding-right: 35px;
-      }
     </style>
     <div id="pageContent">
       <paper-material elevation="1" id="top-container">
@@ -309,19 +308,7 @@
      _interventionChanged : function() {
        if (this.intervention && typeof this.intervention === 'object' && Object.keys(this.intervention).length > 0) {
          if(true || !this.intervention.implementation_status ) {
-           this.set('intervention.implementation_status', [
-                  {
-                    "cp_output": 1,
-                    "fc_records": [
-                        {
-                            "fc_ref_number": "REF NUMBER 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-                            "due_date": "2017-01-01",
-                            "line_item_text": "Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah Blah blah blah ",
-                            "commitment_amount": 123123123123100
-                        }
-                    ]
-                }
-              ]);
+           this.set('intervention.implementation_status', []);
          }
 
          this._prepareCpOutputs();
