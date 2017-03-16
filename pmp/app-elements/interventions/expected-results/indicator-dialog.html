@@ -104,13 +104,12 @@
                            type="number"
                            min="0"
                            max="100"
-                           on-change="_onChange"
                            allowed-pattern="[0-9\.]"
                            placeholder="&#8212;">
               </paper-input>
             </template>
             <template is="dom-if" if="[[unit.yesno]]">
-              <paper-dropdown-menu label="Baseline" noink>
+              <paper-dropdown-menu label="Baseline" noink always-float-label>
                 <paper-menu class="dropdown-content"
                             attr-for-selected="name"
                             selected="{{indicator.baseline}}">
@@ -121,10 +120,33 @@
             </template>
           </div>
           <div class="col col-3">
-            <paper-input label="Target"
-                         value="{{indicator.target}}"
-                         type="number" placeholder="&#8212;">
-            </paper-input>
+            <template is="dom-if" if="[[unit.numeric]]">
+              <paper-input label="Target"
+                           value="{{indicator.target}}"
+                           type="number"
+                           placeholder="&#8212;">
+              </paper-input>
+            </template>
+            <template is="dom-if" if="[[unit.percentage]]">
+              <paper-input label="Target"
+                           value="{{indicator.target}}"
+                           type="number"
+                           min="0"
+                           max="100"
+                           allowed-pattern="[0-9\.]"
+                           placeholder="&#8212;">
+              </paper-input>
+            </template>
+            <template is="dom-if" if="[[unit.yesno]]">
+              <paper-dropdown-menu label="Target" noink always-float-label>
+                <paper-menu class="dropdown-content"
+                            attr-for-selected="name"
+                            selected="{{indicator.target}}">
+                  <paper-item name="yes">Yes</paper-item>
+                  <paper-item name="no">No</paper-item>
+                </paper-menu>
+              </paper-dropdown-menu>
+            </template>
           </div>
           <div class="col col-6">
             <paper-textarea label="Means of Verification"
@@ -188,9 +210,64 @@
             value: []
           }
         },
+        observers: [
+          '_indicatorDataChange(indicator.*)',
+          '_updateIndicatorValsAtUnitChange(unit.*)'
+        ],
 
-        ready: function() {
+        _indicatorDataChange: function(data) {
+          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
+            if (this.unit.percentage && data.value !== '') {
+              var val = parseInt(data.value, 10);
+              if (isNaN(val) || val < 0) {
+                val = 0;
+              }
+              if (val > 100) {
+                val = 100;
+              }
+              this.set(data.path, val);
+            }
+          }
+        },
 
+        _updateIndicatorValsAtUnitChange: function(data) {
+          this.debounce('indicatorUnitChanged', function() {
+            if (!this.indicator) {
+              return;
+            }
+            var activeUnit = this._getActiveUnit();
+            var resetFields = false;
+            var baseline = parseFloat(this.indicator.baseline);
+            var target = parseFloat(this.indicator.target);
+
+            switch (activeUnit) {
+              case 'numeric':
+                if (isNaN(baseline)) {
+                  this.set('indicator.baseline', '');
+                }
+                if (isNaN(target)) {
+                  this.set('indicator.target', '');
+                }
+                break;
+              case 'percentage':
+                if (baseline < 0 || baseline > 100 || isNaN(baseline)) {
+                  this.set('indicator.baseline', '');
+                }
+                if (target < 0 || target > 100 || isNaN(target)) {
+                  this.set('indicator.target', '');
+                }
+                break;
+              case 'yesno':
+                if (this.indicator.baseline !== 'yes' && this.indicator.baseline !== 'no') {
+                  this.set('indicator.baseline', '');
+                }
+                if (this.indicator.target !== 'yes' && this.indicator.target !== 'no') {
+                  this.set('indicator.target', '');
+                }
+
+                break;
+            }
+          }.bind(this), 50);
         },
 
         _unitChanged: function(event) {
