@@ -31,9 +31,6 @@
         @apply(--layout-horizontal);
         width: 100%;
       }
-      #pageContent {
-        max-width: calc(100% - 225px);
-      }
       .block {
         display: block;
       }
@@ -88,7 +85,9 @@
           padding: 10px 0 25px;
         }
       }
-
+      .truncate {
+        max-width: 225px;
+      }
       .implementation-status-no-fc {
         padding: 0 24px;
       }
@@ -142,7 +141,7 @@
           </div>
         </div>
       </paper-material>
-      <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
+ <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
 
         <template is="dom-if" if="[[!intervention.implementation_status.length]]">
           <div class="row-h">
@@ -254,11 +253,8 @@
           </div>
 
         <!--</template>   -->
-      </etools-content-panel>
+    </etools-content-panel>
 
-    </div>
-    <div id="sidebar" hidden$="[[!editMode]]">
-        <government-status on-save-partnership="_validateSave"></government-status>
     </div>
 
   </template>

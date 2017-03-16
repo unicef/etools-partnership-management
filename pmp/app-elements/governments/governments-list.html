@@ -678,12 +678,12 @@
           return [];
         },
 
-        _governmentsChanged: function() {
+        _governmentsChanged: function(governmentsList) {
           // List fade in fade out effect
           this.$.list.classList.add('hidden');
           this.async(function() {
-          var governmentsList = this.$$('#governments');
-          if (governmentsList && Array.isArray(governmentsList.data) && governmentsList.data.length > 0) {
+            // var governmentsList = this.$$('#governments');
+            if (Array.isArray(governmentsList) && governmentsList.length > 0) {
               this.$$('#list').classList.remove('hidden');
             }
           }.bind(this), 300);
