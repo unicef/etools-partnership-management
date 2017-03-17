@@ -219,9 +219,6 @@
                         placeholder="&#8212;"
                         char-counter
                         maxlength="130"
-                        required$="[[interventionRequiredField]]"
-                        auto-validate
-                        error-message="Please enter population focus content"
                         readonly$="[[!detailsEditMode]]"></paper-textarea>
       </div>
       <div class="row-h flex-c">
@@ -374,12 +371,14 @@
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             this._setNewEditMode();
+
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
               this._agreementSelected(this.agreement);
             } else {
               this.set('selectedPartnerId', null);
             }
+
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           } else {
@@ -400,7 +399,7 @@
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
+            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
@@ -516,7 +515,7 @@
         validate: function() {
           var valid = true;
           var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'intStart', 'intEnd', 'populationFocus', 'sectorLocations',
+            'partnerFocalPts', 'intStart', 'intEnd', 'sectorLocations',
             'plannedBudget', 'expectedResults'];
           fields.forEach(function(field) {
             if (!this.$$('#' + field).validate()) {
