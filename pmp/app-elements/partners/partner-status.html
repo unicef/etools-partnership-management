@@ -222,9 +222,10 @@
           this.fire('save-partner', {});
         },
 
-        _triggerHidePartner: function(){
-          if(this.partner.hidden)
+        _triggerHidePartner: function() {
+          if (this.partner.hidden) {
             return;
+          }
           this._showStatusChangeConfirmationDialog();
         }
       });
