@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -28,6 +29,7 @@
           @apply(--paper-fab-btn-green);
         };
       }
+
       paper-input {
         width: 200px;
       }
@@ -47,6 +49,10 @@
 
       .action.delete[disabled] {
         visibility: hidden;
+      }
+
+      .fr-nrs-detalis + .fr-nrs-detalis {
+        margin-top: 20px;
       }
 
     </style>
@@ -72,76 +78,72 @@
                            value="{{item.value}}"
                            placeholder="&#8212;" readonly$="[[!editMode]]"></paper-input>
             </div>
-            <template is="dom-repeat" items="[[_getFrNrDetails(item.value)]]" as="itemDetail">
-                
             <template is="dom-if" if="[[_showFrNrDetails(item.value)]]">
-
-              <div class="row-h">
-                <div class="col col-4 left-col">
-                  <!-- Grant -->
-                  <paper-input-container class="form-field-wrapper" always-float-label>
-                    <label aria-hidden="true">Grant</label>
-                    <span class="paper-input-input">[[itemDetail.grant_number]]</span>
-                  </paper-input-container>
-                </div>
-                <div class="col col-8">
-                  <div class="row-h flex-c darkbg">
-                    <div class="col col-4">
-                      <!-- WBS -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">WBS</label>
-                        <span class="paper-input-input">[[itemDetail.wbs]]</span>
-                      </paper-input-container>
-                    </div>
-                    <div class="col col-4">
-                      <!-- FC Type -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">FC Type</label>
-                        <span class="paper-input-input">[[itemDetail.fc_type]]</span>
-                      </paper-input-container>
-                    </div>
-                    <div class="col col-4">
-                      <!-- FC Reference -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">FC Reference</label>
-                        <span class="paper-input-input">[[itemDetail.fc_ref_number]]</span>
-                      </paper-input-container>
+              <template is="dom-repeat" items="[[_getFrNrDetails(item.value)]]" as="itemDetail">
+                <div class="row-h fr-nrs-detalis">
+                  <div class="col col-4 left-col">
+                    <!-- Grant -->
+                    <paper-input-container class="form-field-wrapper" always-float-label>
+                      <label aria-hidden="true">Grant</label>
+                      <span class="paper-input-input">[[itemDetail.grant_number]]</span>
+                    </paper-input-container>
+                  </div>
+                  <div class="col col-8 darkbg">
+                    <div class="flex-c">
+                      <div class="row-h flex-c">
+                        <div class="col col-4">
+                          <!-- WBS -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">WBS</label>
+                            <span class="paper-input-input">[[itemDetail.wbs]]</span>
+                          </paper-input-container>
+                        </div>
+                        <div class="col col-4">
+                          <!-- FC Type -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">FC Type</label>
+                            <span class="paper-input-input">[[itemDetail.fc_type]]</span>
+                          </paper-input-container>
+                        </div>
+                        <div class="col col-4">
+                          <!-- FC Reference -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">FC Reference</label>
+                            <span class="paper-input-input">[[itemDetail.fc_ref_number]]</span>
+                          </paper-input-container>
+                        </div>
+                      </div>
+                      <div class="row-h flex-c">
+                        <div class="col col-4">
+                          <!-- Agreement Amount -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">Agreement Amount</label>
+                            <span
+                                class="paper-input-input">$ [[_getFormattedAmount(itemDetail.agreement_amount)]]</span>
+                          </paper-input-container>
+                        </div>
+                        <div class="col col-4">
+                          <!-- Commitment Amount -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">Commitment Amount</label>
+                            <span
+                                class="paper-input-input">$ [[_getFormattedAmount(itemDetail.commitment_amount)]]</span>
+                          </paper-input-container>
+                        </div>
+                        <div class="col col-4">
+                          <!-- Expenditure Amount -->
+                          <paper-input-container class="form-field-wrapper" always-float-label>
+                            <label aria-hidden="true">Expenditure Amount</label>
+                            <span
+                                class="paper-input-input">$ [[_getFormattedAmount(itemDetail.expenditure_amount)]]</span>
+                          </paper-input-container>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row-h">
-                <div class="col col-4"></div>
-                <div class="col col-8">
-                  <div class="row-h flex-c darkbg">
-                    <div class="col col-4">
-                      <!-- Agreement Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Agreement Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.agreement_amount]]</span>
-                      </paper-input-container>
-                    </div>
-                    <div class="col col-4">
-                      <!-- Commitment Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Commitment Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.commitment_amount]]</span>
-                      </paper-input-container>
-                    </div>
-                    <div class="col col-4">
-                      <!-- Expenditure Amount -->
-                      <paper-input-container class="form-field-wrapper" always-float-label>
-                        <label aria-hidden="true">Expenditure Amount</label>
-                        <span class="paper-input-input">$ [[itemDetail.expenditure_amount]]</span>
-                      </paper-input-container>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                <br>
+              </template>
             </template>
-          </template>
 
           </div>
 
@@ -170,6 +172,7 @@
         is: 'intervention-fund-reservations',
 
         behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior
         ],
 
@@ -240,11 +243,15 @@
             return value;
           }
         },
-       _getFrNrDetails: function(frNumber) {
+        _getFrNrDetails: function(frNumber) {
           if (this._showFrNrDetails(frNumber)) {
-            var value = this.frNumbersDetails[frNumber];
-            return value;
+            return this.frNumbersDetails[frNumber];
           }
+          return [];
+        },
+
+        _getFormattedAmount: function(amount) {
+          return this.displayCurrencyAmount(amount, '0');
         }
       });
     })();
