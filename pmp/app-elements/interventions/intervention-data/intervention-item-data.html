@@ -219,6 +219,31 @@
                 prepareMultipartData = true;
               }
 
+              // prepare indicators disaggregations for upload
+              if (intervention.result_links.length) {
+                var formattedResults = [];
+                intervention.result_links.forEach(function(r) {
+                  if (r.ll_results instanceof Array && r.ll_results.length > 0) {
+                    r.ll_results.forEach(function(llr) {
+                      if (llr.applied_indicators instanceof Array && llr.applied_indicators.length > 0) {
+                        llr.applied_indicators.forEach(function(ind) {
+                          if (ind.disaggregation_logic) {
+                            var dLogic = [];
+                            for (var disaggLogic in ind.disaggregation_logic) {
+                              var dl = {};
+                              dl[disaggLogic] = ind.disaggregation_logic[disaggLogic];
+                              dLogic.push(dl);
+                            }
+                            ind.disaggregation_logic = dLogic;
+                          }
+                        });
+                        console.log(llr.applied_indicators);
+                      }
+                    });
+                  }
+                });
+              }
+
               this.fire('global-loading', {message: 'Saving intervention data...', active: true});
               // fire in the hole
               this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
