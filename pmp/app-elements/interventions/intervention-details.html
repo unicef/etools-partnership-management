@@ -399,7 +399,7 @@
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
+            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
@@ -515,7 +515,7 @@
         validate: function() {
           var valid = true;
           var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'intStart', 'intEnd', 'populationFocus', 'sectorLocations',
+            'partnerFocalPts', 'intStart', 'intEnd', 'sectorLocations',
             'plannedBudget', 'expectedResults'];
           fields.forEach(function(field) {
             if (!this.$$('#' + field).validate()) {
