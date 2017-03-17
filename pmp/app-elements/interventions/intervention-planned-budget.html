@@ -10,6 +10,8 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
+<link rel="import" href="../common-elements/etools-currency-input.html">
+
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -145,12 +147,16 @@
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
-                    <paper-input label="CSO Cont. (Local)"
-                      value="{{item.partner_contribution_local}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                    <etools-currency-input label="CSO Cont. (Local)"
+                                           value="{{item.partner_contribution_local}}"
+                                           readonly$="[[!editMode]]">
+                    </etools-currency-input>
+                    <!--<paper-input label="CSO Cont. (Local)"-->
+                      <!--value="{{item.partner_contribution_local}}"-->
+                      <!--type="number"-->
+                      <!--placeholder="&#8212;"-->
+                      <!--readonly$="[[!editMode]]">-->
+                    <!--</paper-input>-->
                   </div>
                 </div>
               </div>

@@ -1,0 +1,145 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="etools-currency-input">
+
+  <template>
+    <style include="shared-styles">
+      :host {
+        width: 235px;
+        @apply(--etools-currency-input);
+      }
+      /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
+      then include it in shared-styles(do not use shared-styles here) */
+    </style>
+
+    <paper-input id="currencyInput"
+                 label="[[label]]"
+                 value="{{internalValue}}"
+                 placeholder="[[placeholder]]"
+                 on-keydown="_applyCurrencyFormat"
+                 disabled$="[[disabled]]"
+                 readonly$="[[readonly]]"
+                 required$="[[required]]"
+                 invalid$="[[invalid]]"
+                 auto-validate$="[[autoValidate]]"
+                 error-message="[[errorMessage]]">
+    </paper-input>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'etools-currency-input',
+        properties: {
+          label: String,
+          internalValue: {
+            type: String
+          },
+          value: {
+            value: null,
+            notify: true,
+            observer: '_valueChanged'
+          },
+          placeholder: {
+            type: String,
+            value: '—'
+          },
+          readonly: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_readonlyStateChange'
+          },
+          disabled: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+          },
+          required: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          autoValidate: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          invalid: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          errorMessage: {
+            type: String,
+            value: 'This field is required'
+          },
+          oldInternalValue: String
+        },
+
+        _readonlyStateChange: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
+        },
+
+        validate: function() {
+          return this.$.currencyInput.validate();
+        },
+
+        _valueChanged: function(value) {
+          if (this._emptyValue(value)) {
+            return;
+          }
+          if (this._emptyValue(this.internalValue)) {
+            var val = this._formatNumber(value);
+            this.set('internalValue', val);
+            this.set('oldInternalValue', val);
+          }
+        },
+        _formatNumber: function(numStr) {
+          if (this._emptyValue(numStr)) {
+            return '0';
+          }
+          numStr = parseFloat(numStr).toFixed(2);
+          numStr += '';
+          return numStr.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        },
+        _applyCurrencyFormat: function(event) {
+          if (this.internalValue !== this.oldInternalValue) {
+            console.log(event, this.value, this.internalValue);
+            // re-format internal value
+            var val = this._formatNumber(this.internalValue.replace(', '));
+            this.set('internalValue', val);
+            this.set('oldInternalValue', val);
+            // update real value
+            val = val.replace(', ', '');
+            var realValue = parseFloat(val);
+            this.set('value', realValue);
+          }
+
+
+        },
+
+        _emptyValue: function(value) {
+          if (value === null || typeof value === 'undefined') {
+            return true;
+          }
+          value = value + '';
+          if (value === '') {
+            return true;
+          }
+          return false;
+        }
+
+      });
+    })();
+  </script>
+
+</dom-module>
