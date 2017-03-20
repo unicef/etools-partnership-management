@@ -13,11 +13,13 @@
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
 <link rel="import" href="../app-config/etools-app-config.html">
+<link rel="import" href="../app-elements/partners/new-partner-dialog.html">
+
 <dom-module id="page-partners">
 
   <template>
 
-    <style include="page-layout-styles shared-styles">
+    <style include="page-layout-styles shared-styles buttons-styles">
 
       :host {
         display: block;
@@ -46,7 +48,7 @@
       <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
-            <h1 main-title>
+          <h1 main-title>
               <template is="dom-if" if="[[listActive]]">
                 <span>Partners</span>
               </template>
@@ -70,6 +72,12 @@
                   Print
                 </paper-button>
               </div>-->
+              <div class="top-content-action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+                <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+                  <iron-icon icon="add"></iron-icon>
+                  Add New Partner
+                </paper-button>
+              </div>
             </div>
           </div>
           <template is="dom-if" if="[[tabsActive]]">
@@ -151,7 +159,18 @@
       listeners: {
         'partner-save-error': '_partnerSaveError'
       },
+      ready:function(){
+         this.newPartnerDialog = document.createElement('new-partner-dialog');
+         this.newPartnerDialog.setAttribute('id','newPartnerDialog');
+         Polymer.dom(document.querySelector('body')).appendChild(this.newPartnerDialog);
 
+      },
+      detached:function(){
+          if(this.newPartnerDialog)
+          {
+            Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
+          }
+      },
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -212,6 +231,12 @@
           this.$.partnerDetails.set('serverErrors', event.detail);
         }
 
+      },
+      _showNewPartnerBtn: function(listActive, permissions){
+         return listActive && permissions.partnershipManager; //TODO which permission?
+      },
+      _openNewPartnerDialog: function(){
+        this.newPartnerDialog._openNewPartnerDialog();
       }
 
     });
