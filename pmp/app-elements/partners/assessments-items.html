@@ -37,7 +37,7 @@
         width: 100%;
 
         --paper-toolbar-height: 40px;
-        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar-background: #eeeeee; /* TODO: replace with app-theme var */
         --paper-toolbar: {
           -webkit-border-radius: 8px;
           -moz-border-radius: 8px;
@@ -47,7 +47,7 @@
           @apply(--nested-content-panel-title);
         };
 
-        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: #75C300; /* TODO: replace with app-theme var */
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
@@ -156,7 +156,7 @@
                   </div>
                   <div class="row-h file-container">
                     <!-- Report file -->
-                    <etools-single-file 
+                    <etools-single-file
                                   id$="report_[[index]]"
                                   file="{{item.report}}"
                                   internal-file="{{item.report_file}}"
@@ -229,7 +229,7 @@
             current: false,
             report: null,
             report_file: ''
-          };      
+          };
         },
         /**
          * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
