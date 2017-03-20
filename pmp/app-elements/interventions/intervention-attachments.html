@@ -37,7 +37,7 @@
         --etools-file-upload-button-paper-btn: {
           font-weight: bold;
           padding: 5px 10px;
-          background-color: #3A94FF; /* TODO: replace with app-theme var */
+          background-color: #0099FF; /* TODO: replace with app-theme var */
         };
 
         --etools-file-upload-button: {
@@ -70,11 +70,11 @@
       </div>
 
       <div class="row-h flex-c">
-        <etools-file id="attachments" 
-          files="{{attachments}}" 
-          file-model="[[fileModel]]" 
+        <etools-file id="attachments"
+          files="{{attachments}}"
+          file-model="[[fileModel]]"
           file-types=[[fileTypes]]
-          label="Attachments" 
+          label="Attachments"
           multiple activate-file-types use-delete-events
           readonly$=[[!attachmentEditMode]]></etools-file>
       </div>
@@ -140,7 +140,7 @@
                 file_name: this._getFileName(attachment),
                 path: this._getPath(attachment)
               };
-            }.bind(this)));  
+            }.bind(this)));
           }
         },
         _setNewEditMode: function() {
@@ -185,7 +185,7 @@
         _hideNoAttachmentsWarning: function(length) {
           return length > 0;
         },
-        
+
       });
 
     })();

@@ -47,7 +47,7 @@
 
       .darkbg {
         padding: 15px;
-        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        background-color: #eeeeee; /* TODO: replace with app-theme var */
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
         border-radius: 10px;
@@ -440,7 +440,7 @@
           }
           var plannedBudget = this.dataItems[index];
           plannedBudget = parseInt(plannedBudget.id, 10);
-          
+
           if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
             // planned budget already saved (has an id assigned)
             return false;
