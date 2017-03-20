@@ -22,12 +22,12 @@
           color: var(--dark-secondary-text-color);
           background-color: #faec63; /* TODO: replace with app-theme var */
         };
-        --risk-rating-moderate: {          
+        --risk-rating-moderate: {
           @apply(--risk-rating-field);
           color: var(--dark-secondary-text-color);
           background-color: #ffbd00; /* TODO: replace with app-theme var */
         };
-        --risk-rating-high: {          
+        --risk-rating-high: {
           @apply(--risk-rating-field);
           color: #fff;
           background-color: #ffbd00; /* TODO: replace with app-theme var */
@@ -47,7 +47,7 @@
         };
         --risk-rating-not-assessed {
           @apply(--risk-rating-field);
-          background-color: #eeeeee; /* TODO: replace with app-theme var */
+          background-color: var(--medium-theme-background-color);
           color: var(--dark-secondary-text-color);
         };
       }
@@ -62,7 +62,7 @@
         --paper-input-container-input: {
           @apply(--risk-rating-low);
         };
-      }            
+      }
 
       span.risk-rating-field.moderate {
         @apply(--risk-rating-moderate);
@@ -72,7 +72,7 @@
           @apply(--risk-rating-moderate);
         };
       }
-      
+
       span.risk-rating-field.high {
         @apply(--risk-rating-high);
       }
@@ -91,7 +91,7 @@
         };
       }
 
-      span.risk-rating-field.unavailable {        
+      span.risk-rating-field.unavailable {
         @apply(--risk-rating-unavailable);
       }
       .risk-rating-field.unavailable {

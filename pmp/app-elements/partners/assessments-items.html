@@ -37,7 +37,7 @@
         width: 100%;
 
         --paper-toolbar-height: 40px;
-        --paper-toolbar-background: #eeeeee; /* TODO: replace with app-theme var */
+        --paper-toolbar-background: var(--medium-theme-background-color);
         --paper-toolbar: {
           -webkit-border-radius: 8px;
           -moz-border-radius: 8px;
@@ -47,7 +47,7 @@
           @apply(--nested-content-panel-title);
         };
 
-        --paper-fab-keyboard-focus-background: #75C300; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
