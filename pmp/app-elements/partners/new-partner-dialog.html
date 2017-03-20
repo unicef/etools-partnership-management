@@ -1,0 +1,28 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+
+<dom-module id="new-partner-dialog">
+  <template>
+    <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" dialog-title="New Partner" on-close="_handleDialogClosed">
+        <paper-input label="Vendor #" value="{{vendorNumber}}" placeholder="&#8212;" required auto-validate error-message="Vendor# is required"></paper-input>
+    </etools-dialog>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+    is:'new-partner-dialog',
+    properties:{
+        vendorNumber:String
+    },
+    _openNewPartnerDialog: function(){
+        this.$.newPartnerDialog.opened = true;
+    },
+    _handleDialogClosed: function(closingReason){
+        if(closingReason.detail.confirmed)
+         this.fire('create-partner',{ 'vendorNumber' : vendorNumber})
+    }
+
+})
+</script>
