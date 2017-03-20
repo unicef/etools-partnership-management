@@ -219,7 +219,10 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <partner-status on-save-partner="_validateAndTriggerPartnerSave" partner="[[partner]]"></partner-status>
+      <partner-status on-save-partner="_validateAndTriggerPartnerSave"  
+        partner="[[partner]]" 
+        edit-mode$="[[editMode]]">
+      </partner-status>
     </div>
     <!-- sidebar content end -->
 

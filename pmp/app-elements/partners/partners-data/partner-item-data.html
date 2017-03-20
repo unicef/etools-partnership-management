@@ -120,6 +120,22 @@
             this.set('handleResponseAdditionalCallback', null);
           }
         },
+
+        hidePartner: function(partner){
+          if(typeof partner === 'object' && Object.keys(partner).length === 0) {
+            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
+            return;
+          }
+
+          this._prepareEndpoint(partner.id);
+          delete partner.id;
+          this.ajaxEl.set('method', 'PATCH');
+          this.ajaxEl.set('multiPart', false);
+          this.ajaxEl.set('prepareMultipartData', false);
+          this.ajaxEl.set('body', partner);
+          this.ajaxEl.set('url', this.endpoint.url);
+         
+        },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});

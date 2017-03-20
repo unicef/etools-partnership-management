@@ -30,6 +30,7 @@
           @apply(--paper-fab-btn-green);
         };
       }
+
       paper-input {
         width: 200px;
       }
@@ -49,6 +50,10 @@
 
       .action.delete[disabled] {
         visibility: hidden;
+      }
+
+      .fr-nrs-detalis + .fr-nrs-detalis {
+        margin-top: 20px;
       }
 
     </style>
@@ -74,72 +79,64 @@
                            value="{{item.value}}"
                            placeholder="&#8212;" readonly$="[[!editMode]]"></paper-input>
             </div>
-            <template is="dom-repeat" items="[[_getFrNrDetails(item.value)]]" as="itemDetail">
-                
+
             <template is="dom-if" if="[[_showFrNrDetails(item.value)]]">
-
-              <div class="row-h">
-                <div class="col col-4 left-col">
-                  <!-- Grant -->
-                  <etools-form-element-wrapper label="Grant">
-                    [[itemDetail.grant_number]]
-                  </etools-form-element-wrapper>
-                </div>
-                <div class="col col-8">
-                  <div class="row-h flex-c darkbg">
-                    <div class="col col-4">
-                      <!-- WBS -->
-                      <etools-form-element-wrapper label="WBS">
-                        [[itemDetail.wbs]]
-                      </etools-form-element-wrapper>
-                    </div>
-                    <div class="col col-4">
-                      <!-- FC Type -->
-                      <etools-form-element-wrapper label="FC Type">
-                        [[itemDetail.fc_type]]
-                      </etools-form-element-wrapper>
-                    </div>
-                    <div class="col col-4">
-                      <!-- FC Reference -->
-                      <etools-form-element-wrapper label="FC Reference">
-                        [[itemDetail.fc_ref_number]]
-                      </etools-form-element-wrapper>
+              <template is="dom-repeat" items="[[_getFrNrDetails(item.value)]]" as="itemDetail">
+                <div class="row-h fr-nrs-detalis">
+                  <div class="col col-4 left-col">
+                    <!-- Grant -->
+                    <etools-form-element-wrapper label="Grant">
+                      [[itemDetail.grant_number]]
+                    </etools-form-element-wrapper>
+                  </div>
+                  <div class="col col-8 darkbg">
+                    <div class="flex-c">
+                      <div class="row-h flex-c">
+                        <div class="col col-4">
+                          <!-- WBS -->
+                          <etools-form-element-wrapper label="WBS">
+                            [[itemDetail.wbs]]
+                          </etools-form-element-wrapper>
+                        </div>
+                        <div class="col col-4">
+                          <!-- FC Type -->
+                          <etools-form-element-wrapper label="FC Type">
+                            [[itemDetail.fc_type]]
+                          </etools-form-element-wrapper>
+                        </div>
+                        <div class="col col-4">
+                          <!-- FC Reference -->
+                          <etools-form-element-wrapper label="FC Reference">
+                            [[itemDetail.fc_ref_number]]
+                          </etools-form-element-wrapper>
+                        </div>
+                      </div>
+                      <div class="row-h flex-c">
+                        <div class="col col-4">
+                          <!-- Agreement Amount -->
+                          <etools-form-element-wrapper label="Agreement Amount">
+                            $ [[_getFormattedAmount(itemDetail.agreement_amount)]]
+                          </etools-form-element-wrapper>
+                        </div>
+                        <div class="col col-4">
+                          <!-- Commitment Amount -->
+                          <etools-form-element-wrapper label="Commitment Amount">
+                            $ [[_getFormattedAmount(itemDetail.commitment_amount)]]
+                          </etools-form-element-wrapper>
+                        </div>
+                        <div class="col col-4">
+                          <!-- Expenditure Amount -->
+                          <etools-form-element-wrapper label="Expenditure Amount">
+                            $ [[_getFormattedAmount(itemDetail.expenditure_amount)]]
+                          </etools-form-element-wrapper>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row-h">
-                <div class="col col-4"></div>
-                <div class="col col-8">
-                  <div class="row-h flex-c darkbg">
-                    <div class="col col-4">
-                      <!-- Agreement Amount -->
-                      <etools-form-element-wrapper label="Agreement Amount">
-                        $ [[displayCurrencyAmount(itemDetail.agreement_amount, '0')]]
-                      </etools-form-element-wrapper>
-                    </div>
-                    <div class="col col-4">
-                      <!-- Commitment Amount -->
-                      <etools-form-element-wrapper label="Commitment Amount">
-                        $ [[displayCurrencyAmount(itemDetail.commitment_amount, '0')]]
-                      </etools-form-element-wrapper>
-                    </div>
-                    <div class="col col-4">
-                      <!-- Expenditure Amount -->
-                      <etools-form-element-wrapper label="Expenditure Amount">
-                        $ [[displayCurrencyAmount(itemDetail.expenditure_amount, '0')]]
-                      </etools-form-element-wrapper>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                <br>
+              </template>
             </template>
-          </template>
-
           </div>
-
         </div>
       </template>
 
@@ -236,11 +233,15 @@
             return value;
           }
         },
-       _getFrNrDetails: function(frNumber) {
+        _getFrNrDetails: function(frNumber) {
           if (this._showFrNrDetails(frNumber)) {
-            var value = this.frNumbersDetails[frNumber];
-            return value;
+            return this.frNumbersDetails[frNumber];
           }
+          return [];
+        },
+
+        _getFormattedAmount: function(amount) {
+          return this.displayCurrencyAmount(amount, '0');
         }
       });
     })();
