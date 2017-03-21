@@ -680,10 +680,9 @@
         },
 
         _governmentsChanged: function(governmentsData) {
-          // List fade in fade out effect
-          this.$$('#list').classList.add('hidden');
-          if (governmentsData && Array.isArray(governmentsData) && governmentsData.length > 0) {
-            this.$$('#list').classList.remove('hidden');
+          var classList = this.$.list.classList;
+          if (governmentsData instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
           }
         },
 
