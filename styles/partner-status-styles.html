@@ -15,31 +15,31 @@
       }
 
       .synced {
-        background-color: #00A651; /* TODO: replace with app-theme var */
+        background-color: var(--status-synced-color);
       }
 
       .blocked {
-        background-color: #FFA149; /* TODO: replace with app-theme var */
+        background-color: var(--status-blocked-color);
       }
 
       .not-synced {
-        background-color: #3A94FF; /* TODO: replace with app-theme var */
+        background-color: var(--status-not-synced-color);
       }
 
       .synced iron-icon, .blocked iron-icon, .not-synced iron-icon {
         --iron-icon-height: 16px;
         --iron-icon-width: 16px;
-        color: #ffffff;
+        color: var(--primary-background-color);
         @apply(--layout-self-center);
       }
 
       .marked-for-deletion iron-icon {
         position: relative;
-        color: #ED4A26; /* TODO: replace with app-theme var */
+        color: var(--icon-delete-color);
       }
       .marked-for-deletion iron-icon:after {
         content: "\00d7";
-        color: #ffffff;
+        color: var(--primary-background-color);
         position: absolute;
         z-index: 1;
         bottom: 6px;
