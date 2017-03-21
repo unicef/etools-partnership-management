@@ -1,4 +1,4 @@
-<!-- This file wi--primary-coll be dedicated to theming
+<!-- This file will be dedicated to theming
      variables used throughout the app -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
@@ -16,58 +16,74 @@
     --secondary-color: #0099FF;
     --ternary-color: #F7EE76;
     --accent-color: var(--paper-light-blue-a200);
-    --error-color: var(--paper-deep-orange-a700);
+
     --primary-text-color: rgba(0, 0, 0, 0.87);
-    --secondary-text-color: rgba(0, 0, 0, 0.54);
     --dark-primary-text-color: rgba(0, 0, 0, 0.87);
     --light-primary-text-color: rgba(255, 255, 255, 1);
-    --dark-secondary-text-color: rgba(0, 0, 0, 0.54);
+
+    --secondary-text-color: rgba(0, 0, 0, 0.54);
     --light-secondary-text-color: rgba(255, 255, 255, 0.7);
+    --dark-secondary-text-color: rgba(0, 0, 0, 0.54);
+
     --dark-disabled-text-color: rgba(0, 0, 0, 0.38);
-    --light-disabled-text-color: rgba(255, 255, 255, 0.5);
-    --dark-icon-color: rgba(0, 0, 0, 0.54);
+    --light-disabled-text-color: #9D9D9D;
+
     --light-icon-color: rgba(255, 255, 255, 1);
+    --dark-icon-color: rgba(0, 0, 0, 0.54);
+    --light-disabled-icon-color: #9D9D9D;
     --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);
-    --light-disabled-icon-color: rgba(255, 255, 255, 0.5);
+
+    --light-divider-color: rgba(255, 255, 255, 0.12);
     --dark-divider-color: rgba(0, 0, 0, 0.12);
     --darker-divider-color: #9D9D9D;
-    --light-divider-color: rgba(255, 255, 255, 0.12);
-    --dark-hover-color: rgba(0, 0, 0, 0.01);
+
     --light-hover-color: rgba(255, 255, 255, 0.01);
-    --dark-ink-color: rgba(0, 0, 0, 0.3);
+    --dark-hover-color: rgba(0, 0, 0, 0.01);
+
     --light-ink-color: rgba(255, 255, 255, 0.30);
+    --dark-ink-color: rgba(0, 0, 0, 0.3);
+
     --light-theme-background-color: var(paper-grey-50);
-    --medium-theme-background-color: #eeeeee;
+    --medium-theme-background-color: #eeeeee; /* this one's ok, but mode the color to something more generic */
+
     --title-toolbar-secondary-text-color : #C7CED2;
-    --app-header-bg-color: #2A3B46; /* search for it  */
-    --warnigns-text-color: #F7A14B;
+    --app-header-bg-color: #2A3B46;
+    --error-color: #E54F2E;
+    --warning-color: #F7A14B;
     --success-color: #75c300;
-    --error-main-color: #E54F2E;
-    --error-bg-color: #f2dede;
-    --error-border-color: #ebccd1;
-    --error-dark-color: #a94442;
 
-    --number-icon-fill-color: rgba(158, 158, 158, 1.0);
-    --activity-panel-background-color: rgba(242, 242, 242, 1.0);
+    /* rename all these, please */
+    --error-box-heading-color: var(--error-color);
+    --error-box-bg-color: #f2dede;
+    --error-box-border-color: #ebccd1;
+    --error-box-text-color: #a94442;
 
-    --partnership-management-color: var(--primary-background-color);
-    --work-planning-color: var(--paper-light-green-500);
-    --field-monitering-color: var(--paper-green-500);
+    --add-button-color : var(--success-color);
+    --icon-delete-color: var(--error-color);
 
-    --toolbar-height: 60px;
-    --side-bar-scrolling: hidden;
+    --risk-rating-not-assesed-color: #dcd8d8;
+    --risk-rating-high-color: #f03a47;
+    --risk-rating-significant-color: #ff8329;
+    --risk-rating-moderate-color: #ffca3a;
+    --risk-rating-low-color: #fff277;
+    --risk-rating-default-color: #000000;
 
-    --paper-menu-background-color: var(--light-theme-content-color);
-    --paper-tabs-selection-bar-color: var(--accent-color);
+    --status-synced-color: #00A651;
+    --status-blocked-color: #FFA149;
+    --status-not-synced-color: #3A94FF;
+
+    --status-suspended-color: var(--warning-color);
+    --status-terminated-color: var(--error-box-heading-color);
+    --status-completed-color: var(--success-color);
+    --status-active-color: var(--secondary-color);
 
     /* custom etools polymer elements general customization */
     --ecp-header-title: {
       font-size: 21px;
       font-weight: bold;
     };
-    --icon-delete-color: #ea4022;
-    --paper-fab-add-color : #72C300;
-
+    --toolbar-height: 60px;
+    --side-bar-scrolling: hidden;
 
     --etools-checkable-input-size: 20px;
     --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
@@ -86,16 +102,6 @@
       margin: 0;
     };
 
-    --risk-rating-not-assesed-color: #dcd8d8;
-    --risk-rating-high-color: #f03a47;
-    --risk-rating-significant-color: #ff8329;
-    --risk-rating-moderate-color: #ffca3a;
-    --risk-rating-low-color: #fff277;
-    --risk-rating-default-color: #000000;
-
-    --status-synced-color: #00A651;
-    --status-blocked-color: #FFA149;
-    --status-not-synced-color: #3A94FF;
   }
 
 </style>

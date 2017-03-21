@@ -91,11 +91,11 @@
       }
 
       .status-container.active .icon-wrapper {
-        background-color: var(--secondary-color);
+        background-color: var(--status-active-color);
       }
 
       .status-container.active.suspended .icon-wrapper {
-        background-color: var(--warnigns-text-color);
+        background-color: var(--status-suspended-color);
       }
 
       .status-container.active.suspended .icon-wrapper {
@@ -117,14 +117,14 @@
 
       .status-container.active.suspended .icon-wrapper iron-icon {
         background-color: var(--primary-background-color, #FFFFFF);
-        color: var(--warnigns-text-color);
+        color: var(--status-suspended-color);
         margin-left: -6px;
         width: 100%;
         height: 100%;
       }
 
       .status-container.active.terminated .icon-wrapper iron-icon {
-        color: var(--error-main-color);
+        color: var(--status-terminated-color);
       }
 
       .status-container.active .status,
@@ -137,7 +137,7 @@
         margin: 25px -25px 0 -25px;
       }
       .status-container.completed .icon-wrapper {
-        background: var(--success-color);
+        background: var(--status-completed-color);
       }
       .status-container.completed .icon-wrapper .status-nr,
       .status-container:not(.completed) iron-icon[icon="check"] {
