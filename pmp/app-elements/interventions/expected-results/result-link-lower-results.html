@@ -164,7 +164,7 @@
                   <div class="indicator-col flex-c">
                     <span class="heading">Indicator</span>
                     <span class="content">
-                      [[_displayIndicatorValue(indicator.name)]]
+                      [[_getIndicatorType(indicator.unit)]][[_displayIndicatorValue(indicator.name)]]
                     </span>
                   </div>
                 </div>
@@ -242,10 +242,25 @@
         },
 
         _displayIndicatorValue: function(value) {
+          value = value ? value.toString() : '';
           if (typeof value === 'string' && value !== '') {
             return value;
           } else {
             return '-';
+          }
+        },
+
+        _getIndicatorType: function(unit) {
+          if (!unit) {
+            return '';
+          }
+          switch (unit) {
+            case 'numeric':
+              return '# - ';
+            case 'percentage':
+              return '% - ';
+            case 'yesno':
+              return 'Yes/No - ';
           }
         },
 
