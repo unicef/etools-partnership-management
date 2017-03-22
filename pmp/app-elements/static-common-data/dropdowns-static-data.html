@@ -55,34 +55,34 @@
               agencyChoices: agencyChoices
             };
           },
-          setAgreementAmendmentTypes: function(agreement_amendment_types) {
+          setAgreementAmendmentTypes: function(agreementAmmendmentTypes) {
             return {
               type: 'SET_AGREEMENT_AMENDMENT_TYPES',
-              agreementAmendmentTypes: agreement_amendment_types
+              agreementAmendmentTypes: agreementAmmendmentTypes
             };
           },
-          setCsoTypes: function(cso_types) {
+          setCsoTypes: function(csoTypes) {
             return {
               type: 'SET_CSO_TYPES',
-              csoTypes: cso_types
+              csoTypes: csoTypes
             };
           },
-          setPartnerTypes: function(partner_types) {
+          setPartnerTypes: function(partnerTypes) {
             return {
               type: 'SET_PARTNER_TYPES',
-              partnerTypes: partner_types
+              partnerTypes: partnerTypes
             };
           },
-          setAssessmentTypes: function(assessment_types) {
+          setAssessmentTypes: function(assessmentTypes) {
             return {
               type: 'SET_ASSESSMENT_TYPES',
-              assessmentTypes: assessment_types
+              assessmentTypes: assessmentTypes
             };
           },
-          setInterventionAmendmentTypes: function(intervention_amendment_types) {
+          setInterventionAmendmentTypes: function(interventionAmendmentTypes) {
             return {
               type: 'SET_INTERVENTION_AMENDMENT_TYPES',
-              interventionAmendmentTypes: intervention_amendment_types
+              interventionAmendmentTypes: interventionAmendmentTypes
             };
           },
           setAgreementTypes: function(agreementTypesData) {
@@ -106,12 +106,14 @@
         _handleResponse: function(response) {
           if (response.detail) {
             // set intervention_doc_type values
-            if (Array.isArray(response.detail.intervention_doc_type) && response.detail.intervention_doc_type.length > 0) {
-              this.dispatch('setInterventionDocTypes', response.detail.intervention_doc_type);
+            var interventionDocType = response.detail.intervention_doc_type;
+            if (Array.isArray(interventionDocType) && interventionDocType.length > 0) {
+              this.dispatch('setInterventionDocTypes', interventionDocType);
             }
             // set intervention_status values
-            if (Array.isArray(response.detail.intervention_status) && response.detail.intervention_status.length > 0) {
-              var preparedStatuses = this._prepareDropdownStatusesData(response.detail.intervention_status);
+            var interventionStatus = response.detail.intervention_status;
+            if (Array.isArray(interventionStatus) && interventionStatus.length > 0) {
+              var preparedStatuses = this._prepareDropdownStatusesData(interventionStatus);
               this.dispatch('setInterventionStatuses', preparedStatuses);
             }
             // set currencies data
@@ -131,8 +133,9 @@
               this.dispatch('setAgencyChoices', response.detail.agency_choices);
             }
             // set agreement amendment data
-            if (Array.isArray(response.detail.agreement_amendment_types) && response.detail.agreement_amendment_types.length > 0) {
-              this.dispatch('setAgreementAmendmentTypes', response.detail.agreement_amendment_types);
+            var agreementAmmendmentTypes = response.detail.agreement_amendment_types;
+            if (Array.isArray(agreementAmmendmentTypes) && agreementAmmendmentTypes.length > 0) {
+              this.dispatch('setAgreementAmendmentTypes', agreementAmmendmentTypes);
             }
             // set cso types data
             if (Array.isArray(response.detail.cso_types) && response.detail.cso_types.length > 0) {
@@ -147,8 +150,9 @@
               this.dispatch('setAssessmentTypes', response.detail.assessment_types);
             }
             // set intervention ammendment data
-            if (Array.isArray(response.detail.intervention_amendment_types) && response.detail.intervention_amendment_types.length > 0) {
-              this.dispatch('setInterventionAmendmentTypes', response.detail.intervention_amendment_types);
+            var interventionAmendmentTypes = response.detail.intervention_amendment_types;
+            if (Array.isArray(interventionAmendmentTypes) && interventionAmendmentTypes.length > 0) {
+              this.dispatch('setInterventionAmendmentTypes', interventionAmendmentTypes);
             }
           }
         },

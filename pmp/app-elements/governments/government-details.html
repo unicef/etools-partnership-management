@@ -183,15 +183,15 @@ it doesn't need to be included in element's style -->
         }
       },
       _handleValueChange: function(e) {
-        if (_.has(e,'detail.selectedValues')) {
+        if (_.has(e, 'detail.selectedValues')) {
           var path = 'intervention.' + e.target.id;
           this.set(path, e.detail.selectedValues.value);
           e.target.invalid = false;
-        }else if(e.target.value){
+        }else if (e.target.value) {
           e.target.invalid = false;
         }
       },
-      _addNewResult: function () {
+      _addNewResult: function() {
         var intervention = _.get(this.intervention, 'id') || '';
         var newResult = {
           'intervention': intervention,
@@ -210,16 +210,16 @@ it doesn't need to be included in element's style -->
           this.set('governmentEditMode', this.editMode);
           this.updateStyles();
       },
-      _validateSave: function(){
+      _validateSave: function() {
         event.stopImmediatePropagation();
         if (_.isEqual(this.intervention, this.originalIntervention)) {
-          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true}); // TODO : disable save button when no change detected
-        }
-        else if (this._interventionIsValid()) {
+          // TODO : disable save button when no change detected
+          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true});
+        } else if (this._interventionIsValid()) {
           this.fire('save-intervention', {intervention: this.intervention});
         } else {
-          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn: true}); // TODO : scroll missed fields into view
-
+          // TODO : scroll missed fields into view
+          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn: true});
         }
       },
       _interventionIsValid: function() {
@@ -233,7 +233,8 @@ it doesn't need to be included in element's style -->
           this.$$('#country_programme').invalid = true;
           valid = false;
         }
-        var resultsValid = this.$.governmentResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
+        var govtResults = this.$.governmentResults;
+        var resultsValid = govtResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
         if (!resultsValid) {
           valid = false;
         }
@@ -244,10 +245,10 @@ it doesn't need to be included in element's style -->
         // TODO create sticky save button
 
       },
-      _interventionChanged : function(intervention){
+      _interventionChanged: function(intervention) {
         this._setNewEditMode();
-        if(!_.has(this.originalIntervention,'id') || (_.has(this.originalIntervention,'id') && this.intervention.id!== this.originalIntervention.id)){
-
+        if (!_.has(this.originalIntervention, 'id') ||
+            (_.has(this.originalIntervention, 'id') && this.intervention.id !== this.originalIntervention.id)) {
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
         this.fire('global-loading', {active: false});
