@@ -203,7 +203,7 @@ it doesn't need to be included in element's style -->
           'unicef_managers': [],
           'sectors': [],
           'sections': [],
-        }
+        };
         this.push('intervention.results', newResult);
       },
       _setNewEditMode: function() {
@@ -226,11 +226,11 @@ it doesn't need to be included in element's style -->
         var valid = true;
         // validate Partnership Details
         if (!this.intervention.partner) {
-          this.$$("#partner").invalid = true;
+          this.$$('#partner').invalid = true;
           valid = false;
         }
         if (!this.intervention.country_programme) {
-          this.$$("#country_programme").invalid = true;
+          this.$$('#country_programme').invalid = true;
           valid = false;
         }
         var resultsValid = this.$.governmentResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
@@ -252,6 +252,6 @@ it doesn't need to be included in element's style -->
         }
         this.fire('global-loading', {active: false});
       },
-    })
+    });
   </script>
 </dom-module>

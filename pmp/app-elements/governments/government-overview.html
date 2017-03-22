@@ -250,7 +250,7 @@
 
   <script>
     Polymer({
-      is : "government-overview",
+      is: 'government-overview',
       behaviors: [
         pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
         pmpBehaviors.CommonGeneralBehavior,
@@ -290,9 +290,9 @@
        '_interventionChanged(intervention.*)'
      ],
 
-     _interventionChanged : function() {
+     _interventionChanged: function() {
        if (this.intervention && typeof this.intervention === 'object' && Object.keys(this.intervention).length > 0) {
-         if(!this.intervention.implementation_status){
+         if (!this.intervention.implementation_status) {
            this.set('intervention.implementation_status', []);
          }
 
@@ -301,21 +301,20 @@
          this._findProgramme();
          this._findPartner();
        }
-       this.fire('global-loading', {active:false});
+       this.fire('global-loading', {active: false});
      },
 
       _prepareCpOutputs: function() {
-        var cpOutputNames   = [];
-
-        if(_.has(this.intervention,'implementation_status')){
-          this.intervention.implementation_status.forEach(function(elem){
+        var cpOutputNames = [];
+        if (_.has(this.intervention, 'implementation_status')) {
+          this.intervention.implementation_status.forEach(function(elem) {
             cpOutputNames.push(this._getCpOutputName(elem.cp_output));
           }.bind(this));
         }
         this.set('cpOutputNames', cpOutputNames);
       },
       _fcs_exist: function(fc_records) {
-        if ((!Array.isArray(fc_records)) || (fc_records.length === 0)) {
+        if (!Array.isArray(fc_records) || fc_records.length === 0) {
           return false;
         }
         return true;
@@ -325,8 +324,8 @@
         var countryProgrammes = [];
         var currentCpId = this.intervention.country_programme;
 
-        countryProgrammes = this.allCountryProgrammes.filter(function(elem){
-          return (elem.value == currentCpId);
+        countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
+          return (elem.value === currentCpId);
         });
 
         this.set('countryProgramme', countryProgrammes.pop());
@@ -336,8 +335,8 @@
         var partners = [];
         var currentPartnerId = this.intervention.partner;
 
-        partners = this.allPartners.filter(function(elem){
-          return (elem.value == currentPartnerId);
+        partners = this.allPartners.filter(function(elem) {
+          return (elem.value === currentPartnerId);
         });
 
         this.set('partner', partners.pop());
@@ -349,7 +348,7 @@
         var actualTotalSum = 0;
         var outstandingTotalSum = 0;
 
-        if (_.has(this.intervention,'implementation_status')) {
+        if (_.has(this.intervention, 'implementation_status')) {
           this.intervention.implementation_status.forEach(function(elem) {
             actualIndividualSum = 0;
             outstandingIndividualSum = 0;
@@ -373,8 +372,8 @@
         this.set('intervention.outstanding_total_sum', outstandingTotalSum);
       },
       _getCpOutputName: function(cpoId) {
-        for(var key in this.allCpOutputs) {
-          if(this.allCpOutputs[key].value === cpoId) {
+        for (var key in this.allCpOutputs) {
+          if (this.allCpOutputs[key].value === cpoId) {
             return this.allCpOutputs[key].label;
           }
         }
@@ -384,6 +383,6 @@
         return this.getDisplayValue(dateString, true);
       },
 
-  })
+  });
   </script>
 </dom-module>

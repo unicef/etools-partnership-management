@@ -103,8 +103,9 @@
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
+        var id = this.dataItems[this.elToDeleteIndex].id;
 
-        if (this.dataItems[this.elToDeleteIndex].id) {
+        if (id) {
           this.fire('global-loading', {message: 'Deleting items from server...', active: true});
 
           var deleteAjax = this.$$('#deleteAjax');
@@ -117,7 +118,7 @@
             console.error('your element must use etoolsConfig.globals behaviour to remove exiting items');
             return;
           }
-          var endpoint = this.getEndpoint(this._deleteEpName, {id: this.dataItems[this.elToDeleteIndex].id});
+          var endpoint = this.getEndpoint(this._deleteEpName, {id: id});
           deleteAjax.set('method', 'DELETE');
           deleteAjax.set('endpoint', endpoint);
           deleteAjax.set('body', {});

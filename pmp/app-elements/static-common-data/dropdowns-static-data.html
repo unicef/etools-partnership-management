@@ -49,10 +49,10 @@
               currencies: currenciesData
             };
           },
-          setAgencyChoices: function(agency_choices) {
+          setAgencyChoices: function(agencyChoices) {
             return {
               type: 'SET_AGENCY_CHOICHES',
-              agencyChoices: agency_choices
+              agencyChoices: agencyChoices
             };
           },
           setAgreementAmendmentTypes: function(agreement_amendment_types) {
@@ -83,7 +83,7 @@
             return {
               type: 'SET_INTERVENTION_AMENDMENT_TYPES',
               interventionAmendmentTypes: intervention_amendment_types
-            };          
+            };
           },
           setAgreementTypes: function(agreementTypesData) {
             return {
@@ -125,7 +125,7 @@
             // set agreement statuses data
             if (Array.isArray(response.detail.agreement_status) && response.detail.agreement_status.length > 0) {
               this.dispatch('setAgreementStatuses', response.detail.agreement_status);
-            }        
+            }
             // set agency data
             if (Array.isArray(response.detail.agency_choices) && response.detail.agency_choices.length > 0) {
               this.dispatch('setAgencyChoices', response.detail.agency_choices);

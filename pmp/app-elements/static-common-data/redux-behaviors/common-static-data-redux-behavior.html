@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
-
   // shuts up the linting script
   var Redux = Redux || {};
   var PolymerRedux = PolymerRedux || {};
@@ -49,7 +48,6 @@
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
         return Object.assign({}, state, { fileTypes: action.fileTypes });
-
 
       case 'SET_CP_OUTPUTS':
         // console.log('set cp_outputs data...', action.cpOutputs);
@@ -102,9 +100,11 @@
       case 'SET_PARTNERS':
         //console.log('set partners data...', action.partners);
         return Object.assign({}, state, { partners: action.partnersData });
+
       case 'SET_AGREEMENTS':
         //console.log('set partners data...', action.partners);
         return Object.assign({}, state, { agreementsList: action.agreementsList });
+
       case 'SET_PARTNERS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
         return Object.assign({}, state, { partnersDropdownData: action.partnersDropdownData });
@@ -128,6 +128,7 @@
       case 'SET_AGREEMENT_STATUSES':
         // console.log('set agreement_statuses data...', action.statuses);
         return Object.assign({}, state, {agreementStatuses: action.statuses});
+
       case 'SET_CSO_PARTNERS':
         // console.log('set cso partners data...', action.csoPartners);
         return Object.assign({}, state, {csoPartners: action.csoPartners});
@@ -155,7 +156,6 @@
       case 'SET_INTERVENTION_AMENDMENT_TYPES':
         // console.log('set interventionAmendmentTypes...', action.interventionAmendmentTypes);
         return Object.assign({}, state, { interventionAmendmentTypes: action.interventionAmendmentTypes });
-
     }
   });
 

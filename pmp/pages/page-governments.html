@@ -47,11 +47,11 @@
             pattern="governments/new/details"
             active="{{newInterventionActive}}"
     ></app-route>
-  	<government-intervention-item-data id="interventionData"
+    <government-intervention-item-data id="interventionData"
                                        intervention="{{intervention}}"
                                        intervention-id="[[selectedInterventionId]]"
                                        on-response-received="_refreshGovernmentsList"></government-intervention-item-data>
-  	<app-header-layout>
+    <app-header-layout>
 
       <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
         <div class="top-content">
@@ -219,7 +219,6 @@
         }
         return false;
       },
-
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
