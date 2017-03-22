@@ -1,6 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
+
+  // shuts up the linting script
+  var Redux = Redux || {};
+  var PolymerRedux = PolymerRedux || {};
+
   var initialDropdownPmpData = {
     hrps: [],
     supplyItems: [],

@@ -343,7 +343,7 @@
             statePath: 'agreementStatuses'
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
 
@@ -431,42 +431,41 @@
         },
 
         _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function () {
+          this.debounce('updateShownFilters', function() {
 
             var filtersValues = [
               {
                 filterName: 'Agreement Type',
                 selectedValue: this.agreementType
-              }, 
+              },
               {
                 filterName: 'Agreement Status',
                 selectedValue: this.agreementStatus
-              }, 
+              },
               {
                 filterName: 'Partner',
                 selectedValue: this.selectedPartners
-              }, 
+              },
               {
                 filterName: 'Starts After',
                 selectedValue: this.startDate
-              }, 
+              },
               {
                 filterName: 'Ends Before',
                 selectedValue: this.endDate
-              },                           
-            ];            
+              },
+            ];
             this.updateShownFilters(filtersValues);
 
           }.bind(this), 500);
         },
-        
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
+
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
@@ -544,7 +543,7 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {        
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -571,7 +570,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('agreements').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
@@ -637,7 +636,6 @@
             return new Date(date);
           }
         },
-
 
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {
