@@ -9,7 +9,7 @@
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
-                 on-success="_handleResponse"
+                 on-success="_handleSuccResponse"
                  on-fail="handleErrorResponse"></etools-ajax>
   </template>
 
@@ -44,7 +44,8 @@
           withUpload: Boolean,
           prepareMultipartData: Boolean,
 
-          handleResponseAdditionalCallback: Object,
+          handleSuccResponseAdditionalCallback: Object,
+          handleErrResponseAdditionalCallback: Object,
           ajaxEl: Object
 
         },
@@ -108,16 +109,18 @@
           // after body is set the request is automatically triggered
         },
 
-        _handleResponse: function(response) {
+        _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
           // update the partners list in dexieDB
           etoolsAppConfig.db.table('partners').put(response.detail);
 
           this.fire('global-loading', {active: false});
-          if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+
+          if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
+            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
-            this.set('handleResponseAdditionalCallback', null);
+            this.set('handleSuccResponseAdditionalCallback', null);
+            this.set('handleErrResponseAdditionalCallback', null);
           }
         },
 
@@ -134,7 +137,41 @@
           this.ajaxEl.set('prepareMultipartData', false);
           this.ajaxEl.set('body', partner);
           this.ajaxEl.set('url', this.endpoint.url);
-         
+
+        },
+        createPartner: function(vendorNoObj, successCallback, errorCallback) {
+          var self = this;
+          var __ = {
+             firePostRequest: function(){
+                  // self.set('endpoint', self.getEndpoint("partners"));
+                  // self.ajaxEl.set('method', 'POST');
+                  // self.ajaxEl.set('multiPart', false);
+                  // self.ajaxEl.set('prepareMultipartData', false);
+                  // self.ajaxEl.set('body', vendorNoObj);
+                  // self.ajaxEl.set('url', self.endpoint.url);
+              },
+            inputIsValid: function(input){
+              return input && input.vendor_number;
+            },
+            setCallbacks: function(){
+              self.handleSuccResponseAdditionalCallback = successCallback;
+              self.handleErrResponseAdditionalCallback = errorCallback;
+            }
+          }
+
+          if(!__.inputIsValid(vendorNoObj)) {
+            this.fire('toast', {text: 'Invalid Vendor Number for new partner!', showCloseBtn: true});
+            return;
+          }
+
+          this.fire('global-loading', {message: 'Creating new partner...', active: true});
+          __.setCallbacks();
+          __.firePostRequest();
+
+          setTimeout(function(){
+           self.fire('global-loading', {active: false});
+          }, 3000)
+
         },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
@@ -160,7 +197,7 @@
             if (Object.keys(partner).length > 0) {
               // set additional callback if any
               if (callback) {
-                this.set('handleResponseAdditionalCallback', callback);
+                this.set('handleSuccResponseAdditionalCallback', callback);
               }
               this.withUpload = false; // used to set multipart prop on etools-ajax
               this.prepareMultipartData = false;

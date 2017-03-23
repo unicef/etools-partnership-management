@@ -4,8 +4,18 @@
 
 <dom-module id="new-partner-dialog">
   <template>
-    <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" dialog-title="New Partner" on-close="_handleDialogClosed">
-        <paper-input label="Vendor #" value="{{vendorNumber}}" placeholder="&#8212;" required auto-validate error-message="Vendor# is required"></paper-input>
+      <style>
+          #vendorNo{
+              margin-bottom: 30px;
+          }
+      </style>
+    <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"  dialog-title="New Partner" on-close="_handleDialogClosed">
+        <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
+            placeholder="&#8212;" autofocus
+            required auto-validate error-message="Vendor# is required"
+            allowed-pattern="[0-9]"
+            char-counter
+            maxlength="11"></paper-input>
     </etools-dialog>
   </template>
 </dom-module>
@@ -14,14 +24,31 @@
 Polymer({
     is:'new-partner-dialog',
     properties:{
-        vendorNumber:String
+        vendor_number:{
+            type:String
+        },
+        vendorNumberIsEmpty:{
+            type:Boolean,
+            computed:'_vendorNumberIsEmpty(vendor_number)'
+        }
+
     },
-    _openNewPartnerDialog: function(){
+    _openNewPartnerDialog: function() {
+        this.$.vendorNo.invalid = false;
         this.$.newPartnerDialog.opened = true;
     },
-    _handleDialogClosed: function(closingReason){
-        if(closingReason.detail.confirmed)
-         this.fire('create-partner',{ 'vendorNumber' : vendorNumber})
+    _vendorNumberIsEmpty: function() {
+        return !!!this.vendor_number ;
+    },
+    _handleDialogClosed: function(closingReason) {
+        if(closingReason.detail.confirmed) {
+            if(!this.vendor_number)
+              return;
+
+           this.fire('create-partner',{ 'vendor_number' : this.vendor_number})
+        } else {
+            this.vendor_number="";
+        }
     }
 
 })
