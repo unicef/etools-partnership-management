@@ -263,7 +263,7 @@
           var programmeVisits = 0;
           var spotChecks = 0;
 
-          switch(true) {
+          switch (true) {
 
             case (cashTransferred <= 50000):
               programmeVisits = 1;
@@ -300,11 +300,11 @@
         },
 
         _prepareInterventionData: function() {
-          for(var key1 in this.partner.interventions) {
+          for (var key1 in this.partner.interventions) {
             var intervention = this.partner.interventions[key1];
             var total = 0;
 
-            for(var key2 in intervention.planned_budget) {
+            for (var key2 in intervention.planned_budget) {
               total += parseFloat(intervention.planned_budget[key2].total);
             }
 

@@ -178,7 +178,7 @@
         indicatorDialogDataReceived: function(data) {
           var actionParams = data.actionParams;
           var indicator = data.indicatorData;
-          for (var i=0; i<this.dataItems.length; i++) {
+          for (var i = 0; i < this.dataItems.length; i++) {
             //search expected result item by output id
             if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
               var indicatorPaths = 'dataItems.' + i + '.ll_results.' +

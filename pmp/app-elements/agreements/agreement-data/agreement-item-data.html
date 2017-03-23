@@ -152,7 +152,6 @@
           }
         },
 
-
         _hasFiles: function(list, property) {
           if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
             return false;
@@ -161,8 +160,7 @@
           for (var i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
-            }
-            else {
+            } else {
               delete list[i][property];
             }
           }
@@ -214,7 +212,8 @@
               }
               this.fire('global-loading', {message: 'Saving agreement data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', agreement, url, this.withUpload, this.prepareMultipartData);
+              var action = (isNew) ? 'POST' : 'PATCH';
+              this._prepareAndFireRequest(action, agreement, url, this.withUpload, this.prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',

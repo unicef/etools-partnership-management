@@ -127,7 +127,10 @@
         },
 
         _attachmentsChanged: function(attachments) {
-          if (Array.isArray(attachments) && attachments.length > 0 && !this._hasPath(attachments[0]) && !this.preparedAttachments) {
+          if (Array.isArray(attachments) &&
+              attachments.length > 0 &&
+              !this._hasPath(attachments[0]) &&
+              !this.preparedAttachments) {
             // this should run only one time when attachments(intervention.attachments) are provided
             this.set('preparedAttachments', true);
             this.set('attachments', attachments.map(function(attachment) {
@@ -147,7 +150,7 @@
           if (!this.editMode) {
             this.set('attachmentEditMode', this.editMode);
             return;
-          };
+          }
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('attachmentEditMode', false);
@@ -155,8 +158,6 @@
             this.set('attachmentEditMode', true);
           }
           this.updateStyles();
-
-
         },
         _getPath: function(attachment) {
           if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {

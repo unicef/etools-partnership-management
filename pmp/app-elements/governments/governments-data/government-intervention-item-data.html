@@ -14,7 +14,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       Polymer({
@@ -48,10 +48,10 @@
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
         },
-        attached: function(){
+        attached: function() {
           this.ajaxEl = this.$.ajax;
         },
-        saveIntervention: function (intervention, cb) {
+        saveIntervention: function(intervention, cb) {
           if (_.isEmpty(intervention)) {
             this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
           } else {
@@ -66,11 +66,11 @@
               isNew = true;
             }
             if (!_.isEmpty(intervention)) {
-              if(cb){
-                this.set('handleResponseAdditionalCallback',cb);
+              if (cb) {
+                this.set('handleResponseAdditionalCallback', cb);
               }
-              this.fire('global-loading', {message: 'Saving government intervention data...', active:true});
-              this._prepareAndFireRequest((isNew)? 'POST' : 'PATCH', intervention, url);
+              this.fire('global-loading', {message: 'Saving government intervention data...', active: true});
+              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this intervention.',
@@ -94,12 +94,12 @@
 
           // after body is set the request is automatically triggered
         },
-        _resetAjax: function(){
+        _resetAjax: function() {
           this.ajaxEl.set('params', null);
           this.ajaxEl.set('body', null);
           this.ajaxEl.set('url', null);
         },
-        _handleResponse: function(response){
+        _handleResponse: function(response) {
           this._setIntervention(response.detail);
 
           // update the government interventions list in dexieDB
@@ -115,7 +115,7 @@
           this.fire('response-received', {});
         },
 
-        _interventionIdChanged: function (newId) {
+        _interventionIdChanged: function(newId) {
           if (newId) {
             this.fire('global-loading', {message: 'Loading government intervention data...', active: true});
             this._prepareAndFireRequest();
@@ -123,7 +123,7 @@
           }
         },
 
-        _prepareEndpoint: function (id) {
+        _prepareEndpoint: function(id) {
           if (id > 0) {
             // check and prepare request URL
             if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
@@ -152,7 +152,7 @@
                       errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + '\n');
                     }
                   } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                    for(var key in errors[errField]) {
+                    for (var key in errors[errField]) {
                       errorMessages.push(errors[errField][key] + '\n');
                     }
                   }
@@ -185,7 +185,8 @@
             dexieObject.cp_outputs = this._pushIfNew(dexieObject.cp_outputs, responseElement.result);
 
             for (key in responseElement.unicef_managers) {
-              dexieObject.unicef_focal_points = this._pushIfNew(dexieObject.unicef_focal_points, responseElement.unicef_managers[key]);
+              var workingElem = responseElement.unicef_managers[key];
+              dexieObject.unicef_focal_points = this._pushIfNew(dexieObject.unicef_focal_points, workingElem);
             }
 
             for (key in responseElement.sectors) {
@@ -194,10 +195,10 @@
           }.bind(this));
 
           sectorIds.forEach(function(sectorId) {
-            for(key in this.allSectors) {
+            for (key in this.allSectors) {
               var workingSector = this.allSectors[key];
 
-              if(workingSector.value === sectorId) {
+              if (workingSector.value === sectorId) {
                 dexieObject.sectors.push(workingSector.label);
               }
             }
@@ -209,9 +210,9 @@
             }
           });
 
-          this.allCountryProgrammes.forEach(function(country_programme) {
-            if (country_programme.value === dexieObject.country_programme) {
-              dexieObject.country_programme_name = country_programme.label;
+          this.allCountryProgrammes.forEach(function(elem) {
+            if (elem.value === dexieObject.country_programme) {
+              dexieObject.country_programme_name = elem.label;
             }
           });
 

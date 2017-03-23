@@ -421,7 +421,7 @@
           if (!this.editMode) {
             this.set('detailsEditMode', this.editMode);
             return;
-          };
+          }
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('detailsEditMode', false);
@@ -430,8 +430,6 @@
 
           }
           this.updateStyles();
-
-
         },
 
         _setYears: function(interventionStart, interventionEnd) {

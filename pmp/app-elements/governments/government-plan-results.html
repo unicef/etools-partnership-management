@@ -276,7 +276,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
           Polymer({
             is: 'government-plan-results',
             behaviors: [
@@ -326,10 +326,10 @@
                 readOnly: true
               }
             },
-            _handleValueChange: function (e) {
+            _handleValueChange: function(e) {
               var id = e.target.id;
               var index = e.target.index;
-              var dataItemsPath = 'dataItems.'+ index;
+              var dataItemsPath = 'dataItems.' + index;
               // ensure this.result observes subproperty change
               var updatedResult = _.has(e, 'detail.selectedValues') ?
                   this._getUpdatedObject(id, e.detail.selectedValues, this.dataItems[index]) :
@@ -342,26 +342,26 @@
                 e.target.invalid = false;
               }
             },
-            _addActivity: function (e) {
-              var activitiesPath = 'dataItems.'+e.target.index+'.result_activities';
+            _addActivity: function(e) {
+              var activitiesPath = 'dataItems.' + e.target.index + '.result_activities';
               this.push(activitiesPath, {
                 'code': '',
                 'description': ''
               });
             },
-            _fieldsAreValid: function () {
+            _fieldsAreValid: function() {
               var self = this;
               var fields = arguments;
               // looping through result elements and  setting to invalid any with no value assigned
               var results = Polymer.dom(this.root).querySelectorAll('.resultItem');
-              if(results.length) {
-                return fieldsValid = _.reduce(results, function(isValid,result,i){
-                    var validate = _.reduce(fields, function (valid, field) {
+              if (results.length) {
+                return _.reduce(results, function(isValid, result, i) {
+                    var validate = _.reduce(fields, function(valid, field) {
                       var exists = !!self.dataItems[i][field];
                       if (!exists) {
-                        Polymer.dom(result).querySelector("#" + field).invalid = true;
+                        Polymer.dom(result).querySelector('#' + field).invalid = true;
                       } else {
-                        Polymer.dom(result).querySelector("#" + field).invalid = false;
+                        Polymer.dom(result).querySelector('#' + field).invalid = false;
                       }
                       return valid && exists;
                     }, true);
@@ -370,7 +370,7 @@
               }
               return true;
             },
-            _yearsEmpty: function (years) {
+            _yearsEmpty: function(years) {
               return _.isEmpty(years);
             },
 

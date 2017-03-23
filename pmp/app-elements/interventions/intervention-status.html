@@ -259,7 +259,8 @@
     (function() {
       'use strict';
 
-      // TODO: Very important! this is 99% the same as agreement status. Check if the statuses are the same and refactor this 2 elements
+      // TODO: Very important! this is 99% the same as agreement status.
+      // Check if the statuses are the same and refactor this 2 elements
 
       Polymer({
         is: 'intervention-status',
@@ -313,7 +314,7 @@
 
         _getFirstStatusWrapperClass: function(status) {
           if (this._statusIs(status, 'draft') || this._statusIs(status, 'cancelled')) {
-            return 'active'
+            return 'active';
           }
           return 'completed';
         },
@@ -333,13 +334,13 @@
 
         _getThirdStatusWrapperClass: function(status) {
           if (this._statusIs(status, 'implemented')) {
-            return 'active'
+            return 'active';
           }
           return '';
         },
 
         _showDraft: function(status) {
-          if(this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
+          if (this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
             return true;
           }
           return false;

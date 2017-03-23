@@ -146,7 +146,7 @@
             value: false
           }
         },
-        ready: function(){
+        ready: function() {
           var statusChangeWarningDialogContent = document.createElement('p');
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
@@ -163,22 +163,19 @@
           }
           return hidden;
         },
-         _showStatusChangeConfirmationDialog: function() {
+        _showStatusChangeConfirmationDialog: function() {
           if (!this.warningDialog) {
-             console.warn('[pmp partner status change] warningDialog not created!');
+            console.warn('[pmp partner status change] warningDialog not created!');
+            return;
+          }
+          var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+          if (!msgEl) {
+             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
              return;
           }
-
-           var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
-           if(!msgEl)
-           {
-              console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
-              return;
-           }
-           var warningMessage = 'Are you sure you want to hide partner '+ this.partner.name+'?';
-           msgEl.innerHTML = warningMessage;
-           this.warningDialog.opened = true;
-
+          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+          msgEl.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
         },
 
         _statusChangeConfirmationCallback: function(event) {
