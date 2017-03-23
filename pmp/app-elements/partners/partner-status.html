@@ -51,7 +51,7 @@
         background-color: #ceccec; /* TODO: replace with app-theme var */
         color: #ea4022; /* TODO: replace with app-theme var */
       }
-      
+
       #hide-btn iron-icon {
         color: #646464; /* TODO: replace with app-theme var */
         @apply(--layout-self-start);
@@ -107,7 +107,7 @@
 
       <template is="dom-if" if="[[editMode]]">
         <div class="buttons-section vertical">
-           <paper-button 
+           <paper-button
               id="hide-btn"
               class="primary-btn with-prefix w100"
               on-tap="_triggerHidePartner"
@@ -115,7 +115,7 @@
             <iron-icon icon="cancel"></iron-icon>
             <span class="btn-label">Hide</span>
           </paper-button>
-          <paper-button 
+          <paper-button
               id="save-btn"
               class="primary-btn w100"
               on-tap="_triggerPartnerSave">
@@ -146,7 +146,7 @@
             value: false
           }
         },
-        ready: function(){
+        ready: function() {
           var statusChangeWarningDialogContent = document.createElement('p');
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
@@ -163,22 +163,19 @@
           }
           return hidden;
         },
-         _showStatusChangeConfirmationDialog: function() {
+        _showStatusChangeConfirmationDialog: function() {
           if (!this.warningDialog) {
-             console.warn('[pmp partner status change] warningDialog not created!');
+            console.warn('[pmp partner status change] warningDialog not created!');
+            return;
+          }
+          var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+          if (!msgEl) {
+             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
              return;
           }
-          
-           var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
-           if(!msgEl)
-           {
-              console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
-              return;
-           }
-           var warningMessage = 'Are you sure you want to hide partner '+ this.partner.name+'?';
-           msgEl.innerHTML = warningMessage;
-           this.warningDialog.opened = true;
-           
+          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+          msgEl.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
         },
 
         _statusChangeConfirmationCallback: function(event) {
@@ -190,7 +187,7 @@
               id: this.partner.id,
               hidden: true
             });
-          }         
+          }
         },
         _showSyncedStatus: function(partner) {
           if (partner.vision_synced === true && partner.deleted_flag === false &&

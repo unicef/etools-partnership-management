@@ -46,7 +46,7 @@
                   this.push('serverErrors', 'Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
                 }
               } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                for(var key in errors[errField]) {
+                for (var key in errors[errField]) {
                   this.push('serverErrors', errors[errField][key]);
                 }
               }
