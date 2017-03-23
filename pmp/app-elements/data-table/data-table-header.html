@@ -70,7 +70,7 @@
           type: Object,
         },
 
-        noTitle : {
+        noTitle: {
           type: Boolean,
           observer: '_noTitle',
         },
@@ -104,19 +104,17 @@
         }
         this._lastSelectedCol = column;
       },
-      _noTitle: function(){
+      _noTitle: function() {
         this.customStyle = {
-          '--data-table-header' : 'height: auto',
-          '--header-title' : 'display: none'
-        }
+          '--data-table-header': 'height: auto',
+          '--header-title': 'display: none'
+        };
         this.updateStyles();
       },
-      _noCollapse: function(){
-        this.customStyle['--header-columns']='margin-left : 0; flex: 1';
+      _noCollapse: function() {
+        this.customStyle['--header-columns'] = 'margin-left: 0; flex: 1';
         this.updateStyles();
       }
-
-
     });
 
   </script>

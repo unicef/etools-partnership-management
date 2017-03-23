@@ -211,7 +211,7 @@
           if (!this.editMode) {
             this.set('signEditMode', this.editMode);
             return;
-          };
+          }
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('signEditMode', false);
@@ -219,8 +219,6 @@
             this.set('signEditMode', true);
           }
           this.updateStyles();
-
-
         },
 
         _agreementChanged: function(agreement) {
