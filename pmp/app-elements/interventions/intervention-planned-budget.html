@@ -264,8 +264,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[_addIntegers(_localCsoTotal, _localUnicefTotal)]] [[localCurrency]]</span>
-                <span>[[_addIntegers(_usdCsoTotal, _usdUnicefTotal)]] USD</span>
+                <span>[[_getPlannedBudgetTotalFormatted(_localCsoTotal, _localUnicefTotal)]] [[localCurrency]]</span>
+                <span>[[_getPlannedBudgetTotalFormatted(_usdCsoTotal, _usdUnicefTotal)]] USD</span>
               </div>
             </div>
           </div>
@@ -587,10 +587,6 @@
           if (newValue !== oldValue) {
             this.updateStyles();
           }
-        },
-
-        _addIntegers: function(num1, num2) {
-          return parseInt(num1) + parseInt(num2);
         }
 
       });
