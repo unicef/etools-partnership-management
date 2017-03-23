@@ -21,35 +21,36 @@
 </dom-module>
 
 <script>
-Polymer({
-    is:'new-partner-dialog',
-    properties:{
-        vendor_number:{
-            type:String
+   (function() {
+     'use strict';
+        Polymer({
+        is: 'new-partner-dialog',
+        properties: {
+            vendor_number: {
+                type: String
+            },
+            vendorNumberIsEmpty: {
+                type: Boolean,
+                computed: '_vendorNumberIsEmpty(vendor_number)'
+            }
         },
-        vendorNumberIsEmpty:{
-            type:Boolean,
-            computed:'_vendorNumberIsEmpty(vendor_number)'
+        _openNewPartnerDialog: function() {
+            this.$.vendorNo.invalid = false;
+            this.$.newPartnerDialog.opened = true;
+        },
+        _vendorNumberIsEmpty: function() {
+            return !!!this.vendor_number;
+        },
+        _handleDialogClosed: function(closingReason) {
+            if (closingReason.detail.confirmed) {
+              if (!this.vendor_number) {
+                  return;
+              }
+              this.fire('create-partner', {'vendor_number': this.vendor_number});
+            } else {
+              this.vendor_number = '';
+            }
         }
-
-    },
-    _openNewPartnerDialog: function() {
-        this.$.vendorNo.invalid = false;
-        this.$.newPartnerDialog.opened = true;
-    },
-    _vendorNumberIsEmpty: function() {
-        return !!!this.vendor_number ;
-    },
-    _handleDialogClosed: function(closingReason) {
-        if(closingReason.detail.confirmed) {
-            if(!this.vendor_number)
-              return;
-
-           this.fire('create-partner',{ 'vendor_number' : this.vendor_number})
-        } else {
-            this.vendor_number="";
-        }
-    }
-
-})
+       });
+    })();
 </script>

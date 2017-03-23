@@ -159,23 +159,22 @@
 
       listeners: {
         'partner-save-error': '_partnerSaveError',
-        'create-partner':'_createPartner'
+        'create-partner': '_createPartner'
       },
-      ready:function(){
-         this.newPartnerDialog = document.createElement('new-partner-dialog');
-         this.newPartnerDialog.setAttribute('id','newPartnerDialog');
-         Polymer.dom(document.querySelector('body')).appendChild(this.newPartnerDialog);
+      ready: function() {
+        this.newPartnerDialog = document.createElement('new-partner-dialog');
+        this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
+        Polymer.dom(document.querySelector('body')).appendChild(this.newPartnerDialog);
 
-          this.newPartnerDialog.addEventListener('create-partner', function(event) {
-            this.fire('create-partner', event.detail);
-          }.bind(this), false);
+        this.newPartnerDialog.addEventListener('create-partner', function(event) {
+          this.fire('create-partner', event.detail);
+        }.bind(this), false);
 
       },
-      detached:function(){
-          if(this.newPartnerDialog)
-          {
-            Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
-          }
+      detached: function() {
+        if (this.newPartnerDialog) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
+        }
       },
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
@@ -244,16 +243,17 @@
       _showNewPartnerBtn: function(listActive, permissions) {
          return listActive && this._hasEditPermissions(permissions);
       },
-      _openNewPartnerDialog: function(){
+      _openNewPartnerDialog: function() {
         this.newPartnerDialog._openNewPartnerDialog();
       },
-      _createPartner:function(event){
-        this.$.partnerData.createPartner(event.detail,this._newPartnerCreated,this._handleCreatePartnerError);
+      _createPartner: function(event) {
+        this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
+          this._handleCreatePartnerError);
       },
-      _newPartnerCreated: function(partner){
-        this.fire('update-main-path', {path:'partners/' + partner.id + '/details'});
+      _newPartnerCreated: function(partner) {
+        this.fire('update-main-path', {path: 'partners/' + partner.id + '/details'});
       },
-      _handleCreatePartnerError: function(errorDetails){
+      _handleCreatePartnerError: function(errorDetails) {
         this._openNewPartnerDialog();
         this.fire('toast', {text: 'Erorr creating new partner!', showCloseBtn: true});
       }

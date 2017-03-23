@@ -141,7 +141,7 @@
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
           var self = this;
           var __ = {
-             firePostRequest: function(){
+             firePostRequest: function() {
                   // self.set('endpoint', self.getEndpoint("partners"));
                   // self.ajaxEl.set('method', 'POST');
                   // self.ajaxEl.set('multiPart', false);
@@ -149,16 +149,16 @@
                   // self.ajaxEl.set('body', vendorNoObj);
                   // self.ajaxEl.set('url', self.endpoint.url);
               },
-            inputIsValid: function(input){
+            inputIsValid: function(input) {
               return input && input.vendor_number;
             },
-            setCallbacks: function(){
+            setCallbacks: function() {
               self.handleSuccResponseAdditionalCallback = successCallback;
               self.handleErrResponseAdditionalCallback = errorCallback;
             }
-          }
+          };
 
-          if(!__.inputIsValid(vendorNoObj)) {
+          if (!__.inputIsValid(vendorNoObj)) {
             this.fire('toast', {text: 'Invalid Vendor Number for new partner!', showCloseBtn: true});
             return;
           }
@@ -167,9 +167,9 @@
           __.setCallbacks();
           __.firePostRequest();
 
-          setTimeout(function(){
+          setTimeout(function() {
            self.fire('global-loading', {active: false});
-          }, 3000)
+          }, 3000);
         },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
