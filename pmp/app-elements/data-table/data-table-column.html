@@ -33,7 +33,7 @@
         height: 16px;
       }
 
-      #up, #down {
+      #up, #down, #icon-wrapper {
         display: none;
       }
 
@@ -46,11 +46,13 @@
         color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
       }
 
-      :host([selected][direction="asc"]) #up {
+      :host([selected][direction="asc"]) #up,
+      :host([selected][direction="asc"]) #icon-wrapper {
         display: block;
       }
 
-      :host([selected][direction="desc"]) #down {
+      :host([selected][direction="desc"]) #down,
+      :host([selected][direction="desc"]) #icon-wrapper {
         display: block;
       }
 

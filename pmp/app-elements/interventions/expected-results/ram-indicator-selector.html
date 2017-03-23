@@ -59,15 +59,15 @@
     </div>
   </template>
 
-	<script>
-		(function() {
-			'use strict';
-			Polymer({
-				is: 'ram-indicator-selector',
-				behaviors: [
-					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
-				],
-				properties: {
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'ram-indicator-selector',
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+        ],
+        properties: {
           cpOutputs: {
             type: Array,
             statePath: 'unmodifiedCpOutputs'
@@ -108,7 +108,7 @@
             type: Boolean,
             value: false
           }
-				},
+        },
 
         observers: [
             '_removeAlreadySelectedCpOs(alreadySelectedCpo, cpOutputs.length)'
@@ -130,11 +130,11 @@
         },
 
         _cpOutputSelected: function(cpOutputId) {
-				  // select cpOutput by id
+          // select cpOutput by id
           if (!Array.isArray(this.cpOutputs)) {
             return;
           }
-				  var cpOutputSelector = this.$.cpOutput;
+          var cpOutputSelector = this.$.cpOutput;
           if (cpOutputId > 0) {
             var currentCpValue = cpOutputSelector.value;
             if (!currentCpValue || (currentCpValue && currentCpValue.id && currentCpValue.id !== cpOutputId)) {
@@ -151,21 +151,21 @@
           if (!Array.isArray(this.cpOutputs)) {
             return;
           }
-				  var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
-				    return cpOut.id === id;
+          var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
+            return cpOut.id === id;
           })[0];
-				  if (selectedCpOutput) {
+          if (selectedCpOutput) {
             this.$.cpOutput.value = selectedCpOutput;
           }
         },
 
         _cpIndicatorsChanged: function(cpIndicators) {
-				  if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
+          if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
               Array.isArray(cpIndicators) && cpIndicators.length) {
-				    var selectedCpIndicators = cpIndicators.filter(function(indicator) {
-				      return this.firstLoadCpIndicators.indexOf(indicator.id) > -1;
+            var selectedCpIndicators = cpIndicators.filter(function(indicator) {
+              return this.firstLoadCpIndicators.indexOf(indicator.id) > -1;
             }.bind(this));
-				    // set selected cp indicators (searched by ids) on dropdown
+            // set selected cp indicators (searched by ids) on dropdown
             this.$.indicators.value = selectedCpIndicators;
             this.set('firstLoadCpIndicators', []);
           } else {
@@ -177,24 +177,24 @@
         },
 
         _removeAlreadySelectedCpOs: function(alreadySelectedCpo, cpOutputsLength) {
-				  // prevent having cpoutputs already selected in the current cpOutput selector
-				  if (cpOutputsLength === 0) {
-				    return;
+          // prevent having cpoutputs already selected in the current cpOutput selector
+          if (cpOutputsLength === 0) {
+            return;
           }
-				  this.debounce('removeAlreadySelected', function() {
-				    var cpOutputsSelectorOptions = this.cpOutputs.filter(function(cpO) {
-				      return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
+          this.debounce('removeAlreadySelected', function() {
+            var cpOutputsSelectorOptions = this.cpOutputs.filter(function(cpO) {
+              return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
             }.bind(this));
-				    this.set('cpOutputsOptions', cpOutputsSelectorOptions);
+            this.set('cpOutputsOptions', cpOutputsSelectorOptions);
           }.bind(this), 50);
         },
 
         validate: function() {
-				  var valid = true;
-				  if(!this.$.cpOutput.validate()) {
-				    valid = false;
+          var valid = true;
+          if (!this.$.cpOutput.validate()) {
+            valid = false;
           }
-          if(!this.$.indicators.validate()) {
+          if (!this.$.indicators.validate()) {
             valid = false;
           }
           return valid;
@@ -205,7 +205,7 @@
           this.$.indicators.invalid = false;
         }
 
-			});
-		})();
-	</script>
+      });
+    })();
+  </script>
 </dom-module>

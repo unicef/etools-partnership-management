@@ -257,35 +257,35 @@ App global configuration
       governments: {
         cachingKey: 'governments',
         exp: 5 * 60 * 1000, // 5min
-        url : '/api/v2/government_interventions/'
+        url: '/api/v2/government_interventions/'
       },
       governmentsDetails: {
-        template : '/api/v2/government_interventions/<%=id%>/'
+        template: '/api/v2/government_interventions/<%=id%>/'
       },
       countryProgrammes: {
         cachingKey: 'countryProgrammes',
         exp: 5 * 60 * 1000, // 5min
-        url : '/api/v2/reports/countryprogramme/'
+        url: '/api/v2/reports/countryprogramme/'
       },
       sections: {
-          url : '/api/sections',
+          url: '/api/sections',
           exp: 6 * 60 * 60 * 1000,
           cachingKey: 'sections'
       },
       ramIndicators: {
         template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
-      governmentIntResultDelete : {
-        template : '/api/v2/government_interventions/results/<%=id%>/'
+      governmentIntResultDelete: {
+        template: '/api/v2/government_interventions/results/<%=id%>/'
       },
       governmentResultActivityDelete: {
-        template : '/api/v2/government_interventions/results/activities/<%=id%>/'
+        template: '/api/v2/government_interventions/results/activities/<%=id%>/'
       },
       monitoringVisits: {
         template: '/api/t2f/travels/activities/<%=id%>/',
       },
-      sectorLocationsDelete : {
-        template : '/api/v2/interventions/sector-locations/<%=id%>/'
+      sectorLocationsDelete: {
+        template: '/api/v2/interventions/sector-locations/<%=id%>/'
       }
     };
     /* jshint ignore:start */

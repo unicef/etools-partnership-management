@@ -30,7 +30,7 @@
           notify: true
         }
       },
-      saveProfile: function (profile) {
+      saveProfile: function(profile) {
         var url = this.endpoint.url;
         if (_.isEmpty(profile)) {
             return;
@@ -57,7 +57,7 @@
           this.$.ajax.set('url', url);
         }
       },
-      _resetAjax: function(){
+      _resetAjax: function() {
         this.$.ajax.set('params', null);
         this.$.ajax.set('body', null);
         this.$.ajax.set('url', null);
@@ -87,7 +87,7 @@
                     errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + '\n');
                   }
                 } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                  for(var key in errors[errField]) {
+                  for (var key in errors[errField]) {
                     errorMessages.push(errors[errField][key] + '\n');
                   }
                 }

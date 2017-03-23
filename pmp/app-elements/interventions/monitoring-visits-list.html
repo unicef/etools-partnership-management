@@ -115,60 +115,6 @@
         _hideMonitoringVisits: function(length) {
           return length === 0;
         },
-
-        _init: function(active) {
-          this.set('initComplete', false);
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
-          // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'partner_name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
-          this.set('initComplete', true);
-          this.set('sortOrder', result);
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-
-        },
-        _init: function(active) {
-          this.set('initComplete', false);
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
-          // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'partner_name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
-          this.set('initComplete', true);
-          this.set('sortOrder', result);
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-        // verify date and prettify or not
-        _checkAndShowDate: function(dateString) {
-          return this.getDisplayValue(dateString, true);
-        },
       });
 
     })();
