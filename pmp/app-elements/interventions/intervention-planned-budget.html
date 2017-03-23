@@ -63,8 +63,8 @@
         padding: 15px;
         @apply(--layout-horizontal);
       }
-      #totals-content-wrapper .darkbg:first-child {
-        margin-bottom: 15px;
+       .darkbg + .darkbg {
+        margin-top: 15px;
       }
 
       #totals-content-wrapper {
@@ -254,6 +254,18 @@
               <div class="flex-c total-unicef">
                 <span>[[displayCurrencyAmount(_localCsoTotal, '0')]] [[localCurrency]]</span>
                 <span>[[displayCurrencyAmount(_usdCsoTotal, '0')]] USD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
+              <span>Total Budget (CSO + UNICEF)</span>
+            </div>
+            <div class="col col-4">
+              <div class="flex-c total-unicef">
+                <span>[[_getPlannedBudgetTotalFormatted(_localCsoTotal, _localUnicefTotal)]] [[localCurrency]]</span>
+                <span>[[_getPlannedBudgetTotalFormatted(_usdCsoTotal, _usdUnicefTotal)]] USD</span>
               </div>
             </div>
           </div>

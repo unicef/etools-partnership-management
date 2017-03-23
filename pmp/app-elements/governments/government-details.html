@@ -44,13 +44,15 @@ it doesn't need to be included in element's style -->
           @apply(--paper-fab-btn-green);
         }
       }
-
+      #detailsContent {
+        width: 100%;
+      }
       paper-input {
         width: 100%;
       }
 
     </style>
-    <div id="pageContent">
+    <div id="detailsContent">
       <!--Partnership Details-->
       <etools-content-panel class="content-section" title="Partnership Details">
         <div class="row-h flex-c">
@@ -118,9 +120,7 @@ it doesn't need to be included in element's style -->
         </div>
       </etools-content-panel>
     </div>
-    <div id="sidebar" hidden$="[[!governmentEditMode]]">
-      <government-status on-save-intervention="_validateSave"></government-status>
-    </div>
+
   </template>
 
   <script>
