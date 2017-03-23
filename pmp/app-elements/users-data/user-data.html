@@ -25,7 +25,7 @@
 
         is: 'user-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior, 
+        behaviors: [pmpBehaviors.DataElementBehavior,
                     etoolsAppConfig.globals],
 
         properties: {
@@ -59,7 +59,9 @@
         },
 
         _findGroup: function(groupName) {
-          return _.find(this.userGroups, function(grp){ return grp.name === groupName})
+          return _.find(this.userGroups, function(grp) {
+             return grp.name === groupName;
+          });
         },
         _handleError: function(rsp, err) {
           console.log(rsp);
@@ -76,7 +78,7 @@
           var permissionsList = this.getAllPermissions();
 
           if (!_.isEmpty(data)) {
-            this._setUserGroups(_user.groups)
+            this._setUserGroups(_user.groups);
 
             permissionsList.defaultPermissions.forEach(function(perm) {
               _permissions[perm] = true;

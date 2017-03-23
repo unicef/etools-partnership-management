@@ -71,10 +71,10 @@
           }
         },
         _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart){
+          if (!multipart) {
             multipart = false;
           }
-          if (!prepareMultipartData){
+          if (!prepareMultipartData) {
             prepareMultipartData = false;
           }
           if (!this.ajaxEl) {
@@ -124,8 +124,8 @@
           }
         },
 
-        hidePartner: function(partner){
-          if(typeof partner === 'object' && Object.keys(partner).length === 0) {
+        hidePartner: function(partner) {
+          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
             return;
           }
@@ -137,7 +137,6 @@
           this.ajaxEl.set('prepareMultipartData', false);
           this.ajaxEl.set('body', partner);
           this.ajaxEl.set('url', this.endpoint.url);
-
         },
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
           var self = this;
@@ -171,7 +170,6 @@
           setTimeout(function(){
            self.fire('global-loading', {active: false});
           }, 3000)
-
         },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
@@ -226,7 +224,8 @@
               }
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', partner, url, this.withUpload, this.prepareMultipartData);
+              var action = (isNew) ? 'POST' : 'PATCH';
+              this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',

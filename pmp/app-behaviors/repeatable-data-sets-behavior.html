@@ -103,33 +103,35 @@
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
+        var id = this.dataItems[this.elToDeleteIndex].id;
 
-        if (this.dataItems[this.elToDeleteIndex].id) {
+        if (id) {
           this.fire('global-loading', {message: 'Deleting items from server...', active: true});
 
           var deleteAjax = this.$$('#deleteAjax');
           if ((!deleteAjax) || (!this._deleteEpName)) {
-            console.error('you must define etools-ajax with id "deleteAjax" and ' + 
+            console.error('you must define etools-ajax with id "deleteAjax" and ' +
              'property _deleteEpName to remove existing records');
             return;
           }
           if (!this.getEndpoint) {
-            console.error('your element must use etoolsConfig.globals behaviour to remove exiting items')
+            console.error('your element must use etoolsConfig.globals behaviour to remove exiting items');
             return;
           }
+          var endpoint = this.getEndpoint(this._deleteEpName, {id: id});
           deleteAjax.set('method', 'DELETE');
-          deleteAjax.set('endpoint', this.getEndpoint(this._deleteEpName, {id: this.dataItems[this.elToDeleteIndex].id}));
-          deleteAjax.set('body', {} );
+          deleteAjax.set('endpoint', endpoint);
+          deleteAjax.set('body', {});
 
         } else {
           this._deleteElement();
           this.elToDeleteIndex = -1;
         }
-        
+
       } else {
         this.elToDeleteIndex = -1;
       }
-      
+
     },
 
     _deleteElement: function() {
@@ -140,7 +142,7 @@
 
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
-        this.fire('delete-confirm', {index:this.elToDeleteIndex})
+        this.fire('delete-confirm', {index: this.elToDeleteIndex});
       }
     },
 

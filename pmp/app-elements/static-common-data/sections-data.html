@@ -28,7 +28,7 @@
                     }
                 },
                 actions: {
-                    setSectionsData: function(sectionsData){
+                    setSectionsData: function(sectionsData) {
                         return {
                             type: 'SET_SECTIONS',
                             sections: sectionsData
@@ -41,7 +41,7 @@
                 },
 
                 _handleResponse: function(response) {
-                    var values = _.get(response,'detail');
+                    var values = _.get(response, 'detail');
                     if (!_.isEmpty(values)) {
                         // set offices values
                         this.dispatch('setSectionsData', this._prepareData(values));

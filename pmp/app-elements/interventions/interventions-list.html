@@ -683,9 +683,11 @@
             params.push('status=' + this.selectedStatuses[0].value);
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            params.push('unicef_focal_points=' + encodeURIComponent(this.selectedUnicefFocalPoints.map(function(focalPt) {
+            var serializedFocalPoints = this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
-            })));
+            });
+            serializedFocalPoints = encodeURIComponent(serializedFocalPoints);
+            params.push('unicef_focal_points=' + serializedFocalPoints);
           }
           if (this.selectedOffices && this.selectedOffices.length) {
             params.push('office=' + this.selectedOffices[0].value);

@@ -47,7 +47,8 @@
                          total-results="{{totalResults}}"
                          on-governments-loaded="_requiredDataHasBeenLoaded"
                          unicef-users-data="[[unicefUsersData]]"
-                         fire-data-loaded>
+                         fire-data-loaded
+                         show-loading>
     </governments-list-data>
 
     <partners-list-data prepare-dropdown-data>
@@ -595,7 +596,7 @@
           if (this.selectedYears && this.selectedYears.length) {
             params.push('year=' + this.selectedYears[0].value);
           }
-          if(this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
+          if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             params.push('unicef_focal_point=' + this.selectedUnicefFocalPoints[0].value);
           }
 
@@ -605,7 +606,6 @@
 
           return endpointUrl + '?' + queryString;
         },
-
 
         // Run when partners-data is fully loaded
         // Maps array of partner ids to multiselect compatible {value, label} format
@@ -678,15 +678,11 @@
           return [];
         },
 
-        _governmentsChanged: function() {
-          // List fade in fade out effect
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-          var governmentsList = this.$$('#governments');
-          if (governmentsList && Array.isArray(governmentsList.data) && governmentsList.data.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }.bind(this), 300);
+        _governmentsChanged: function(governmentsData) {
+          var classList = this.$.list.classList;
+          if (governmentsData instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _qChanged: function(q) {
@@ -765,18 +761,18 @@
           }
         },
 
-        _getYears: function () {
-          var maxYear = 0, minYear = 3000;
+        _getYears: function() {
+          var maxYear = 0;
+          var minYear = 3000;
 
-          this.countryProgrammes.forEach(function(cpObject){
-
+          this.countryProgrammes.forEach(function(cpObject) {
             maxYear = Math.max(maxYear, moment(cpObject.to_date).year());
             minYear = Math.min(minYear, moment(cpObject.from_date).year());
           });
 
-          var years = _.range(minYear, maxYear+1);
-          years = years.map(function(year){
-            return _.assign({},{label: year.toString(), value: year});
+          var years = _.range(minYear, maxYear + 1);
+          years = years.map(function(year) {
+            return _.assign({}, {label: year.toString(), value: year});
           });
 
           this.set('years', years);

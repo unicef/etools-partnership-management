@@ -56,10 +56,22 @@
 
           unicefUsersData: {
             type: Array
+          },
+          showLoading: {
+            type: Boolean,
+            value: false
           }
         },
 
-        query: function(field, order, searchString, selectedPartnerNames, unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
+        ready: function() {
+          if (this.showLoading) {
+            this.fire('global-loading', {message: 'Loading governement interventions data...', active: true});
+          }
+          this._elementReady();
+        },
+
+        query: function(field, order, searchString, selectedPartnerNames,
+                        unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -88,11 +100,13 @@
 
               government.unicef_focal_point_names = [];
 
-              for(var key in government.unicef_focal_points) {
+              for (var key in government.unicef_focal_points) {
                 government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
               }
 
-              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, government.partner_name)) {
+              if (selectedPartnerNames &&
+                  selectedPartnerNames.length &&
+                  !_.includes(selectedPartnerNames, government.partner_name)) {
                 return false;
               }
 
@@ -163,7 +177,7 @@
         },
 
         getUserNameFromId: function(Id) {
-          for (var i=0; i < this.unicefUsersData.length; i++) {
+          for (var i = 0; i < this.unicefUsersData.length; i++) {
             if (this.unicefUsersData[i].value === Id) {
               return this.unicefUsersData[i].label;
             }
