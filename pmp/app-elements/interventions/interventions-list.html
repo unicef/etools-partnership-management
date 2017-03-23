@@ -56,9 +56,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -806,11 +804,6 @@
           this._init(this.active);
           this.fire('global-loading', {active: false});
         },
-
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
         _pageSizeSelected: function(e) {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);

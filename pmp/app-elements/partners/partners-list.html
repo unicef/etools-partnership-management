@@ -58,10 +58,8 @@
         <paper-input id="query"
             type="search"
             autocomplete="off"
-            value="[[q]]"
-            on-keyup="_setQ"
-            placeholder="Search"
-            on-search="_setQ">
+            value="{{q}}"
+            placeholder="Search">
             <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -488,11 +486,6 @@
           this.set('debounceTime', 50);
           this.set('pageNumber', e.detail.value);
         },
-
-        _setQ: function() {
-          this.set('q', this.$.query.value);
-        },
-
         _qChanged: function(q) {
           this.set('debounceTime', 300);
           this.set('pageNumber', 1);

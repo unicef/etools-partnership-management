@@ -54,9 +54,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -343,7 +341,7 @@
             statePath: 'agreementStatuses'
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
 
@@ -437,36 +435,36 @@
               {
                 filterName: 'Agreement Type',
                 selectedValue: this.agreementType
-              }, 
+              },
               {
                 filterName: 'Agreement Status',
                 selectedValue: this.agreementStatus
-              }, 
+              },
               {
                 filterName: 'Partner',
                 selectedValue: this.selectedPartners
-              }, 
+              },
               {
                 filterName: 'Starts After',
                 selectedValue: this.startDate
-              }, 
+              },
               {
                 filterName: 'Ends Before',
                 selectedValue: this.endDate
-              },                           
-            ];            
+              },
+            ];
             this.updateShownFilters(filtersValues);
 
           }.bind(this), 500);
         },
-        
+
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
+
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
@@ -544,7 +542,7 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {        
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -571,7 +569,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('agreements').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
@@ -597,11 +595,6 @@
           }
           return [];
         },
-
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
         _qChanged: function(q) {
           this.set('debounceTime', 300);
           this.set('pageNumber', 1);
