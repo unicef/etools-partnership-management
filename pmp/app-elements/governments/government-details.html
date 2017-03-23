@@ -22,7 +22,9 @@
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
-<link rel="import" href="../../../bower_components/paper-styles/shadow.html">
+<!-- TODO: Why is shadow.html used here? Since it contains only mixins and is a custom style
+it doesn't need to be included in element's style -->
+<!--<link rel="import" href="../../../bower_components/paper-styles/shadow.html">-->
 
 <link rel="import" href="government-plan-results.html">
 <link rel="import" href="government-status.html">
@@ -30,7 +32,7 @@
 <dom-module id="government-details">
   <template>
     <style
-        include="page-layout-styles shadow repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
+        include="page-layout-styles repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
       :host {
         @apply(--layout-horizontal);
         width: 100%;

@@ -47,7 +47,8 @@
                          total-results="{{totalResults}}"
                          on-governments-loaded="_requiredDataHasBeenLoaded"
                          unicef-users-data="[[unicefUsersData]]"
-                         fire-data-loaded>
+                         fire-data-loaded
+                         show-loading>
     </governments-list-data>
 
     <partners-list-data prepare-dropdown-data>
@@ -678,15 +679,11 @@
           return [];
         },
 
-        _governmentsChanged: function(governmentsList) {
-          // List fade in fade out effect
-          this.$.list.classList.add('hidden');
-          this.async(function() {
-            // var governmentsList = this.$$('#governments');
-            if (Array.isArray(governmentsList) && governmentsList.length > 0) {
-              this.$$('#list').classList.remove('hidden');
-            }
-          }.bind(this), 300);
+        _governmentsChanged: function(governmentsData) {
+          var classList = this.$.list.classList;
+          if (governmentsData instanceof Array && classList.contains('hidden')) {
+            classList.remove('hidden');
+          }
         },
 
         _qChanged: function(q) {

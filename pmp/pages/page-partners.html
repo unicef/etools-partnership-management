@@ -108,7 +108,8 @@
           <partner-details id="partnerDetails"
                            partner="[[partner]]"
                            edit-mode="[[_hasEditPermissions(permissions)]]"
-                           on-save-partner="_savePartner"></partner-details>
+                           on-save-partner="_savePartner"
+                           on-hide-partner="_hidePartner"></partner-details>
         </div>
       </iron-pages>
 
@@ -200,7 +201,10 @@
         event.stopImmediatePropagation();
         this.$.partnerData.savePartner(event.detail);
       },
-
+      _hidePartner: function(event) {
+        event.stopImmediatePropagation();
+        this.$.partnerData.hidePartner(event.detail);
+      },
       _observeRouteDataId: function(id) {
         this.set('selectedPartnerId', id);
       },
