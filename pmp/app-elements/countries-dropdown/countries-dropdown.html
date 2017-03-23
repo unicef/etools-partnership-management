@@ -124,11 +124,10 @@
       },
       _handleResponse: function(res) {
         // TODO: before main refresh... move to base url
-        console.log('before refreshing move to baseurl')
         this.fire('main_refresh');
       },
-      _countrySelectorUpdate: function(countries){
-          if (Array.isArray(countries) && (countries.length > 1)){
+      _countrySelectorUpdate: function(countries) {
+          if (Array.isArray(countries) && (countries.length > 1)) {
               this.countrySelectorVisible = true;
           }
       },

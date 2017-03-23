@@ -353,7 +353,7 @@
 
         observers: [
 
-          '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+          '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
@@ -429,7 +429,7 @@
         },
 
         _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function () {
+          this.debounce('updateShownFilters', function() {
 
             var filtersValues = [
               {
@@ -457,7 +457,7 @@
 
           }.bind(this), 500);
         },
-
+        
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
@@ -630,7 +630,6 @@
             return new Date(date);
           }
         },
-
 
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {

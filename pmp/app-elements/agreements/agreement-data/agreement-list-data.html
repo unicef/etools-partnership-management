@@ -107,7 +107,9 @@
 
             queryResult = queryResult.filter(function(agreement) {
 
-              if (selectedPartnerNames && selectedPartnerNames.length && !_.includes(selectedPartnerNames, agreement.partner_name)) {
+              if (selectedPartnerNames &&
+                  selectedPartnerNames.length &&
+                  !_.includes(selectedPartnerNames, agreement.partner_name)) {
                 return false;
               }
 
