@@ -111,6 +111,8 @@
 
         _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
+          console.log(response);
+          console.log(response.detail);
           // update the partners list in dexieDB
           etoolsAppConfig.db.table('partners').put(response.detail);
 
@@ -142,15 +144,15 @@
           var self = this;
           var __ = {
              firePostRequest: function() {
-                  // self.set('endpoint', self.getEndpoint("partners"));
-                  // self.ajaxEl.set('method', 'POST');
-                  // self.ajaxEl.set('multiPart', false);
-                  // self.ajaxEl.set('prepareMultipartData', false);
-                  // self.ajaxEl.set('body', vendorNoObj);
-                  // self.ajaxEl.set('url', self.endpoint.url);
+                  self.set('endpoint', self.getEndpoint("createPartner", vendorNoObj));
+                  self.ajaxEl.set('method', 'POST');
+                  self.ajaxEl.set('multiPart', false);
+                  self.ajaxEl.set('body', {});
+                  self.ajaxEl.set('prepareMultipartData', false);
+                  self.ajaxEl.set('url', self.endpoint.url);
               },
             inputIsValid: function(input) {
-              return input && input.vendor_number;
+              return input && input.vendor;
             },
             setCallbacks: function() {
               self.handleSuccResponseAdditionalCallback = successCallback;
@@ -159,17 +161,16 @@
           };
 
           if (!__.inputIsValid(vendorNoObj)) {
+            console.log(vendorNoObj);
             this.fire('toast', {text: 'Invalid Vendor Number for new partner!', showCloseBtn: true});
             return;
           }
 
           this.fire('global-loading', {message: 'Creating new partner...', active: true});
           __.setCallbacks();
+          console.log('fire');
           __.firePostRequest();
 
-          setTimeout(function() {
-           self.fire('global-loading', {active: false});
-          }, 3000);
         },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
