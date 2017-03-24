@@ -15,6 +15,7 @@
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-styles.html">
@@ -215,7 +216,8 @@
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -224,12 +226,6 @@
             type: Array,
             notify: true,
             observer: '_partnersChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
           },
 
           csoTypes: {
@@ -471,26 +467,6 @@
           return endpointUrl + '?' + queryString;
         },
 
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        _pageSizeChanged: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dropdownSelected: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
@@ -521,18 +497,6 @@
             return 'CSO / Community Based';
           } else {
             return 'CSO / ' + csoType;
-          }
-        },
-
-        // When the list data rows are changing check and close any details opened
-        _listDataChanged: function() {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
           }
         },
 

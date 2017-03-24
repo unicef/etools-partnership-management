@@ -187,7 +187,7 @@
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
       </data-table-footer>
 
@@ -217,13 +217,6 @@
             type: Array,
             notify: true,
             observer: '_governmentsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            value: '',
-            observer: '_qChanged'
           },
 
           interventionStatuses: {
@@ -683,11 +676,6 @@
           }
         },
 
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
         },
@@ -706,33 +694,6 @@
           this.set('requiredDataLoaded', true);
           this._init(this.active);
           this.fire('global-loading', {active: false});
-        },
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
-              }
-            });
-          }
         },
 
         // verify date and prettify or not
