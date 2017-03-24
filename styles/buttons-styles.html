@@ -8,7 +8,7 @@
     <style>
       :root {
         --primary-button-default: {
-          color: #fff; /* TODO: replace with app-theme var */
+          color: var(--light-primary-text-color, #fff);
           /*font-size: 14px;*/
           font-weight: bold;
           padding: 5px 10px;
@@ -41,22 +41,22 @@
       }
 
       .primary-btn {
-        background-color: #3A94FF; /* TODO: replace with app-theme var */
+        background-color: var(--secondary-color);
         --paper-button: {
           @apply(--primary-button-default);
         };
       }
 
       .danger-btn {
-        background-color: #E54F2E; /* TODO: replace with app-theme var */
+        background-color: var(--error-color);
       }
 
       .warning-btn {
-        background-color: #F7A14B; /* TODO: replace with app-theme var */
+        background-color: var(--warning-color);
       }
 
       .success-btn {
-        background-color: #75c300; /* TODO: replace with app-theme var */;
+        background-color: var(--success-color);
       }
 
       .primary-btn.with-prefix {

@@ -9,72 +9,118 @@
 
   :root {
 
-    --gray-light: rgba(0,0,0,.38);
+    --gray-light: rgba(0, 0, 0, 0.38);
     --primary-background-color: #FFFFFF;
-    --primary-text-color: rgba(0, 0, 0, 0.87);
     --primary-color: var(--paper-indigo-500);
-    --secondary-color: var(--paper-indigo-700);
-    --ternary-color: var(--paper-indigo-800);
+    --secondary-color: #0099FF;
+    --ternary-color: #F7EE76;
     --accent-color: var(--paper-light-blue-a200);
-    --error-color: var(--paper-deep-orange-a700);
+
     --primary-text-color: rgba(0, 0, 0, 0.87);
-    --secondary-text-color: rgba(0, 0, 0, 0.54);
     --dark-primary-text-color: rgba(0, 0, 0, 0.87);
+    --medium-primary-text-color: #9D9D9D;
     --light-primary-text-color: rgba(255, 255, 255, 1);
-    --dark-secondary-text-color: rgba(0, 0, 0, 0.54);
+
+    --secondary-text-color: rgba(0, 0, 0, 0.54);
     --light-secondary-text-color: rgba(255, 255, 255, 0.7);
+    --dark-secondary-text-color: rgba(0, 0, 0, 0.54);
+
     --dark-disabled-text-color: rgba(0, 0, 0, 0.38);
-    --light-disabled-text-color: rgba(255, 255, 255, 0.5);
-    --dark-icon-color: rgba(0, 0, 0, 0.54);
+    --light-disabled-text-color: #9D9D9D;
+
     --light-icon-color: rgba(255, 255, 255, 1);
+    --medium-icon-color: #9D9D9D;
+    --dark-icon-color: rgba(0, 0, 0, 0.54);
+    --light-disabled-icon-color: #9D9D9D;
     --dark-disabled-icon-color: rgba(0, 0, 0, 0.38);
-    --light-disabled-icon-color: rgba(255, 255, 255, 0.5);
+
+    --light-divider-color: rgba(255, 255, 255, 0.12);
     --dark-divider-color: rgba(0, 0, 0, 0.12);
     --darker-divider-color: #9D9D9D;
-    --light-divider-color: rgba(255, 255, 255, 0.12);
-    --dark-hover-color: rgba(0, 0, 0, 0.01);
+
     --light-hover-color: rgba(255, 255, 255, 0.01);
-    --dark-ink-color: rgba(0, 0, 0, 0.3);
+    --dark-hover-color: rgba(0, 0, 0, 0.01);
+
     --light-ink-color: rgba(255, 255, 255, 0.30);
+    --dark-ink-color: rgba(0, 0, 0, 0.3);
+
     --light-theme-background-color: var(paper-grey-50);
-    --title-toolbar-secondary-text-color : #C7CED2;
+    --medium-theme-background-color: #eeeeee;
+    --dark-theme-background-color: #d9d9d9;
 
-    --warnigns-text-color: #F7A14B;
+    --title-toolbar-secondary-text-color: #C7CED2;
+    --nonprod-header-color: #a94442;
+    --header-bg-color: #233944;
 
-    --number-icon-fill-color: rgba(158, 158, 158, 1.0);
-    --activity-panel-background-color: rgba(242, 242, 242, 1.0);
+    --error-color: #E54F2E;
+    --warning-color: #F7A14B;
+    --success-color: #75c300;
 
+    --error-box-heading-color: var(--error-color);
+    --error-box-bg-color: #f2dede;
+    --error-box-border-color: #ebccd1;
+    --error-box-text-color: #a94442;
 
-    --partnership-management-color: var(--primary-background-color);
-    --work-planning-color: var(--paper-light-green-500);
-    --field-monitering-color: var(--paper-green-500);
+    --add-button-color : var(--success-color);
+    --icon-delete-color: var(--error-color);
 
-    --toolbar-height: 60px;
-    --side-bar-scrolling: hidden;
+    --risk-rating-not-assesed-color: #dcd8d8;
+    --risk-rating-high-color: #f03a47;
+    --risk-rating-significant-color: #ff8329;
+    --risk-rating-moderate-color: #ffca3a;
+    --risk-rating-low-color: #fff277;
+    --risk-rating-default-color: #000000;
 
-    --paper-menu-background-color: var(--light-theme-content-color);
-    --paper-tabs-selection-bar-color: var(--accent-color);
+    --status-synced-color: #00A651;
+    --status-blocked-color: #FFA149;
+    --status-not-synced-color: #3A94FF;
+
+    --status-suspended-color: var(--warning-color);
+    --status-terminated-color: var(--error-box-heading-color);
+    --status-completed-color: var(--success-color);
+    --status-active-color: var(--secondary-color);
+
+    /* sidebar item styles */
+    --sidebar-bg-color: var(--primary-background-color);
+    --sidebar-text-color:var(--primary-text-color);
+    --sidebar-icon-color: var(--dark-icon-color);
+    --sidebar-secondary-text-color: var(--gray-light);
+    --sidebar-selected-bg-color: var(--medium-theme-background-color);
+    --sidebar-selected-item-color: var(--primary-color);
+
+    /* list colors */
+    --list-primary-color: var(--accent-color);
+    --list-secondary-color: var(--primary-background-color);
+    --list-divider-color: var(--dark-divider-color);
+    --list-bg-color: var(--primary-background-color);
+    --list-second-bg-color: var(--medium-theme-background-color);
+    --list-text-color: var(--primary-text-color);
+    --list-secondary-text-color: var(--secondary-text-color);
+    --list-icon-hover-color: rgba(0, 0, 0, 0.38);
+    --list-icon-color: var(--dark-icon-color);
 
     /* custom etools polymer elements general customization */
+
+    /* etools-panel styles */
+    --ecp-content-bg-color: var(--primary-background-color);
+    --ecp-header-bg: var(--secondary-color);
     --ecp-header-title: {
       font-size: 21px;
       font-weight: bold;
     };
-    --icon-delete-color: #ea4022;
-    --paper-fab-add-color : #72C300;
-
-
-    --etools-checkable-input-size: 20px;
-    --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
-    --etools-checkable-input-checked-color: var(--accent-color);
     --ecp-content: {
       padding: 10px 25px 25px;
     };
-    --ecp-header-bg : #0099FF;
     --ecp-expand-btn: {
       color: var(--light-icon-color);
       padding: 4px;
     };
+
+    --toolbar-height: 60px;
+    --side-bar-scrolling: hidden;
+    --etools-checkable-input-size: 20px;
+    --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
+    --etools-checkable-input-checked-color: var(--accent-color);
 
     --esmm-external-wrapper: {
       width: 100%;
