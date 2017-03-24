@@ -219,7 +219,7 @@
           filteredGovernments: {
             type: Array,
             notify: true,
-            observer: '_governmentsChanged'
+            observer: '_listChanged'
           },
 
           interventionStatuses: {
@@ -649,13 +649,6 @@
             });
           }
           return [];
-        },
-
-        _governmentsChanged: function(governmentsData) {
-          var classList = this.$.list.classList;
-          if (governmentsData instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
         },
 
         _dateChanged: function(date) {

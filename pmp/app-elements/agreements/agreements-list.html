@@ -253,7 +253,7 @@
           filteredAgreements: {
             type: Array,
             notify: true,
-            observer: '_agreementsChanged'
+            observer: '_listChanged'
           },
 
           agreementType: {
@@ -598,14 +598,6 @@
 //            return dateString;
 //          }
 //        },
-
-        // List fade in fade out effect
-        _agreementsChanged: function(filteredAgreements) {
-          var classList = this.$.list.classList;
-          if (filteredAgreements instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
 
         // verify date and prettify or not
         _checkAndShowAgreementDate: function(dateString) {

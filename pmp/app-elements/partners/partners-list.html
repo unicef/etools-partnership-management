@@ -226,7 +226,7 @@
           filteredPartners: {
             type: Array,
             notify: true,
-            observer: '_partnersChanged'
+            observer: '_listChanged'
           },
 
           csoTypes: {
@@ -449,16 +449,6 @@
           this.set('debounceTime', 50);
           this.set('showHidden', this.showHidden ? false : true);
           this.set('pageNumber', 1);
-        },
-
-        // List fade in fade out effect
-        _partnersChanged: function(filteredPartners) {\
-
-      console.log()
-          var classList = this.$.list.classList;
-          if (filteredPartners instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
         },
 
         _computeName: function(name, shortName) {

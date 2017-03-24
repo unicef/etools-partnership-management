@@ -240,7 +240,7 @@
           filteredInterventions: {
             type: Array,
             notify: true,
-            observer: '_interventionsChanged'
+            observer: '_listChanged'
           },
 
           documentTypes: {
@@ -742,14 +742,6 @@
 
           }
           return [];
-        },
-
-        _interventionsChanged: function(filteredInterventions) {
-          // List fade in fade out effect
-          var classList = this.$.list.classList;
-          if (filteredInterventions instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
         },
 
         _dateChanged: function(date) {
