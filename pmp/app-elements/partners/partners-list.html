@@ -49,6 +49,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
+                        list-data-path="filteredPartners"
                         fire-data-loaded show-loading>
     </partners-list-data>
 
@@ -246,42 +247,14 @@
             type: String
           },
 
-          sortOrder: {
-            type: Object,
-          },
-
-          pageNumber: {
-            type: Number
-          },
-
-          pageSize: {
-            type: Number
-          },
-
           showHidden: {
             type: Boolean
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
             type: Object,
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -479,7 +452,9 @@
         },
 
         // List fade in fade out effect
-        _partnersChanged: function(filteredPartners) {
+        _partnersChanged: function(filteredPartners) {\
+
+      console.log()
           var classList = this.$.list.classList;
           if (filteredPartners instanceof Array && classList.contains('hidden')) {
             classList.remove('hidden');
@@ -498,23 +473,6 @@
           } else {
             return 'CSO / ' + csoType;
           }
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredPartners will be empty.
-         * Because of this we need to refilter after partners data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredPartners === 'undefined' ||
-              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger partners filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
       });

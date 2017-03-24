@@ -46,6 +46,7 @@
                          filtered-interventions="{{filteredInterventions}}"
                          total-results="{{totalResults}}"
                          on-interventions-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredInterventions"
                          fire-data-loaded show-loading>
     </interventions-list-data>
 
@@ -272,12 +273,6 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
@@ -286,30 +281,10 @@
             type: Array
           },
 
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
-          },
-
           urlParams: {
             type: Object
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -481,7 +456,7 @@
 
         // update selected filters(przent in URL) at page refresh
         _updateSelectedFiltersValues: function() {
-          this.debounce('updaetShownFilters', function() {
+          this.debounce('updateShownFilters', function() {
             var filtersValues = [
               {
                 filterName: 'PD/SSFA Type',
@@ -779,23 +754,6 @@
 
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredInterventions will be empty.
-         * Because of this we need to refilter after interventions data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredInterventions === 'undefined' ||
-              (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger interventions filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
         // verify date and prettify or not

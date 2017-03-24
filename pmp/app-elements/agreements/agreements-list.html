@@ -43,6 +43,7 @@
     <agreement-list-data id="agreements"
                          filtered-agreements="{{filteredAgreements}}"
                          total-results="{{totalResults}}"
+                         list-data-path="filteredAgreements"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
                          fire-data-loaded show-loading>
     </agreement-list-data>
@@ -278,27 +279,12 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
 
           visibleRange: {
             type: Array
-          },
-
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
@@ -310,19 +296,6 @@
             statePath: 'partnersDropdownData'
           },
 
-          detailsOpened: Boolean,
-
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -637,23 +610,6 @@
         // verify date and prettify or not
         _checkAndShowAgreementDate: function(dateString) {
           return this.getDisplayValue(dateString, true);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredAgreements will be empty.
-         * Because of this we need to refilter after agreements data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredAgreements === 'undefined' ||
-              (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger agreements filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
       });

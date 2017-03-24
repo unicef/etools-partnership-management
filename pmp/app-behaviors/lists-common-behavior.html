@@ -8,6 +8,35 @@
             notify: true,
             observer: '_qChanged'
           },
+
+         sortOrder: Object,
+
+         debounceTime: {
+            type: Number,
+            value: 50
+         },
+
+         pageSize: {
+            type: Number
+         },
+
+         pageNumber: {
+            type: Number
+         },
+
+         active: Boolean,
+
+         detailsOpened: Boolean,
+
+         forceDataRefresh: {
+            type: Boolean,
+            value: false
+         },
+
+         requiredDataLoaded: {
+           type: Boolean,
+           value: false
+         },
       },
 
       // When the list data rows are changing check and close any details opened
@@ -42,6 +71,28 @@
         this.set('debounceTime', 300);
         this.set('pageNumber', 1);
       },
+
+       /**
+         * At page refresh Dexie DBs might be wiped out and the list(filteredPartners,filteredAgreementsetc) will be empty.
+         * Because of this we need to refilter after list data is saved locally.
+         * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
+         */
+      _requiredDataHasBeenLoaded: function(event) {
+          event.stopImmediatePropagation();
+
+          var listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
+          var list = this.get(listDataPath);
+
+          if (typeof list === 'undefined' ||
+              (Array.isArray(listData) && list.length === 0)) {
+            this.set('forceDataRefresh',  true);
+          }
+          // recheck params to trigger agreements filtering
+          this.set('initComplete', false);
+          this.set('requiredDataLoaded', true);
+          this._init(this.active);
+          this.fire('global-loading', {active: false});
+       },
 
   }
 </script>

@@ -17,6 +17,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -46,6 +47,7 @@
                          filtered-governments="{{filteredGovernments}}"
                          total-results="{{totalResults}}"
                          on-governments-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredGovernments"
                          unicef-users-data="[[unicefUsersData]]"
                          fire-data-loaded
                          show-loading>
@@ -209,7 +211,8 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior,
         ],
 
         properties: {
@@ -229,10 +232,6 @@
             value: {field: 'partner_name', direction: 'asc'}
           },
 
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
@@ -241,25 +240,8 @@
             type: Array
           },
 
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
-          },
-
           urlParams: {
             type: Object
-          },
-
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
           },
 
           // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
@@ -678,22 +660,6 @@
 
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-//         /**
-//          * At page refresh Dexie DBs might be wiped out and filteredGovernments will be empty.
-//          * Because of this we need to refilter after governments data is saved locally.
-//          */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredGovernments) && this.filteredGovernments.length === 0) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger partners filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
         // verify date and prettify or not
