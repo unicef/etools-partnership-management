@@ -40,20 +40,20 @@
 
       #name {
         margin-left: 16px;
-        color: var(--dark-primary-text-color);
+        color: var(--sidebar-text-color, --primary-text-color);
       }
 
       iron-icon {
         margin: 0 16px;
-        color: var(--dark-icon-color);
+        color: var(--sidebar-icon-color,--dark-icon-color);
       }
 
       :host(.iron-selected) #main {
-        background-color: #e8e8e8;
+        background-color: var(--sidebar-selected-bg-color, --medium-theme-background-color);
       }
 
       :host(.iron-selected:not([nested-nav])) #main > * {
-        color: var(--primary-color);
+        color: var(--sidebar-selected-item-color, --primary-color);
       }
 
       #main:active {

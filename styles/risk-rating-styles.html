@@ -5,49 +5,49 @@
 <dom-module id="risk-rating-styles">
   <template>
     <style>
-      /* Not Available, Non-Assessed, Low, Moderate, High, Significant */
+
       :host {
         --risk-rating-field: {
           width: 100%;
           height: 19px;
           text-align: center;
           padding: 0 5px;
-          background-color: #FF9640; /* TODO: replace with app-theme var */
-          color: #fff;
+          background-color: var(--risk-rating-significant-color);
+          color: var(light-primary-text-color);
           text-transform: uppercase;
         };
 
         --risk-rating-low: {
           @apply(--risk-rating-field);
           color: var(--dark-secondary-text-color);
-          background-color: #faec63; /* TODO: replace with app-theme var */
+          background-color: var(--risk-rating-low-color);
         };
-        --risk-rating-moderate: {          
+        --risk-rating-moderate: {
           @apply(--risk-rating-field);
           color: var(--dark-secondary-text-color);
-          background-color: #ffbd00; /* TODO: replace with app-theme var */
+          background-color: var(--risk-rating-moderate-color);
         };
-        --risk-rating-high: {          
+        --risk-rating-high: {
           @apply(--risk-rating-field);
-          color: #fff;
-          background-color: #ffbd00; /* TODO: replace with app-theme var */
+          color: var(--primary-text-color);
+          background-color: var(--risk-rating-high-color);
         };
         --risk-rating-significant: {
           @apply(--risk-rating-field);
-          color: #fff;
-          background-color: #ea4022; /* TODO: replace with app-theme var */
+          color: var(--primary-text-color);
+          background-color: var(--risk-rating-significant-color);
         };
         --risk-rating-unavailable {
           @apply(--risk-rating-field);
-          background-color: rgba(255, 255, 255, 0); /* TODO: replace with app-theme var */
-          color: var(--dark-primary-text-color);
+          background-color: var(--risk-rating-default-color);
+          color: var(--primary-text-color);
           text-align: left;
           text-transform: capitalize;
           padding-left: 0;
         };
         --risk-rating-not-assessed {
           @apply(--risk-rating-field);
-          background-color: #eeeeee; /* TODO: replace with app-theme var */
+          background-color: var(--risk-rating-not-assesed-color);
           color: var(--dark-secondary-text-color);
         };
       }
@@ -62,7 +62,7 @@
         --paper-input-container-input: {
           @apply(--risk-rating-low);
         };
-      }            
+      }
 
       span.risk-rating-field.moderate {
         @apply(--risk-rating-moderate);
@@ -72,7 +72,7 @@
           @apply(--risk-rating-moderate);
         };
       }
-      
+
       span.risk-rating-field.high {
         @apply(--risk-rating-high);
       }
@@ -91,7 +91,7 @@
         };
       }
 
-      span.risk-rating-field.unavailable {        
+      span.risk-rating-field.unavailable {
         @apply(--risk-rating-unavailable);
       }
       .risk-rating-field.unavailable {

@@ -15,11 +15,11 @@
           width: calc(100% - 96px);
         }
         display: block;
-        border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+        border-bottom: 1px solid var(--list-divider-color, rgba(0, 0, 0, 0.12));
       }
 
       :host(:hover) paper-material {
-        background-color: #EEEEEE; /* TODO: replace with app-theme var */
+        background-color: var(--list-second-bg-color);
         @apply(--hover-setting);
       }
 
@@ -28,8 +28,8 @@
         @apply(--layout-center);
         padding-right: 24px;
         font-size: 13px;
-        color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
-        background-color: var(--primary-background-color, #FFFFFF);
+        color: var(--list-text-color, rgba(0, 0, 0, 0.87));
+        background-color: var(--list-bg-color, #FFFFFF);
       }
 
       paper-material ::slotted(*) {
@@ -46,13 +46,13 @@
       }
 
       iron-icon {
-        color: var(--dark-icon-color, rgba(0, 0, 0, 0.54));
+        color: var(--list-icon-color, rgba(0, 0, 0, 0.54));
       }
 
       #collapse-wrapper {
         padding: 15px 24px 15px 72px;
-        background-color: #EEEEEE; /* TODO: replace with app-theme var */
-        border-top: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
+        background-color: var(--list-second-bg-color);
+        border-top: 1px solid var(--list-divider-color, rgba(0, 0, 0, 0.12));
       }
 
     </style>

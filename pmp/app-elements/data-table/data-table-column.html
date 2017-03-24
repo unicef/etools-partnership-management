@@ -12,7 +12,7 @@
 
         height: 56px;
         font-size: 12px;
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+        color: var(--list-secondary-text-color, rgba(0, 0, 0, 0.54));
         font-weight: bold;
       }
 
@@ -43,7 +43,7 @@
 
       :host([selected]) #label,
       :host(:not([selected]):hover[sortable]) #label {
-        color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
+        color: var(--list-text-color, rgba(0, 0, 0, 0.87));
       }
 
       :host([selected][direction="asc"]) #up,
@@ -57,11 +57,11 @@
       }
 
       :host(:not([selected])) iron-icon {
-        color: var(--sort-icon-hover-color, rgba(0, 0, 0, 0.38));
+        color: var(--list-icon-hover-color, rgba(0, 0, 0, 0.38));
       }
 
       :host([selected]) iron-icon {
-        color: var(--sort-icon-color, rgba(0, 0, 0, 0.87));
+        color: var(--list-icon-color, rgba(0, 0, 0, 0.87));
       }
 
     </style>
