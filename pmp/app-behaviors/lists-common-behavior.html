@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.ListsCommonBehavior = {
+      properties:{
+         q: {
+            type: String,
+            notify: true,
+            observer: '_qChanged'
+          },
+      },
+
+      // When the list data rows are changing check and close any details opened
+     _listDataChanged: function(event) {
+       var rows = this.$.list.querySelectorAll('data-table-row');
+         if (rows && rows.length) {
+           for (var i = 0; i < rows.length; i++) {
+             if (rows[i].detailsOpened) {
+               rows[i].set('detailsOpened', false);
+             }
+           }
+         }
+      },
+
+      _sortOrderChanged: function(e) {
+        this.set('debounceTime', 150);
+        this.set('sortOrder', e.detail);
+      },
+
+      _pageSizeChanged: function(e) {
+        this.set('debounceTime', 200);
+        this.set('pageNumber', 1);
+        this.set('pageSize', parseInt(e.detail.value));
+      },
+
+      _pageNumberChanged: function(e) {
+        this.set('debounceTime', 50);
+        this.set('pageNumber', e.detail.value);
+      },
+
+      _qChanged: function(q) {
+        this.set('debounceTime', 300);
+        this.set('pageNumber', 1);
+      },
+
+  }
+</script>
