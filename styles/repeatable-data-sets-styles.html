@@ -5,7 +5,7 @@
   <template>
     <style>
       .item-container {
-        background: #fff;
+        background: var(--ecp-content-bg-color, --primary-background-color);
         padding: 15px;
       }
 
@@ -59,7 +59,7 @@
       .item-actions-container {
         position: relative;
         padding-right: 10px;
-        border-right: 2px solid #00aeef; /* TODO: replace with app-theme var */;
+        border-right: 2px solid var(--secondary-color);
         margin-top: 25px;
       }
 
@@ -69,8 +69,8 @@
         position: absolute;
         top: -32px;
         right: -12px;
-        background-color: #00aeef; /* TODO: replace with app-theme var */;
-        color: #fff;
+        background-color: var(--secondary-color);
+        color: var(--light-primary-text-color);
         content: attr(data-item-nr);
         text-align: center;
         font-size: 12px;

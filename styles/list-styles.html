@@ -18,13 +18,14 @@
       }
 
       a {
-        color: var(--accent-color);
+        color: var(--list-primary-color);
       }
 
       #listControls {
         @apply(--layout-horizontal);
         padding: 6px 30px;
         margin-bottom: 20px;
+        background: var(--list-bg-color);
       }
 
       .wrap-controls, .fixed-controls,
@@ -65,7 +66,7 @@
       .filters-divider {
         height: calc(100% - 16px);
         margin: 0 20px;
-        border-left: 2px solid var(--dark-divider-color);
+        border-left: 2px solid var(--list-divider-color);
       }
 
       #filterMenu {
@@ -73,14 +74,14 @@
       }
 
       #filterMenu .button {
-        color: var(--accent-color);
+        color: var(--list-primary-color);
       }
 
       #filterMenu .button iron-icon {
         margin-right: 5px;
       }
 
-      #filterMenu paper-item {
+      #listControls paper-item {
         --paper-item: {
           cursor: pointer;
         };
@@ -88,7 +89,7 @@
           font-weight: normal !important;
         };
         --paper-item-focused: {
-          background-color: rgba(255, 255, 255, 1);
+          background-color: var(--list-secondary-color);
         };
         --paper-item-focused-before: {
           background: none;
@@ -117,7 +118,7 @@
         display: block;
         opacity: 1;
         transition: opacity 0.4s;
-        background-color: #FFFFFF;
+        background-color: var(--list-secondary-color);
         padding: 0;
       }
 
@@ -166,7 +167,7 @@
       .row-details-content .rdc-title {
         display: inline-block;
         width: 100%;
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+        color: var(--list-secondary-text-color, rgba(0, 0, 0, 0.54));
         font-weight: bold;
         margin-bottom: 10px;
       }

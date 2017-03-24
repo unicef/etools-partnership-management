@@ -78,7 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       app-toolbar {
-        background-color: #0099FF;
+        background-color: var(--secondary-color);
         color: white;
         --app-toolbar-font-size: 16px;
       }
@@ -115,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 47px;
         height: 47px;
       }
-      
+
       .side-nav-wrapper .nav-menu {
         padding: 8px 0;
       }
@@ -123,6 +123,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .side-nav-wrapper .divider {
         margin: 8px 0;
         border-bottom: 1px solid var(--dark-divider-color);
+      }
+      .nav-menu {
+        background: var(--sidebar-bg-color, #fff);
       }
       .nav-menu, .flexy {
         @apply(--layout-flex);
@@ -137,14 +140,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .warning-toast-dismiss-btn {
         text-transform: none;
-        color: #eeff41; /* TODO: replace with a var from above */
+        color: var(--ternary-color);
       }
       .last-one {
         margin-bottom: 10px;
       }
       .lighter-item {
-        --dark-icon-color: var(--gray-light);
-        --dark-primary-text-color: var(--gray-light);
+        --sidebar-icon-color: var(--sidebar-secondary-text-color);
+        --sidebar-text-color: var(--sidebar-secondary-text-color);
       }
 
     </style>
@@ -191,14 +194,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
               </template>
             </iron-selector>
-          
+
             <div class="flexy"></div>
 
             <div class="secondary-header">eTools Community Channels</div>
             <side-bar-item name="Knowledge base" class="lighter-item" icon="maps:local-library" href="https://etools.uservoice.com"></side-bar-item>
             <side-bar-item name="Discussion" class="lighter-item" icon="icons:question-answer" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"></side-bar-item>
             <side-bar-item name="Information" class="lighter-item last-one" icon="icons:info" href="http://etools.unicefresults.org"></side-bar-item>
-          </div>  
+          </div>
         </div>
 
       </app-drawer>
@@ -360,7 +363,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
           this.set('subroute', subroute);
         }
-        
+
         if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
           this.set('page', (page || 'partners'));
         } else {
