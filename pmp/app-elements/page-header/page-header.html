@@ -17,7 +17,7 @@
 
       app-toolbar {
         padding: 0 16px 0 0;
-        background-color: var(--nonprod-header-color, #233944);
+        background-color: var(--header-bg-color, #233944);
       }
 
       div[main-title] {
@@ -156,7 +156,7 @@
 
           // If not production environment, changing header color to red
           if (location.indexOf(production) === -1) {
-            this.customStyle['--nonprod-header-color'] = '#a94442';
+            this.customStyle['--header-bg-color'] = 'var(--nonprod-header-color)'; // TODO:
             this.updateStyles();
           }
         },
