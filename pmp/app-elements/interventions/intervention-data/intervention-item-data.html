@@ -15,9 +15,9 @@
   </template>
 
   <script>
-    (function() {
+    (function(window) {
       'use strict';
-
+      console.log(window.pmpBehaviors.AjaxServerErrorsBehavior);
       Polymer({
 
         is: 'intervention-item-data',
@@ -268,7 +268,7 @@
         },
 
       });
-    })();
+    })(window);
   </script>
 
 </dom-module>
