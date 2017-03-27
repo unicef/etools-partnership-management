@@ -11,6 +11,8 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="user"
                  on-success="_handleResponse"
                  on-fail="_handleError"></etools-ajax>
   </template>

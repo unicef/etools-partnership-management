@@ -283,11 +283,11 @@
         return false;
       },
 
+      /**
+       * Temporary permission for PM
+       */
       _allowPmToEditRegardlessStatus: function(permissions) {
-        if (typeof permissions === 'object' && permissions.partnershipManager === true) {
-          return true;
-        }
-        return false;
+        return typeof permissions === 'object' && permissions.partnershipManager === true;
       },
 
       _saveAgreement: function(event) {
