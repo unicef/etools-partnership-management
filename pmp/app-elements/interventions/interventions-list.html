@@ -10,6 +10,7 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -24,11 +25,6 @@
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="interventions-list">
 
@@ -130,33 +126,33 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
-        </data-table-column>
-        <data-table-column class="col-3" field="partner_name" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-3" field="partner_name" sortable>
           Partner Name
-        </data-table-column>
-        <data-table-column class="flex-c" field="document_type">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="document_type">
           Document Type
-        </data-table-column>
-        <data-table-column class="flex-c" field="status">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="status">
           Status
-        </data-table-column>
-        <data-table-column class="col-2" field="title">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="title">
           Title
-        </data-table-column>
-        <data-table-column class="flex-c" field="start" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
           Start Date
-        </data-table-column>
-        <data-table-column class="flex-c" field="end" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
           End Date
-        </data-table-column>
-      </data-table-header>
+        </etools-data-table-column>
+      </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[filteredInterventions]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <a class="col-data col-2 truncate"
                href="interventions/[[intervention.id]]/details"
@@ -202,17 +198,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
           on-page-size-changed="_pageSizeSelected"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 
@@ -831,7 +827,7 @@
 
         // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
         _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('data-table-row');
+          var rows = this.$.list.querySelectorAll('etools-data-table-row');
           if (rows && rows.length) {
             for (var i = 0; i < rows.length; i++) {
               if (rows[i].detailsOpened) {

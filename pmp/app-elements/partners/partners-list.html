@@ -10,6 +10,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -22,11 +23,6 @@
 
 <link rel="import" href="partners-data/partners-list-data.html">
 <link rel="import" href="partner-item.html">
-
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="partners-list">
 
@@ -118,23 +114,23 @@
 
     <paper-material id="list" elevation="1">
 
-        <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-          <data-table-column class="flex" field="vendor_number" sortable>
+        <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+          <etools-data-table-column class="flex" field="vendor_number" sortable>
             Vendor #
-          </data-table-column>
-          <data-table-column class="flex-3" field="name" sortable>
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-3" field="name" sortable>
             Name(short - full)
-          </data-table-column>
-          <data-table-column class="flex-2" field="partner_type">
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-2" field="partner_type">
             Type
-          </data-table-column>
-          <data-table-column class="flex" field="rating">
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="rating">
             Risk
-          </data-table-column>
-        </data-table-header>
+          </etools-data-table-column>
+        </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
-          <data-table-row details-opened="[[detailsOpened]]">
+          <etools-data-table-row details-opened="[[detailsOpened]]">
             <div slot="row-data">
               <a class="col-data flex truncate"
                  href="partners/[[partner.id]]/details"
@@ -186,17 +182,17 @@
                 <span>$ [[getDisplayValue(partner.total_ct_cy)]]</span>
               </div>
             </div>
-          </data-table-row>
+          </etools-data-table-row>
         </template>
 
-        <data-table-footer
+        <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
           on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-        </data-table-footer>
+        </etools-data-table-footer>
 
     </paper-material>
 
@@ -533,7 +529,7 @@
 
         // When the list data rows are changing check and close any details opened
         _listDataChanged: function() {
-          var rows = this.$.list.querySelectorAll('data-table-row');
+          var rows = this.$.list.querySelectorAll('etools-data-table-row');
           if (rows && rows.length) {
             for (var i = 0; i < rows.length; i++) {
               if (rows[i].detailsOpened) {
