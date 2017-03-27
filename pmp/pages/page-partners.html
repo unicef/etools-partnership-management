@@ -254,8 +254,7 @@
         this.fire('update-main-path', {path: 'partners/' + partner.id + '/details'});
       },
       _handleCreatePartnerError: function(errorDetails) {
-        this._openNewPartnerDialog();
-        this.fire('toast', {text: 'Erorr creating new partner!', showCloseBtn: true});
+        this.fire('toast', {text: errorDetails.error , showCloseBtn: true});
       }
 
     });

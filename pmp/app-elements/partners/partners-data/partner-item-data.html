@@ -10,7 +10,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
                  on-success="_handleSuccResponse"
-                 on-fail="handleErrorResponse"></etools-ajax>
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -111,8 +111,7 @@
 
         _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
-          console.log(response);
-          console.log(response.detail);
+
           // update the partners list in dexieDB
           etoolsAppConfig.db.table('partners').put(response.detail);
 
@@ -125,7 +124,15 @@
             this.set('handleErrResponseAdditionalCallback', null);
           }
         },
+        _handleErrorResponse: function(response){
+          this.handleErrorResponse(response);
 
+          if(typeof this.handleErrResponseAdditionalCallback === 'function')
+          {
+            this.handleErrResponseAdditionalCallback(this.tryGetResponseErrorMsg(response));
+          }
+          this.handleErrResponseAdditionalCallback = null;
+        },
         hidePartner: function(partner) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
@@ -141,35 +148,22 @@
           this.ajaxEl.set('url', this.endpoint.url);
         },
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
-          var self = this;
-          var __ = {
-             firePostRequest: function() {
-                  self.set('endpoint', self.getEndpoint("createPartner", vendorNoObj));
-                  self.ajaxEl.set('method', 'POST');
-                  self.ajaxEl.set('multiPart', false);
-                  self.ajaxEl.set('body', {});
-                  self.ajaxEl.set('prepareMultipartData', false);
-                  self.ajaxEl.set('url', self.endpoint.url);
-              },
-            inputIsValid: function(input) {
-              return input && input.vendor;
-            },
-            setCallbacks: function() {
-              self.handleSuccResponseAdditionalCallback = successCallback;
-              self.handleErrResponseAdditionalCallback = errorCallback;
-            }
-          };
-
-          if (!__.inputIsValid(vendorNoObj)) {
-            console.log(vendorNoObj);
+          if (!vendorNoObj && !vendorNoObj.vendor) {
             this.fire('toast', {text: 'Invalid Vendor Number for new partner!', showCloseBtn: true});
             return;
           }
 
           this.fire('global-loading', {message: 'Creating new partner...', active: true});
-          __.setCallbacks();
-          console.log('fire');
-          __.firePostRequest();
+
+          this.handleSuccResponseAdditionalCallback = successCallback;
+          this.handleErrResponseAdditionalCallback = errorCallback;
+
+          this.set('endpoint', this.getEndpoint("createPartner", vendorNoObj));
+          this.ajaxEl.set('method', 'POST');
+          this.ajaxEl.set('multiPart', false);
+          this.ajaxEl.set('prepareMultipartData', false);
+          this.ajaxEl.set('url', this.endpoint.url);
+          this.ajaxEl.set('body', {});
 
         },
         savePartner: function(partner, callback) {

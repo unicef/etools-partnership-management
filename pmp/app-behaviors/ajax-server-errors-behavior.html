@@ -20,7 +20,19 @@
       errorEventName: {
         value: null,
         observer: '_errorEventNameChange'
+      },
+      tryGetResponseErrorMsg: {
+        type: Function
       }
+    },
+
+    tryGetResponseErrorMsg: function(response){
+      try {
+         return response.detail.request.detail.request.response;
+      } catch(ex){
+        console.warn(ex);
+      }
+      return 'An error occured!';
     },
 
     handleErrorResponse: function(response) {
