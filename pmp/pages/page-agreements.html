@@ -124,6 +124,7 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
+              allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
@@ -277,6 +278,13 @@
 
       _hasEditPermissions: function(permissions) {
         if (typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+          return true;
+        }
+        return false;
+      },
+
+      _allowPmToEditRegardlessStatus: function(permissions) {
+        if (typeof permissions === 'object' && permissions.partnershipManager === true) {
           return true;
         }
         return false;

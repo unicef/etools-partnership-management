@@ -11,8 +11,6 @@
 
     <etools-ajax id="ajax"
                  endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="user"
                  on-success="_handleResponse"
                  on-fail="_handleError"></etools-ajax>
   </template>
@@ -25,8 +23,10 @@
 
         is: 'user-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior,
-                    etoolsAppConfig.globals],
+        behaviors: [
+          pmpBehaviors.DataElementBehavior,
+          etoolsAppConfig.globals
+        ],
 
         properties: {
 
@@ -64,8 +64,6 @@
           });
         },
         _handleError: function(rsp, err) {
-          console.log(rsp);
-          console.log(err);
           this._setUser(null);
           this._setPermissions(null);
         },
@@ -104,10 +102,10 @@
               });
             }
           } else {
-            //for testing
-            permissionsList.superPermissions.forEach(function(perm) {
-              _permissions[perm] = true;
-            });
+            // TODO: we need to redirect to login page if no user data received
+            // permissionsList.superPermissions.forEach(function(perm) {
+            //  _permissions[perm] = true;
+            // });
           }
           this._setPermissions(_permissions);
         }

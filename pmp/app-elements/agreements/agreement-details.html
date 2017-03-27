@@ -271,6 +271,10 @@
             value: false,
             observer: '_editModeChanged'
           },
+          allowEditRegardlessStatus: {
+            type: Boolean,
+            value: false
+          },
           isNewAgreement: {
             type: Boolean,
             value: false,
@@ -413,6 +417,11 @@
         _allowEdit: function(agreementStatus) {
           if (!this.editMode) {
             return false;
+          }
+          if (this.allowEditRegardlessStatus) {
+            // TODO: revise this temporary permission
+            // temporary edit permission for PM regardless status
+            return true;
           }
           if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
             return true;
