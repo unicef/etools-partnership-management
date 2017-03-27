@@ -2,7 +2,7 @@
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
   pmpBehaviors.ListsCommonBehavior = {
-      properties:{
+      properties: {
          q: {
             type: String,
             notify: true,
@@ -81,7 +81,8 @@
       },
 
        /**
-         * At page refresh Dexie DBs might be wiped out and the list(filteredPartners,filteredAgreements etc) will be empty.
+         * At page refresh Dexie DBs might be wiped out and the list
+         *(filteredPartners,filteredAgreements etc) will be empty.
          * Because of this we need to refilter after list data is saved locally.
          * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
          */
@@ -92,7 +93,7 @@
           var list = this.get(listDataPath);
 
           if (typeof list === 'undefined' ||
-              (Array.isArray(listData) && list.length === 0)) {
+              (Array.isArray(list) && list.length === 0)) {
             this.set('forceDataRefresh',  true);
           }
           // recheck params to trigger agreements filtering
@@ -101,6 +102,5 @@
           this._init(this.active);
           this.fire('global-loading', {active: false});
        },
-
-  }
+  };
 </script>
