@@ -74,7 +74,6 @@
 
       // List fade in fade out effect
       _listChanged: function(filteredList) {
-        console.log('cjamged');
          var classList = this.$.list.classList;
          if (filteredList instanceof Array && classList.contains('hidden')) {
             classList.remove('hidden');
@@ -82,7 +81,7 @@
       },
 
        /**
-         * At page refresh Dexie DBs might be wiped out and the list(filteredPartners,filteredAgreementsetc) will be empty.
+         * At page refresh Dexie DBs might be wiped out and the list(filteredPartners,filteredAgreements etc) will be empty.
          * Because of this we need to refilter after list data is saved locally.
          * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
          */
