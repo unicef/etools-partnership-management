@@ -124,11 +124,10 @@
             this.set('handleErrResponseAdditionalCallback', null);
           }
         },
-        _handleErrorResponse: function(response){
+        _handleErrorResponse: function(response) {
           this.handleErrorResponse(response);
 
-          if(typeof this.handleErrResponseAdditionalCallback === 'function')
-          {
+          if (typeof this.handleErrResponseAdditionalCallback === 'function') {
             this.handleErrResponseAdditionalCallback(this.tryGetResponseErrorMsg(response));
           }
           this.handleErrResponseAdditionalCallback = null;
@@ -158,7 +157,7 @@
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
 
-          this.set('endpoint', this.getEndpoint("createPartner", vendorNoObj));
+          this.set('endpoint', this.getEndpoint('createPartner', vendorNoObj));
           this.ajaxEl.set('method', 'POST');
           this.ajaxEl.set('multiPart', false);
           this.ajaxEl.set('prepareMultipartData', false);
