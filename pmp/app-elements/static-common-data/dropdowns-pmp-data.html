@@ -89,7 +89,14 @@
 
             // set CP Outputs values
             if (Array.isArray(response.detail.cp_outputs) && response.detail.cp_outputs.length > 0) {
-              var preparedCpOutputs = this._prepareDropdownData(response.detail.cp_outputs);
+              var preparedCpOutputs = response.detail.cp_outputs.map(function(d) {
+                return {
+                  value: d.id,
+                  label: d.name,
+                  wbs: d.wbs
+                };
+              });
+
               this.dispatch('setCpOutputs', preparedCpOutputs);
               // TODO: keep ony this form, but only after you refactor the old one
               this.dispatch('setUnmodifiedCpOutputs', response.detail.cp_outputs);
