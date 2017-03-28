@@ -183,6 +183,7 @@
                 custom-object-options
                 selected="{{agreement.signed_by}}"
                 update-selected
+                selected-requires-valid-options
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
@@ -447,7 +448,6 @@
               || this.validateStringValue(signedByUnicefDate)
               || this.validateIdValue(signedByPartnerStaffId)
               || this.validateStringValue(signedByPartnerDate);
-
         },
 
         _partnerChanged: function(currentPartnerId) {

@@ -370,6 +370,12 @@
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
+
+          if (activePage === 'list') {
+            // reset agreementAuthorizedOfficers to avoid searching new selected intervention
+            // signedByAuthorizedOfficer id in the old intervention authorized officers
+            this.$.interventionReviewAndSign.set('agreementAuthorizedOfficers', []);
+          }
         }.bind(this), 50);
       },
 
