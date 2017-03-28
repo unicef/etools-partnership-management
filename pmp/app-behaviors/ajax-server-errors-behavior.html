@@ -20,19 +20,23 @@
       errorEventName: {
         value: null,
         observer: '_errorEventNameChange'
-      },
-      tryGetResponseErrorMsg: {
-        type: Function
       }
     },
 
     tryGetResponseErrorMsg: function(response) {
+      var errMsg = 'An error occured!';
       try {
-         return response.detail.request.detail.request.response;
+        if (response.detail.request.detail.request.response) {
+          return response.detail.request.detail.request.response;
+        } else {
+          // response.detail.request.detail.request.response could be null for 500 server errors,
+          // we need to avoid returning null here
+          return errMsg;
+        }
       } catch (ex) {
         console.warn(ex);
       }
-      return 'An error occured!';
+      return errMsg;
     },
 
     handleErrorResponse: function(response) {

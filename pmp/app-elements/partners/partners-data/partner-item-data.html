@@ -128,7 +128,7 @@
           this.handleErrorResponse(response);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
-            this.handleErrResponseAdditionalCallback(this.tryGetResponseErrorMsg(response));
+            this.handleErrResponseAdditionalCallback.bind(this, this.tryGetResponseErrorMsg(response))();
           }
           this.handleErrResponseAdditionalCallback = null;
         },

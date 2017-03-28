@@ -254,7 +254,8 @@
         this.fire('update-main-path', {path: 'partners/' + partner.id + '/details'});
       },
       _handleCreatePartnerError: function(errorDetails) {
-        this.fire('toast', {text: errorDetails.error , showCloseBtn: true});
+        var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
+        this.fire('toast', {text: toastMsg , showCloseBtn: true});
       }
 
     });
