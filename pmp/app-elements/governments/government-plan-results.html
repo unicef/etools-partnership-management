@@ -103,8 +103,11 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[cpOutputDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="[[_mapItemFromId(result.result,cpOutputDropdownData)]]"
+                         option-value="id"
+                         option-label="name"
+                         custom-object-options
+                         selected="{{result.result}}"
+                         update-selected
                          error-message="Please select a CP Output"
                          required>
                 </etools-searchable-multiselection-menu>
@@ -112,7 +115,7 @@
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="CP Output"
-                    value="[[_mapItemFromId(result.result,cpOutputDropdownData,'true')]]"
+                    value="[[_mapItemFromId(result.result, cpOutputDropdownData, 'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -126,8 +129,8 @@
                              class="fixed-width"
                              placeholder="&#8212;"
                              options="[[yearOptions]]"
-                             on-value-change="_handleValueChange"
-                             value="[[_mapItemFromId(result.year,yearOptions)]]"
+                             selected="[[result.year]]"
+                             update-selected
                              error-message="Please select a year"
                              disabled="[[_yearsEmpty(yearOptions)]]"
                              required>
@@ -136,7 +139,7 @@
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="Year"
-                    value="[[_mapItemFromId(result.year,yearOptions,'true')]]"
+                    value="[[_mapItemFromValue(result.year, yearOptions, 'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -200,7 +203,7 @@
                        options="[[sectorsDropdownData]]"
                        on-value-change="_handleValueChange"
                        error-message="Please select a programme(s)/sector(s)"
-                       value="[[_mapItemFromId(result.sectors,sectorsDropdownData)]]"
+                       value="[[_mapItemFromValue(result.sectors, sectorsDropdownData)]]"
                        multi>
                 </etools-searchable-multiselection-menu>
               </template>
@@ -222,7 +225,7 @@
                        placeholder="&#8212;"
                        options="[[sectionsDropdownData]]"
                        on-value-change="_handleValueChange"
-                       value="[[_mapItemFromId(result.sections,sectionsDropdownData)]]"
+                       value="[[_mapItemFromValue(result.sections, sectionsDropdownData)]]"
                        error-message="Please select a section(s)"
                        multi>
                 </etools-searchable-multiselection-menu>
@@ -247,7 +250,7 @@
                          placeholder="&#8212;"
                          options="[[unicefUsersDropdownData]]"
                          on-value-change="_handleValueChange"
-                         value="{{_mapItemFromId(result.unicef_managers,unicefUsersDropdownData)}}"
+                         value="{{_mapItemFromValue(result.unicef_managers, unicefUsersDropdownData)}}"
                          error-message="Please select a UNICEF manager"
                          multi
                          required>
@@ -293,7 +296,7 @@
               },
               cpOutputDropdownData: {
                 type: Array,
-                statePath: 'cpOutputs'
+                statePath: 'unmodifiedCpOutputs'
               },
               yearOptions: {
                 type: Array,

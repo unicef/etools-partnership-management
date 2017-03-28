@@ -73,6 +73,8 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
+                  option-value="[[filter.optionValue]]]"
+                  option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
                   custom-object-options></etools-searchable-multiselection-menu>
@@ -297,7 +299,7 @@
           },
           cpOutputs: {
             type: Array,
-            statePath:  'cpOutputs'
+            statePath: 'unmodifiedCpOutputs'
           },
           selectedCpOutputs: {
             type: Array,
@@ -362,6 +364,8 @@
               filterName: 'PD/SSFA Type',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.documentTypes,
               alreadySelected: [],
               path: 'selectedDocumentTypes'
@@ -370,6 +374,8 @@
               filterName: 'Country Programme Output',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'id',
+              optionLabel: 'name',
               selectionOptions: this.cpOutputs,
               alreadySelected: [],
               path: 'selectedCpOutputs'
@@ -378,6 +384,8 @@
               filterName: 'Sectors',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
@@ -386,6 +394,8 @@
               filterName: 'Status',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.interventionStatuses,
               alreadySelected: [],
               path: 'selectedStatuses'
@@ -394,6 +404,8 @@
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
@@ -402,6 +414,8 @@
               filterName: 'Offices',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.offices,
               alreadySelected: [],
               path: 'selectedOffices'
@@ -542,7 +556,7 @@
 
               (this.selectedCpOutputs && this.selectedCpOutputs.length)
                   ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.value;
+                return cpOutput.id;
               }) : [],
 
               (this.selectedStatuses && this.selectedStatuses.length)
@@ -593,7 +607,7 @@
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-              return cpOutput.value;
+              return cpOutput.id;
             }).join('|'));
           }
 
@@ -643,7 +657,7 @@
             params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
           // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   params.push('country_programme=' + this.selectedCpOutputs[0].value);
+          //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
           // }
           if (this.selectedSectors && this.selectedSectors.length) {
             params.push('sector=' + this.selectedSectors[0].value);
@@ -721,14 +735,14 @@
           });
         },
 
-        _setSelectedCpOutputs: function(cpOutputsString) {
+        _setselectedCpOutputs: function(cpOutputsString) {
           var cpOut = cpOutputsString.split('|');
           if (cpOut && cpOut.length) {
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
             });
             return this.cpOutputs.filter(function(cpo) {
-              return cpOut.indexOf(parseInt(cpo.value, 10)) > -1;
+              return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
           }
           return [];

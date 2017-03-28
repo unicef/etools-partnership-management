@@ -273,7 +273,7 @@
         },
         allCpOutputs: {
           type: Array,
-          statePath: 'cpOutputs'
+          statePath: 'unmodifiedCpOutputs'
         },
         cpOutputNames: {
           type: Array,
@@ -380,8 +380,8 @@
       },
       _getCpOutputName: function(cpoId) {
         for (var key in this.allCpOutputs) {
-          if (this.allCpOutputs[key].value === cpoId) {
-            return this.allCpOutputs[key].label;
+          if (this.allCpOutputs[key].id === cpoId) {
+            return this.allCpOutputs[key].name;
           }
         }
         return null;
