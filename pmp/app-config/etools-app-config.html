@@ -219,6 +219,9 @@ App global configuration
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
       },
+      createPartner: {
+        template: '/api/v2/partners/add/?vendor=<%=vendor%>',
+      },
       partnerStaffMembers: {
         template: '/api/v2/partners/<%=id%>/staff-members/',
       },
