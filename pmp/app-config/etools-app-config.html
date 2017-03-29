@@ -29,6 +29,7 @@ App global configuration
       db: etoolsCustomDexieDb,
 
       // globals
+      /** @polymerBehavior etoolsAppConfig.globals */
       globals: {
 
         baseSite: window.location.origin,
@@ -217,6 +218,9 @@ App global configuration
         // exp: 6 * 1000, // 6 sec
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
+      },
+      createPartner: {
+        template: '/api/v2/partners/add/?vendor=<%=vendor%>',
       },
       partnerStaffMembers: {
         template: '/api/v2/partners/<%=id%>/staff-members/',
