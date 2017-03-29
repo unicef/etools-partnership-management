@@ -91,7 +91,7 @@
                     <iron-icon icon="file-download"></iron-icon>
                     Export
                   </paper-button>
-                </a>  
+                </a>
               </div>
               <!-- Print functionality pending implementation -->
               <!--<div class="top-content-action"  hidden$="[[!listActive]]">
@@ -287,7 +287,19 @@
         serverErrors: {
           type: Array,
           value: []
-        }
+        },
+        routeData: {
+          type: Object
+        },
+        intervDetailsActive: {
+          type: Object
+        },
+        routeDataNewInterv: {
+          type: Object
+        },
+        editMode: {
+          type: Boolean
+        },
       },
 
       observers: [
@@ -423,7 +435,7 @@
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {
-              
+
               var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
               if (!_sendAttachmentFile && attachment.id) {
                 return {
@@ -439,7 +451,7 @@
               }
             });
           }
-          // if prc_review_document is null we need to delete the property otherwise the 
+          // if prc_review_document is null we need to delete the property otherwise the
           // file gets deleted from the backend
           if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
             delete interventionData.prc_review_document;
@@ -480,7 +492,7 @@
         return {
           id: null,
           intervention: interventionId ? interventionId : null,
-          type: null 
+          type: null
         };
       },
 
