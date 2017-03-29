@@ -17,6 +17,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -40,6 +41,7 @@
                          filtered-interventions="{{filteredInterventions}}"
                          total-results="{{totalResults}}"
                          on-interventions-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredInterventions"
                          fire-data-loaded show-loading>
     </interventions-list-data>
 
@@ -51,9 +53,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -205,7 +205,7 @@
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
       </etools-data-table-footer>
 
@@ -227,20 +227,15 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
           filteredInterventions: {
             type: Array,
             notify: true,
-            observer: '_interventionsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           documentTypes: {
@@ -273,12 +268,6 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
@@ -287,30 +276,10 @@
             type: Array
           },
 
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
-          },
-
           urlParams: {
             type: Object
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -482,7 +451,7 @@
 
         // update selected filters(przent in URL) at page refresh
         _updateSelectedFiltersValues: function() {
-          this.debounce('updaetShownFilters', function() {
+          this.debounce('updateShownFilters', function() {
             var filtersValues = [
               {
                 filterName: 'PD/SSFA Type',
@@ -770,70 +739,8 @@
           return [];
         },
 
-        _interventionsChanged: function(filteredInterventions) {
-          // List fade in fade out effect
-          var classList = this.$.list.classList;
-          if (filteredInterventions instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredInterventions will be empty.
-         * Because of this we need to refilter after interventions data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredInterventions === 'undefined' ||
-              (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger interventions filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-        },
-
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('etools-data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
         },
 
         // verify date and prettify or not

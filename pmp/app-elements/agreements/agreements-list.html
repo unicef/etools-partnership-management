@@ -19,6 +19,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -38,6 +39,7 @@
     <agreement-list-data id="agreements"
                          filtered-agreements="{{filteredAgreements}}"
                          total-results="{{totalResults}}"
+                         list-data-path="filteredAgreements"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
                          fire-data-loaded show-loading>
     </agreement-list-data>
@@ -50,9 +52,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -217,7 +217,7 @@
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
       </etools-data-table-footer>
 
@@ -240,7 +240,8 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -248,13 +249,7 @@
           filteredAgreements: {
             type: Array,
             notify: true,
-            observer: '_agreementsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           agreementType: {
@@ -280,27 +275,12 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
 
           visibleRange: {
             type: Array
-          },
-
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
@@ -312,19 +292,6 @@
             statePath: 'partnersDropdownData'
           },
 
-          detailsOpened: Boolean,
-
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -593,26 +560,6 @@
           return [];
         },
 
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
         _dropdownSelected: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
@@ -648,51 +595,9 @@
 //          }
 //        },
 
-        // List fade in fade out effect
-        _agreementsChanged: function(filteredAgreements) {
-          var classList = this.$.list.classList;
-          if (filteredAgreements instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
-
-        // TODO: refactor this, it is identical with partner-lists _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('etools-data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
-        },
-
         // verify date and prettify or not
         _checkAndShowAgreementDate: function(dateString) {
           return this.getDisplayValue(dateString, true);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredAgreements will be empty.
-         * Because of this we need to refilter after agreements data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredAgreements === 'undefined' ||
-              (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger agreements filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
       });

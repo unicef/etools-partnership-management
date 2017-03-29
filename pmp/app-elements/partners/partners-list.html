@@ -16,6 +16,7 @@
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
@@ -43,6 +44,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
+                        list-data-path="filteredPartners"
                         fire-data-loaded show-loading>
     </partners-list-data>
 
@@ -53,10 +55,8 @@
         <paper-input id="query"
             type="search"
             autocomplete="off"
-            value="[[q]]"
-            on-keyup="_setQ"
-            placeholder="Search"
-            on-search="_setQ">
+            value="{{q}}"
+            placeholder="Search">
             <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -212,7 +212,8 @@
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -220,13 +221,7 @@
           filteredPartners: {
             type: Array,
             notify: true,
-            observer: '_partnersChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           csoTypes: {
@@ -247,42 +242,14 @@
             type: String
           },
 
-          sortOrder: {
-            type: Object,
-          },
-
-          pageNumber: {
-            type: Number
-          },
-
-          pageSize: {
-            type: Number
-          },
-
           showHidden: {
             type: Boolean
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
             type: Object,
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -468,31 +435,6 @@
           return endpointUrl + '?' + queryString;
         },
 
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        _pageSizeChanged: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _setQ: function() {
-          this.set('q', this.$.query.value);
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dropdownSelected: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
@@ -502,14 +444,6 @@
           this.set('debounceTime', 50);
           this.set('showHidden', this.showHidden ? false : true);
           this.set('pageNumber', 1);
-        },
-
-        // List fade in fade out effect
-        _partnersChanged: function(filteredPartners) {
-          var classList = this.$.list.classList;
-          if (filteredPartners instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
         },
 
         _computeName: function(name, shortName) {
@@ -525,36 +459,6 @@
             return 'CSO / ' + csoType;
           }
         },
-
-        // When the list data rows are changing check and close any details opened
-        _listDataChanged: function() {
-          var rows = this.$.list.querySelectorAll('etools-data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredPartners will be empty.
-         * Because of this we need to refilter after partners data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredPartners === 'undefined' ||
-              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger partners filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-        },
-
       });
     })();
 
