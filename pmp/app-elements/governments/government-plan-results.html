@@ -129,7 +129,7 @@
                              class="fixed-width"
                              placeholder="&#8212;"
                              options="[[yearOptions]]"
-                             selected="[[result.year]]"
+                             selected="{{result.year}}"
                              update-selected
                              error-message="Please select a year"
                              disabled="[[_yearsEmpty(yearOptions)]]"
@@ -201,9 +201,9 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectorsDropdownData]]"
-                       on-value-change="_handleValueChange"
                        error-message="Please select a programme(s)/sector(s)"
-                       value="[[_mapItemFromValue(result.sectors, sectorsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sectors}}"
                        multi>
                 </etools-searchable-multiselection-menu>
               </template>
@@ -224,8 +224,8 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectionsDropdownData]]"
-                       on-value-change="_handleValueChange"
-                       value="[[_mapItemFromValue(result.sections, sectionsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sections}}"
                        error-message="Please select a section(s)"
                        multi>
                 </etools-searchable-multiselection-menu>
@@ -249,8 +249,8 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[unicefUsersDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="{{_mapItemFromValue(result.unicef_managers, unicefUsersDropdownData)}}"
+                         update-selected
+                         selected="{{result.unicef_managers}}"
                          error-message="Please select a UNICEF manager"
                          multi
                          required>
@@ -328,17 +328,6 @@
                 value: 'governmentIntResultDelete',
                 readOnly: true
               }
-            },
-            _handleValueChange: function(e) {
-              var id = e.target.id;
-              var index = e.target.index;
-              var dataItemsPath = 'dataItems.' + index;
-              // ensure this.result observes subproperty change
-              var updatedResult = _.has(e, 'detail.selectedValues') ?
-                  this._getUpdatedObject(id, e.detail.selectedValues, this.dataItems[index]) :
-                  this._getUpdatedObject(id, this.dataItems[index].id, this.dataItems[index]);
-              this.set(dataItemsPath, updatedResult);
-              e.target.invalid = false;
             },
             _handleInputChange: function(e) {
               if (e.target.value) {
