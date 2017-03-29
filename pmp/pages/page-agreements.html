@@ -124,6 +124,7 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
+              allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
@@ -280,6 +281,13 @@
           return true;
         }
         return false;
+      },
+
+      /**
+       * Temporary permission for PM
+       */
+      _allowPmToEditRegardlessStatus: function(permissions) {
+        return typeof permissions === 'object' && permissions.partnershipManager === true;
       },
 
       _saveAgreement: function(event) {
