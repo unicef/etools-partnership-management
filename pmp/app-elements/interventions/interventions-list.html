@@ -73,7 +73,7 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
-                  option-value="[[filter.optionValue]]]"
+                  option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
@@ -735,7 +735,7 @@
           });
         },
 
-        _setselectedCpOutputs: function(cpOutputsString) {
+        _setSelectedCpOutputs: function(cpOutputsString) {
           var cpOut = cpOutputsString.split('|');
           if (cpOut && cpOut.length) {
             cpOut = cpOut.map(function(cpOutStrValue) {
