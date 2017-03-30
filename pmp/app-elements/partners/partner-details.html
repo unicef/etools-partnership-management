@@ -206,13 +206,13 @@
 
         <!-- Assessments section -->
         <div class="assessments">
-          <assessments-items id="assessmentsList" data-items="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
+          <assessments-items id="assessmentsList" data-items$="{{partner.assessments}}" edit-mode="[[editMode]]"></assessments-items>
         </div>
       </etools-content-panel>
 
       <!-- Staff Members section-->
       <etools-content-panel class="content-section" title$="Staff Members ([[partner.staff_members.length]])" show-expand-btn>
-        <staff-members id="staffMembersList" data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
+        <staff-members id="staffMembersList" data-items$="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
     </div> <!-- main page content end -->

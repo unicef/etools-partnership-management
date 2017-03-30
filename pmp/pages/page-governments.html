@@ -184,7 +184,23 @@
         csvDownloadUrl: {
           type: String
         },
-        fakePermission: true,
+        fakePermission: {
+          type: Boolean,
+          value: true
+        },
+        endpoint: {
+          type: Object,
+        },
+        tabsActive: {
+          type: Boolean
+        },
+        routeData: {
+          type: Object
+        },
+        permissions: {
+          // TODO: Replace with behavior
+          type: Object
+        },
       },
 
        observers: [

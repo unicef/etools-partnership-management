@@ -96,7 +96,10 @@
 
         _resetErrors: function() {
           this.set('errors', []);
-        }
+        },
+        _hideSuspendAndTerminateBtns: function(status) {
+          return status !== 'active';
+        },
 
       });
     })();

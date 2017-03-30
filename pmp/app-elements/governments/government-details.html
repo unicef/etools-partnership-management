@@ -108,7 +108,8 @@ it doesn't need to be included in element's style -->
       </etools-content-panel>
       <!--Work Plan Results-->
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
-        <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
+        <government-plan-results id="governmentResults"
+                                 data-items$="{{intervention.results}}"
                                  allow-edit="[[governmentEditMode]]"
                                  year-options="[[yearOptions]]">
         </government-plan-results>
@@ -151,6 +152,9 @@ it doesn't need to be included in element's style -->
         governmentEditMode: {
           type: Boolean,
           value: true,
+        },
+        active: {
+          type: Boolean,
         },
         partnersDropdownData: {
           type: Array,

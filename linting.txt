@@ -1,0 +1,40 @@
+[33mwarn[39m:    ../bower_components/etools-page-refresh/etools-page-refresh.html:16:5
+    Property 'refreshInProgress' bound to attribute 'disabled' not found in 'properties' for element 'etools-page-refresh'
+[33mwarn[39m:    app-elements/partners/partner-overview.html:158:48
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' partner-overview'
+[33mwarn[39m:    app-elements/partners/partner-overview.html:159:54
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' partner-overview'
+[33mwarn[39m:    app-elements/partners/partner-overview.html:159:121
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' partner-overview'
+[33mwarn[39m:    app-elements/partners/partner-details.html:120:13
+    Computed Binding method 'prettyDate' is not defined on element ' partner-details'
+[33mwarn[39m:    app-elements/partners/partner-details.html:196:13
+    Computed Binding method 'prettyDate' is not defined on element ' partner-details'
+[33mwarn[39m:    app-elements/data-table/data-table-header.html:45:15
+    Property label not found in 'properties' for element 'data-table-header'
+[33mwarn[39m:    app-elements/interventions/intervention-planned-budget.html:243:23
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' intervention-planned-budget'
+[33mwarn[39m:    app-elements/interventions/intervention-planned-budget.html:244:23
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' intervention-planned-budget'
+[33mwarn[39m:    app-elements/interventions/intervention-planned-budget.html:255:23
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' intervention-planned-budget'
+[33mwarn[39m:    app-elements/interventions/intervention-planned-budget.html:256:23
+    Computed Binding method 'displayCurrencyAmount' is not defined on element ' intervention-planned-budget'
+[33mwarn[39m:    ../bower_components/etools-datepicker/etools-datepicker.html:85:7
+    Property 'date' bound to attribute 'date' not found in 'properties' for element 'etools-datepicker'
+[33mwarn[39m:    ../bower_components/etools-datepicker/etools-datepicker.html:85:7
+    Property 'minDate' bound to attribute 'min-date' not found in 'properties' for element 'etools-datepicker'
+[33mwarn[39m:    ../bower_components/etools-datepicker/etools-datepicker.html:85:7
+    Property 'maxDate' bound to attribute 'max-date' not found in 'properties' for element 'etools-datepicker'
+[33mwarn[39m:    ../bower_components/etools-content-toggle-button/etools-content-toggle-button.html:52:0
+    Property label not found in 'properties' for element 'etools-content-toggle-button'
+[33mwarn[39m:    ../bower_components/etools-checkable-input/etools-checkable-input.html:98:105
+    Property label not found in 'properties' for element 'etools-checkable-input'
+[33mwarn[39m:    ../bower_components/etools-dialog/etools-dialog.html:63:7
+    <paper-dialog-scrollable> is undefined.
+[33mwarn[39m:    pages/page-agreements.html:94:11
+    The expression [[!_showPageTabs(agreementPage)]] bound to the attribute 'hidden' should use $= instead of =.
+[33mwarn[39m:    app-elements/common-elements/etools-error-messages-box.html:50:5
+    The expression [[title]] bound to the attribute 'title' should use $= instead of =.
+[33mwarn[39m:    ../bower_components/etools-file/etools-file.html:124:13
+    The expression [[uploadLabel]] bound to the attribute 'title' should use $= instead of =.

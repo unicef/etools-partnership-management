@@ -94,7 +94,7 @@
                                                  readonly$="[[!detailsEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
-        <div class="col col-3" title="[[intervention.number]]">
+        <div class="col col-3" title$="[[intervention.number]]">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
@@ -228,7 +228,7 @@
             <div class="title">Sector Locations</div>
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
-                                         data-items="{{intervention.sector_locations}}"
+                                         data-items$="{{intervention.sector_locations}}"
                                          edit-mode$="[[detailsEditMode]]"
                                          required$="[[interventionRequiredField]]">
           </intervention-sector-locations>
@@ -238,7 +238,7 @@
 
     <etools-content-panel class="content-section" title="Expected results">
       <intervention-expected-results id="expectedResults"
-          data-items="{{intervention.result_links}}"
+          data-items$="{{intervention.result_links}}"
           edit-mode$="[[detailsEditMode]]"
           intervention-id="[[intervention.id]]"
           required$="[[interventionRequiredField]]">
@@ -247,7 +247,7 @@
 
     <etools-content-panel class="content-section" title="Planned Budget">
       <intervention-planned-budget id="plannedBudget"
-                                   data-items="{{intervention.planned_budget}}"
+                                   data-items$="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
                                    edit-mode$="[[detailsEditMode]]"
                                    years="[[years]]"
@@ -255,7 +255,7 @@
     </etools-content-panel>
     <etools-content-panel class="content-section" title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
-                                   data-items="{{intervention.planned_visits}}"
+                                   data-items$="{{intervention.planned_visits}}"
                                    edit-mode$="[[detailsEditMode]]"
                                    years="[[years]]"></intervention-planned-visits>
     </etools-content-panel>
