@@ -212,6 +212,14 @@
             this.set('signEditMode', this.editMode);
             return;
           }
+
+          if (this.permissions.partnershipManager) {
+            // TODO: revise this temporary permission
+            // temporary edit permission for PM regardless status
+            this.set('signEditMode', true);
+            return;
+          }
+
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('signEditMode', false);

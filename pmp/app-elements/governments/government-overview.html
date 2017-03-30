@@ -8,17 +8,12 @@
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/list-styles.html">
-
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -26,7 +21,7 @@
 
 <dom-module id="government-overview">
   <template>
-    <style include="page-layout-styles grid-layout-styles shared-styles list-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles data-table-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -54,7 +49,7 @@
          text-align: right;
          justify-content: flex-end;
       }
-      data-table-column.text-flex-right,
+      etools-data-table-column.text-flex-right,
       .col-data.text-flex-right {
          padding-right: 0 !important;
          padding-left: 15px;
@@ -153,36 +148,36 @@
   <!-- Start -->
         <template is="dom-repeat" items="[[intervention.implementation_status]]" as="status">
          <template is="dom-if" if="[[_fcs_exist(status.fc_records)]]">
-          <data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
-            <data-table-column class="col-2" field="fc_number">
+          <etools-data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
+            <etools-data-table-column class="col-2" field="fc_number">
                 FC#
-            </data-table-column>
-            <data-table-column class="col-2" field="fc_date" >
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2" field="fc_date" >
                 FC Date
-            </data-table-column>
-            <data-table-column class="col-4" field="fc_title">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-4" field="fc_title">
                 FC Title
-            </data-table-column>
-            <data-table-column class="col-2 text-flex-right" field="actual_ammount">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2 text-flex-right" field="actual_ammount">
                 Commitment Amount $
-            </data-table-column>
-            <data-table-column class="col-2 text-flex-right" field="outstanding_ammount">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2 text-flex-right" field="outstanding_ammount">
                 Outstanding $
-            </data-table-column>
-          </data-table-header>
+            </etools-data-table-column>
+          </etools-data-table-header>
 
           <template is="dom-if" if="[[!status.fc_records.length]]">
-            <data-table-row no-collapse>
+            <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <span class="col-data col-12">
                     No records to display
                 </span>
               </div>
-            </data-table-row>
+            </etools-data-table-row>
           </template>
           <template is="dom-repeat" items="[[status.fc_records]]" as="record">
 
-            <data-table-row no-collapse>
+            <etools-data-table-row no-collapse>
               <div slot="row-data">
                 <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
                     [[record.fc_ref_number]]
@@ -201,7 +196,7 @@
                      <!--[[record.outstanding]]-->
                 </span>
               </div>
-            </data-table-row>
+            </etools-data-table-row>
           </template>
           <div class="row-h flex-c padded-top" hidden$="[[!status.fc_records.length]]">
             <div class="col col-6">

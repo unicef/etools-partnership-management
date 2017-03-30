@@ -154,10 +154,11 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 update-selected
+                selected-requires-valid-options
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]"
                 error-message="Please select a partner"
-                required$="[[validateStringValue(agreement.signed_by_partner_date)]]" show-logs>
+                required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
             </etools-searchable-multiselection-menu>
           </div>
           <div class="col col-3">
@@ -270,6 +271,10 @@
             type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          allowEditRegardlessStatus: {
+            type: Boolean,
+            value: false
           },
           isNewAgreement: {
             type: Boolean,
@@ -414,6 +419,11 @@
           if (!this.editMode) {
             return false;
           }
+          if (this.allowEditRegardlessStatus) {
+            // TODO: revise this temporary permission
+            // temporary edit permission for PM regardless status
+            return true;
+          }
           if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
             return true;
           }
@@ -451,7 +461,7 @@
         },
 
         _partnerChanged: function(currentPartnerId) {
-          if (currentPartnerId !== this.oldSelectedPartnerId) {
+          if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
             // partner not set or changed, reset related fields
             this.set('agreement.partner_manager', null);
             this.set('staffMembers', []);
@@ -512,21 +522,25 @@
          * Also officers are required if at least one of these fields are populated.
          */
         _validateSignedByUnicefFields: function(singedByUnicefStaffId, signedByUnicefDateString) {
-          var signedByUnicefField = this.$$('#signedByUnicef');
-          var signedByUnicefDateField = this.$$('#signedByUnicefDateField');
-          if (singedByUnicefStaffId !== null || signedByUnicefDateString !== null) {
-            if (signedByUnicefField) {
-              signedByUnicefField.validate();
+          setTimeout(function() {
+            // setTimeout with 0 delay will ensure signedByUnicef dropdown
+            // selected value will be set before this validation
+            var signedByUnicefField = this.$$('#signedByUnicef');
+            var signedByUnicefDateField = this.$$('#signedByUnicefDateField');
+            if (singedByUnicefStaffId !== null || signedByUnicefDateString !== null) {
+              if (signedByUnicefField) {
+                signedByUnicefField.validate();
+              }
+              if (signedByUnicefDateField) {
+                signedByUnicefDateField.validate();
+              }
             }
-            if (signedByUnicefDateField) {
-              signedByUnicefDateField.validate();
+            // also partner authorized officers field is required if at least one of these 2 fields was filed
+            var authorizedOfficers = this.$$('#authorizedOfficers');
+            if (authorizedOfficers) {
+              authorizedOfficers.validateOfficersSelection();
             }
-          }
-          // also partner authorized officers field is required if at least one of these 2 fields was filed
-          var authorizedOfficers = this.$$('#authorizedOfficers');
-          if (authorizedOfficers) {
-            authorizedOfficers.validateOfficersSelection();
-          }
+          }.bind(this), 0);
         },
 
         /**
@@ -535,21 +549,25 @@
          * Also officers are required if at least one of these fields are populated.
          */
         _validateSignedByPartnerFields: function(singedByPartnerStaffId, signedByPartnerDateString) {
-          var signedByPartnerField = this.$$('#signedByPartner');
-          var signedByPartnerDateField = this.$$('#signedByPartnerDateField');
-          if (singedByPartnerStaffId !== null || signedByPartnerDateString !== null) {
-            if (signedByPartnerField) {
-              signedByPartnerField.validate();
+          setTimeout(function() {
+            // setTimeout with 0 delay will ensure signedByPartner dropdown
+            // selected value will be set before this validation
+            var signedByPartnerField = this.$$('#signedByPartner');
+            var signedByPartnerDateField = this.$$('#signedByPartnerDateField');
+            if (singedByPartnerStaffId !== null || signedByPartnerDateString !== null) {
+              if (signedByPartnerField) {
+                signedByPartnerField.validate();
+              }
+              if (signedByPartnerDateField) {
+                signedByPartnerDateField.validate();
+              }
             }
-            if (signedByPartnerDateField) {
-              signedByPartnerDateField.validate();
+            // also partner authorized officers field is required if at least one of these 2 fields was filed
+            var authorizedOfficers = this.$$('#authorizedOfficers');
+            if (authorizedOfficers) {
+              authorizedOfficers.validateOfficersSelection();
             }
-          }
-          // also partner authorized officers field is required if at least one of these 2 fields was filed
-          var authorizedOfficers = this.$$('#authorizedOfficers');
-          if (authorizedOfficers) {
-            authorizedOfficers.validateOfficersSelection();
-          }
+          }.bind(this), 0);
         },
 
         /**
