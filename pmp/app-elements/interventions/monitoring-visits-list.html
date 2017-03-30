@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -7,12 +8,7 @@
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 <link rel="import" href="intervention-data/monitoring-visits-data.html">
 
 
@@ -20,7 +16,7 @@
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
       }
@@ -34,29 +30,29 @@
     </monitoring-visits-data>
 
     <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
-      <data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
-        <data-table-column class="col-2" field="reference_number">
+      <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
+        <etools-data-table-column class="col-2" field="reference_number">
             Reference #
-        </data-table-column>
-        <data-table-column class="col-2" field="primary_traveler" >
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="primary_traveler" >
             Traveler
-        </data-table-column>
-        <data-table-column class="col-2" field="travel_type">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="travel_type">
             Travel Type
-        </data-table-column>
-        <data-table-column class="col-2" field="date">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="date">
             When
-        </data-table-column>
-        <data-table-column class="col-2" field="locations">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="locations">
             Locations
-        </data-table-column>
-        <data-table-column class="col-2" field="status">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="status">
             Status
-        </data-table-column>
-      </data-table-header>
+        </etools-data-table-column>
+      </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
-        <data-table-row no-collapse>
+        <etools-data-table-row no-collapse>
           <div slot="row-data">
             <a class="col-data col-2 truncate" href="#" title="[[visit.reference_number]]">
                 [[visit.reference_number]]
@@ -77,7 +73,7 @@
                 [[visit.status]]
             </span>
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
     </div>
     <div class="monitoring-visits-warning" hidden="[[!_hideMonitoringVisits(monitoringVisits.length)]]">

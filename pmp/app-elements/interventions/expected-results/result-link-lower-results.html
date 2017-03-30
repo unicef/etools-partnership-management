@@ -132,7 +132,11 @@
             <div class="row-h">
               <paper-input label="PD or SSFA ToR Output"
                            value="{{item.name}}"
-                           readonly$="[[!editMode]]"></paper-input>
+                           readonly$="[[!editMode]]"
+                           required
+                           auto-validate
+                           invalid
+                           error-message="Lower Output needs to be specified!"></paper-input>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"

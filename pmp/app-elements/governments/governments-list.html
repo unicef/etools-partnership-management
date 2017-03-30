@@ -11,31 +11,27 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="governments-data/governments-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
-
 <dom-module id="governments-list">
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
         width: 100%;
@@ -46,6 +42,7 @@
                          filtered-governments="{{filteredGovernments}}"
                          total-results="{{totalResults}}"
                          on-governments-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredGovernments"
                          unicef-users-data="[[unicefUsersData]]"
                          fire-data-loaded
                          show-loading>
@@ -62,9 +59,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
         <!--  -->
@@ -133,25 +128,25 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
-        </data-table-column>
-        <data-table-column class="col-4" field="partner_name"  sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name"  sortable>
           Government Partner
-        </data-table-column>
-        <data-table-column class="flex-c" field="country_programme_name"  sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="country_programme_name"  sortable>
           Country Programme
-        </data-table-column>
-        <data-table-column class="flex-c" field="created_at">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="created_at">
           Years
-        </data-table-column>
+        </etools-data-table-column>
 
-      </data-table-header>
+      </etools-data-table-header>
 
        <template id="rows" is="dom-repeat" items="[[filteredGovernments]]"
                 as="entry" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <a class="col-data col-2 truncate"
                href="governments/[[entry.id]]/details"
@@ -181,17 +176,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 
@@ -211,21 +206,15 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior,
         ],
 
         properties: {
           filteredGovernments: {
             type: Array,
             notify: true,
-            observer: '_governmentsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            value: '',
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           interventionStatuses: {
@@ -238,10 +227,6 @@
             value: {field: 'partner_name', direction: 'asc'}
           },
 
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
@@ -250,25 +235,8 @@
             type: Array
           },
 
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
-          },
-
           urlParams: {
             type: Object
-          },
-
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
           },
 
           // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
@@ -678,68 +646,8 @@
           return [];
         },
 
-        _governmentsChanged: function(governmentsData) {
-          var classList = this.$.list.classList;
-          if (governmentsData instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-//         /**
-//          * At page refresh Dexie DBs might be wiped out and filteredGovernments will be empty.
-//          * Because of this we need to refilter after governments data is saved locally.
-//          */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (Array.isArray(this.filteredGovernments) && this.filteredGovernments.length === 0) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger partners filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-        },
-
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows) {
-            rows.forEach(function(row) {
-              if (row.detailsOpened) {
-                row.set('detailsOpened', false);
-              }
-            });
-          }
         },
 
         // verify date and prettify or not
