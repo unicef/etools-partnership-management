@@ -45,10 +45,11 @@
 
       paper-material {
         padding: 0;
+        background-color: var(--ecp-content-bg-color, #FFFFFF);
       }
       paper-material paper-toolbar {
         --paper-toolbar-height: 40px;
-        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar-background: var(--medium-theme-background-color);
         --paper-toolbar: {
           -webkit-border-radius: 8px;
           -moz-border-radius: 8px;
@@ -64,7 +65,7 @@
         @apply(--layout-flex);
         @apply(--layout-end-justified);
         padding-bottom: 12px;
-        color: #ea4022; /* TODO: replace with app-theme var */
+        color: var(--error-color);
       }
     </style>
 
@@ -93,7 +94,7 @@
                                                  readonly$="[[!detailsEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" title="[[intervention.number]]">
           <!-- Reference Number -->
           <paper-input label="Reference Number"
                        value="[[intervention.number]]"
@@ -219,9 +220,6 @@
                         placeholder="&#8212;"
                         char-counter
                         maxlength="130"
-                        required$="[[interventionRequiredField]]"
-                        auto-validate
-                        error-message="Please enter population focus content"
                         readonly$="[[!detailsEditMode]]"></paper-textarea>
       </div>
       <div class="row-h flex-c">
@@ -304,7 +302,7 @@
           ssfaDocTypes: {
             type: Array,
             value: []
-          }, 
+          },
           currentDocTypes: {
             type: Array,
             value: []
@@ -374,12 +372,14 @@
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             this._setNewEditMode();
+
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
               this._agreementSelected(this.agreement);
             } else {
               this.set('selectedPartnerId', null);
             }
+
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           } else {
@@ -400,7 +400,7 @@
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd', 'populationFocus'];
+            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
@@ -422,17 +422,22 @@
           if (!this.editMode) {
             this.set('detailsEditMode', this.editMode);
             return;
-          };
+          }
+
+          if (this.permissions.partnershipManager) {
+            // TODO: revise this temporary permission
+            // temporary edit permission for PM regardless status
+            this.set('detailsEditMode', true);
+            return;
+          }
+
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('detailsEditMode', false);
           } else {
             this.set('detailsEditMode', true);
-
           }
           this.updateStyles();
-
-
         },
 
         _setYears: function(interventionStart, interventionEnd) {
@@ -479,7 +484,7 @@
               default:
                 options = this.documentTypes;
                 break;
-            } 
+            }
           }
           this.set('currentDocTypes', options);
         },
@@ -516,7 +521,7 @@
         validate: function() {
           var valid = true;
           var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'intStart', 'intEnd', 'populationFocus', 'sectorLocations',
+            'partnerFocalPts', 'intStart', 'intEnd', 'sectorLocations',
             'plannedBudget', 'expectedResults'];
           fields.forEach(function(field) {
             if (!this.$$('#' + field).validate()) {

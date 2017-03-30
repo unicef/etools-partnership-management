@@ -418,6 +418,8 @@
               return frNumber.value;
             });
           }
+          // fr_numbers_details are readonly, we do not have to send them to backend
+          delete interventionData.fr_numbers_details;
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {
@@ -495,7 +497,7 @@
         }
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', null);
-        this.fire('update-main-path', {path: 'interventions/new/details'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'interventions/new/details'});
       },
 
       _newIntervention: function(newInterventionActive) {

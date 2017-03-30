@@ -50,12 +50,6 @@
               cpOutputs: cpOutputsData
             };
           },
-          setUnmodifiedCpOutputs: function(cpOutputsData) {
-            return {
-              type: 'SET_UNMODIFIED_CP_OUTPUTS',
-              unmodifiedCpOutputs: cpOutputsData
-            };
-          },
           setSignedByUnicefUsers: function(signedByUnicefUsersData) {
             return {
               type: 'SET_SIGNED_BY_UNICEF_USERS',
@@ -89,10 +83,7 @@
 
             // set CP Outputs values
             if (Array.isArray(response.detail.cp_outputs) && response.detail.cp_outputs.length > 0) {
-              var preparedCpOutputs = this._prepareDropdownData(response.detail.cp_outputs);
-              this.dispatch('setCpOutputs', preparedCpOutputs);
-              // TODO: keep ony this form, but only after you refactor the old one
-              this.dispatch('setUnmodifiedCpOutputs', response.detail.cp_outputs);
+              this.dispatch('setCpOutputs', response.detail.cp_outputs);
             }
             // set Signed By UNICEF Users
             if (Array.isArray(response.detail.signed_by_unicef_users)

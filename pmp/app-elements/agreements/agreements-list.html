@@ -11,6 +11,7 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -18,30 +19,27 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="agreement-data/agreement-list-data.html">
 <link rel="import" href="../partners/partners-data/partners-list-data.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="agreements-list">
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
     </style>
 
     <agreement-list-data id="agreements"
                          filtered-agreements="{{filteredAgreements}}"
                          total-results="{{totalResults}}"
+                         list-data-path="filteredAgreements"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
                          fire-data-loaded show-loading>
     </agreement-list-data>
@@ -54,9 +52,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -154,29 +150,29 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="agreement_number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="agreement_number" sortable>
           Reference Number #
-        </data-table-column>
-        <data-table-column class="col-4" field="partner_name" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name" sortable>
           Partner Full Name
-        </data-table-column>
-        <data-table-column class="col-2" field="partner_type">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_type">
           Type
-        </data-table-column>
-        <data-table-column class="col-2" field="partner_status">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_status">
           Status
-        </data-table-column>
-        <data-table-column class="flex-c" field="start" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
           Start Date
-        </data-table-column>
-        <data-table-column class="flex-c" field="end" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
           End Date
-        </data-table-column>
-      </data-table-header>
+        </etools-data-table-column>
+      </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" as="agreement" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
 
             <a class="col-data col-2 truncate"
@@ -213,17 +209,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 
@@ -244,7 +240,8 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -252,13 +249,7 @@
           filteredAgreements: {
             type: Array,
             notify: true,
-            observer: '_agreementsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           agreementType: {
@@ -284,27 +275,12 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
 
           visibleRange: {
             type: Array
-          },
-
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
@@ -316,19 +292,6 @@
             statePath: 'partnersDropdownData'
           },
 
-          detailsOpened: Boolean,
-
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -343,7 +306,7 @@
             statePath: 'agreementStatuses'
           },
           csvDownloadUrl: {
-            type: String, 
+            type: String,
             notify: true
           },
 
@@ -355,7 +318,7 @@
 
         observers: [
 
-          '_updateURL(q, agreementType, agreementStatus, selectedPartners,' +
+          '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
@@ -431,42 +394,41 @@
         },
 
         _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function () {
+          this.debounce('updateShownFilters', function() {
 
             var filtersValues = [
               {
                 filterName: 'Agreement Type',
                 selectedValue: this.agreementType
-              }, 
+              },
               {
                 filterName: 'Agreement Status',
                 selectedValue: this.agreementStatus
-              }, 
+              },
               {
                 filterName: 'Partner',
                 selectedValue: this.selectedPartners
-              }, 
+              },
               {
                 filterName: 'Starts After',
                 selectedValue: this.startDate
-              }, 
+              },
               {
                 filterName: 'Ends Before',
                 selectedValue: this.endDate
-              },                           
-            ];            
+              },
+            ];
             this.updateShownFilters(filtersValues);
 
           }.bind(this), 500);
         },
-        
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-          
+
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
@@ -544,7 +506,7 @@
           return out.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {        
+        _buildCsvDownloadUrl: function() {
           var queryString = '';
           var endpointUrl = '';
           var params = [];
@@ -571,7 +533,7 @@
           params.push('format=csv');
           queryString = params.join('&');
           endpointUrl = this.getEndpoint('agreements').url;
-          
+
           return endpointUrl + '?' + queryString;
         },
 
@@ -598,26 +560,6 @@
           return [];
         },
 
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
         _dropdownSelected: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
@@ -638,7 +580,6 @@
           }
         },
 
-
 //        _addDays: function(date, numDays) {
 //          if (date instanceof Date && date !== 'Invalid Date') {
 //            date.setDate(date.getDate() + numDays);
@@ -654,51 +595,9 @@
 //          }
 //        },
 
-        // List fade in fade out effect
-        _agreementsChanged: function(filteredAgreements) {
-          var classList = this.$.list.classList;
-          if (filteredAgreements instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
-
-        // TODO: refactor this, it is identical with partner-lists _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
-        },
-
         // verify date and prettify or not
         _checkAndShowAgreementDate: function(dateString) {
           return this.getDisplayValue(dateString, true);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredAgreements will be empty.
-         * Because of this we need to refilter after agreements data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredAgreements === 'undefined' ||
-              (Array.isArray(this.filteredAgreements) && this.filteredAgreements.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger agreements filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
         },
 
       });

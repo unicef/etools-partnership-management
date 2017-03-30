@@ -33,7 +33,7 @@
         width: 100%;
         padding: 7px 0;
 
-        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
@@ -178,7 +178,7 @@
         indicatorDialogDataReceived: function(data) {
           var actionParams = data.actionParams;
           var indicator = data.indicatorData;
-          for (var i=0; i<this.dataItems.length; i++) {
+          for (var i = 0; i < this.dataItems.length; i++) {
             //search expected result item by output id
             if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
               var indicatorPaths = 'dataItems.' + i + '.ll_results.' +

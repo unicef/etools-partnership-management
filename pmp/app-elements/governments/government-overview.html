@@ -8,25 +8,20 @@
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/list-styles.html">
-
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/object-databind-behavior.html">
 
 <dom-module id="government-overview">
-  <template>  
-    <style include="page-layout-styles grid-layout-styles shared-styles list-styles ">
+  <template>
+    <style include="page-layout-styles grid-layout-styles shared-styles data-table-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -48,7 +43,16 @@
          margin-bottom: 20px;
       }
       .text-right {
-        margin-left: auto;
+         margin-left: auto;
+      }
+      .text-flex-right {
+         text-align: right;
+         justify-content: flex-end;
+      }
+      etools-data-table-column.text-flex-right,
+      .col-data.text-flex-right {
+         padding-right: 0 !important;
+         padding-left: 15px;
       }
       .padded-top {
         padding: 10px 0;
@@ -56,8 +60,11 @@
       .padded-right {
         padding-right: 15px;
       }
+      .padded-left {
+        padding-left: 15px
+      }
       .grey-box {
-        background-color: #dadada;
+        background-color: var(--medium-theme-background-color);
         font-size: 120%;
       }
       .yellow-box {
@@ -73,8 +80,10 @@
           padding: 10px 0 25px;
         }
       }
-
-      .implementation-status-no-fc { 
+      .truncate {
+        max-width: 225px;
+      }
+      .implementation-status-no-fc {
         padding: 0 24px;
       }
       .no-fc-output-name {
@@ -85,26 +94,30 @@
         color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
         @apply(--header-title);
       }
+
     </style>
     <div id="pageContent">
       <paper-material elevation="1" id="top-container">
         <div class="row-h flex-c">
           <div class="col col-12 block">
-              <iron-label for="cp_outputs_list"> 
-                Cp Output(s)                                
+              <iron-label for="cp_outputs_list">
+                Cp Output(s)
               </iron-label>
               <br/>
               <div class="content" id="cp_outputs_list">
+                <template is="dom-if" if="[[!cpOutputNames.length]]">
+                 <strong>-</strong>
+                </template>
                 <template is="dom-repeat" items="[[cpOutputNames]]" as="cpOut">
                     <strong> [[ cpOut ]] </strong> <br/>
                 </template>
-              </div>              
+              </div>
           </div>
-        </div>       
-        
+        </div>
+
         <div class="row-h flex-c">
           <div class="col col-6 block">
-              <iron-label for="govt_partner"> 
+              <iron-label for="govt_partner">
                 Government Partner
               </iron-label>
               <br />
@@ -113,130 +126,140 @@
               </div>
           </div>
           <div class="col col-6 block">
-              <iron-label for="country_programme"> 
+              <iron-label for="country_programme">
                 Country Programme
               </iron-label>
               <br />
               <div class="content" id="country_programme">
                 [[countryProgramme.label]]
-              </div>                            
+              </div>
           </div>
-        </div>        
+        </div>
       </paper-material>
-      <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
+ <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
 
+        <template is="dom-if" if="[[!intervention.implementation_status.length]]">
+          <div class="row-h">
+            <div class="col col-12 padded-left">
+              <p>No records to display</p>
+            </div>
+          </div>
+        </template>
   <!-- Start -->
         <template is="dom-repeat" items="[[intervention.implementation_status]]" as="status">
          <template is="dom-if" if="[[_fcs_exist(status.fc_records)]]">
-          <data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
-            <data-table-column class="col-2" field="fc_number">
+          <etools-data-table-header id="listHeader" label="[[status.cp_name]]" no-collapse>
+            <etools-data-table-column class="col-2" field="fc_number">
                 FC#
-            </data-table-column>
-            <data-table-column class="col-2" field="fc_date" >
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2" field="fc_date" >
                 FC Date
-            </data-table-column>
-            <data-table-column class="col-4" field="fc_title">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-4" field="fc_title">
                 FC Title
-            </data-table-column>
-            <data-table-column class="col-2" field="actual_ammount">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2 text-flex-right" field="actual_ammount">
                 Commitment Amount $
-            </data-table-column>
-            <data-table-column class="col-2" field="outstanding_ammount">
+            </etools-data-table-column>
+            <etools-data-table-column class="col-2 text-flex-right" field="outstanding_ammount">
                 Outstanding $
-            </data-table-column>
-          </data-table-header>
+            </etools-data-table-column>
+          </etools-data-table-header>
 
-          <template is="dom-repeat" items="[[status.fc_records]]" as="record">
-
-            <data-table-row no-collapse>
+          <template is="dom-if" if="[[!status.fc_records.length]]">
+            <etools-data-table-row no-collapse>
               <div slot="row-data">
-                <a class="col-data col-2 truncate" href="#" title="[[record.fc_number]]">
-                    [[record.fc_ref_number]]
-                </a>
-                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.fc_date)]]">
-                    [[_checkAndShowDate(record.due_date)]]
-                </span>
-                <span class="col-data col-4" title="[[record.fc_title]]">
-                    [[record.line_item_text]]
-                </span>
-                <span class="col-data col-2" title="[[record.actual]]">
-                    [[record.commitment_amount]]
-                </span>
-                <span class="col-data col-2" title="[[record.outstanding]]">
-                    <!-- [[record.outstanding]] -->
-                    Missing
+                <span class="col-data col-12">
+                    No records to display
                 </span>
               </div>
-            </data-table-row>
+            </etools-data-table-row>
           </template>
-          <div class="row-h flex-c padded-top">
+          <template is="dom-repeat" items="[[status.fc_records]]" as="record">
+
+            <etools-data-table-row no-collapse>
+              <div slot="row-data">
+                <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
+                    [[record.fc_ref_number]]
+                </a>
+                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.due_date)]]">
+                    [[_checkAndShowDate(record.due_date)]]
+                </span>
+                <span class="col-data col-4" title="[[record.line_item_text]]">
+                    [[record.line_item_text]]
+                </span>
+                <span class="col-data col-2 text-flex-right" title="[[record.commitment_amount]]">
+                    [[record.commitment_amount]]
+                </span>
+                <span class="col-data col-2 text-flex-right" title="Coming soon">
+                     Coming soon
+                     <!--[[record.outstanding]]-->
+                </span>
+              </div>
+            </etools-data-table-row>
+          </template>
+          <div class="row-h flex-c padded-top" hidden$="[[!status.fc_records.length]]">
             <div class="col col-6">
             </div>
             <div class="col col-2">
               <strong class="text-right padded-top"> Output Total </strong>
             </div>
             <div class="col col-4 padded-right">
-              <paper-material elevation="1" class="yellow-box"> 
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <span><strong>[[ status.actual_sum ]]</strong></span>
               </paper-material>
-            
-              <paper-material elevation="1" class="yellow-box"> 
-                <!-- <span><strong>[[ status.outstanding_sum ]]</strong></span> -->
-                <span><strong>Missing</strong></span>
+
+              <paper-material elevation="1" class="yellow-box text-flex-right">
+                <strong>Coming soon</strong>
+                <!--<span><strong>[[ status.outstanding_sum ]]</strong></span>-->
               </paper-material>
             </div>
           </div>
           </template>
           <template is="dom-if" if="[[!_fcs_exist(status.fc_records)]]">
-            <div class="implementation-status-no-fc" 
+            <div class="implementation-status-no-fc"
                   hidden$="[[_fcs_exist(status.fc_records]]">
-                    <span class="no-fc-output-name">{{status.cp_name}}:</span> 
-                    <br> 
+                    <span class="no-fc-output-name">{{status.cp_name}}:</span>
+                    <br>
                     <span class="no-fc-message">No FCs Available</span>
             </div>
           </template>
         </template>
-        
+
   <!-- End -->
 
-          <div class="row-h flex-c padded-top grey-box">
+          <div class="row-h flex-c padded-top grey-box" hidden$="[[!intervention.implementation_status.length]]">
             <div class="col col-4">
             </div>
             <div class="col col-4">
               <strong class="text-right padded-top">Overall Total for Government Partner </strong>
             </div>
             <div class="col col-4 padded-right">
-              <paper-material elevation="1" class="yellow-box"> 
+              <paper-material elevation="1" class="yellow-box text-flex-right">
                 <span><strong>[[ intervention.actual_total_sum ]]</strong></span>
               </paper-material>
-            
-              <paper-material elevation="1" class="yellow-box"> 
-                <!-- <span><strong>[[ intervention.outstanding_total_sum ]]</strong></span> -->
-                <span><strong>Missing</strong></span>
+              <paper-material elevation="1" class="yellow-box text-flex-right">
+                <strong>Coming soon</strong>
+                 <!--<span><strong>[[ intervention.outstanding_total_sum ]]</strong></span>-->
               </paper-material>
             </div>
           </div>
-            
-        <!--</template>   -->
-      </etools-content-panel>
-      
-    </div>
-    <div id="sidebar" hidden$="[[!editMode]]">
-        <government-status on-save-partnership="_validateSave"></government-status>
+    </etools-content-panel>
+
     </div>
 
   </template>
 
   <script>
     Polymer({
-      is : "government-overview",
+      is: 'government-overview',
       behaviors: [
         pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
         pmpBehaviors.CommonGeneralBehavior,
         pmpBehaviors.ObjectDatabindBehavior
       ],
       observers: [
-        
+
       ],
       properties: {
         intervention: {
@@ -249,9 +272,6 @@
         },
         cpOutputNames: {
           type: Array,
-        },
-        cpOutputsHelper: {
-          type: Object,
         },
         allPartners: {
           type: Array,
@@ -268,40 +288,35 @@
           type: Object
         }
      },
+     observes: [
+       '_interventionChanged(intervention.*)'
+     ],
 
-     _interventionChanged : function(intervention){
-       if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {    
-         if(!intervention.implementation_status){
+     _interventionChanged: function() {
+       if (this.intervention && typeof this.intervention === 'object' && Object.keys(this.intervention).length > 0) {
+         if (!this.intervention.implementation_status) {
            this.set('intervention.implementation_status', []);
          }
 
-         this._prepareCpOutputs(); 
+         this._prepareCpOutputs();
          this._prepareInterventionStatusData();
          this._findProgramme();
-         this._findPartner(); 
+         this._findPartner();
        }
-       this.fire('global-loading', {active:false});        
+       this.fire('global-loading', {active: false});
      },
 
-      _prepareCpOutputs: function() {       
-        var cpOutputNames   = [];
-        var cpOutputsHelper = {};      
-        
-        this.allCpOutputs.forEach(function(elem){          
-          cpOutputsHelper[elem.value] = elem.label;                      
-        });
-        if(_.has(this.intervention, 'implementation_status')){
-          this.intervention.implementation_status.forEach(function(elem){
-            cpOutputNames.push(cpOutputsHelper[elem.cp_output]);
-          });
+      _prepareCpOutputs: function() {
+        var cpOutputNames = [];
+        if (_.has(this.intervention, 'implementation_status')) {
+          this.intervention.implementation_status.forEach(function(elem) {
+            cpOutputNames.push(this._getCpOutputName(elem.cp_output));
+          }.bind(this));
         }
-
-        
         this.set('cpOutputNames', cpOutputNames);
-        this.set('cpOutputsHelper', cpOutputsHelper);
       },
-      _fcs_exist: function(fc_records) {
-        if ((!Array.isArray(fc_records)) || (fc_records.length === 0)) {
+      _fcs_exist: function(fcRecords) {
+        if (!Array.isArray(fcRecords) || fcRecords.length === 0) {
           return false;
         }
         return true;
@@ -311,32 +326,31 @@
         var countryProgrammes = [];
         var currentCpId = this.intervention.country_programme;
 
-        countryProgrammes = this.allCountryProgrammes.filter(function(elem){
-          return (elem.value == currentCpId);
-        }); 
+        countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
+          return (elem.value === currentCpId);
+        });
 
         this.set('countryProgramme', countryProgrammes.pop());
       },
-      
+
       _findPartner: function() {
         var partners = [];
         var currentPartnerId = this.intervention.partner;
 
-        partners = this.allPartners.filter(function(elem){
-          return (elem.value == currentPartnerId);
+        partners = this.allPartners.filter(function(elem) {
+          return (elem.value === currentPartnerId);
         });
 
         this.set('partner', partners.pop());
       },
 
       _prepareInterventionStatusData: function() {
-        var cpOutputsHelper = this.cpOutputsHelper;
         var actualIndividualSum = 0;
         var outstandingIndividualSum = 0;
         var actualTotalSum = 0;
         var outstandingTotalSum = 0;
 
-        if (_.has(this.intervention,'implementation_status')) {
+        if (_.has(this.intervention, 'implementation_status')) {
           this.intervention.implementation_status.forEach(function(elem) {
             actualIndividualSum = 0;
             outstandingIndividualSum = 0;
@@ -352,18 +366,25 @@
             elem.actual_sum = actualIndividualSum;
             elem.outstanding_sum = outstandingIndividualSum;
 
-            elem.cp_name = cpOutputsHelper[parseInt(elem.cp_output)];
-          });
+            elem.cp_name = this._getCpOutputName(parseInt(elem.cp_output));
+          }.bind(this));
         }
 
         this.set('intervention.actual_total_sum', actualTotalSum);
-        this.set('intervention.outstanding_total_sum', outstandingTotalSum);          
+        this.set('intervention.outstanding_total_sum', outstandingTotalSum);
       },
-
+      _getCpOutputName: function(cpoId) {
+        for (var key in this.allCpOutputs) {
+          if (this.allCpOutputs[key].id === cpoId) {
+            return this.allCpOutputs[key].name;
+          }
+        }
+        return null;
+      },
       _checkAndShowDate: function(dateString) {
         return this.getDisplayValue(dateString, true);
       },
 
-  })
+  });
   </script>
 </dom-module>

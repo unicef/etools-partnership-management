@@ -124,6 +124,7 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
+              allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
@@ -282,6 +283,13 @@
         return false;
       },
 
+      /**
+       * Temporary permission for PM
+       */
+      _allowPmToEditRegardlessStatus: function(permissions) {
+        return typeof permissions === 'object' && permissions.partnershipManager === true;
+      },
+
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
         this.$.agreementData.saveAgreement(event.detail, this._newAgreementSaved);
@@ -314,7 +322,7 @@
         // go to new agreement
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         this.set('selectedAgreementId', 0);
-        this.fire('update-main-path', {path: 'agreements/new-agreement'}, {bubbles: false});
+        this.fire('update-main-path', {path: 'agreements/new-agreement'});
       },
       _observeRouteDataId: function(id) {
         this.set('selectedAgreementId', id);

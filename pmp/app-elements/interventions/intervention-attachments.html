@@ -37,11 +37,11 @@
         --etools-file-upload-button-paper-btn: {
           font-weight: bold;
           padding: 5px 10px;
-          background-color: #3A94FF; /* TODO: replace with app-theme var */
+          background-color: var(--secondary-color);
         };
 
         --etools-file-upload-button: {
-          color: #fff !important; /* TODO: replace with app-theme var */
+          color: var(--light-primary-text-color, #FFFFFF) !important;
           max-width: 200px;
           margin-left: 25px;
           margin-top: 25px !important;
@@ -70,11 +70,11 @@
       </div>
 
       <div class="row-h flex-c">
-        <etools-file id="attachments" 
-          files="{{attachments}}" 
-          file-model="[[fileModel]]" 
+        <etools-file id="attachments"
+          files="{{attachments}}"
+          file-model="[[fileModel]]"
           file-types=[[fileTypes]]
-          label="Attachments" 
+          label="Attachments"
           multiple activate-file-types use-delete-events
           readonly$=[[!attachmentEditMode]]></etools-file>
       </div>
@@ -127,7 +127,10 @@
         },
 
         _attachmentsChanged: function(attachments) {
-          if (Array.isArray(attachments) && attachments.length > 0 && !this._hasPath(attachments[0]) && !this.preparedAttachments) {
+          if (Array.isArray(attachments) &&
+              attachments.length > 0 &&
+              !this._hasPath(attachments[0]) &&
+              !this.preparedAttachments) {
             // this should run only one time when attachments(intervention.attachments) are provided
             this.set('preparedAttachments', true);
             this.set('attachments', attachments.map(function(attachment) {
@@ -140,14 +143,22 @@
                 file_name: this._getFileName(attachment),
                 path: this._getPath(attachment)
               };
-            }.bind(this)));  
+            }.bind(this)));
           }
         },
         _setNewEditMode: function() {
           if (!this.editMode) {
             this.set('attachmentEditMode', this.editMode);
             return;
-          };
+          }
+
+          if (this.permissions.partnershipManager) {
+            // TODO: revise this temporary permission
+            // temporary edit permission for PM regardless status
+            this.set('attachmentEditMode', true);
+            return;
+          }
+
           if (!(this.permissions.partnershipManager || this.permissions.PME) &&
                 (!this.intervention.status || this.intervention.status !== 'draft')) {
             this.set('attachmentEditMode', false);
@@ -155,8 +166,6 @@
             this.set('attachmentEditMode', true);
           }
           this.updateStyles();
-
-
         },
         _getPath: function(attachment) {
           if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
@@ -185,7 +194,7 @@
         _hideNoAttachmentsWarning: function(length) {
           return length > 0;
         },
-        
+
       });
 
     })();

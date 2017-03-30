@@ -14,7 +14,7 @@
       }
 
       app-header {
-        background-color: #2A3B46;  /* TODO: replace with app-theme var */
+        background-color: var(--header-bg-color);
       }
 
       iron-pages[role="main"] {
@@ -33,12 +33,7 @@
       #pageContent {
         @apply(--layout-flex);
         width: 100%;
-        /*max-width: calc(100% - 225px);*/
       }
-
-      /*#main #pageContent {*/
-        /*max-width: 100%;*/
-      /*}*/
 
       #sidebar {
         @apply(--layout);
@@ -50,8 +45,8 @@
       }
 
       .page-top-content {
-        background-color: #ffffff; /* TODO: replace with app-theme var */
-        border-bottom: 1px solid #bdbdbd; /* TODO: replace with app-theme var */
+        background-color: var(--primary-background-color);
+        border-bottom: 1px solid var(--darker-divider-color);
         padding: 0 25px;
         min-height: 85px;
       }
@@ -116,11 +111,11 @@
       }
 
       .page-top-content paper-tabs {
-        --paper-tabs-selection-bar-color: #00aeef; /* TODO: replace with app-theme var */
+        --paper-tabs-selection-bar-color: var(--secondary-color);
       }
 
       .page-top-content paper-tab {
-        --paper-tab-ink: #00aeef; /* TODO: replace with app-theme var */
+        --paper-tab-ink: var(--secondary-color);
         padding: 0 25px;
       }
 
@@ -130,7 +125,7 @@
       }
 
       .page-top-content paper-tab.iron-selected .tab-content {
-        color: #00aeef; /* TODO: replace with app-theme var */
+        color: var(--secondary-color);
       }
 
       .content-section:not(:first-of-type) {

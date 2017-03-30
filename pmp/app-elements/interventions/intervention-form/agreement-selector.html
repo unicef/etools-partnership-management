@@ -48,34 +48,34 @@
     </div>
   </template>
 
-	<script>
-		(function() {
-			'use strict';  
-			Polymer({
-				is: 'agreement-selector',
-				behaviors: [
-					pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
-				],
-				properties: {
-					agreementId: {
-						type: Number,
-						observer: '_agreementChanged',
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'agreement-selector',
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+        ],
+        properties: {
+          agreementId: {
+            type: Number,
+            observer: '_agreementChanged',
             notify: true
-					},
-					filteredAgreements: {
-						type: Array,
-						value: []
-					},
-					partnersDropdownData: {
-						type: Array,
-						statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
-					},
-					agreements: {
-						type: Array,
-						statePath: 'agreementsList'
-					},
+          },
+          filteredAgreements: {
+            type: Array,
+            value: []
+          },
+          partnersDropdownData: {
+            type: Array,
+            statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
+          },
+          agreements: {
+            type: Array,
+            statePath: 'agreementsList'
+          },
           partnerId: {
-					  type: Number,
+            type: Number,
             notify: true,
             observer: '_partnerSelected'
           },
@@ -89,10 +89,10 @@
             value: false
           },
           interventionId: Number
-				},
-				_agreementChanged: function(agreementId) {
-					var partnerSelector = this.$.partner;
-					var agreementSelector = this.$.agreements;
+        },
+        _agreementChanged: function(agreementId) {
+          var partnerSelector = this.$.partner;
+          var agreementSelector = this.$.agreements;
 //          if (!agreementId) {
 //            partnerSelector.value = null,
 //            agreementSelector.value = null;
@@ -107,22 +107,22 @@
           });
           this.set('selectedAgreement', agreement);
 
-          if (agreement && typeof agreement === 'object' 
+          if (agreement && typeof agreement === 'object'
               && agreement.partner && this.partnerId !== agreement.partner) {
             var partner = _.find(this.partnersDropdownData, function(partner) {
               return partner.id === agreement.partner;
             });
             if (!partner) {
-              this.fire('toast', { text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+              this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
               // this._resetSelectorData(partnerSelector, agreementSelector);
               return;
             }
             this.set('partnerId', partner.id);
           }
-				},
+        },
 
-				_filterAgreements: function(partnerId) {
-					// this.$.agreements.set('value', null);
+        _filterAgreements: function(partnerId) {
+          // this.$.agreements.set('value', null);
           if (!partnerId) {
             this.set('filteredAgreements', []);
             return;
@@ -133,24 +133,24 @@
             this.set('agreementId', null);
           }
 
-					// set filtered agreements based on this
-					var agreements = _.filter(this.agreements, function(agreement) {
-					  if (this.interventionId > 0) {
-					    // existing intervention
+          // set filtered agreements based on this
+          var agreements = _.filter(this.agreements, function(agreement) {
+            if (this.interventionId > 0) {
+              // existing intervention
               return agreement.partner === partnerId;
             } else {
-					    // new intervention
+              // new intervention
               return agreement.partner === partnerId &&
                   ['suspended', 'terminated'].indexOf(agreement.status) === -1;
             }
 
-					}.bind(this));
-					this.set('filteredAgreements', agreements);
-				},
-				_partnerSelected: function(partnerId) {
-					// clear agreementSelection
-					this._filterAgreements(partnerId);
-				},
+          }.bind(this));
+          this.set('filteredAgreements', agreements);
+        },
+        _partnerSelected: function(partnerId) {
+          // clear agreementSelection
+          this._filterAgreements(partnerId);
+        },
 
 //        _resetSelectorData: function(partnerDropdown, agreementDropdown) {
 //          this.set('agreementId', null);
@@ -177,7 +177,7 @@
           return valid;
         }
 
-			});
-		})();
-	</script>
+      });
+    })();
+  </script>
 </dom-module>

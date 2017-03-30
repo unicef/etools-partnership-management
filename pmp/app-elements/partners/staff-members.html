@@ -23,14 +23,14 @@
         display: block;
         width: 100%;
 
-        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
 
         --etools-checkable-input-font-size: 16px;
         --etools-checkable-input-label: {
-          color: var(--dark-primary-text-color);
+          color: var(--primary-text-color);
           @apply(--layout-vertical);
           @apply(--layout-center-justified);
         };

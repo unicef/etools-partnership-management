@@ -57,7 +57,7 @@
       }
 
       .icon-wrapper {
-        background-color: #9D9D9D; /* TODO: replace with app-theme var */
+        background-color: var(--medium-icon-color);
         @apply(--layout-vertical);
         @apply(--layout-center-justified);
         width: 24px;
@@ -65,7 +65,7 @@
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         border-radius: 50%;
-        color: #ffffff;
+        color: var(--light-primary-text-color, #FFFFFF);
       }
 
       .icon-wrapper iron-icon {
@@ -87,15 +87,15 @@
         margin-top: 15px;
         margin-bottom: 15px;
         text-transform: capitalize;
-        color: #9D9D9D; /* TODO: replace with app-theme var */
+        color: var(--medium-primary-text-color);
       }
 
       .status-container.active .icon-wrapper {
-        background-color: #3A94FF; /* TODO: replace with app-theme var */
+        background-color: var(--status-active-color);
       }
 
       .status-container.active.suspended .icon-wrapper {
-        background-color: #F7A14B; /* TODO: replace with app-theme var */
+        background-color: var(--status-suspended-color);
       }
 
       .status-container.active.suspended .icon-wrapper {
@@ -116,15 +116,15 @@
       }
 
       .status-container.active.suspended .icon-wrapper iron-icon {
-        background-color: #fff;
-        color: #F7A14B; /* TODO: replace with app-theme var */
+        background-color: var(--primary-background-color, #FFFFFF);
+        color: var(--status-suspended-color);
         margin-left: -6px;
         width: 100%;
         height: 100%;
       }
 
       .status-container.active.terminated .icon-wrapper iron-icon {
-        color: #E54F2E; /* TODO: replace with app-theme var */
+        color: var(--status-terminated-color);
       }
 
       .status-container.active .status,
@@ -137,7 +137,7 @@
         margin: 25px -25px 0 -25px;
       }
       .status-container.completed .icon-wrapper {
-        background: #75c300; /* TODO: replace with app-theme var */;
+        background: var(--status-completed-color);
       }
       .status-container.completed .icon-wrapper .status-nr,
       .status-container:not(.completed) iron-icon[icon="check"] {
@@ -145,7 +145,7 @@
       }
 
       iron-icon[icon="check"] {
-        color: #fff;
+        color: var(--light-primary-text-color, #FFFFFF);
       }
       iron-icon[icon="report-problem"] {
         --iron-icon-height: 24px;
@@ -259,7 +259,8 @@
     (function() {
       'use strict';
 
-      // TODO: Very important! this is 99% the same as agreement status. Check if the statuses are the same and refactor this 2 elements
+      // TODO: Very important! this is 99% the same as agreement status.
+      // Check if the statuses are the same and refactor this 2 elements
 
       Polymer({
         is: 'intervention-status',
@@ -313,7 +314,7 @@
 
         _getFirstStatusWrapperClass: function(status) {
           if (this._statusIs(status, 'draft') || this._statusIs(status, 'cancelled')) {
-            return 'active'
+            return 'active';
           }
           return 'completed';
         },
@@ -333,13 +334,13 @@
 
         _getThirdStatusWrapperClass: function(status) {
           if (this._statusIs(status, 'implemented')) {
-            return 'active'
+            return 'active';
           }
           return '';
         },
 
         _showDraft: function(status) {
-          if(this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
+          if (this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
             return true;
           }
           return false;

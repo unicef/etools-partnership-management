@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.AjaxServerErrorsBehavior */
   pmpBehaviors.AjaxServerErrorsBehavior = {
 
     properties: {
@@ -21,6 +22,22 @@
         value: null,
         observer: '_errorEventNameChange'
       }
+    },
+
+    tryGetResponseErrorMsg: function(response) {
+      var errMsg = 'An error occured!';
+      try {
+        if (response.detail.request.detail.request.response) {
+          return response.detail.request.detail.request.response;
+        } else {
+          // response.detail.request.detail.request.response could be null for 500 server errors,
+          // we need to avoid returning null here
+          return errMsg;
+        }
+      } catch (ex) {
+        console.warn(ex);
+      }
+      return errMsg;
     },
 
     handleErrorResponse: function(response) {
@@ -46,7 +63,7 @@
                   this.push('serverErrors', 'Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
                 }
               } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                for(var key in errors[errField]) {
+                for (var key in errors[errField]) {
                   this.push('serverErrors', errors[errField][key]);
                 }
               }
@@ -54,7 +71,7 @@
           }
         }
       }
-
+      this.serverErrors = this.serverErrors ? this.serverErrors : [];
       if (this.useToastEvent) {
         if (this.serverErrors.length > 1) {
           errorMessage = this.serverErrors.join('\n');

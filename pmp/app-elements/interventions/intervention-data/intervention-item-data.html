@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
+<link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 
 <dom-module id="intervention-item-data">
@@ -16,7 +17,6 @@
   <script>
     (function() {
       'use strict';
-
       Polymer({
 
         is: 'intervention-item-data',
@@ -40,7 +40,6 @@
 
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
-
         },
 
         attached: function() {
@@ -60,7 +59,7 @@
          */
         _handleResponse: function(response) {
           this._setIntervention(response.detail);
-          
+
           // update the interventions list in dexieDB
           var mappedResponse = this._formatResponseDataForDexie(response.detail);
           etoolsAppConfig.db.table('interventions').put(mappedResponse);
@@ -136,7 +135,7 @@
             if (list[i][property] instanceof File) {
               hasF = true;
             } else {
-              delete list[i][property]
+              delete list[i][property];
             }
           }
           return hasF;
@@ -211,7 +210,7 @@
                 withUpload = true;
                 prepareMultipartData = true;
               } else {
-                delete intervention.prc_review_document
+                delete intervention.prc_review_document;
               }
 
               if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
@@ -232,13 +231,13 @@
           }
         },
 
-        _formatResponseDataForDexie: function(responseDetail) {        
+        _formatResponseDataForDexie: function(responseDetail) {
           var dexieObject = {};
           dexieObject.sectors = [];
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
           dexieObject.cso_contribution = 0;
-          
+
           dexieObject.id = responseDetail.id;
           dexieObject.hrp = responseDetail.hrp;
           dexieObject.end = responseDetail.end;
@@ -262,9 +261,9 @@
 
           responseDetail.result_links.forEach(function(elem) {
             dexieObject.cp_outputs.push(elem.cp_output);
-          });          
+          });
 
-          return dexieObject;          
+          return dexieObject;
         },
 
       });

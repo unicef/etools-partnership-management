@@ -47,15 +47,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-tap-highlight" content="no">
 
     <script>
-      UserVoice = window.UserVoice || [];
-      (function () {
+      var UserVoice = window.UserVoice || [];
+      (function() {
         var uv = document.createElement('script');
         uv.type = 'text/javascript';
         uv.async = true;
         uv.src = '//widget.uservoice.com/s74dylVlP3CUCbVw6famA.js';
         var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(uv, s)
+        s.parentNode.insertBefore(uv, s);
       })();
+
       UserVoice.push(['addTrigger', {}]);
       // Setup Polymer options
       window.Polymer = {
@@ -130,8 +131,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 400;
         line-height: 1.5;
         min-height: 100vh;
-        background-color: #EEEEEE;
-        color: rgba(0, 0, 0, 0.87);
+        background-color: var(--medium-theme-background-color, #eeeeee);
+        color: var(--primary-text-color);
       }
     </style>
   </head>

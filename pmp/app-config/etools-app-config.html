@@ -20,7 +20,8 @@ App global configuration
       interventions: 'id, number, partner_name, document_type, ' +
         'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
       user: 'id',
-      governments: 'number, country_programme, country_programme_name, cp_outputs, partner, partner_name, sectors, unicef_focal_points, years'
+      governments: 'id, number, country_programme, country_programme_name, cp_outputs, partner, ' +
+        'partner_name, sectors, unicef_focal_points, years'
     });
 
     var etoolsAppConfig = {
@@ -28,6 +29,7 @@ App global configuration
       db: etoolsCustomDexieDb,
 
       // globals
+      /** @polymerBehavior etoolsAppConfig.globals */
       globals: {
 
         baseSite: window.location.origin,
@@ -217,6 +219,9 @@ App global configuration
         // if this caching key is missing then the data will be cached with the url as key
         // cachingKey: 'partnerDetails'
       },
+      createPartner: {
+        template: '/api/v2/partners/add/?vendor=<%=vendor%>',
+      },
       partnerStaffMembers: {
         template: '/api/v2/partners/<%=id%>/staff-members/',
       },
@@ -256,35 +261,35 @@ App global configuration
       governments: {
         cachingKey: 'governments',
         exp: 5 * 60 * 1000, // 5min
-        url : '/api/v2/government_interventions/'
+        url: '/api/v2/government_interventions/'
       },
       governmentsDetails: {
-        template : '/api/v2/government_interventions/<%=id%>/'
+        template: '/api/v2/government_interventions/<%=id%>/'
       },
       countryProgrammes: {
         cachingKey: 'countryProgrammes',
         exp: 5 * 60 * 1000, // 5min
-        url : '/api/v2/reports/countryprogramme/'
+        url: '/api/v2/reports/countryprogramme/'
       },
       sections: {
-          url : '/api/sections',
+          url: '/api/sections',
           exp: 6 * 60 * 60 * 1000,
           cachingKey: 'sections'
       },
       ramIndicators: {
         template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
-      governmentIntResultDelete : {
-        template : '/api/v2/government_interventions/results/<%=id%>/'
+      governmentIntResultDelete: {
+        template: '/api/v2/government_interventions/results/<%=id%>/'
       },
       governmentResultActivityDelete: {
-        template : '/api/v2/government_interventions/results/activities/<%=id%>/'
+        template: '/api/v2/government_interventions/results/activities/<%=id%>/'
       },
       monitoringVisits: {
         template: '/api/t2f/travels/activities/<%=id%>/',
       },
-      sectorLocationsDelete : {
-        template : '/api/v2/interventions/sector-locations/<%=id%>/'
+      sectorLocationsDelete: {
+        template: '/api/v2/interventions/sector-locations/<%=id%>/'
       }
     };
     /* jshint ignore:start */
