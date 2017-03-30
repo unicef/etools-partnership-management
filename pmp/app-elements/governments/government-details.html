@@ -60,7 +60,7 @@ it doesn't need to be included in element's style -->
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Government Partner"
-                  value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.partner, partnersDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -70,8 +70,8 @@ it doesn't need to be included in element's style -->
                                                      label="Government Partner"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.partner}}"
+                                                     update-selected
                                                      error-message="Please select a partner"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -81,7 +81,7 @@ it doesn't need to be included in element's style -->
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Country Programme"
-                  value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -90,8 +90,8 @@ it doesn't need to be included in element's style -->
                                                      label="Country Programme"
                                                      placeholder="&#8212;"
                                                      options="[[countryProgrammeDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.country_programme}}"
+                                                     update-selected
                                                      error-message="Please select a country programme"
                                                      required>
               </etools-searchable-multiselection-menu>

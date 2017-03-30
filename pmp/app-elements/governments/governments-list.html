@@ -74,6 +74,9 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
+                  custom-object-options="[[filter.customObjectOptions]]"
+                  option-value="[[filter.optionValue]]"
+                  option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
@@ -195,7 +198,6 @@
   <script>
     (function() {
       'use strict';
-
       var _governmentsLastNavigated = null;
 
       Polymer({
@@ -335,12 +337,18 @@
               multiple: true,
               selectionOptions: [], // will be populated when the partners data is received
               alreadySelected: [],
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               path: 'selectedPartners'
             },
             {
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
@@ -349,6 +357,9 @@
               filterName: 'Country Programme Output',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: true,
+              optionValue: 'id',
+              optionLabel: 'name',
               selectionOptions: this.cpOutputs,
               alreadySelected: [],
               path: 'selectedCpOutputs'
@@ -357,6 +368,9 @@
               filterName: 'Sectors',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
@@ -365,6 +379,9 @@
               filterName: 'Years',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.years,
               alreadySelected: [],
               path: 'selectedYears'
@@ -480,7 +497,7 @@
 
               (this.selectedCpOutputs && this.selectedCpOutputs.length)
                   ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.value;
+                return cpOutput.id;
               }) : [],
 
               (this.selectedSectors && this.selectedSectors.length)
@@ -513,7 +530,7 @@
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-              return cpOutput.value;
+              return cpOutput.id;
             }).join('|'));
           }
 
@@ -606,7 +623,7 @@
               return parseInt(cpOutStrValue, 10);
             });
             return this.cpOutputs.filter(function(cpo) {
-              return cpOut.indexOf(parseInt(cpo.value, 10)) > -1;
+              return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
           }
           return [];

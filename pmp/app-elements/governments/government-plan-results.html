@@ -103,8 +103,11 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[filteredCpOutputDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="[[_mapItemFromId(result.result,filteredCpOutputDropdownData)]]"
+                         option-value="id"
+                         option-label="name"
+                         custom-object-options
+                         selected="{{result.result}}"
+                         update-selected
                          error-message="Please select a CP Output. If there aren't any to choose from, check the Country Programme."
                          required>
                 </etools-searchable-multiselection-menu>
@@ -126,8 +129,8 @@
                              class="fixed-width"
                              placeholder="&#8212;"
                              options="[[yearOptions]]"
-                             on-value-change="_handleValueChange"
-                             value="[[_mapItemFromId(result.year,yearOptions)]]"
+                             selected="{{result.year}}"
+                             update-selected
                              error-message="Please select a year"
                              disabled="[[_yearsEmpty(yearOptions)]]"
                              required>
@@ -136,7 +139,7 @@
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="Year"
-                    value="[[_mapItemFromId(result.year,yearOptions,'true')]]"
+                    value="[[_mapItemFromValue(result.year, yearOptions, 'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -198,9 +201,9 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectorsDropdownData]]"
-                       on-value-change="_handleValueChange"
                        error-message="Please select a programme(s)/sector(s)"
-                       value="[[_mapItemFromId(result.sectors,sectorsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sectors}}"
                        multi>
                 </etools-searchable-multiselection-menu>
               </template>
@@ -221,8 +224,8 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectionsDropdownData]]"
-                       on-value-change="_handleValueChange"
-                       value="[[_mapItemFromId(result.sections,sectionsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sections}}"
                        error-message="Please select a section(s)"
                        multi>
                 </etools-searchable-multiselection-menu>
@@ -246,8 +249,8 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[unicefUsersDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="{{_mapItemFromId(result.unicef_managers,unicefUsersDropdownData)}}"
+                         update-selected
+                         selected="{{result.unicef_managers}}"
                          error-message="Please select a UNICEF manager"
                          multi
                          required>
