@@ -102,17 +102,17 @@
                          label="CP Output"
                          index="[[index]]"
                          placeholder="&#8212;"
-                         options="[[cpOutputDropdownData]]"
+                         options="[[filteredCpOutputDropdownData]]"
                          on-value-change="_handleValueChange"
-                         value="[[_mapItemFromId(result.result,cpOutputDropdownData)]]"
-                         error-message="Please select a CP Output"
+                         value="[[_mapItemFromId(result.result,filteredCpOutputDropdownData)]]"
+                         error-message="Please select a CP Output. If there aren't any to choose from, check the Country Programme."
                          required>
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="CP Output"
-                    value="[[_mapItemFromId(result.result,cpOutputDropdownData,'true')]]"
+                    value="[[_mapItemFromId(result.result,filteredCpOutputDropdownData,'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -291,9 +291,17 @@
                 type: Array,
                 notify: true,
               },
+              cpWbs: {
+                type: String,
+                value: ''
+              },
               cpOutputDropdownData: {
                 type: Array,
+                value: [],
                 statePath: 'cpOutputs'
+              },
+              filteredCpOutputDropdownData: {
+                type: Array
               },
               yearOptions: {
                 type: Array,
@@ -325,6 +333,23 @@
                 value: 'governmentIntResultDelete',
                 readOnly: true
               }
+            },
+            observers: [
+              '_cpWbsChanged(cpWbs)'
+            ],
+            _cpWbsChanged: function() {
+              if (!this.cpOutputDropdownData) {
+                return;
+              }
+
+              var cpWbs = this.cpWbs;
+              var filteredCpOutputDropdownData;
+
+              filteredCpOutputDropdownData = this.cpOutputDropdownData.filter(function(cpo) {
+                return (cpo.wbs.indexOf(cpWbs) !== -1);
+              });
+
+              this.set('filteredCpOutputDropdownData', filteredCpOutputDropdownData);
             },
             _handleValueChange: function(e) {
               var id = e.target.id;
@@ -363,6 +388,10 @@
                       } else {
                         Polymer.dom(result).querySelector('#' + field).invalid = false;
                       }
+                      if (field === 'result' && !self._isCpoIdInDropdown(self.dataItems[i][field])) {
+                        valid = false;
+                        Polymer.dom(result).querySelector('#' + field).invalid = true;
+                      }
                       return valid && exists;
                     }, true);
                     return isValid && validate;
@@ -373,6 +402,12 @@
             _yearsEmpty: function(years) {
               return _.isEmpty(years);
             },
+            _isCpoIdInDropdown: function(cpoId) {
+              var matchedElems = this.filteredCpOutputDropdownData.filter(function(elem) {
+                 return elem.value === cpoId;
+              });
+              return !!matchedElems.length;
+            }
 
           });
         })();
