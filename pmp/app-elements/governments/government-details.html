@@ -240,7 +240,7 @@ it doesn't need to be included in element's style -->
           valid = false;
         }
         var govtResults = this.$.governmentResults;
-        var resultsValid = govtResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
+        var resultsValid = govtResults._fieldsAreValid(['result', 'year', 'planned_amount', 'planned_visits']);
         if (!resultsValid) {
           valid = false;
         }
