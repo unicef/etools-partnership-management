@@ -98,7 +98,7 @@
             <!--CP Output-->
             <div class="col col-6">
               <template is="dom-if" if="[[editMode]]">
-                <etools-searchable-multiselection-menu id="result"
+                <etools-searchable-multiselection-menu id$="result_[[index]]"
                          label="CP Output"
                          index="[[index]]"
                          placeholder="&#8212;"
@@ -123,7 +123,7 @@
             <!--Year-->
             <div class="col">
               <template is="dom-if" if="[[editMode]]">
-                <etools-searchable-multiselection-menu id="year"
+                <etools-searchable-multiselection-menu id$="year_[[index]]"
                              label="Year"
                              index="[[index]]"
                              class="fixed-width"
@@ -149,12 +149,13 @@
               <template is="dom-if" if="[[editMode]]">
                 <paper-input
                     class="input-wrapper"
-                    id="planned_amount"
+                    id$="planned_amount_[[index]]"
                     label="Planned Cash Transfers in USD"
                     index="[[index]]"
                     value="{{result.planned_amount}}"
                     on-change="_handleInputChange"
                     placeholder="&#8212;"
+                    error-message="Please enter Planned Cash"
                     required>
                 </paper-input>
               </template>
@@ -173,19 +174,21 @@
               <template is="dom-if" if="[[editMode]]">
                 <paper-input
                     class="input-wrapper"
-                    id="planned_visits"
+                    id$="planned_visits_[[index]]"
                     label="# of Planned Visits"
                     index="[[index]]"
                     value="{{result.planned_visits}}"
                     on-change="_handleInputChange"
-                    placeholder="&#8212;">
+                    placeholder="&#8212;"
+                    error-message="Please enter # of Planned Visits"
+                    required>
                 </paper-input>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     id="plannedVisits"
                     label="# of Planned Visits"
-                    value="{{result.planned_visits}}"
+                    value="[[result.planned_visits]]"
                     placeholder="&#8212;"
                     readonly>
                 </paper-input>
@@ -377,30 +380,21 @@
                 'description': ''
               });
             },
-            _fieldsAreValid: function() {
+            _fieldsAreValid: function(fields) {
               var self = this;
-              var fields = arguments;
+              var valid = true;
               // looping through result elements and  setting to invalid any with no value assigned
-              var results = Polymer.dom(this.root).querySelectorAll('.resultItem');
-              if (results.length) {
-                return _.reduce(results, function(isValid, result, i) {
-                    var validate = _.reduce(fields, function(valid, field) {
-                      var exists = !!self.dataItems[i][field];
-                      if (!exists) {
-                        Polymer.dom(result).querySelector('#' + field).invalid = true;
-                      } else {
-                        Polymer.dom(result).querySelector('#' + field).invalid = false;
-                      }
-                      if (field === 'result' && !self._isCpoIdInDropdown(self.dataItems[i][field])) {
-                        valid = false;
-                        Polymer.dom(result).querySelector('#' + field).invalid = true;
-                      }
-                      return valid && exists;
-                    }, true);
-                    return isValid && validate;
-                }, true);
+              if (this.dataItems instanceof Array && this.dataItems.length) {
+                this.dataItems.forEach(function(item, index) {
+                  fields.forEach(function(field, fieldIndex) {
+                    var el = self.$$('#' + field + '_' + index);
+                    if (el && !el.validate()) {
+                      valid = false;
+                    }
+                  });
+                });
               }
-              return true;
+              return valid;
             },
             _yearsEmpty: function(years) {
               return _.isEmpty(years);
