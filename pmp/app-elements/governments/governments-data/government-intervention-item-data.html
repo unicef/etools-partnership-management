@@ -20,7 +20,10 @@
       Polymer({
 
         is: 'government-intervention-item-data',
-        behaviors: [etoolsAppConfig.globals, pmpBehaviors.EtoolsStaticCommonDataReduxBehavior],
+        behaviors: [
+          etoolsAppConfig.globals,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+        ],
         properties: {
           intervention: {
             type: Object,
