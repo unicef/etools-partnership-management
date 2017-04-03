@@ -150,11 +150,15 @@
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
-                    <etools-currency-amount-input label="CSO Cont. (Local)"
+                    <etools-currency-amount-input id$="csoContLocal_[[index]]"
+                      label="CSO Cont. (Local)"
                       value="{{item.partner_contribution_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="CSO Cont. (Local) required">
                     </etools-currency-amount-input>
                   </div>
                 </div>
@@ -162,19 +166,27 @@
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <etools-currency-amount-input label="UNICEF Cash (Local)"
+                    <etools-currency-amount-input id$="unicefCashLocal_[[index]]"
+                      label="UNICEF Cash (Local)"
                       value="{{item.unicef_cash_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Cash (Local) required">
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <etools-currency-amount-input label="UNICEF Supply (Local)"
+                    <etools-currency-amount-input id$="inKindAmountLocal_[[index]]"
+                      label="UNICEF Supply (Local)"
                       value="{{item.in_kind_amount_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Supply (Local) required">
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
@@ -191,12 +203,15 @@
                 <div class="row-h flex-c left-col">
                   <div class="col col-4"></div>
                   <div class="col col-8">
-                    <etools-currency-amount-input id$="partnerContribUsd_[[index]]"
+                    <etools-currency-amount-input id$="csoContUsd_[[index]]"
                       label="CSO Cont. (USD)"
                       value="{{item.partner_contribution}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="CSO Cont. (USD) required">
                     </etools-currency-amount-input>
                   </div>
                 </div>
@@ -209,15 +224,22 @@
                       value="{{item.unicef_cash}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Cash (USD) required">
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <etools-currency-amount-input label="UNICEF Supply (USD)"
+                    <etools-currency-amount-input id$="inKindAmountUsd_[[index]]"
+                      label="UNICEF Supply (USD)"
                       value="{{item.in_kind_amount}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Supply (USD) required">
                     </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
@@ -241,8 +263,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localUnicefTotal, '0')]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0')]] USD</span>
+                <span>[[displayCurrencyAmount(_localUnicefTotal, '0.00')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0.00')]] USD</span>
               </div>
             </div>
           </div>
@@ -253,8 +275,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localCsoTotal, '0')]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdCsoTotal, '0')]] USD</span>
+                <span>[[displayCurrencyAmount(_localCsoTotal, '0.00')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdCsoTotal, '0.00')]] USD</span>
               </div>
             </div>
           </div>
@@ -334,7 +356,7 @@
           },
           required: {
             type: Boolean,
-            value: false
+            value: true
           },
           editMode: {
             type: Boolean,
@@ -412,7 +434,6 @@
 
         _dataItemChange: function(dataItem) {
           if (dataItem.path !== 'dataItems.splices') {
-
             this._computeTotals(this.dataItems);
           }
         },
@@ -526,7 +547,7 @@
         },
 
         _getPlannedBudgetTotalFormatted: function(val1, val2) {
-          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0');
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0.00');
         },
 
         _yearAlreadySelected: function(year, dropdownIdx) {
@@ -562,10 +583,15 @@
               valid = false;
             }
             this.dataItems.forEach(function(item, index) {
-              var yearEl = this.$$('#year_' + index);
-              if (!yearEl.validate()) {
+              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index];
+              elementsSelectorsToValidate.forEach(function(selector) {
+                var el = this.$$(selector);
+                if (el && !el.validate()) {
                   valid = false;
-              }
+                }
+              }.bind(this));
             }.bind(this));
           }
           return valid;
@@ -576,10 +602,15 @@
           this.$.currency.invalid = false;
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
-              var yearEl = this.$$('#year_' + index);
-              if (yearEl) {
-                  yearEl.set('invalid', false);
-              }
+              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index];
+              elementsSelectorsToValidate.forEach(function(selector) {
+                var el = this.$$(selector);
+                if (el) {
+                  el.set('invalid', false);
+                }
+              }.bind(this));
             }.bind(this));
           }
         },

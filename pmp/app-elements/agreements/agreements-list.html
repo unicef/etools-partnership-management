@@ -11,6 +11,7 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -22,22 +23,17 @@
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="agreement-data/agreement-list-data.html">
 <link rel="import" href="../partners/partners-data/partners-list-data.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
 
 <dom-module id="agreements-list">
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
     </style>
 
     <agreement-list-data id="agreements"
@@ -154,29 +150,29 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="agreement_number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="agreement_number" sortable>
           Reference Number #
-        </data-table-column>
-        <data-table-column class="col-4" field="partner_name" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name" sortable>
           Partner Full Name
-        </data-table-column>
-        <data-table-column class="col-2" field="partner_type">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_type">
           Type
-        </data-table-column>
-        <data-table-column class="col-2" field="partner_status">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="partner_status">
           Status
-        </data-table-column>
-        <data-table-column class="flex-c" field="start" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
           Start Date
-        </data-table-column>
-        <data-table-column class="flex-c" field="end" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
           End Date
-        </data-table-column>
-      </data-table-header>
+        </etools-data-table-column>
+      </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" as="agreement" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
 
             <a class="col-data col-2 truncate"
@@ -213,17 +209,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
           on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 

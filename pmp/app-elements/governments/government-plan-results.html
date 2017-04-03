@@ -98,21 +98,24 @@
             <!--CP Output-->
             <div class="col col-6">
               <template is="dom-if" if="[[editMode]]">
-                <etools-searchable-multiselection-menu id="result"
+                <etools-searchable-multiselection-menu id$="result_[[index]]"
                          label="CP Output"
                          index="[[index]]"
                          placeholder="&#8212;"
-                         options="[[cpOutputDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="[[_mapItemFromId(result.result,cpOutputDropdownData)]]"
-                         error-message="Please select a CP Output"
+                         options="[[filteredCpOutputDropdownData]]"
+                         option-value="id"
+                         option-label="name"
+                         custom-object-options
+                         selected="{{result.result}}"
+                         update-selected
+                         error-message="Please select a CP Output. If there aren't any to choose from, check the Country Programme."
                          required>
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="CP Output"
-                    value="[[_mapItemFromId(result.result,cpOutputDropdownData,'true')]]"
+                    value="[[_mapItemFromId(result.result,filteredCpOutputDropdownData,'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -120,14 +123,14 @@
             <!--Year-->
             <div class="col">
               <template is="dom-if" if="[[editMode]]">
-                <etools-searchable-multiselection-menu id="year"
+                <etools-searchable-multiselection-menu id$="year_[[index]]"
                              label="Year"
                              index="[[index]]"
                              class="fixed-width"
                              placeholder="&#8212;"
                              options="[[yearOptions]]"
-                             on-value-change="_handleValueChange"
-                             value="[[_mapItemFromId(result.year,yearOptions)]]"
+                             selected="{{result.year}}"
+                             update-selected
                              error-message="Please select a year"
                              disabled="[[_yearsEmpty(yearOptions)]]"
                              required>
@@ -136,7 +139,7 @@
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     label="Year"
-                    value="[[_mapItemFromId(result.year,yearOptions,'true')]]"
+                    value="[[_mapItemFromValue(result.year, yearOptions, 'true')]]"
                     placeholder="&#8212;"
                     readonly></paper-input>
               </template>
@@ -146,12 +149,13 @@
               <template is="dom-if" if="[[editMode]]">
                 <paper-input
                     class="input-wrapper"
-                    id="planned_amount"
+                    id$="planned_amount_[[index]]"
                     label="Planned Cash Transfers in USD"
                     index="[[index]]"
                     value="{{result.planned_amount}}"
                     on-change="_handleInputChange"
                     placeholder="&#8212;"
+                    error-message="Please enter Planned Cash"
                     required>
                 </paper-input>
               </template>
@@ -170,19 +174,21 @@
               <template is="dom-if" if="[[editMode]]">
                 <paper-input
                     class="input-wrapper"
-                    id="planned_visits"
+                    id$="planned_visits_[[index]]"
                     label="# of Planned Visits"
                     index="[[index]]"
                     value="{{result.planned_visits}}"
                     on-change="_handleInputChange"
-                    placeholder="&#8212;">
+                    placeholder="&#8212;"
+                    error-message="Please enter # of Planned Visits"
+                    required>
                 </paper-input>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     id="plannedVisits"
                     label="# of Planned Visits"
-                    value="{{result.planned_visits}}"
+                    value="[[result.planned_visits]]"
                     placeholder="&#8212;"
                     readonly>
                 </paper-input>
@@ -198,9 +204,9 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectorsDropdownData]]"
-                       on-value-change="_handleValueChange"
                        error-message="Please select a programme(s)/sector(s)"
-                       value="[[_mapItemFromId(result.sectors,sectorsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sectors}}"
                        multi>
                 </etools-searchable-multiselection-menu>
               </template>
@@ -221,8 +227,8 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectionsDropdownData]]"
-                       on-value-change="_handleValueChange"
-                       value="[[_mapItemFromId(result.sections,sectionsDropdownData)]]"
+                       update-selected
+                       selected="{{result.sections}}"
                        error-message="Please select a section(s)"
                        multi>
                 </etools-searchable-multiselection-menu>
@@ -246,8 +252,8 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[unicefUsersDropdownData]]"
-                         on-value-change="_handleValueChange"
-                         value="{{_mapItemFromId(result.unicef_managers,unicefUsersDropdownData)}}"
+                         update-selected
+                         selected="{{result.unicef_managers}}"
                          error-message="Please select a UNICEF manager"
                          multi
                          required>
@@ -291,9 +297,17 @@
                 type: Array,
                 notify: true,
               },
+              cpWbs: {
+                type: String,
+                value: ''
+              },
               cpOutputDropdownData: {
                 type: Array,
+                value: [],
                 statePath: 'cpOutputs'
+              },
+              filteredCpOutputDropdownData: {
+                type: Array
               },
               yearOptions: {
                 type: Array,
@@ -326,6 +340,23 @@
                 readOnly: true
               }
             },
+            observers: [
+              '_cpWbsChanged(cpWbs)'
+            ],
+            _cpWbsChanged: function() {
+              if (!this.cpOutputDropdownData) {
+                return;
+              }
+
+              var cpWbs = this.cpWbs;
+              var filteredCpOutputDropdownData;
+
+              filteredCpOutputDropdownData = this.cpOutputDropdownData.filter(function(cpo) {
+                return (cpo.wbs.indexOf(cpWbs) !== -1);
+              });
+
+              this.set('filteredCpOutputDropdownData', filteredCpOutputDropdownData);
+            },
             _handleValueChange: function(e) {
               var id = e.target.id;
               var index = e.target.index;
@@ -349,30 +380,31 @@
                 'description': ''
               });
             },
-            _fieldsAreValid: function() {
+            _fieldsAreValid: function(fields) {
               var self = this;
-              var fields = arguments;
+              var valid = true;
               // looping through result elements and  setting to invalid any with no value assigned
-              var results = Polymer.dom(this.root).querySelectorAll('.resultItem');
-              if (results.length) {
-                return _.reduce(results, function(isValid, result, i) {
-                    var validate = _.reduce(fields, function(valid, field) {
-                      var exists = !!self.dataItems[i][field];
-                      if (!exists) {
-                        Polymer.dom(result).querySelector('#' + field).invalid = true;
-                      } else {
-                        Polymer.dom(result).querySelector('#' + field).invalid = false;
-                      }
-                      return valid && exists;
-                    }, true);
-                    return isValid && validate;
-                }, true);
+              if (this.dataItems instanceof Array && this.dataItems.length) {
+                this.dataItems.forEach(function(item, index) {
+                  fields.forEach(function(field, fieldIndex) {
+                    var el = self.$$('#' + field + '_' + index);
+                    if (el && !el.validate()) {
+                      valid = false;
+                    }
+                  });
+                });
               }
-              return true;
+              return valid;
             },
             _yearsEmpty: function(years) {
               return _.isEmpty(years);
             },
+            _isCpoIdInDropdown: function(cpoId) {
+              var matchedElems = this.filteredCpOutputDropdownData.filter(function(elem) {
+                 return elem.value === cpoId;
+              });
+              return !!matchedElems.length;
+            }
 
           });
         })();

@@ -11,6 +11,7 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -21,22 +22,16 @@
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="governments-data/governments-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
-
 <dom-module id="governments-list">
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
         width: 100%;
@@ -79,6 +74,9 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
+                  custom-object-options="[[filter.customObjectOptions]]"
+                  option-value="[[filter.optionValue]]"
+                  option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"></etools-searchable-multiselection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
@@ -133,25 +131,25 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
-        </data-table-column>
-        <data-table-column class="col-4" field="partner_name"  sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4" field="partner_name"  sortable>
           Government Partner
-        </data-table-column>
-        <data-table-column class="flex-c" field="country_programme_name"  sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="country_programme_name"  sortable>
           Country Programme
-        </data-table-column>
-        <data-table-column class="flex-c" field="created_at">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="created_at">
           Years
-        </data-table-column>
+        </etools-data-table-column>
 
-      </data-table-header>
+      </etools-data-table-header>
 
        <template id="rows" is="dom-repeat" items="[[filteredGovernments]]"
                 as="entry" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <a class="col-data col-2 truncate"
                href="governments/[[entry.id]]/details"
@@ -181,17 +179,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
           on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 
@@ -200,7 +198,6 @@
   <script>
     (function() {
       'use strict';
-
       var _governmentsLastNavigated = null;
 
       Polymer({
@@ -340,12 +337,18 @@
               multiple: true,
               selectionOptions: [], // will be populated when the partners data is received
               alreadySelected: [],
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               path: 'selectedPartners'
             },
             {
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
@@ -354,6 +357,9 @@
               filterName: 'Country Programme Output',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: true,
+              optionValue: 'id',
+              optionLabel: 'name',
               selectionOptions: this.cpOutputs,
               alreadySelected: [],
               path: 'selectedCpOutputs'
@@ -362,6 +368,9 @@
               filterName: 'Sectors',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
@@ -370,6 +379,9 @@
               filterName: 'Years',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              customObjectOptions: false,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.years,
               alreadySelected: [],
               path: 'selectedYears'
@@ -485,7 +497,7 @@
 
               (this.selectedCpOutputs && this.selectedCpOutputs.length)
                   ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.value;
+                return cpOutput.id;
               }) : [],
 
               (this.selectedSectors && this.selectedSectors.length)
@@ -518,7 +530,7 @@
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-              return cpOutput.value;
+              return cpOutput.id;
             }).join('|'));
           }
 
@@ -611,7 +623,7 @@
               return parseInt(cpOutStrValue, 10);
             });
             return this.cpOutputs.filter(function(cpo) {
-              return cpOut.indexOf(parseInt(cpo.value, 10)) > -1;
+              return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
           }
           return [];

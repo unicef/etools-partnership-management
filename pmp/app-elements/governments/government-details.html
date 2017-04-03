@@ -59,7 +59,7 @@ it doesn't need to be included in element's style -->
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Government Partner"
-                  value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.partner, partnersDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -69,8 +69,8 @@ it doesn't need to be included in element's style -->
                                                      label="Government Partner"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.partner}}"
+                                                     update-selected
                                                      error-message="Please select a partner"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -80,7 +80,7 @@ it doesn't need to be included in element's style -->
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Country Programme"
-                  value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -89,8 +89,8 @@ it doesn't need to be included in element's style -->
                                                      label="Country Programme"
                                                      placeholder="&#8212;"
                                                      options="[[countryProgrammeDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.country_programme}}"
+                                                     update-selected
                                                      error-message="Please select a country programme"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -110,7 +110,8 @@ it doesn't need to be included in element's style -->
         <government-plan-results id="governmentResults"
                                  data-items$="{{intervention.results}}"
                                  allow-edit="[[governmentEditMode]]"
-                                 year-options="[[yearOptions]]">
+                                 year-options="[[yearOptions]]"
+                                 cp-wbs="[[selectedCpWbs]]">
         </government-plan-results>
         <div id="bottom-actions" class="row-h" hidden$="[[!governmentEditMode]]">
           <paper-fab icon="add"
@@ -132,7 +133,7 @@ it doesn't need to be included in element's style -->
         pmpBehaviors.ObjectDatabindBehavior
       ],
       observers: [
-        '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
+        '_countriesDropdownChanged(countryProgrammeDropdownData, intervention.country_programme)',
         '_init(active)'
       ],
       properties: {
@@ -167,6 +168,9 @@ it doesn't need to be included in element's style -->
           type: Array,
           notify: true
         },
+        selectedCpWbs: {
+          type: String
+        }
       },
       _init: function(active) {
         if (active) {
@@ -175,14 +179,16 @@ it doesn't need to be included in element's style -->
           }
         }
       },
-      _getYears: function() {
+      _countriesDropdownChanged: function() {
         var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
         if (!_.isEmpty(cpObject)) {
           var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
           years = years.map(function(year) {
             return _.assign({}, {label: year.toString(), value: year});
           });
+
           this.set('yearOptions', years);
+          this.set('selectedCpWbs', cpObject.wbs);
         }
       },
       _handleValueChange: function(e) {
@@ -237,7 +243,7 @@ it doesn't need to be included in element's style -->
           valid = false;
         }
         var govtResults = this.$.governmentResults;
-        var resultsValid = govtResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
+        var resultsValid = govtResults._fieldsAreValid(['result', 'year', 'planned_amount', 'planned_visits']);
         if (!resultsValid) {
           valid = false;
         }

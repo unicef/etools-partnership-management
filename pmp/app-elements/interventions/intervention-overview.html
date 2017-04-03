@@ -211,8 +211,8 @@
           }
           if (Array.isArray(this.allCpOutputs) && this.allCpOutputs.length > 0) {
             this.allCpOutputs.forEach(function(cpo) {
-              if (uniqueIds.indexOf(cpo.value) > -1) {
-                cpOutputs.push(cpo.label);
+              if (uniqueIds.indexOf(cpo.id) > -1) {
+                cpOutputs.push(cpo.name);
               }
             });
 

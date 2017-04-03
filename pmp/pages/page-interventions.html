@@ -411,7 +411,7 @@
 
       _validateAndSaveIntervention: function(event) {
         event.stopImmediatePropagation();
-
+        this.set('serverErrors', []);
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }

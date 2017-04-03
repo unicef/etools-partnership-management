@@ -40,6 +40,7 @@
     "etools-content-panel": "^1.0.1",
     "iron-form": "PolymerElements/iron-form#^1.1.4",
     "etools-page-refresh": "^1.0.0",
+    "etools-data-table": "^1.0.0",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "etools-dialog": "^1.0.0",
@@ -47,7 +48,7 @@
     "etools-searchable-multiselection-menu": "^1.0.2",
     "etools-file": "^1.0.0",
     "polymer-redux": "^0.3.0",
-    "etools-currency-amount-input": "^1.0.0"
+    "etools-currency-amount-input": "1.0.4"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
