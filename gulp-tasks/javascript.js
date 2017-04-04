@@ -10,11 +10,6 @@ const jscs = require('gulp-jscs');
 const jscsStylish = require('gulp-jscs-stylish');
 const lazypipe = require('lazypipe'); // Lazy pipe creates a reusable pipe stream
 
-var jscsTasks = lazypipe()
-    .pipe(jscs, {
-      configPath: 'gulp-tasks/jscsRules.json'
-    });
-
 // Minify Javascript
 function minify() {
   return uglify({
@@ -26,7 +21,7 @@ function minify() {
 // Lint Javascript
 var lint = lazypipe()
   .pipe(jshint)
-  .pipe(jscsTasks)
+  .pipe(jscs)
   .pipe(jscsStylish.combineWithHintResults)
   .pipe(jshint.reporter, jshintStylish)
   // Option to have js linting fail on error
