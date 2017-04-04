@@ -583,9 +583,15 @@
               valid = false;
             }
             this.dataItems.forEach(function(item, index) {
-              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
-                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
-                '#inKindAmountUsd_' + index];
+              var elementsSelectorsToValidate = [
+                '#year_' + index,
+                '#csoContLocal_' + index,
+                '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index,
+                '#csoContUsd_' + index,
+                '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index
+              ];
               elementsSelectorsToValidate.forEach(function(selector) {
                 var el = this.$$(selector);
                 if (el && !el.validate()) {
@@ -602,9 +608,15 @@
           this.$.currency.invalid = false;
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
-              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
-                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
-                '#inKindAmountUsd_' + index];
+              var elementsSelectorsToValidate = [
+                '#year_' + index,
+                '#csoContLocal_' + index,
+                '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index,
+                '#csoContUsd_' + index,
+                '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index
+              ];
               elementsSelectorsToValidate.forEach(function(selector) {
                 var el = this.$$(selector);
                 if (el) {
