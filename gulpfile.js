@@ -72,7 +72,7 @@ const javascript = require('./gulp-tasks/javascript.js'); //Any processing on ja
 const html = require('./gulp-tasks/html.js');             //Any processing on html
 const css = require('./gulp-tasks/css.js');               //Any processing on css
 const project = require('./gulp-tasks/project.js');
-
+const polylint = require('gulp-polylint');
 
 // Log task end messages
 var log = function (message) {
@@ -109,6 +109,15 @@ function source() {
     .pipe(project.rejoin()); // Call rejoin when you're finished
 }
 
+// The runPolylint task will run each individual source file through polylint
+// Checks for polymer specific errors in the html and javascript parts of the
+// source code
+function runPolylint() {
+  return project.getSources()
+    .pipe(gulpif('**/*.html', polylint({noRecursion: true})))
+    .pipe(polylint.reporter(polylint.reporter.stylishlike));
+}
+
 // The dependencies task will split all of your bower_components files into one
 // big ReadableStream
 // You probably don't need to do anything to your dependencies but it's here in
@@ -131,6 +140,14 @@ gulp.task('default', gulp.series([
   project.serviceWorker
 ]));
 
+// Clean the build directory, run polylint,
+// split all source and dependency files into streams and lint them individually
+gulp.task('lint', gulp.series([
+  clean.build,
+  runPolylint,
+  project.merge(source, dependencies),
+  project.serviceWorker
+]));
 
 // DO NOT RUN
 // Fully builds project
