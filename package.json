@@ -16,7 +16,8 @@
   "scripts": {
     "dev": "polymer serve & npm run watch",
     "test": "polymer test",
-    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' "
+    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' ",
+    "update-bower": "node_modules/npm-check-updates/bin/ncu -um bower"
   },
   "private": true,
   "devDependencies": {
@@ -43,6 +44,7 @@
     "jshint-stylish": "^2.2.1",
     "lazypipe": "^1.0.1",
     "merge-stream": "^1.0.0",
+    "npm-check-updates": "^2.10.5",
     "plylog": "^0.4.0",
     "polymer-build": "^0.4.0",
     "yargs": "^5.0.0"
