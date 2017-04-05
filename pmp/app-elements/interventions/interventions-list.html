@@ -10,31 +10,27 @@
 
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
-
 <dom-module id="interventions-list">
 
   <template>
 
-    <style include="shared-styles list-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
         width: 100%;
@@ -45,6 +41,7 @@
                          filtered-interventions="{{filteredInterventions}}"
                          total-results="{{totalResults}}"
                          on-interventions-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredInterventions"
                          fire-data-loaded show-loading>
     </interventions-list-data>
 
@@ -56,9 +53,7 @@
                      type="search"
                      placeholder="Search"
                      autocomplete="off"
-                     value="[[q]]"
-                     on-keyup="_onSearch"
-                     on-search="_onSearch">
+                     value="{{q}}">
           <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -73,6 +68,8 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
+changed teh                  option-value="[[filter.optionValue]]"
+                  option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
                   custom-object-options></etools-searchable-multiselection-menu>
@@ -130,33 +127,33 @@
 
     <paper-material id="list" elevation="1">
 
-      <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-        <data-table-column class="col-2" field="number" sortable>
+      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+        <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
-        </data-table-column>
-        <data-table-column class="col-3" field="partner_name" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="col-3" field="partner_name" sortable>
           Partner Name
-        </data-table-column>
-        <data-table-column class="flex-c" field="document_type">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="document_type">
           Document Type
-        </data-table-column>
-        <data-table-column class="flex-c" field="status">
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="status">
           Status
-        </data-table-column>
-        <data-table-column class="col-2" field="title">
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2" field="title">
           Title
-        </data-table-column>
-        <data-table-column class="flex-c" field="start" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="start" sortable>
           Start Date
-        </data-table-column>
-        <data-table-column class="flex-c" field="end" sortable>
+        </etools-data-table-column>
+        <etools-data-table-column class="flex-c" field="end" sortable>
           End Date
-        </data-table-column>
-      </data-table-header>
+        </etools-data-table-column>
+      </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[filteredInterventions]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
-        <data-table-row details-opened="[[detailsOpened]]">
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <a class="col-data col-2 truncate"
                href="interventions/[[intervention.id]]/details"
@@ -202,17 +199,17 @@
             </div>
 
           </div>
-        </data-table-row>
+        </etools-data-table-row>
       </template>
 
-      <data-table-footer
+      <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
-          on-page-size-changed="_pageSizeSelected"
+          on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-      </data-table-footer>
+      </etools-data-table-footer>
 
     </paper-material>
 
@@ -232,20 +229,15 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
           filteredInterventions: {
             type: Array,
             notify: true,
-            observer: '_interventionsChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           documentTypes: {
@@ -278,12 +270,6 @@
             observer: '_dateChanged'
           },
 
-          sortOrder: Object,
-
-          pageNumber: {
-            type: Number
-          },
-
           totalPages: {
             type: Number
           },
@@ -292,30 +278,10 @@
             type: Array
           },
 
-          pageSize: {
-            type: Number
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
-          },
-
           urlParams: {
             type: Object
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -328,7 +294,7 @@
           },
           cpOutputs: {
             type: Array,
-            statePath:  'cpOutputs'
+            statePath: 'cpOutputs'
           },
           selectedCpOutputs: {
             type: Array,
@@ -393,6 +359,8 @@
               filterName: 'PD/SSFA Type',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.documentTypes,
               alreadySelected: [],
               path: 'selectedDocumentTypes'
@@ -401,6 +369,8 @@
               filterName: 'Country Programme Output',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'id',
+              optionLabel: 'name',
               selectionOptions: this.cpOutputs,
               alreadySelected: [],
               path: 'selectedCpOutputs'
@@ -409,6 +379,8 @@
               filterName: 'Sectors',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.sectors,
               alreadySelected: [],
               path: 'selectedSectors'
@@ -417,6 +389,8 @@
               filterName: 'Status',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.interventionStatuses,
               alreadySelected: [],
               path: 'selectedStatuses'
@@ -425,6 +399,8 @@
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
@@ -433,6 +409,8 @@
               filterName: 'Offices',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
+              optionValue: 'value',
+              optionLabel: 'label',
               selectionOptions: this.offices,
               alreadySelected: [],
               path: 'selectedOffices'
@@ -487,7 +465,7 @@
 
         // update selected filters(przent in URL) at page refresh
         _updateSelectedFiltersValues: function() {
-          this.debounce('updaetShownFilters', function() {
+          this.debounce('updateShownFilters', function() {
             var filtersValues = [
               {
                 filterName: 'PD/SSFA Type',
@@ -573,7 +551,7 @@
 
               (this.selectedCpOutputs && this.selectedCpOutputs.length)
                   ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.value;
+                return cpOutput.id;
               }) : [],
 
               (this.selectedStatuses && this.selectedStatuses.length)
@@ -624,7 +602,7 @@
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
             out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-              return cpOutput.value;
+              return cpOutput.id;
             }).join('|'));
           }
 
@@ -674,7 +652,7 @@
             params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
           // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   params.push('country_programme=' + this.selectedCpOutputs[0].value);
+          //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
           // }
           if (this.selectedSectors && this.selectedSectors.length) {
             params.push('sector=' + this.selectedSectors[0].value);
@@ -683,9 +661,11 @@
             params.push('status=' + this.selectedStatuses[0].value);
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            params.push('unicef_focal_points=' + encodeURIComponent(this.selectedUnicefFocalPoints.map(function(focalPt) {
+            var serializedFocalPoints = this.selectedUnicefFocalPoints.map(function(focalPt) {
               return focalPt.value;
-            })));
+            });
+            serializedFocalPoints = encodeURIComponent(serializedFocalPoints);
+            params.push('unicef_focal_points=' + serializedFocalPoints);
           }
           if (this.selectedOffices && this.selectedOffices.length) {
             params.push('office=' + this.selectedOffices[0].value);
@@ -757,7 +737,7 @@
               return parseInt(cpOutStrValue, 10);
             });
             return this.cpOutputs.filter(function(cpo) {
-              return cpOut.indexOf(parseInt(cpo.value, 10)) > -1;
+              return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
           }
           return [];
@@ -773,70 +753,8 @@
           return [];
         },
 
-        _interventionsChanged: function(filteredInterventions) {
-          // List fade in fade out effect
-          var classList = this.$.list.classList;
-          if (filteredInterventions instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredInterventions will be empty.
-         * Because of this we need to refilter after interventions data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredInterventions === 'undefined' ||
-              (Array.isArray(this.filteredInterventions) && this.filteredInterventions.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger interventions filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-        },
-
-        _onSearch: function() {
-          this.q = this.$.query.value;
-        },
-
-        _pageSizeSelected: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        // TODO: refactor this, it is identical with partner-lists and agreements-list _listDataChanged
-        _listDataChanged: function(event) {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
         },
 
         // verify date and prettify or not

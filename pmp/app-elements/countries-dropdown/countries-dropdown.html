@@ -5,7 +5,6 @@
 
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
-<link rel="import" href="../countries-data/countries-data.html">
 
 <dom-module id="countries-dropdown">
   <template>
@@ -124,11 +123,10 @@
       },
       _handleResponse: function(res) {
         // TODO: before main refresh... move to base url
-        console.log('before refreshing move to baseurl')
         this.fire('main_refresh');
       },
-      _countrySelectorUpdate: function(countries){
-          if (Array.isArray(countries) && (countries.length > 1)){
+      _countrySelectorUpdate: function(countries) {
+          if (Array.isArray(countries) && (countries.length > 1)) {
               this.countrySelectorVisible = true;
           }
       },

@@ -22,7 +22,9 @@
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
-<link rel="import" href="../../../bower_components/paper-styles/shadow.html">
+<!-- TODO: Why is shadow.html used here? Since it contains only mixins and is a custom style
+it doesn't need to be included in element's style -->
+<!--<link rel="import" href="../../../bower_components/paper-styles/shadow.html">-->
 
 <link rel="import" href="government-plan-results.html">
 <link rel="import" href="government-status.html">
@@ -30,11 +32,11 @@
 <dom-module id="government-details">
   <template>
     <style
-        include="page-layout-styles shadow repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
+        include="page-layout-styles repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
-        --paper-fab-keyboard-focus-background: var(--paper-fab-add-color);
+        --paper-fab-keyboard-focus-background: var(--add-button-color);
       }
 
       paper-fab {
@@ -42,13 +44,15 @@
           @apply(--paper-fab-btn-green);
         }
       }
-
+      #detailsContent {
+        width: 100%;
+      }
       paper-input {
         width: 100%;
       }
 
     </style>
-    <div id="pageContent">
+    <div id="detailsContent">
       <!--Partnership Details-->
       <etools-content-panel class="content-section" title="Partnership Details">
         <div class="row-h flex-c">
@@ -56,7 +60,7 @@
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Government Partner"
-                  value="[[_mapItemFromId(intervention.partner,partnersDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.partner, partnersDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -66,8 +70,8 @@
                                                      label="Government Partner"
                                                      placeholder="&#8212;"
                                                      options="[[partnersDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.partner,partnersDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.partner}}"
+                                                     update-selected
                                                      error-message="Please select a partner"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -77,7 +81,7 @@
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Country Programme"
-                  value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                  value="[[_mapItemFromValue(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -86,8 +90,8 @@
                                                      label="Country Programme"
                                                      placeholder="&#8212;"
                                                      options="[[countryProgrammeDropdownData]]"
-                                                     value="[[_mapItemFromId(intervention.country_programme,countryProgrammeDropdownData)]]"
-                                                     on-value-change="_handleValueChange"
+                                                     selected="{{intervention.country_programme}}"
+                                                     update-selected
                                                      error-message="Please select a country programme"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -106,7 +110,8 @@
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
         <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
                                  allow-edit="[[governmentEditMode]]"
-                                 year-options="[[yearOptions]]">
+                                 year-options="[[yearOptions]]"
+                                 cp-wbs="[[selectedCpWbs]]">
         </government-plan-results>
         <div id="bottom-actions" class="row-h" hidden$="[[!governmentEditMode]]">
           <paper-fab icon="add"
@@ -116,9 +121,7 @@
         </div>
       </etools-content-panel>
     </div>
-    <div id="sidebar" hidden$="[[!governmentEditMode]]">
-      <government-status on-save-intervention="_validateSave"></government-status>
-    </div>
+
   </template>
 
   <script>
@@ -130,7 +133,7 @@
         pmpBehaviors.ObjectDatabindBehavior
       ],
       observers: [
-        '_getYears(countryProgrammeDropdownData, intervention.country_programme)',
+        '_countriesDropdownChanged(countryProgrammeDropdownData, intervention.country_programme)',
         '_init(active)'
       ],
       properties: {
@@ -162,6 +165,9 @@
           type: Array,
           notify: true
         },
+        selectedCpWbs: {
+          type: String
+        }
       },
       _init: function(active) {
         if (active) {
@@ -170,26 +176,28 @@
           }
         }
       },
-      _getYears: function() {
+      _countriesDropdownChanged: function() {
         var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
         if (!_.isEmpty(cpObject)) {
           var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
           years = years.map(function(year) {
             return _.assign({}, {label: year.toString(), value: year});
           });
+
           this.set('yearOptions', years);
+          this.set('selectedCpWbs', cpObject.wbs);
         }
       },
       _handleValueChange: function(e) {
-        if (_.has(e,'detail.selectedValues')) {
+        if (_.has(e, 'detail.selectedValues')) {
           var path = 'intervention.' + e.target.id;
           this.set(path, e.detail.selectedValues.value);
           e.target.invalid = false;
-        }else if(e.target.value){
+        }else if (e.target.value) {
           e.target.invalid = false;
         }
       },
-      _addNewResult: function () {
+      _addNewResult: function() {
         var intervention = _.get(this.intervention, 'id') || '';
         var newResult = {
           'intervention': intervention,
@@ -201,37 +209,38 @@
           'unicef_managers': [],
           'sectors': [],
           'sections': [],
-        }
+        };
         this.push('intervention.results', newResult);
       },
       _setNewEditMode: function() {
           this.set('governmentEditMode', this.editMode);
           this.updateStyles();
       },
-      _validateSave: function(){
+      _validateSave: function() {
         event.stopImmediatePropagation();
         if (_.isEqual(this.intervention, this.originalIntervention)) {
-          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true}); // TODO : disable save button when no change detected
-        }
-        else if (this._interventionIsValid()) {
+          // TODO : disable save button when no change detected
+          this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true});
+        } else if (this._interventionIsValid()) {
           this.fire('save-intervention', {intervention: this.intervention});
         } else {
-          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn: true}); // TODO : scroll missed fields into view
-
+          // TODO : scroll missed fields into view
+          this.fire('toast', {text: 'Please fill in required fields.', showCloseBtn: true});
         }
       },
       _interventionIsValid: function() {
         var valid = true;
         // validate Partnership Details
         if (!this.intervention.partner) {
-          this.$$("#partner").invalid = true;
+          this.$$('#partner').invalid = true;
           valid = false;
         }
         if (!this.intervention.country_programme) {
-          this.$$("#country_programme").invalid = true;
+          this.$$('#country_programme').invalid = true;
           valid = false;
         }
-        var resultsValid = this.$.governmentResults._fieldsAreValid('result', 'year', 'planned_amount', 'planned_visits');
+        var govtResults = this.$.governmentResults;
+        var resultsValid = govtResults._fieldsAreValid(['result', 'year', 'planned_amount', 'planned_visits']);
         if (!resultsValid) {
           valid = false;
         }
@@ -242,14 +251,14 @@
         // TODO create sticky save button
 
       },
-      _interventionChanged : function(intervention){
+      _interventionChanged: function(intervention) {
         this._setNewEditMode();
-        if(!_.has(this.originalIntervention,'id') || (_.has(this.originalIntervention,'id') && this.intervention.id!== this.originalIntervention.id)){
-
+        if (!_.has(this.originalIntervention, 'id') ||
+            (_.has(this.originalIntervention, 'id') && this.intervention.id !== this.originalIntervention.id)) {
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
         this.fire('global-loading', {active: false});
       },
-    })
+    });
   </script>
 </dom-module>

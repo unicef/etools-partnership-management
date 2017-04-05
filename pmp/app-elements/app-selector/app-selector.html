@@ -13,7 +13,7 @@
   <style include="page-layout-styles shared-styles">
     :host {
       position: relative;
-      color: var(--dark-primary-text-color);
+      color: var(--primary-text-color);
     }
 
     paper-icon-button.apps-button {
@@ -27,7 +27,7 @@
 
     paper-icon-button.icon-opened {
       background: white;
-      color: var(--dark-primary-text-color);
+      color: var(--primary-text-color);
     }
 
     .container {
@@ -68,8 +68,8 @@
     }
 
     .panel {
-      border-top: 1px solid rgba(0, 0, 0, 0.12);
-      border-right: 1px solid rgba(0, 0, 0, 0.12);
+      border-top: 1px solid var(--dark-divider-color);
+      border-right: 1px solid var(--dark-divider-color);
       min-width: 266px;
     }
 
@@ -163,6 +163,6 @@
         }
         window.location.href = this.baseSite + '/' + id + '/';
       },
-    })
+    });
   </script>
 </dom-module>

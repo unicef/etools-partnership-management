@@ -94,7 +94,7 @@
 
       .dropdown-with-clear-btn paper-icon-button.remove,
       paper-icon-button.remove-field.remove {
-        color: #ea4022 /* TODO: replace with app-theme var */
+        color: var(--icon-delete-color);
       }
 
       .dropdown-with-clear-btn {
@@ -139,6 +139,17 @@
 
       etools-searchable-multiselection-menu {
         --esmm-readonly-input-container-underline: {
+          display: none;
+        };
+      }
+      etools-currency-amount-input[readonly] {
+        --etools-currency-container-underline: {
+          display: none;
+        };
+        --etools-currency-container-underline-focus: {
+          display: none;
+        };
+        --etools-currency-container-underline-disabled: {
           display: none;
         };
       }

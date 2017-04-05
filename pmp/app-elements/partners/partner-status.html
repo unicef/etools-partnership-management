@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <link rel="import" href="../../../styles/partner-status-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
@@ -43,6 +44,19 @@
       .buttons-section {
         margin: 25px -25px 0 -25px;
       }
+      #hide-btn[hidden] + #save-btn {
+        margin-top: 0;
+      }
+      #hide-btn {
+        background-color: var(--dark-theme-background-color);
+        color: var(--error-color);
+      }
+
+      #hide-btn iron-icon {
+        color: var(--dark-icon-color);
+        @apply(--layout-self-start);
+      }
+
     </style>
 
     <etools-content-panel title="Partner status">
@@ -69,7 +83,6 @@
         </div>
       </div>
 
-
       <div class="status-container" hidden$="[[!_showBlockedStatus(partner)]]">
         <div class="status-icon">
           <span class="blocked">
@@ -80,7 +93,6 @@
           <p>Blocked in VISION</p>
         </div>
       </div>
-
 
       <div class="status-container" hidden$="[[!_showMakedForDeletionStatus(partner)]]">
         <div class="status-icon">
@@ -93,9 +105,18 @@
         </div>
       </div>
 
-      <template is="dom-if" if="[[showSaveBtn]]">
+      <template is="dom-if" if="[[editMode]]">
         <div class="buttons-section vertical">
-          <paper-button 
+           <paper-button
+              id="hide-btn"
+              class="primary-btn with-prefix w100"
+              on-tap="_triggerHidePartner"
+              hidden$=[[_isHidden(partner.hidden)]]>
+            <iron-icon icon="cancel"></iron-icon>
+            <span class="btn-label">Hide</span>
+          </paper-button>
+          <paper-button
+              id="save-btn"
               class="primary-btn w100"
               on-tap="_triggerPartnerSave">
             Save
@@ -113,17 +134,61 @@
       Polymer({
         is: 'partner-status',
 
+        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+
         properties: {
           partner: {
             type: Object,
             notify: true
           },
-          showSaveBtn: {
+          editMode: {
             type: Boolean,
-            value: true
+            value: false
           }
         },
+        ready: function() {
+          var statusChangeWarningDialogContent = document.createElement('p');
+          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
+              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+        },
+        detach: function() {
+          if (this.warningDialog) {
+            this.removeDialog(this.warningDialog);
+          }
+        },
+        _isHidden: function(hidden) {
+          if (typeof hidden === 'undefined' || hidden === null) {
+            return true;
+          }
+          return hidden;
+        },
+        _showStatusChangeConfirmationDialog: function() {
+          if (!this.warningDialog) {
+            console.warn('[pmp partner status change] warningDialog not created!');
+            return;
+          }
+          var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+          if (!msgEl) {
+             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
+             return;
+          }
+          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+          msgEl.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
+        },
 
+        _statusChangeConfirmationCallback: function(event) {
+          if (event.detail.confirmed) {
+            if (!this.editMode) {
+              return;
+            }
+            this.fire('hide-partner', {
+              id: this.partner.id,
+              hidden: true
+            });
+          }
+        },
         _showSyncedStatus: function(partner) {
           if (partner.vision_synced === true && partner.deleted_flag === false &&
               (typeof partner.blocked === 'undefined' || partner.blocked === false)) {
@@ -152,8 +217,14 @@
         },
         _triggerPartnerSave: function() {
           this.fire('save-partner', {});
-        }
+        },
 
+        _triggerHidePartner: function() {
+          if (this.partner.hidden) {
+            return;
+          }
+          this._showStatusChangeConfirmationDialog();
+        }
       });
     })();
 

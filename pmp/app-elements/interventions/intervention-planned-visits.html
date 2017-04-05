@@ -23,7 +23,7 @@
         width: 100%;
         padding: 7px 0;
 
-        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
@@ -68,30 +68,33 @@
                              value="{{item.programmatic}}"
                              type="number"
                              min="0"
+                             allowed-pattern="[0-9\.]"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]">
                 </paper-input>
               </div>
-              <div class="col col-3">
-                <paper-input label="Spot Checks"
-                             value="{{item.spot_checks}}"
-                             type="number"
-                             min="0"
-                             hidden
-                             placeholder="&#8212;"
-                             readonly$="[[!editMode]]">
-                </paper-input>
-              </div>
-              <div class="col col-3">
-                <paper-input label="Audit"
-                             value="{{item.audit}}"
-                             type="number"
-                             min="0"
-                             hidden
-                             placeholder="&#8212;"
-                             readonly$="[[!editMode]]">
-                </paper-input>
-              </div>
+              <!--<div class="col col-3">-->
+                <!--<paper-input label="Spot Checks"-->
+                             <!--value="{{item.spot_checks}}"-->
+                             <!--type="number"-->
+                             <!--min="0"-->
+                             <!--allowed-pattern="[0-9\.]"-->
+                             <!--hidden-->
+                             <!--placeholder="&#8212;"-->
+                             <!--readonly$="[[!editMode]]">-->
+                <!--</paper-input>-->
+              <!--</div>-->
+              <!--<div class="col col-3">-->
+                <!--<paper-input label="Audit"-->
+                             <!--value="{{item.audit}}"-->
+                             <!--type="number"-->
+                             <!--min="0"-->
+                             <!--allowed-pattern="[0-9\.]"-->
+                             <!--hidden-->
+                             <!--placeholder="&#8212;"-->
+                             <!--readonly$="[[!editMode]]">-->
+                <!--</paper-input>-->
+              <!--</div>-->
             </div>
           </div>
         </div>
@@ -133,7 +136,7 @@
           }
         },
         observers: [
-          '_dataItemsChanged(dataItems)',
+          '_dataItemsChanged(dataItems)'
         ],
 
         ready: function() {
@@ -141,8 +144,8 @@
             id: null,
             year: null,
             programmatic: null,
-            spot_checks: null,
-            audit: null
+//            spot_checks: null,
+//            audit: null
           };
         },
 

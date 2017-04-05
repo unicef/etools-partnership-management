@@ -17,7 +17,7 @@
 
       app-toolbar {
         padding: 0 16px 0 0;
-        background-color: var(--nonprod-header-color, #233944);
+        background-color: var(--header-bg-color, #233944);
       }
 
       div[main-title] {
@@ -33,7 +33,7 @@
       }
 
       etools-page-refresh, #profile {
-        color: #BCC1C6; /* TODO: replace with app-theme var */
+        color: var(--title-toolbar-secondary-text-color);
       }
 
       #menuButton {
@@ -130,9 +130,13 @@
         },
         _updateCountriesList: function(countries) {
           var arrayObj = countries.map(function(arrayItem) {
-            return {id: arrayItem.id, name: arrayItem.name, imgClass: this._getFlagIconClass(arrayItem.business_area_code)};
+            return {
+                id: arrayItem.id,
+                name: arrayItem.name,
+                imgClass: this._getFlagIconClass(arrayItem.business_area_code)
+              };
           }.bind(this));
-          arrayObj = _.sortBy(arrayObj, function(c){ return c.name; });
+          arrayObj = _.sortBy(arrayObj, function(c) { return c.name; });
           this.set('countries', arrayObj);
           },
         ready: function() {
@@ -152,7 +156,7 @@
 
           // If not production environment, changing header color to red
           if (location.indexOf(production) === -1) {
-            this.customStyle['--nonprod-header-color'] = '#A73838';
+            this.customStyle['--header-bg-color'] = 'var(--nonprod-header-color)'; // TODO:
             this.updateStyles();
           }
         },

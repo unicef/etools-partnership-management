@@ -396,7 +396,7 @@
 
       _validateAndSaveIntervention: function(event) {
         event.stopImmediatePropagation();
-
+        this.set('serverErrors', []);
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
@@ -418,6 +418,8 @@
               return frNumber.value;
             });
           }
+          // fr_numbers_details are readonly, we do not have to send them to backend
+          delete interventionData.fr_numbers_details;
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {

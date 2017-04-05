@@ -2,7 +2,8 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-amount-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
@@ -12,6 +13,7 @@
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <dom-module id="intervention-planned-budget">
   <template>
@@ -25,17 +27,17 @@
         width: 100%;
         padding: 7px 0;
 
-        --paper-fab-keyboard-focus-background: #8dc63f; /* TODO: replace with app-theme var */
+        --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
       }
-      paper-input {
+      etools-currency-amount-input {
         width: 100%;
       }
 
-      paper-input.total-input {
-        --paper-input-container-input: {
+      etools-currency-amount-input.total-input {
+        --etools-currency-container-input: {
           font-weight: bold;
         };
       }
@@ -47,7 +49,7 @@
 
       .darkbg {
         padding: 15px;
-        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        background-color: var(--medium-theme-background-color);
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
         border-radius: 10px;
@@ -61,8 +63,8 @@
         padding: 15px;
         @apply(--layout-horizontal);
       }
-      #totals-content-wrapper .darkbg:first-child {
-        margin-bottom: 15px;
+       .darkbg + .darkbg {
+        margin-top: 15px;
       }
 
       #totals-content-wrapper {
@@ -81,11 +83,13 @@
 
       .total-unicef {
         @apply(--layout-vertical);
+        max-width: 100%;
+        word-wrap: break-word;
       }
       .total-unicef span {
         display: inline-block;
         width: 100%;
-        background-color: #F7EE76; /* TODO: replace with app-theme var */
+        background-color: var(--ternary-color);
         padding: 15px;
         box-sizing: border-box;
         border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
@@ -145,40 +149,49 @@
                     </etools-searchable-multiselection-menu>
                   </div>
                   <div class="col col-8">
-                    <paper-input label="CSO Cont. (Local)"
+                    <etools-currency-amount-input id$="csoContLocal_[[index]]"
+                      label="CSO Cont. (Local)"
                       value="{{item.partner_contribution_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="CSO Cont. (Local) required">
+                    </etools-currency-amount-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <paper-input label="UNICEF Cash (Local)"
+                    <etools-currency-amount-input id$="unicefCashLocal_[[index]]"
+                      label="UNICEF Cash (Local)"
                       value="{{item.unicef_cash_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Cash (Local) required">
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Supply (Local)"
+                    <etools-currency-amount-input id$="inKindAmountLocal_[[index]]"
+                      label="UNICEF Supply (Local)"
                       value="{{item.in_kind_amount_local}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Supply (Local) required">
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Total (Local)"
-                      class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.unicef_cash_local, item.in_kind_amount_local, localCurrency)]]"
-                      placeholder="&#8212;"
-                      readonly>
-                    </paper-input>
+                    <etools-form-element-wrapper label="UNICEF Total (Local)">
+                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
+                    </etools-form-element-wrapper>
                   </div>
                 </div>
               </div>
@@ -189,42 +202,49 @@
                 <div class="row-h flex-c left-col">
                   <div class="col col-4"></div>
                   <div class="col col-8">
-                    <paper-input id$="partnerContribUsd_[[index]]"
+                    <etools-currency-amount-input id$="csoContUsd_[[index]]"
                       label="CSO Cont. (USD)"
                       value="{{item.partner_contribution}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="CSO Cont. (USD) required">
+                    </etools-currency-amount-input>
                   </div>
                 </div>
               </div>
               <div class="col col-8">
                 <div class="row-h flex-c darkbg">
                   <div class="col col-4">
-                    <paper-input id$="unicefCashUsd_[[index]]"
+                    <etools-currency-amount-input id$="unicefCashUsd_[[index]]"
                       label="UNICEF Cash (USD)"
                       value="{{item.unicef_cash}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Cash (USD) required">
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Supply (USD)"
+                    <etools-currency-amount-input id$="inKindAmountUsd_[[index]]"
+                      label="UNICEF Supply (USD)"
                       value="{{item.in_kind_amount}}"
                       type="number"
                       placeholder="&#8212;"
-                      readonly$="[[!editMode]]">
-                    </paper-input>
+                      readonly$="[[!editMode]]"
+                      required$="[[required]]"
+                      auto-validate
+                      error-message="UNICEF Supply (USD) required">
+                    </etools-currency-amount-input>
                   </div>
                   <div class="col col-4">
-                    <paper-input label="UNICEF Total (USD)"
-                      class="total-input"
-                      value$="[[_getPlannedBudgetTotal(item.unicef_cash, item.in_kind_amount, 'USD')]]"
-                      placeholder="&#8212;"
-                      readonly>
-                    </paper-input>
+                    <etools-form-element-wrapper label="UNICEF Total (USD)">
+                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] [[localCurrency]]
+                    </etools-form-element-wrapper>
                   </div>
                 </div>
               </div>
@@ -242,8 +262,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[_localUnicefTotal]] [[localCurrency]]</span>
-                <span>[[_usdUnicefTotal]] USD</span>
+                <span>[[displayCurrencyAmount(_localUnicefTotal, '0.00')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0.00')]] USD</span>
               </div>
             </div>
           </div>
@@ -254,8 +274,20 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[_localCsoTotal]] [[localCurrency]]</span>
-                <span>[[_usdCsoTotal]] USD</span>
+                <span>[[displayCurrencyAmount(_localCsoTotal, '0.00')]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdCsoTotal, '0.00')]] USD</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="darkbg">
+            <div class="col flex-c total-unicef-label">
+              <span>Total Budget (CSO + UNICEF)</span>
+            </div>
+            <div class="col col-4">
+              <div class="flex-c total-unicef">
+                <span>[[_getPlannedBudgetTotalFormatted(_localCsoTotal, _localUnicefTotal)]] [[localCurrency]]</span>
+                <span>[[_getPlannedBudgetTotalFormatted(_usdCsoTotal, _usdUnicefTotal)]] USD</span>
               </div>
             </div>
           </div>
@@ -284,7 +316,8 @@
 
         behaviors: [
           pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsBehaviors.EtoolsCurrencyBehavior
         ],
 
         properties: {
@@ -322,7 +355,7 @@
           },
           required: {
             type: Boolean,
-            value: false
+            value: true
           },
           editMode: {
             type: Boolean,
@@ -347,7 +380,7 @@
             unicef_cash: 0,
             in_kind_amount: 0,
             partner_contribution_local: 0,
-            unicef_cash_local:0,
+            unicef_cash_local: 0,
             in_kind_amount_local: 0,
             year: null,
             total: 0,
@@ -400,7 +433,6 @@
 
         _dataItemChange: function(dataItem) {
           if (dataItem.path !== 'dataItems.splices') {
-
             this._computeTotals(this.dataItems);
           }
         },
@@ -440,7 +472,7 @@
           }
           var plannedBudget = this.dataItems[index];
           plannedBudget = parseInt(plannedBudget.id, 10);
-          
+
           if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
             // planned budget already saved (has an id assigned)
             return false;
@@ -513,6 +545,10 @@
           return t;
         },
 
+        _getPlannedBudgetTotalFormatted: function(val1, val2) {
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0.00');
+        },
+
         _yearAlreadySelected: function(year, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
           var selected = false;
@@ -546,10 +582,15 @@
               valid = false;
             }
             this.dataItems.forEach(function(item, index) {
-              var yearEl = this.$$('#year_' + index);
-              if (!yearEl.validate()) {
+              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index];
+              elementsSelectorsToValidate.forEach(function(selector) {
+                var el = this.$$(selector);
+                if (el && !el.validate()) {
                   valid = false;
-              }
+                }
+              }.bind(this));
             }.bind(this));
           }
           return valid;
@@ -560,10 +601,15 @@
           this.$.currency.invalid = false;
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
-              var yearEl = this.$$('#year_' + index);
-              if (yearEl) {
-                  yearEl.set('invalid', false);
-              }
+              var elementsSelectorsToValidate = ['#year_' + index, '#csoContLocal_' + index, '#unicefCashLocal_' + index,
+                '#inKindAmountLocal_' + index, '#csoContUsd_' + index, '#unicefCashUsd_' + index,
+                '#inKindAmountUsd_' + index];
+              elementsSelectorsToValidate.forEach(function(selector) {
+                var el = this.$$(selector);
+                if (el) {
+                  el.set('invalid', false);
+                }
+              }.bind(this));
             }.bind(this));
           }
         },

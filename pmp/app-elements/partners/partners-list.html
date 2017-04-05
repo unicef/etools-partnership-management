@@ -10,33 +10,29 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="partners-data/partners-list-data.html">
 <link rel="import" href="partner-item.html">
 
-<link rel="import" href="../data-table/data-table-footer.html">
-<link rel="import" href="../data-table/data-table-header.html">
-<link rel="import" href="../data-table/data-table-column.html">
-<link rel="import" href="../data-table/data-table-row.html">
-
 <dom-module id="partners-list">
 
   <template>
 
-    <style include="shared-styles list-styles iron-flex iron-flex-factors partner-status-styles">
+    <style include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles">
       :host {
         /* TODO: paper-toggle-button style could be global, recheck this when app-theme colors are defined */
-        --paper-toggle-button-checked-bar-color: #88D4F7; /* TODO: replace with app-theme var */
-        --paper-toggle-button-checked-button-color: #3baaee; /* TODO: replace with app-theme var */
+        --paper-toggle-button-checked-bar-color: var(--accent-color);
+        --paper-toggle-button-checked-button-color: var(--secondary-color);
       }
 
       .sm-status-wrapper {
@@ -48,6 +44,7 @@
                         filtered-partners="{{filteredPartners}}"
                         total-results="{{totalResults}}"
                         on-partners-loaded="_requiredDataHasBeenLoaded"
+                        list-data-path="filteredPartners"
                         fire-data-loaded show-loading>
     </partners-list-data>
 
@@ -58,10 +55,8 @@
         <paper-input id="query"
             type="search"
             autocomplete="off"
-            value="[[q]]"
-            on-keyup="_setQ"
-            placeholder="Search"
-            on-search="_setQ">
+            value="{{q}}"
+            placeholder="Search">
             <iron-icon icon="search" prefix></iron-icon>
         </paper-input>
 
@@ -75,7 +70,7 @@
                           on-iron-deselect="filterValueChanged"
                           data-filter-path$="[[filter.path]]"
                           on-iron-activate="_dropdownSelected"
-                          selected=[[filter.alreadySelected]]>
+                          selected="[[filter.alreadySelected]]">
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                   <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
@@ -118,23 +113,23 @@
 
     <paper-material id="list" elevation="1">
 
-        <data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
-          <data-table-column class="flex" field="vendor_number" sortable>
+        <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+          <etools-data-table-column class="flex" field="vendor_number" sortable>
             Vendor #
-          </data-table-column>
-          <data-table-column class="flex-3" field="name" sortable>
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-3" field="name" sortable>
             Name(short - full)
-          </data-table-column>
-          <data-table-column class="flex-2" field="partner_type">
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-2" field="partner_type">
             Type
-          </data-table-column>
-          <data-table-column class="flex" field="rating">
+          </etools-data-table-column>
+          <etools-data-table-column class="flex" field="rating">
             Risk
-          </data-table-column>
-        </data-table-header>
+          </etools-data-table-column>
+        </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
-          <data-table-row details-opened="[[detailsOpened]]">
+          <etools-data-table-row details-opened="[[detailsOpened]]">
             <div slot="row-data">
               <a class="col-data flex truncate"
                  href="partners/[[partner.id]]/details"
@@ -186,17 +181,17 @@
                 <span>$ [[getDisplayValue(partner.total_ct_cy)]]</span>
               </div>
             </div>
-          </data-table-row>
+          </etools-data-table-row>
         </template>
 
-        <data-table-footer
+        <etools-data-table-footer
           page-size="[[pageSize]]"
           page-number="[[pageNumber]]"
           total-results="[[totalResults]]"
           visible-range="{{visibleRange}}"
           on-page-size-changed="_pageSizeChanged"
           on-page-number-changed="_pageNumberChanged">
-        </data-table-footer>
+        </etools-data-table-footer>
 
     </paper-material>
 
@@ -217,7 +212,8 @@
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -225,13 +221,7 @@
           filteredPartners: {
             type: Array,
             notify: true,
-            observer: '_partnersChanged'
-          },
-
-          q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
+            observer: '_listChanged'
           },
 
           csoTypes: {
@@ -252,42 +242,14 @@
             type: String
           },
 
-          sortOrder: {
-            type: Object,
-          },
-
-          pageNumber: {
-            type: Number
-          },
-
-          pageSize: {
-            type: Number
-          },
-
           showHidden: {
             type: Boolean
-          },
-
-          debounceTime: {
-            type: Number,
-            value: 50
           },
 
           urlParams: {
             type: Object,
           },
 
-          detailsOpened: Boolean,
-          active: Boolean,
-
-          forceDataRefresh: {
-            type: Boolean,
-            value: false
-          },
-          requiredDataLoaded: {
-            type: Boolean,
-            value: false
-          },
           initComplete: {
             type: Boolean,
             value: false
@@ -358,8 +320,8 @@
           this._updateSelectedFiltersValues();
         },
 
-        _updateSelectedFiltersValues: function(){
-          this.debounce('updateShownFilters', function () {
+        _updateSelectedFiltersValues: function() {
+          this.debounce('updateShownFilters', function() {
             var filtersValues = [
               {
                 filterName: 'Partner Type',
@@ -473,31 +435,6 @@
           return endpointUrl + '?' + queryString;
         },
 
-        _sortOrderChanged: function(e) {
-          this.set('debounceTime', 150);
-          this.set('sortOrder', e.detail);
-        },
-
-        _pageSizeChanged: function(e) {
-          this.set('debounceTime', 200);
-          this.set('pageNumber', 1);
-          this.set('pageSize', parseInt(e.detail.value));
-        },
-
-        _pageNumberChanged: function(e) {
-          this.set('debounceTime', 50);
-          this.set('pageNumber', e.detail.value);
-        },
-
-        _setQ: function() {
-          this.set('q', this.$.query.value);
-        },
-
-        _qChanged: function(q) {
-          this.set('debounceTime', 300);
-          this.set('pageNumber', 1);
-        },
-
         _dropdownSelected: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
@@ -507,14 +444,6 @@
           this.set('debounceTime', 50);
           this.set('showHidden', this.showHidden ? false : true);
           this.set('pageNumber', 1);
-        },
-
-        // List fade in fade out effect
-        _partnersChanged: function(filteredPartners) {
-          var classList = this.$.list.classList;
-          if (filteredPartners instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-          }
         },
 
         _computeName: function(name, shortName) {
@@ -530,36 +459,6 @@
             return 'CSO / ' + csoType;
           }
         },
-
-        // When the list data rows are changing check and close any details opened
-        _listDataChanged: function() {
-          var rows = this.$.list.querySelectorAll('data-table-row');
-          if (rows && rows.length) {
-            for (var i = 0; i < rows.length; i++) {
-              if (rows[i].detailsOpened) {
-                rows[i].set('detailsOpened', false);
-              }
-            }
-          }
-        },
-
-        /**
-         * At page refresh Dexie DBs might be wiped out and filteredPartners will be empty.
-         * Because of this we need to refilter after partners data is saved locally.
-         */
-        _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-          if (typeof this.filteredPartners === 'undefined' ||
-              (Array.isArray(this.filteredPartners) && this.filteredPartners.length === 0)) {
-            this.set('forceDataRefresh',  true);
-          }
-          // recheck params to trigger partners filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-        },
-
       });
     })();
 

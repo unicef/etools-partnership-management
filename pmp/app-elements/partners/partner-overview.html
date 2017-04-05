@@ -11,10 +11,6 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
-<link rel="import" href="../../../styles/list-styles.html">
-
-
-
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -22,7 +18,7 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles list-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -39,7 +35,7 @@
 
       paper-material paper-toolbar {
         --paper-toolbar-height: 40px;
-        --paper-toolbar-background: #F2F2F2; /* TODO: replace with app-theme var */
+        --paper-toolbar-background: var(--medium-theme-background-color);
         --paper-toolbar: {
           -webkit-border-radius: 8px;
           -moz-border-radius: 8px;
@@ -62,7 +58,7 @@
       .hact-heading {
         @apply(--layout-vertical);
         margin-top: 20px;
-        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        background-color: var(--medium-theme-background-color);
         -webkit-border-radius: 8px;
         -moz-border-radius: 8px;
         border-radius: 8px;
@@ -186,7 +182,7 @@
                 [[partnership.title]]
                 </div>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0')]] </div>
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0')]] </div>
               <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
               <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
             </div>
@@ -263,7 +259,7 @@
           var programmeVisits = 0;
           var spotChecks = 0;
 
-          switch(true) {
+          switch (true) {
 
             case (cashTransferred <= 50000):
               programmeVisits = 1;
@@ -300,11 +296,11 @@
         },
 
         _prepareInterventionData: function() {
-          for(var key1 in this.partner.interventions) {
+          for (var key1 in this.partner.interventions) {
             var intervention = this.partner.interventions[key1];
             var total = 0;
 
-            for(var key2 in intervention.planned_budget) {
+            for (var key2 in intervention.planned_budget) {
               total += parseFloat(intervention.planned_budget[key2].total);
             }
 

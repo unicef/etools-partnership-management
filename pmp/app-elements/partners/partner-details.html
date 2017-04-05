@@ -219,7 +219,10 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <partner-status on-save-partner="_validateAndTriggerPartnerSave" partner="[[partner]]"></partner-status>
+      <partner-status on-save-partner="_validateAndTriggerPartnerSave"
+        partner="[[partner]]"
+        edit-mode$="[[editMode]]">
+      </partner-status>
     </div>
     <!-- sidebar content end -->
 
@@ -232,7 +235,7 @@
       Polymer({
         is: 'partner-details',
 
-        behaviors: [        
+        behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior
@@ -313,7 +316,13 @@
         },
 
         _cleanUpdateData: function(partner) {
-          var updateableFields = ['alternate_name', 'shared_with', 'staff_members', 'assessments', 'core_values_assessment'];
+          var updateableFields = [
+              'alternate_name',
+              'shared_with',
+              'staff_members',
+              'assessments',
+              'core_values_assessment'
+            ];
           var changes = {};
           updateableFields.forEach(function(fieldName) {
             // TODO: improve this

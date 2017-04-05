@@ -27,7 +27,7 @@
       }
 
       .item-container {
-        background-color: #EDEDED; /* TODO: replace with app-theme var */
+        background-color: var(--medium-theme-background-color);
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
         border-radius: 10px;
@@ -43,7 +43,7 @@
       }
 
       .action.delete:not(:hover) {
-        color: #929292 /* TODO: replace with app-theme var */
+        color: var(--medium-icon-color);
       }
 
       .add-btn-wrapper {
@@ -81,10 +81,10 @@
         min-height: 41px;
       }
       .indicator-col .indicator-baseline {
-        background-color: #F7EE76; /* TODO: replace with app-theme var */
+        background-color: var(--ternary-color);
       }
       .indicator-col .indicator-target {
-        background-color: #75C300; /* TODO: replace with app-theme var */
+        background-color: var(--success-color);
       }
       .indicator-col .content {
         padding: 10px 0;
@@ -132,7 +132,11 @@
             <div class="row-h">
               <paper-input label="PD or SSFA ToR Output"
                            value="{{item.name}}"
-                           readonly$="[[!editMode]]"></paper-input>
+                           readonly$="[[!editMode]]"
+                           required
+                           auto-validate
+                           invalid
+                           error-message="Lower Output needs to be specified!"></paper-input>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
@@ -164,7 +168,7 @@
                   <div class="indicator-col flex-c">
                     <span class="heading">Indicator</span>
                     <span class="content">
-                      [[_displayIndicatorValue(indicator.name)]]
+                      [[_getIndicatorType(indicator.unit)]][[_displayIndicatorValue(indicator.name)]]
                     </span>
                   </div>
                 </div>
@@ -242,10 +246,25 @@
         },
 
         _displayIndicatorValue: function(value) {
+          value = value ? value.toString() : '';
           if (typeof value === 'string' && value !== '') {
             return value;
           } else {
             return '-';
+          }
+        },
+
+        _getIndicatorType: function(unit) {
+          if (!unit) {
+            return '';
+          }
+          switch (unit) {
+            case 'numeric':
+              return '# - ';
+            case 'percentage':
+              return '% - ';
+            case 'yesno':
+              return 'Yes/No - ';
           }
         },
 

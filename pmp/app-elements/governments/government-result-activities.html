@@ -10,7 +10,7 @@
   <template>
     <style include="iron-flex iron-flex-alignment iron-flex-factors buttons-styles">
       .activity {
-        background: var(--activity-panel-background-color);
+        background: var(--medium-theme-background-color);
         border-radius: 8px;
         padding: 12px 24px;
         margin-top: 12px;
@@ -88,7 +88,7 @@
 
   <script>
     Polymer({
-      is: "government-result-activities",
+      is: 'government-result-activities',
       properties: {
         dataItems: {
           type: Array,
@@ -104,6 +104,6 @@
         pmpBehaviors.RepeatableDataSetsBehavior,
         etoolsAppConfig.globals
       ]
-    })
+    });
   </script>
 </dom-module>

@@ -25,8 +25,10 @@
 
         is: 'user-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior, 
-                    etoolsAppConfig.globals],
+        behaviors: [
+          pmpBehaviors.DataElementBehavior,
+          etoolsAppConfig.globals
+        ],
 
         properties: {
 
@@ -59,11 +61,11 @@
         },
 
         _findGroup: function(groupName) {
-          return _.find(this.userGroups, function(grp){ return grp.name === groupName})
+          return _.find(this.userGroups, function(grp) {
+             return grp.name === groupName;
+          });
         },
         _handleError: function(rsp, err) {
-          console.log(rsp);
-          console.log(err);
           this._setUser(null);
           this._setPermissions(null);
         },
@@ -76,7 +78,7 @@
           var permissionsList = this.getAllPermissions();
 
           if (!_.isEmpty(data)) {
-            this._setUserGroups(_user.groups)
+            this._setUserGroups(_user.groups);
 
             permissionsList.defaultPermissions.forEach(function(perm) {
               _permissions[perm] = true;
@@ -102,10 +104,10 @@
               });
             }
           } else {
-            //for testing
-            permissionsList.superPermissions.forEach(function(perm) {
-              _permissions[perm] = true;
-            });
+            // TODO: we need to redirect to login page if no user data received
+            // permissionsList.superPermissions.forEach(function(perm) {
+            //  _permissions[perm] = true;
+            // });
           }
           this._setPermissions(_permissions);
         }

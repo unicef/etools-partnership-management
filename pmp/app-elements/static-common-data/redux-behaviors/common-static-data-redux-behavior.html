@@ -1,13 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
+  // shuts up the linting script
+  var Redux = Redux || {};
+  var PolymerRedux = PolymerRedux || {};
+
   var initialDropdownPmpData = {
     hrps: [],
     supplyItems: [],
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
-    unmodifiedCpOutputs: [],
     countryProgrammes: [],
     interventionDocTypes: [],
     interventionStatuses: [],
@@ -39,118 +42,115 @@
     switch (action.type) {
       case 'SET_HRPS':
         // console.log('set hrps data...', action.hrps);
-        return Object.assign({}, state, { hrps: action.hrps });
+        return Object.assign({}, state, {hrps: action.hrps});
 
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
-        return Object.assign({}, state, { fileTypes: action.fileTypes });
-
+        return Object.assign({}, state, {fileTypes: action.fileTypes});
 
       case 'SET_CP_OUTPUTS':
         // console.log('set cp_outputs data...', action.cpOutputs);
-        return Object.assign({}, state, { cpOutputs: action.cpOutputs });
-
-      case 'SET_UNMODIFIED_CP_OUTPUTS':
-        // console.log('set unmodified cp_outputs data...', action.unmodifiedCpOutputs);
-        return Object.assign({}, state, { unmodifiedCpOutputs: action.unmodifiedCpOutputs });
+        return Object.assign({}, state, {cpOutputs: action.cpOutputs});
 
       case 'SET_CP_DATA':
         // console.log('set countryProgrammes data...', action.countryProgrammes);
-        return Object.assign({}, state, { countryProgrammes: action.countryProgrammes });
+        return Object.assign({}, state, {countryProgrammes: action.countryProgrammes});
 
       case 'SET_SIGNED_BY_UNICEF_USERS':
         // console.log('set signed_by_unicef_users data...', action.signedByUnicefUsers);
-        return Object.assign({}, state, { signedByUnicefUsers: action.signedByUnicefUsers });
+        return Object.assign({}, state, {signedByUnicefUsers: action.signedByUnicefUsers});
 
       case 'SET_SUPPLY_ITEMS':
         // console.log('set supply_items data...', action.supplyItems);
-        return Object.assign({}, state, { supplyItems: action.supplyItems });
+        return Object.assign({}, state, {supplyItems: action.supplyItems});
 
       case 'SET_INTERVENTION_DOC_TYPES':
         // console.log('set interventionDocTypes data...', action.interventionDocTypes);
-        return Object.assign({}, state, { interventionDocTypes: action.interventionDocTypes });
+        return Object.assign({}, state, {interventionDocTypes: action.interventionDocTypes});
 
       case 'SET_INTERVENTION_STATUSES':
         // console.log('set interventionStatuses data...', action.statuses);
-        return Object.assign({}, state, { interventionStatuses: action.statuses });
+        return Object.assign({}, state, {interventionStatuses: action.statuses});
 
       case 'SET_SECTORS':
         // console.log('set sectors data...', action.sectors);
-        return Object.assign({}, state, { sectors: action.sectors });
+        return Object.assign({}, state, {sectors: action.sectors});
 
       case 'SET_SECTIONS':
         // console.log('set sectors data...', action.sectors);
-        return Object.assign({}, state, { sections: action.sections });
+        return Object.assign({}, state, {sections: action.sections});
 
       case 'SET_LOCATIONS':
         // console.log('set locations data...', action.locations);
-        return Object.assign({}, state, { locations: action.locations });
+        return Object.assign({}, state, {locations: action.locations});
 
       case 'SET_UNICEF_USERS_DATA':
         // console.log('set unicefUsersData data...', action.unicefUsersData);
-        return Object.assign({}, state, { unicefUsersData: action.unicefUsersData });
+        return Object.assign({}, state, {unicefUsersData: action.unicefUsersData});
 
       case 'SET_OFFICES':
         // console.log('set offices data...', action.offices);
-        return Object.assign({}, state, { offices: action.offices });
+        return Object.assign({}, state, {offices: action.offices});
 
       case 'SET_PARTNERS':
         //console.log('set partners data...', action.partners);
-        return Object.assign({}, state, { partners: action.partnersData });
+        return Object.assign({}, state, {partners: action.partnersData});
+
       case 'SET_AGREEMENTS':
         //console.log('set partners data...', action.partners);
-        return Object.assign({}, state, { agreementsList: action.agreementsList });
+        return Object.assign({}, state, {agreementsList: action.agreementsList});
+
       case 'SET_PARTNERS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
-        return Object.assign({}, state, { partnersDropdownData: action.partnersDropdownData });
+        return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
 
       case 'SET_PARTNERS_FILTERED_DROPDOWN':
         // console.log('set filtered partners data...', action.partnersFilteredDropdownData);
-        return Object.assign({}, state, { partnersFilteredDropdownData: action.partnersFilteredDropdownData });
+        return Object.assign({}, state, {partnersFilteredDropdownData: action.partnersFilteredDropdownData});
 
       case 'SET_AGREEMENTS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
-        return Object.assign({}, state, { agreementsDropdownData: action.agreementsDropdownData });
+        return Object.assign({}, state, {agreementsDropdownData: action.agreementsDropdownData});
 
       case 'SET_CURRENCIES':
         // console.log('set currencies data...', action.currencies);
-        return Object.assign({}, state, { currencies: action.currencies });
+        return Object.assign({}, state, {currencies: action.currencies});
 
       case 'SET_AGREEMENT_TYPES':
         // console.log('set agreement_types data...', action.agreementTypes);
-        return Object.assign({}, state, { agreementTypes: action.agreementTypes });
+        return Object.assign({}, state, {agreementTypes: action.agreementTypes});
 
       case 'SET_AGREEMENT_STATUSES':
         // console.log('set agreement_statuses data...', action.statuses);
         return Object.assign({}, state, {agreementStatuses: action.statuses});
+
       case 'SET_CSO_PARTNERS':
         // console.log('set cso partners data...', action.csoPartners);
         return Object.assign({}, state, {csoPartners: action.csoPartners});
 
       case 'SET_CSO_TYPES':
         // console.log('set csoTypes...', action.csoTypes);
-        return Object.assign({}, state, { csoTypes: action.csoTypes });
+        return Object.assign({}, state, {csoTypes: action.csoTypes});
 
       case 'SET_PARTNER_TYPES':
         // console.log('set partnerTypes...', action.partnerTypes);
-        return Object.assign({}, state, { partnerTypes: action.partnerTypes });
+        return Object.assign({}, state, {partnerTypes: action.partnerTypes});
 
       case 'SET_AGENCY_CHOICHES':
         // console.log('set agencyChoices...', action.agencyChoices);
-        return Object.assign({}, state, { agencyChoices: action.agencyChoices });
+        return Object.assign({}, state, {agencyChoices: action.agencyChoices});
 
       case 'SET_AGREEMENT_AMENDMENT_TYPES':
         // console.log('set agreementAmendmentTypes...', action.agreementAmendmentTypes);
-        return Object.assign({}, state, { agreementAmendmentTypes: action.agreementAmendmentTypes });
+        return Object.assign({}, state, {agreementAmendmentTypes: action.agreementAmendmentTypes});
 
       case 'SET_ASSESSMENT_TYPES':
         // console.log('set assessmentTypes...', action.assessmentTypes);
-        return Object.assign({}, state, { assessmentTypes: action.assessmentTypes});
+        return Object.assign({}, state, {assessmentTypes: action.assessmentTypes});
 
       case 'SET_INTERVENTION_AMENDMENT_TYPES':
         // console.log('set interventionAmendmentTypes...', action.interventionAmendmentTypes);
-        return Object.assign({}, state, { interventionAmendmentTypes: action.interventionAmendmentTypes });
-
+        return Object.assign({}, state, {interventionAmendmentTypes: action.interventionAmendmentTypes});
     }
   });
 

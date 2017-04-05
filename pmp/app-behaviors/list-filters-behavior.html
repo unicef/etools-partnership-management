@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.ListFiltersBehavior */
   pmpBehaviors.ListFiltersBehavior = {
 
     properties: {
@@ -28,10 +29,11 @@
 
     // update filter data
     updateFilters: function(filterName, property, newValue) {
+      var i;
       // update main filters
       if (this.listFilterOptions) {
         if (this.listFilterOptions.length > 0) {
-          for (var i = 0; i < this.listFilterOptions.length; i++) {
+          for (i = 0; i < this.listFilterOptions.length; i++) {
             if (this.listFilterOptions[i].filterName === filterName) {
               this.set('listFilterOptions.' + i + '.' + property, newValue);
               break;
@@ -41,7 +43,7 @@
         // update available filters
         var found = false;
         if (this.availableListFilterOptions.length > 0) {
-          for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+          for (i = 0; i < this.availableListFilterOptions.length; i++) {
             if (this.availableListFilterOptions[i].filterName === filterName) {
               this.set('availableListFilterOptions.' + i + '.' + property, newValue);
               found = true;
@@ -52,7 +54,7 @@
         // if the filter was moved from available to selected then update in selected filters
         if (!found) {
           if (this.selectedFilters.length > 0) {
-            for (var i = 0; i < this.selectedFilters.length; i++) {
+            for (i = 0; i < this.selectedFilters.length; i++) {
               if (this.selectedFilters[i].filterName === filterName) {
                 this.set('selectedFilters.' + i + '.' + property, newValue);
                 break;
@@ -147,6 +149,7 @@
     },
     // update shown filters
     updateShownFilters: function(filters) {
+      var i;
       if (!filters) {
         filters = [];
       }
@@ -156,12 +159,13 @@
           if (this._validateFilterSelectedValue(filter.selectedValue)) {
             var foundInAvailable = false;
             if (this.availableListFilterOptions.length > 0) {
-              for (var i = 0; i < this.availableListFilterOptions.length; i++) {
+              for (i = 0; i < this.availableListFilterOptions.length; i++) {
                 if (this.availableListFilterOptions[i].filterName === filter.filterName) {
-                  if (this.availableListFilterOptions[i].type === 'esmm' || this.availableListFilterOptions[i].type === 'dropdown') {
+                  var type = this.availableListFilterOptions[i].type;
+                  if (type === 'esmm' || type === 'dropdown') {
                     // update esmm dropdown selection
                     this.set('availableListFilterOptions.' + i + '.alreadySelected', filter.selectedValue);
-                  } else if (this.availableListFilterOptions[i].type === 'datepicker') {
+                  } else if (type === 'datepicker') {
                     // update datepicker selection
                     this.set('availableListFilterOptions.' + i + '.dateSelected', filter.selectedValue);
                   }
@@ -176,7 +180,7 @@
             // search it in selected filters lists and update selected value0
             if (!foundInAvailable) {
               if (this.selectedFilters.length > 0) {
-                for (var i = 0; i < this.selectedFilters.length; i++) {
+                for (i = 0; i < this.selectedFilters.length; i++) {
                   if (this.selectedFilters[i].filterName === filter.filterName) {
                     if (this.selectedFilters[i].type === 'esmm' || this.selectedFilters[i].type === 'dropdown') {
                       // update esmm dropdown selection
