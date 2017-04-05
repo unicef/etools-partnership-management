@@ -1,4 +1,4 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+
 <link rel="import" href="date-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
@@ -29,7 +29,12 @@
       }
       return '-';
     },
-
+    /**
+     * Prepare date string and return it in a user readable format
+    */
+    getDateDisplayValue: function(dateString) {
+      return this.getDisplayValue(dateString, true);
+    },
     /**
      * Update URL params
      */

@@ -182,8 +182,8 @@
                 <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
                     [[record.fc_ref_number]]
                 </a>
-                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.due_date)]]">
-                    [[_checkAndShowDate(record.due_date)]]
+                <span class="col-data col-2 truncate" title="[[getDateDisplayValue(record.due_date)]]">
+                    [[getDateDisplayValue(record.due_date)]]
                 </span>
                 <span class="col-data col-4" title="[[record.line_item_text]]">
                     [[record.line_item_text]]
@@ -380,9 +380,6 @@
           }
         }
         return null;
-      },
-      _checkAndShowDate: function(dateString) {
-        return this.getDisplayValue(dateString, true);
       },
 
   });
