@@ -91,7 +91,7 @@
                     <iron-icon icon="file-download"></iron-icon>
                     Export
                   </paper-button>
-                </a>  
+                </a>
               </div>
               <!-- Print functionality pending implementation -->
               <!--<div class="top-content-action"  hidden$="[[!listActive]]">
@@ -233,7 +233,13 @@
           type: Number
         },
         intervention: {
-          type: Object
+          type: Object,
+          notify: true,
+          observer: '_interventionChanged'
+        },
+        originalIntervention: {
+          type: Object,
+          value: {}
         },
         partnerStaffMembers: Array,
         partnerId: {
@@ -312,6 +318,9 @@
         }
       },
 
+      _interventionChanged: function(intervention) {
+        this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
+      },
       _resizeHeader: function() {
         this.$$('app-header-layout').notifyResize();
       },
@@ -422,15 +431,15 @@
           delete interventionData.fr_numbers_details;
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
-            interventionData.attachments = interventionData.attachments.map(function(attachment) {
-              
+            interventionData.attachments = this._getNewOrModifiedAttachments(interventionData.attachments)
+            .map(function(attachment) {
               var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
               if (!_sendAttachmentFile && attachment.id) {
                 return {
                   id: attachment.id
                 };
               } else {
-                return {
+                return  {
                   id: attachment.id,
                   intervention: attachment.intervention,
                   type: attachment.type,
@@ -439,7 +448,7 @@
               }
             });
           }
-          // if prc_review_document is null we need to delete the property otherwise the 
+          // if prc_review_document is null we need to delete the property otherwise the
           // file gets deleted from the backend
           if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
             delete interventionData.prc_review_document;
@@ -450,7 +459,25 @@
           this._showErrorsWarning(validInterventionDetails, validReviewAndSign);
         }
       },
-
+      _getNewOrModifiedAttachments: function(attachments) {
+        var modifAttachments = [];
+        var originalAttachments = this.originalIntervention.attachments;
+        for (var i =0; i < attachments.length; i++) {
+          if (this._attachmentIsNewOrModified(attachments[i], i, originalAttachments)) {
+             modifAttachments.push(attachments[i]);
+          }
+        }
+        return modifAttachments;
+      },
+      _attachmentIsNewOrModified: function(attachment, index, originalAttachments) {
+        if (!attachment.id) {
+          return true;
+        }
+        if(!originalAttachments || !originalAttachments[index]) {
+          return true;
+        }
+        return (JSON.stringify(originalAttachments[index]) !== JSON.stringify(attachment));
+      },
       _showErrorsWarning: function(validDetails, validReviewAndSign) {
         var msg = 'Please review invalid fields data';
         var tabs = [];
@@ -480,7 +507,7 @@
         return {
           id: null,
           intervention: interventionId ? interventionId : null,
-          type: null 
+          type: null
         };
       },
 
