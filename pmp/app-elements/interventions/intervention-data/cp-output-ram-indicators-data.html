@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-config/etools-app-config.html">
 
 <dom-module id="cp-output-ram-indicators-data">
 
@@ -35,7 +36,17 @@
             observer: '_cpOutputIdChanged'
           },
 
-          ajaxEl: Object,
+          ajaxEl: {
+            type: Object,
+          },
+
+          label: {
+            type: String,
+          },
+
+          endpoint: {
+            type: Object,
+          },
 
           globalMessage: {
             type: String,
