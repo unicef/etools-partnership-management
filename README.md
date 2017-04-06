@@ -30,10 +30,10 @@ Update app shell from [etools-frontend-template](https://github.com/unicef-polym
 Check your local project remote repository for etools-frontend-template:
 ```bash
 $ git remote -v
-etools-frontend-template	https://github.com/unicef-polymer/etools-frontend-template.git (fetch)
-etools-frontend-template	https://github.com/unicef-polymer/etools-frontend-template.git (push)
-origin	https://github.com/unicef/etools-partnership-management.git (fetch)
-origin	https://github.com/unicef/etools-partnership-management.git (push)
+etools-frontend-template  https://github.com/unicef-polymer/etools-frontend-template.git (fetch)
+etools-frontend-template  https://github.com/unicef-polymer/etools-frontend-template.git (push)
+origin  https://github.com/unicef/etools-partnership-management.git (fetch)
+origin  https://github.com/unicef/etools-partnership-management.git (push)
 ```
 
 If etools-frontend-template is not listed run:
@@ -54,8 +54,8 @@ From https://github.com/unicef-polymer/etools-frontend-template
 $ git merge --no-ff etools-frontend-template/develop
 ```
 
-**IMPORTANT!!!** Be careful with frontend app shell template update. It might contain new features you do not have 
-in your app or you might have made significant changes to fit your app requirements. You may have conflicts at merge. 
+**IMPORTANT!!!** Be careful with frontend app shell template update. It might contain new features you do not have
+in your app or you might have made significant changes to fit your app requirements. You may have conflicts at merge.
 
 Build Application
 -----------------
@@ -93,6 +93,15 @@ View your app at http://localhost:8080
 This command will start the server and use the bundled build (build/bundled folder) to serve the files from.
 Before you can serve the bundled build you have to generate the build files.
 Service worker only works in the built app, so test service worker functionality here.
+
+Check the code
+---------------------------------
+
+Run the lint task to check for issues with the code. Please do this before finishing a pull request
+
+```bash
+$ gulp lint
+```
 
 Additional options for gulp tasks
 ---------------------------------

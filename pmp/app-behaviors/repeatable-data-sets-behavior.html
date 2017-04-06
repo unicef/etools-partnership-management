@@ -1,8 +1,8 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.RepeatableDataSetsBehaviorImpl */
   pmpBehaviors.RepeatableDataSetsBehaviorImpl = {
     // make sure you add DynamicDialogBehavior too in your element
     properties: {
@@ -176,6 +176,7 @@
     }
   };
 
+  /** @polymerBehavior pmpBehaviors.RepeatableDataSetsBehavior */
   pmpBehaviors.RepeatableDataSetsBehavior = [
     etoolsBehaviors.DynamicDialogBehavior,
     pmpBehaviors.RepeatableDataSetsBehaviorImpl

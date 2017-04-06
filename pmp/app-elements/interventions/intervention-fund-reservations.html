@@ -77,7 +77,8 @@
               <paper-input id$="frNumber_[[index]]"
                            label="FR Number"
                            value="{{item.value}}"
-                           placeholder="&#8212;" readonly$="[[!editMode]]"></paper-input>
+                           placeholder="&#8212;" readonly$="[[!editMode]]">
+              </paper-input>
             </div>
 
             <template is="dom-if" if="[[_showFrNrDetails(item.value)]]">

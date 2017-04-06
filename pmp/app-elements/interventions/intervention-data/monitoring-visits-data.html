@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-config/etools-app-config.html">
 
 <dom-module id="monitoring-visits-data">
 
@@ -20,7 +21,10 @@
       Polymer({
 
         is: 'monitoring-visits-data',
-        behaviors: [etoolsAppConfig.globals, pmpBehaviors.AjaxServerErrorsBehavior],
+        behaviors: [
+          etoolsAppConfig.globals,
+          pmpBehaviors.AjaxServerErrorsBehavior
+        ],
         properties: {
           monitoringVisits: {
             type: Array,
@@ -32,7 +36,13 @@
             observer: '_interventionIdChanged'
           },
 
-          ajaxEl: Object,
+          ajaxEl: {
+            type: Object
+          },
+
+          endpoint: {
+            type: Object
+          },
 
           globalMessage: {
             type: String,
