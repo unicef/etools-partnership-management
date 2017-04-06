@@ -3,7 +3,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../app-config/etools-app-config.html">
@@ -54,7 +53,6 @@
                                        intervention="{{intervention}}"
                                        intervention-id="[[selectedInterventionId]]"
                                        on-response-received="_refreshGovernmentsList"></government-intervention-item-data>
-    <app-header-layout>
 
       <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
         <div class="top-content">
@@ -147,7 +145,6 @@
           <government-status on-save-intervention="_validateSave"></government-status>
         </div>
       </div>
-    </app-header-layout>
 
   </template>
 
@@ -207,7 +204,6 @@
       },
 
        observers: [
-//         '_resizeHeader(governmentListActive, agreementDetailsActive, newAgreementActive)',
          '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
          '_updateUrlTab(routeData.tab)',
          '_observeRouteDataId(routeData.id)',
@@ -288,5 +284,3 @@
 
   </script>
 </dom-module>
-
-//TODO 1. save after error, delete function
