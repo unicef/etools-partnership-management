@@ -82,6 +82,7 @@
              options="[[agreementAuthorizedOfficers]]"
              selected="{{intervention.partner_authorized_officer_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -105,6 +106,7 @@
              options="[[signedByUnicefUsers]]"
              selected="{{intervention.unicef_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -204,8 +206,9 @@
         },
 
         _interventionChanged: function(intervention) {
-          // ensure loading msg close
+          console.log(intervention);
           this._setNewEditMode();
+          // ensure loading msg close
           this.fire('global-loading', {active: false});
         },
         _setNewEditMode: function() {
@@ -231,6 +234,7 @@
         },
 
         _agreementChanged: function(agreement) {
+          console.log(agreement);
           if (agreement && typeof agreement === 'object' && Object.keys(agreement).length > 0) {
             var authorizedOfficerData = agreement.authorized_officers.map(function(officer) {
               return {

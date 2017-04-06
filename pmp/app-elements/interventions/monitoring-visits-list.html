@@ -111,6 +111,10 @@
         _hideMonitoringVisits: function(length) {
           return length === 0;
         },
+        // TODO: refactor this, is duplicated on many elements
+        _checkAndShowDate: function(dateString) {
+          return this.getDisplayValue(dateString, true);
+        }
       });
 
     })();

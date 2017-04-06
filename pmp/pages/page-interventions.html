@@ -160,45 +160,47 @@
               </interventions-list>
             </div>
 
-            <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
-              <div class="page" name="overview">
-                <intervention-overview intervention="[[intervention]]"
-                                       intervention-agreement="[[agreement]]">
-                </intervention-overview>
-              </div>
-            </template>
+            <!--<template is="dom-if" if="[[!listActive]]" restamp>-->
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <div class="page" name="overview">
+                  <intervention-overview intervention="[[intervention]]"
+                                         intervention-agreement="[[agreement]]">
+                  </intervention-overview>
+                </div>
+              </template>
 
-            <div class="page" name="details">
-              <intervention-details id="interventionDetails"
-                                    permissions="[[permissions]]"
-                                    intervention="{{intervention}}"
-                                    partner-staff-members="[[partnerStaffMembers]]"
-                                    selected-partner-id="{{partnerId}}"
-                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]"
-                                    on-update-intervention-status="_updateInterventionStatus">
-              </intervention-details>
-            </div>
-            <div class="page" name="review-and-sign">
-              <intervention-review-and-sign id="interventionReviewAndSign"
-                                            intervention="{{intervention}}"
-                                            permissions="[[permissions]]"
-                                            agreement="[[agreement]]"
-                                            new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                            edit-mode="[[_hasEditPermissions(permissions)]]">
-              </intervention-review-and-sign>
-            </div>
-            <div class="page" name="attachments">
-              <intervention-attachments id="intervAttachments"
-                edit-mode="[[_hasEditPermissions(permissions)]]"
-                permissions="[[permissions]]"
-                intervention="[[intervention]]"
-                file-model="[[_getAttachmentModel(intervention.id)]]"
-                attachments="{{intervention.attachments}}"
-                on-delete-file="_deleteAttachment"
-                new-intervention="[[_newIntervention(newInterventionActive)]]">
-              </intervention-attachments>
-            </div>
+              <div class="page" name="details">
+                <intervention-details id="interventionDetails"
+                                      permissions="[[permissions]]"
+                                      intervention="{{intervention}}"
+                                      partner-staff-members="[[partnerStaffMembers]]"
+                                      selected-partner-id="{{partnerId}}"
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                      edit-mode="[[_hasEditPermissions(permissions)]]"
+                                      on-update-intervention-status="_updateInterventionStatus">
+                </intervention-details>
+              </div>
+              <div class="page" name="review-and-sign">
+                <intervention-review-and-sign id="interventionReviewAndSign"
+                                              intervention="{{intervention}}"
+                                              permissions="[[permissions]]"
+                                              agreement="[[agreement]]"
+                                              new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                              edit-mode="[[_hasEditPermissions(permissions)]]">
+                </intervention-review-and-sign>
+              </div>
+              <div class="page" name="attachments">
+                <intervention-attachments id="intervAttachments"
+                  edit-mode="[[_hasEditPermissions(permissions)]]"
+                  permissions="[[permissions]]"
+                  intervention="[[intervention]]"
+                  file-model="[[_getAttachmentModel(intervention.id)]]"
+                  attachments="{{intervention.attachments}}"
+                  on-delete-file="_deleteAttachment"
+                  new-intervention="[[_newIntervention(newInterventionActive)]]">
+                </intervention-attachments>
+              </div>
+            <!--</template>-->
           </iron-pages>
         </div> <!-- main page content end -->
 
@@ -385,6 +387,15 @@
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
+
+          if (activePage === 'list') {
+            // reset agreementAuthorizedOfficers to avoid searching new selected intervention
+            // signedByAuthorizedOfficer id in the old intervention authorized officers
+
+
+
+            // this.$.interventionReviewAndSign.set('agreementAuthorizedOfficers', []);
+          }
         }.bind(this), 50);
       },
 
@@ -404,9 +415,17 @@
         if (isNaN(id)) {
           id = null;
         }
+        this.set('agreement', null);
+        this.set('partnerId', 0);
+        this.set('partnerStaffMembers', []);
+        this.set('intervention', null);
+
         this.set('selectedInterventionId', id);
         // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
-        this.$.intervAttachments.set('preparedAttachments', false);
+        var intervAttachTab = this.$.intervAttachments;
+        if (intervAttachTab) {
+          intervAttachTab.set('preparedAttachments', false);
+        }
       },
 
       _validateAndSaveIntervention: function(event) {
