@@ -31,12 +31,13 @@
         ],
 
         properties: {
-
           endpointName: {
             type: String,
             value: 'user'
           },
-
+          endpoint: {
+            type: Object
+          },
           user: {
             type: Object,
             readOnly: true,
@@ -46,7 +47,6 @@
             type: Array,
             readOnly: true
           },
-
           permissions: {
             type: Object,
             readOnly: true,

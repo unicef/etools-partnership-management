@@ -27,7 +27,6 @@ it doesn't need to be included in element's style -->
 <!--<link rel="import" href="../../../bower_components/paper-styles/shadow.html">-->
 
 <link rel="import" href="government-plan-results.html">
-<link rel="import" href="government-status.html">
 
 <dom-module id="government-details">
   <template>
@@ -108,7 +107,8 @@ it doesn't need to be included in element's style -->
       </etools-content-panel>
       <!--Work Plan Results-->
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
-        <government-plan-results id="governmentResults" data-items="{{intervention.results}}"
+        <government-plan-results id="governmentResults"
+                                 data-items="{{intervention.results}}"
                                  allow-edit="[[governmentEditMode]]"
                                  year-options="[[yearOptions]]"
                                  cp-wbs="[[selectedCpWbs]]">
@@ -152,6 +152,9 @@ it doesn't need to be included in element's style -->
         governmentEditMode: {
           type: Boolean,
           value: true,
+        },
+        active: {
+          type: Boolean,
         },
         partnersDropdownData: {
           type: Array,

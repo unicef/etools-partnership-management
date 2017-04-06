@@ -11,10 +11,9 @@
   "noarg": true,
   "quotmark": "single",
   "undef": true,
-  "unused": true,
   "newcap": false,
   "laxbreak": true,
-  "unused":false,
+  "unused": false,
   "globals": {
     "Polymer": true,
     "_": true,

@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
@@ -11,8 +12,9 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
-
 <link rel="import" href="../../../styles/shared-styles.html">
+
+<link rel="import" href="partner-status.html">
 
 <dom-module id="partner-overview">
 
@@ -182,7 +184,7 @@
                 [[partnership.title]]
                 </div>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0')]] </div>
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0')]] </div>
               <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
               <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
             </div>

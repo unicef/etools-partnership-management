@@ -3,14 +3,17 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../app-config/etools-app-config.html">
-
 
 <!-- Replace these with something more apppriate -->
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/governments/governments-list.html">
 <link rel="import" href="../app-elements/governments/government-details.html">
 <link rel="import" href="../app-elements/governments/government-overview.html">
+<link rel="import" href="../app-elements/governments/government-status.html">
 <link rel="import" href="../app-elements/governments/governments-data/government-intervention-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -184,7 +187,23 @@
         csvDownloadUrl: {
           type: String
         },
-        fakePermission: true,
+        fakePermission: {
+          type: Boolean,
+          value: true
+        },
+        endpoint: {
+          type: Object,
+        },
+        tabsActive: {
+          type: Boolean
+        },
+        routeData: {
+          type: Object
+        },
+        permissions: {
+          // TODO: Replace with behavior
+          type: Object
+        },
       },
 
        observers: [
