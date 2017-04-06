@@ -96,7 +96,7 @@
                 required>
             </etools-searchable-multiselection-menu>
           </div>
-          <div class="col col-3" title="[[agreement.agreement_number]]">
+          <div class="col col-3" title$="[[agreement.agreement_number]]">
             <!-- Reference Number -->
             <paper-input label="Reference Number"
                          value="[[agreement.agreement_number]]"
@@ -132,7 +132,7 @@
                 hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
               <!-- Generate PCA -->
               <label aria-hidden="true">Auto-generated PCA</label>
-              <a target="_blank" href="/api/v2/agreements/[[agreement.id]]/pdf/">
+              <a target="_blank" href$="/api/v2/agreements/[[agreement.id]]/pdf/">
                 <paper-button class="paper-input-input secondary-btn">
                   <iron-icon icon="refresh"></iron-icon>
                   GENERATE PCA

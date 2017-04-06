@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
@@ -17,8 +18,10 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="partners-data/partners-list-data.html">
@@ -28,7 +31,7 @@
 
   <template>
 
-    <style include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles">
+    <style include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles">
       :host {
         /* TODO: paper-toggle-button style could be global, recheck this when app-theme colors are defined */
         --paper-toggle-button-checked-bar-color: var(--accent-color);
@@ -305,7 +308,7 @@
           this.set('partnerType', parms.partner_type ? parms.partner_type : '');
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
           this.set('showHidden', parms.hidden ? true : false);
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'name', direction: 'asc'};

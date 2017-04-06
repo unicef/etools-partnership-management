@@ -46,7 +46,11 @@
     Polymer({
 
       is: 'details-item',
-
+      properties: {
+        icon: String,
+        content: String,
+        heading: String,
+      },
       attached: function() {
         if (!this.content) {
           this.toggleAttribute('hidden', true);
