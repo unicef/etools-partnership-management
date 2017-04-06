@@ -143,8 +143,10 @@ gulp.task('default', gulp.series([
 // Run polylint,
 // split all source and dependency files into streams and lint them individually uning polylint
 gulp.task('lint', gulp.series([
-  clean.build,
+  // because 'source' splits the sources and lints them individually, we need to clean
+  // the build directory
   runPolylint,
+  clean.build,
   source
 ]));
 
