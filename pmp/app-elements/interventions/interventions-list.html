@@ -18,9 +18,11 @@
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
@@ -30,7 +32,7 @@
 
   <template>
 
-    <style include="shared-styles data-table-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
         @apply(--layout-flex);
         width: 100%;
@@ -450,7 +452,7 @@ changed teh                  option-value="[[filter.optionValue]]"
           this.set('startDate', parms.start ? parms.start : '');
           this.set('endDate', parms.end ? parms.end : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'partner_name', direction: 'asc'};
           if (parms.sort) {

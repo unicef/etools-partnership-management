@@ -1,6 +1,6 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.ListsCommonBehavior */
   pmpBehaviors.ListsCommonBehavior = {
       properties: {
          q: {
@@ -37,6 +37,11 @@
            type: Boolean,
            value: false
          },
+
+         defaultListsSize: {
+           type: Number,
+           value: 10
+         }
       },
 
       // When the list data rows are changing check and close any details opened
