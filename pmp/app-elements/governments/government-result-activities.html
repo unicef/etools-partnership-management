@@ -1,10 +1,11 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <dom-module id="government-result-activities">
   <template>
@@ -32,58 +33,58 @@
     <etools-ajax id="deleteAjax"
                  on-success="_handleDeleteResponse"
                  on-fail="_handleDeleteError"></etools-ajax>
-		<template is="dom-repeat" items="{{dataItems}}" as="activity">
-			<div class="layout horizontal activity">
-				<!--Activity delete divider-->
-				<div class="layout vertical center-justified activity-divider">
-					<paper-icon-button class="action delete-activity"
-														 on-tap="_openDeleteConfirmation"
-														 data-args$="[[index]]"
-														 hidden$="[[!editMode]]"
-														 icon="cancel">
-					</paper-icon-button>
-				</div>
-				<!--Activity data-->
-				<div class="layout horizontal flex">
-					<template is="dom-if" if="[[editMode]]">
-						<paper-input
-								id="activityId"
-								class="activityId"
-								label="Activity ID"
-								value="{{activity.code}}"
-								placeholder=" ">
-						</paper-input>
-						<div class="flex">
-							<paper-input
-									class="activityDesc"
-									label="Activity Description"
-									value="{{activity.description}}"
-									placeholder=" ">
-							</paper-input>
-						</div>
-					</template>
-					<template is="dom-if" if="[[!editMode]]">
-						<paper-input
-								label="Activity ID"
-								class="activityId"
-								value="{{activity.code}}"
-								readonly
-								placeholder=" ">
-						</paper-input>
-						<div class="flex">
-							<paper-input
-									id="activityDesc"
-									label="Activity Description"
-									value="{{activity.description}}"
-									readonly
-									placeholder=" ">
-							</paper-input>
-						</div>
-					</template>
+    <template is="dom-repeat" items="{{dataItems}}" as="activity">
+      <div class="layout horizontal activity">
+        <!--Activity delete divider-->
+        <div class="layout vertical center-justified activity-divider">
+          <paper-icon-button class="action delete-activity"
+                             on-tap="_openDeleteConfirmation"
+                             data-args$="[[index]]"
+                             hidden$="[[!editMode]]"
+                             icon="cancel">
+          </paper-icon-button>
+        </div>
+        <!--Activity data-->
+        <div class="layout horizontal flex">
+          <template is="dom-if" if="[[editMode]]">
+            <paper-input
+                id="activityId"
+                class="activityId"
+                label="Activity ID"
+                value="{{activity.code}}"
+                placeholder=" ">
+            </paper-input>
+            <div class="flex">
+              <paper-input
+                  class="activityDesc"
+                  label="Activity Description"
+                  value="{{activity.description}}"
+                  placeholder=" ">
+              </paper-input>
+            </div>
+          </template>
+          <template is="dom-if" if="[[!editMode]]">
+            <paper-input
+                label="Activity ID"
+                class="activityId"
+                value="{{activity.code}}"
+                readonly
+                placeholder=" ">
+            </paper-input>
+            <div class="flex">
+              <paper-input
+                  id="activityDesc"
+                  label="Activity Description"
+                  value="{{activity.description}}"
+                  readonly
+                  placeholder=" ">
+              </paper-input>
+            </div>
+          </template>
 
-				</div>
-			</div>
-		</template>
+        </div>
+      </div>
+    </template>
   </template>
 
   <script>
@@ -96,8 +97,8 @@
         },
         _deleteEpName: {
           type: String,
-					value: 'governmentResultActivityDelete',
-					readOnly: true
+          value: 'governmentResultActivityDelete',
+          readOnly: true
         }
       },
       behaviors: [
