@@ -308,7 +308,7 @@
           this.set('partnerType', parms.partner_type ? parms.partner_type : '');
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
           this.set('showHidden', parms.hidden ? true : false);
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'name', direction: 'asc'};

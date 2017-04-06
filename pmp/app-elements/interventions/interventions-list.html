@@ -452,7 +452,7 @@ changed teh                  option-value="[[filter.optionValue]]"
           this.set('startDate', parms.start ? parms.start : '');
           this.set('endDate', parms.end ? parms.end : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : 5);
+          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
           // format of sort param is sort=field.order ex: sort=name.asc
           var result = {field: 'partner_name', direction: 'asc'};
           if (parms.sort) {
