@@ -36,6 +36,13 @@ function splitSource() {
   return project.sources().pipe(project.splitHtml());
 }
 
+// Returns a DestroyableTransform with all the source files
+// Source files are those in src/** as well as anything
+// added to the sourceGlobs property of polymer.json
+function getSources() {
+  return project.sources();
+}
+
 // Returns a ReadableStream of all the dependency files
 // Dependency files are those in bower_components/**
 function splitDependencies() {
@@ -131,6 +138,7 @@ function writeUnbundledServiceWorker() {
 
 module.exports = {
   splitSource: splitSource,
+  getSources: getSources,
   splitDependencies: splitDependencies,
   rejoin: rejoin,
   merge: merge,

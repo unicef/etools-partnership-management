@@ -20,8 +20,9 @@
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 
 <link rel="import" href="governments-data/governments-list-data.html">
@@ -31,7 +32,7 @@
 
   <template>
 
-    <style include="shared-styles data-table-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
         @apply(--layout-flex);
         width: 100%;
@@ -47,9 +48,6 @@
                          fire-data-loaded
                          show-loading>
     </governments-list-data>
-
-    <partners-list-data prepare-dropdown-data>
-    </partners-list-data>
 
     <paper-material id="listControls" elevation="1">
 

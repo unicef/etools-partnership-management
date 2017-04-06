@@ -3,6 +3,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 
@@ -86,12 +89,12 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action"  hidden$="[[!listActive]]">
-                <a target="_blank" href="[[csvDownloadUrl]]">
+                <a target="_blank" href$="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
                   </paper-button>
-                </a>  
+                </a>
               </div>
               <!-- Print functionality pending implementation -->
               <!--<div class="top-content-action"  hidden$="[[!listActive]]">
@@ -287,7 +290,19 @@
         serverErrors: {
           type: Array,
           value: []
-        }
+        },
+        routeData: {
+          type: Object
+        },
+        intervDetailsActive: {
+          type: Boolean
+        },
+        routeDataNewInterv: {
+          type: Object
+        },
+        editMode: {
+          type: Boolean
+        },
       },
 
       observers: [
@@ -423,7 +438,7 @@
           // prepare attachments
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = interventionData.attachments.map(function(attachment) {
-              
+
               var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
               if (!_sendAttachmentFile && attachment.id) {
                 return {
@@ -439,7 +454,7 @@
               }
             });
           }
-          // if prc_review_document is null we need to delete the property otherwise the 
+          // if prc_review_document is null we need to delete the property otherwise the
           // file gets deleted from the backend
           if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
             delete interventionData.prc_review_document;
@@ -480,7 +495,7 @@
         return {
           id: null,
           intervention: interventionId ? interventionId : null,
-          type: null 
+          type: null
         };
       },
 
