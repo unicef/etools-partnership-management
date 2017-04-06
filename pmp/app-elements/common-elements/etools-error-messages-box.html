@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
@@ -47,7 +48,7 @@
       }
     </style>
 
-    <etools-content-panel class="errors-box" title="[[title]]">
+    <etools-content-panel class="errors-box" title$="[[title]]">
       <ul>
         <template is="dom-repeat" items=[[errors]]>
           <li>[[item]]</li>
@@ -96,7 +97,10 @@
 
         _resetErrors: function() {
           this.set('errors', []);
-        }
+        },
+        _hideSuspendAndTerminateBtns: function(status) {
+          return status !== 'active';
+        },
 
       });
     })();
