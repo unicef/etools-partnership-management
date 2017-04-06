@@ -3,6 +3,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
@@ -69,7 +72,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <a target="_blank" href="[[csvDownloadUrl]]">
+                <a target="_blank" href$="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -91,7 +94,7 @@
               </div>
             </div>
           </div>
-          <div class="top-content-row" hidden="[[!_showPageTabs(agreementPage)]]">
+          <div class="top-content-row" hidden$="[[!_showPageTabs(agreementPage)]]">
             <paper-tabs
                 selected="details"
                 attr-for-selected="name"
@@ -178,6 +181,15 @@
         csvDownloadUrl: {
           type: String
         },
+        agreementDetailsActive: {
+          type: Boolean
+        },
+        newAgreementActive: {
+          type: Boolean
+        },
+        routeData: {
+          type: Object
+        }
 
       },
 

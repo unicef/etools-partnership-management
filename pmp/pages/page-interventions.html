@@ -3,6 +3,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 
@@ -86,7 +89,7 @@
             </h1>
             <div class="top-content-actions-wrapper">
               <div class="top-content-action"  hidden$="[[!listActive]]">
-                <a target="_blank" href="[[csvDownloadUrl]]">
+                <a target="_blank" href$="[[csvDownloadUrl]]">
                   <paper-button>
                     <iron-icon icon="file-download"></iron-icon>
                     Export
@@ -293,7 +296,19 @@
         serverErrors: {
           type: Array,
           value: []
-        }
+        },
+        routeData: {
+          type: Object
+        },
+        intervDetailsActive: {
+          type: Boolean
+        },
+        routeDataNewInterv: {
+          type: Object
+        },
+        editMode: {
+          type: Boolean
+        },
       },
 
       observers: [
@@ -433,6 +448,7 @@
           if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
             interventionData.attachments = this._getNewOrModifiedAttachments(interventionData.attachments)
             .map(function(attachment) {
+
               var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
               if (!_sendAttachmentFile && attachment.id) {
                 return {

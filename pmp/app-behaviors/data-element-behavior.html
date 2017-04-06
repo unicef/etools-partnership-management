@@ -1,9 +1,13 @@
+<link rel="import" href="../app-config/etools-app-config.html"/>
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.DataElementBehavior */
   pmpBehaviors.DataElementBehaviorImpl = {
 
     properties: {
-      endpoint: Object,
+      endpoint: {
+        type: Object
+      },
       data: {
         type: Array,
         readOnly: true,
