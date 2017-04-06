@@ -23,6 +23,7 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../../scripts/lodash/lodash.html">
 
 <dom-module id="page-interventions">
 
@@ -334,6 +335,7 @@
       },
 
       _interventionChanged: function(intervention) {
+        console.log(this.intervention);
         this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
       },
       _resizeHeader: function() {
@@ -426,73 +428,142 @@
         }
 
         var interventionDetails = this.$.interventionDetails;
-        var validInterventionDetails = interventionDetails.validate();
+        var interventionDetailsAreValid = interventionDetails.validate();
 
         var reviewAndSign = this.$.interventionReviewAndSign;
-        var validReviewAndSign = reviewAndSign.validate();
+        var reviewAndSignIsValid = reviewAndSign.validate();
 
-        if (validInterventionDetails && validReviewAndSign) {
-          var interventionData = Object.assign({}, this.intervention);
+        if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
+          this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
+          return;
+        }
 
-          // on save sector_locations sector prop needs to be sector ID and not the sector obj
-          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
-          // prepare fr numbers
-          if (Array.isArray(interventionData.fr_numbers) && interventionData.fr_numbers.length > 0) {
-            interventionData.fr_numbers = interventionData.fr_numbers.map(function(frNumber) {
-              return frNumber.value;
-            });
-          }
-          // fr_numbers_details are readonly, we do not have to send them to backend
-          delete interventionData.fr_numbers_details;
-          // prepare attachments
-          if (Array.isArray(interventionData.attachments) && interventionData.attachments.length > 0) {
-            interventionData.attachments = this._getNewOrModifiedAttachments(interventionData.attachments)
-            .map(function(attachment) {
-
-              var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
-              if (!_sendAttachmentFile && attachment.id) {
-                return {
-                  id: attachment.id
-                };
-              } else {
-                return  {
-                  id: attachment.id,
-                  intervention: attachment.intervention,
-                  type: attachment.type,
-                  attachment: attachment.raw
-                };
-              }
-            });
-          }
-          // if prc_review_document is null we need to delete the property otherwise the
-          // file gets deleted from the backend
-          if (interventionData.hasOwnProperty('prc_review_document') && !interventionData.prc_review_document) {
-            delete interventionData.prc_review_document;
-          }
-
-          this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+        var interventionData;
+        if (this._isNewIntervention()) {
+           console.log('is new');
+           interventionData = Object.assign({}, this.intervention);
         } else {
-          this._showErrorsWarning(validInterventionDetails, validReviewAndSign);
+           interventionData = this._getModifiedInterventionDetails();
         }
+
+        // on save sector_locations sector prop needs to be sector ID and not the sector obj
+        if (interventionData.sector_locations) {//if there were any modifications
+          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
+        }
+
+        // prepare fr numbers
+        if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
+            && this._objectFieldIsModified("fr_numbers")) {
+          interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
+            return frNumber.value;
+          });
+        }
+        // fr_numbers_details are readonly, we do not have to send them to backend
+        delete interventionData.fr_numbers_details;
+
+        // prepare attachments
+        interventionData.attachments = this._prepareAttachments();
+        if(!Array.isArray(interventionData.attachments) || interventionData.attachments.length === 0) {
+           delete interventionData.attachments;
+        }
+
+        // if prc_review_document is null we need to delete the property otherwise the
+        // file gets deleted from the backend
+        if (this.intervention.hasOwnProperty('prc_review_document') && !this.intervention.prc_review_document) {
+          delete interventionData.prc_review_document;
+        }
+        console.log(interventionData);
+
+        if (Object.keys(interventionData) == 0) {
+           this.fire('toast', {
+                text: 'There is nothing to save. No change detected.',
+                showCloseBtn: true
+              });
+        } else {
+          //this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+        }
+
       },
-      _getNewOrModifiedAttachments: function(attachments) {
-        var modifAttachments = [];
-        var originalAttachments = this.originalIntervention.attachments;
-        for (var i =0; i < attachments.length; i++) {
-          if (this._attachmentIsNewOrModified(attachments[i], i, originalAttachments)) {
-             modifAttachments.push(attachments[i]);
+      _getModifiedInterventionDetails: function() {
+        var updatableFields = ['agreement', 'document_type', 'title', 'partner', 'hrp',
+                     'start', 'end', 'population_focus'];
+        var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
+                    'sector_locations', 'result_links', 'planned_budget', 'planned_visits'];
+
+        var modifInterventionDetails = {};
+        updatableFields.forEach(function(fieldName) {
+            if(this._primitiveFieldIsModified(fieldName)) {
+              modifInterventionDetails[fieldName] = this.intervention[fieldName];
+            }
+        }.bind(this));
+
+        updatableObjectFields.forEach(function(fieldName) {
+            if(this._objectFieldIsModified(fieldName)) {
+              modifInterventionDetails[fieldName] = this.intervention[fieldName];
+            }
+        }.bind(this));
+
+        console.log('modifInterventionDetails');
+        console.log(modifInterventionDetails);
+        return modifInterventionDetails;
+
+      },
+      _objectFieldIsModified: function(fieldName) {
+        var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
+
+        var dropdownArrayFields = ['partner_focal_points','unicef_focal_points', 'offices']
+        if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
+          //Covers dropdown arrays which can have same content but with changed order
+          var diffArr = _.difference(this.originalIntervention[fieldName], this.intervention[fieldName]);
+          if(diffArr.length == 0) {
+            isModified = false;
           }
         }
-        return modifAttachments;
+        return isModified;
       },
-      _attachmentIsNewOrModified: function(attachment, index, originalAttachments) {
+      _primitiveFieldIsModified: function(fieldName) {
+        return this.originalIntervention[fieldName] !== this.intervention[fieldName];
+      },
+      _isNewIntervention: function() {
+        return !!!this.intervention.id;
+      },
+      _prepareAttachments: function() {
+         if (!Array.isArray(this.intervention.attachments) || this.intervention.attachments.length == 0) {
+             return [];
+          }
+         var modifAttachments = this.intervention.attachments
+                              .filter(this._attachmentIsNewOrModified.bind(this))
+                              .map(function(attachment) {
+                                  var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
+                                  if (!_sendAttachmentFile && attachment.id) {
+                                    return {
+                                      id: attachment.id
+                                    };
+                                  } else {
+                                    return  {
+                                      id: attachment.id,
+                                      intervention: attachment.intervention,
+                                      type: attachment.type,
+                                      attachment: attachment.raw
+                                    };
+                                  }
+                             });
+          return modifAttachments;
+      },
+
+      _attachmentIsNewOrModified: function(attachment) {
         if (!attachment.id) {
           return true;
         }
-        if(!originalAttachments || !originalAttachments[index]) {
+        if(!this.originalIntervention.attachments) {
           return true;
         }
-        return (JSON.stringify(originalAttachments[index]) !== JSON.stringify(attachment));
+        var originalAttachment = this.originalIntervention.attachments.find(function(att) { return att.id === attachment.id; });
+        if (!originalAttachment) {
+          return true;
+        }
+
+        return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
       },
       _showErrorsWarning: function(validDetails, validReviewAndSign) {
         var msg = 'Please review invalid fields data';
