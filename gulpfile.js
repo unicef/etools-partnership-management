@@ -73,6 +73,7 @@ const html = require('./gulp-tasks/html.js');             //Any processing on ht
 const css = require('./gulp-tasks/css.js');               //Any processing on css
 const project = require('./gulp-tasks/project.js');
 const polylint = require('gulp-polylint');
+const ncu = require('npm-check-updates');
 
 // Log task end messages
 var log = function (message) {
@@ -126,6 +127,29 @@ function dependencies() {
   return project.splitDependencies()
     .pipe(project.rejoin());
 }
+// Chceck for updates on NPM and Bower packages
+gulp.task('update-packages', function() {
+  return ncu.run({
+      packageFile: 'package.json',
+      removeRange: true,
+      upgrade: true,
+      silent: true,
+    }).then(function() {
+      console.log('Npm dependencies updated');
+      return ncu.run({
+        packageFile: 'bower.json',
+        removeRange: true,
+        upgrade: true,
+        silent: true,
+      });
+    }).then(function() {
+      console.log('Bower dependencies updated.');
+      console.log('Npm-check-updates finished.');
+    }).catch(function(error) {
+      console.log('Error running npm-check-updates:\n', error);
+    });
+});
+
 
 // Clean the build directory, split all source and dependency files into streams
 // and process them, and output bundled and unbundled versions of the project

@@ -16,8 +16,7 @@
   "scripts": {
     "dev": "polymer serve & npm run watch",
     "test": "polymer test",
-    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' ",
-    "update-bower": "node_modules/npm-check-updates/bin/ncu -um bower"
+    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' "
   },
   "private": true,
   "devDependencies": {
@@ -51,7 +50,7 @@
     "yargs": "^5.0.0"
   },
   "dependencies": {
-    "express": "^4.14.0",
-    "redux": "^3.6.0"
+    "express": "4.15.2",
+    "redux": "3.6.0"
   }
 }
