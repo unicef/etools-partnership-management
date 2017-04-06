@@ -298,7 +298,8 @@
          * and cso_type is 'National'
          */
         _showCoreValueAssessment: function(partnerType, csoType) {
-          if (partnerType === 'Civil Society Organization' && csoType === 'National') {
+          if (partnerType === 'Civil Society Organization' &&
+          (['National', 'Academic Institution', 'Community Based Organization'].indexOf(csoType) > -1)) {
             return true;
           }
           return false;
