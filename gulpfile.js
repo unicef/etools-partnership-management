@@ -140,13 +140,10 @@ gulp.task('default', gulp.series([
   project.serviceWorker
 ]));
 
-// Clean the build directory, run polylint,
-// split all source and dependency files into streams and lint them individually
+// Run polylint,
+// split all source and dependency files into streams and lint them individually uning polylint
 gulp.task('lint', gulp.series([
-  clean.build,
-  runPolylint,
-  project.merge(source, dependencies),
-  project.serviceWorker
+  runPolylint
 ]));
 
 // DO NOT RUN
