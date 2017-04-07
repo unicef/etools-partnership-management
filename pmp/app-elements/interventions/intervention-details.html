@@ -87,6 +87,7 @@
                                                  custom-object-options
                                                  selected="{{intervention.document_type}}"
                                                  update-selected
+                                                 selected-requires-valid-options
                                                  hide-search
                                                  dynamic-align
                                                  required auto-validate
@@ -123,6 +124,7 @@
                                                  custom-object-options
                                                  selected="{{intervention.offices}}"
                                                  update-selected
+                                                 selected-requires-valid-options
                                                  dynamic-align
                                                  multi required auto-validate
                                                  error-message="Please select intervention's office(s)"
@@ -137,6 +139,7 @@
                                                  custom-object-options
                                                  selected="{{intervention.unicef_focal_points}}"
                                                  update-selected
+                                                 selected-requires-valid-options
                                                  dynamic-align
                                                  multi
                                                  required$="[[interventionRequiredField]]"
@@ -157,6 +160,7 @@
                                                  option-label="name"
                                                  selected="{{intervention.partner_focal_points}}"
                                                  update-selected
+                                                 selected-requires-valid-options
                                                  dynamic-align
                                                  multi
                                                  required$="[[interventionRequiredField]]"
@@ -178,6 +182,7 @@
                                                  custom-object-options
                                                  selected="{{intervention.hrp}}"
                                                  update-selected
+                                                 selected-requires-valid-options
                                                  dynamic-align
                                                  readonly$="[[!detailsEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -250,14 +255,15 @@
                                    data-items="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
                                    edit-mode$="[[detailsEditMode]]"
-                                   years="[[years]]"></intervention-planned-budget>
-                                  <!--required$="[[interventionRequiredField]]"-->
+                                   years="[[years]]">
+      </intervention-planned-budget>
     </etools-content-panel>
     <etools-content-panel class="content-section" title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
                                    edit-mode$="[[detailsEditMode]]"
-                                   years="[[years]]"></intervention-planned-visits>
+                                   years="[[years]]">
+      </intervention-planned-visits>
     </etools-content-panel>
 
   </template>
@@ -333,12 +339,12 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
+            value: false
           },
           detailsEditMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           },
           newIntervention: {
             type: Boolean,

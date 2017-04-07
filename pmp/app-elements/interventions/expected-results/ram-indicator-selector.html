@@ -4,6 +4,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
@@ -30,7 +31,8 @@
                                                option-value="id"
                                                option-label="name"
                                                selected="{{cpOutputId}}"
-                                               update-selected no-change-event
+                                               update-selected
+                                               url="[[oldCpOutputsUrl]]"
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Output"
@@ -47,7 +49,7 @@
                                                option-value="id"
                                                option-label="name"
                                                selected="{{selectedCpIndicatorsIds}}"
-                                               update-selected no-change-event
+                                               update-selected
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Indicators"
@@ -65,7 +67,8 @@
       Polymer({
         is: 'ram-indicator-selector',
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          etoolsAppConfig.globals
         ],
         properties: {
           cpOutputs: {
@@ -107,14 +110,19 @@
           editMode: {
             type: Boolean,
             value: false
+          },
+          oldCpOutputsUrl: {
+            type: String
           }
         },
 
         observers: [
-            '_removeAlreadySelectedCpOs(alreadySelectedCpo, cpOutputs.length)'
+          '_removeAlreadySelectedCpOs(alreadySelectedCpo, cpOutputs.length)'
         ],
 
         ready: function() {
+          var oldCpOutputEndpoint = this.getEndpoint('cpOutputsByIdsAsValues');
+          this.set('oldCpOutputsUrl', oldCpOutputEndpoint.url);
           if (this.cpOutputs.length > 0 && this.cpOutputId) {
             // set selected cp output when cpOutputs data exists
             this._cpOutputSelected(this.cpOutputId);

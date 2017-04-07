@@ -82,6 +82,7 @@
              options="[[agreementAuthorizedOfficers]]"
              selected="{{intervention.partner_authorized_officer_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -105,6 +106,7 @@
              options="[[signedByUnicefUsers]]"
              selected="{{intervention.unicef_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -185,12 +187,12 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
+            value: false
           },
           signEditMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           },
           newIntervention: {
             type: Boolean
