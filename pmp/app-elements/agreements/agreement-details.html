@@ -226,7 +226,7 @@
       <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
         <!-- Amendments -->
         <etools-content-panel class="content-section" title$="Amendments ([[agreement.amendments.length]])">
-          <agreement-amendments data-items="{{agreement.amendments}}"
+          <agreement-amendments id="agreementAmendments" data-items="{{agreement.amendments}}"
                                 staff-members="[[staffMembers]]"
                                 partner-name="[[agreement.partner_name]]"
                                 partner-authorized-officers="[[_getAuthorizedOfficers(staffMembers, agreement.authorized_officers)]]"
@@ -614,9 +614,15 @@
             valid = false;
           }
 
+          if (!this._validateAmendments()) {
+            valid = false;
+          }
+
           return valid;
         },
-
+        _validateAmendments: function() {
+           return this.$$('#agreementAmendments').validate();
+        },
         /**
          * Validate signed by fields
          */

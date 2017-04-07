@@ -102,9 +102,10 @@
                 <div class="col col-8 file-container">
                   <!-- Signed Agreement -->
                   <div class="file-wrapper">
-                    <etools-single-file label="Signed Amendment"
+                    <etools-single-file id$="fileUpload_[[index]]" label="Signed Amendment"
                                file="{{item.signed_amendment}}"
                                internal-file="{{item.signed_amendment_file}}"
+                               error-message="Signed Amendment file is required"
                                accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
                   </div>
                 </div>
@@ -176,7 +177,44 @@
             amendment_types: []
           };
         },
+        validate: function() {
+          console.log('here');
+          if (!this.dataItems) {
+            return true;
+          }
+          var isValid = true;
+          this.dataItems.forEach(function (amendm, index) {
+              if (amendm.id) {
+                 return;
+              }
+              if (!amendm.signed_date) {
+                 this.$$('#signedDate_' + index).invalid = true;
+                 isValid = false;
+              } else if (this._signedDateIsInTheFuture(amendm.signed_date)) {
+                 this.$$('#signedDate_' + index).errorMessage = "The 'Signed Date' cannot be in the future";
+                 this.$$('#signedDate_' + index).invalid = true;
+                 isValid = false;
+              }
+              if (!amendm.signed_amendment) {
+                 this.$$('#fileUpload_' + index).invalid = true;
+                 isValid = false;
+              }
+              if (!amendm.amendment_types || amendm.amendment_types.length === 0) {
+                 //TODO ???
+                 isValid = false;
+              }
 
+           }.bind(this));
+
+           return isValid;
+        },
+        _signedDateIsInTheFuture: function(signed_date) {
+          var signed_dt = Date.parse(signed_date)
+          if (signed_dt) {
+            return signed_dt > Date.now();
+          }
+          return false;
+        },
         /**
          * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
          */
@@ -309,7 +347,6 @@
             }
           }
         }
-
       });
     })();
   </script>
