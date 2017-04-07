@@ -3,7 +3,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
@@ -73,149 +72,147 @@
                          agreement-id="[[intervention.agreement]]"
                          agreement="{{agreement}}"></agreement-item-data>
 
-    <app-header-layout>
-      <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
-        <div class="top-content">
-          <div class="top-content-row title-row">
-            <h1 main-title>
-              <template is="dom-if" if="[[listActive]]">
-                PD/SSFA ToRs
-              </template>
-              <template is="dom-if" if="[[newInterventionActive]]">
-                Add Programme Document or PD/SSFA ToRs
-              </template>
-              <template is="dom-if" if="[[intervDetailsActive]]">
-                [[_getInterventionDetailsTitle(intervention)]]
-              </template>
-            </h1>
-            <div class="top-content-actions-wrapper">
-              <div class="top-content-action"  hidden$="[[!listActive]]">
-                <a target="_blank" href$="[[csvDownloadUrl]]">
-                  <paper-button>
-                    <iron-icon icon="file-download"></iron-icon>
-                    Export
-                  </paper-button>
-                </a>
-              </div>
-              <!-- Print functionality pending implementation -->
-              <!--<div class="top-content-action"  hidden$="[[!listActive]]">
+    <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
+      <div class="top-content">
+        <div class="top-content-row title-row">
+          <h1 main-title>
+            <template is="dom-if" if="[[listActive]]">
+              PD/SSFA ToRs
+            </template>
+            <template is="dom-if" if="[[newInterventionActive]]">
+              Add Programme Document or PD/SSFA ToRs
+            </template>
+            <template is="dom-if" if="[[intervDetailsActive]]">
+              [[_getInterventionDetailsTitle(intervention)]]
+            </template>
+          </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!listActive]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
-                  <iron-icon icon="print"></iron-icon>
-                  Print
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
                 </paper-button>
-              </div>-->
-              <div class="top-content-action"  hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
-                <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
-                  <iron-icon icon="add"></iron-icon>
-                  Add new PD/SSFA ToR
-                </paper-button>
-              </div>
+              </a>
             </div>
-          </div>
-          <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
-            <paper-tabs
-                selected="{{activeTab}}"
-                attr-for-selected="name"
-                noink bottom-item>
-              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
-                <paper-tab name="overview" link>
-                  <span class="tab-content">Overview</span>
-                </paper-tab>
-              </template>
-
-              <paper-tab name="details" link>
-                <span class="tab-content">Details</span>
-              </paper-tab>
-
-              <paper-tab name="review-and-sign" link>
-                <span class="tab-content">Review & Sign</span>
-              </paper-tab>
-
-              <paper-tab name="attachments" link>
-                <span class="tab-content">Attachments</span>
-              </paper-tab>
-
-            </paper-tabs>
+            <!-- Print functionality pending implementation -->
+            <!--<div class="top-content-action"  hidden$="[[!listActive]]">
+              <paper-button>
+                <iron-icon icon="print"></iron-icon>
+                Print
+              </paper-button>
+            </div>-->
+            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
+                <iron-icon icon="add"></iron-icon>
+                Add new PD/SSFA ToR
+              </paper-button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div id="main">
-        <div id="pageContent">
-
-          <etools-error-messages-box id="errorsBox"
-                                     title="Errors Saving PD/SSFA ToR"
-                                     errors="{{serverErrors}}"></etools-error-messages-box>
-
-          <iron-pages id="interventionsPages"
-                      selected="{{interventionPage}}"
-                      attr-for-selected="name"
-                      fallback-selection="list"
-                      role="main">
-
-            <div class="page" name="list">
-              <interventions-list
-                  active="[[listActive]]"
-                  csv-download-url="{{csvDownloadUrl}}"
-                  url-params="[[interventionsQueryParams]]">
-              </interventions-list>
-            </div>
-
+        <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
+          <paper-tabs
+              selected="{{activeTab}}"
+              attr-for-selected="name"
+              noink bottom-item>
             <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
-              <div class="page" name="overview">
-                <intervention-overview intervention="[[intervention]]"
-                                       intervention-agreement="[[agreement]]">
-                </intervention-overview>
-              </div>
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
             </template>
 
-            <div class="page" name="details">
-              <intervention-details id="interventionDetails"
-                                    permissions="[[permissions]]"
-                                    intervention="{{intervention}}"
-                                    partner-staff-members="[[partnerStaffMembers]]"
-                                    selected-partner-id="{{partnerId}}"
-                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                    edit-mode="[[_hasEditPermissions(permissions)]]"
-                                    on-update-intervention-status="_updateInterventionStatus">
-              </intervention-details>
-            </div>
-            <div class="page" name="review-and-sign">
-              <intervention-review-and-sign id="interventionReviewAndSign"
-                                            intervention="{{intervention}}"
-                                            permissions="[[permissions]]"
-                                            agreement="[[agreement]]"
-                                            new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                            edit-mode="[[_hasEditPermissions(permissions)]]">
-              </intervention-review-and-sign>
-            </div>
-            <div class="page" name="attachments">
-              <intervention-attachments id="intervAttachments"
-                edit-mode="[[_hasEditPermissions(permissions)]]"
-                permissions="[[permissions]]"
-                intervention="[[intervention]]"
-                file-model="[[_getAttachmentModel(intervention.id)]]"
-                attachments="{{intervention.attachments}}"
-                on-delete-file="_deleteAttachment"
-                new-intervention="[[_newIntervention(newInterventionActive)]]">
-              </intervention-attachments>
-            </div>
-          </iron-pages>
-        </div> <!-- main page content end -->
+            <paper-tab name="details" link>
+              <span class="tab-content">Details</span>
+            </paper-tab>
 
-        <!-- sidebar content start -->
-        <div id="sidebar" hidden$="[[listActive]]">
-           <intervention-status status="[[intervention.status]]"
-                                intervention-id$="[[intervention.id]]"
-                                intervention-agreement-status="[[agreement.status]]"
-                                on-save-intervention="_validateAndSaveIntervention"
-                                on-update-intervention-status="_updateInterventionStatus"
-                                show-save-btn$="[[editMode]]"></intervention-status>
+            <paper-tab name="review-and-sign" link>
+              <span class="tab-content">Review & Sign</span>
+            </paper-tab>
 
+            <paper-tab name="attachments" link>
+              <span class="tab-content">Attachments</span>
+            </paper-tab>
+
+          </paper-tabs>
         </div>
-        <!-- sidebar content end -->
       </div>
-    </app-header-layout>
+    </div>
+
+    <div id="main">
+      <div id="pageContent">
+
+        <etools-error-messages-box id="errorsBox"
+                                   title="Errors Saving PD/SSFA ToR"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
+
+        <iron-pages id="interventionsPages"
+                    selected="{{interventionPage}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    role="main">
+
+          <div class="page" name="list">
+            <interventions-list
+                active="[[listActive]]"
+                csv-download-url="{{csvDownloadUrl}}"
+                url-params="[[interventionsQueryParams]]">
+            </interventions-list>
+          </div>
+
+          <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+            <div class="page" name="overview">
+              <intervention-overview intervention="[[intervention]]"
+                                     intervention-agreement="[[agreement]]">
+              </intervention-overview>
+            </div>
+          </template>
+
+          <div class="page" name="details">
+            <intervention-details id="interventionDetails"
+                                  permissions="[[permissions]]"
+                                  intervention="{{intervention}}"
+                                  partner-staff-members="[[partnerStaffMembers]]"
+                                  selected-partner-id="{{partnerId}}"
+                                  new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                  edit-mode="[[_hasEditPermissions(permissions)]]"
+                                  on-update-intervention-status="_updateInterventionStatus">
+            </intervention-details>
+          </div>
+          <div class="page" name="review-and-sign">
+            <intervention-review-and-sign id="interventionReviewAndSign"
+                                          intervention="{{intervention}}"
+                                          permissions="[[permissions]]"
+                                          agreement="[[agreement]]"
+                                          new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                          edit-mode="[[_hasEditPermissions(permissions)]]">
+            </intervention-review-and-sign>
+          </div>
+          <div class="page" name="attachments">
+            <intervention-attachments id="intervAttachments"
+                                      edit-mode="[[_hasEditPermissions(permissions)]]"
+                                      permissions="[[permissions]]"
+                                      intervention="[[intervention]]"
+                                      file-model="[[_getAttachmentModel(intervention.id)]]"
+                                      attachments="{{intervention.attachments}}"
+                                      on-delete-file="_deleteAttachment"
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
+            </intervention-attachments>
+          </div>
+        </iron-pages>
+      </div> <!-- main page content end -->
+
+      <!-- sidebar content start -->
+      <div id="sidebar" hidden$="[[listActive]]">
+        <intervention-status status="[[intervention.status]]"
+                             intervention-id$="[[intervention.id]]"
+                             intervention-agreement-status="[[agreement.status]]"
+                             on-save-intervention="_validateAndSaveIntervention"
+                             on-update-intervention-status="_updateInterventionStatus"
+                             show-save-btn$="[[editMode]]"></intervention-status>
+
+      </div>
+      <!-- sidebar content end -->
+    </div>
 
   </template>
 
@@ -313,7 +310,6 @@
       },
 
       observers: [
-        '_resizeHeader(listActive, intervDetailsActive, newInterventionActive)',
         /**
          * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
          * both dependencies because all observer dependecies need to be defined for the observer to work
@@ -333,15 +329,10 @@
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
       },
-
       _interventionChanged: function(intervention) {
         console.log(this.intervention);
         this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
       },
-      _resizeHeader: function() {
-        this.$$('app-header-layout').notifyResize();
-      },
-
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
           if (this.newInterventionActive) {
@@ -380,7 +371,7 @@
         if (listActive === false) {
           if (newInterventionActive) {
             // return new intervention page tab name
-            page =  this.routeDataNewInterv.intTab;
+            page = this.routeDataNewInterv.intTab;
           } else {
             // return intervention details page tab name
             page = this.routeData.intTab;
@@ -552,6 +543,8 @@
       },
 
       _attachmentIsNewOrModified: function(attachment) {
+        console.log("attachment");
+        console.log(attachment);
         if (!attachment.id) {
           return true;
         }
@@ -600,8 +593,10 @@
 
       _deleteAttachment: function(event) {
         // TODO:  remove after attachment delete is implemented
-        this.fire('toast', {text: 'Delete file not implemented yet! '
-          + 'event.detail has all the date needed for delete action.', showCloseBtn: true});
+        this.fire('toast', {
+          text: 'Delete file not implemented yet! '
+          + 'event.detail has all the date needed for delete action.', showCloseBtn: true
+        });
       },
 
       _goToNewInterventionPage: function(event) {
@@ -651,7 +646,7 @@
       _interventionSaveErrors: function(event) {
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
-            (typeof event.detail === 'string' && event.detail !== '')) {
+          (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
         }
       }
