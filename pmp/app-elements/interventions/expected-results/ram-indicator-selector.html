@@ -33,6 +33,7 @@
                                                selected="{{cpOutputId}}"
                                                update-selected
                                                url="[[oldCpOutputsUrl]]"
+                                               ajax-params="[[oldCpOutputsUrlAjaxParams]]"
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Output"
@@ -113,6 +114,12 @@
           },
           oldCpOutputsUrl: {
             type: String
+          },
+          oldCpOutputsUrlAjaxParams: {
+            type: Object,
+            value: {
+              dropdown: true
+            }
           }
         },
 
