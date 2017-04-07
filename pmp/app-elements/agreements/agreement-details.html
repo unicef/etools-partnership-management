@@ -18,6 +18,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 
@@ -186,6 +187,7 @@
                 update-selected
                 selected-requires-valid-options
                 dynamic-align
+                url="[[missingSignedByUnicefUsersUrl]]"
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
                 required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -257,6 +259,7 @@
         is: 'agreement-details',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.AgreementsCommonBehavior
@@ -293,10 +296,6 @@
           staffMembers: {
             type: Array
           },
-          unicefStaff: {
-            type: Array,
-            statePath: 'unicefUsersData'
-          },
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
@@ -313,13 +312,19 @@
             type: Array,
             value: []
           },
-          oldSelectedPartnerId: Number
+          oldSelectedPartnerId: Number,
+          missingSignedByUnicefUsersUrl: String
         },
 
         observers: [
           '_agreementFieldChanged(agreement.*)',
           '_partnerChanged(agreement.partner)'
         ],
+
+        ready: function() {
+          var missingSignedByUnicefUsersEndpoint = this.getEndpoint('unicefUsers');
+          this.set('missingSignedByUnicefUsersUrl', missingSignedByUnicefUsersEndpoint.url);
+        },
 
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);

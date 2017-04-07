@@ -108,6 +108,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
+             url="[[missingSignedByUnicefUsersUrl]]"
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
@@ -159,8 +160,9 @@
         is: 'intervention-review-and-sign',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          pmpBehaviors.CommonGeneralBehavior,
         ],
 
         properties: {
@@ -196,7 +198,13 @@
           },
           newIntervention: {
             type: Boolean
-          }
+          },
+          missingSignedByUnicefUsersUrl: String
+        },
+
+        ready: function() {
+          var missingSignedByUnicefUsersEndpoint = this.getEndpoint('unicefUsers');
+          this.set('missingSignedByUnicefUsersUrl', missingSignedByUnicefUsersEndpoint.url);
         },
 
         _editModeChanged: function(newValue, oldValue) {
