@@ -38,6 +38,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
+<link rel="import" href="app-elements/data-refresh-dialog/data-refresh-button.html">
+<link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
@@ -198,6 +200,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>
                 <side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>
                 <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
+                <div class="divider"></div>
+                <data-refresh-button name="Refresh list data" on-tap="openDataRefreshDialog"></data-refresh-button>
               </template>
             </iron-selector>
 
@@ -251,7 +255,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-footer></page-footer>
         </app-header-layout>
       </app-drawer-layout>
-
+      <data-refresh-dialog id="dataRefreshDialog"></data-refresh-dialog>
   </template>
 
   <script>
@@ -292,8 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         routeData: {
           type: Object
-        }
-
+        },
       },
 
       behaviors: [
@@ -334,9 +337,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //  this.set('route.path', this.baseUrl + 'partners/list');
         //}
       },
+
+      openDataRefreshDialog: function() {
+        this.$.dataRefreshDialog.open();
+      },
+
       detached: function() {
         // clean: remove global loading element if the app-shell is detached
         this.removeLoading(this.globalLoadingElement);
+      },
+
+      toggleDrawer: function() {
+        this.$.drawer.toggle();
       },
 
       _updateMainPath: function(event) {
@@ -361,9 +373,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         this.initialLoad = false;
-      },
-      toggleDrawer: function() {
-        this.$.drawer.toggle();
       },
 
       _routePageChanged: function(page) {

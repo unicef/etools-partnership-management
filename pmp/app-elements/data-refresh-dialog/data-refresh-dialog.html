@@ -1,0 +1,97 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<dom-module id="data-refresh-dialog">
+  <template>
+    <style include="shared-styles grid-layout-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      paper-input,
+      paper-textarea,
+      paper-material {
+        width: 100%;
+      }
+
+      paper-material {
+        padding: 0;
+      }
+
+      #content-box {
+        max-height: 600px;
+        overflow-y: auto;
+        margin: 0 -20px;
+        padding: 0 15px;
+      }
+    </style>
+    <etools-dialog id="dataRefreshDialog" size="sm" ok-btn-text="Refresh data" cancel-btn-text="Cancel" dialog-title="Refresh data">
+      <div id="content-box">
+
+          <paper-menu class="dropdown-content"
+                      attr-for-selected="name"
+                      selected="[[selected]]">
+
+            <paper-item name="partners">Partners</paper-item>
+            <paper-item name="agreements">Agreements</paper-item>
+            <paper-item name="governments">Governments</paper-item>
+            <paper-item name="interventions">PD/SSFA ToR</paper-item>
+
+          </paper-menu>
+      </div>
+      <!--<etools-loading id="profileDataLoading"></etools-loading>-->
+    </etools-dialog>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'data-refresh-dialog',
+        selected: String,
+        name: String,
+        behaviors: [
+            etoolsAppConfig,
+            EtoolsLogsBehavior
+          ],
+        properties: {},
+        observers: [],
+        listeners: {},
+        ready: function() {
+          console.log('ready');
+        },
+
+        open: function() {
+          this.$.dataRefreshDialog.opened = true;
+          // this.clear('governments');
+        },
+
+        clear: function(collectionName) {
+          this.db[collectionName].clear()
+            .then(function() {
+              return this.db.collectionsList.delete(collectionName);
+            }.bind(this))
+            .then(function() {
+              this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
+              this._refreshPage();
+            }.bind(this))
+            .catch(function(err) {
+              this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
+            }.bind(this));
+        },
+        // Is there a way to do this without refreshing the page?
+        _refreshPage: function() {
+          this.refreshInProgress = false;
+          window.location.reload(true);
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
+
