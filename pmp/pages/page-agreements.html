@@ -3,7 +3,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../app-config/etools-app-config.html">
@@ -50,7 +49,6 @@
                          agreement-id="[[selectedAgreementId]]"
                          error-event-name="agreement-save-error"></agreement-item-data>
 
-    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -134,7 +132,6 @@
           </agreement-details>
         </div>
       </iron-pages>
-    </app-header-layout>
 
   </template>
 
@@ -194,7 +191,6 @@
       },
 
       observers: [
-        '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
         '_observeRouteDataId(routeData.id)'
       ],
@@ -208,10 +204,6 @@
         if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
-      },
-
-      _resizeHeader: function() {
-        this.$$('app-header-layout').notifyResize();
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {

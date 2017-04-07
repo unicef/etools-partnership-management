@@ -153,8 +153,8 @@
             <div class="col col-2 center-text">
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
-            <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0')]] </div>
-            <div class="col col-2 center-text block">  $[[displayCurrencyAmount(partner.total_ct_cy, '0')]] <br> <small>out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0')]] planned </small> </div>
+            <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]] </div>
+            <div class="col col-2 center-text block">  $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br> <small>out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned </small> </div>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
@@ -184,9 +184,9 @@
                 [[partnership.title]]
                 </div>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0')]] </div>
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0', 0)]] </div>
               <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
-              <div class="col col-4 center-text"> [[_checkAndShowDate(partnership.start)]] - [[_checkAndShowDate(partnership.end)]] </div>
+              <div class="col col-4 center-text"> [[getDateDisplayValue(partnership.start)]] - [[getDateDisplayValue(partnership.end)]] </div>
             </div>
           </template>
         </div>
@@ -309,12 +309,6 @@
             intervention.total_planned_budget = total;
           }
         },
-
-        // verify date and prettify or not
-        _checkAndShowDate: function(dateString) {
-          return this.getDisplayValue(dateString, true);
-        },
-
       });
 
     })();

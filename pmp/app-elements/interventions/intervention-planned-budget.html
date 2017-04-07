@@ -263,8 +263,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localUnicefTotal, '0.00')]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0.00')]] USD</span>
+                <span>[[displayCurrencyAmount(_localUnicefTotal, '0', 0)]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0', 0)]] USD</span>
               </div>
             </div>
           </div>
@@ -275,8 +275,8 @@
             </div>
             <div class="col col-4">
               <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localCsoTotal, '0.00')]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdCsoTotal, '0.00')]] USD</span>
+                <span>[[displayCurrencyAmount(_localCsoTotal, '0', 0)]] [[localCurrency]]</span>
+                <span>[[displayCurrencyAmount(_usdCsoTotal, '0', 0)]] USD</span>
               </div>
             </div>
           </div>
@@ -547,7 +547,7 @@
         },
 
         _getPlannedBudgetTotalFormatted: function(val1, val2) {
-          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0.00');
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0', 0);
         },
 
         _yearAlreadySelected: function(year, dropdownIdx) {

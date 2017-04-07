@@ -6,6 +6,7 @@
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/etools-loading/etools-loading.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">"
 
@@ -171,12 +172,11 @@
           </div>
         </div>
       </div>
-
-
-
-      </div>
+      <etools-loading id="profileDataLoading"></etools-loading>
     </etools-dialog>
-    <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
+    <template is="dom-if" if="[[_showEtoolsAjaxEl]]">
+      <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
+    </template>
   </template>
 
   <script>
@@ -207,7 +207,6 @@
           userProfileModel: {
             type: Object,
             value: {
-              id: null,
               office: null,
               section: null,
               supervisor: null,
@@ -218,15 +217,78 @@
               job_title: '',
               phone_number: '',
             }
+          },
+          _showUserProfileDataEl: {
+            type: Boolean,
+            value: false
+          },
+          _loadingEl: {
+            type: Object
+          },
+          _defaultLoadingMsg: {
+            type: String,
+            value: 'Loading profile data...'
           }
         },
         observers: [
-          '_mapIds(profile)'
+          '_mapIds(profile)',
+          '_recenterDialog(profile.supervisees.*, availableCountryIds.*, availableGroups.*)'
         ],
+        listeners: {
+          'my-profile-ajax-loading': '_handleMyProfileAjaxLoading',
+          'toast': '_handleErrorsToastEvent'
+        },
         ready: function() {
+          var d = Polymer.dom(this.$.userProfileDialog.root).querySelector('paper-dialog');
+          if (d) {
+            d.addEventListener('iron-overlay-opened', this._stampProfileDataElement.bind(this));
+          }
           if (!this.profile) {
             this.set('profile', this.userProfileModel);
           }
+        },
+        _stampProfileDataElement: function() {
+          if (!this._showEtoolsAjaxEl) {
+            this._setLoadingMsgAndActivate(this._defaultLoadingMsg);
+            this.set('_showEtoolsAjaxEl', true);
+          }
+        },
+        _recenterDialog: function(superviseesData, countryIdsData, groupsData) {
+          this.debounce('recenterMyProfileDialog', function() {
+            this._centerDialog();
+          }.bind(this), 300);
+        },
+        _getLoadingEl: function() {
+          if (!this._loadingEl) {
+            this._loadingEl = this.$.profileDataLoading;
+          }
+          return this._loadingEl;
+        },
+        _setLoadingMsgAndActivate: function(msg) {
+          var loadingEl = this._getLoadingEl();
+          if (loadingEl) {
+            loadingEl.loadingText = msg;
+            loadingEl.active = true;
+          }
+        },
+        _deactivateLoading: function() {
+          var loadingEl = this._getLoadingEl();
+          if (loadingEl) {
+            loadingEl.active = false;
+          }
+        },
+        _handleMyProfileAjaxLoading: function(e) {
+          e.stopImmediatePropagation();
+          if (e.detail && e.detail.message) {
+            this._setLoadingMsgAndActivate(e.detail.message);
+          } else {
+            this._deactivateLoading();
+          }
+        },
+        _handleErrorsToastEvent: function(e) {
+          e.stopImmediatePropagation();
+          this._deactivateLoading();
+          this.fire('user-profile-toast', e.detail);
         },
         openUserProfileDialog: function() {
           this.$.userProfileDialog.opened = true;
@@ -253,7 +315,10 @@
           this.set('profile', JSON.parse(JSON.stringify(this.userProfileModel)));
         },
         saveData: function() {
-          this.$.userProfileData.saveProfile(this.profile);
+          var profileDataEl = this.$$('#userProfileData');
+          if (profileDataEl) {
+            profileDataEl.saveProfile(this.profile);
+          }
         },
       });
     })();
