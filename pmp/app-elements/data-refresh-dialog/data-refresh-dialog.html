@@ -1,5 +1,8 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -21,6 +24,9 @@
       paper-material {
         padding: 0;
       }
+      paper-dropdown-menu {
+        width: 100%;
+      }
 
       #content-box {
         max-height: 600px;
@@ -29,19 +35,26 @@
         padding: 0 15px;
       }
     </style>
-    <etools-dialog id="dataRefreshDialog" size="sm" ok-btn-text="Refresh data" cancel-btn-text="Cancel" dialog-title="Refresh data">
+    <etools-dialog
+            id="dataRefreshDialog"
+            size="sm"
+            ok-btn-text="Refresh data"
+            cancel-btn-text="Cancel"
+            dialog-title="Refresh data"
+            disable-confirm-btn="[[isRefreshDisabled]]"
+            on-close="_handleDialogClosed">
       <div id="content-box">
-
+        <paper-dropdown-menu label="Select the data you would like to refresh">
           <paper-menu class="dropdown-content"
                       attr-for-selected="name"
-                      selected="[[selected]]">
+                      selected="{{selected}}">
 
             <paper-item name="partners">Partners</paper-item>
             <paper-item name="agreements">Agreements</paper-item>
             <paper-item name="governments">Governments</paper-item>
             <paper-item name="interventions">PD/SSFA ToR</paper-item>
-
           </paper-menu>
+        </paper-dropdown-menu>
       </div>
       <!--<etools-loading id="profileDataLoading"></etools-loading>-->
     </etools-dialog>
@@ -53,25 +66,34 @@
 
       Polymer({
         is: 'data-refresh-dialog',
-        selected: String,
-        name: String,
         behaviors: [
             etoolsAppConfig,
             EtoolsLogsBehavior
           ],
-        properties: {},
-        observers: [],
-        listeners: {},
+        properties: {
+          selected: String,
+          name: String,
+          isRefreshDisabled: {
+            type: Boolean,
+            value: true
+          }
+        },
+        observers: [
+          'valueChanged(selected)'
+        ],
         ready: function() {
           console.log('ready');
         },
 
         open: function() {
           this.$.dataRefreshDialog.opened = true;
+          console.log(this.selected);
           // this.clear('governments');
         },
 
-        clear: function(collectionName) {
+        clearSelectedFromDexie: function() {
+          var collectionName = this.selected;
+          console.log(collectionName);
           this.db[collectionName].clear()
             .then(function() {
               return this.db.collectionsList.delete(collectionName);
@@ -82,8 +104,21 @@
             }.bind(this))
             .catch(function(err) {
               this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
+              this.fire('global-loading', {active: false});
             }.bind(this));
         },
+
+        valueChanged: function(selected) {
+          this.isRefreshDisabled = false;
+        },
+
+        _handleDialogClosed: function(closingReason) {
+            if (closingReason.detail.confirmed) {
+              this.clearSelectedFromDexie();
+              this.fire('global-loading', {message: 'Refreshing data...', active: true});
+            }
+        },
+
         // Is there a way to do this without refreshing the page?
         _refreshPage: function() {
           this.refreshInProgress = false;
