@@ -330,7 +330,6 @@
         }
       },
       _interventionChanged: function(intervention) {
-        console.log(this.intervention);
         this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
       },
       _activeTabChanged: function(activeTab) {
@@ -431,7 +430,6 @@
 
         var interventionData;
         if (this._isNewIntervention()) {
-           console.log('is new');
            interventionData = Object.assign({}, this.intervention);
         } else {
            var modifiedDetails = this._getModifiedInterventionDetails();
@@ -465,8 +463,6 @@
         if (this.intervention.hasOwnProperty('prc_review_document') && !this.intervention.prc_review_document) {
           delete interventionData.prc_review_document;
         }
-        console.log("interventionData");
-        console.log(interventionData);
 
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
@@ -475,20 +471,7 @@
         'partner_authorized_officer_signatory','signed_by_partner_date','unicef_signatory', 'signed_by_unicef_date'];
         var updatableObjectFields = ['amendments'];
 
-        var modifReviewAndSign = {};
-        updatableFields.forEach(function(fieldName) {
-            if(this._primitiveFieldIsModified(fieldName)) {
-              modifReviewAndSign[fieldName] = this.intervention[fieldName];
-            }
-        }.bind(this));
-
-        updatableObjectFields.forEach(function(fieldName) {
-            if(this._objectFieldIsModified(fieldName)) {
-              modifReviewAndSign[fieldName] = this.intervention[fieldName];
-            }
-        }.bind(this));
-
-        return modifReviewAndSign;
+        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
       },
       _getModifiedInterventionDetails: function() {
         var updatableFields = ['agreement', 'document_type', 'title', 'partner', 'hrp',
@@ -496,23 +479,25 @@
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
                     'sector_locations', 'result_links', 'planned_budget', 'planned_visits'];
 
-        var modifInterventionDetails = {};
-        updatableFields.forEach(function(fieldName) {
+        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+      },
+
+      _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
+         var modifiedObject = {};
+
+          updatableFields.forEach(function(fieldName) {
             if(this._primitiveFieldIsModified(fieldName)) {
-              modifInterventionDetails[fieldName] = this.intervention[fieldName];
+              modifiedObject[fieldName] = this.intervention[fieldName];
             }
-        }.bind(this));
+         }.bind(this));
 
-        updatableObjectFields.forEach(function(fieldName) {
+         updatableObjectFields.forEach(function(fieldName) {
             if(this._objectFieldIsModified(fieldName)) {
-              modifInterventionDetails[fieldName] = this.intervention[fieldName];
+              modifiedObject[fieldName] = this.intervention[fieldName];
             }
         }.bind(this));
 
-        console.log('modifInterventionDetails');
-        console.log(modifInterventionDetails);
-        return modifInterventionDetails;
-
+        return modifiedObject;
       },
       _objectFieldIsModified: function(fieldName) {
         var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
@@ -558,8 +543,6 @@
       },
 
       _attachmentIsNewOrModified: function(attachment) {
-        console.log("attachment");
-        console.log(attachment);
         if (!attachment.id) {
           return true;
         }
@@ -570,9 +553,6 @@
         if (!originalAttachment) {
           return true;
         }
-
-        console.log("stringified attachment");
-        console.log(JSON.stringify(attachment));
         return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
       },
       _showErrorsWarning: function(validDetails, validReviewAndSign) {
