@@ -143,7 +143,8 @@ gulp.task('default', gulp.series([
 // Run polylint,
 // split all source and dependency files into streams and lint them individually uning polylint
 gulp.task('lint', gulp.series([
-  runPolylint
+  runPolylint,
+  source
 ]));
 
 // DO NOT RUN
