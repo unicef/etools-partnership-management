@@ -21,6 +21,7 @@
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
@@ -188,6 +189,7 @@
                 selected-requires-valid-options
                 dynamic-align
                 url="[[missingSignedByUnicefUsersUrl]]"
+                ajax-params="[[missingSignedByUnicefAjaxParams]]"
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
                 required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -262,7 +264,8 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.AgreementsCommonBehavior
+          pmpBehaviors.AgreementsCommonBehavior,
+          pmpBehaviors.MissingSignedByUnicefUsersBehavior
         ],
 
         properties: {
@@ -312,8 +315,7 @@
             type: Array,
             value: []
           },
-          oldSelectedPartnerId: Number,
-          missingSignedByUnicefUsersUrl: String
+          oldSelectedPartnerId: Number
         },
 
         observers: [
@@ -322,8 +324,7 @@
         ],
 
         ready: function() {
-          var missingSignedByUnicefUsersEndpoint = this.getEndpoint('unicefUsers');
-          this.set('missingSignedByUnicefUsersUrl', missingSignedByUnicefUsersEndpoint.url);
+          this.setMissingSignedByUnicefUsersUrl();
         },
 
         _isNewAgreementChanged: function(isNew) {

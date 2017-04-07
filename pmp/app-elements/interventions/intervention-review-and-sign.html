@@ -15,6 +15,7 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
@@ -109,6 +110,7 @@
              selected-requires-valid-options
              dynamic-align
              url="[[missingSignedByUnicefUsersUrl]]"
+             ajax-params="[[missingSignedByUnicefAjaxParams]]"
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
@@ -163,6 +165,7 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.MissingSignedByUnicefUsersBehavior
         ],
 
         properties: {
@@ -198,13 +201,11 @@
           },
           newIntervention: {
             type: Boolean
-          },
-          missingSignedByUnicefUsersUrl: String
+          }
         },
 
         ready: function() {
-          var missingSignedByUnicefUsersEndpoint = this.getEndpoint('unicefUsers');
-          this.set('missingSignedByUnicefUsersUrl', missingSignedByUnicefUsersEndpoint.url);
+          this.setMissingSignedByUnicefUsersUrl();
         },
 
         _editModeChanged: function(newValue, oldValue) {

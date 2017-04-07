@@ -130,6 +130,7 @@
         ready: function() {
           var oldCpOutputEndpoint = this.getEndpoint('cpOutputsByIdsAsValues');
           this.set('oldCpOutputsUrl', oldCpOutputEndpoint.url);
+
           if (this.cpOutputs.length > 0 && this.cpOutputId) {
             // set selected cp output when cpOutputs data exists
             this._cpOutputSelected(this.cpOutputId);
