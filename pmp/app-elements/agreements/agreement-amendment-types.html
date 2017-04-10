@@ -113,6 +113,7 @@
                                                      selected="{{item.type}}"
                                                      update-selected dynamic-align
                                                      required
+                                                     auto-validate$="[[_autoValidateIsOn(editMode, item.type)]]"
                                                      hide-search
                                                      error-message="Please select amendment type">
               </etools-searchable-multiselection-menu>
@@ -238,6 +239,12 @@
             existing_clause_amended: null
           };
           this.set('editMode', true);
+        },
+        _autoValidateIsOn: function(editMode, selectedValue) {
+          if (editMode && selectedValue) {
+            return true;
+          }
+          return false;
         },
 
         _isFirstElem: function(index) {

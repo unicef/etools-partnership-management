@@ -167,7 +167,9 @@
           staffMembers: Array
         },
 
-        observers: ['_signedDateChanged(dataItems.*)'],
+        observers: [
+          '_dataItemsChanged(dataItems.*)',
+          ],
 
         ready: function() {
           this.dataSetModel = {
@@ -187,7 +189,6 @@
           };
         },
         validate: function() {
-          console.log('here');
           if (!this.dataItems) {
             return true;
           }
@@ -200,7 +201,7 @@
                  this.$$('#signedDate_' + index).invalid = true;
                  isValid = false;
               } else if (this._signedDateIsInTheFuture(amendm.signed_date)) {
-                 this.$$('#signedDate_' + index).errorMessage = "The 'Signed Date' cannot be in the future";
+                 this.$$('#signedDate_' + index).errorMessage = "Signed Date can not be in the future";
                  this.$$('#signedDate_' + index).invalid = true;
                  isValid = false;
               }
@@ -210,7 +211,9 @@
               }
 
               var amendmTypesEl =  this.$$('#amendmentTypes_' + index);
-              isValid = this._validateAmendmentTypes(amendm, amendmTypesEl);
+              if (!this._validateAmendmentTypes(amendm, amendmTypesEl)) {
+                isValid = false;
+              }
 
            }.bind(this));
 
@@ -353,7 +356,7 @@
               amendment.signed_date, amendmentIndex);
         },
 
-        _signedDateChanged: function(data) {
+        _dataItemsChanged: function(data) {
           var path = data.path.slice(data.path.lastIndexOf('.') + 1);
           var ind = data.path.slice(data.path.indexOf('#') + 1);
           var index = ind.slice(0, ind.indexOf('.'));
@@ -361,7 +364,26 @@
             // reset invalid state is field is not empty
             var signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
-              signedDateEl.invalid = false;
+                if (this._signedDateIsInTheFuture(data.value)) {
+                   signedDateEl.errorMessage = "Signed Date can not be in the future";
+                   signedDateEl.invalid = true;
+                } else {
+                  signedDateEl.invalid = false;
+                  signedDateEl.errorMessage = "Please select signed date";
+                }
+              } else {
+                  signedDateEl.invalid = true;
+                  signedDateEl.errorMessage = "Please select signed date";
+              }
+          }
+          if (path === 'signed_amendment') {
+            var uploadFileEl = this.$$('#fileUpload_' + index);
+            if (uploadFileEl && data.value) {
+              if (data.value instanceof File) {
+                uploadFileEl.invalid = false;
+              }
+            } else {
+                uploadFileEl.invalid = true;
             }
           }
         }
