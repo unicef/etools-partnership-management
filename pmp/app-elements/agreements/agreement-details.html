@@ -621,7 +621,11 @@
           return valid;
         },
         _validateAmendments: function() {
-           return this.$$('#agreementAmendments').validate();
+           var agreementAmendmentsElem = this.$$('#agreementAmendments');
+           if (agreementAmendmentsElem) {
+             return agreementAmendmentsElem.validate();
+           }
+           return true;
         },
         /**
          * Validate signed by fields

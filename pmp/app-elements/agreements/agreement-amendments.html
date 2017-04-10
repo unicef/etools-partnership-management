@@ -174,7 +174,16 @@
             id: null,
             signed_date: null,
             signed_agreement: [],
-            amendment_types: []
+            amendment_types: [{ //TODO - how to not duplicate model here and in agreement-amendment-types.html?
+              id: null,
+              type: null,
+              officer: null,
+              bank_info: null,
+              legal_name_of_ip: null,
+              cp_cycle_end: null,
+              additional_clauses: null,
+              existing_clause_amended: null
+           }]
           };
         },
         validate: function() {
@@ -199,14 +208,23 @@
                  this.$$('#fileUpload_' + index).invalid = true;
                  isValid = false;
               }
-              if (!amendm.amendment_types || amendm.amendment_types.length === 0) {
-                 //TODO ???
-                 isValid = false;
-              }
+
+              var amendmTypesEl =  this.$$('#amendmentTypes_' + index);
+              isValid = this._validateAmendmentTypes(amendm, amendmTypesEl);
 
            }.bind(this));
 
            return isValid;
+        },
+        _validateAmendmentTypes: function(amendment, amendmentTypesEl) {
+          var isValid = true;
+          amendment.amendment_types.forEach(function(amendmType, index) {
+            if (!amendmType.type) {
+              isValid = false;
+              amendmentTypesEl._invalidAmendmentTypeField(true, "#amendmentType_" + index);
+            }
+          });
+          return isValid;
         },
         _signedDateIsInTheFuture: function(signed_date) {
           var signed_dt = Date.parse(signed_date)
