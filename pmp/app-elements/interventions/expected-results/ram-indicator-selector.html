@@ -6,6 +6,7 @@
 
 <link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../../app-behaviors/esmm-missing-options/missing-cp-outputs-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
 
@@ -32,8 +33,8 @@
                                                option-label="name"
                                                selected="{{cpOutputId}}"
                                                update-selected
-                                               url="[[oldCpOutputsUrl]]"
-                                               ajax-params="[[oldCpOutputsUrlAjaxParams]]"
+                                               url="[[missingOldCpOutputsUrl]]"
+                                               ajax-params="[[missingOldCpOutputsAjaxParams]]"
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Output"
@@ -69,7 +70,8 @@
         is: 'ram-indicator-selector',
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.MissingCpOutputsBehavior
         ],
         properties: {
           cpOutputs: {
@@ -112,9 +114,6 @@
             type: Boolean,
             value: false
           },
-          oldCpOutputsUrl: {
-            type: String
-          },
           oldCpOutputsUrlAjaxParams: {
             type: Object,
             value: {
@@ -128,8 +127,7 @@
         ],
 
         ready: function() {
-          var oldCpOutputEndpoint = this.getEndpoint('cpOutputsByIdsAsValues');
-          this.set('oldCpOutputsUrl', oldCpOutputEndpoint.url);
+          this.setMissingOldCpOutputsUrl();
 
           if (this.cpOutputs.length > 0 && this.cpOutputId) {
             // set selected cp output when cpOutputs data exists

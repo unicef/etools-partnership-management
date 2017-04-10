@@ -56,12 +56,6 @@
               type: 'SET_SIGNED_BY_UNICEF_USERS',
               signedByUnicefUsers: signedByUnicefUsersData
             };
-          },
-          setSupplyItems: function(supplyItemsData) {
-            return {
-              type: 'SET_SUPPLY_ITEMS',
-              supplyItems: supplyItemsData
-            };
           }
         },
 
@@ -89,14 +83,7 @@
             // set Signed By UNICEF Users
             if (Array.isArray(response.detail.signed_by_unicef_users)
                 && response.detail.signed_by_unicef_users.length > 0) {
-              var signedByUnicefUsers = this._prepareDropdownData(response.detail.signed_by_unicef_users, true);
-              this.dispatch('setSignedByUnicefUsers', signedByUnicefUsers);
-            }
-            // set supply items
-            if (Array.isArray(response.detail.supply_items)
-                && response.detail.supply_items.length > 0) {
-              var supplyItems = this._prepareDropdownData(response.detail.supply_items);
-              this.dispatch('setSupplyItems', supplyItems);
+              this.dispatch('setSignedByUnicefUsers', response.detail.signed_by_unicef_users);
             }
           }
         },
@@ -104,25 +91,12 @@
         /**
          * Prepare values for dropdowns
          */
-        _prepareDropdownData: function(data, usersData) {
+        _prepareDropdownData: function(data) {
           return data.map(function(d) {
-            if (usersData) {
-              var userName = d.first_name + ' ' + d.last_name;
-              userName = userName.trim();
-              if (userName === '') {
-                // no first and last name => use email
-                userName = d.email;
-              }
-              return {
-                value: d.id,
-                label: userName
-              };
-            } else {
-              return {
-                value: d.id,
-                label: d.name
-              };
-            }
+            return {
+              value: d.id,
+              label: d.name
+            };
           });
         }
 
