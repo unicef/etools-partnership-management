@@ -1,12 +1,17 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="../partners/partners-data/partners-list-data.html">
+<link rel="import" href="../agreements/agreement-data/agreement-list-data.html">
+<link rel="import" href="../interventions/intervention-data/interventions-list-data.html">
+<link rel="import" href="../governments/governments-data/governments-list-data.html">
+
 
 <dom-module id="data-refresh-dialog">
   <template>
@@ -15,17 +20,12 @@
         display: none !important;
       }
 
-      paper-input,
-      paper-textarea,
       paper-material {
         width: 100%;
       }
 
       paper-material {
         padding: 0;
-      }
-      paper-dropdown-menu {
-        width: 100%;
       }
 
       #content-box {
@@ -44,20 +44,77 @@
             disable-confirm-btn="[[isRefreshDisabled]]"
             on-close="_handleDialogClosed">
       <div id="content-box">
-        <paper-dropdown-menu label="Select the data you would like to refresh">
-          <paper-menu class="dropdown-content"
-                      attr-for-selected="name"
-                      selected="{{selected}}">
+        <iron-label> Select the data you want to refresh: </iron-label>
 
-            <paper-item name="partners">Partners</paper-item>
-            <paper-item name="agreements">Agreements</paper-item>
-            <paper-item name="governments">Governments</paper-item>
-            <paper-item name="interventions">PD/SSFA ToR</paper-item>
-          </paper-menu>
-        </paper-dropdown-menu>
+        <div class="custom-field-wrapper">
+          <etools-checkable-input checked="{{selected.partners}}"
+                                  label="Partners data"
+                                  label-alignment="right">
+          </etools-checkable-input>
+          <etools-checkable-input checked="{{selected.agreements}}"
+                                  label="Agreements data"
+                                  label-alignment="right">
+          </etools-checkable-input>
+          <etools-checkable-input checked="{{selected.interventions}}"
+                                  label="PD/SSFA ToR data"
+                                  label-alignment="right">
+          </etools-checkable-input>
+          <etools-checkable-input checked="{{selected.governments}}"
+                                  label="Governments data"
+                                  label-alignment="right">
+          </etools-checkable-input>
+
+        </div>
       </div>
       <!--<etools-loading id="profileDataLoading"></etools-loading>-->
     </etools-dialog>
+    <!--
+   <partners-list-data id="partners"
+                         filtered-partners="{{filteredPartners}}"
+                         total-results="{{totalResults}}"
+                         on-partners-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredPartners"
+                         fire-data-loaded show-loading>
+   </partners-list-data>
+   <agreement-list-data id="agreements"
+                         filtered-agreements="{{filteredAgreements}}"
+                         total-results="{{totalResults}}"
+                         list-data-path="filteredAgreements"
+                         on-agreements-loaded="_requiredDataHasBeenLoaded"
+                         fire-data-loaded show-loading>
+   </agreement-list-data>
+   <interventions-list-data id="interventions"
+                         filtered-interventions="{{filteredInterventions}}"
+                         total-results="{{totalResults}}"
+                         on-interventions-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredInterventions"
+                         fire-data-loaded show-loading>
+   </interventions-list-data>
+
+   <governments-list-data id="governments"
+                         filtered-governments="{{filteredGovernments}}"
+                         total-results="{{totalResults}}"
+                         on-governments-loaded="_requiredDataHasBeenLoaded"
+                         list-data-path="filteredGovernments"
+                         unicef-users-data="[[unicefUsersData]]"
+                         fire-data-loaded
+                         show-loading>
+    </governments-list-data>
+    -->
+   <!--<partners-list-data id="partners">
+   </partners-list-data>
+   <agreement-list-data id="agreements">
+   </agreement-list-data>
+   <interventions-list-data id="interventions">
+   </interventions-list-data>
+   <governments-list-data id="governments">
+    </governments-list-data>-->
+
+    <etools-ajax id="ajax"
+                 endpoint="[[ajaxEndpoint]]"
+                 caching-storage="custom"
+                 dexie-db-collection="[[ajaxCollection]]">
+    </etools-ajax>
   </template>
 
   <script>
@@ -71,59 +128,79 @@
             EtoolsLogsBehavior
           ],
         properties: {
-          selected: String,
           name: String,
-          isRefreshDisabled: {
-            type: Boolean,
-            value: true
-          }
+          ajaxUrl: String,
+          ajaxEndpoint: Object,
+          ajaxCollection: String,
+          selected: {
+            type: Object,
+            value: {
+              governments: false,
+              interventions: false,
+              partners: false,
+              agreements: false,
+            }
+          },
         },
-        observers: [
-          'valueChanged(selected)'
-        ],
         ready: function() {
-          console.log('ready');
         },
 
         open: function() {
           this.$.dataRefreshDialog.opened = true;
-          console.log(this.selected);
-          // this.clear('governments');
         },
 
-        clearSelectedFromDexie: function() {
-          var collectionName = this.selected;
-          console.log(collectionName);
-          this.db[collectionName].clear()
+        clearSelectedFromDexie: function(collectionName) {
+          return this.db[collectionName].clear()
             .then(function() {
               return this.db.collectionsList.delete(collectionName);
             }.bind(this))
             .then(function() {
               this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
-              this._refreshPage();
+
+              // this._refreshPage();
+              console.log('done for', collectionName);
+              this._fireAjaxRequest(collectionName);
+
+              return true;
             }.bind(this))
             .catch(function(err) {
               this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
-              this.fire('global-loading', {active: false});
+              return false;
             }.bind(this));
         },
 
-        valueChanged: function(selected) {
-          this.isRefreshDisabled = false;
+        _fireAjaxRequest: function(name) {
+            this.set('ajaxEndpoint', undefined);
+            this.set('ajaxCollection', undefined);
+
+            var endpoint = this.globals.getEndpoint(name);
+            console.log(endpoint);
+
+            this.set('ajaxEndpoint', endpoint);
+            this.set('ajaxCollection', name);
         },
 
         _handleDialogClosed: function(closingReason) {
             if (closingReason.detail.confirmed) {
-              this.clearSelectedFromDexie();
               this.fire('global-loading', {message: 'Refreshing data...', active: true});
+
+              var promises = [];
+              for (var key in this.selected) {
+                if(this.selected[key]) {
+                  promises.push(this.clearSelectedFromDexie(key));
+                }
+              }
+
+              Promise.all(promises).then(function(results) {
+                console.log('all k', results);
+                this.fire('global-loading', {active: false})
+              }.bind(this)).catch(function(error) {
+                console.log('oops', error);
+                this.fire('global-loading', {active: false})
+              }.bind(this));
+
             }
         },
-
-        // Is there a way to do this without refreshing the page?
-        _refreshPage: function() {
-          this.refreshInProgress = false;
-          window.location.reload(true);
-        }
 
       });
     })();
