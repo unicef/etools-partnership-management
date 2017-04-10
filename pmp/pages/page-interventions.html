@@ -464,6 +464,7 @@
           delete interventionData.prc_review_document;
         }
 
+        console.log(interventionData);
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
@@ -507,12 +508,21 @@
         var dropdownArrayFields = ['partner_focal_points','unicef_focal_points', 'offices'];
         if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
           // Covers dropdown arrays which can have same content but with changed order
-          var diffArr = _.difference(this.originalIntervention[fieldName], this.intervention[fieldName]);
-          if (diffArr.length === 0) {
+          if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
             isModified = false;
           }
         }
         return isModified;
+      },
+      _arraysAreEqual: function(array1 , array2) {
+        var differencesArray = [];
+        if (array1.length > array2.length) {
+          differencesArray = _.difference(array1, array2);
+        } else {
+          differencesArray = _.difference(array2, array1);
+        }
+        return _.isEmpty(differencesArray);
+
       },
       _primitiveFieldIsModified: function(fieldName) {
         return this.originalIntervention[fieldName] !== this.intervention[fieldName];
