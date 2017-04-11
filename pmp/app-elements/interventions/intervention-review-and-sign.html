@@ -101,13 +101,14 @@
       <div class="row-h flex-c">
         <div class="col col-6">
           <!-- Signed by UNICEF -->
+          <!-- There's a problem here, the user's full name isn't available, the first and last name are separate -->
           <etools-searchable-multiselection-menu id="signedByUnicef"
              label="Signed by UNICEF"
              placeholder="&#8212;"
              options="[[signedByUnicefUsers]]"
              custom-object-options
-             option-value="user_id"
-             option-label="full_name"
+             option-value="id"
+             option-label="email"
              selected="{{intervention.unicef_signatory}}"
              update-selected
              selected-requires-valid-options
@@ -273,7 +274,7 @@
         _setSignedByUnicef: function(unicefUserId, unicefUsersLength) {
           if (unicefUserId && unicefUsersLength) {
             return this.unicefUsersData.filter(function(user) {
-              return user.value === parseInt(unicefUserId, 10);
+              return parseInt(user.user_id) === parseInt(unicefUserId, 10);
             });
           }
           return [];

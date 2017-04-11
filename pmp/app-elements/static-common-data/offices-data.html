@@ -47,7 +47,7 @@
         _handleResponse: function(response) {
           if (response.detail && response.detail.length > 0) {
             // set offices values
-            this.dispatch('setOfficesData', this._prepareOfficesData(response.detail));
+            this.dispatch('setOfficesData', response.detail);
           }
         },
 

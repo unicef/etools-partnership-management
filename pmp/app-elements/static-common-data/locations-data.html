@@ -47,21 +47,9 @@
         _handleResponse: function(response) {
           if (response.detail && response.detail.length > 0) {
             // set locations values
-            this.dispatch('setLocations', this._prepareLocationsData(response.detail));
+            this.dispatch('setLocations', response.detail);
           }
         },
-
-        /**
-         * Prepare values for dropdowns
-         */
-        _prepareLocationsData: function(data) {
-          return data.map(function(d) {
-            return {
-              value: parseInt(d.id, 10),
-              label: d.name
-            };
-          });
-        }
 
       });
     })();

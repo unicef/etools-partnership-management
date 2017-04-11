@@ -35,13 +35,13 @@
         },
 
         _displayMultiple: function(id, collection) {
-            var entries = this._mapItemFromValue(id, collection);
+            var entries = this._mapItemFromId(id, collection);
             if (Array.isArray(entries)) {
                 return _.map(entries, function(e) {
-                    return e.label;
+                    return e.name || e.full_name;
                 }).join(', ');
             }
-            return entries.label;
+            return entries.name || e.full_name;
         },
         _getUpdatedObject: function(prop, value, oldObj) {
             //for multiselect
