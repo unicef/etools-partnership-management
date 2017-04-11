@@ -63,8 +63,8 @@
             <span class="col-data col-2" title="[[visit.travel_type]]">
                 [[visit.travel_type]]
             </span>
-            <span class="col-data col-2" title="[[_checkAndShowDate(visit.date)]]">
-                [[_checkAndShowDate(visit.date)]]
+            <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
+                [[getDateDisplayValue(visit.date)]]
             </span>
             <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
                 [[getDisplayValue(visit.locations)]]
@@ -76,7 +76,7 @@
         </etools-data-table-row>
       </template>
     </div>
-    <div class="monitoring-visits-warning" hidden="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
+    <div class="monitoring-visits-warning" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
       <p>There are no monitoring visits for this intervention.</p>
     </div>
 

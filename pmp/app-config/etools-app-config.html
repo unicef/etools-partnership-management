@@ -23,15 +23,14 @@ App global configuration
       governments: 'id, number, country_programme, country_programme_name, cp_outputs, partner, ' +
         'partner_name, sectors, unicef_focal_points, years'
     });
-
+    /** @polymerBehavior etoolsAppConfig.globals */
     var etoolsAppConfig = {
 
       db: etoolsCustomDexieDb,
 
       // globals
-      /** @polymerBehavior etoolsAppConfig.globals */
-      globals: {
 
+      globals: {
         baseSite: window.location.origin,
         basePath: (window.location.port === '8080') ? '/' : '/pmp/',
         serverBackend: (window.location.port !== '8080'),

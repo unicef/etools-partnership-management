@@ -20,12 +20,18 @@
       Polymer({
 
         is: 'government-intervention-item-data',
-        behaviors: [etoolsAppConfig.globals, pmpBehaviors.EtoolsStaticCommonDataReduxBehavior],
+        behaviors: [
+          etoolsAppConfig.globals,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+        ],
         properties: {
           intervention: {
             type: Object,
             readOnly: true,
             notify: true
+          },
+          endpoint: {
+            type: Object,
           },
           interventionId: {
             type: Number,

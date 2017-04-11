@@ -1,10 +1,9 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="date-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.CommonGeneralBehaviorImpl */
   pmpBehaviors.CommonGeneralBehaviorImpl = {
-
     /**
      * Prepare and return the string value we have to display on the interface.
      * Ex: partners and agreements lists data values.
@@ -29,7 +28,12 @@
       }
       return '-';
     },
-
+    /**
+     * Prepare date string and return it in a user readable format
+    */
+    getDateDisplayValue: function(dateString) {
+      return this.getDisplayValue(dateString, true);
+    },
     /**
      * Update URL params
      */
@@ -117,6 +121,7 @@
 
   };
 
+  /** @polymerBehavior pmpBehaviors.CommonGeneralBehavior */
   pmpBehaviors.CommonGeneralBehavior = [
     pmpBehaviors.DateBehavior,
     pmpBehaviors.CommonGeneralBehaviorImpl

@@ -1,0 +1,102 @@
+<!-- Styles for list pages-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="list-filter-styles">
+  <template>
+    <style>
+        #listControls {
+        @apply(--layout-horizontal);
+        padding: 6px 30px;
+        margin-bottom: 20px;
+        background: var(--list-bg-color);
+      }
+
+      .wrap-controls, .fixed-controls,
+      .wrap-controls .filter {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      .wrap-controls {
+        @apply(--layout-wrap);
+        padding-bottom: 8px;
+      }
+
+      .wrap-controls > *:not(:last-child) {
+        margin-right: 15px;
+      }
+
+      .wrap-controls paper-input {
+        min-width: 200px;
+      }
+
+      .wrap-controls paper-dropdown-menu,
+      .wrap-controls .filter {
+        min-width: 250px;
+      }
+
+      .wrap-controls .filter.esmm {
+        min-width: 350px;
+      }
+
+      .fixed-controls {
+        @apply(--layout-end-justified);
+
+        margin-left: auto;
+        white-space: nowrap;
+      }
+
+      .filters-divider {
+        height: calc(100% - 16px);
+        margin: 0 20px;
+        border-left: 2px solid var(--list-divider-color, #9D9D9D);
+      }
+
+      #filterMenu {
+        max-width: 126px;
+      }
+
+      #filterMenu .button {
+        color: var(--list-primary-color, #40c4ff);
+      }
+
+      #filterMenu .button iron-icon {
+        margin-right: 5px;
+      }
+
+      #listControls paper-item {
+        --paper-item: {
+          cursor: pointer;
+        };
+        --paper-item-selected: {
+          font-weight: normal !important;
+        };
+        --paper-item-focused: {
+          background-color: var(--list-secondary-color, #ffffff);
+        };
+        --paper-item-focused-before: {
+          background: none;
+          opacity: 0;
+        };
+        --paper-item-focused-after: {
+          background: none;
+          opacity: 0;
+        }
+      }
+
+      #hiddenToggle {
+        @apply(--layout-horizontal);
+
+        padding: 10px 8px 10px 8px;
+        cursor: pointer;
+        font-weight: normal;
+        font-size: 16px;
+      }
+
+      #hiddenToggle paper-toggle-button {
+        margin-left: 10px;
+      }
+    </style>
+  </template>
+</dom-module>

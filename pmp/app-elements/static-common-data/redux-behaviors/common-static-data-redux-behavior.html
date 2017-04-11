@@ -33,7 +33,7 @@
     agreementStatuses: [],
     csoPartners: []
   };
-
+  /** @polymerBehavior pmpBehaviors.EtoolsStaticCommonDataReduxBehavior */
   var commonStaticDataStore = Redux.createStore(function(state, action) {
     if (!state) {
       return initialDropdownPmpData;

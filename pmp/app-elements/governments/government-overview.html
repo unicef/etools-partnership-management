@@ -9,6 +9,7 @@
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -136,7 +137,7 @@
           </div>
         </div>
       </paper-material>
- <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
+      <etools-content-panel id="implementation-status-panel" class="content-section" title="Implementation Status">
 
         <template is="dom-if" if="[[!intervention.implementation_status.length]]">
           <div class="row-h">
@@ -182,14 +183,14 @@
                 <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
                     [[record.fc_ref_number]]
                 </a>
-                <span class="col-data col-2 truncate" title="[[_checkAndShowDate(record.due_date)]]">
-                    [[_checkAndShowDate(record.due_date)]]
+                <span class="col-data col-2 truncate" title="[[getDateDisplayValue(record.due_date)]]">
+                    [[getDateDisplayValue(record.due_date)]]
                 </span>
                 <span class="col-data col-4" title="[[record.line_item_text]]">
                     [[record.line_item_text]]
                 </span>
-                <span class="col-data col-2 text-flex-right" title="[[record.commitment_amount]]">
-                    [[record.commitment_amount]]
+                <span class="col-data col-2 text-flex-right" title="[[displayCurrencyAmount(record.commitment_amount, '0',0)]]">
+                    [[displayCurrencyAmount(record.commitment_amount, '0', 0)]]
                 </span>
                 <span class="col-data col-2 text-flex-right" title="Coming soon">
                      Coming soon
@@ -206,7 +207,7 @@
             </div>
             <div class="col col-4 padded-right">
               <paper-material elevation="1" class="yellow-box text-flex-right">
-                <span><strong>[[ status.actual_sum ]]</strong></span>
+                <span><strong>[[ displayCurrencyAmount(status.actual_sum, '0', 0) ]]</strong></span>
               </paper-material>
 
               <paper-material elevation="1" class="yellow-box text-flex-right">
@@ -236,7 +237,7 @@
             </div>
             <div class="col col-4 padded-right">
               <paper-material elevation="1" class="yellow-box text-flex-right">
-                <span><strong>[[ intervention.actual_total_sum ]]</strong></span>
+                <span><strong>[[ displayCurrencyAmount(intervention.actual_total_sum, '0',0) ]]</strong></span>
               </paper-material>
               <paper-material elevation="1" class="yellow-box text-flex-right">
                 <strong>Coming soon</strong>
@@ -256,7 +257,8 @@
       behaviors: [
         pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
         pmpBehaviors.CommonGeneralBehavior,
-        pmpBehaviors.ObjectDatabindBehavior
+        pmpBehaviors.ObjectDatabindBehavior,
+        etoolsBehaviors.EtoolsCurrencyBehavior
       ],
       observers: [
 
@@ -380,9 +382,6 @@
           }
         }
         return null;
-      },
-      _checkAndShowDate: function(dateString) {
-        return this.getDisplayValue(dateString, true);
       },
 
   });
