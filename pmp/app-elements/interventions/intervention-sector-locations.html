@@ -242,6 +242,7 @@
           var valid = true;
           if (this.dataItems.length === 0 && this.required) {
             this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
+            valid = false;
           } else {
             if (!this.required) {
               return valid;
