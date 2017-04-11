@@ -132,7 +132,7 @@
               </iron-label>
               <br />
               <div class="content" id="country_programme">
-                [[countryProgramme.label]]
+                [[countryProgramme.name]]
               </div>
           </div>
         </div>
@@ -329,7 +329,7 @@
         var currentCpId = this.intervention.country_programme;
 
         countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
-          return (elem.value === currentCpId);
+          return (elem.id === currentCpId);
         });
 
         this.set('countryProgramme', countryProgrammes.pop());
