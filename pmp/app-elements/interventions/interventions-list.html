@@ -769,10 +769,10 @@ changed teh                  option-value="[[filter.optionValue]]"
          */
         _getHrpValue: function(hrpId) {
           var hrpData = this.hrps.filter(function(hrp) {
-            return parseInt(hrp.value, 10) === parseInt(hrpId, 10);
+            return parseInt(hrp.id, 10) === parseInt(hrpId, 10);
           })[0];
           if (hrpData) {
-            return this.getDisplayValue(hrpData.label);
+            return this.getDisplayValue(hrpData.name);
           } else {
             return '-';
           }
