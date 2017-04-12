@@ -330,6 +330,8 @@
         }
       },
       _interventionChanged: function(intervention) {
+        console.log('initial intervention');
+        console.log(intervention);
         this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
       },
       _activeTabChanged: function(activeTab) {
@@ -478,11 +480,43 @@
         var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
                      'start', 'end', 'population_focus'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-                    'sector_locations', 'result_links', 'planned_budget', 'planned_visits'];
+                    'sector_locations', 'planned_budget', 'planned_visits'];
+        var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
 
-        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        return Object.assign({}, modifiedDetails, modifiedExpectedResults);
       },
+      _buildModifiedExpectedResultsObject: function() {
+        var modifExpectedResultsArray = this._getNewOrModifiedExpectedResults();
 
+        if (!_.isEmpty(modifExpectedResultsArray)) {
+          return {result_links: modifExpectedResultsArray};
+        }
+         return {};
+      },
+      _getNewOrModifiedExpectedResults: function() {
+        if (_.isEmpty(this.intervention.result_links)) {
+          return [];
+        }
+        return this.intervention.result_links
+                   .filter(this._expectedResultIsNewOrModified.bind(this));
+      },
+      _expectedResultIsNewOrModified: function(result_link) {
+        if (_.isEmpty(this.originalIntervention.result_links)) {
+          return true;
+        }
+        if (!result_link.id) {
+          return true;
+        }
+        var originalResultLink = this. originalIntervention.result_links.find(function(res){
+          return res.id === result_link.id;
+        });
+        if (!originalResultLink) {
+          return true;
+        }
+
+        return (JSON.stringify(originalResultLink) !== JSON.stringify(result_link));
+      },
       _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
          var modifiedObject = {};
 
@@ -530,7 +564,7 @@
         return !!!this.intervention.id;
       },
       _prepareAttachments: function() {
-        if (!Array.isArray(this.intervention.attachments) || this.intervention.attachments.length === 0) {
+        if (_.isEmpty(this.intervention.attachments)) {
           return [];
         }
          var modifAttachments = this.intervention.attachments
@@ -554,10 +588,10 @@
       },
 
       _attachmentIsNewOrModified: function(attachment) {
-        if (!attachment.id) {
+        if (_.isEmpty(this.originalIntervention.attachments)) {
           return true;
         }
-        if (!this.originalIntervention.attachments) {
+        if (!attachment.id) {
           return true;
         }
         var originalAttachment = this.originalIntervention.attachments.find(function(att) {
