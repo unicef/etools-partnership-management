@@ -102,9 +102,10 @@
                 <div class="col col-8 file-container">
                   <!-- Signed Agreement -->
                   <div class="file-wrapper">
-                    <etools-single-file label="Signed Amendment"
+                    <etools-single-file id$="fileUpload_[[index]]" label="Signed Amendment"
                                file="{{item.signed_amendment}}"
                                internal-file="{{item.signed_amendment_file}}"
+                               error-message="Signed Amendment file is required"
                                accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
                   </div>
                 </div>
@@ -166,17 +167,75 @@
           staffMembers: Array
         },
 
-        observers: ['_signedDateChanged(dataItems.*)'],
+        observers: [
+          '_dataItemsChanged(dataItems.*)',
+          ],
 
         ready: function() {
           this.dataSetModel = {
             id: null,
             signed_date: null,
             signed_agreement: [],
-            amendment_types: []
+            amendment_types: [{ //TODO - how to not duplicate model here and in agreement-amendment-types.html?
+              id: null,
+              type: null,
+              officer: null,
+              bank_info: null,
+              legal_name_of_ip: null,
+              cp_cycle_end: null,
+              additional_clauses: null,
+              existing_clause_amended: null
+           }]
           };
         },
+        validate: function() {
+          if (!this.dataItems) {
+            return true;
+          }
+          var isValid = true;
+          this.dataItems.forEach(function (amendm, index) {
+              if (amendm.id) {
+                 return;
+              }
+              if (!amendm.signed_date) {
+                 this.$$('#signedDate_' + index).invalid = true;
+                 isValid = false;
+              } else if (this._signedDateIsInTheFuture(amendm.signed_date)) {
+                 this.$$('#signedDate_' + index).errorMessage = "Signed Date can not be in the future";
+                 this.$$('#signedDate_' + index).invalid = true;
+                 isValid = false;
+              }
+              if (!amendm.signed_amendment) {
+                 this.$$('#fileUpload_' + index).invalid = true;
+                 isValid = false;
+              }
 
+              var amendmTypesEl =  this.$$('#amendmentTypes_' + index);
+              if (!this._validateAmendmentTypes(amendm, amendmTypesEl)) {
+                isValid = false;
+              }
+
+           }.bind(this));
+
+           return isValid;
+        },
+        _validateAmendmentTypes: function(amendment, amendmentTypesEl) {
+          var isValid = true;
+          amendment.amendment_types.forEach(function(amendmType, index) {
+            if (!amendmType.type) {
+              isValid = false;
+              amendmentTypesEl._invalidAmendmentTypeField(true, "#amendmentType_" + index);
+            }
+          });
+          return isValid;
+        },
+        _signedDateIsInTheFuture: function(signed_date) {
+          var signed_dt = Date.parse(signed_date)
+          if (signed_dt) {
+            return signed_dt > Date.now();
+          }
+          return false;
+        },
         /**
          * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
          */
@@ -297,7 +356,7 @@
               amendment.signed_date, amendmentIndex);
         },
 
-        _signedDateChanged: function(data) {
+        _dataItemsChanged: function(data) {
           var path = data.path.slice(data.path.lastIndexOf('.') + 1);
           var ind = data.path.slice(data.path.indexOf('#') + 1);
           var index = ind.slice(0, ind.indexOf('.'));
@@ -305,11 +364,29 @@
             // reset invalid state is field is not empty
             var signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
-              signedDateEl.invalid = false;
+                if (this._signedDateIsInTheFuture(data.value)) {
+                   signedDateEl.errorMessage = "Signed Date can not be in the future";
+                   signedDateEl.invalid = true;
+                } else {
+                  signedDateEl.invalid = false;
+                  signedDateEl.errorMessage = "Please select signed date";
+                }
+              } else {
+                  signedDateEl.invalid = true;
+                  signedDateEl.errorMessage = "Please select signed date";
+              }
+          }
+          if (path === 'signed_amendment') {
+            var uploadFileEl = this.$$('#fileUpload_' + index);
+            if (uploadFileEl && data.value) {
+              if (data.value instanceof File) {
+                uploadFileEl.invalid = false;
+              }
+            } else {
+                uploadFileEl.invalid = true;
             }
           }
         }
-
       });
     })();
   </script>
