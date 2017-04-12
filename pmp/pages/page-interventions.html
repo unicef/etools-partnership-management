@@ -438,6 +438,7 @@
            interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
+        var reviewAndSignFields = ['','','',''];
         // on save sector_locations sector prop needs to be sector ID and not the sector obj
         if (interventionData.sector_locations) {//if there were any modifications
           interventionData.sector_locations = interventionDetails.prepareSectorLocations();
