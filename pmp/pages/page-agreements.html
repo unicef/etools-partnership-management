@@ -43,7 +43,6 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
                          agreement-id="[[selectedAgreementId]]"
@@ -117,7 +116,8 @@
           <agreements-list id="list"
                            active="[[agreementListActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[agreementQueryParams]]">
+                           url-params="[[agreementQueryParams]]"
+                           disable-upgrade$="[[!agreementListActive]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
@@ -128,7 +128,8 @@
               allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement">
+              on-save-agreement="_saveAgreement"
+              disable-upgrade$="[[agreementListActive]]">
           </agreement-details>
         </div>
       </iron-pages>

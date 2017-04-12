@@ -16,26 +16,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 
-<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
-
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-elements/users-data/user-data.html">
-<link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
+<!--<link rel="import" href="app-elements/side-bar-item/side-bar-item.html">-->
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
@@ -52,8 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
 <link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
 
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
 <!--
 <link rel="import" href="pages/page-agreements.html">
 <link rel="import" href="pages/page-interventions.html">
@@ -63,13 +57,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- -->
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
+<link rel="import" href="../styles/nav-menu-styles.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
 
   <template>
 
-    <style include="page-layout-styles shared-styles iron-flex iron-flex-alignment">
+    <style include="page-layout-styles shared-styles nav-menu-styles">
 
       :host {
         display: block;
@@ -83,15 +78,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-      app-toolbar {
-        background-color: var(--secondary-color);
-        color: white;
-        --app-toolbar-font-size: 16px;
-      }
-
       .side-nav-wrapper {
         @apply(--layout-vertical);
-
         height: 100%;
         overflow-y: var(--side-bar-scrolling);
         overflow-x: hidden;
@@ -99,21 +87,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .side-nav-wrapper .header {
-        min-height: 60px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        background-color: var(--secondary-color);
+        color: white;
         border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      #etools-logo {
-        height: 50%;
-        width: 60%;
-      }
-      .uppercase {
+        min-height: 59px;
+        padding: 0 16px;
+        font-size: 16px;
         text-transform: uppercase;
-      }
-
-      #unicef-logo {
-        height: 100%;
-        width: 60%;
+        pointer-events: none;
       }
 
       #app-select {
@@ -123,7 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .side-nav-wrapper .nav-menu {
-        padding: 8px 0;
+        padding: 0;
       }
 
       .side-nav-wrapper .divider {
@@ -131,9 +114,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-bottom: 1px solid var(--dark-divider-color);
       }
       .nav-menu {
+        @apply(--layout-vertical);
         background: var(--sidebar-bg-color, #fff);
       }
-      .nav-menu, .flexy {
+      .nav-menu, .nav-menu iron-selector[role="navigation"] {
         @apply(--layout-flex);
       }
       .secondary-header {
@@ -151,12 +135,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .last-one {
         margin-bottom: 10px;
       }
-      .lighter-item {
-        --sidebar-icon-color: var(--sidebar-secondary-text-color);
-        --sidebar-text-color: var(--sidebar-secondary-text-color);
-      }
 
     </style>
+
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <!-- get static data -->
     <dropdowns-pmp-data></dropdowns-pmp-data>
@@ -169,8 +151,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <partners-list-data></partners-list-data>
     <agreement-list-data></agreement-list-data>
     <country-programmes-data></country-programmes-data>
-
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -186,27 +166,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <div class="side-nav-wrapper">
 
-          <app-toolbar class="header uppercase">
+          <div class="header">
             Partnership <br>
             Management
-          </app-toolbar>
+          </div>
 
-          <div class="nav-menu layout vertical">
-            <iron-selector selected="[[page]]" attr-for-selected="menu-name" selectable="side-bar-item" role="navigation">
-              <template is="dom-if" if="[[permissions.loggedInDefault]]">
-                <side-bar-item menu-name="partners" name="partners" icon="social:people" href$="[[baseUrl]]partners/list"></side-bar-item>
-                <side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>
-                <side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>
-                <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
-              </template>
+          <div class="nav-menu">
+            <iron-selector selected="[[page]]" attr-for-selected="menu-name" selectable="a" role="navigation">
+              <!--<template is="dom-if" if="[[permissions.loggedInDefault]]">-->
+
+                <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list">
+                  <iron-icon icon="social:people"></iron-icon>
+                  <div class="name">Partners</div>
+                </a>
+
+                <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list">
+                  <iron-icon icon="av:playlist-add-check"></iron-icon>
+                  <div class="name">Agreements</div>
+                </a>
+
+                <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list">
+                  <iron-icon icon="verified-user"></iron-icon>
+                  <div class="name">PD/SSFA ToR</div>
+                </a>
+
+                <a class="nav-menu-item" menu-name="governments" href$="[[baseUrl]]governments/list">
+                  <iron-icon icon="account-balance"></iron-icon>
+                  <div class="name">Governments</div>
+                </a>
+              <!-- TODO: remove side-bar-item, it was created in other scope we do not need it here -->
+              <!--<side-bar-item menu-name="partners" name="partners" icon="social:people" href$="[[baseUrl]]partners/list"></side-bar-item>-->
+              <!--<side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>-->
+              <!--<side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>-->
+              <!--<side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>-->
+
+              <!--</template>-->
             </iron-selector>
 
-            <div class="flexy"></div>
-
             <div class="secondary-header">eTools Community Channels</div>
-            <side-bar-item name="Knowledge base" class="lighter-item" icon="maps:local-library" href="https://etools.uservoice.com"></side-bar-item>
-            <side-bar-item name="Discussion" class="lighter-item" icon="icons:question-answer" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"></side-bar-item>
-            <side-bar-item name="Information" class="lighter-item last-one" icon="icons:info" href="http://etools.unicefresults.org"></side-bar-item>
+
+            <a class="nav-menu-item lighter-item" href="https://etools.uservoice.com">
+              <iron-icon icon="maps:local-library"></iron-icon>
+              <div class="name">Knowledge base</div>
+            </a>
+
+            <a class="nav-menu-item lighter-item" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560">
+              <iron-icon icon="icons:question-answer"></iron-icon>
+              <div class="name">Discussion</div>
+            </a>
+
+            <a class="nav-menu-item lighter-item last-one" href="http://etools.unicefresults.org">
+              <iron-icon icon="icons:info"></iron-icon>
+              <div class="name">Information</div>
+            </a>
+
           </div>
         </div>
 
@@ -214,16 +227,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Main content -->
       <app-header-layout fullbleed has-scrolling-region>
-        <app-header  fixed shadow>
+        <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
+
         <iron-pages id="pages"
                     selected="[[page]]"
                     attr-for-selected="name"
                     fallback-selection="not-found"
                     role="main">
 
-          <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
+          <template id="privatePages" is="dom-if" notify-dom-change
+                    if="[[permissions.loggedInDefault]]" on-dom-change="_pagesStamped" >
             <page-partners name="partners"
                            on-dom-change="_pagesStamped"
                            route="[[subroute]]"
@@ -247,10 +262,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </template>
           <page-not-found name="not-found"></page-not-found>
 
-          </iron-pages>
-          <page-footer></page-footer>
-        </app-header-layout>
-      </app-drawer-layout>
+        </iron-pages>
+        <page-footer></page-footer>
+      </app-header-layout>
+    </app-drawer-layout>
 
   </template>
 
@@ -321,6 +336,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function() {
+        console.log('app-shell', new Date());
         // create loading element, used for global loading
         this.globalLoadingElement = this.createLoading();
         this.fire('global-loading', {message: 'Loading data...', active: true});
@@ -373,7 +389,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('subroute', subroute);
         }
 
-        if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
+        if (this._pagesAvailable) {
           this.set('page', (page || 'partners'));
         } else {
           //console.log('No permissions yet or page hasn\'t stampped', page);
@@ -381,6 +397,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageChanged: function(page) {
+        if (!page) {
+          return;
+        }
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._pageNotFound, true);
       },

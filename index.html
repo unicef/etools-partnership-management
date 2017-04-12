@@ -61,7 +61,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Setup Polymer options
       window.Polymer = {
         dom: 'shadow',
-        lazyRegister: true
+        lazyRegister: true,
+        disableUpgradeEnabled: true,
+        suppressTemplateNotifications: true,
+        suppressBindingNotifications: true
       };
       var serverBackend = (window.location.port !== '8080');
       var baseUrl = serverBackend ? '/pmp/' : '/';
@@ -121,6 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       appShellImport.href = baseUrl + 'pmp/app-shell.html';
       document.head.appendChild(appShellImport);
 
+      console.log('index: ', new Date());
     </script>
 
     <style>

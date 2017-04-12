@@ -172,7 +172,9 @@
         </etools-data-table-column>
       </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" items="[[filteredAgreements]]" as="agreement" initial-count="10" on-dom-change="_listDataChanged">
+      <template id="rows" is="dom-repeat" notify-dom-change
+                items="[[filteredAgreements]]" as="agreement"
+                initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
 
