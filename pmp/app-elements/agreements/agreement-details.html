@@ -18,8 +18,10 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
@@ -182,9 +184,14 @@
                 placeholder="&#8212;"
                 options="[[unicefSeniorStaff]]"
                 custom-object-options
+                option-value="user_id"
+                option-label="full_name"
                 selected="{{agreement.signed_by}}"
                 update-selected
+                selected-requires-valid-options
                 dynamic-align
+                url="[[missingSignedByUnicefUsersUrl]]"
+                ajax-params="[[missingSignedByUnicefAjaxParams]]"
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
                 required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -256,9 +263,11 @@
         is: 'agreement-details',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.AgreementsCommonBehavior
+          pmpBehaviors.AgreementsCommonBehavior,
+          pmpBehaviors.MissingSignedByUnicefUsersBehavior
         ],
 
         properties: {
@@ -292,10 +301,6 @@
           staffMembers: {
             type: Array
           },
-          unicefStaff: {
-            type: Array,
-            statePath: 'unicefUsersData'
-          },
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
@@ -319,6 +324,10 @@
           '_agreementFieldChanged(agreement.*)',
           '_partnerChanged(agreement.partner)'
         ],
+
+        ready: function() {
+          this.setMissingSignedByUnicefUsersUrl();
+        },
 
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);
