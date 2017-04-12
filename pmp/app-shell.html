@@ -26,7 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 
-<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-elements/users-data/user-data.html">
@@ -261,9 +261,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </page-governments>
           </template>
           <page-not-found name="not-found"></page-not-found>
-
         </iron-pages>
         <page-footer></page-footer>
+        <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
       </app-header-layout>
     </app-drawer-layout>
 
@@ -313,8 +313,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       behaviors: [
         etoolsAppConfig.globals,
-        pmpBehaviors.NotificationToastsBehavior,
-        etoolsBehaviors.LoadingBehavior
+        pmpBehaviors.NotificationToastsBehavior
       ],
 
       observers: [
@@ -336,10 +335,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function() {
-        console.log('app-shell', new Date());
-        // create loading element, used for global loading
-        this.globalLoadingElement = this.createLoading();
-        this.fire('global-loading', {message: 'Loading data...', active: true});
+//        Polymer.RenderStatus.afterNextRender(this, function() {
+//          console.log('app-shell rendered', new Date());
+//        });
+        // init loading element, used for global loading
+        this.globalLoadingElement = this.$.pageLoading;
+        this.fire('global-loading', {message: 'Loading page elements...', active: true});
       },
 
       attached: function() {
