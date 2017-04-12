@@ -1,0 +1,50 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="nav-menu-styles">
+  <template>
+    <style>
+      .nav-menu-item {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        position: relative;
+        height: 48px;
+        cursor: pointer;
+        text-decoration: none;
+        text-transform: capitalize;
+      }
+
+      .nav-menu-item.iron-selected {
+        background-color: var(--sidebar-selected-bg-color, --medium-theme-background-color);
+      }
+
+      .nav-menu-item.iron-selected:active {
+        background-color: var(--dark-divider-color);
+      }
+
+      .nav-menu-item .name {
+        margin-left: 16px;
+        color: var(--sidebar-text-color, --primary-text-color);
+      }
+
+      .nav-menu-item iron-icon {
+        margin: 0 16px;
+        color: var(--sidebar-icon-color, --dark-icon-color);
+      }
+
+      .nav-menu-item.iron-selected .name,
+      .nav-menu-item.iron-selected iron-icon {
+        color: var(--sidebar-selected-item-color, --primary-color);
+      }
+
+      .nav-menu-item.lighter-item .name,
+      .nav-menu-item.lighter-item iron-icon {
+        color: var(--sidebar-secondary-text-color);
+      }
+
+    </style>
+  </template>
+</dom-module>
