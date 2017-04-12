@@ -7,7 +7,6 @@
 
   var initialDropdownPmpData = {
     hrps: [],
-    supplyItems: [],
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -59,10 +58,6 @@
       case 'SET_SIGNED_BY_UNICEF_USERS':
         // console.log('set signed_by_unicef_users data...', action.signedByUnicefUsers);
         return Object.assign({}, state, {signedByUnicefUsers: action.signedByUnicefUsers});
-
-      case 'SET_SUPPLY_ITEMS':
-        // console.log('set supply_items data...', action.supplyItems);
-        return Object.assign({}, state, {supplyItems: action.supplyItems});
 
       case 'SET_INTERVENTION_DOC_TYPES':
         // console.log('set interventionDocTypes data...', action.interventionDocTypes);
