@@ -330,6 +330,7 @@
         }
       },
       _interventionChanged: function(intervention) {
+        console.log(this.intervention);
         this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
       },
       _activeTabChanged: function(activeTab) {
@@ -496,8 +497,68 @@
         if (_.isEmpty(this.intervention.result_links)) {
           return [];
         }
-        return this.intervention.result_links
-                   .filter(this._expectedResultIsNewOrModified.bind(this));
+        var modifExpResults = this.intervention.result_links
+                   .filter(this._expectedResultIsNewOrModified.bind(this))
+                   .map(function(result_link) {
+                     result_link.ll_results = this._getNewOrModifiedPSorSSFATOROutput(result_link.ll_results,
+                                                            this._getOriginalResultLink(result_link.id));
+                     return result_link;
+                   }.bind(this));
+
+        return modifExpResults;
+      },
+      _getOriginalResultLink: function(id) {
+         return this.originalIntervention.result_links.find(function(r) {
+          return r.id === id;
+        });
+      },
+      _getOriginalLlResult: function(id, originalResultLink) {
+        return originalResultLink.ll_results.find(function(r){
+          return r.id === id;
+        });
+      },
+      _getNewOrModifiedPSorSSFATOROutput: function(ll_results, original_result_link) {
+        if (!original_result_link || !original_result_link.ll_results) {
+          return ll_results;
+        }
+        var modifLlResults = ll_results.filter(function(ll_result) {
+                                    if (!ll_result.id) {
+                                      return true;
+                                    }
+                                    var original_ll_result = original_result_link.ll_results.find(function(r) {
+                                      return r.id == ll_result.id;
+                                    });
+
+                                    if (!original_ll_result) {
+                                      return true;
+                                    }
+                                    return (JSON.stringify(original_ll_result) !== JSON.stringify(ll_result));
+                                 })
+                                .map(function(ll_result){
+                                  ll_result.applied_indicators = this._getNewOrModifiedIndicators(ll_result.applied_indicators,
+                                                                                         this._getOriginalLlResult(ll_result.id, original_result_link));
+                                  return ll_result;
+                                }.bind(this));
+         return modifLlResults;
+      },
+      _getNewOrModifiedIndicators: function(indicators, original_ll_result) {
+        if (!original_ll_result || !original_ll_result.applied_indicators) {
+          return indicators;
+        }
+        var modifIndicators = indicators.filter(function(indicator){
+                  if (!indicator.id) {
+                    return true;
+                  }
+                  var originalIndicator = original_ll_result.applied_indicators.find(function(r) {
+                    return r.id = indicator.id;
+                  });
+                  if (!originalIndicator) {
+                    return true;
+                  }
+                  return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator))
+                });
+
+        return modifIndicators;
       },
       _expectedResultIsNewOrModified: function(result_link) {
         if (_.isEmpty(this.originalIntervention.result_links)) {
@@ -506,9 +567,7 @@
         if (!result_link.id) {
           return true;
         }
-        var originalResultLink = this. originalIntervention.result_links.find(function(res){
-          return res.id === result_link.id;
-        });
+        var originalResultLink = this._getOriginalResultLink(result_link.id);
         if (!originalResultLink) {
           return true;
         }
