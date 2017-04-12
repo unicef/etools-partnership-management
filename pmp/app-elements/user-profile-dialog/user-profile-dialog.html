@@ -117,12 +117,12 @@
             </paper-input>
           </div>
           <div class="col col-6">
-            <!-- Big problem here. Profile.oic is an integer, user_id is a string -->
             <etools-searchable-multiselection-menu id="oic"
                                                    label="My OIC"
                                                    placeholder="&#8212;"
                                                    selected="{{profile.oic}}"
                                                    options="[[allUsers]]"
+                                                   update-selected
                                                    custom-object-options
                                                    option-value="user_id"
                                                    option-label="full_name"
