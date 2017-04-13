@@ -47,22 +47,10 @@
         _handleResponse: function(response) {
           if (response.detail && response.detail.length > 0) {
             // set sectors values
-            this.dispatch('setSectors', this._prepareSectorsData(response.detail));
+            this.dispatch('setSectors', response.detail);
           }
         },
 
-        /**
-         * Prepare values for dropdowns
-         */
-        _prepareSectorsData: function(data) {
-          return data.map(function(d) {
-            return {
-              value: parseInt(d.id, 10),
-              label: d.name,
-              color: d.color
-            };
-          });
-        }
 
       });
     })();
