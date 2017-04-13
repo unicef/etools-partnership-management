@@ -122,6 +122,8 @@
                                                  placeholder="&#8212;"
                                                  options="[[offices]]"
                                                  custom-object-options
+                                                 option-label="name"
+                                                 option-value="id"
                                                  selected="{{intervention.offices}}"
                                                  update-selected
                                                  selected-requires-valid-options
@@ -137,6 +139,8 @@
                                                  placeholder="&#8212;"
                                                  options="[[unicefUsersData]]"
                                                  custom-object-options
+                                                 option-label="full_name"
+                                                 option-value="user_id"
                                                  selected="{{intervention.unicef_focal_points}}"
                                                  update-selected
                                                  selected-requires-valid-options
@@ -179,6 +183,8 @@
                                                  label="In response to an HRP, Select"
                                                  placeholder="&#8212;"
                                                  options="[[hrps]]"
+                                                 option-value="id"
+                                                 option-label="name"
                                                  custom-object-options
                                                  selected="{{intervention.hrp}}"
                                                  update-selected

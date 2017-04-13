@@ -131,7 +131,7 @@
           <br/>
           <div class="content" id="interventions_sectors">
             <template is="dom-repeat" items="[[sectors]]" as="sector">
-              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.label]]</span>
+              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
             </template>
           </div>
         </div>
@@ -229,15 +229,16 @@
             locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });
-            sectorIds.push(locLvl1.sector.id);
+            sectorIds.push(parseInt(locLvl1.sector.id));
           });
 
           sectors = [];
           if (Array.isArray(this.allSectors) && this.allSectors.length > 0) {
             sectors = this.allSectors.filter(function(elem) {
-              return (sectorIds.indexOf(elem.value) > -1);
+              return (sectorIds.indexOf(parseInt(elem.id)) > -1);
             });
           }
+
           this.set('sectors', sectors);
           this.set('locations', sectorLocations);
         },
