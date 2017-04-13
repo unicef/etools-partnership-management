@@ -94,13 +94,20 @@ This command will start the server and use the bundled build (build/bundled fold
 Before you can serve the bundled build you have to generate the build files.
 Service worker only works in the built app, so test service worker functionality here.
 
-Check the code
+Dev Tasks
 ---------------------------------
 
 Run the lint task to check for issues with the code. Please do this before finishing a pull request
 
 ```bash
 $ gulp lint
+```
+
+The update-packages task checks for updates of node and bower packages and updates bower.json and packages.json accordingly.
+You still need to run npm update and bower update manually afterwards.
+
+```bash
+$ gulp update-packages
 ```
 
 Additional options for gulp tasks
