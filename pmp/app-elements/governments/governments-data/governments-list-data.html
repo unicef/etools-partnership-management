@@ -180,8 +180,8 @@
 
         getUserNameFromId: function(Id) {
           for (var i = 0; i < this.unicefUsersData.length; i++) {
-            if (this.unicefUsersData[i].value === Id) {
-              return this.unicefUsersData[i].label;
+            if (parseInt(this.unicefUsersData[i].user_id) === Id) {
+              return this.unicefUsersData[i].full_name;
             }
           }
         }

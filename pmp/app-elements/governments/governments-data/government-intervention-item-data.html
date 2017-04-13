@@ -204,8 +204,8 @@
             for (key in this.allSectors) {
               var workingSector = this.allSectors[key];
 
-              if (workingSector.value === sectorId) {
-                dexieObject.sectors.push(workingSector.label);
+              if (workingSector.id === sectorId) {
+                dexieObject.sectors.push(workingSector.name);
               }
             }
           }.bind(this));
@@ -218,7 +218,7 @@
 
           this.allCountryProgrammes.forEach(function(elem) {
             if (elem.value === dexieObject.country_programme) {
-              dexieObject.country_programme_name = elem.label;
+              dexieObject.country_programme_name = elem.name;
             }
           });
 

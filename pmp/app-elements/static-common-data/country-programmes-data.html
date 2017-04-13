@@ -47,24 +47,9 @@
         _handleResponse: function(response) {
           if (response.detail && response.detail.length > 0) {
             // set setUsersData values
-            this.dispatch('setCountryProgrammesData', this._prepareCpData(response.detail));
+            this.dispatch('setCountryProgrammesData', response.detail);
           }
         },
-
-        /**
-         * Prepare values for dropdowns
-         */
-        _prepareCpData: function(data) {
-          return data.map(function(d) {
-            return {
-              value: parseInt(d.id),
-              label: d.name,
-              from_date: d.from_date,
-              to_date: d.to_date,
-              wbs: d.wbs
-            };
-          });
-        }
 
       });
     })();

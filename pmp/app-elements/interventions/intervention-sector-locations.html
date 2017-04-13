@@ -65,6 +65,9 @@
                                                        placeholder="&#8212;"
                                                        value="[[_setSector(item.sector, sectors.length)]]"
                                                        options="[[sectors]]"
+                                                       custom-object-options
+                                                       option-label="name"
+                                                       option-value="id"
                                                        on-value-change="_sectorSelected"
                                                        required$="[[required]]"
                                                        auto-validate
@@ -78,6 +81,9 @@
                                                        placeholder="&#8212;"
                                                        value="[[_setSectorLocations(item.locations, locations.length)]]"
                                                        options="[[locations]]"
+                                                       custom-object-options
+                                                       option-label="name"
+                                                       option-value="id"
                                                        on-value-change="_locationsSelected"
                                                        multi
                                                        required$="[[required]]"
@@ -157,7 +163,7 @@
         _sectorSelected: function(event) {
           var sectorSelected = event.detail.selectedValues;
           if (sectorSelected && Object.keys(sectorSelected).length > 0) {
-            var sectorId = parseInt(sectorSelected.value, 10);
+            var sectorId = parseInt(sectorSelected.id, 10);
             if (this._sectorAlreadySelected(sectorId, event.model.index)) {
               this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
               var sectorDropdown = this.$$('#sector_' + event.model.index);
@@ -169,7 +175,7 @@
             }
             this.set('dataItems.' + event.model.index + '.sector', {
               id: sectorId,
-              name: sectorSelected.label
+              name: sectorSelected.name
             });
           } else {
             this.set('dataItems.' + event.model.index + '.sector', null);
@@ -179,7 +185,7 @@
         _setSector: function(sector) {
           if (sector && Object.keys(sector).length > 0 && this.sectors.length) {
             return this.sectors.filter(function(s) {
-              return parseInt(s.value, 10) === parseInt(sector.id, 10);
+              return parseInt(s.id, 10) === parseInt(sector.id, 10);
             });
           }
           return [];
@@ -191,7 +197,7 @@
               return parseInt(location.id, 10);
             });
             return this.locations.filter(function(l) {
-              return selectedLocationsIds.indexOf(parseInt(l.value, 10)) > -1;
+              return selectedLocationsIds.indexOf(parseInt(l.id, 10)) > -1;
             });
           }
           return [];
@@ -202,7 +208,7 @@
           if (Array.isArray(locationsSelected) && locationsSelected.length > 0) {
             this.set('dataItems.' + event.model.index + '.locations', locationsSelected.map(function(l) {
               return {
-                id: parseInt(l.value, 10),
+                id: parseInt(l.id, 10),
                 name: l.name
               };
             }));
