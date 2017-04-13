@@ -220,7 +220,6 @@ it doesn't need to be included in element's style -->
           this.updateStyles();
       },
       _validateSave: function() {
-        event.stopImmediatePropagation();
         if (_.isEqual(this.intervention, this.originalIntervention)) {
           // TODO : disable save button when no change detected
           this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true});
