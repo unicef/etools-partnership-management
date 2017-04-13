@@ -219,7 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout id="appHeaderLayout" fullbleed has-scrolling-region>
+      <app-header-layout fullbleed has-scrolling-region>
         <app-header  fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
@@ -350,7 +350,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // set route.path only if received path is different
           this.set('route.path', this.baseUrl + event.detail.path);
           this.set('route.__queryParams', null);
-          this.$.appHeaderLayout.notifyResize();
         }
         event.stopPropagation();
       },
