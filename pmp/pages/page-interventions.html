@@ -454,7 +454,7 @@
 
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
-        if (!Array.isArray(interventionData.attachments) || interventionData.attachments.length === 0) {
+        if (_.isEmpty(interventionData.attachments)) {
            delete interventionData.attachments;
         }
 
@@ -478,11 +478,108 @@
         var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
                      'start', 'end', 'population_focus'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-                    'sector_locations', 'result_links', 'planned_budget', 'planned_visits'];
+                    'sector_locations', 'planned_budget', 'planned_visits'];
+        var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
 
-        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        return Object.assign({}, modifiedDetails, modifiedExpectedResults);
       },
+      _buildModifiedExpectedResultsObject: function() {
+        var modifExpectedResultsArray = this._getNewOrModifiedExpectedResults();
 
+        if (!_.isEmpty(modifExpectedResultsArray)) {
+          return {result_links: modifExpectedResultsArray};
+        }
+         return {};
+      },
+      _getNewOrModifiedExpectedResults: function() {
+        if (_.isEmpty(this.intervention.result_links)) {
+          return [];
+        }
+        var modifExpResults = this.intervention.result_links
+                   .filter(this._expectedResultIsNewOrModified.bind(this))
+                   .map(function(result_link) {
+                     if (_.isEmpty(result_link.ll_results)) {
+                       return result_link;
+                     }
+
+                     result_link.ll_results = this._getNewOrModifiedPSorSSFATOROutput(result_link.ll_results,
+                                                            this._getOriginalResultLink(result_link.id));
+                     return result_link;
+                   }.bind(this));
+
+        return modifExpResults;
+      },
+      _getOriginalResultLink: function(id) {
+         return this.originalIntervention.result_links.find(function(r) {
+          return r.id === id;
+        });
+      },
+      _getOriginalLlResult: function(id, originalResultLink) {
+        return originalResultLink.ll_results.find(function(r){
+          return r.id === id;
+        });
+      },
+      _getNewOrModifiedPSorSSFATOROutput: function(ll_results, original_result_link) {
+        if (!original_result_link || _.isEmpty(original_result_link.ll_results)) {
+          return ll_results;
+        }
+        var modifLlResults = ll_results.filter(function(ll_result) {
+                                    if (!ll_result.id) {
+                                      return true;
+                                    }
+                                    var original_ll_result = original_result_link.ll_results.find(function(r) {
+                                      return r.id === ll_result.id;
+                                    });
+
+                                    if (!original_ll_result) {
+                                      return true;
+                                    }
+                                    return (JSON.stringify(original_ll_result) !== JSON.stringify(ll_result));
+                                 })
+                                .map(function(ll_result){
+                                  if (_.isEmpty(ll_result.applied_indicators)) {
+                                    return ll_result;
+                                  }
+                                  ll_result.applied_indicators = this._getNewOrModifiedIndicators(ll_result.applied_indicators,
+                                                                                         this._getOriginalLlResult(ll_result.id, original_result_link));
+                                  return ll_result;
+                                }.bind(this));
+         return modifLlResults;
+      },
+      _getNewOrModifiedIndicators: function(indicators, original_ll_result) {
+        if (!original_ll_result || _.isEmpty(original_ll_result.applied_indicators)) {
+          return indicators;
+        }
+        var modifIndicators = indicators.filter(function(indicator){
+                  if (!indicator.id) {
+                    return true;
+                  }
+                  var originalIndicator = original_ll_result.applied_indicators.find(function(r) {
+                    return r.id === indicator.id;
+                  });
+                  if (!originalIndicator) {
+                    return true;
+                  }
+                  return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator))
+                });
+
+        return modifIndicators;
+      },
+      _expectedResultIsNewOrModified: function(result_link) {
+        if (_.isEmpty(this.originalIntervention.result_links)) {
+          return true;
+        }
+        if (!result_link.id) {
+          return true;
+        }
+        var originalResultLink = this._getOriginalResultLink(result_link.id);
+        if (!originalResultLink) {
+          return true;
+        }
+
+        return (JSON.stringify(originalResultLink) !== JSON.stringify(result_link));
+      },
       _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
          var modifiedObject = {};
 
@@ -530,7 +627,7 @@
         return !!!this.intervention.id;
       },
       _prepareAttachments: function() {
-        if (!Array.isArray(this.intervention.attachments) || this.intervention.attachments.length === 0) {
+        if (_.isEmpty(this.intervention.attachments)) {
           return [];
         }
          var modifAttachments = this.intervention.attachments
@@ -554,10 +651,10 @@
       },
 
       _attachmentIsNewOrModified: function(attachment) {
-        if (!attachment.id) {
+        if (_.isEmpty(this.originalIntervention.attachments)) {
           return true;
         }
-        if (!this.originalIntervention.attachments) {
+        if (!attachment.id) {
           return true;
         }
         var originalAttachment = this.originalIntervention.attachments.find(function(att) {
