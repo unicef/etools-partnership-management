@@ -438,7 +438,6 @@
            interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
-        var reviewAndSignFields = ['','','',''];
         // on save sector_locations sector prop needs to be sector ID and not the sector obj
         if (interventionData.sector_locations) {//if there were any modifications
           interventionData.sector_locations = interventionDetails.prepareSectorLocations();
@@ -456,7 +455,7 @@
 
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
-        if (!Array.isArray(interventionData.attachments) || interventionData.attachments.length === 0) {
+        if (_.isEmpty(interventionData.attachments)) {
            delete interventionData.attachments;
         }
 
@@ -501,6 +500,10 @@
         var modifExpResults = this.intervention.result_links
                    .filter(this._expectedResultIsNewOrModified.bind(this))
                    .map(function(result_link) {
+                     if (_.isEmpty(result_link.ll_results)) {
+                       return result_link;
+                     }
+
                      result_link.ll_results = this._getNewOrModifiedPSorSSFATOROutput(result_link.ll_results,
                                                             this._getOriginalResultLink(result_link.id));
                      return result_link;
@@ -519,7 +522,7 @@
         });
       },
       _getNewOrModifiedPSorSSFATOROutput: function(ll_results, original_result_link) {
-        if (!original_result_link || !original_result_link.ll_results) {
+        if (!original_result_link || _.isEmpty(original_result_link.ll_results)) {
           return ll_results;
         }
         var modifLlResults = ll_results.filter(function(ll_result) {
@@ -527,7 +530,7 @@
                                       return true;
                                     }
                                     var original_ll_result = original_result_link.ll_results.find(function(r) {
-                                      return r.id == ll_result.id;
+                                      return r.id === ll_result.id;
                                     });
 
                                     if (!original_ll_result) {
@@ -536,6 +539,9 @@
                                     return (JSON.stringify(original_ll_result) !== JSON.stringify(ll_result));
                                  })
                                 .map(function(ll_result){
+                                  if (_.isEmpty(ll_result.applied_indicators)) {
+                                    return ll_result;
+                                  }
                                   ll_result.applied_indicators = this._getNewOrModifiedIndicators(ll_result.applied_indicators,
                                                                                          this._getOriginalLlResult(ll_result.id, original_result_link));
                                   return ll_result;
@@ -543,7 +549,7 @@
          return modifLlResults;
       },
       _getNewOrModifiedIndicators: function(indicators, original_ll_result) {
-        if (!original_ll_result || !original_ll_result.applied_indicators) {
+        if (!original_ll_result || _.isEmpty(original_ll_result.applied_indicators)) {
           return indicators;
         }
         var modifIndicators = indicators.filter(function(indicator){
@@ -551,7 +557,7 @@
                     return true;
                   }
                   var originalIndicator = original_ll_result.applied_indicators.find(function(r) {
-                    return r.id = indicator.id;
+                    return r.id === indicator.id;
                   });
                   if (!originalIndicator) {
                     return true;
