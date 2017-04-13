@@ -17,8 +17,10 @@
         background-color: var(--header-bg-color);
       }
 
-      iron-pages[role="main"] {
-        @apply(--layout-flex);
+      iron-pages#pages[role="main"] {
+        -ms-flex: 1 0 0;
+        -webkit-flex: 1 0 0;
+        flex: 1 0 0;
       }
 
       #main, .page {
