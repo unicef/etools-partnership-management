@@ -122,7 +122,7 @@
           // this.set('country', this.$.repeat.itemForElement(e.detail.item));
       },
       _handleResponse: function(res) {
-        // TODO: before main refresh... move to base url
+        this.fire('update-main-path', {path: ''});
         this.fire('main_refresh');
       },
       _countrySelectorUpdate: function(countries) {

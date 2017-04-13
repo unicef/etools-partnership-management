@@ -3,10 +3,10 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
-<link rel="import" href="../app-selector/app-selector.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
 <link rel="import" href="../user-profile-dialog/user-profile-dialog.html">
 <link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/etools-app-selector/etools-app-selector.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -80,7 +80,7 @@
     <app-toolbar sticky class="content-align">
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div class="titlebar content-align">
-        <app-selector id="selector"></app-selector>
+        <etools-app-selector id="selector"></etools-app-selector>
         <img id="second-logo" src="../../../images/etools-logo-color-white.svg">
       </div>
       <div class="content-align">
@@ -144,9 +144,10 @@
           this.userProfileDialog = document.createElement('user-profile-dialog');
           this.userProfileDialog.setAttribute('id', 'userProfileDialog');
 
-          // this hack is here because elemets added this way can't trigger global events, but they can listen to them
-          this.userProfileDialog.addEventListener('hacky-global-loading', function(event) {
-              this.fire('global-loading', event.detail);
+          // this will handle the outside app-shell toast event that comes from profile dialog
+          this.userProfileDialog.addEventListener('user-profile-toast', function(e) {
+            e.stopImmediatePropagation();
+            this.fire('toast', e.detail);
           }.bind(this), false);
 
           Polymer.dom(document.querySelector('body')).appendChild(this.userProfileDialog);
