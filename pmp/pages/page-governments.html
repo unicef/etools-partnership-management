@@ -8,6 +8,7 @@
 <link rel="import" href="../app-config/etools-app-config.html">
 
 <!-- Replace these with something more apppriate -->
+<link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="../app-elements/governments/governments-list.html">
 <link rel="import" href="../app-elements/governments/government-details.html">
@@ -40,111 +41,116 @@
     </app-route>
 
     <app-route
-            route="{{route}}"
-            pattern="governments/:id/:tab"
-            active="{{tabsActive}}"
-            data="{{routeData}}"></app-route>
+        route="{{route}}"
+        pattern="governments/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
     <app-route
-            route="{{route}}"
-            pattern="governments/new/details"
-            active="{{newInterventionActive}}"
+        route="{{route}}"
+        pattern="governments/new/details"
+        active="{{newInterventionActive}}"
     ></app-route>
     <government-intervention-item-data id="interventionData"
                                        intervention="{{intervention}}"
                                        intervention-id="[[selectedInterventionId]]"
-                                       on-response-received="_refreshGovernmentsList"></government-intervention-item-data>
+                                       on-response-received="_refreshGovernmentsList"
+                                       error-event-name="gov-intervention-save-error"></government-intervention-item-data>
 
-      <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
-        <div class="top-content">
-          <div class="top-content-row title-row">
-            <h1 main-title>
-              <template is="dom-if" if="[[governmentListActive]]">
-                <span> Government in simple </span>
-              </template>
-              <template is="dom-if" if="[[newInterventionActive]]">
-                <span>Add New Goverment in Simple</span>
-              </template>
-              <span hidden$="[[governmentListActive]]">[[intervention.number]]</span>
-            </h1>
-            <div class="top-content-actions-wrapper">
-              <div class="top-content-action" hidden$="[[!governmentListActive]]">
-                <a target="_blank" href$="[[csvDownloadUrl]]">
-                  <paper-button>
-                    <iron-icon icon="file-download"></iron-icon>
-                    Export
-                  </paper-button>
-                </a>
-              </div>
-              <!-- Print Functionality Pending Implementation -->
-              <!--<div class="top-content-action">
+    <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
+      <div class="top-content">
+        <div class="top-content-row title-row">
+          <h1 main-title>
+            <template is="dom-if" if="[[governmentListActive]]">
+              <span> Government in simple </span>
+            </template>
+            <template is="dom-if" if="[[newInterventionActive]]">
+              <span>Add New Goverment in Simple</span>
+            </template>
+            <span hidden$="[[governmentListActive]]">[[intervention.number]]</span>
+          </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!governmentListActive]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
-                  <iron-icon icon="print"></iron-icon>
-                  Print
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
                 </paper-button>
-              </div>-->
-              <div class="top-content-action" hidden$="[[!governmentListActive]]">
-                <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
-                  <iron-icon icon="add"></iron-icon>
-                  Add New Government in simple
-                </paper-button>
-              </div>
+              </a>
+            </div>
+            <!-- Print Functionality Pending Implementation -->
+            <!--<div class="top-content-action">
+              <paper-button>
+                <iron-icon icon="print"></iron-icon>
+                Print
+              </paper-button>
+            </div>-->
+            <div class="top-content-action" hidden$="[[!governmentListActive]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_goToNewGovernmentPage">
+                <iron-icon icon="add"></iron-icon>
+                Add New Government in simple
+              </paper-button>
             </div>
           </div>
-          <template is="dom-if" if="[[_getTabsActive(tabsActive,newInterventionActive)]]">
-            <div class="top-content-row">
-              <paper-tabs
-                      selected="{{routeData.tab}}"
-                      attr-for-selected="name"
-                      noink bottom-item
-                      fallback-selection="details">
-
-                <paper-tab name="overview" link>
-                  <span class="tab-content">Overview</span>
-                </paper-tab>
-                <paper-tab name="details" link>
-                  <span class="tab-content">Government Details</span>
-                </paper-tab>
-              </paper-tabs>
-            </div>
-          </template>
-
         </div>
-      </div>
-      <div id="main">
-        <div id="pageContent"> <!--   -->
-          <iron-pages id="governmentsPages"
-                      selected="{{governmentsPage}}"
-                      attr-for-selected="name"
-                      fallback-selection="list"
-                      role="main">
+        <template is="dom-if" if="[[_getTabsActive(tabsActive,newInterventionActive)]]">
+          <div class="top-content-row">
+            <paper-tabs
+                selected="{{routeData.tab}}"
+                attr-for-selected="name"
+                noink bottom-item
+                fallback-selection="details">
 
-            <div class="page" name="list">
-              <governments-list id="list"
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
+              <paper-tab name="details" link>
+                <span class="tab-content">Government Details</span>
+              </paper-tab>
+            </paper-tabs>
+          </div>
+        </template>
+
+      </div>
+    </div>
+    <div id="main">
+      <div id="pageContent">
+        <etools-error-messages-box id="errorsBox"
+                                   title="Errors Saving Government Intervention"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
+
+        <iron-pages id="governmentsPages"
+                    selected="{{governmentsPage}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    role="main">
+
+          <div class="page" name="list">
+            <governments-list id="list"
                               active="[[governmentListActive]]"
                               url-params="[[governmentQueryParams]]"
                               csv-download-url="{{csvDownloadUrl}}"
                               partners-dropdown-data="[[partnersDropdownData]]">
-              </governments-list>
-            </div>
-            <div class="page" name="details">
-              <government-details id="details"
-                                  active="[[newInterventionActive]]"
-                                  on-details-refresh="_goToNewGovernmentPage"
-                                  intervention="[[intervention]]"
-                                  edit-mode="[[_hasEditPermissions(permissions)]]"
-                                  on-save-intervention="_saveIntervention"></government-details>
-            </div>
-            <div class="page" name="overview">
-              <government-overview id="overview"
-                                  intervention="[[intervention]]"></government-overview>
-            </div>
+            </governments-list>
+          </div>
+          <div class="page" name="details">
+            <government-details id="details"
+                                active="[[newInterventionActive]]"
+                                on-details-refresh="_goToNewGovernmentPage"
+                                intervention="[[intervention]]"
+                                edit-mode="[[_hasEditPermissions(permissions)]]"
+                                on-save-intervention="_saveIntervention"></government-details>
+          </div>
+          <div class="page" name="overview">
+            <government-overview id="overview"
+                                 intervention="[[intervention]]"></government-overview>
+          </div>
 
-          </iron-pages>
-        </div>
-        <div id="sidebar" hidden$="[[governmentListActive]]">
-          <government-status on-save-intervention="_validateSave"></government-status>
-        </div>
+        </iron-pages>
       </div>
+      <div id="sidebar" hidden$="[[governmentListActive]]">
+        <government-status on-save-intervention="_validateSave"></government-status>
+      </div>
+    </div>
 
   </template>
 
@@ -201,13 +207,21 @@
           // TODO: Replace with behavior
           type: Object
         },
+        serverErrors: {
+          type: Array,
+          value: []
+        },
       },
 
-       observers: [
-         '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
-         '_updateUrlTab(routeData.tab)',
-         '_observeRouteDataId(routeData.id)',
-       ],
+      observers: [
+        '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
+        '_updateUrlTab(routeData.tab)',
+        '_observeRouteDataId(routeData.id)',
+      ],
+
+      listeners: {
+        'gov-intervention-save-error': '_govInterventionSaveErrors'
+      },
 
       ready: function() {
         this.set('agreementTypes', [
@@ -218,7 +232,7 @@
       },
       _getActivePage: function(listActive, tab, isNew) {
         var result = listActive ? 'list' :
-                isNew ? 'details' : tab;
+          isNew ? 'details' : tab;
         return result;
       },
       _saveIntervention: function(e) {
@@ -245,7 +259,7 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
       _goToNewGovernmentPage: function() {
@@ -278,6 +292,14 @@
       },
       _validateSave: function() {
         return this.$.details._validateSave();
+      },
+
+      _govInterventionSaveErrors: function(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+          (typeof event.detail === 'string' && event.detail !== '')) {
+          this.set('serverErrors', event.detail);
+        }
       }
 
     });

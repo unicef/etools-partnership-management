@@ -210,12 +210,14 @@
           </div>
         </div>
         <div class="row-h flex-c">
-          <etools-single-file
-              file="{{agreement.attached_agreement}}"
-              internal-file="[[agreement.attached_agreement_file]]"
-              label="Signed Agreement"
-              accept=".doc,.docx,.pdf,.jpg,.png"
-              readonly$="[[!editMode]]"></etools-single-file>
+          <div class="col col-12">
+            <etools-single-file
+                file="{{agreement.attached_agreement}}"
+                internal-file="[[agreement.attached_agreement_file]]"
+                label="Signed Agreement"
+                accept=".doc,.docx,.pdf,.jpg,.png"
+                readonly$="[[!editMode]]"></etools-single-file>
+          </div>
         </div>
       </etools-content-panel>
 
