@@ -273,7 +273,7 @@
         _setSignedByUnicef: function(unicefUserId, unicefUsersLength) {
           if (unicefUserId && unicefUsersLength) {
             return this.unicefUsersData.filter(function(user) {
-              return user.value === parseInt(unicefUserId, 10);
+              return parseInt(user.user_id) === parseInt(unicefUserId, 10);
             });
           }
           return [];

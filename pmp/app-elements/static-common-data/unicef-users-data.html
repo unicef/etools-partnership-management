@@ -47,21 +47,9 @@
         _handleResponse: function(response) {
           if (response.detail && response.detail.length > 0) {
             // set setUsersData values
-            this.dispatch('setUsersData', this._prepareUsersData(response.detail));
+            this.dispatch('setUsersData', response.detail);
           }
         },
-
-        /**
-         * Prepare values for dropdowns
-         */
-        _prepareUsersData: function(data) {
-          return data.map(function(d) {
-            return {
-              value: parseInt(d.user_id, 10),
-              label: d.full_name
-            };
-          });
-        }
 
       });
     })();

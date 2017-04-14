@@ -67,8 +67,7 @@
           if (response.detail) {
             // set HRPs value
             if (Array.isArray(response.detail.hrps) && response.detail.hrps.length > 0) {
-              var preparedHrps = this._prepareDropdownData(response.detail.hrps);
-              this.dispatch('setHrps', preparedHrps);
+              this.dispatch('setHrps', response.detail.hrps);
             }
 
             // set file types value
