@@ -32,10 +32,7 @@
      * Prepare date string and return it in a user readable format
     */
     getDateDisplayValue: function(dateString, format) {
-      if (typeof dateString === 'string' && dateString !== '') {
-        return this.prettyDate(dateString, format);
-      }
-      return dateString;
+     return this.getDisplayValue(dateString, true);
     },
 
     /**
