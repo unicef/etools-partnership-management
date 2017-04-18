@@ -78,8 +78,11 @@
       <!-- <iron-icon class$="[[country.imgClass]]" prefix></iron-icon> -->
 
       <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
-        <paper-listbox class="dropdown-content" id="countriesListbox" attr-for-selected="countryId"
-                       selected="[[current]]" on-iron-select="_countrySelected">
+        <paper-listbox class="dropdown-content"
+                       id="countriesListbox"
+                       attr-for-selected="countryId"
+                       selected="[[current]]"
+                       on-iron-select="_countrySelected">
           <template id="repeat" is="dom-repeat" items="[[countries]]">
             <paper-item country-id="[[item.id]]">
               <!-- <iron-icon class$="[[item.imgClass]]" item-icon></iron-icon> -->
@@ -116,6 +119,7 @@
       _countrySelected: function(e) {
         if (e.detail.item.countryId !== this.current) {
           //send post request to change_coutry endpoint
+          console.log('change_country_request');
           this.$.ajax.body = {country: e.detail.item.countryId};
           this.$.ajax.endpoint = this.getEndpoint('changeCountry');
         }

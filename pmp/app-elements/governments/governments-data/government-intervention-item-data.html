@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 
 <dom-module id="government-intervention-item-data">
 
@@ -10,7 +11,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
                  on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
+                 on-fail="handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -54,7 +55,7 @@
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
         },
-        attached: function() {
+        ready: function() {
           this.ajaxEl = this.$.ajax;
         },
         saveIntervention: function(intervention, cb) {
@@ -93,7 +94,7 @@
           }
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
+            && ['PATCH', 'POST'].indexOf(method) > -1) {
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
@@ -106,6 +107,12 @@
           this.ajaxEl.set('url', null);
         },
         _handleResponse: function(response) {
+          if(!(typeof response.detail === 'object' && Object.keys(response.detail).length)) {
+            // TODO: there are cases when this response is an empty object,
+            // gov interv doesn't exists, but the servers returns empty object with 200 HTTP status
+            console.warn('[Gov-intervention-item-data] Empty response!');
+            return;
+          }
           this._setIntervention(response.detail);
 
           // update the government interventions list in dexieDB
@@ -137,46 +144,13 @@
             }
           }
         },
-        _handleErrorResponse: function(response) {
-          this.fire('global-loading', {active: false});
-          var errors = response.detail.request.detail.request.response;
-          if (this.ajaxEl.method === 'POST' || this.ajaxEl.method === 'PATCH') {
-            // TODO: improve etools-ajax on-fail event data model (received errors)
-            var errorMessage = 'An error occurred during save!';
-            if (errors) {
-              var errorMessages = ['Errors occurred:\n'];
-              if (Array.isArray(errors) && errors.length > 0) {
-                errors.forEach(function(err) {
-                  errorMessages.push(err + '\n');
-                });
-              } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
-                for (var errField in errors) {
-                  if (typeof errors[errField] === 'string') {
-                    errorMessages.push('Field ' + errField + ' - ' + errors[errField] + '\n');
-                  } else if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
-                    for (var errF in errors[errField]) {
-                      errorMessages.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF] + '\n');
-                    }
-                  } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                    for (var key in errors[errField]) {
-                      errorMessages.push(errors[errField][key] + '\n');
-                    }
-                  }
-                }
-              }
-              if (errorMessages.length > 1) {
-                errorMessage = errorMessages.join('');
-              }
-            }
-            this.fire('toast', {text: errorMessage, showCloseBtn: true});
-          }
-        },
+
         _formatResponseDataForDexie: function(responseDetail) {
           var dexieObject = {};
           var sectorIds = [];
           var key;
 
-          dexieObject.id     = responseDetail.id;
+          dexieObject.id = responseDetail.id;
           dexieObject.number = responseDetail.number;
           dexieObject.partner = responseDetail.partner;
           dexieObject.created_at = responseDetail.created_at;
