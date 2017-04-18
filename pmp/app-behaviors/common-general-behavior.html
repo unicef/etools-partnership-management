@@ -8,7 +8,7 @@
      * Prepare and return the string value we have to display on the interface.
      * Ex: partners and agreements lists data values.
      */
-    getDisplayValue: function(value, isDate, separator, skipSpaces) {
+    getDisplayValue: function(value, isDate, separator, skipSpaces) {//TOOD - apply single responsability
       if (typeof value === 'string' && value !== '') {
         if (isDate) {
           return this.prettyDate(value);
@@ -31,9 +31,13 @@
     /**
      * Prepare date string and return it in a user readable format
     */
-    getDateDisplayValue: function(dateString) {
-      return this.getDisplayValue(dateString, true);
+    getDateDisplayValue: function(dateString, format) {
+      if (typeof dateString === 'string' && dateString !== '') {
+        return this.prettyDate(dateString, format);
+      }
+      return dateString;
     },
+
     /**
      * Update URL params
      */
