@@ -68,26 +68,30 @@
       }
 
     </style>
-      <etools-ajax id="ajax"
-                     method="POST"
-                     on-success="_handleResponse"
-                     on-fail="_handleError"></etools-ajax>
+    <etools-ajax id="ajax"
+                 method="POST"
+                 on-success="_handleResponse"
+                 on-fail="_handleError"></etools-ajax>
 
     <template is="dom-if" if="[[countrySelectorVisible]]">
 
-        <!-- <iron-icon class$="[[country.imgClass]]" prefix></iron-icon> -->
+      <!-- <iron-icon class$="[[country.imgClass]]" prefix></iron-icon> -->
 
-        <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
-          <paper-listbox class="dropdown-content" id="countriesListbox" attr-for-selected="countryId" selected="[[current]]" on-iron-select="_countrySelected">
-            <template id="repeat" is="dom-repeat" items="[[countries]]">
-              <paper-item country-id="[[item.id]]">
-                <!-- <iron-icon class$="[[item.imgClass]]" item-icon></iron-icon> -->
-                [[item.name]]
-              </paper-item>
-            </template>
-          </paper-listbox>
+      <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
+        <paper-listbox class="dropdown-content"
+                       id="countriesListbox"
+                       attr-for-selected="countryId"
+                       selected="[[current]]"
+                       on-iron-select="_countrySelected">
+          <template id="repeat" is="dom-repeat" items="[[countries]]">
+            <paper-item country-id="[[item.id]]">
+              <!-- <iron-icon class$="[[item.imgClass]]" item-icon></iron-icon> -->
+              [[item.name]]
+            </paper-item>
+          </template>
+        </paper-listbox>
 
-        </paper-dropdown-menu>
+      </paper-dropdown-menu>
     </template>
   </template>
 
@@ -98,37 +102,37 @@
       is: 'countries-dropdown',
 
       properties: {
-          current: Number,
-          country: {
-            type: Object
-          },
-          countries: {
-              type: Array,
-              observer: '_countrySelectorUpdate'
-          },
-          countrySelectorVisible: Boolean
+        current: Number,
+        country: {
+          type: Object
+        },
+        countries: {
+          type: Array,
+          observer: '_countrySelectorUpdate'
+        },
+        countrySelectorVisible: Boolean
       },
       behaviors: [
         etoolsAppConfig.globals
       ],
 
       _countrySelected: function(e) {
-          if (e.detail.item.countryId !== this.current) {
-            //send post request to change_coutry endpoint
-            console.log('change_country_request');
-            this.$.ajax.body = {country: e.detail.item.countryId};
-            this.$.ajax.endpoint = this.getEndpoint('changeCountry');
-          }
-          // this.set('country', this.$.repeat.itemForElement(e.detail.item));
+        if (e.detail.item.countryId !== this.current) {
+          //send post request to change_coutry endpoint
+          console.log('change_country_request');
+          this.$.ajax.body = {country: e.detail.item.countryId};
+          this.$.ajax.endpoint = this.getEndpoint('changeCountry');
+        }
+        // this.set('country', this.$.repeat.itemForElement(e.detail.item));
       },
       _handleResponse: function(res) {
-        // TODO: before main refresh... move to base url
+        this.fire('update-main-path', {path: ''});
         this.fire('main_refresh');
       },
       _countrySelectorUpdate: function(countries) {
-          if (Array.isArray(countries) && (countries.length > 1)) {
-              this.countrySelectorVisible = true;
-          }
+        if (Array.isArray(countries) && (countries.length > 1)) {
+          this.countrySelectorVisible = true;
+        }
       },
       _handleError: function(rsp, err) {
         console.log(rsp);

@@ -203,7 +203,7 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 

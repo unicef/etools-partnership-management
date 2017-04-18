@@ -81,9 +81,6 @@
           padding: 10px 0 25px;
         }
       }
-      .truncate {
-        max-width: 225px;
-      }
       .implementation-status-no-fc {
         padding: 0 24px;
       }
@@ -132,7 +129,7 @@
               </iron-label>
               <br />
               <div class="content" id="country_programme">
-                [[countryProgramme.label]]
+                [[countryProgramme.name]]
               </div>
           </div>
         </div>
@@ -329,7 +326,7 @@
         var currentCpId = this.intervention.country_programme;
 
         countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
-          return (elem.value === currentCpId);
+          return (elem.id === currentCpId);
         });
 
         this.set('countryProgramme', countryProgrammes.pop());

@@ -155,8 +155,8 @@
             </div>
             <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]] </div>
             <div class="col col-2 center-text block">  $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br> <small>out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned </small> </div>
-            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.planned_visits]] </span> / [[mrProgVisits]] </div></strong>
-            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[mrSpotChecks]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.programmatic_visits]] </span> / [[partner.hact_min_requirements.programme_visits]] </div></strong>
+            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[partner.hact_min_requirements.spot_checks]] </div></strong>
             <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
           </div>
         </div>
@@ -235,66 +235,14 @@
             value: [],
             notify: true
           },
-          mrProgVisits: {
-            type: Number,
-            value: 0
-          },
-          mrSpotChecks: {
-            type: Number,
-            value: 0
-          }
         },
 
         _partnerChanged: function(partner) {
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             this.contentVisible = true;
-            this._calculateMinimumRequirements();
           } else {
             this.contentVisible = false;
           }
-        },
-
-        _calculateMinimumRequirements: function() {
-
-          var ratingLowOrModerale = (this.partner.rating === 'Low' || this.partner.rating === 'Moderate');
-          var cashTransferred = this.partner.total_ct_cy;
-          var programmeVisits = 0;
-          var spotChecks = 0;
-
-          switch (true) {
-
-            case (cashTransferred <= 50000):
-              programmeVisits = 1;
-              break;
-
-            case (50000 < cashTransferred <= 100000):
-              programmeVisits = 1;
-              spotChecks = 1;
-              break;
-
-            case (100000 < cashTransferred <= 350000 && ratingLowOrModerale):
-              programmeVisits = 1;
-              spotChecks = 1;
-              break;
-
-            case (100000 < cashTransferred <= 350000 && !ratingLowOrModerale):
-              programmeVisits = 2;
-              spotChecks = 2;
-              break;
-
-            case (3500000 < cashTransferred && ratingLowOrModerale):
-              programmeVisits = 2;
-              spotChecks = 1;
-              break;
-
-            case (3500000 < cashTransferred && !ratingLowOrModerale):
-              programmeVisits = 4;
-              spotChecks = 3;
-              break;
-          }
-
-          this.set('mrProgVisits', programmeVisits);
-          this.set('mrSpotChecks', spotChecks);
         },
 
         _prepareInterventionData: function() {

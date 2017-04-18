@@ -48,7 +48,8 @@
     "etools-searchable-multiselection-menu": "^1.0.2",
     "etools-file": "^1.0.0",
     "polymer-redux": "^0.3.0",
-    "etools-currency-amount-input": "1.0.5"
+    "etools-app-selector": "^1.0.3",
+    "etools-currency-amount-input": "1.0.6"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

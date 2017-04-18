@@ -260,30 +260,30 @@
         newInterventionModel: {
           type: Object,
           value: {
-            id: null,
-            agreement: null,
-            document_type: null,
-            hrp: null,
-            number: null,
-            prc_review_document_file: null,
-            title: null,
+            id: undefined,
+            agreement: undefined,
+            document_type: undefined,
+            hrp: undefined,
+            number: undefined,
+            prc_review_document_file: undefined,
+            title: undefined,
             status: 'draft',
-            start: null,
-            end: null,
-            submission_date_prc: null,
-            review_date_prc: null,
-            submission_date: null,
-            prc_review_document: null,
-            signed_by_unicef_date: null,
-            signed_by_partner_date: null,
-            unicef_signatory: null,
+            start: undefined,
+            end: undefined,
+            submission_date_prc: undefined,
+            review_date_prc: undefined,
+            submission_date: undefined,
+            prc_review_document: undefined,
+            signed_by_unicef_date: undefined,
+            signed_by_partner_date: undefined,
+            unicef_signatory: undefined,
             unicef_focal_points: [],
             partner_focal_points: [],
-            partner_authorized_officer_signatory: null,
+            partner_authorized_officer_signatory: undefined,
             offices: [],
-            fr_numbers: null,
+            fr_numbers: undefined,
             planned_visits: [],
-            population_focus: null,
+            population_focus: undefined,
             sector_locations: [],
             planned_budget: [],
             result_links: [],
@@ -335,7 +335,7 @@
         }
       },
       _interventionChanged: function(intervention) {
-        this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
+        this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -366,7 +366,7 @@
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 
@@ -435,11 +435,11 @@
 
         var interventionData;
         if (this._isNewIntervention()) {
-           interventionData = Object.assign({}, this.intervention);
+          interventionData = Object.assign({}, this.intervention);
         } else {
-           var modifiedDetails = this._getModifiedInterventionDetails();
-           var modifiedReviewAndSign = this._getModifiedReviewAndSign();
-           interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+          var modifiedDetails = this._getModifiedInterventionDetails();
+          var modifiedReviewAndSign = this._getModifiedReviewAndSign();
+          interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
         // on save sector_locations sector prop needs to be sector ID and not the sector obj
@@ -449,7 +449,7 @@
 
         // prepare fr numbers
         if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
-            && this._objectFieldIsModified('fr_numbers')) {
+          && this._objectFieldIsModified('fr_numbers')) {
           interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
             return frNumber.value;
           });
@@ -459,8 +459,8 @@
 
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
-        if (!Array.isArray(interventionData.attachments) || interventionData.attachments.length === 0) {
-           delete interventionData.attachments;
+        if (_.isEmpty(interventionData.attachments)) {
+          delete interventionData.attachments;
         }
 
         // if prc_review_document is null we need to delete the property otherwise the
@@ -481,26 +481,122 @@
       },
       _getModifiedInterventionDetails: function() {
         var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
-                     'start', 'end', 'population_focus'];
+          'start', 'end', 'population_focus'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-                    'sector_locations', 'result_links', 'planned_budget', 'planned_visits'];
+          'sector_locations', 'planned_budget', 'planned_visits'];
+        var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
 
-        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+        return Object.assign({}, modifiedDetails, modifiedExpectedResults);
       },
+      _buildModifiedExpectedResultsObject: function() {
+        var modifExpectedResultsArray = this._getNewOrModifiedExpectedResults();
 
+        if (!_.isEmpty(modifExpectedResultsArray)) {
+          return {result_links: modifExpectedResultsArray};
+        }
+        return {};
+      },
+      _getNewOrModifiedExpectedResults: function() {
+        if (_.isEmpty(this.intervention.result_links)) {
+          return [];
+        }
+        var modifExpResults = this.intervention.result_links
+          .filter(this._expectedResultIsNewOrModified.bind(this))
+          .map(function(resultLink) {
+            if (_.isEmpty(resultLink.ll_results)) {
+              return resultLink;
+            }
+
+            resultLink.ll_results = this._getNewOrModifiedPSorSSFATOROutput(resultLink.ll_results,
+              this._getOriginalResultLink(resultLink.id));
+            return resultLink;
+          }.bind(this));
+
+        return modifExpResults;
+      },
+      _getOriginalResultLink: function(id) {
+        return this.originalIntervention.result_links.find(function(r) {
+          return r.id === id;
+        });
+      },
+      _getOriginalLlResult: function(id, originalResultLink) {
+        return originalResultLink.ll_results.find(function(r) {
+          return r.id === id;
+        });
+      },
+      _getNewOrModifiedPSorSSFATOROutput: function(llResults, originalResultLink) {
+        if (!originalResultLink || _.isEmpty(originalResultLink.ll_results)) {
+          return llResults;
+        }
+        var modifLlResults = llResults.filter(function(llResult) {
+          if (!llResult.id) {
+            return true;
+          }
+          var originalLlResult = originalResultLink.ll_results.find(function(r) {
+            return r.id === llResult.id;
+          });
+
+          if (!originalLlResult) {
+            return true;
+          }
+          return (JSON.stringify(originalLlResult) !== JSON.stringify(llResult));
+        }).map(function(llResult) {
+          if (_.isEmpty(llResult.applied_indicators)) {
+            return llResult;
+          }
+          llResult.applied_indicators = this._getNewOrModifiedIndicators(llResult.applied_indicators,
+            this._getOriginalLlResult(llResult.id, originalResultLink));
+          return llResult;
+        }.bind(this));
+        return modifLlResults;
+      },
+      _getNewOrModifiedIndicators: function(indicators, originalLlResult) {
+        if (!originalLlResult || _.isEmpty(originalLlResult.applied_indicators)) {
+          return indicators;
+        }
+        var modifIndicators = indicators.filter(function(indicator) {
+          if (!indicator.id) {
+            return true;
+          }
+          var originalIndicator = originalLlResult.applied_indicators.find(function(r) {
+            return r.id === indicator.id;
+          });
+          if (!originalIndicator) {
+            return true;
+          }
+          return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator));
+        });
+
+        return modifIndicators;
+      },
+      _expectedResultIsNewOrModified: function(resultLink) {
+        if (_.isEmpty(this.originalIntervention.result_links)) {
+          return true;
+        }
+        if (!resultLink.id) {
+          return true;
+        }
+        var originalResultLink = this._getOriginalResultLink(resultLink.id);
+        if (!originalResultLink) {
+          return true;
+        }
+
+        return (JSON.stringify(originalResultLink) !== JSON.stringify(resultLink));
+      },
       _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
-         var modifiedObject = {};
+        var modifiedObject = {};
 
-          updatableFields.forEach(function(fieldName) {
-            if (this._primitiveFieldIsModified(fieldName)) {
-              modifiedObject[fieldName] = this.intervention[fieldName];
-            }
-         }.bind(this));
+        updatableFields.forEach(function(fieldName) {
+          if (this._primitiveFieldIsModified(fieldName)) {
+            modifiedObject[fieldName] = this.intervention[fieldName];
+          }
+        }.bind(this));
 
-         updatableObjectFields.forEach(function(fieldName) {
-            if (this._objectFieldIsModified(fieldName)) {
-              modifiedObject[fieldName] = this.intervention[fieldName];
-            }
+        updatableObjectFields.forEach(function(fieldName) {
+          if (this._objectFieldIsModified(fieldName)) {
+            modifiedObject[fieldName] = this.intervention[fieldName];
+          }
         }.bind(this));
 
         return modifiedObject;
@@ -509,7 +605,7 @@
         // jscs:disable
         var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
         // jscs:enable
-        var dropdownArrayFields = ['partner_focal_points','unicef_focal_points', 'offices'];
+        var dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
         if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
           // Covers dropdown arrays which can have same content but with changed order
           if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
@@ -535,34 +631,35 @@
         return !!!this.intervention.id;
       },
       _prepareAttachments: function() {
-        if (!Array.isArray(this.intervention.attachments) || this.intervention.attachments.length === 0) {
+        if (_.isEmpty(this.intervention.attachments)) {
           return [];
         }
-         var modifAttachments = this.intervention.attachments
-                            .filter(this._attachmentIsNewOrModified.bind(this))
-                            .map(function(attachment) {
-                                var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
-                                if (!_sendAttachmentFile && attachment.id) {
-                                  return {
-                                    id: attachment.id
-                                  };
-                                } else {
-                                  return {
-                                    id: attachment.id,
-                                    intervention: attachment.intervention,
-                                    type: attachment.type,
-                                    attachment: attachment.raw
-                                  };
-                                }
-                            });
-          return modifAttachments;
+        var modifAttachments = this.intervention.attachments
+          .filter(this._attachmentIsNewOrModified.bind(this))
+          .map(function(attachment) {
+            var _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
+            if (!_sendAttachmentFile && attachment.id) {
+              return {
+                id: attachment.id,
+                type: attachment.type
+              };
+            } else {
+              return {
+                id: attachment.id,
+                intervention: attachment.intervention,
+                type: attachment.type,
+                attachment: attachment.raw
+              };
+            }
+          });
+        return modifAttachments;
       },
 
       _attachmentIsNewOrModified: function(attachment) {
-        if (!attachment.id) {
+        if (_.isEmpty(this.originalIntervention.attachments)) {
           return true;
         }
-        if (!this.originalIntervention.attachments) {
+        if (!attachment.id) {
           return true;
         }
         var originalAttachment = this.originalIntervention.attachments.find(function(att) {
