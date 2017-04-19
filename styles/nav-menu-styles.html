@@ -4,6 +4,51 @@
 <dom-module id="nav-menu-styles">
   <template>
     <style>
+
+      :host {
+        @apply(--layout-vertical);
+        height: 100%;
+        overflow-y: var(--side-bar-scrolling);
+        overflow-x: hidden;
+        border-right: 1px solid var(--dark-divider-color);
+      }
+
+      .menu-header {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        background-color: var(--secondary-color);
+        color: white;
+        border-bottom: 1px solid var(--dark-divider-color);
+        min-height: 59px;
+        padding: 0 16px;
+        font-size: 16px;
+        text-transform: uppercase;
+        pointer-events: none;
+      }
+
+      .divider {
+        margin: 8px 0;
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+      .nav-menu {
+        @apply(--layout-vertical);
+        background: var(--sidebar-bg-color, #fff);
+        min-height: 450px;
+        padding: 0;
+      }
+      .nav-menu, .nav-menu iron-selector[role="navigation"] {
+        @apply(--layout-flex);
+      }
+
+      .secondary-header {
+        color: var(--primary-text-color);
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 12px;
+        border-top: 1px solid var(--gray-lighter);
+      }
+
       .nav-menu-item {
         @apply(--layout-horizontal);
         @apply(--layout-center);

@@ -14,7 +14,6 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-<link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
 
 <dom-module id="page-partners">
@@ -171,7 +170,6 @@
         this.newPartnerDialog.addEventListener('create-partner', function(event) {
           this.fire('create-partner', event.detail);
         }.bind(this), false);
-
       },
       detached: function() {
         if (this.newPartnerDialog) {

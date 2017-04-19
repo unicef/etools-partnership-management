@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="../../styles/nav-menu-styles.html">
+
+<dom-module id="app-sidebar-menu">
+
+  <template>
+
+    <style include="nav-menu-styles"></style>
+
+    <div class="menu-header">
+      Partnership <br>
+      Management
+    </div>
+
+    <div class="nav-menu">
+      <iron-selector selected="[[page]]"
+                     attr-for-selected="menu-name"
+                     selectable="a"
+                     role="navigation">
+        <!--<template is="dom-if" if="[[permissions.loggedInDefault]]">-->
+
+        <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list">
+          <iron-icon icon="social:people"></iron-icon>
+          <div class="name">Partners</div>
+        </a>
+
+        <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list">
+          <iron-icon icon="av:playlist-add-check"></iron-icon>
+          <div class="name">Agreements</div>
+        </a>
+
+        <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list">
+          <iron-icon icon="verified-user"></iron-icon>
+          <div class="name">PD/SSFA ToR</div>
+        </a>
+
+        <a class="nav-menu-item" menu-name="governments" href$="[[baseUrl]]governments/list">
+          <iron-icon icon="account-balance"></iron-icon>
+          <div class="name">Governments</div>
+        </a>
+
+        <!--</template>-->
+      </iron-selector>
+
+      <div class="secondary-header">eTools Community Channels</div>
+
+      <a class="nav-menu-item lighter-item" href="https://etools.uservoice.com">
+        <iron-icon icon="maps:local-library"></iron-icon>
+        <div class="name">Knowledge base</div>
+      </a>
+
+      <a class="nav-menu-item lighter-item" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560">
+        <iron-icon icon="icons:question-answer"></iron-icon>
+        <div class="name">Discussion</div>
+      </a>
+
+      <a class="nav-menu-item lighter-item last-one" href="http://etools.unicefresults.org">
+        <iron-icon icon="icons:info"></iron-icon>
+        <div class="name">Information</div>
+      </a>
+
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+
+        is: 'app-sidebar-menu',
+
+        properties: {
+          page: String,
+          baseUrl: String,
+          permissions: String // TODO: might not be needed
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

@@ -5,7 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../app-config/etools-app-config.html">
+
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -129,7 +129,7 @@
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement"
-              disable-upgrade$="[[agreementListActive]]">
+              disable-upgrade$="[[_detailsPageDisableUpgrade(agreementDetailsActive, newAgreementActive)]]">
           </agreement-details>
         </div>
       </iron-pages>
@@ -205,6 +205,10 @@
         if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
+      },
+
+      _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
+        return !agreementDetailsActive && !newAgreementActive;
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {

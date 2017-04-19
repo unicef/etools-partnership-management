@@ -6,7 +6,6 @@
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
@@ -257,9 +256,6 @@
         pmpBehaviors.ObjectDatabindBehavior,
         etoolsBehaviors.EtoolsCurrencyBehavior
       ],
-      observers: [
-
-      ],
       properties: {
         intervention: {
           type: Object,
@@ -287,7 +283,7 @@
           type: Object
         }
      },
-     observes: [
+     observers: [
        '_interventionChanged(intervention.*)'
      ],
 

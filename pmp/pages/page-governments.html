@@ -5,7 +5,6 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../app-config/etools-app-config.html">
 
 <!-- Replace these with something more apppriate -->
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
@@ -43,13 +42,13 @@
     <app-route
         route="{{route}}"
         pattern="governments/:id/:tab"
-        active="{{tabsActive}}"
+        active="{{govTabsActive}}"
         data="{{routeData}}"></app-route>
     <app-route
         route="{{route}}"
         pattern="governments/new/details"
-        active="{{newInterventionActive}}"
-    ></app-route>
+        active="{{newGovInterventionActive}}"></app-route>
+
     <government-intervention-item-data id="interventionData"
                                        intervention="{{intervention}}"
                                        intervention-id="[[selectedInterventionId]]"
@@ -63,7 +62,7 @@
             <template is="dom-if" if="[[governmentListActive]]">
               <span> Government in simple </span>
             </template>
-            <template is="dom-if" if="[[newInterventionActive]]">
+            <template is="dom-if" if="[[newGovInterventionActive]]">
               <span>Add New Goverment in Simple</span>
             </template>
             <span hidden$="[[governmentListActive]]">[[intervention.number]]</span>
@@ -92,7 +91,7 @@
             </div>
           </div>
         </div>
-        <template is="dom-if" if="[[_getTabsActive(tabsActive,newInterventionActive)]]">
+        <template is="dom-if" if="[[_getTabsActive(govTabsActive, newGovInterventionActive)]]">
           <div class="top-content-row">
             <paper-tabs
                 selected="{{routeData.tab}}"
@@ -129,20 +128,25 @@
                               active="[[governmentListActive]]"
                               url-params="[[governmentQueryParams]]"
                               csv-download-url="{{csvDownloadUrl}}"
-                              partners-dropdown-data="[[partnersDropdownData]]">
+                              partners-dropdown-data="[[partnersDropdownData]]"
+                              disable-upgrade$="[[!governmentListActive]]">
             </governments-list>
           </div>
           <div class="page" name="details">
             <government-details id="details"
-                                active="[[newInterventionActive]]"
+                                active="[[newGovInterventionActive]]"
                                 on-details-refresh="_goToNewGovernmentPage"
                                 intervention="[[intervention]]"
                                 edit-mode="[[_hasEditPermissions(permissions)]]"
-                                on-save-intervention="_saveIntervention"></government-details>
+                                on-save-intervention="_saveIntervention"
+                                disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
+            </government-details>
           </div>
           <div class="page" name="overview">
             <government-overview id="overview"
-                                 intervention="[[intervention]]"></government-overview>
+                                 intervention="[[intervention]]"
+                                 disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
+            </government-overview>
           </div>
 
         </iron-pages>
@@ -197,7 +201,7 @@
         endpoint: {
           type: Object,
         },
-        tabsActive: {
+        govTabsActive: {
           type: Boolean
         },
         routeData: {
@@ -214,7 +218,7 @@
       },
 
       observers: [
-        '_pageChanged(governmentListActive, routeData.tab, newInterventionActive)',
+        '_pageChanged(governmentListActive, routeData.tab, newGovInterventionActive)',
         '_updateUrlTab(routeData.tab)',
         '_observeRouteDataId(routeData.id)',
       ],
@@ -230,6 +234,9 @@
           {name: 'SSFA', label: 'Small Scale Funding Agreement'}
         ]);
       },
+      _detailsPageDisableUpgrade: function(govTabsActive, newGovInterventionActive) {
+        return !govTabsActive && !newGovInterventionActive;
+      },
       _getActivePage: function(listActive, tab, isNew) {
         var result = listActive ? 'list' :
           isNew ? 'details' : tab;
@@ -244,12 +251,12 @@
       _interventionSaved: function(intervention) {
         this.fire('update-main-path', {path: 'governments/' + intervention.id + '/details'});
       },
-      _pageChanged: function(governmentListActive, tab, newInterventionActive) {
-        var activePage = this._getActivePage(governmentListActive, tab, newInterventionActive);
+      _pageChanged: function(governmentListActive, tab, newGovInterventionActive) {
+        var activePage = this._getActivePage(governmentListActive, tab, newGovInterventionActive);
         this.set('governmentsPage', activePage);
       },
-      _getTabsActive: function(tabsActive, newInterventionActive) {
-        if (tabsActive || newInterventionActive) {
+      _getTabsActive: function(govTabsActive, newGovInterventionActive) {
+        if (govTabsActive || newGovInterventionActive) {
           return true;
         }
         return false;
