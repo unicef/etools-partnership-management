@@ -94,7 +94,7 @@
           },
           interventionId: Number
         },
-        _partnersDropdownDataChanged: function(){
+        _partnersDropdownDataChanged: function() {
           this._setSelectedPartnerId();
         },
         _agreementsChanged: function() {
@@ -107,7 +107,7 @@
           var partnerSelector = this.$.partner;
           var agreementSelector = this.$.agreements;
 
-          if(!this.agreements) {
+          if (!this.agreements) {
             return;
           }
           var agreement = _.find(this.agreements, function(agreement) {
@@ -121,7 +121,7 @@
         },
         _setSelectedPartnerId: function() {
           var agreement = this.selectedAgreement;
-          if(!agreement || !agreement.partner || this.partnerId === agreement.partner) {
+          if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
             return;
           }
           var partner = _.find(this.partnersDropdownData, function(partner) {
