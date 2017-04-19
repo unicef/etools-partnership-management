@@ -429,9 +429,7 @@
           if (this.csoType && this.csoType.length) {
             params.push('cso_type=' + this.csoType);
           }
-          if (this.showHidden) {
-            params.push('hidden=true');
-          }
+          params.push('hidden=' + this.showHidden);
 
           params.push('format=csv');
           queryString = params.join('&');
