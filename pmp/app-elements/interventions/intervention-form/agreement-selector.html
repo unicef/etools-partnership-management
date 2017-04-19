@@ -61,7 +61,7 @@
         properties: {
           agreementId: {
             type: Number,
-            observer: '_agreementChanged',
+            observer: '_agreementIdChanged',
             notify: true
           },
           filteredAgreements: {
@@ -75,7 +75,8 @@
           },
           agreements: {
             type: Array,
-            statePath: 'agreementsList'
+            statePath: 'agreementsList',
+            observer: '_agreementsChanged'// Covers issues on refresh when agreements is populated after the rest of the observers run
           },
           partnerId: {
             type: Number,
@@ -91,16 +92,24 @@
             type: Boolean,
             value: false
           },
-          interventionId: Number,
+          interventionId: Number
         },
         _partnersDropdownDataChanged: function(){
           this._setSelectedPartnerId();
         },
-        _agreementChanged: function(agreementId) {
+        _agreementsChanged: function() {
+          if (this.selectedAgreement) {
+            return;
+          }
+          this._agreementIdChanged(this.agreementId);
+        },
+        _agreementIdChanged: function(agreementId) {
           var partnerSelector = this.$.partner;
           var agreementSelector = this.$.agreements;
 
-          // find the partner associated with this agreement
+          if(!this.agreements) {
+            return;
+          }
           var agreement = _.find(this.agreements, function(agreement) {
             return agreement.id === agreementId;
           });
