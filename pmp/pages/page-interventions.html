@@ -18,7 +18,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
-<link rel="import" href="../app-config/etools-app-config.html">
+
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
@@ -26,7 +26,7 @@
 
 <dom-module id="page-interventions">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
 
@@ -45,7 +45,7 @@
         route="{{route}}"
         pattern="interventions/list"
         query-params="{{interventionsQueryParams}}"
-        active="{{listActive}}"></app-route>
+        active="{{intervListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
@@ -76,7 +76,7 @@
       <div class="top-content">
         <div class="top-content-row title-row">
           <h1 main-title>
-            <template is="dom-if" if="[[listActive]]">
+            <template is="dom-if" if="[[intervListActive]]">
               PD/SSFA ToRs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
@@ -87,7 +87,7 @@
             </template>
           </h1>
           <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!listActive]]">
+            <div class="top-content-action" hidden$="[[!intervListActive]]">
               <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
                   <iron-icon icon="file-download"></iron-icon>
@@ -96,13 +96,13 @@
               </a>
             </div>
             <!-- Print functionality pending implementation -->
-            <!--<div class="top-content-action"  hidden$="[[!listActive]]">
+            <!--<div class="top-content-action"  hidden$="[[!intervListActive]]">
               <paper-button>
                 <iron-icon icon="print"></iron-icon>
                 Print
               </paper-button>
             </div>-->
-            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
                 Add new PD/SSFA ToR
@@ -153,16 +153,18 @@
 
           <div class="page" name="list">
             <interventions-list
-                active="[[listActive]]"
+                active="[[intervListActive]]"
                 csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[interventionsQueryParams]]">
+                url-params="[[interventionsQueryParams]]"
+                disable-upgrade$="[[!intervListActive]]">
             </interventions-list>
           </div>
 
           <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
             <div class="page" name="overview">
               <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]">
+                                     intervention-agreement="[[agreement]]"
+                                     disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
               </intervention-overview>
             </div>
           </template>
@@ -175,7 +177,8 @@
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
                                   edit-mode="[[_hasEditPermissions(permissions)]]"
-                                  on-update-intervention-status="_updateInterventionStatus">
+                                  on-update-intervention-status="_updateInterventionStatus"
+                                  disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
@@ -184,7 +187,8 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions)]]">
+                                          edit-mode="[[_hasEditPermissions(permissions)]]"
+                                          disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
@@ -195,14 +199,15 @@
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
                                       on-delete-file="_deleteAttachment"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                      disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <div id="sidebar" hidden$="[[listActive]]">
+      <div id="sidebar" hidden$="[[intervListActive]]">
         <intervention-status status="[[intervention.status]]"
                              intervention-id$="[[intervention.id]]"
                              intervention-agreement-status="[[agreement.status]]"
@@ -316,7 +321,7 @@
          */
         '_updateUrlTab(routeData.intTab)',
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
-        '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
+        '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)'
       ],
 
@@ -328,6 +333,9 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
+      },
+      _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
+        return !intervDetailsActive && !newInterventionActive;
       },
       _interventionChanged: function(intervention) {
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
@@ -365,9 +373,9 @@
         }.bind(this), 50);
       },
 
-      _getActivePage: function(listActive, intervDetailsActive, newInterventionActive) {
+      _getActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
         var page = 'list';
-        if (listActive === false) {
+        if (intervListActive === false) {
           if (newInterventionActive) {
             // return new intervention page tab name
             page = this.routeDataNewInterv.intTab;
@@ -379,9 +387,9 @@
         return page;
       },
 
-      _pageChanged: function(listActive, intervDetailsActive, newInterventionActive) {
+      _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
-          var activePage = this._getActivePage(listActive, intervDetailsActive, newInterventionActive);
+          var activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
           if (activePage === 'list') {
             this.set('activeTab', 'details');
           }
@@ -743,8 +751,8 @@
         return title;
       },
 
-      _showAddNewIntervBtn: function(listActive, permissions) {
-        if (listActive && this._hasEditPermissions(permissions)) {
+      _showAddNewIntervBtn: function(intervListActive, permissions) {
+        if (intervListActive && this._hasEditPermissions(permissions)) {
           return true;
         }
         return false;

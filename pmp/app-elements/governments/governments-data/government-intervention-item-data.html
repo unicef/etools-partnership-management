@@ -107,7 +107,7 @@
           this.ajaxEl.set('url', null);
         },
         _handleResponse: function(response) {
-          if(!(typeof response.detail === 'object' && Object.keys(response.detail).length)) {
+          if (!(typeof response.detail === 'object' && Object.keys(response.detail).length)) {
             // TODO: there are cases when this response is an empty object,
             // gov interv doesn't exists, but the servers returns empty object with 200 HTTP status
             console.warn('[Gov-intervention-item-data] Empty response!');

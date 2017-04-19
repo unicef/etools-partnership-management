@@ -26,9 +26,8 @@
 <link rel="import" href="agreement-amendment-types.html">
 
 <dom-module id="agreement-amendments">
-  <template>
-    <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles buttons-styles">
+  <template strip-whitespace>
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -82,14 +81,14 @@
                 <!-- Uncomment this block once PCA agreement generation is ready on backend side -->
 
                 <!--<div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_amendment)]]">-->
-                <!--<paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>-->
-                <!--&lt;!&ndash; Auto-generated PCA Amendment &ndash;&gt;-->
-                <!--<label aria-hidden="true">Auto-generated PCA Amendment</label>-->
-                <!--<paper-button class="paper-input-input secondary-btn">-->
-                <!--<iron-icon icon="refresh"></iron-icon>-->
-                <!--GENERATE PCA-->
-                <!--</paper-button>-->
-                <!--</paper-input-container>-->
+                  <!--<paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>-->
+                    <!--&lt;!&ndash; Auto-generated PCA Amendment &ndash;&gt;-->
+                    <!--<label aria-hidden="true">Auto-generated PCA Amendment</label>-->
+                    <!--<paper-button class="paper-input-input secondary-btn">-->
+                      <!--<iron-icon icon="refresh"></iron-icon>-->
+                      <!--GENERATE PCA-->
+                    <!--</paper-button>-->
+                  <!--</paper-input-container>-->
                 <!--</div>-->
                 <div class="col col-4">
                   <!-- Signed Date -->
@@ -322,11 +321,11 @@
          *  uncomment when PCA Amendment generation will be available
          */
         /* _hideGenerateBtn: function(signedAmendment) {
-         if (signedAmendment) {
-         return true;
-         }
-         return false;
-         }, */
+          if (signedAmendment) {
+            return true;
+          }
+          return false;
+        }, */
 
         /**
          * Check if amendment has at least an amendment type selected
