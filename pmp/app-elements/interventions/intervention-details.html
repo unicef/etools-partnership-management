@@ -472,14 +472,15 @@
         },
 
         _selectedPartnerIdChanged: function(id, oldId) {
+          if (typeof oldId === 'number'
+              && id !== oldId
+              && !this.agreement) { //Prevent reset on changes caused by initialization of the fields
 
-          if (typeof oldId === 'number' && id !== oldId) {
             // reset partner focal points options and value
             this.set('intervention.partner_focal_points', []);
             this.set('partnerStaffMembers', []);
           }
         },
-
         /**
          * When an agreement is selected then check it's type and update document types dropdown
          */
