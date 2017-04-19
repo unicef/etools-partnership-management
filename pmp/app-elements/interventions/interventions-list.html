@@ -30,7 +30,7 @@
 
 <dom-module id="interventions-list">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
@@ -153,7 +153,7 @@ changed teh                  option-value="[[filter.optionValue]]"
         </etools-data-table-column>
       </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" items="[[filteredInterventions]]"
+      <template id="rows" is="dom-repeat" notify-dom-change items="[[filteredInterventions]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">

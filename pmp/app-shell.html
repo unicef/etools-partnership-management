@@ -14,28 +14,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="app-elements/page-header/page-header.html">
-<link rel="import" href="app-elements/page-footer/page-footer.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 
-<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
-
-<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
+<link rel="import" href="app-menu/app-sidebar-menu.html">
+
 <link rel="import" href="app-elements/users-data/user-data.html">
-<link rel="import" href="app-elements/side-bar-item/side-bar-item.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
@@ -52,8 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
 <link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
 
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
 <!--
 <link rel="import" href="pages/page-agreements.html">
 <link rel="import" href="pages/page-interventions.html">
@@ -67,9 +55,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="app-shell">
 
-  <template>
+  <template strip-whitespace>
 
-    <style include="page-layout-styles shared-styles iron-flex iron-flex-alignment">
+    <style include="page-layout-styles shared-styles">
 
       :host {
         display: block;
@@ -83,77 +71,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-      app-toolbar {
-        background-color: var(--secondary-color);
-        color: white;
-        --app-toolbar-font-size: 16px;
-      }
-
-      .side-nav-wrapper {
-        @apply(--layout-vertical);
-
-        height: 100%;
-        overflow-y: var(--side-bar-scrolling);
-        overflow-x: hidden;
-        border-right: 1px solid var(--dark-divider-color);
-      }
-
-      .side-nav-wrapper .header {
-        min-height: 60px;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-
-      #etools-logo {
-        height: 50%;
-        width: 60%;
-      }
-      .uppercase {
-        text-transform: uppercase;
-      }
-
-      #unicef-logo {
-        height: 100%;
-        width: 60%;
-      }
-
-      #app-select {
-        margin-left: auto;
-        width: 47px;
-        height: 47px;
-      }
-
-      .side-nav-wrapper .nav-menu {
-        padding: 8px 0;
-      }
-
-      .side-nav-wrapper .divider {
-        margin: 8px 0;
-        border-bottom: 1px solid var(--dark-divider-color);
-      }
-      .nav-menu {
-        background: var(--sidebar-bg-color, #fff);
-      }
-      .nav-menu, .flexy {
-        @apply(--layout-flex);
-      }
-      .secondary-header {
-        color: var(--primary-text-color);
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
-        font-size: 12px;
-        border-top: 1px solid var(--gray-lighter);
-      }
       .warning-toast-dismiss-btn {
         text-transform: none;
         color: var(--ternary-color);
       }
       .last-one {
         margin-bottom: 10px;
-      }
-      .lighter-item {
-        --sidebar-icon-color: var(--sidebar-secondary-text-color);
-        --sidebar-text-color: var(--sidebar-secondary-text-color);
       }
 
       .global-warn-msg-toast {
@@ -163,6 +86,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
     </style>
+
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <!-- get static data -->
     <dropdowns-pmp-data></dropdowns-pmp-data>
@@ -176,8 +101,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <agreement-list-data></agreement-list-data>
     <country-programmes-data></country-programmes-data>
 
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
-
     <app-location route="{{route}}"></app-location>
 
     <app-route
@@ -189,74 +112,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Drawer content -->
       <app-drawer id="drawer" transition-duration="350">
-
-        <div class="side-nav-wrapper">
-
-          <app-toolbar class="header uppercase">
-            Partnership <br>
-            Management
-          </app-toolbar>
-
-          <div class="nav-menu layout vertical">
-            <iron-selector selected="[[page]]" attr-for-selected="menu-name" selectable="side-bar-item" role="navigation">
-              <template is="dom-if" if="[[permissions.loggedInDefault]]">
-                <side-bar-item menu-name="partners" name="partners" icon="social:people" href$="[[baseUrl]]partners/list"></side-bar-item>
-                <side-bar-item menu-name="agreements" name="agreements" icon="av:playlist-add-check" href$="[[baseUrl]]agreements/list"></side-bar-item>
-                <side-bar-item menu-name="interventions" name="PD/SSFA ToR" icon="verified-user" href$="[[baseUrl]]interventions/list"></side-bar-item>
-                <side-bar-item menu-name="governments" name="governments" icon="account-balance" href$="[[baseUrl]]governments/list"></side-bar-item>
-              </template>
-            </iron-selector>
-
-            <div class="flexy"></div>
-
-            <div class="secondary-header">eTools Community Channels</div>
-            <side-bar-item name="Knowledge base" class="lighter-item" icon="maps:local-library" href="https://etools.uservoice.com"></side-bar-item>
-            <side-bar-item name="Discussion" class="lighter-item" icon="icons:question-answer" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"></side-bar-item>
-            <side-bar-item name="Information" class="lighter-item last-one" icon="icons:info" href="http://etools.unicefresults.org"></side-bar-item>
-          </div>
-        </div>
+        <!-- App main menu(left sidebar) -->
+        <app-sidebar-menu base-url="[[baseUrl]]" page="[[page]]" permissions="[[permissions]]"></app-sidebar-menu>
 
       </app-drawer>
 
       <!-- Main content -->
       <app-header-layout fullbleed has-scrolling-region>
-        <app-header  fixed shadow>
+        <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
+
         <iron-pages id="pages"
                     selected="[[page]]"
                     attr-for-selected="name"
                     fallback-selection="not-found"
                     role="main">
 
-          <template is="dom-if" id="privatePages" on-dom-change="_pagesStamped" if="[[permissions.loggedInDefault]]">
-            <page-partners name="partners"
+          <template id="privatePages" is="dom-if" notify-dom-change
+                    if="[[permissions.loggedInDefault]]" on-dom-change="_pagesStamped">
+            <page-partners id="partners"
+                           name="partners"
                            on-dom-change="_pagesStamped"
                            route="[[subroute]]"
                            user="[[user]]"
                            permissions="[[permissions]]">
 
             </page-partners>
-            <page-agreements name="agreements"
+            <page-agreements id="agreements"
+                             name="agreements"
                              route="[[subroute]]"
                              user="[[user]]"
                              permissions="[[permissions]]">
             </page-agreements>
-            <page-interventions name="interventions"
+            <page-interventions id="interventions"
+                                name="interventions"
                                 route="[[subroute]]"
                                 permissions="[[permissions]]">
             </page-interventions>
-            <page-governments name="governments"
+            <page-governments id="governments"
+                              name="governments"
                               route="[[subroute]]"
                               permissions="[[permissions]]">
             </page-governments>
           </template>
           <page-not-found name="not-found"></page-not-found>
-
-          </iron-pages>
-          <page-footer></page-footer>
-        </app-header-layout>
-      </app-drawer-layout>
+        </iron-pages>
+        <page-footer></page-footer>
+        <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
+      </app-header-layout>
+    </app-drawer-layout>
 
   </template>
 
@@ -298,14 +203,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         routeData: {
           type: Object
+        },
+        lazyLoadPages: {
+          type: Array,
+          value: ['partners', 'agreements', 'interventions', 'governments']
         }
 
       },
 
       behaviors: [
         etoolsAppConfig.globals,
-        pmpBehaviors.NotificationToastsBehavior,
-        etoolsBehaviors.LoadingBehavior
+        pmpBehaviors.NotificationToastsBehavior
       ],
 
       observers: [
@@ -327,9 +235,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function() {
-        // create loading element, used for global loading
-        this.globalLoadingElement = this.createLoading();
-        this.fire('global-loading', {message: 'Loading data...', active: true});
+        // init loading element, used for global loading
+        this.globalLoadingElement = this.$.pageLoading;
+        this.fire('global-loading', {message: 'Loading main elements...', active: true});
       },
 
       attached: function() {
@@ -339,10 +247,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         //if (this.route.path === this.baseUrl) {
         //  this.set('route.path', this.baseUrl + 'partners/list');
         //}
-      },
-      detached: function() {
-        // clean: remove global loading element if the app-shell is detached
-        this.removeLoading(this.globalLoadingElement);
       },
 
       _updateMainPath: function(event) {
@@ -379,7 +283,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('subroute', subroute);
         }
 
-        if (this._pagesAvailable || (['settings', 'etc'].indexOf(page) !== -1)) {
+        if (this._pagesAvailable) {
           this.set('page', (page || 'partners'));
         } else {
           //console.log('No permissions yet or page hasn\'t stampped', page);
@@ -387,8 +291,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageChanged: function(page) {
+        if (!page) {
+          return;
+        }
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
-        this.importHref(resolvedPageUrl, null, this._pageNotFound, true);
+        // check if page has been loaded, only if wasn't use importHref to load it
+        var pageEl = this._getPageElement(page);
+        if (!this._pageLoaded(pageEl)) {
+          // activate the global loading with a propper message
+          this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
+          // make the import
+          this.importHref(resolvedPageUrl, this._lazyLoadPagesAfterCurrentPageHasLoaded.bind(this, page, pageEl),
+              this._pageNotFound, true);
+        }
       },
 
       _pageNotFound: function() {
@@ -419,6 +334,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.globalLoadingElement.active = isActive;
           }
         }, 50);
+      },
+
+      _pageLoaded: function(pageEl) {
+        return Polymer.isInstance(pageEl);
+      },
+
+      _getPageElement: function(pageId) {
+        return this.$$('#' + pageId);
+      },
+
+      // load all the other main pages after first page is loaded
+      _lazyLoadPagesAfterCurrentPageHasLoaded: function(currentLoadingPage, currentLoadingPageEl) {
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._lazyLoadPages.bind(this, currentLoadingPage));
+      },
+      // load all the other main pages except the one just rendered
+      _lazyLoadPages: function(currentLoadingPage) {
+        try {
+          var pageUrl;
+          var self = this;
+          self.lazyLoadPages.forEach(function(page) {
+            if (page !== currentLoadingPage) {
+              // make the import
+              pageUrl = self.resolveUrl('pages/page-' + page + '.html');
+              // do not use optAsync=true of importHref, it will generate behaviors not found warnings
+              self.importHref(pageUrl, null, null, false);
+            }
+          });
+        } catch (err) {
+          console.error('An error occurred during pages lazy load', err);
+        }
       }
 
     });

@@ -14,12 +14,11 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-<link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
 
 <dom-module id="page-partners">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
 
@@ -109,17 +108,18 @@
 
       <div class="page" name="list">
         <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
-                       url-params="[[queryParams]]"></partners-list>
+                       url-params="[[queryParams]]" disable-upgrade$="[[!listActive]]"></partners-list>
       </div>
       <div class="page" name="overview">
-        <partner-overview partner="[[partner]]"></partner-overview>
+        <partner-overview partner="[[partner]]" disable-upgrade$="[[!tabsActive]]"></partner-overview>
       </div>
       <div class="page" name="details">
         <partner-details id="partnerDetails"
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"></partner-details>
+                         on-hide-partner="_hidePartner"
+                         disable-upgrade$="[[!tabsActive]]"></partner-details>
       </div>
     </iron-pages>
 
@@ -170,7 +170,6 @@
         this.newPartnerDialog.addEventListener('create-partner', function(event) {
           this.fire('create-partner', event.detail);
         }.bind(this), false);
-
       },
       detached: function() {
         if (this.newPartnerDialog) {
