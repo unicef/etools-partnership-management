@@ -71,6 +71,7 @@
           partnersDropdownData: {
             type: Array,
             statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
+            observer: '_partnersDropdownDataChanged'
           },
           agreements: {
             type: Array,
@@ -79,6 +80,7 @@
           partnerId: {
             type: Number,
             notify: true,
+            value: undefined,
             observer: '_partnerSelected'
           },
           selectedAgreement: {
@@ -90,18 +92,14 @@
             type: Boolean,
             value: false
           },
-          interventionId: Number
+          interventionId: Number,
+        },
+        _partnersDropdownDataChanged: function(){
+          this._setSelectedPartnerId();
         },
         _agreementChanged: function(agreementId) {
           var partnerSelector = this.$.partner;
           var agreementSelector = this.$.agreements;
-//          if (!agreementId) {
-//            partnerSelector.value = null,
-//            agreementSelector.value = null;
-//            this.set('filteredAgreements', []);
-//            this.set('selectedAgreement', null);
-//            return;
-//          }
 
           // find the partner associated with this agreement
           var agreement = _.find(this.agreements, function(agreement) {
@@ -109,20 +107,24 @@
           });
           this.set('selectedAgreement', agreement);
 
-          if (agreement && typeof agreement === 'object'
-              && agreement.partner && this.partnerId !== agreement.partner) {
-            var partner = _.find(this.partnersDropdownData, function(partner) {
-              return partner.id === agreement.partner;
-            });
-            if (!partner) {
-              this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
-              // this._resetSelectorData(partnerSelector, agreementSelector);
-              return;
-            }
-            this.set('partnerId', partner.id);
+          if (this.partnersDropdownData && this.partnersDropdownData.length) {
+            this._setSelectedPartnerId();
           }
         },
-
+        _setSelectedPartnerId: function() {
+          var agreement = this.selectedAgreement;
+          if(!agreement || !agreement.partner || this.partnerId === agreement.partner) {
+            return;
+          }
+          var partner = _.find(this.partnersDropdownData, function(partner) {
+            return partner.id === agreement.partner;
+          });
+          if (!partner) {
+            this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+            return;
+          }
+          this.set('partnerId', partner.id);
+        },
         _filterAgreements: function(partnerId) {
           // this.$.agreements.set('value', null);
           if (!partnerId) {
