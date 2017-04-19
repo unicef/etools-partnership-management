@@ -43,7 +43,9 @@
     <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
                        partner="{{partner}}"
-                       error-event-name="partner-save-error"></partner-item-data>
+                       error-event-name="partner-save-error"
+                       keep-loading-on-response-handling>
+    </partner-item-data>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
       <div class="top-content">
@@ -149,6 +151,10 @@
         },
         selectedPartnerId: {
           type: Number
+        },
+        partner: {
+          type: Object,
+          observer: '_partnerChanged'
         }
       },
 
@@ -253,6 +259,13 @@
       _handleCreatePartnerError: function(errorDetails) {
         var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
         this.fire('toast', {text: toastMsg, showCloseBtn: true});
+      },
+
+      _partnerChanged: function(partner) {
+        if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          // dismiss partner details pages loading
+          this.fire('global-loading', {active: false});
+        }
       }
 
     });

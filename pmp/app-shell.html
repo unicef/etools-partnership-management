@@ -67,7 +67,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         z-index: 100;
         --app-drawer-width: 220px;
         --app-drawer-content-container: {
-            background-color: var(--light-theme-content-color);
+          background-color: var(--light-theme-content-color);
         };
       }
 
@@ -75,14 +75,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-transform: none;
         color: var(--ternary-color);
       }
-      .last-one {
-        margin-bottom: 10px;
-      }
 
       .global-warn-msg-toast {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        /*max-height: 100%;*/
+      }
+
+      #pageLoading {
+        position: fixed;
+        z-index: 1000;
       }
 
     </style>
