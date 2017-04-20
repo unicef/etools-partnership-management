@@ -61,7 +61,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Setup Polymer options
       window.Polymer = {
         dom: 'shadow',
-        lazyRegister: true
+        lazyRegister: true,
+        disableUpgradeEnabled: true,
+        suppressTemplateNotifications: true,
+        suppressBindingNotifications: true
       };
       var serverBackend = (window.location.port !== '8080');
       var baseUrl = serverBackend ? '/pmp/' : '/';
@@ -131,8 +134,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 400;
         line-height: 1.5;
         min-height: 100vh;
-        background-color: var(--medium-theme-background-color, #eeeeee);
-        color: var(--primary-text-color);
+        /* we can not use app-theme color variables here, IE11 can not apply them */
+        background-color: #eeeeee;
+        color: rgba(0, 0, 0, 0.87);
       }
     </style>
   </head>
