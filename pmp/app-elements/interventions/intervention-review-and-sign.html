@@ -220,7 +220,6 @@
         _interventionChanged: function(intervention) {
           // ensure loading msg close
           this._setNewEditMode();
-          this.fire('global-loading', {active: false});
         },
         _setNewEditMode: function() {
           if (!this.editMode) {
@@ -241,7 +240,6 @@
           } else {
             this.set('signEditMode', true);
           }
-          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {

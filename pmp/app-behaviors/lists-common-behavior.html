@@ -2,110 +2,111 @@
   window.pmpBehaviors = window.pmpBehaviors || {};
   /** @polymerBehavior pmpBehaviors.ListsCommonBehavior */
   pmpBehaviors.ListsCommonBehavior = {
-      properties: {
-         q: {
-            type: String,
-            notify: true,
-            observer: '_qChanged'
-          },
-
-         sortOrder: Object,
-
-         debounceTime: {
-            type: Number,
-            value: 50
-         },
-
-         pageSize: {
-            type: Number
-         },
-
-         pageNumber: {
-            type: Number
-         },
-
-         active: Boolean,
-
-         detailsOpened: Boolean,
-
-         forceDataRefresh: {
-            type: Boolean,
-            value: false
-         },
-
-         requiredDataLoaded: {
-           type: Boolean,
-           value: false
-         },
-
-         defaultListsSize: {
-           type: Number,
-           value: 10
-         }
+    properties: {
+      q: {
+        type: String,
+        notify: true,
+        observer: '_qChanged'
       },
 
-      // When the list data rows are changing check and close any details opened
-     _listDataChanged: function(event) {
-       var rows = this.$.list.querySelectorAll('data-table-row');
-         if (rows && rows.length) {
-           for (var i = 0; i < rows.length; i++) {
-             if (rows[i].detailsOpened) {
-               rows[i].set('detailsOpened', false);
-             }
-           }
-         }
+      sortOrder: Object,
+
+      debounceTime: {
+        type: Number,
+        value: 50
       },
 
-      _sortOrderChanged: function(e) {
-        this.set('debounceTime', 150);
-        this.set('sortOrder', e.detail);
+      pageSize: {
+        type: Number
       },
 
-      _pageSizeChanged: function(e) {
-        this.set('debounceTime', 200);
-        this.set('pageNumber', 1);
-        this.set('pageSize', parseInt(e.detail.value));
+      pageNumber: {
+        type: Number
       },
 
-      _pageNumberChanged: function(e) {
-        this.set('debounceTime', 50);
-        this.set('pageNumber', e.detail.value);
+      active: Boolean,
+
+      detailsOpened: Boolean,
+
+      forceDataRefresh: {
+        type: Boolean,
+        value: false
       },
 
-      _qChanged: function(q) {
-        this.set('debounceTime', 300);
-        this.set('pageNumber', 1);
+      requiredDataLoaded: {
+        type: Boolean,
+        value: false
       },
 
-      // List fade in fade out effect
-      _listChanged: function(filteredList) {
-         var classList = this.$.list.classList;
-         if (filteredList instanceof Array && classList.contains('hidden')) {
-            classList.remove('hidden');
-         }
-      },
+      defaultListsSize: {
+        type: Number,
+        value: 10
+      }
+    },
 
-       /**
-         * At page refresh Dexie DBs might be wiped out and the list
-         *(filteredPartners,filteredAgreements etc) will be empty.
-         * Because of this we need to refilter after list data is saved locally.
-         * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
-         */
-      _requiredDataHasBeenLoaded: function(event) {
-          event.stopImmediatePropagation();
-
-          var listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
-          var list = this.get(listDataPath);
-
-          if (typeof list === 'undefined' ||
-              (Array.isArray(list) && list.length === 0)) {
-            this.set('forceDataRefresh',  true);
+    // When the list data rows are changing check and close any details opened
+    _listDataChanged: function(event) {
+      var rows = this.$.list.querySelectorAll('data-table-row');
+      if (rows && rows.length) {
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].detailsOpened) {
+            rows[i].set('detailsOpened', false);
           }
-          // recheck params to trigger agreements filtering
-          this.set('initComplete', false);
-          this.set('requiredDataLoaded', true);
-          this._init(this.active);
-          this.fire('global-loading', {active: false});
-       },
+        }
+      }
+    },
+
+    _sortOrderChanged: function(e) {
+      this.set('debounceTime', 150);
+      this.set('sortOrder', e.detail);
+    },
+
+    _pageSizeChanged: function(e) {
+      this.set('debounceTime', 200);
+      this.set('pageNumber', 1);
+      this.set('pageSize', parseInt(e.detail.value));
+    },
+
+    _pageNumberChanged: function(e) {
+      this.set('debounceTime', 50);
+      this.set('pageNumber', e.detail.value);
+    },
+
+    _qChanged: function(q) {
+      this.set('debounceTime', 300);
+      this.set('pageNumber', 1);
+    },
+
+    // List fade in fade out effect
+    _listChanged: function(filteredList) {
+      var classList = this.$.list.classList;
+      if (filteredList instanceof Array && classList.contains('hidden')) {
+        classList.remove('hidden');
+        // dismiss global loading after the list becomes visible (fist page of the list is displayed)
+        this.fire('global-loading', {active: false});
+      }
+    },
+
+    /**
+     * At page refresh Dexie DBs might be wiped out and the list
+     *(filteredPartners,filteredAgreements etc) will be empty.
+     * Because of this we need to refilter after list data is saved locally.
+     * list-data-path holds the name of the list : filteredAgreements,filteredPartners, etc
+     */
+    _requiredDataHasBeenLoaded: function(event) {
+      event.stopImmediatePropagation();
+
+      var listDataPath = Polymer.dom(event).localTarget.getAttribute('list-data-path');
+      var list = this.get(listDataPath);
+
+      if (typeof list === 'undefined' ||
+          (Array.isArray(list) && list.length === 0)) {
+        this.set('forceDataRefresh', true);
+      }
+      // recheck params to trigger agreements filtering
+      this.set('initComplete', false);
+      this.set('requiredDataLoaded', true);
+      this._init(this.active);
+    },
   };
 </script>

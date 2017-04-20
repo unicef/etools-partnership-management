@@ -17,10 +17,13 @@
         background-color: var(--header-bg-color);
       }
 
-      iron-pages#pages[role="main"] {
-        -ms-flex: 1 0 0;
-        -webkit-flex: 1 0 0;
-        flex: 1 0 0;
+      /* TODO: remove iron-pages#pages[role="main"] rule once the element is removed from app-shell */
+      iron-pages#pages[role="main"],
+      #pages {
+        display: block;
+        /*-ms-flex: 1 0 0;*/
+        /*-webkit-flex: 1 0 0;*/
+        /*flex: 1 0 0;*/
       }
 
       #main, .page {
