@@ -29,7 +29,7 @@ it doesn't need to be included in element's style -->
 <link rel="import" href="government-plan-results.html">
 
 <dom-module id="government-details">
-  <template>
+  <template strip-whitespace>
     <style
         include="page-layout-styles repeatable-data-sets-styles grid-layout-styles shared-styles buttons-styles iron-flex-factors">
       :host {
@@ -80,7 +80,7 @@ it doesn't need to be included in element's style -->
             <template is="dom-if" if="[[!governmentEditMode]]">
               <paper-input
                   label="Country Programme"
-                  value="[[_mapItemFromValue(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
+                  value="[[_mapItemFromId(intervention.country_programme, countryProgrammeDropdownData,'true')]]"
                   placeholder="&#8212;"
                   readonly></paper-input>
             </template>
@@ -90,7 +90,10 @@ it doesn't need to be included in element's style -->
                                                      placeholder="&#8212;"
                                                      options="[[countryProgrammeDropdownData]]"
                                                      selected="{{intervention.country_programme}}"
+                                                     option-label="name"
+                                                     option-value="id"
                                                      update-selected
+                                                     custom-object-options
                                                      error-message="Please select a country programme"
                                                      required>
               </etools-searchable-multiselection-menu>
@@ -180,7 +183,7 @@ it doesn't need to be included in element's style -->
         }
       },
       _countriesDropdownChanged: function() {
-        var cpObject = _.find(this.countryProgrammeDropdownData, {value: this.intervention.country_programme});
+        var cpObject = _.find(this.countryProgrammeDropdownData, {id: this.intervention.country_programme});
         if (!_.isEmpty(cpObject)) {
           var years = _.range(moment(cpObject.from_date).year(), moment(cpObject.to_date).year() + 1);
           years = years.map(function(year) {
@@ -220,7 +223,6 @@ it doesn't need to be included in element's style -->
           this.updateStyles();
       },
       _validateSave: function() {
-        event.stopImmediatePropagation();
         if (_.isEqual(this.intervention, this.originalIntervention)) {
           // TODO : disable save button when no change detected
           this.fire('toast', {text: 'Nothing to save, no changes made.', showCloseBtn: true});
