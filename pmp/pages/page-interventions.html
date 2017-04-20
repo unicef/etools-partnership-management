@@ -332,6 +332,12 @@
       },
       _interventionChanged: function(intervention) {
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
+        if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          this.async(function() {
+            // ensure loading msg close
+            this.fire('global-loading', {active: false});
+          }.bind(this), 1000);
+        }
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -402,13 +408,15 @@
       },
 
       _observeRouteDataId: function(id) {
-        id = parseInt(id, 10);
-        if (isNaN(id)) {
-          id = null;
-        }
-        this.set('selectedInterventionId', id);
-        // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
-        this.$.intervAttachments.set('preparedAttachments', false);
+        this.async(function() {
+          id = parseInt(id, 10);
+          if (isNaN(id)) {
+            id = null;
+          }
+          this.set('selectedInterventionId', id);
+          // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
+          this.$.intervAttachments.set('preparedAttachments', false);
+        }.bind(this));
       },
 
       _validateAndSaveIntervention: function(event) {

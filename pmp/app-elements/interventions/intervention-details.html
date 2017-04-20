@@ -29,7 +29,7 @@
 
 <dom-module id="intervention-details">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
@@ -397,9 +397,6 @@
           } else {
             this.set('interventionRequiredField', false);
           }
-          console.log(intervention);
-          // ensure loading msg close
-          this.fire('global-loading', {active: false});
         },
 
         newInterventionFlagChanged: function() {
@@ -449,7 +446,6 @@
           } else {
             this.set('detailsEditMode', true);
           }
-          this.updateStyles();
         },
 
         _setYears: function(interventionStart, interventionEnd) {
