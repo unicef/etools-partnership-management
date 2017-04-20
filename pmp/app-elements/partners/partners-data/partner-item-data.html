@@ -48,7 +48,6 @@
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
           ajaxEl: Object
-
         },
         attached: function() {
           this.ajaxEl = this.$.ajax;
@@ -115,8 +114,6 @@
 
           // update the partners list in dexieDB
           etoolsAppConfig.db.table('partners').put(response.detail);
-
-          this.fire('global-loading', {active: false});
 
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
             this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();

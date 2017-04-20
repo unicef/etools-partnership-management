@@ -18,7 +18,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
-<link rel="import" href="../app-config/etools-app-config.html">
+
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
@@ -26,26 +26,19 @@
 
 <dom-module id="page-interventions">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
-
       :host {
         display: block;
       }
-
-      .list-page {
-        max-width: 920px;
-        margin: 20px auto;
-      }
-
     </style>
 
     <app-route
         route="{{route}}"
         pattern="interventions/list"
         query-params="{{interventionsQueryParams}}"
-        active="{{listActive}}"></app-route>
+        active="{{intervListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
@@ -76,7 +69,7 @@
       <div class="top-content">
         <div class="top-content-row title-row">
           <h1 main-title>
-            <template is="dom-if" if="[[listActive]]">
+            <template is="dom-if" if="[[intervListActive]]">
               PD/SSFA ToRs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
@@ -87,7 +80,7 @@
             </template>
           </h1>
           <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!listActive]]">
+            <div class="top-content-action" hidden$="[[!intervListActive]]">
               <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
                   <iron-icon icon="file-download"></iron-icon>
@@ -96,13 +89,13 @@
               </a>
             </div>
             <!-- Print functionality pending implementation -->
-            <!--<div class="top-content-action"  hidden$="[[!listActive]]">
+            <!--<div class="top-content-action"  hidden$="[[!intervListActive]]">
               <paper-button>
                 <iron-icon icon="print"></iron-icon>
                 Print
               </paper-button>
             </div>-->
-            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
+            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
                 Add new PD/SSFA ToR
@@ -153,16 +146,18 @@
 
           <div class="page" name="list">
             <interventions-list
-                active="[[listActive]]"
+                active="[[intervListActive]]"
                 csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[interventionsQueryParams]]">
+                url-params="[[interventionsQueryParams]]"
+                disable-upgrade$="[[!intervListActive]]">
             </interventions-list>
           </div>
 
           <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
             <div class="page" name="overview">
               <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]">
+                                     intervention-agreement="[[agreement]]"
+                                     disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
               </intervention-overview>
             </div>
           </template>
@@ -175,7 +170,8 @@
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
                                   edit-mode="[[_hasEditPermissions(permissions)]]"
-                                  on-update-intervention-status="_updateInterventionStatus">
+                                  on-update-intervention-status="_updateInterventionStatus"
+                                  disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
@@ -184,7 +180,8 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions)]]">
+                                          edit-mode="[[_hasEditPermissions(permissions)]]"
+                                          disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
@@ -195,14 +192,15 @@
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
                                       on-delete-file="_deleteAttachment"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                      disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <div id="sidebar" hidden$="[[listActive]]">
+      <div id="sidebar" hidden$="[[intervListActive]]">
         <intervention-status status="[[intervention.status]]"
                              intervention-id$="[[intervention.id]]"
                              intervention-agreement-status="[[agreement.status]]"
@@ -255,30 +253,30 @@
         newInterventionModel: {
           type: Object,
           value: {
-            id: null,
-            agreement: null,
-            document_type: null,
-            hrp: null,
-            number: null,
-            prc_review_document_file: null,
-            title: null,
+            id: undefined,
+            agreement: undefined,
+            document_type: undefined,
+            hrp: undefined,
+            number: undefined,
+            prc_review_document_file: undefined,
+            title: undefined,
             status: 'draft',
-            start: null,
-            end: null,
-            submission_date_prc: null,
-            review_date_prc: null,
-            submission_date: null,
-            prc_review_document: null,
-            signed_by_unicef_date: null,
-            signed_by_partner_date: null,
-            unicef_signatory: null,
+            start: undefined,
+            end: undefined,
+            submission_date_prc: undefined,
+            review_date_prc: undefined,
+            submission_date: undefined,
+            prc_review_document: undefined,
+            signed_by_unicef_date: undefined,
+            signed_by_partner_date: undefined,
+            unicef_signatory: undefined,
             unicef_focal_points: [],
             partner_focal_points: [],
-            partner_authorized_officer_signatory: null,
+            partner_authorized_officer_signatory: undefined,
             offices: [],
-            fr_numbers: null,
+            fr_numbers: undefined,
             planned_visits: [],
-            population_focus: null,
+            population_focus: undefined,
             sector_locations: [],
             planned_budget: [],
             result_links: [],
@@ -316,7 +314,7 @@
          */
         '_updateUrlTab(routeData.intTab)',
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
-        '_pageChanged(listActive, intervDetailsActive, newInterventionActive, activeTab)',
+        '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)'
       ],
 
@@ -329,8 +327,17 @@
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
       },
+      _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
+        return !intervDetailsActive && !newInterventionActive;
+      },
       _interventionChanged: function(intervention) {
-        this.set('originalIntervention',  JSON.parse(JSON.stringify(intervention)));
+        this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
+        if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          this.async(function() {
+            // ensure loading msg close
+            this.fire('global-loading', {active: false});
+          }.bind(this), 1000);
+        }
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -361,13 +368,13 @@
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 
-      _getActivePage: function(listActive, intervDetailsActive, newInterventionActive) {
+      _getActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
         var page = 'list';
-        if (listActive === false) {
+        if (intervListActive === false) {
           if (newInterventionActive) {
             // return new intervention page tab name
             page = this.routeDataNewInterv.intTab;
@@ -379,9 +386,9 @@
         return page;
       },
 
-      _pageChanged: function(listActive, intervDetailsActive, newInterventionActive) {
+      _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
-          var activePage = this._getActivePage(listActive, intervDetailsActive, newInterventionActive);
+          var activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
           if (activePage === 'list') {
             this.set('activeTab', 'details');
           }
@@ -401,13 +408,15 @@
       },
 
       _observeRouteDataId: function(id) {
-        id = parseInt(id, 10);
-        if (isNaN(id)) {
-          id = null;
-        }
-        this.set('selectedInterventionId', id);
-        // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
-        this.$.intervAttachments.set('preparedAttachments', false);
+        this.async(function() {
+          id = parseInt(id, 10);
+          if (isNaN(id)) {
+            id = null;
+          }
+          this.set('selectedInterventionId', id);
+          // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
+          this.$.intervAttachments.set('preparedAttachments', false);
+        }.bind(this));
       },
 
       _validateAndSaveIntervention: function(event) {
@@ -430,11 +439,11 @@
 
         var interventionData;
         if (this._isNewIntervention()) {
-           interventionData = Object.assign({}, this.intervention);
+          interventionData = Object.assign({}, this.intervention);
         } else {
-           var modifiedDetails = this._getModifiedInterventionDetails();
-           var modifiedReviewAndSign = this._getModifiedReviewAndSign();
-           interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+          var modifiedDetails = this._getModifiedInterventionDetails();
+          var modifiedReviewAndSign = this._getModifiedReviewAndSign();
+          interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
         // on save sector_locations sector prop needs to be sector ID and not the sector obj
@@ -444,7 +453,7 @@
 
         // prepare fr numbers
         if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
-            && this._objectFieldIsModified('fr_numbers')) {
+          && this._objectFieldIsModified('fr_numbers')) {
           interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
             return frNumber.value;
           });
@@ -455,7 +464,7 @@
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
         if (_.isEmpty(interventionData.attachments)) {
-           delete interventionData.attachments;
+          delete interventionData.attachments;
         }
 
         // if prc_review_document is null we need to delete the property otherwise the
@@ -476,9 +485,9 @@
       },
       _getModifiedInterventionDetails: function() {
         var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
-                     'start', 'end', 'population_focus'];
+          'start', 'end', 'population_focus'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-                    'sector_locations', 'planned_budget', 'planned_visits'];
+          'sector_locations', 'planned_budget', 'planned_visits'];
         var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
         var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
 
@@ -490,109 +499,108 @@
         if (!_.isEmpty(modifExpectedResultsArray)) {
           return {result_links: modifExpectedResultsArray};
         }
-         return {};
+        return {};
       },
       _getNewOrModifiedExpectedResults: function() {
         if (_.isEmpty(this.intervention.result_links)) {
           return [];
         }
         var modifExpResults = this.intervention.result_links
-                   .filter(this._expectedResultIsNewOrModified.bind(this))
-                   .map(function(result_link) {
-                     if (_.isEmpty(result_link.ll_results)) {
-                       return result_link;
-                     }
+          .filter(this._expectedResultIsNewOrModified.bind(this))
+          .map(function(resultLink) {
+            if (_.isEmpty(resultLink.ll_results)) {
+              return resultLink;
+            }
 
-                     result_link.ll_results = this._getNewOrModifiedPSorSSFATOROutput(result_link.ll_results,
-                                                            this._getOriginalResultLink(result_link.id));
-                     return result_link;
-                   }.bind(this));
+            resultLink.ll_results = this._getNewOrModifiedPSorSSFATOROutput(resultLink.ll_results,
+              this._getOriginalResultLink(resultLink.id));
+            return resultLink;
+          }.bind(this));
 
         return modifExpResults;
       },
       _getOriginalResultLink: function(id) {
-         return this.originalIntervention.result_links.find(function(r) {
+        return this.originalIntervention.result_links.find(function(r) {
           return r.id === id;
         });
       },
       _getOriginalLlResult: function(id, originalResultLink) {
-        return originalResultLink.ll_results.find(function(r){
+        return originalResultLink.ll_results.find(function(r) {
           return r.id === id;
         });
       },
-      _getNewOrModifiedPSorSSFATOROutput: function(ll_results, original_result_link) {
-        if (!original_result_link || _.isEmpty(original_result_link.ll_results)) {
-          return ll_results;
+      _getNewOrModifiedPSorSSFATOROutput: function(llResults, originalResultLink) {
+        if (!originalResultLink || _.isEmpty(originalResultLink.ll_results)) {
+          return llResults;
         }
-        var modifLlResults = ll_results.filter(function(ll_result) {
-                                    if (!ll_result.id) {
-                                      return true;
-                                    }
-                                    var original_ll_result = original_result_link.ll_results.find(function(r) {
-                                      return r.id === ll_result.id;
-                                    });
+        var modifLlResults = llResults.filter(function(llResult) {
+          if (!llResult.id) {
+            return true;
+          }
+          var originalLlResult = originalResultLink.ll_results.find(function(r) {
+            return r.id === llResult.id;
+          });
 
-                                    if (!original_ll_result) {
-                                      return true;
-                                    }
-                                    return (JSON.stringify(original_ll_result) !== JSON.stringify(ll_result));
-                                 })
-                                .map(function(ll_result){
-                                  if (_.isEmpty(ll_result.applied_indicators)) {
-                                    return ll_result;
-                                  }
-                                  ll_result.applied_indicators = this._getNewOrModifiedIndicators(ll_result.applied_indicators,
-                                                                                         this._getOriginalLlResult(ll_result.id, original_result_link));
-                                  return ll_result;
-                                }.bind(this));
-         return modifLlResults;
+          if (!originalLlResult) {
+            return true;
+          }
+          return (JSON.stringify(originalLlResult) !== JSON.stringify(llResult));
+        }).map(function(llResult) {
+          if (_.isEmpty(llResult.applied_indicators)) {
+            return llResult;
+          }
+          llResult.applied_indicators = this._getNewOrModifiedIndicators(llResult.applied_indicators,
+            this._getOriginalLlResult(llResult.id, originalResultLink));
+          return llResult;
+        }.bind(this));
+        return modifLlResults;
       },
-      _getNewOrModifiedIndicators: function(indicators, original_ll_result) {
-        if (!original_ll_result || _.isEmpty(original_ll_result.applied_indicators)) {
+      _getNewOrModifiedIndicators: function(indicators, originalLlResult) {
+        if (!originalLlResult || _.isEmpty(originalLlResult.applied_indicators)) {
           return indicators;
         }
-        var modifIndicators = indicators.filter(function(indicator){
-                  if (!indicator.id) {
-                    return true;
-                  }
-                  var originalIndicator = original_ll_result.applied_indicators.find(function(r) {
-                    return r.id === indicator.id;
-                  });
-                  if (!originalIndicator) {
-                    return true;
-                  }
-                  return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator))
-                });
+        var modifIndicators = indicators.filter(function(indicator) {
+          if (!indicator.id) {
+            return true;
+          }
+          var originalIndicator = originalLlResult.applied_indicators.find(function(r) {
+            return r.id === indicator.id;
+          });
+          if (!originalIndicator) {
+            return true;
+          }
+          return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator));
+        });
 
         return modifIndicators;
       },
-      _expectedResultIsNewOrModified: function(result_link) {
+      _expectedResultIsNewOrModified: function(resultLink) {
         if (_.isEmpty(this.originalIntervention.result_links)) {
           return true;
         }
-        if (!result_link.id) {
+        if (!resultLink.id) {
           return true;
         }
-        var originalResultLink = this._getOriginalResultLink(result_link.id);
+        var originalResultLink = this._getOriginalResultLink(resultLink.id);
         if (!originalResultLink) {
           return true;
         }
 
-        return (JSON.stringify(originalResultLink) !== JSON.stringify(result_link));
+        return (JSON.stringify(originalResultLink) !== JSON.stringify(resultLink));
       },
       _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
-         var modifiedObject = {};
+        var modifiedObject = {};
 
-          updatableFields.forEach(function(fieldName) {
-            if (this._primitiveFieldIsModified(fieldName)) {
-              modifiedObject[fieldName] = this.intervention[fieldName];
-            }
-         }.bind(this));
+        updatableFields.forEach(function(fieldName) {
+          if (this._primitiveFieldIsModified(fieldName)) {
+            modifiedObject[fieldName] = this.intervention[fieldName];
+          }
+        }.bind(this));
 
-         updatableObjectFields.forEach(function(fieldName) {
-            if (this._objectFieldIsModified(fieldName)) {
-              modifiedObject[fieldName] = this.intervention[fieldName];
-            }
+        updatableObjectFields.forEach(function(fieldName) {
+          if (this._objectFieldIsModified(fieldName)) {
+            modifiedObject[fieldName] = this.intervention[fieldName];
+          }
         }.bind(this));
 
         return modifiedObject;
@@ -601,7 +609,7 @@
         // jscs:disable
         var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
         // jscs:enable
-        var dropdownArrayFields = ['partner_focal_points','unicef_focal_points', 'offices'];
+        var dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
         if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
           // Covers dropdown arrays which can have same content but with changed order
           if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
@@ -630,25 +638,25 @@
         if (_.isEmpty(this.intervention.attachments)) {
           return [];
         }
-         var modifAttachments = this.intervention.attachments
-                            .filter(this._attachmentIsNewOrModified.bind(this))
-                            .map(function(attachment) {
-                                var _sendAttachmentFile = (attachment.raw instanceof File) ? true :  false;
-                                if (!_sendAttachmentFile && attachment.id) {
-                                  return {
-                                    id: attachment.id,
-                                    type: attachment.type
-                                  };
-                                } else {
-                                  return {
-                                    id: attachment.id,
-                                    intervention: attachment.intervention,
-                                    type: attachment.type,
-                                    attachment: attachment.raw
-                                  };
-                                }
-                            });
-          return modifAttachments;
+        var modifAttachments = this.intervention.attachments
+          .filter(this._attachmentIsNewOrModified.bind(this))
+          .map(function(attachment) {
+            var _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
+            if (!_sendAttachmentFile && attachment.id) {
+              return {
+                id: attachment.id,
+                type: attachment.type
+              };
+            } else {
+              return {
+                id: attachment.id,
+                intervention: attachment.intervention,
+                type: attachment.type,
+                attachment: attachment.raw
+              };
+            }
+          });
+        return modifAttachments;
       },
 
       _attachmentIsNewOrModified: function(attachment) {
@@ -744,8 +752,8 @@
         return title;
       },
 
-      _showAddNewIntervBtn: function(listActive, permissions) {
-        if (listActive && this._hasEditPermissions(permissions)) {
+      _showAddNewIntervBtn: function(intervListActive, permissions) {
+        if (intervListActive && this._hasEditPermissions(permissions)) {
           return true;
         }
         return false;
