@@ -24,6 +24,7 @@
 
       :host {
         display: block;
+        position: relative;
       }
 
     </style>
@@ -43,8 +44,7 @@
     <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
                        partner="{{partner}}"
-                       error-event-name="partner-save-error"
-                       keep-loading-on-response-handling>
+                       error-event-name="partner-save-error">
     </partner-item-data>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
@@ -197,7 +197,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editPartnerDetails === true) {
+        if (permissions && typeof permissions === 'object' && permissions.editPartnerDetails === true) {
           return true;
         }
         return false;
