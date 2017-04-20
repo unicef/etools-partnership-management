@@ -126,7 +126,14 @@
             type: Boolean
           },
           attachmentEditMode: {
-            type: Boolean
+            type: Boolean,
+            observer: '_editModeChanged'
+          }
+        },
+
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
           }
         },
 
@@ -169,7 +176,6 @@
           } else {
             this.set('attachmentEditMode', true);
           }
-          this.updateStyles();
         },
         _getPath: function(attachment) {
           if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
