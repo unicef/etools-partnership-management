@@ -394,14 +394,15 @@
 
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
-          } else {
-            this.set('interventionRequiredField', false);
           }
         },
 
-        newInterventionFlagChanged: function() {
+        newInterventionFlagChanged: function(newValue) {
           if (this.intervention && !this.fieldsResetted) {
             this._resetValidations();
+          }
+          if (newValue) {
+            this.set('interventionRequiredField', false);
           }
         },
 
