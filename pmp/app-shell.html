@@ -71,6 +71,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
+      app-header-layout {
+        position: relative;
+      }
+
+      app-header {
+        background-color: var(--header-bg-color);
+      }
+
       .warning-toast-dismiss-btn {
         text-transform: none;
         color: var(--ternary-color);
@@ -84,6 +92,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #pageLoading {
         position: fixed;
         z-index: 1000;
+      }
+
+      .main-page {
+        @apply(--layout-flex);
+      }
+
+      :host(.ie) page-footer {
+        position: absolute;
+        bottom: 0;
+        height: 90px;
       }
 
     </style>
@@ -124,82 +142,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <div id="pages">
-          <template is="dom-if" if="[[_activePageIs(page, 'partners')]]" restamp>
-            <page-partners id="partners"
-                           name="partners"
+        <template is="dom-if" if="[[_activePageIs(page, 'partners')]]" restamp>
+          <page-partners id="partners" class="main-page"
+                         route="[[subroute]]"
+                         user="[[user]]"
+                         permissions="[[permissions]]">
+          </page-partners>
+        </template>
+
+        <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
+          <page-agreements id="agreements" class="main-page"
                            route="[[subroute]]"
                            user="[[user]]"
                            permissions="[[permissions]]">
-            </page-partners>
-          </template>
+          </page-agreements>
+        </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
-            <page-agreements id="agreements"
-                             name="agreements"
-                             route="[[subroute]]"
-                             user="[[user]]"
-                             permissions="[[permissions]]">
-            </page-agreements>
-          </template>
-
-          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
-            <page-interventions id="interventions"
-                                name="interventions"
-                                route="[[subroute]]"
-                                permissions="[[permissions]]">
-            </page-interventions>
-          </template>
-
-          <template is="dom-if" if="[[_activePageIs(page, 'governments')]]" restamp>
-            <page-governments id="governments"
-                              name="governments"
+        <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
+          <page-interventions id="interventions" class="main-page"
                               route="[[subroute]]"
                               permissions="[[permissions]]">
-            </page-governments>
-          </template>
+          </page-interventions>
+        </template>
 
-          <page-not-found name="not-found"></page-not-found>
-        </div>
+        <template is="dom-if" if="[[_activePageIs(page, 'governments')]]" restamp>
+          <page-governments id="governments" class="main-page"
+                            route="[[subroute]]"
+                            permissions="[[permissions]]">
+          </page-governments>
+        </template>
 
-        <!-- TODO: remove old iron-pages once the above alternative is finalized -->
-        <!--<iron-pages id="pages"-->
-                    <!--selected="[[page]]"-->
-                    <!--attr-for-selected="name"-->
-                    <!--fallback-selection="not-found"-->
-                    <!--role="main">-->
-
-          <!--<template id="privatePages" is="dom-if" notify-dom-change-->
-                    <!--if="[[permissions.loggedInDefault]]" on-dom-change="_pagesStamped">-->
-            <!--<page-partners id="partners"-->
-                           <!--name="partners"-->
-                           <!--on-dom-change="_pagesStamped"-->
-                           <!--route="[[subroute]]"-->
-                           <!--user="[[user]]"-->
-                           <!--permissions="[[permissions]]">-->
-            <!--</page-partners>-->
-            <!--<page-agreements id="agreements"-->
-                             <!--name="agreements"-->
-                             <!--route="[[subroute]]"-->
-                             <!--user="[[user]]"-->
-                             <!--permissions="[[permissions]]">-->
-            <!--</page-agreements>-->
-            <!--<page-interventions id="interventions"-->
-                                <!--name="interventions"-->
-                                <!--route="[[subroute]]"-->
-                                <!--permissions="[[permissions]]">-->
-            <!--</page-interventions>-->
-            <!--<page-governments id="governments"-->
-                              <!--name="governments"-->
-                              <!--route="[[subroute]]"-->
-                              <!--permissions="[[permissions]]">-->
-            <!--</page-governments>-->
-          <!--</template>-->
-          <!--<page-not-found name="not-found"></page-not-found>-->
-        <!--</iron-pages>-->
+        <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
+          <page-not-found class="main-page"></page-not-found>
+        </template>
 
         <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
-        <page-footer></page-footer>
+        <page-footer id="appFooter"></page-footer>
       </app-header-layout>
     </app-drawer-layout>
 
@@ -221,22 +199,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         route: {
           type: Object
         },
-        _pagesAvailable: {
-          type: Boolean,
-          value: false
-        },
         narrow: {
           type: Boolean,
           reflectToAttribute: true
         },
         baseUrl: String,
         initialLoad: {
-            type: Boolean,
-            value: true
+          type: Boolean,
+          value: true
         },
         permissions: {
-            type: Object,
-            value: null
+          type: Object,
+          value: null
         },
         subroute: {
           type: Object
@@ -247,8 +221,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         lazyLoadPages: {
           type: Array,
           value: ['partners', 'agreements', 'interventions', 'governments']
-        }
-
+        },
+        isIE: Boolean
       },
 
       behaviors: [
@@ -258,7 +232,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       observers: [
         '_routePageChanged(routeData.page)',
-        '_permissionsPagesStamped(permissions, _pagesAvailable)'
+        '_permissionsPagesStamped(permissions)'
       ],
 
       listeners: {
@@ -274,7 +248,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.location.href = this.loginPath;
       },
 
+      created: function() {
+        this.isIE = this.detectIEBrowser();
+      },
+
       ready: function() {
+        if (this.isIE) {
+          this._addIEBrowserStylesAdjustments();
+        }
         // init loading element, used for global loading
         this.globalLoadingElement = this.$.pageLoading;
         this.fire('global-loading', {message: 'Loading main elements...', active: true});
@@ -295,15 +276,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('route.path', this.baseUrl + event.detail.path);
           this.set('route.__queryParams', null);
         }
-        this._notifyAppHeaderLayoutResize();
         event.stopImmediatePropagation();
       },
-      _notifyAppHeaderLayoutResize: function() {
-        this.$.appHeadLayout.notifyResize();
-      },
-      _permissionsPagesStamped: function(permissions, _pagesAvailable) {
-        if (!permissions) { // || !_pagesAvailable
-            return;
+      _permissionsPagesStamped: function(permissions) {
+        if (!permissions) {
+          return;
         }
         if ((this.route.path === this.baseUrl || this.route.path === '/') &&
             permissions.loggedInDefault) {
@@ -325,14 +302,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var subroute = JSON.parse(JSON.stringify(this.route));
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
           this.set('subroute', subroute);
-          this._notifyAppHeaderLayoutResize();
         }
 
-        // if (this._pagesAvailable) {
-          this.set('page', (page || 'partners'));
-        // } else {
-          //console.log('No permissions yet or page hasn\'t stampped', page);
-        // }
+        this.set('page', (page || 'partners'));
       },
 
       _pageChanged: function(page) {
@@ -356,30 +328,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.fire('toast', {text: 'Oops you hit a 404!'});
       },
 
-      _pagesStamped: function() {
-        if (!this._pagesAvailable) {
-          this.$.privatePages.render();
-          this._pagesAvailable = true;
-        }
-      },
-
       /**
        * Show loading when data is requested from server, or save is in progress...
        */
       _handleLoading: function(event) {
         event.stopImmediatePropagation();
-//        this.debounce('showGlobalLoading', function() {
-          if (this.globalLoadingElement) {
-            var loadingMsg = 'Loading...';
-            if (event.detail && typeof event.detail.message === 'string' && event.detail.message !== '') {
-              loadingMsg = event.detail.message;
-            }
-            this.globalLoadingElement.loadingText = loadingMsg;
-            var isActive = (event.detail.active === true) ? true : false;
-            this.globalLoadingElement.active = isActive;
-//            console.log('start loading...open ' + isActive);
+        //        this.debounce('showGlobalLoading', function() {
+        if (this.globalLoadingElement) {
+          var loadingMsg = 'Loading...';
+          if (event.detail && typeof event.detail.message === 'string' && event.detail.message !== '') {
+            loadingMsg = event.detail.message;
           }
-//        }, 50);
+          this.globalLoadingElement.loadingText = loadingMsg;
+          var isActive = (event.detail.active === true) ? true : false;
+          this.globalLoadingElement.active = isActive;
+          //            console.log('start loading...open ' + isActive);
+        }
+        //        }, 50);
       },
 
       _pageLoaded: function(pageEl) {
@@ -392,7 +357,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // load all the other main pages after first page is loaded
       _lazyLoadPagesAfterCurrentPageHasLoaded: function(currentLoadingPage, currentLoadingPageEl) {
-         Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._lazyLoadPages.bind(this, currentLoadingPage));
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._lazyLoadPages.bind(this, currentLoadingPage));
       },
       // load all the other main pages except the one just rendered
       _lazyLoadPages: function(currentLoadingPage) {
@@ -414,6 +379,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _activePageIs: function(activePage, expectedPage) {
         return activePage === expectedPage;
+      },
+
+      detectIEBrowser: function() {
+        var userAgent = window.navigator.userAgent;
+        var ieBrowser = false;
+        if (userAgent.indexOf('Trident/') > -1) {
+          // IE 11
+          ieBrowser = true;
+        }
+        return !!ieBrowser;
+      },
+
+      /**
+       * In IE11 we must NOT use fullbleed and hasScrollingRegion and we have to make some
+       */
+      _addIEBrowserStylesAdjustments: function() {
+        this.classList.add('ie');
+        var appHeaderLayout = this.$.appHeadLayout;
+        appHeaderLayout.removeAttribute('fullbleed');
+        appHeaderLayout.set('hasScrollingRegion', false);
+        appHeaderLayout.style.minHeight = '100%';
+        var contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
+        if (contentContainer) {
+          contentContainer.style.minHeight = '100vh';
+          contentContainer.style.boxSizing = 'border-box';
+          contentContainer.style.paddingBottom = '90px';
+        }
       }
 
     });
