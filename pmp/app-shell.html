@@ -249,7 +249,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       created: function() {
-        this.isIE = this.detectIEBrowser();
+        this.isIE = this.isIEBrowser();
       },
 
       ready: function() {
@@ -381,14 +381,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return activePage === expectedPage;
       },
 
-      detectIEBrowser: function() {
+      isIEBrowser: function() {
         var userAgent = window.navigator.userAgent;
         var ieBrowser = false;
         if (userAgent.indexOf('Trident/') > -1) {
           // IE 11
           ieBrowser = true;
         }
-        return !!ieBrowser;
+        return ieBrowser;
       },
 
       /**
