@@ -33,6 +33,7 @@
         overflow-y: auto;
         margin: 0 -20px;
         padding: 0 15px;
+        height: 100%;
       }
     </style>
     <etools-dialog
@@ -47,20 +48,25 @@
         <iron-label> Select the data you want to refresh: </iron-label>
 
         <div class="custom-field-wrapper">
-          <etools-checkable-input checked="{{selected.partners}}"
+          <etools-checkable-input checked="{{partnersSelected}}"
                                   label="Partners data"
                                   label-alignment="right">
           </etools-checkable-input>
-          <etools-checkable-input checked="{{selected.agreements}}"
+          <etools-checkable-input checked="{{agreementsSelected}}"
                                   label="Agreements data"
                                   label-alignment="right">
           </etools-checkable-input>
-          <etools-checkable-input checked="{{selected.interventions}}"
+          <etools-checkable-input checked="{{interventionsSelected}}"
                                   label="PD/SSFA ToR data"
                                   label-alignment="right">
           </etools-checkable-input>
-          <etools-checkable-input checked="{{selected.governments}}"
+          <etools-checkable-input checked="{{governmentsSelected}}"
                                   label="Governments data"
+                                  label-alignment="right">
+          </etools-checkable-input>
+
+          <etools-checkable-input checked="{{allSelected}}"
+                                  label="All"
                                   label-alignment="right">
           </etools-checkable-input>
 
@@ -68,53 +74,7 @@
       </div>
       <!--<etools-loading id="profileDataLoading"></etools-loading>-->
     </etools-dialog>
-    <!--
-   <partners-list-data id="partners"
-                         filtered-partners="{{filteredPartners}}"
-                         total-results="{{totalResults}}"
-                         on-partners-loaded="_requiredDataHasBeenLoaded"
-                         list-data-path="filteredPartners"
-                         fire-data-loaded show-loading>
-   </partners-list-data>
-   <agreement-list-data id="agreements"
-                         filtered-agreements="{{filteredAgreements}}"
-                         total-results="{{totalResults}}"
-                         list-data-path="filteredAgreements"
-                         on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded show-loading>
-   </agreement-list-data>
-   <interventions-list-data id="interventions"
-                         filtered-interventions="{{filteredInterventions}}"
-                         total-results="{{totalResults}}"
-                         on-interventions-loaded="_requiredDataHasBeenLoaded"
-                         list-data-path="filteredInterventions"
-                         fire-data-loaded show-loading>
-   </interventions-list-data>
 
-   <governments-list-data id="governments"
-                         filtered-governments="{{filteredGovernments}}"
-                         total-results="{{totalResults}}"
-                         on-governments-loaded="_requiredDataHasBeenLoaded"
-                         list-data-path="filteredGovernments"
-                         unicef-users-data="[[unicefUsersData]]"
-                         fire-data-loaded
-                         show-loading>
-    </governments-list-data>
-    -->
-   <!--<partners-list-data id="partners">
-   </partners-list-data>
-   <agreement-list-data id="agreements">
-   </agreement-list-data>
-   <interventions-list-data id="interventions">
-   </interventions-list-data>
-   <governments-list-data id="governments">
-    </governments-list-data>-->
-
-    <etools-ajax id="ajax"
-                 endpoint="[[ajaxEndpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="[[ajaxCollection]]">
-    </etools-ajax>
   </template>
 
   <script>
@@ -129,19 +89,35 @@
           ],
         properties: {
           name: String,
-          ajaxUrl: String,
-          ajaxEndpoint: Object,
-          ajaxCollection: String,
-          selected: {
-            type: Object,
-            value: {
-              governments: false,
-              interventions: false,
-              partners: false,
-              agreements: false,
-            }
+          governmentsSelected: {
+            type: Boolean,
+            value: false
+          },
+          interventionsSelected: {
+            type: Boolean,
+            value: false
+          },
+          partnersSelected: {
+            type: Boolean,
+            value: false
+          },
+          agreementsSelected: {
+            type: Boolean,
+            value: false
+          },
+          allSelected: {
+            type: Boolean,
+            value: false
+          },
+          isRefreshDisabled: {
+            type: Boolean,
+            value: false
           },
         },
+        observers: [
+          '_selectedObserver(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
+          '_otherSelectedObserver(allSelected)'
+        ],
         ready: function() {
         },
 
@@ -156,28 +132,13 @@
             }.bind(this))
             .then(function() {
               this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
-
-              // this._refreshPage();
               console.log('done for', collectionName);
-              this._fireAjaxRequest(collectionName);
-
               return true;
             }.bind(this))
             .catch(function(err) {
               this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
               return false;
             }.bind(this));
-        },
-
-        _fireAjaxRequest: function(name) {
-            this.set('ajaxEndpoint', undefined);
-            this.set('ajaxCollection', undefined);
-
-            var endpoint = this.globals.getEndpoint(name);
-            console.log(endpoint);
-
-            this.set('ajaxEndpoint', endpoint);
-            this.set('ajaxCollection', name);
         },
 
         _handleDialogClosed: function(closingReason) {
@@ -193,13 +154,41 @@
 
               Promise.all(promises).then(function(results) {
                 console.log('all k', results);
-                this.fire('global-loading', {active: false})
+                this._refreshPage();
               }.bind(this)).catch(function(error) {
                 console.log('oops', error);
                 this.fire('global-loading', {active: false})
               }.bind(this));
 
             }
+        },
+
+        _refreshPage: function() {
+          // window.location.reload(true);
+          this.fire('global-loading', {active: false})
+        },
+        _otherSelectedObserver: function() {
+          this.debounce('_selectedRefreshCheckbox', function() {
+            if(!this.allSelected) {
+              return;
+            }
+
+            this.set('governmentsSelected', true);
+            this.set('interventionsSelected', true);
+            this.set('partnersSelected', true);
+            this.set('agreementsSelected', true);
+          }.bind(this), 150);
+        },
+
+        _selectedObserver: function() {
+          this.debounce('_selectedRefreshCheckbox', function() {
+            var allSelected = this.governmentsSelected &&
+                this.interventionsSelected &&
+                this.partnersSelected &&
+                this.agreementsSelected;
+
+            this.set('allSelected', allSelected);
+          }.bind(this), 150);
         },
 
       });

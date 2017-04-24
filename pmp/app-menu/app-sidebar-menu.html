@@ -50,6 +50,9 @@
           <div class="name">Governments</div>
         </a>
 
+        <div class="divider"></div>
+        <data-refresh-button name="Refresh list data" on-tap="openDataRefreshDialog"></data-refresh-button>
+
         <!--</template>-->
       </iron-selector>
 
@@ -70,8 +73,6 @@
         <div class="name">Information</div>
       </a>
 
-    </div>
-
   </template>
 
   <script>
@@ -86,6 +87,12 @@
           page: String,
           baseUrl: String,
           permissions: String // TODO: might not be needed
+        },
+
+        openDataRefreshDialog: function() {
+          this.debounce('openDataRefreshDialog', function() {
+            this.fire('open-data-refresh-dialog');
+          }.bind(this), 50);
         }
 
       });
