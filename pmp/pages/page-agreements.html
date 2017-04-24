@@ -286,7 +286,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+        if (permissions && typeof permissions === 'object' && permissions.editAgreementDetails === true) {
           return true;
         }
         return false;

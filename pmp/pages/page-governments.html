@@ -289,7 +289,7 @@
         }
       },
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editInterventionDetails === true) {
+        if (permissions && typeof permissions === 'object' && permissions.editInterventionDetails === true) {
           return true;
         }
         return false;
