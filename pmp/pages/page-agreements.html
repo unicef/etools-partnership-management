@@ -296,7 +296,7 @@
        * Temporary permission for PM
        */
       _allowPmToEditRegardlessStatus: function(permissions) {
-        return typeof permissions === 'object' && permissions.partnershipManager === true;
+        return permissions && typeof permissions === 'object' && permissions.partnershipManager === true;
       },
 
       _saveAgreement: function(event) {
