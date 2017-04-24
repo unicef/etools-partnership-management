@@ -30,6 +30,7 @@
 
       #content-box {
         max-height: 600px;
+        min-height: 140px;
         overflow-y: auto;
         margin: 0 -20px;
         padding: 0 15px;
@@ -42,33 +43,44 @@
             ok-btn-text="Refresh data"
             cancel-btn-text="Cancel"
             dialog-title="Refresh data"
-            disable-confirm-btn="[[isRefreshDisabled]]"
+            disable-confirm-btn="[[!anySelected]]"
             on-close="_handleDialogClosed">
       <div id="content-box">
         <iron-label> Select the data you want to refresh: </iron-label>
 
-        <div class="custom-field-wrapper">
-          <etools-checkable-input checked="{{partnersSelected}}"
-                                  label="Partners data"
-                                  label-alignment="right">
-          </etools-checkable-input>
-          <etools-checkable-input checked="{{agreementsSelected}}"
-                                  label="Agreements data"
-                                  label-alignment="right">
-          </etools-checkable-input>
-          <etools-checkable-input checked="{{interventionsSelected}}"
-                                  label="PD/SSFA ToR data"
-                                  label-alignment="right">
-          </etools-checkable-input>
-          <etools-checkable-input checked="{{governmentsSelected}}"
-                                  label="Governments data"
-                                  label-alignment="right">
-          </etools-checkable-input>
+        <div class="custom-field-wrapper flex-c">
 
-          <etools-checkable-input checked="{{allSelected}}"
-                                  label="All"
-                                  label-alignment="right">
-          </etools-checkable-input>
+          <div class="row-h">
+            <div class="col-6">
+              <etools-checkable-input checked="{{partnersSelected}}"
+                                      label="Partners data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+              <etools-checkable-input checked="{{agreementsSelected}}"
+                                      label="Agreements data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+            <div class="col-6">
+              <etools-checkable-input checked="{{interventionsSelected}}"
+                                      label="PD/SSFA ToR data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+              <etools-checkable-input checked="{{governmentsSelected}}"
+                                      label="Governments data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+          </div>
+
+          <div class="row-h">
+            <div class="col-12">
+              <etools-checkable-input checked="{{allSelected}}"
+                                      label="All"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -109,7 +121,7 @@
             type: Boolean,
             value: false
           },
-          isRefreshDisabled: {
+          anySelected: {
             type: Boolean,
             value: false
           },
@@ -146,27 +158,42 @@
               this.fire('global-loading', {message: 'Refreshing data...', active: true});
 
               var promises = [];
-              for (var key in this.selected) {
-                if(this.selected[key]) {
-                  promises.push(this.clearSelectedFromDexie(key));
-                }
+
+              if (this.governmentsSelected) {
+                promises.push(this.clearSelectedFromDexie('governments'));
+              }
+              if (this.interventionsSelected) {
+                promises.push(this.clearSelectedFromDexie('interventions'));
+              }
+              if (this.partnersSelected) {
+                promises.push(this.clearSelectedFromDexie('partners'));
+              }
+              if (this.agreementsSelected) {
+                promises.push(this.clearSelectedFromDexie('agreements'));
               }
 
-              Promise.all(promises).then(function(results) {
-                console.log('all k', results);
-                this._refreshPage();
-              }.bind(this)).catch(function(error) {
-                console.log('oops', error);
-                this.fire('global-loading', {active: false})
+              Promise.all(promises)
+              .then(function(results) {
+                this._handleSuccess();
+              }.bind(this))
+              .catch(function(error) {
+                this._handleFailure();
               }.bind(this));
 
             }
         },
 
-        _refreshPage: function() {
-          // window.location.reload(true);
-          this.fire('global-loading', {active: false})
+        _handleSuccess: function() {
+          this.fire('global-loading', {active: false});
+          this.fire('update-main-path', {path: ''});
+          this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
         },
+
+        _handleFailure: function() {
+            this.fire('global-loading', {active: false});
+            this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
+        },
+
         _otherSelectedObserver: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
             if(!this.allSelected) {
@@ -177,6 +204,7 @@
             this.set('interventionsSelected', true);
             this.set('partnersSelected', true);
             this.set('agreementsSelected', true);
+            this.set('anySelected', true)
           }.bind(this), 150);
         },
 
@@ -187,7 +215,13 @@
                 this.partnersSelected &&
                 this.agreementsSelected;
 
+            var anySelected = this.governmentsSelected ||
+                this.interventionsSelected ||
+                this.partnersSelected ||
+                this.agreementsSelected;
+
             this.set('allSelected', allSelected);
+            this.set('anySelected', anySelected);
           }.bind(this), 150);
         },
 
