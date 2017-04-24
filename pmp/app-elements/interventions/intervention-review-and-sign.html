@@ -15,12 +15,13 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
 <dom-module id="intervention-review-and-sign">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles grid-layout-styles shared-styles file-styles">
       :host {
@@ -82,6 +83,7 @@
              options="[[agreementAuthorizedOfficers]]"
              selected="{{intervention.partner_authorized_officer_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
@@ -103,9 +105,15 @@
              label="Signed by UNICEF"
              placeholder="&#8212;"
              options="[[signedByUnicefUsers]]"
+             custom-object-options
+             option-value="user_id"
+             option-label="full_name"
              selected="{{intervention.unicef_signatory}}"
              update-selected
+             selected-requires-valid-options
              dynamic-align
+             url="[[missingSignedByUnicefUsersUrl]]"
+             ajax-params="[[missingSignedByUnicefAjaxParams]]"
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
@@ -157,8 +165,10 @@
         is: 'intervention-review-and-sign',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.MissingSignedByUnicefUsersBehavior
         ],
 
         properties: {
@@ -185,16 +195,20 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
+            value: false
           },
           signEditMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           },
           newIntervention: {
             type: Boolean
           }
+        },
+
+        ready: function() {
+          this.setMissingSignedByUnicefUsersUrl();
         },
 
         _editModeChanged: function(newValue, oldValue) {
@@ -206,7 +220,6 @@
         _interventionChanged: function(intervention) {
           // ensure loading msg close
           this._setNewEditMode();
-          this.fire('global-loading', {active: false});
         },
         _setNewEditMode: function() {
           if (!this.editMode) {
@@ -227,7 +240,6 @@
           } else {
             this.set('signEditMode', true);
           }
-          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
@@ -259,7 +271,7 @@
         _setSignedByUnicef: function(unicefUserId, unicefUsersLength) {
           if (unicefUserId && unicefUsersLength) {
             return this.unicefUsersData.filter(function(user) {
-              return user.value === parseInt(unicefUserId, 10);
+              return parseInt(user.user_id) === parseInt(unicefUserId, 10);
             });
           }
           return [];

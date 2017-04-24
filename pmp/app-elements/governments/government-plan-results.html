@@ -15,7 +15,7 @@
 <link rel="import" href="government-result-activities.html">
 
 <dom-module id="government-plan-results">
-  <template>
+  <template strip-whitespace>
     <style
         include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles iron-flex iron-flex-alignment iron-flex-factors">
       :host {
@@ -204,6 +204,9 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectorsDropdownData]]"
+                       custom-object-options
+                       option-label="name"
+                       option-value="id"
                        error-message="Please select a programme(s)/sector(s)"
                        update-selected
                        selected="{{result.sectors}}"
@@ -227,6 +230,9 @@
                        index="[[index]]"
                        placeholder="&#8212;"
                        options="[[sectionsDropdownData]]"
+                       custom-object-options
+                       option-label="name"
+                       option-value="id"
                        update-selected
                        selected="{{result.sections}}"
                        error-message="Please select a section(s)"
@@ -252,6 +258,9 @@
                          index="[[index]]"
                          placeholder="&#8212;"
                          options="[[unicefUsersDropdownData]]"
+                         custom-object-options
+                         option-label="full_name"
+                         option-value="user_id"
                          update-selected
                          selected="{{result.unicef_managers}}"
                          error-message="Please select a UNICEF manager"

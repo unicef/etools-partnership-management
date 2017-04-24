@@ -21,6 +21,7 @@
                                                option-label="name"
                                                selected="{{partnerId}}"
                                                update-selected
+                                               selected-requires-valid-options
                                                dynamic-align
                                                required auto-validate
                                                error-message="Partner is required"
@@ -38,6 +39,7 @@
                                                option-label="agreement_number"
                                                selected="{{agreementId}}"
                                                update-selected
+                                               selected-requires-valid-options
                                                dynamic-align
                                                required auto-validate
                                                error-message="Agreement required"
@@ -59,7 +61,7 @@
         properties: {
           agreementId: {
             type: Number,
-            observer: '_agreementChanged',
+            observer: '_agreementIdChanged',
             notify: true
           },
           filteredAgreements: {
@@ -69,10 +71,12 @@
           partnersDropdownData: {
             type: Array,
             statePath: 'csoPartners', // 'setPartnersDropdown' Do we need to use only CSO type partners?
+            observer: '_partnersDropdownDataChanged'
           },
           agreements: {
             type: Array,
-            statePath: 'agreementsList'
+            statePath: 'agreementsList',
+            observer: '_agreementsChanged'// Covers issues on refresh when agreements is populated after the rest of the observers run
           },
           partnerId: {
             type: Number,
@@ -90,37 +94,52 @@
           },
           interventionId: Number
         },
-        _agreementChanged: function(agreementId) {
+        resetDropdowns: function() { //TODO - this has to de handled inside the new version of dropdown component
+          var agrDropDown = this.$.agreements;
+          if (agrDropDown && (!agrDropDown.options || !agrDropDown.options.length)) {
+            agrDropDown.value = null;
+            agrDropDown.selected = null;
+          }
+        },
+        _partnersDropdownDataChanged: function() {
+          this._setSelectedPartnerId();
+        },
+        _agreementsChanged: function() {
+          if (this.selectedAgreement) {
+            return;
+          }
+          this._agreementIdChanged(this.agreementId);
+        },
+        _agreementIdChanged: function(agreementId) {
           var partnerSelector = this.$.partner;
           var agreementSelector = this.$.agreements;
-//          if (!agreementId) {
-//            partnerSelector.value = null,
-//            agreementSelector.value = null;
-//            this.set('filteredAgreements', []);
-//            this.set('selectedAgreement', null);
-//            return;
-//          }
 
-          // find the partner associated with this agreement
+          if (!this.agreements) {
+            return;
+          }
           var agreement = _.find(this.agreements, function(agreement) {
             return agreement.id === agreementId;
           });
           this.set('selectedAgreement', agreement);
 
-          if (agreement && typeof agreement === 'object'
-              && agreement.partner && this.partnerId !== agreement.partner) {
-            var partner = _.find(this.partnersDropdownData, function(partner) {
-              return partner.id === agreement.partner;
-            });
-            if (!partner) {
-              this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
-              // this._resetSelectorData(partnerSelector, agreementSelector);
-              return;
-            }
-            this.set('partnerId', partner.id);
+          if (this.partnersDropdownData && this.partnersDropdownData.length) {
+            this._setSelectedPartnerId();
           }
         },
-
+        _setSelectedPartnerId: function() {
+          var agreement = this.selectedAgreement;
+          if (!agreement || !agreement.partner || this.partnerId === agreement.partner) {
+            return;
+          }
+          var partner = _.find(this.partnersDropdownData, function(partner) {
+            return partner.id === agreement.partner;
+          });
+          if (!partner) {
+            this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+            return;
+          }
+          this.set('partnerId', partner.id);
+        },
         _filterAgreements: function(partnerId) {
           // this.$.agreements.set('value', null);
           if (!partnerId) {

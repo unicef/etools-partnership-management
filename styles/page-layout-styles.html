@@ -9,17 +9,6 @@
       [hidden] {
         display: none;
       }
-      app-header-layout {
-        position: inherit;
-      }
-
-      app-header {
-        background-color: var(--header-bg-color);
-      }
-
-      iron-pages[role="main"] {
-        @apply(--layout-flex);
-      }
 
       #main, .page {
         @apply(--layout-horizontal);
@@ -130,6 +119,9 @@
 
       .content-section:not(:first-of-type) {
         margin-top: 25px;
+      }
+      etools-error-messages-box + .content-section {
+        margin-top: 0;
       }
     </style>
   </template>

@@ -29,7 +29,7 @@
 
 <dom-module id="partners-list">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles">
       :host {
@@ -131,7 +131,9 @@
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[filteredPartners]]" as="partner" initial-count="10" on-dom-change="_listDataChanged">
+        <template id="rows" is="dom-repeat" notify-dom-change
+                  items="[[filteredPartners]]" as="partner"
+                  initial-count="10" on-dom-change="_listDataChanged">
           <etools-data-table-row details-opened="[[detailsOpened]]">
             <div slot="row-data">
               <a class="col-data flex truncate"
@@ -427,9 +429,7 @@
           if (this.csoType && this.csoType.length) {
             params.push('cso_type=' + this.csoType);
           }
-          if (this.showHidden) {
-            params.push('hidden=true');
-          }
+          params.push('hidden=' + this.showHidden);
 
           params.push('format=csv');
           queryString = params.join('&');

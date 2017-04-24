@@ -14,12 +14,11 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-<link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
 
 <dom-module id="page-partners">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
 
@@ -44,7 +43,8 @@
     <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
                        partner="{{partner}}"
-                       error-event-name="partner-save-error"></partner-item-data>
+                       error-event-name="partner-save-error">
+    </partner-item-data>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
       <div class="top-content">
@@ -109,17 +109,18 @@
 
       <div class="page" name="list">
         <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
-                       url-params="[[queryParams]]"></partners-list>
+                       url-params="[[queryParams]]" disable-upgrade$="[[!listActive]]"></partners-list>
       </div>
       <div class="page" name="overview">
-        <partner-overview partner="[[partner]]"></partner-overview>
+        <partner-overview partner="[[partner]]" disable-upgrade$="[[!tabsActive]]"></partner-overview>
       </div>
       <div class="page" name="details">
         <partner-details id="partnerDetails"
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"></partner-details>
+                         on-hide-partner="_hidePartner"
+                         disable-upgrade$="[[!tabsActive]]"></partner-details>
       </div>
     </iron-pages>
 
@@ -149,6 +150,13 @@
         },
         selectedPartnerId: {
           type: Number
+        },
+        partner: {
+          type: Object,
+          observer: '_partnerChanged'
+        },
+        permissions: {
+          type: Object
         }
       },
 
@@ -170,7 +178,6 @@
         this.newPartnerDialog.addEventListener('create-partner', function(event) {
           this.fire('create-partner', event.detail);
         }.bind(this), false);
-
       },
       detached: function() {
         if (this.newPartnerDialog) {
@@ -192,7 +199,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editPartnerDetails === true) {
+        if (permissions && typeof permissions === 'object' && permissions.editPartnerDetails === true) {
           return true;
         }
         return false;
@@ -202,7 +209,7 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 
@@ -254,6 +261,13 @@
       _handleCreatePartnerError: function(errorDetails) {
         var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
         this.fire('toast', {text: toastMsg, showCloseBtn: true});
+      },
+
+      _partnerChanged: function(partner) {
+        if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          // dismiss partner details pages loading
+          this.fire('global-loading', {active: false});
+        }
       }
 
     });
