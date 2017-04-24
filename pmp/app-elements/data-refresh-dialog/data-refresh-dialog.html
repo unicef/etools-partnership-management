@@ -137,7 +137,7 @@
 
         _allSelectedChanged: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
-            if(!this.allSelected) {
+            if (!this.allSelected) {
               return;
             }
 
@@ -145,7 +145,7 @@
             this.set('interventionsSelected', true);
             this.set('partnersSelected', true);
             this.set('agreementsSelected', true);
-            this.set('anySelected', true)
+            this.set('anySelected', true);
           }.bind(this), 150);
         },
 
