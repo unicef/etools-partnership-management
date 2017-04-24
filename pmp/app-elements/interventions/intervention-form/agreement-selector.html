@@ -76,7 +76,8 @@
           agreements: {
             type: Array,
             statePath: 'agreementsList',
-            observer: '_agreementsChanged'// Covers issues on refresh when agreements is populated after the rest of the observers run
+            // Covers issues on refresh when agreements is populated after the rest of the observers run
+            observer: '_agreementsChanged'
           },
           partnerId: {
             type: Number,
