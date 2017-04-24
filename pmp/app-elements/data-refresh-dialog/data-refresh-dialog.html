@@ -127,74 +127,15 @@
           },
         },
         observers: [
-          '_selectedObserver(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
-          '_otherSelectedObserver(allSelected)'
+          '_singleSectionChanged(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
+          '_allSelectedChanged(allSelected)'
         ],
-        ready: function() {
-        },
 
         open: function() {
           this.$.dataRefreshDialog.opened = true;
         },
 
-        clearSelectedFromDexie: function(collectionName) {
-          return this.db[collectionName].clear()
-            .then(function() {
-              return this.db.collectionsList.delete(collectionName);
-            }.bind(this))
-            .then(function() {
-              this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
-              console.log('done for', collectionName);
-              return true;
-            }.bind(this))
-            .catch(function(err) {
-              this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
-              return false;
-            }.bind(this));
-        },
-
-        _handleDialogClosed: function(closingReason) {
-            if (closingReason.detail.confirmed) {
-              this.fire('global-loading', {message: 'Refreshing data...', active: true});
-
-              var promises = [];
-
-              if (this.governmentsSelected) {
-                promises.push(this.clearSelectedFromDexie('governments'));
-              }
-              if (this.interventionsSelected) {
-                promises.push(this.clearSelectedFromDexie('interventions'));
-              }
-              if (this.partnersSelected) {
-                promises.push(this.clearSelectedFromDexie('partners'));
-              }
-              if (this.agreementsSelected) {
-                promises.push(this.clearSelectedFromDexie('agreements'));
-              }
-
-              Promise.all(promises)
-              .then(function(results) {
-                this._handleSuccess();
-              }.bind(this))
-              .catch(function(error) {
-                this._handleFailure();
-              }.bind(this));
-
-            }
-        },
-
-        _handleSuccess: function() {
-          this.fire('global-loading', {active: false});
-          this.fire('update-main-path', {path: ''});
-          this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
-        },
-
-        _handleFailure: function() {
-            this.fire('global-loading', {active: false});
-            this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
-        },
-
-        _otherSelectedObserver: function() {
+        _allSelectedChanged: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
             if(!this.allSelected) {
               return;
@@ -208,7 +149,7 @@
           }.bind(this), 150);
         },
 
-        _selectedObserver: function() {
+        _singleSectionChanged: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
             var allSelected = this.governmentsSelected &&
                 this.interventionsSelected &&
@@ -223,6 +164,62 @@
             this.set('allSelected', allSelected);
             this.set('anySelected', anySelected);
           }.bind(this), 150);
+        },
+
+        _handleDialogClosed: function(closingReason) {
+            if (closingReason.detail.confirmed) {
+              var promises = [];
+
+              this.fire('global-loading', {message: 'Refreshing data...', active: true});
+
+              if (this.governmentsSelected) {
+                promises.push(this._clearSelectedFromDexie('governments'));
+              }
+              if (this.interventionsSelected) {
+                promises.push(this._clearSelectedFromDexie('interventions'));
+              }
+              if (this.partnersSelected) {
+                promises.push(this._clearSelectedFromDexie('partners'));
+              }
+              if (this.agreementsSelected) {
+                promises.push(this._clearSelectedFromDexie('agreements'));
+              }
+
+              Promise.all(promises)
+              .then(function(results) {
+                this._handleSuccess();
+              }.bind(this))
+              .catch(function(error) {
+                this._handleFailure();
+              }.bind(this));
+
+            }
+        },
+
+        _clearSelectedFromDexie: function(collectionName) {
+          return this.db[collectionName].clear()
+            .then(function() {
+              return this.db.collectionsList.delete(collectionName);
+            }.bind(this))
+            .then(function() {
+              this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
+              return true;
+            }.bind(this))
+            .catch(function(err) {
+              this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
+              return false;
+            }.bind(this));
+        },
+
+        _handleSuccess: function() {
+          this.fire('global-loading', {active: false});
+          this.fire('update-main-path', {path: ''});
+          this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
+        },
+
+        _handleFailure: function() {
+            this.fire('global-loading', {active: false});
+            this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
         },
 
       });
