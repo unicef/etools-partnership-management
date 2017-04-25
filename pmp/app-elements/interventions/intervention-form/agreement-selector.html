@@ -76,7 +76,8 @@
           agreements: {
             type: Array,
             statePath: 'agreementsList',
-            observer: '_agreementsChanged'// Covers issues on refresh when agreements is populated after the rest of the observers run
+            // Covers issues on refresh when agreements is populated after the rest of the observers run
+            observer: '_agreementsChanged'
           },
           partnerId: {
             type: Number,
@@ -93,6 +94,13 @@
             value: false
           },
           interventionId: Number
+        },
+        resetDropdowns: function() { //TODO - this has to de handled inside the new version of dropdown component
+          var agrDropDown = this.$.agreements;
+          if (agrDropDown && (!agrDropDown.options || !agrDropDown.options.length)) {
+            agrDropDown.value = null;
+            agrDropDown.selected = null;
+          }
         },
         _partnersDropdownDataChanged: function() {
           this._setSelectedPartnerId();

@@ -318,25 +318,24 @@
       },
 
       _findProgramme: function() {
-        var countryProgrammes = [];
         var currentCpId = this.intervention.country_programme;
-
-        countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
-          return (elem.id === currentCpId);
-        });
-
-        this.set('countryProgramme', countryProgrammes.pop());
+        if (this.allCountryProgrammes instanceof Array && this.allCountryProgrammes.length) {
+          let countryProgramme = this.allCountryProgrammes.find(function(elem) {
+            return (elem.id === currentCpId);
+          });
+          this.set('countryProgramme', countryProgramme);
+        }
       },
 
       _findPartner: function() {
-        var partners = [];
         var currentPartnerId = this.intervention.partner;
+        if (this.allPartners instanceof Array && this.allPartners.length) {
+          let partner = this.allPartners.find(function(elem) {
+            return (elem.value === currentPartnerId);
+          });
 
-        partners = this.allPartners.filter(function(elem) {
-          return (elem.value === currentPartnerId);
-        });
-
-        this.set('partner', partners.pop());
+          this.set('partner', partner);
+        }
       },
 
       _prepareInterventionStatusData: function() {

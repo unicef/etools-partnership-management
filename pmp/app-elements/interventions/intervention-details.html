@@ -394,14 +394,15 @@
 
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
-          } else {
-            this.set('interventionRequiredField', false);
           }
         },
 
-        newInterventionFlagChanged: function() {
+        newInterventionFlagChanged: function(newValue) {
           if (this.intervention && !this.fieldsResetted) {
             this._resetValidations();
+          }
+          if (newValue) {
+            this.set('interventionRequiredField', false);
           }
         },
 
@@ -471,10 +472,24 @@
           if (typeof oldId === 'number'
               && id !== oldId
               && !this.agreement) { //Prevent reset on changes caused by initialization of the fields
+            this._resetDropdowns();
+          }
+        },
+        _resetDropdowns: function() {
+          //**TODO - this has to be handled inside the new version of dropdown component
+          //Test case - go to existing intervention , then go to New intervention
 
-            // reset partner focal points options and value
-            this.set('intervention.partner_focal_points', []);
-            this.set('partnerStaffMembers', []);
+          // reset partner focal points options and value
+          this.set('intervention.partner_focal_points', []);
+          this.set('partnerStaffMembers', []);
+          var partnerFpDropDown = this.$.partnerFocalPts;
+          if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
+            partnerFpDropDown.value = null;
+            partnerFpDropDown.selected = null;
+          }
+          var agrSel = this.$.agreementSelector;
+          if (agrSel) {
+            agrSel.resetDropdowns();
           }
         },
         /**
