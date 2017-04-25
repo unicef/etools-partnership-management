@@ -23,6 +23,7 @@
         is: 'government-intervention-item-data',
         behaviors: [
           etoolsAppConfig.globals,
+          pmpBehaviors.AjaxServerErrorsBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
         ],
         properties: {
@@ -208,3 +209,4 @@
       });
     })();
   </script>
+</dom-module>
