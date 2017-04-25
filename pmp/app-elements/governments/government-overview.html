@@ -318,27 +318,23 @@
       },
 
       _findProgramme: function() {
-        var countryProgrammes = [];
         var currentCpId = this.intervention.country_programme;
-
         if (this.allCountryProgrammes instanceof Array && this.allCountryProgrammes.length) {
-          countryProgrammes = this.allCountryProgrammes.filter(function(elem) {
+          let countryProgramme = this.allCountryProgrammes.find(function(elem) {
             return (elem.id === currentCpId);
           });
-          this.set('countryProgramme', countryProgrammes.pop());
+          this.set('countryProgramme', countryProgramme);
         }
       },
 
       _findPartner: function() {
-        var partners = [];
         var currentPartnerId = this.intervention.partner;
-
         if (this.allPartners instanceof Array && this.allPartners.length) {
-          partners = this.allPartners.filter(function(elem) {
+          let partner = this.allPartners.find(function(elem) {
             return (elem.value === currentPartnerId);
           });
 
-          this.set('partner', partners.pop());
+          this.set('partner', partner);
         }
       },
 
