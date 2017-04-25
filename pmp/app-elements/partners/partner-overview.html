@@ -69,9 +69,11 @@
       .hact-heading .row-h {
         padding: 8px;
       }
+
       .hact-heading .row-h .col {
         justify-content: center;
       }
+
       .hact-body {
         @apply(--layout-vertical);
         margin-top: 20px;
@@ -80,48 +82,60 @@
       .hact-body .row-h {
         padding: 8px;
       }
+
       .center-text {
         align-items: center;
         justify-content: center;
         text-align: center;
       }
+
       .row-h + .row-h {
         margin-top: 0;
         border-top: 1px solid var(--dark-divider-color);
       }
+
       .full-width {
         width: 100%
       }
+
       .green {
         color: var(--paper-green-500);
       }
+
       .cancelled {
         text-transform: uppercase;
         color: var(--paper-red-500);
       }
+
       .suspended {
         text-transform: uppercase;
         color: var(--paper-orange-500);
       }
+
       .draft {
         text-transform: uppercase;
         color: var(--paper-yellow-700);
       }
+
       .active {
         text-transform: uppercase;
         color: var(--paper-green-500);
       }
+
       .implemented {
         text-transform: uppercase;
         color: var(--paper-blue-500);
       }
+
       .terminated {
         text-transform: uppercase;
         color: var(--paper-purple-500);
       }
+
       .block {
         display: block;
       }
+
       small {
         color: var(--dark-secondary-text-color);
       }
@@ -140,12 +154,12 @@
             <div class="col col-2"><strong> AUDIT </strong></div>
           </div>
           <div class="row-h">
-            <div class="col col-2"> Risk Rating </div>
-            <div class="col col-2"> Current CP Cycle </div>
-            <div class="col col-2"> Current Year </div>
-            <div class="col col-2"> Done / M.R. </div>
-            <div class="col col-2"> Done / M.R. </div>
-            <div class="col col-2"> Done / M.R. </div>
+            <div class="col col-2"> Risk Rating</div>
+            <div class="col col-2"> Current CP Cycle</div>
+            <div class="col col-2"> Current Year</div>
+            <div class="col col-2"> Planned / M.R. / Done</div>
+            <div class="col col-2"> Done / M.R.</div>
+            <div class="col col-2"> Done / M.R.</div>
           </div>
         </div>
         <div class="hact-body">
@@ -153,21 +167,39 @@
             <div class="col col-2 center-text">
               <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
             </div>
-            <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]] </div>
-            <div class="col col-2 center-text block">  $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br> <small>out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned </small> </div>
-            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.programmatic_visits]] </span> / [[partner.hact_min_requirements.programme_visits]] </div></strong>
-            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.spot_checks]] </span> / [[partner.hact_min_requirements.spot_checks]] </div></strong>
-            <div class="col col-2 center-text"> <strong><span class="green"> [[partner.hact_values.audits_done]] </span> / [[partner.hact_values.audits_mr]] </div></strong>
+            <div class="col col-2 center-text"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
+            <div class="col col-2 center-text block"> $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br>
+              <small>
+                out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned
+              </small>
+            </div>
+            <div class="col col-2 center-text">
+              <strong>
+                [[partner.hact_values.planned_visits]] / [[partner.hact_min_requirements.programme_visits]] /
+                <span class="green"> [[partner.hact_values.programmatic_visits]]</span>
+              </strong>
+            </div>
+            <div class="col col-2 center-text">
+              <strong>
+                <span class="green">[[partner.hact_values.spot_checks]] </span>
+                / [[partner.hact_min_requirements.spot_checks]]
+              </strong>
+            </div>
+            <div class="col col-2 center-text">
+              <strong>
+                <span class="green">[[partner.hact_values.audits_done]] </span>
+                / [[partner.hact_values.audits_mr]]
+              </strong>
+            </div>
           </div>
         </div>
 
-
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-4"> Partnership </div>
-            <div class="col col-2"> Total Planned Budget </div>
-            <div class="col col-2"> Status </div>
-            <div class="col col-4"> Timeline </div>
+            <div class="col col-4"> Partnership</div>
+            <div class="col col-2"> Total Planned Budget</div>
+            <div class="col col-2"> Status</div>
+            <div class="col col-4"> Timeline</div>
           </div>
         </div>
         <div class="hact-body">
@@ -181,12 +213,16 @@
                   <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a> <br>
                 </template>
                 <div>
-                [[partnership.title]]
+                  [[partnership.title]]
                 </div>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0', 0)]] </div>
-              <div class="col col-2 center-text"> <strong class$="[[partnership.status]]">[[partnership.status]]</strong> </div>
-              <div class="col col-4 center-text"> [[getDateDisplayValue(partnership.start)]] - [[getDateDisplayValue(partnership.end)]] </div>
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0', 0)]]
+              </div>
+              <div class="col col-2 center-text"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
+              </div>
+              <div class="col col-4 center-text"> [[getDateDisplayValue(partnership.start)]] -
+                [[getDateDisplayValue(partnership.end)]]
+              </div>
             </div>
           </template>
         </div>
