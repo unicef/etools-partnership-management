@@ -105,6 +105,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 90px;
       }
 
+      :host(:not(.ie)) page-footer {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+        @apply(--layout-end-justified);
+      }
+
     </style>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
