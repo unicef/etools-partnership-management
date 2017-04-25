@@ -60,7 +60,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(item.id)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -119,7 +119,7 @@
                              label="E-mail address"
                              value="{{item.email}}"
                              placeholder="&#8212;"
-                             readonly$="[[!_canBeRemoved(index)]]"
+                             readonly$="[[!_canBeRemoved(item.id)]]"
                              invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="A valid & unused email address is required">
                   <iron-icon prefix icon="communication:email"></iron-icon>
@@ -177,12 +177,11 @@
         };
       },
 
-      _canBeRemoved: function(index) {
+      _canBeRemoved: function(id) {
         if (!this.editMode) {
           return false;
         }
-        if (this.dataItems[index] &&
-          typeof this.dataItems[index].id !== 'undefined' && this.dataItems[index].id !== null) {
+        if (id) {
           return false;
         }
         return true;
