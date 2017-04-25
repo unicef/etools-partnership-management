@@ -77,6 +77,7 @@
           file-types=[[fileTypes]]
           label="Attachments"
           multiple activate-file-types use-delete-events
+          on-delete-file="_deleteAttachment"
           readonly$=[[!attachmentEditMode]]></etools-file>
       </div>
     </etools-content-panel>
@@ -108,7 +109,8 @@
           },
           fileTypes: {
             type: Array,
-            statePath: 'fileTypes'
+            statePath: 'fileTypes',
+            observer: '_fileTypesChanged'
           },
           fileModel: {
             type: Object,
@@ -204,6 +206,37 @@
         _hideNoAttachmentsWarning: function(length) {
           return length > 0;
         },
+
+        _deleteAttachment: function(event) {
+          try {
+            let attachment = this.get('attachments.' + event.detail.index);
+            if (attachment) {
+              if (attachment.id) {
+                // delete from serve using endpoint
+                // TODO: use an endpoint(once is implemented on backend) to delete attachments
+                this.fire('toast', {
+                  text: 'Delete file not implemented yet for already saved attachments!',
+                  showCloseBtn: true
+                });
+              } else {
+                // file not saved yet(only selected), delete from local data
+                this.splice('attachments', event.detail.index, 1);
+              }
+            }
+          } catch (err) {
+            console.error('An error occurred on deleting attachment no: #' + (event.detail.index + 1), err);
+          }
+        },
+
+        _fileTypesChanged: function(fileTypes) {
+          if (!fileTypes.length) {
+            // there are no file types in the current workspace
+            this.fire('toast', {
+              text: 'File Type data required to save attachments is missing from current workspace!',
+              showCloseBtn: true
+            });
+          }
+        }
 
       });
 

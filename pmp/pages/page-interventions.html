@@ -191,7 +191,6 @@
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
-                                      on-delete-file="_deleteAttachment"
                                       new-intervention="[[_newIntervention(newInterventionActive)]]"
                                       disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-attachments>
@@ -705,14 +704,6 @@
           intervention: interventionId ? interventionId : null,
           type: null
         };
-      },
-
-      _deleteAttachment: function(event) {
-        // TODO:  remove after attachment delete is implemented
-        this.fire('toast', {
-          text: 'Delete file not implemented yet! '
-          + 'event.detail has all the date needed for delete action.', showCloseBtn: true
-        });
       },
 
       _goToNewInterventionPage: function(event) {
