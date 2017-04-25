@@ -286,7 +286,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+        if (permissions && permissions.editAgreementDetails === true) {
           return true;
         }
         return false;
@@ -296,7 +296,7 @@
        * Temporary permission for PM
        */
       _allowPmToEditRegardlessStatus: function(permissions) {
-        return permissions && typeof permissions === 'object' && permissions.partnershipManager === true;
+        return permissions && permissions.partnershipManager === true;
       },
 
       _saveAgreement: function(event) {
