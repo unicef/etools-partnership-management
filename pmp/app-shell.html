@@ -317,6 +317,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
+        // sometimes this gets triggered before the element is available, so we need a slow down
+        this.debounce('appShellPageChanged', this._handlePageImport.bind(this, page), 200);
+      },
+
+      _handlePageImport: function(page) {
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
         var pageEl = this._getPageElement(page);
