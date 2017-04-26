@@ -45,23 +45,9 @@
                     var values = _.get(response, 'detail');
                     if (!_.isEmpty(values)) {
                         // set offices values
-                        this.dispatch('setSectionsData', this._prepareData(values));
+                        this.dispatch('setSectionsData', values);
                     }
                 },
-
-                /**
-                 * Prepare values for dropdowns
-                 */
-
-                _prepareData: function(data) {
-                    return data.map(function(d) {
-                        return {
-                            value: parseInt(d.id, 10),
-                            label: d.name
-                        };
-                    });
-                }
-
             });
         })();
     </script>

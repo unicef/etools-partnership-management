@@ -3,7 +3,6 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
@@ -15,12 +14,11 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-<link rel="import" href="../app-config/etools-app-config.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
 
 <dom-module id="page-partners">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
 
@@ -45,87 +43,86 @@
     <partner-item-data id="partnerData"
                        partner-id="[[selectedPartnerId]]"
                        partner="{{partner}}"
-                       error-event-name="partner-save-error"></partner-item-data>
+                       error-event-name="partner-save-error">
+    </partner-item-data>
 
-    <app-header-layout>
-      <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
-        <div class="top-content">
-          <div class="top-content-row title-row">
+    <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
+      <div class="top-content">
+        <div class="top-content-row title-row">
           <h1 main-title>
-              <template is="dom-if" if="[[listActive]]">
-                <span>Partners</span>
-              </template>
-              <template is="dom-if" if="[[tabsActive]]">
-                <span>[[partner.name]]</span>
-              </template>
-            </h1>
-            <div class="top-content-actions-wrapper">
-              <div class="top-content-action" hidden$="[[!listActive]]">
-                <a target="_blank" href$="[[csvDownloadUrl]]">
-                  <paper-button>
-                    <iron-icon icon="file-download"></iron-icon>
-                    Export
-                  </paper-button>
-                </a>
-              </div>
-              <!-- Print functionality pending implementation -->
-              <!--<div class="top-content-action">
+            <template is="dom-if" if="[[listActive]]">
+              <span>Partners</span>
+            </template>
+            <template is="dom-if" if="[[tabsActive]]">
+              <span>[[partner.name]]</span>
+            </template>
+          </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!listActive]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
-                  <iron-icon icon="print"></iron-icon>
-                  Print
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
                 </paper-button>
-              </div>-->
-              <div class="top-content-action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
-                <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
-                  <iron-icon icon="add"></iron-icon>
-                  Add New Partner
-                </paper-button>
-              </div>
+              </a>
+            </div>
+            <!-- Print functionality pending implementation -->
+            <!--<div class="top-content-action">
+              <paper-button>
+                <iron-icon icon="print"></iron-icon>
+                Print
+              </paper-button>
+            </div>-->
+            <div class="top-content-action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+                <iron-icon icon="add"></iron-icon>
+                Add New Partner
+              </paper-button>
             </div>
           </div>
-          <template is="dom-if" if="[[tabsActive]]">
-            <div class="top-content-row">
-              <paper-tabs
-                  selected="{{routeData.tab}}"
-                  attr-for-selected="name" noink bottom-item>
-
-                <paper-tab name="overview" link>
-                  <span class="tab-content">Overview</span>
-                </paper-tab>
-
-                <paper-tab name="details" link>
-                  <span class="tab-content">Partner Details</span>
-                </paper-tab>
-
-              </paper-tabs>
-            </div>
-          </template>
         </div>
+        <template is="dom-if" if="[[tabsActive]]">
+          <div class="top-content-row">
+            <paper-tabs
+                selected="{{routeData.tab}}"
+                attr-for-selected="name" noink bottom-item>
+
+              <paper-tab name="overview" link>
+                <span class="tab-content">Overview</span>
+              </paper-tab>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Partner Details</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </template>
       </div>
+    </div>
 
-      <iron-pages id="partnersPages"
-                  selected="{{partnerPage}}"
-                  attr-for-selected="name"
-                  fallback-selection="list"
-                  role="main">
+    <iron-pages id="partnersPages"
+                selected="{{partnerPage}}"
+                attr-for-selected="name"
+                fallback-selection="list"
+                role="main">
 
-        <div class="page" name="list">
-          <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}" url-params="[[queryParams]]"></partners-list>
-        </div>
-        <div class="page" name="overview">
-          <partner-overview partner="[[partner]]"></partner-overview>
-        </div>
-        <div class="page" name="details">
-          <partner-details id="partnerDetails"
-                           partner="[[partner]]"
-                           edit-mode="[[_hasEditPermissions(permissions)]]"
-                           on-save-partner="_savePartner"
-                           on-hide-partner="_hidePartner"></partner-details>
-        </div>
-      </iron-pages>
-
-
-    </app-header-layout>
+      <div class="page" name="list">
+        <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
+                       url-params="[[queryParams]]" disable-upgrade$="[[!listActive]]"></partners-list>
+      </div>
+      <div class="page" name="overview">
+        <partner-overview partner="[[partner]]" disable-upgrade$="[[!tabsActive]]"></partner-overview>
+      </div>
+      <div class="page" name="details">
+        <partner-details id="partnerDetails"
+                         partner="[[partner]]"
+                         edit-mode="[[_hasEditPermissions(permissions)]]"
+                         on-save-partner="_savePartner"
+                         on-hide-partner="_hidePartner"
+                         disable-upgrade$="[[!tabsActive]]"></partner-details>
+      </div>
+    </iron-pages>
 
   </template>
 
@@ -153,11 +150,17 @@
         },
         selectedPartnerId: {
           type: Number
+        },
+        partner: {
+          type: Object,
+          observer: '_partnerChanged'
+        },
+        permissions: {
+          type: Object
         }
       },
 
       observers: [
-        '_resizeHeader(tabsActive)',
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, routeData.tab)',
         '_observeRouteDataId(routeData.id)'
@@ -175,15 +178,11 @@
         this.newPartnerDialog.addEventListener('create-partner', function(event) {
           this.fire('create-partner', event.detail);
         }.bind(this), false);
-
       },
       detached: function() {
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
         }
-      },
-      _resizeHeader: function() {
-        this.$$('app-header-layout').notifyResize();
       },
 
       _getActivePage: function(listActive, tab) {
@@ -200,7 +199,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editPartnerDetails === true) {
+        if (permissions && permissions.editPartnerDetails === true) {
           return true;
         }
         return false;
@@ -210,7 +209,7 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.fire('update-main-path', {path: this.route.path}, {bubbles: false});
+          this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 
@@ -241,13 +240,13 @@
       _partnerSaveError: function(event) {
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
-            (typeof event.detail === 'string' && event.detail !== '')) {
+          (typeof event.detail === 'string' && event.detail !== '')) {
           this.$.partnerDetails.set('serverErrors', event.detail);
         }
 
       },
       _showNewPartnerBtn: function(listActive, permissions) {
-         return listActive && this._hasEditPermissions(permissions);
+        return listActive && this._hasEditPermissions(permissions);
       },
       _openNewPartnerDialog: function() {
         this.newPartnerDialog._openNewPartnerDialog();
@@ -261,7 +260,14 @@
       },
       _handleCreatePartnerError: function(errorDetails) {
         var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
-        this.fire('toast', {text: toastMsg , showCloseBtn: true});
+        this.fire('toast', {text: toastMsg, showCloseBtn: true});
+      },
+
+      _partnerChanged: function(partner) {
+        if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          // dismiss partner details pages loading
+          this.fire('global-loading', {active: false});
+        }
       }
 
     });

@@ -3,10 +3,9 @@
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../app-config/etools-app-config.html">
+
 <link rel="import" href="../app-elements/agreements/agreements-list.html">
 <link rel="import" href="../app-elements/agreements/agreement-details.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -17,7 +16,7 @@
 
 <dom-module id="page-agreements">
 
-  <template>
+  <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
 
@@ -44,13 +43,11 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
                          agreement-id="[[selectedAgreementId]]"
                          error-event-name="agreement-save-error"></agreement-item-data>
 
-    <app-header-layout>
       <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
         <div class="top-content">
           <div class="top-content-row title-row">
@@ -119,7 +116,8 @@
           <agreements-list id="list"
                            active="[[agreementListActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[agreementQueryParams]]">
+                           url-params="[[agreementQueryParams]]"
+                           disable-upgrade$="[[!agreementListActive]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
@@ -130,11 +128,11 @@
               allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement">
+              on-save-agreement="_saveAgreement"
+              disable-upgrade$="[[_detailsPageDisableUpgrade(agreementDetailsActive, newAgreementActive)]]">
           </agreement-details>
         </div>
       </iron-pages>
-    </app-header-layout>
 
   </template>
 
@@ -161,21 +159,21 @@
         newAgreementModel: {
           type: Object,
           value: {
-            id: null,
+            id: undefined,
             authorized_officers: [],
             amendments: [],
-            agreement_type: null,
-            agreement_number: null,
-            attached_agreement: null,
-            start: null,
-            end: null,
-            signed_by_unicef_date: null,
-            signed_by_partner_date: null,
-            status: null,
-            partner: null,
-            country_programme: null,
-            signed_by: null,
-            partner_manager: null
+            agreement_type: undefined,
+            agreement_number: undefined,
+            attached_agreement: undefined,
+            start: undefined,
+            end: undefined,
+            signed_by_unicef_date: undefined,
+            signed_by_partner_date: undefined,
+            status: undefined,
+            partner: undefined,
+            country_programme: undefined,
+            signed_by: undefined,
+            partner_manager: undefined
           }
         },
         csvDownloadUrl: {
@@ -194,7 +192,6 @@
       },
 
       observers: [
-        '_resizeHeader(agreementListActive, agreementDetailsActive, newAgreementActive)',
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
         '_observeRouteDataId(routeData.id)'
       ],
@@ -210,8 +207,8 @@
         }
       },
 
-      _resizeHeader: function() {
-        this.$$('app-header-layout').notifyResize();
+      _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
+        return !agreementDetailsActive && !newAgreementActive;
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
@@ -289,7 +286,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (typeof permissions === 'object' && permissions.editAgreementDetails === true) {
+        if (permissions && permissions.editAgreementDetails === true) {
           return true;
         }
         return false;
@@ -299,7 +296,7 @@
        * Temporary permission for PM
        */
       _allowPmToEditRegardlessStatus: function(permissions) {
-        return typeof permissions === 'object' && permissions.partnershipManager === true;
+        return permissions && permissions.partnershipManager === true;
       },
 
       _saveAgreement: function(event) {

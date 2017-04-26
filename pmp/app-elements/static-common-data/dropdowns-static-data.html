@@ -114,8 +114,7 @@
             // set intervention_status values
             var interventionStatus = response.detail.intervention_status;
             if (Array.isArray(interventionStatus) && interventionStatus.length > 0) {
-              var preparedStatuses = this._prepareDropdownStatusesData(interventionStatus);
-              this.dispatch('setInterventionStatuses', preparedStatuses);
+              this.dispatch('setInterventionStatuses', interventionStatus);
             }
             // set currencies data
             if (Array.isArray(response.detail.currencies) && response.detail.currencies.length > 0) {

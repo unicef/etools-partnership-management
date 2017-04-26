@@ -101,8 +101,7 @@
             this.ajaxEl.set('prepareMultipartData', false);
           }
           this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
+          if (typeof data === 'object' && ['PATCH', 'POST'].indexOf(method) > -1) {
 
             if (multipart) {
               this.ajaxEl.set('multiPart', true);
@@ -198,40 +197,33 @@
             if (intervention.id) {
               delete intervention.id;
             }
-            if (Object.keys(intervention).length > 0) {
-              // set additional callback if any and only if is new intervention
-              if (callback && isNew) {
-                this.set('handleResponseAdditionalCallback', callback);
-              }
-
-              var withUpload = false; // used to set multipart prop on etools-ajax
-              var prepareMultipartData = false;
-              if (this._hasFiles(intervention.attachments, 'attachment')) {
-                withUpload = true;
-                prepareMultipartData = true;
-              }
-              if (this._fileField(intervention, 'prc_review_document')) {
-                withUpload = true;
-                prepareMultipartData = true;
-              } else {
-                delete intervention.prc_review_document;
-              }
-
-              if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-                withUpload = true;
-                prepareMultipartData = true;
-              }
-
-              this.fire('global-loading', {message: 'Saving intervention data...', active: true});
-              // fire in the hole
-              this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
-                  intervention, url, withUpload, prepareMultipartData);
-            } else {
-              this.fire('toast', {
-                text: 'There is nothing to save. No change detected on this intervention.',
-                showCloseBtn: true
-              });
+            // set additional callback if any and only if is new intervention
+            if (callback && isNew) {
+              this.set('handleResponseAdditionalCallback', callback);
             }
+
+            var withUpload = false; // used to set multipart prop on etools-ajax
+            var prepareMultipartData = false;
+            if (this._hasFiles(intervention.attachments, 'attachment')) {
+              withUpload = true;
+              prepareMultipartData = true;
+            }
+            if (this._fileField(intervention, 'prc_review_document')) {
+              withUpload = true;
+              prepareMultipartData = true;
+            } else {
+              delete intervention.prc_review_document;
+            }
+
+            if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
+              withUpload = true;
+              prepareMultipartData = true;
+            }
+
+            this.fire('global-loading', {message: 'Saving intervention data...', active: true});
+            // fire in the hole
+            this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
+                intervention, url, withUpload, prepareMultipartData);
           }
         },
 
