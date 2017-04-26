@@ -6,7 +6,7 @@
 
 <link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
-<link rel="import" href="../../../app-behaviors/esmm-missing-options/missing-cp-outputs-behavior.html">
+<link rel="import" href="../../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
 
@@ -33,8 +33,6 @@
                                                option-label="name"
                                                selected="{{cpOutputId}}"
                                                update-selected
-                                               url="[[missingOldCpOutputsUrl]]"
-                                               ajax-params="[[missingOldCpOutputsAjaxParams]]"
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Output"
@@ -71,7 +69,7 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           etoolsAppConfig.globals,
-          pmpBehaviors.MissingCpOutputsBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
         properties: {
           cpOutputs: {
@@ -127,7 +125,7 @@
         ],
 
         ready: function() {
-          this.setMissingOldCpOutputsUrl();
+          this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
 
           if (this.cpOutputs.length > 0 && this.cpOutputId) {
             // set selected cp output when cpOutputs data exists
