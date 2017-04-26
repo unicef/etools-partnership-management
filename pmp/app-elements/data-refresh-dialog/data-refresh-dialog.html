@@ -30,7 +30,7 @@
 
       #content-box {
         max-height: 600px;
-        min-height: 140px;
+        min-height: 160px;
         overflow-y: auto;
         margin: 0 -20px;
         padding: 0 15px;
@@ -56,16 +56,22 @@
                                       label="Partners data"
                                       label-alignment="right">
               </etools-checkable-input>
-              <etools-checkable-input checked="{{agreementsSelected}}"
-                                      label="Agreements data"
-                                      label-alignment="right">
-              </etools-checkable-input>
             </div>
             <div class="col-6">
               <etools-checkable-input checked="{{interventionsSelected}}"
                                       label="PD/SSFA ToR data"
                                       label-alignment="right">
               </etools-checkable-input>
+            </div>
+          </div>
+          <div class="row-h">
+            <div class="col-6">
+              <etools-checkable-input checked="{{agreementsSelected}}"
+                                      label="Agreements data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+            <div class="col-6">
               <etools-checkable-input checked="{{governmentsSelected}}"
                                       label="Governments data"
                                       label-alignment="right">
@@ -187,7 +193,11 @@
 
               Promise.all(promises)
               .then(function(results) {
-                this._handleSuccess();
+                if (results.indexOf(false) < 0) {
+                  this._handleSuccess();
+                } else {
+                  this._handleFailure();
+                }
               }.bind(this))
               .catch(function(error) {
                 this._handleFailure();
@@ -219,6 +229,7 @@
 
         _handleFailure: function() {
             this.fire('global-loading', {active: false});
+            this.fire('update-main-path', {path: ''});
             this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
         },
 
