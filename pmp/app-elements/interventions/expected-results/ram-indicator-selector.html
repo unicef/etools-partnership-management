@@ -27,7 +27,7 @@
         <etools-searchable-multiselection-menu id="cpOutput"
                                                label="CP Output"
                                                placeholder="&#8212;"
-                                               options="[[cpOutputsOptions]]"
+                                               options="{{cpOutputsOptions}}"
                                                custom-object-options
                                                option-value="id"
                                                option-label="name"
@@ -194,11 +194,37 @@
             return;
           }
           this.debounce('removeAlreadySelected', function() {
+            // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
             var cpOutputsSelectorOptions = this.cpOutputs.filter(function(cpO) {
               return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
             }.bind(this));
-            this.set('cpOutputsOptions', cpOutputsSelectorOptions);
+            var cpoDropdown = this.$.cpOutput;
+            // keep old cpOutputs requested from server
+            var oldCpOutput = this._getExistingOldCpO(cpoDropdown);
+            if (oldCpOutput) {
+              cpOutputsSelectorOptions.push(oldCpOutput);
+            }
+            if (!this.cpOutputId) {
+              this.set('cpOutputsOptions', cpOutputsSelectorOptions);
+            } else {
+              // update dropdown options without triggering any data change observers
+              cpoDropdown.splice.apply(cpoDropdown,
+                  ['options', 0, cpoDropdown.options.length].concat(cpOutputsSelectorOptions));
+              // force dropdown shown options to update using search value updates
+              cpoDropdown.set('search', (cpoDropdown.search === null) ? '' : null);
+            }
           }.bind(this), 50);
+        },
+
+        _getExistingOldCpO: function(cpoDropdown) {
+          var oldCpO;
+          if (cpoDropdown.ajaxParams && cpoDropdown.ajaxParams.values) {
+            // keep ghost data (old cp output previously requested from server)
+            oldCpO = cpoDropdown.options.find(function(opt) {
+              return opt[cpoDropdown.optionValue] === parseInt(cpoDropdown.ajaxParams.values, 10);
+            });
+          }
+          return oldCpO;
         },
 
         validate: function() {
