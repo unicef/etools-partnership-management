@@ -173,8 +173,7 @@
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_interventionChanged'
+            type: Object
           },
           unicefUsersData: {
             type: Array,
@@ -195,12 +194,11 @@
           },
           editMode: {
             type: Boolean,
-            value: false
-          },
-          signEditMode: {
-            type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          signEditMode: {
+            type: Boolean
           },
           newIntervention: {
             type: Boolean
@@ -211,19 +209,16 @@
           this.setMissingSignedByUnicefUsersUrl();
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+        _editModeChanged: function(newValue) {
+          if (newValue !== this.signEditMode) {
+            this._setNewEditMode(newValue);
             this.updateStyles();
           }
         },
 
-        _interventionChanged: function(intervention) {
-          // ensure loading msg close
-          this._setNewEditMode();
-        },
-        _setNewEditMode: function() {
-          if (!this.editMode) {
-            this.set('signEditMode', this.editMode);
+        _setNewEditMode: function(editMode) {
+          if (!editMode) {
+            this.set('signEditMode', editMode);
             return;
           }
 

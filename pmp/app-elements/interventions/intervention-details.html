@@ -345,12 +345,11 @@
           },
           editMode: {
             type: Boolean,
-            value: false
-          },
-          detailsEditMode: {
-            type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          detailsEditMode: {
+            type: Boolean
           },
           newIntervention: {
             type: Boolean,
@@ -382,9 +381,8 @@
         },
 
         _interventionChanged: function(intervention) {
+//          this._setNewEditMode(this.editMode);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            this._setNewEditMode();
-
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
               this._agreementSelected(this.agreement);
@@ -423,14 +421,15 @@
           this.set('fieldsResetted', true);
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+        _editModeChanged: function(newValue) {
+          if (newValue !== this.detailsEditMode) {
+            this._setNewEditMode(newValue);
             this.updateStyles();
           }
         },
-        _setNewEditMode: function() {
-          if (!this.editMode) {
-            this.set('detailsEditMode', this.editMode);
+        _setNewEditMode: function(editMode) {
+          if (!editMode) {
+            this.set('detailsEditMode', editMode);
             return;
           }
 

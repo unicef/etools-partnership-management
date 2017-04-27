@@ -52,7 +52,6 @@
           padding: 15px 25px;
         };
       }
-
       #no-attach-warning {
         display: inline-block;
         width: 100%;
@@ -61,6 +60,9 @@
       }
       #no-attach-warning p {
         margin: 0;
+      }
+      etools-file[readonly] {
+        margin-left: 25px;
       }
     </style>
 
@@ -78,7 +80,8 @@
           label="Attachments"
           multiple activate-file-types use-delete-events
           on-delete-file="_deleteAttachment"
-          readonly$=[[!attachmentEditMode]]></etools-file>
+          readonly$=[[!attachmentEditMode]]
+          no-file-attached-msg=""></etools-file>
       </div>
     </etools-content-panel>
 
@@ -98,8 +101,7 @@
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_setNewEditMode'
+            type: Object
           },
           attachments: {
             type: Array,
@@ -118,7 +120,8 @@
           },
           editMode: {
             type: Boolean,
-            value: false
+            value: false,
+            observer: '_editModeChanged'
           },
           preparedAttachments: {
             type: Boolean,
@@ -128,13 +131,13 @@
             type: Boolean
           },
           attachmentEditMode: {
-            type: Boolean,
-            observer: '_editModeChanged'
+            type: Boolean
           }
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+        _editModeChanged: function(newValue) {
+          if (newValue !== this.attachmentEditMode) {
+            this._setNewEditMode(newValue);
             this.updateStyles();
           }
         },
@@ -159,9 +162,9 @@
             }.bind(this)));
           }
         },
-        _setNewEditMode: function() {
-          if (!this.editMode) {
-            this.set('attachmentEditMode', this.editMode);
+        _setNewEditMode: function(editMode) {
+          if (!editMode) {
+            this.set('attachmentEditMode', editMode);
             return;
           }
 
