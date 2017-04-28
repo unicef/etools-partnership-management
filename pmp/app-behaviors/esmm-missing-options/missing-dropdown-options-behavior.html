@@ -1,0 +1,42 @@
+<link rel="import" href="../../app-config/etools-app-config.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehaviorImpl */
+  pmpBehaviors.MissingDropdownOptionsBehaviorImpl = {
+
+    setDropdownMissingOptionsAjaxDetails: function(dropdownEl, endpointName, params) {
+      try {
+        if (dropdownEl) {
+          var endpointUrl = this.getMissingOptionsEndpointUrl(endpointName);
+          params = (params) ? params : {};
+
+          dropdownEl.set('url', endpointUrl);
+          dropdownEl.set('ajaxParams', params);
+        } else {
+          throw new Error('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+        }
+      } catch (err) {
+        console.error('An error occurred at ghost data esmm setup.', err);
+      }
+    },
+
+    getMissingOptionsEndpointUrl: function(endpointName) {
+      var endpoint = this.getEndpoint(endpointName);
+      if (endpoint && endpoint.url) {
+        return endpoint.url;
+      }
+      return null;
+    },
+
+    getCleanEsmmOptions: function(options) {
+      return (options instanceof Array) ? options.slice(0) : [];
+    }
+
+  };
+
+  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehavior */
+  pmpBehaviors.MissingDropdownOptionsBehavior = [
+    etoolsAppConfig.globals,
+    pmpBehaviors.MissingDropdownOptionsBehaviorImpl
+  ];
+</script>
