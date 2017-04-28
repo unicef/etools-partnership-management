@@ -186,6 +186,7 @@
           </div>
           <div class="page" name="attachments">
             <intervention-attachments id="intervAttachments"
+                                      active="[[_isAttachementsTabActive(activeTab)]]"
                                       edit-mode="[[_hasEditPermissions(permissions)]]"
                                       permissions="[[permissions]]"
                                       intervention="[[intervention]]"
@@ -756,6 +757,10 @@
           (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
         }
+      },
+
+      _isAttachementsTabActive: function(activeTab) {
+        return activeTab === 'attachments';
       }
 
     });
