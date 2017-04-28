@@ -187,7 +187,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <page-footer></page-footer>
       </app-header-layout>
     </app-drawer-layout>
-    <data-refresh-dialog id="dataRefreshDialog"></data-refresh-dialog>
+    <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
 
   </template>
 
@@ -277,6 +277,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _updateMainPath: function(event) {
+        console.log(event.detail.path, this.route.path.replace(this.baseUrl, ''));
+        // restamp page if needed
+        if (event.detail.restoreHomePage) {
+          this.set('page', 'partners');
+        }
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
           this.set('route.path', this.baseUrl + event.detail.path);
@@ -312,6 +317,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // make the import
           this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, page, pageEl),
               this._pageNotFound, false);
+        } else {
+          console.log(page, this.route, this.routeData);
         }
       },
 

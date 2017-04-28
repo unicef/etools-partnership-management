@@ -44,6 +44,7 @@
             cancel-btn-text="Cancel"
             dialog-title="Refresh data"
             disable-confirm-btn="[[!anySelected]]"
+            on-iron-overlay-opened="_refreshDialogOpened"
             on-close="_handleDialogClosed">
       <div id="content-box">
         <iron-label> Select the data you want to refresh: </iron-label>
@@ -131,6 +132,10 @@
             type: Boolean,
             value: false
           },
+          page: {
+            type: String,
+            notify: true
+          }
         },
         observers: [
           '_singleSectionChanged(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
@@ -202,6 +207,7 @@
               .catch(function(error) {
                 this._handleFailure();
               }.bind(this));
+            } else {
 
             }
         },
@@ -223,7 +229,7 @@
 
         _handleSuccess: function() {
           this.fire('global-loading', {active: false});
-          this.fire('update-main-path', {path: ''});
+          this.fire('update-main-path', {path: '', restoreHomePage: true});
           this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
         },
 
@@ -232,6 +238,11 @@
             this.fire('update-main-path', {path: ''});
             this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
         },
+
+        _refreshDialogOpened: function(e) {
+          e.stopImmediatePropagation();
+          this.set('page', null);
+        }
 
       });
     })();
