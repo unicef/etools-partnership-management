@@ -210,10 +210,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         },
         baseUrl: String,
-        initialLoad: {
-          type: Boolean,
-          value: true
-        },
         permissions: {
           type: Object,
           value: null
@@ -237,8 +233,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       observers: [
-        '_routePageChanged(routeData.page)',
-        '_permissionsPagesStamped(permissions)'
+        '_routePageChanged(routeData.page)'
       ],
 
       listeners: {
@@ -259,21 +254,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function() {
+        // for some reason the "$=" will make basePath undefined, we need to use a local property
+        this.baseUrl = this.basePath;
+
         if (this.isIE) {
           this._addIEBrowserStylesAdjustments();
         }
         // init loading element, used for global loading
         this.globalLoadingElement = this.$.pageLoading;
         this.fire('global-loading', {message: 'Loading main elements...', active: true});
-      },
-
-      attached: function() {
-        // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = this.basePath;
-
-        //if (this.route.path === this.baseUrl) {
-        //  this.set('route.path', this.baseUrl + 'partners/list');
-        //}
       },
 
       _updateMainPath: function(event) {
@@ -284,21 +273,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         event.stopImmediatePropagation();
       },
-      _permissionsPagesStamped: function(permissions) {
-        if (!permissions) {
-          return;
-        }
-        if ((this.route.path === this.baseUrl || this.route.path === '/') &&
-            permissions.loggedInDefault) {
-          // setting the default path
-          this.set('route.path', this.baseUrl + 'partners/list');
-        } else if (this.initialLoad) {
-          // reseting the page as the pages might not have been stamped
-          this._routePageChanged(this.routeData.page);
-        }
 
-        this.initialLoad = false;
-      },
       toggleDrawer: function() {
         this.$.drawer.toggle();
       },
@@ -324,8 +299,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // activate the global loading with a propper message
           this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
           // make the import
-          this.importHref(resolvedPageUrl, this._lazyLoadPagesAfterCurrentPageHasLoaded.bind(this, page, pageEl),
-              this._pageNotFound, true);
+          this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, page, pageEl),
+              this._pageNotFound, false);
         }
       },
 
@@ -362,16 +337,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       // load all the other main pages after first page is loaded
-      _lazyLoadPagesAfterCurrentPageHasLoaded: function(currentLoadingPage, currentLoadingPageEl) {
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._lazyLoadPages.bind(this, currentLoadingPage));
+      _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
+        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._firstPageRenderCallback.bind(this, currentLoadingPage));
+      },
+      _firstPageRenderCallback: function(currentLoadedPage) {
+        this._redirectToProperListPage();
+        this._lazyLoadPages(currentLoadedPage);
       },
       // load all the other main pages except the one just rendered
-      _lazyLoadPages: function(currentLoadingPage) {
+      _lazyLoadPages: function(currentLoadedPage) {
         try {
           var pageUrl;
           var self = this;
           self.lazyLoadPages.forEach(function(page) {
-            if (page !== currentLoadingPage) {
+            if (page !== currentLoadedPage) {
               // make the import
               pageUrl = self.resolveUrl('pages/page-' + page + '.html');
               // do not use optAsync=true of importHref, it will generate behaviors not found warnings
@@ -411,6 +391,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           contentContainer.style.minHeight = '100vh';
           contentContainer.style.boxSizing = 'border-box';
           contentContainer.style.paddingBottom = '90px';
+        }
+      },
+
+      _redirectToProperListPage: function() {
+        if (this.route.path === this.baseUrl || this.route.path === '/') {
+          // setting the default path when user enters the app
+          // redirect from /pmp/ to /pmp/partners/list
+          this.set('route.path', this.baseUrl + 'partners/list');
+          return;
+        }
+        // redirect from /pmp/<page> to /pmp/<page>/list
+        if (this.route.path === this.baseUrl + this.routeData.page) {
+          this.set('route.path', this.baseUrl + this.routeData.page + '/list');
+          return;
         }
       }
 
