@@ -39,13 +39,10 @@
       etools-page-refresh, #profile {
         color: var(--title-toolbar-secondary-text-color);
       }
-      #profile.open {
+      #profile.open, #accountProfile, #powerSettings {
         color: var(--dark-secondary-text-color);
       }
 
-      #accountProfile, #powerSettings {
-        color: var(--dark-secondary-text-color);
-      }
 
       paper-icon-button#profile {
         width: 60px;
@@ -164,9 +161,6 @@
             </paper-material>
           </iron-collapse>
         </div>
-
-
-        <!--<a class="logout" on-tap="_logout">Sign out</a>-->
         <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
     </app-toolbar>
