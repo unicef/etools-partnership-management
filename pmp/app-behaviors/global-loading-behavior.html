@@ -1,0 +1,28 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.GlobalLoadingBehavior */
+  pmpBehaviors.GlobalLoadingBehavior = {
+    properties: {
+      appShellEl: Object
+    },
+    showGlobalLoading: function(msg) {
+      var appShell = this._getAppShellElement();
+      if (appShell) {
+        appShell.showLoading(msg);
+      }
+    },
+    hideGlobalLoading: function() {
+      var appShell = this._getAppShellElement();
+      if (appShell) {
+        appShell.hideLoading();
+      }
+    },
+    _getAppShellElement: function() {
+      if (!this.appShellEl) {
+        // search for app shell element
+        this.appShellEl = Polymer.dom(document.querySelector('body')).querySelector('app-shell');
+      }
+      return this.appShellEl;
+    }
+  };
+</script>

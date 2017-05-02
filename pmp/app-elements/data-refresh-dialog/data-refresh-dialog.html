@@ -1,17 +1,14 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="../partners/partners-data/partners-list-data.html">
-<link rel="import" href="../agreements/agreement-data/agreement-list-data.html">
-<link rel="import" href="../interventions/intervention-data/interventions-list-data.html">
-<link rel="import" href="../governments/governments-data/governments-list-data.html">
-
+<link rel="import" href="../../app-behaviors/global-loading-behavior.html">
 
 <dom-module id="data-refresh-dialog">
   <template>
@@ -103,7 +100,9 @@
         is: 'data-refresh-dialog',
         behaviors: [
           etoolsAppConfig,
-          EtoolsLogsBehavior
+          EtoolsLogsBehavior,
+          etoolsBehaviors.EtoolsRefreshBehavior,
+          pmpBehaviors.GlobalLoadingBehavior
         ],
         properties: {
           name: String,
@@ -178,55 +177,47 @@
 
         _handleDialogClosed: function(closingReason) {
           if (closingReason.detail.confirmed) {
-            var promises = [];
+            this.showGlobalLoading('Refreshing data...');
 
+            // clear all data
+            if (this.allSelected) {
+              this.fire('update-main-path', {path: ''});
+              this.refresh();
+              return;
+            }
+
+            // clear only data sets
             var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
             var restampLandingPage = this.page === afterDataRefreshLandingPage;
-            console.log(afterDataRefreshLandingPage, restampLandingPage);
 
-            this.fire('global-loading', {message: 'Refreshing data...', active: true});
-
-            // TODO: - improvement - we might want to use transaction here and in case of failure
-            // changes will not be committed
-            if (this.governmentsSelected) {
-              promises.push(this._clearSelectedFromDexie('governments'));
-            }
-            if (this.interventionsSelected) {
-              promises.push(this._clearSelectedFromDexie('interventions'));
-            }
-            if (this.partnersSelected) {
-              promises.push(this._clearSelectedFromDexie('partners'));
-            }
-            if (this.agreementsSelected) {
-              promises.push(this._clearSelectedFromDexie('agreements'));
-            }
-
-            Promise.all(promises).then(function(results) {
-              if (results.indexOf(false) < 0) {
-                this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
-              } else {
-                this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+            var self = this;
+            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements',
+                'governments', 'interventions', function() {
+              if (self.partnersSelected) {
+                self.db.partners.clear();
+                self.db.collectionsList.delete('partners');
               }
-            }.bind(this))
-              .catch(function(error) {
-                this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
-              }.bind(this));
+              if (self.agreementsSelected) {
+                self.db.agreements.clear();
+                self.db.collectionsList.delete('agreements');
+              }
+              if (self.interventionsSelected) {
+                self.db.interventions.clear();
+                self.db.collectionsList.delete('interventions');
+              }
+              if (self.governmentsSelected) {
+                self.db.governments.clear();
+                self.db.collectionsList.delete('governments');
+              }
+            }).then(function(result) {
+              // transaction succeeded
+              self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+            }).catch(function(error) {
+              // transaction failed
+              self.logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+              self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+            });
           }
-        },
-
-        _clearSelectedFromDexie: function(collectionName) {
-          return this.db[collectionName].clear()
-            .then(function() {
-              return this.db.collectionsList.delete(collectionName);
-            }.bind(this))
-            .then(function() {
-              this.logInfo('Dexie data refreshed for collection: ' + collectionName, null);
-              return true;
-            }.bind(this))
-            .catch(function(err) {
-              this.logWarn('Dexie data clearing failed for collection: ' + collectionName, 'data-refresh-dialog');
-              return false;
-            }.bind(this));
         },
 
         _handleSuccess: function(afterDataRefreshLandingPage, restampLandingPage) {
@@ -241,15 +232,16 @@
 
         _triggerMainRoutePathUpdate: function(afterDataRefreshLandingPage, restampLandingPage) {
           var routePath = afterDataRefreshLandingPage + '/list';
+          var appShell = Polymer.dom(document.querySelector('body')).querySelector('app-shell');
           if (restampLandingPage) {
             this.set('page', null);
             this.fire('update-main-path', {path: routePath});
             setTimeout(function() {
-              this.fire('global-loading', {active: false});
+              this.hideGlobalLoading();
               this.set('page', afterDataRefreshLandingPage);
             }.bind(this), 0);
           } else {
-            this.fire('global-loading', {active: false});
+            this.hideGlobalLoading();
             this.fire('update-main-path', {path: routePath});
           }
           this._resetRefreshSelection();

@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
@@ -49,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="pages/page-partners.html">
 <link rel="import" href="pages/page-governments.html">
 <link rel="import" href="pages/page-not-found.html">
-<!-- -->
+-->
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
@@ -109,6 +110,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-vertical);
         @apply(--layout-flex);
         @apply(--layout-end-justified);
+      }
+
+      :host(:not(.show-loading)) #global-loading-wrapper {
+        display: none;
+      }
+
+      #global-loading-wrapper {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        background-color: rgba(0, 0, 0, 0.6);
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+      }
+      #global-loading-content {
+        background: var(--primary-background-color);
+        border: 1px solid var(--etools-loading-border-color);
+        box-shadow: 0px 2px 5px -2px var(--etools-loading-shadow-color);
+        padding: 10px;
+        border-radius: 4px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-self-center);
+      }
+      #loading-message {
+        margin-left: 15px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      paper-spinner {
+        width: 20px;
+        height: 20px;
       }
 
     </style>
@@ -185,6 +221,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
         <page-footer></page-footer>
+
+        <div id="global-loading-wrapper">
+          <div id="global-loading-content">
+            <paper-spinner active></paper-spinner>
+            <span id="loading-message">[[globalLoadingMsg]]</span>
+          </div>
+        </div>
+
       </app-header-layout>
     </app-drawer-layout>
     <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
@@ -226,7 +270,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           value: ['partners', 'agreements', 'interventions', 'governments']
         },
-        isIE: Boolean
+        isIE: Boolean,
+        globalLoadingMsg: String
       },
 
       behaviors: [
@@ -277,7 +322,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _updateMainPath: function(event) {
-        console.log(event.detail.path, this.route.path.replace(this.baseUrl, ''));
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
           this.set('route.path', this.baseUrl + event.detail.path);
@@ -313,8 +357,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // make the import
           this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, page, pageEl),
               this._pageNotFound, false);
-        } else {
-          console.log(page, this.route, this.routeData);
         }
       },
 
@@ -420,6 +462,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
           return;
         }
+      },
+
+      // New global loading functionality (the old one will be removed)
+      showLoading: function(msg) {
+        if (!msg) {
+          msg = 'Loading...';
+        }
+        this.set('globalLoadingMsg', msg);
+        this.classList.add('show-loading');
+      },
+
+      hideLoading: function() {
+        this.classList.remove('show-loading');
       }
 
     });
