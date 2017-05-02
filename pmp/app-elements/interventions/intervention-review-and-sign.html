@@ -15,7 +15,7 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
@@ -104,7 +104,7 @@
           <etools-searchable-multiselection-menu id="signedByUnicef"
              label="Signed by UNICEF"
              placeholder="&#8212;"
-             options="[[signedByUnicefUsers]]"
+             options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
              custom-object-options
              option-value="user_id"
              option-label="full_name"
@@ -112,8 +112,6 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             url="[[missingSignedByUnicefUsersUrl]]"
-             ajax-params="[[missingSignedByUnicefAjaxParams]]"
              readonly$="[[!signEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
@@ -168,17 +166,13 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingSignedByUnicefUsersBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
           intervention: {
             type: Object,
             observer: '_interventionChanged'
-          },
-          unicefUsersData: {
-            type: Array,
-            statePath: 'unicefUsersData'
           },
           signedByUnicefUsers: {
             type: Array,
@@ -208,7 +202,7 @@
         },
 
         ready: function() {
-          this.setMissingSignedByUnicefUsersUrl();
+          this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
         _editModeChanged: function(newValue, oldValue) {
@@ -220,6 +214,11 @@
         _interventionChanged: function(intervention) {
           // ensure loading msg close
           this._setNewEditMode();
+
+          this.set('intervention.prc_review_document_file', {});
+          this.set('intervention.prc_review_document', {});
+          this.set('intervention.prc_review_document_file', intervention.prc_review_document_file);
+          this.set('intervention.prc_review_document', intervention.prc_review_document);
         },
         _setNewEditMode: function() {
           if (!this.editMode) {
@@ -266,15 +265,6 @@
             }
           }
           return null;
-        },
-
-        _setSignedByUnicef: function(unicefUserId, unicefUsersLength) {
-          if (unicefUserId && unicefUsersLength) {
-            return this.unicefUsersData.filter(function(user) {
-              return parseInt(user.user_id) === parseInt(unicefUserId, 10);
-            });
-          }
-          return [];
         },
 
         _isNotDraft: function(status) {

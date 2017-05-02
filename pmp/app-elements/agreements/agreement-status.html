@@ -281,11 +281,11 @@
         ready: function() {
           var statusChangeWarningDialogContent = document.createElement('p');
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
+          this.warningDialog = this.createDialog('Agreement status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
         },
 
-        detach: function() {
+        detached: function() {
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }
