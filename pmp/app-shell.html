@@ -278,10 +278,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _updateMainPath: function(event) {
         console.log(event.detail.path, this.route.path.replace(this.baseUrl, ''));
-        // restamp page if needed
-        if (event.detail.restoreHomePage) {
-          this.set('page', 'partners');
-        }
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
           this.set('route.path', this.baseUrl + event.detail.path);

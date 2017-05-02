@@ -38,16 +38,15 @@
       }
     </style>
     <etools-dialog
-            id="dataRefreshDialog"
-            size="sm"
-            ok-btn-text="Refresh data"
-            cancel-btn-text="Cancel"
-            dialog-title="Refresh data"
-            disable-confirm-btn="[[!anySelected]]"
-            on-iron-overlay-opened="_refreshDialogOpened"
-            on-close="_handleDialogClosed">
+        id="dataRefreshDialog"
+        size="sm"
+        ok-btn-text="Refresh data"
+        cancel-btn-text="Cancel"
+        dialog-title="Refresh data"
+        disable-confirm-btn="[[!anySelected]]"
+        on-close="_handleDialogClosed">
       <div id="content-box">
-        <iron-label> Select the data you want to refresh: </iron-label>
+        <iron-label> Select the data you want to refresh:</iron-label>
 
         <div class="custom-field-wrapper flex-c">
 
@@ -103,9 +102,9 @@
       Polymer({
         is: 'data-refresh-dialog',
         behaviors: [
-            etoolsAppConfig,
-            EtoolsLogsBehavior
-          ],
+          etoolsAppConfig,
+          EtoolsLogsBehavior
+        ],
         properties: {
           name: String,
           governmentsSelected: {
@@ -178,38 +177,41 @@
         },
 
         _handleDialogClosed: function(closingReason) {
-            if (closingReason.detail.confirmed) {
-              var promises = [];
+          if (closingReason.detail.confirmed) {
+            var promises = [];
 
-              this.fire('global-loading', {message: 'Refreshing data...', active: true});
+            var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
+            var restampLandingPage = this.page === afterDataRefreshLandingPage;
+            console.log(afterDataRefreshLandingPage, restampLandingPage);
 
-              if (this.governmentsSelected) {
-                promises.push(this._clearSelectedFromDexie('governments'));
-              }
-              if (this.interventionsSelected) {
-                promises.push(this._clearSelectedFromDexie('interventions'));
-              }
-              if (this.partnersSelected) {
-                promises.push(this._clearSelectedFromDexie('partners'));
-              }
-              if (this.agreementsSelected) {
-                promises.push(this._clearSelectedFromDexie('agreements'));
-              }
+            this.fire('global-loading', {message: 'Refreshing data...', active: true});
 
-              Promise.all(promises)
-              .then(function(results) {
-                if (results.indexOf(false) < 0) {
-                  this._handleSuccess();
-                } else {
-                  this._handleFailure();
-                }
-              }.bind(this))
-              .catch(function(error) {
-                this._handleFailure();
-              }.bind(this));
-            } else {
-
+            // TODO: - improvement - we might want to use transaction here and in case of failure
+            // changes will not be committed
+            if (this.governmentsSelected) {
+              promises.push(this._clearSelectedFromDexie('governments'));
             }
+            if (this.interventionsSelected) {
+              promises.push(this._clearSelectedFromDexie('interventions'));
+            }
+            if (this.partnersSelected) {
+              promises.push(this._clearSelectedFromDexie('partners'));
+            }
+            if (this.agreementsSelected) {
+              promises.push(this._clearSelectedFromDexie('agreements'));
+            }
+
+            Promise.all(promises).then(function(results) {
+              if (results.indexOf(false) < 0) {
+                this._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+              } else {
+                this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+              }
+            }.bind(this))
+              .catch(function(error) {
+                this._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+              }.bind(this));
+          }
         },
 
         _clearSelectedFromDexie: function(collectionName) {
@@ -227,21 +229,52 @@
             }.bind(this));
         },
 
-        _handleSuccess: function() {
-          this.fire('global-loading', {active: false});
-          this.fire('update-main-path', {path: '', restoreHomePage: true});
+        _handleSuccess: function(afterDataRefreshLandingPage, restampLandingPage) {
+          this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
           this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
         },
 
-        _handleFailure: function() {
-            this.fire('global-loading', {active: false});
-            this.fire('update-main-path', {path: ''});
-            this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
+        _handleFailure: function(afterDataRefreshLandingPage, restampLandingPage) {
+          this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
+          this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
         },
 
-        _refreshDialogOpened: function(e) {
-          e.stopImmediatePropagation();
-          this.set('page', null);
+        _triggerMainRoutePathUpdate: function(afterDataRefreshLandingPage, restampLandingPage) {
+          var routePath = afterDataRefreshLandingPage + '/list';
+          if (restampLandingPage) {
+            this.set('page', null);
+            this.fire('update-main-path', {path: routePath});
+            setTimeout(function() {
+              this.fire('global-loading', {active: false});
+              this.set('page', afterDataRefreshLandingPage);
+            }.bind(this), 0);
+          } else {
+            this.fire('global-loading', {active: false});
+            this.fire('update-main-path', {path: routePath});
+          }
+          this._resetRefreshSelection();
+        },
+
+        _getAfterRefreshLandingPage: function() {
+          if (this.partnersSelected) {
+            return 'partners';
+          }
+          if (this.agreementsSelected) {
+            return 'agreements';
+          }
+          if (this.interventionsSelected) {
+            return 'interventions';
+          }
+          if (this.governmentsSelected) {
+            return 'governments';
+          }
+        },
+
+        _resetRefreshSelection: function() {
+          this.set('partnersSelected', false);
+          this.set('agreementsSelected', false);
+          this.set('interventionsSelected', false);
+          this.set('governmentsSelected', false);
         }
 
       });
