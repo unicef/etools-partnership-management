@@ -214,11 +214,6 @@
         _interventionChanged: function(intervention) {
           // ensure loading msg close
           this._setNewEditMode();
-
-          this.set('intervention.prc_review_document_file', {});
-          this.set('intervention.prc_review_document', {});
-          this.set('intervention.prc_review_document_file', intervention.prc_review_document_file);
-          this.set('intervention.prc_review_document', intervention.prc_review_document);
         },
         _setNewEditMode: function() {
           if (!this.editMode) {
