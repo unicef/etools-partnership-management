@@ -39,10 +39,10 @@
       etools-page-refresh, #profile {
         color: var(--title-toolbar-secondary-text-color);
       }
+
       #profile.open, #accountProfile, #powerSettings {
         color: var(--dark-secondary-text-color);
       }
-
 
       paper-icon-button#profile {
         width: 60px;
@@ -118,6 +118,7 @@
           padding: 8px 0;
           right: 81px;
         }
+
         .open {
           background: var(--primary-background-color);
         }
@@ -131,6 +132,7 @@
           padding: 0 16px 0 8px;
           cursor: pointer;
         }
+
         .dropdown-content .item:hover {
           background: var(--medium-theme-background-color);
         }
@@ -178,10 +180,6 @@
             type: Object,
           },
           userProfileDialog: Object,
-          _id: {
-            type: String,
-            value: ''
-          },
           opened: {
             type: String,
             value: ''
