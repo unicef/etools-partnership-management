@@ -297,6 +297,10 @@
           ]);
         },
 
+        attached: function() {
+          this.fire('global-loading', {message: 'Loading partners list data...', active: true});
+        },
+
         // Input: URL query params
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
@@ -384,7 +388,9 @@
                 this.csoType,
                 this.pageNumber,
                 this.pageSize,
-                this.showHidden);
+                this.showHidden,
+                this.showQueryLoading
+            );
           }, this.debounceTime);
         },
 

@@ -8,8 +8,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 
-<link rel="import" href="../../app-behaviors/global-loading-behavior.html">
-
 <dom-module id="data-refresh-dialog">
   <template>
     <style include="shared-styles grid-layout-styles">
@@ -87,7 +85,6 @@
 
         </div>
       </div>
-      <!--<etools-loading id="profileDataLoading"></etools-loading>-->
     </etools-dialog>
 
   </template>
@@ -101,8 +98,7 @@
         behaviors: [
           etoolsAppConfig,
           EtoolsLogsBehavior,
-          etoolsBehaviors.EtoolsRefreshBehavior,
-          pmpBehaviors.GlobalLoadingBehavior
+          etoolsBehaviors.EtoolsRefreshBehavior
         ],
         properties: {
           name: String,
@@ -177,7 +173,7 @@
 
         _handleDialogClosed: function(closingReason) {
           if (closingReason.detail.confirmed) {
-            this.showGlobalLoading('Refreshing data...');
+            this.fire('global-loading', {message: 'Refreshing data...', active: true});
 
             // clear all data
             if (this.allSelected) {
@@ -237,11 +233,11 @@
             this.set('page', null);
             this.fire('update-main-path', {path: routePath});
             setTimeout(function() {
-              this.hideGlobalLoading();
+              this.fire('global-loading', {active: false});
               this.set('page', afterDataRefreshLandingPage);
             }.bind(this), 0);
           } else {
-            this.hideGlobalLoading();
+            this.fire('global-loading', {active: false});
             this.fire('update-main-path', {path: routePath});
           }
           this._resetRefreshSelection();

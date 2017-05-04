@@ -119,7 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #global-loading-wrapper {
         @apply(--layout-vertical);
         @apply(--layout-center-justified);
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(180, 180, 180, 0.6);
         position: fixed;
         top: 0;
         right: 0;
@@ -242,7 +242,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       properties: {
-
         page: {
           type: String,
           reflectToAttribute: true,
@@ -267,11 +266,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object
         },
         lazyLoadPages: {
-          type: Array,
-          value: ['partners', 'agreements', 'interventions', 'governments']
+          type: Object,
+          value: {
+            partners: false,
+            agreements: false,
+            interventions: false,
+            governments: false
+          }
         },
         isIE: Boolean,
-        globalLoadingMsg: String
+        loadingsCounter: {
+          type: Number,
+          value: 0,
+          observer: '_manageGlobalLoadingState'
+        },
+        globalLoadingMsg: {
+          type: String,
+          value: 'Loading...'
+        }
       },
 
       behaviors: [
@@ -284,7 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'global-loading': '_handleLoading',
+        'global-loading': '_handleGlobalLoading',
         'drawer': 'toggleDrawer',
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
@@ -308,9 +320,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.isIE) {
           this._addIEBrowserStylesAdjustments();
         }
-        // init loading element, used for global loading
-        this.globalLoadingElement = this.$.pageLoading;
-        this.fire('global-loading', {message: 'Loading main elements...', active: true});
       },
 
       openDataRefreshDialog: function() {
@@ -351,7 +360,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
         var pageEl = this._getPageElement(page);
-        if (!this._pageLoaded(pageEl)) {
+        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[page] === false) {
           // activate the global loading with a propper message
           this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
           // make the import
@@ -365,36 +374,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.fire('toast', {text: 'Oops you hit a 404!'});
       },
 
-      /**
-       * Show loading when data is requested from server, or save is in progress...
-       */
-      _handleLoading: function(event) {
-        event.stopImmediatePropagation();
-        //        this.debounce('showGlobalLoading', function() {
-        if (this.globalLoadingElement) {
-          var loadingMsg = 'Loading...';
-          if (event.detail && typeof event.detail.message === 'string' && event.detail.message !== '') {
-            loadingMsg = event.detail.message;
-          }
-          this.globalLoadingElement.loadingText = loadingMsg;
-          var isActive = (event.detail.active === true) ? true : false;
-          this.globalLoadingElement.active = isActive;
-          //            console.log('start loading...open ' + isActive);
-        }
-        //        }, 50);
-      },
-
-      _pageLoaded: function(pageEl) {
-        return Polymer.isInstance(pageEl);
-      },
-
       _getPageElement: function(pageId) {
         return this.$$('#' + pageId);
       },
 
       // load all the other main pages after first page is loaded
       _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
+        this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
+        this.fire('global-loading', {active: false}); // deactivate first page loading msg
         currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+        // load the rest of the pages after current page render is complete
         Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._firstPageRenderCallback.bind(this, currentLoadingPage));
       },
       _firstPageRenderCallback: function(currentLoadedPage) {
@@ -404,16 +393,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // load all the other main pages except the one just rendered
       _lazyLoadPages: function(currentLoadedPage) {
         try {
-          var pageUrl;
-          var self = this;
-          self.lazyLoadPages.forEach(function(page) {
-            if (page !== currentLoadedPage) {
+          for (let page in this.lazyLoadPages) {
+            if (page !== currentLoadedPage && this.lazyLoadPages[page] === false) {
               // make the import
-              pageUrl = self.resolveUrl('pages/page-' + page + '.html');
+              let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
               // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              self.importHref(pageUrl, null, null, false);
+              this.importHref(pageUrl, function() {
+                this.lazyLoadPages[page] = true;
+              }, null, false);
             }
-          });
+          }
         } catch (err) {
           console.error('An error occurred during pages lazy load', err);
         }
@@ -464,17 +453,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      // New global loading functionality (the old one will be removed)
-      showLoading: function(msg) {
-        if (!msg) {
-          msg = 'Loading...';
-        }
-        this.set('globalLoadingMsg', msg);
-        this.classList.add('show-loading');
+      // global loading functionality
+      _loadingIsActive: function() {
+        return this.classList.contains('show-loading');
       },
-
+      showLoading: function() {
+        if (!this._loadingIsActive()) {
+          this.classList.add('show-loading');
+        }
+      },
       hideLoading: function() {
-        this.classList.remove('show-loading');
+        if (this._loadingIsActive()) {
+          this.classList.remove('show-loading');
+        }
+      },
+      _manageGlobalLoadingState: function(loadingsCounterVal) {
+        console.log(loadingsCounterVal);
+        if (loadingsCounterVal > 0) {
+          this.showLoading();
+        } else {
+          this.hideLoading();
+        }
+      },
+      _handleGlobalLoading: function(e) {
+        e.stopImmediatePropagation();
+        console.log('handle loading', e.detail);
+        if (e.detail.active === true) {
+          // set loading message
+          var loadingMsg = 'Loading...';
+          if (e.detail && typeof e.detail.message === 'string' && e.detail.message !== '') {
+            loadingMsg = e.detail.message;
+          }
+          this.set('globalLoadingMsg', loadingMsg);
+          // update loadings counter
+          console.log('increment', this.loadingsCounter);
+          this.loadingsCounter++;
+        } else {
+          if (this.loadingsCounter > 0) {
+            this.loadingsCounter--
+          }
+        }
       }
 
     });
