@@ -214,7 +214,7 @@
                 internal-file="[[agreement.attached_agreement_file]]"
                 label="Signed Agreement"
                 accept=".doc,.docx,.pdf,.jpg,.png"
-                hide-delete-btn="[[_hideDeleteBtn(agreement.status)]]"
+                hide-delete-btn="[[_hideDeleteBtn(agreement.status,agreement.attached_agreement)]]"
                 readonly$="[[!_allowEditAgreementDoc(agreement.status)]]"></etools-single-file>
           </div>
         </div>
@@ -387,7 +387,17 @@
 
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+
+            // forces etools-single-file to redraw the element
+            if (!agreement.attached_agreement) {
+              this.set('agreement.attached_agreement', {});
+            }
+             if (!agreement.attached_agreement_file) {
+              this.set('agreement.attached_agreement_file', '');
+             }
           } else {
+            this.set('agreement.attached_agreement', {});
+            this.set('agreement.attached_agreement_file', '');
             // new agreement, update status to draft and reset fields
             this._setDraftStatus(this.editMode, this.isNewAgreement);
             this._resetDropdown('#partner');
