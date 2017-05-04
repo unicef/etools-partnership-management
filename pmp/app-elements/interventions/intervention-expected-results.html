@@ -116,8 +116,7 @@
 
         properties: {
           interventionId: {
-            type: Number,
-            observer: 'interventionIdChanged'
+            type: Number
           },
           _deleteEpName: {
             type: String,
@@ -196,15 +195,6 @@
             }
           }
         },
-
-        interventionIdChanged: function(interventionId) {
-          if (interventionId > 0) {
-            this.set('dataModel.intervention', interventionId);
-          } else {
-            this.set('dataModel.intervention', null);
-          }
-        },
-
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
