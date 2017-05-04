@@ -210,8 +210,8 @@
         </div>
       </etools-content-panel>
 
-      <!-- Staff Members section-->
-      <etools-content-panel class="content-section" title$="Staff Members ([[partner.staff_members.length]])" show-expand-btn>
+      <!-- Partner Contacts section-->
+      <etools-content-panel class="content-section" title$="Partner Contacts ([[partner.staff_members.length]])" show-expand-btn>
         <staff-members id="staffMembersList" data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
@@ -354,7 +354,7 @@
             partnerChanges.id = this.partner.id;
             this.fire('save-partner', partnerChanges);
           } else {
-            this.fire('toast', {text: 'Please check assessments and staff members ' +
+            this.fire('toast', {text: 'Please check assessments and partner contacts' +
               'invalid fields or empty data rows!', showCloseBtn: true});
           }
 
