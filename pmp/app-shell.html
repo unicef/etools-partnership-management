@@ -20,8 +20,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 
-<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
-
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 
@@ -89,11 +87,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .global-warn-msg-toast {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-      }
-
-      #pageLoading {
-        position: fixed;
-        z-index: 1000;
       }
 
       .main-page {
@@ -219,7 +212,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
-        <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
         <page-footer></page-footer>
 
         <div id="global-loading-wrapper">
@@ -468,7 +460,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       _manageGlobalLoadingState: function(loadingsCounterVal) {
-        console.log(loadingsCounterVal);
         if (loadingsCounterVal > 0) {
           this.showLoading();
         } else {
@@ -477,7 +468,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _handleGlobalLoading: function(e) {
         e.stopImmediatePropagation();
-        console.log('handle loading', e.detail);
         if (e.detail.active === true) {
           // set loading message
           var loadingMsg = 'Loading...';
@@ -486,7 +476,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           this.set('globalLoadingMsg', loadingMsg);
           // update loadings counter
-          console.log('increment', this.loadingsCounter);
           this.loadingsCounter++;
         } else {
           if (this.loadingsCounter > 0) {
