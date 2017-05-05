@@ -15,6 +15,7 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
@@ -137,7 +138,7 @@
           <etools-searchable-multiselection-menu id="unicefFocalPts"
                                                  label="UNICEF Focal Point(s)"
                                                  placeholder="&#8212;"
-                                                 options="[[unicefUsersData]]"
+                                                 options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
                                                  custom-object-options
                                                  option-label="full_name"
                                                  option-value="user_id"
@@ -224,19 +225,9 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <!-- Population Focus -->
-        <paper-textarea id="populationFocus"
-                        label="Population Focus"
-                        value="{{intervention.population_focus}}"
-                        placeholder="&#8212;"
-                        char-counter
-                        maxlength="130"
-                        readonly$="[[!detailsEditMode]]"></paper-textarea>
-      </div>
-      <div class="row-h flex-c">
         <paper-material elevation="0">
           <paper-toolbar>
-            <div class="title">Sector Locations</div>
+            <div class="title">Section/Cluster, Locations</div>
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
                                          data-items="{{intervention.sector_locations}}"
@@ -247,7 +238,7 @@
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" title="Expected results">
+    <etools-content-panel class="content-section" title="PD Output or SSFA TOR Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
           edit-mode$="[[detailsEditMode]]"
@@ -283,7 +274,8 @@
 
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
@@ -379,6 +371,8 @@
           });
           this.set('pcaDocTypes', pcaTypes);
           this.set('ssfaDocTypes', ssfaTypes);
+
+          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
 
         _interventionChanged: function(intervention) {
