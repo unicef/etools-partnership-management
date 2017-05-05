@@ -105,10 +105,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-end-justified);
       }
 
-      :host(:not(.show-loading)) #global-loading-wrapper {
-        display: none;
-      }
-
       #global-loading-wrapper {
         @apply(--layout-vertical);
         @apply(--layout-center-justified);
@@ -178,6 +174,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
+        <div id="global-loading-wrapper" hidden$="[[!showLoading]]">
+          <div id="global-loading-content">
+            <paper-spinner active></paper-spinner>
+            <span id="loading-message">Loading...</span>
+          </div>
+        </div>
+
         <template is="dom-if" if="[[_activePageIs(page, 'partners')]]" restamp>
           <page-partners id="partners" class="main-page"
                          route="[[subroute]]"
@@ -214,12 +217,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <page-footer></page-footer>
 
-        <div id="global-loading-wrapper">
-          <div id="global-loading-content">
-            <paper-spinner active></paper-spinner>
-            <span id="loading-message">[[globalLoadingMsg]]</span>
-          </div>
-        </div>
+
 
       </app-header-layout>
     </app-drawer-layout>
@@ -272,10 +270,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: 0,
           observer: '_manageGlobalLoadingState'
         },
-        globalLoadingMsg: {
-          type: String,
-          value: 'Loading...'
-        }
+        showLoading: Boolean
       },
 
       behaviors: [
@@ -373,12 +368,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // load all the other main pages after first page is loaded
       _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
         this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
-        this.fire('global-loading', {active: false}); // deactivate first page loading msg
         currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
         // load the rest of the pages after current page render is complete
         Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._firstPageRenderCallback.bind(this, currentLoadingPage));
       },
       _firstPageRenderCallback: function(currentLoadedPage) {
+        this.fire('global-loading', {active: false}); // deactivate first page loading msg
         this._redirectToProperListPage();
         this._lazyLoadPages(currentLoadedPage);
       },
@@ -446,24 +441,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       // global loading functionality
-      _loadingIsActive: function() {
-        return this.classList.contains('show-loading');
-      },
-      showLoading: function() {
-        if (!this._loadingIsActive()) {
-          this.classList.add('show-loading');
+      _showLoading: function() {
+        if (!this.showLoading) {
+          this.set('showLoading', true);
         }
       },
-      hideLoading: function() {
-        if (this._loadingIsActive()) {
-          this.classList.remove('show-loading');
+      _hideLoading: function() {
+        if (this.showLoading) {
+          this.set('showLoading', false);
         }
       },
       _manageGlobalLoadingState: function(loadingsCounterVal) {
         if (loadingsCounterVal > 0) {
-          this.showLoading();
+           this._showLoading();
         } else {
-          this.hideLoading();
+           this._hideLoading();
         }
       },
       _handleGlobalLoading: function(e) {
@@ -474,7 +466,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (e.detail && typeof e.detail.message === 'string' && e.detail.message !== '') {
             loadingMsg = e.detail.message;
           }
-          this.set('globalLoadingMsg', loadingMsg);
+          this.$$('#loading-message').innerHTML = loadingMsg;
           // update loadings counter
           this.loadingsCounter++;
         } else {
