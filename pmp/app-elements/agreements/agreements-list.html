@@ -1,5 +1,4 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
@@ -15,6 +14,7 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
@@ -42,7 +42,7 @@
                          total-results="{{totalResults}}"
                          list-data-path="filteredAgreements"
                          on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded show-loading>
+                         fire-data-loaded>
     </agreement-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -239,12 +239,12 @@
         is: 'agreements-list',
 
         behaviors: [
+          etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.ListsCommonBehavior,
-          etoolsAppConfig.globals,
+          pmpBehaviors.ListsCommonBehavior
         ],
 
         properties: {
@@ -367,6 +367,10 @@
           ]);
         },
 
+        attached: function() {
+          this.fire('global-loading', {message: 'Loading agreements list data...', active: true});
+        },
+
         // Input: URL query params
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
@@ -470,7 +474,9 @@
                 this.startDate,
                 this.endDate,
                 this.pageNumber,
-                this.pageSize);
+                this.pageSize,
+                this.showQueryLoading
+            );
           }, this.debounceTime);
         },
 
