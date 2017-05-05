@@ -276,7 +276,6 @@
             offices: [],
             fr_numbers: undefined,
             planned_visits: [],
-            population_focus: undefined,
             sector_locations: [],
             planned_budget: [],
             result_links: [],
@@ -485,7 +484,7 @@
       },
       _getModifiedInterventionDetails: function() {
         var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
-          'start', 'end', 'population_focus'];
+          'start', 'end'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
           'sector_locations', 'planned_budget', 'planned_visits'];
         var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
