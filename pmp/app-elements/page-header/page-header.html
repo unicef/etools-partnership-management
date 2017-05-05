@@ -2,7 +2,6 @@
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
 <link rel="import" href="../user-profile-dialog/user-profile-dialog.html">
 <link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
@@ -32,7 +31,7 @@
         color: var(--light-primary-text-color);
       }
 
-      etools-page-refresh, #profile {
+       #profile {
         color: var(--title-toolbar-secondary-text-color);
       }
 
@@ -43,10 +42,6 @@
       .right-side {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-      }
-
-      etools-page-refresh {
-        margin-left: 25px;
       }
       .titlebar {
         flex: 1 ;
@@ -72,6 +67,7 @@
         color: var(--light-primary-text-color);
         font-weight: 400;
         margin-left: 24px;
+        margin-right: 24px;
         cursor: pointer;
         -webkit-font-smoothing: antialiased;
       }
@@ -95,7 +91,6 @@
         <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
          <paper-icon-button id="profile" icon="social:person" role="button" on-tap="_openUserProfileDialog" aria-disabled="false"></paper-icon-button>
         <a class="logout" on-tap="_logout">Sign out</a>
-        <etools-page-refresh id="refresh"></etools-page-refresh>
       </div>
     </app-toolbar>
   </template>
@@ -116,15 +111,9 @@
         observers: [
           '_updateCountriesList(user.profile.countries_available)'
         ],
-        listeners: {
-        'main_refresh': '_refresh_page'
-        },
+
         openDrawer: function() {
           this.fire('drawer');
-        },
-        _refresh_page: function(event) {
-            event.stopImmediatePropagation();
-            this.$.refresh._refresh();
         },
         _getFlagIconClass: function(id) {
           var flagIdMap = {
