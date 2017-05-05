@@ -244,6 +244,7 @@
       },
       _saveIntervention: function(e) {
         e.stopImmediatePropagation();
+        this.set('serverErrors', []);
         if (_.has(e.detail, 'intervention')) {
           this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved);
         }

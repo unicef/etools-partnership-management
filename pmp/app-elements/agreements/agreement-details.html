@@ -21,7 +21,7 @@
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
-<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
@@ -190,8 +190,6 @@
                 update-selected
                 selected-requires-valid-options
                 dynamic-align
-                url="[[missingSignedByUnicefUsersUrl]]"
-                ajax-params="[[missingSignedByUnicefAjaxParams]]"
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
                 required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
@@ -269,7 +267,7 @@
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.AgreementsCommonBehavior,
-          pmpBehaviors.MissingSignedByUnicefUsersBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
@@ -328,7 +326,7 @@
         ],
 
         ready: function() {
-          this.setMissingSignedByUnicefUsersUrl();
+          this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
         _isNewAgreementChanged: function(isNew) {

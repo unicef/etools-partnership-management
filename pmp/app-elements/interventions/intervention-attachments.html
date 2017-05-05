@@ -100,6 +100,9 @@
         ],
 
         properties: {
+          active: {
+            type: Boolean
+          },
           intervention: {
             type: Object
           },
@@ -111,8 +114,7 @@
           },
           fileTypes: {
             type: Array,
-            statePath: 'fileTypes',
-            observer: '_fileTypesChanged'
+            statePath: 'fileTypes'
           },
           fileModel: {
             type: Object,
@@ -134,6 +136,8 @@
             type: Boolean
           }
         },
+
+        observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
         _editModeChanged: function(newValue) {
           if (newValue !== this.attachmentEditMode) {
@@ -231,8 +235,8 @@
           }
         },
 
-        _fileTypesChanged: function(fileTypes) {
-          if (!fileTypes.length) {
+        _checkEmptyFileTypesData: function(fileTypes, active) {
+          if (active && !fileTypes.length) {
             // there are no file types in the current workspace
             this.fire('toast', {
               text: 'File Type data required to save attachments is missing from current workspace!',
