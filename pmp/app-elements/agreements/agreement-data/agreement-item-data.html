@@ -78,6 +78,7 @@
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
+          this.fire('global-loading', {active: false});
         },
 
         /**

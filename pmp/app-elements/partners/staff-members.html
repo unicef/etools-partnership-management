@@ -60,7 +60,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index)]]"
+                                 disabled="[[!_canBeRemoved(item.id)]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
@@ -72,10 +72,9 @@
                              label="Position"
                              value="{{item.title}}"
                              placeholder="&#8212;"
-                             readonly$="[[!editMode]]">
-                  <!-- TODO: readd this to above field if title is required:
-                   invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, index)]]"
-                   error-message="Title is required" -->
+                             readonly$="[[!editMode]]"
+                             invalid$="[[!_isValid('title', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                             error-message="Position is required">
                 </paper-input>
               </div>
               <div class="col col-4">
@@ -85,7 +84,7 @@
                              value="{{item.first_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, index)]]"
+                             invalid$="[[!_isValid('firstName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="First name is required">
                 </paper-input>
               </div>
@@ -96,7 +95,7 @@
                              value="{{item.last_name}}"
                              placeholder="&#8212;"
                              readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, index)]]"
+                             invalid$="[[!_isValid('lastName', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="Last name is required">
                 </paper-input>
               </div>
@@ -108,7 +107,9 @@
                              label="Phone number"
                              value="{{item.phone}}"
                              placeholder="&#8212;"
-                             readonly$="[[!editMode]]">
+                             readonly$="[[!editMode]]"
+                             invalid$="[[!_isValid('phone', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
+                             error-message="Phone number is required">
                   <iron-icon prefix icon="communication:phone"></iron-icon>
                 </paper-input>
               </div>
@@ -118,8 +119,8 @@
                              label="E-mail address"
                              value="{{item.email}}"
                              placeholder="&#8212;"
-                             readonly$="[[!_canBeRemoved(index)]]"
-                             invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, index)]]"
+                             readonly$="[[!_canBeRemoved(item.id)]]"
+                             invalid$="[[!_isValid('emailAddress', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="A valid & unused email address is required">
                   <iron-icon prefix icon="communication:email"></iron-icon>
                 </paper-input>
@@ -176,12 +177,11 @@
         };
       },
 
-      _canBeRemoved: function(index) {
+      _canBeRemoved: function(id) {
         if (!this.editMode) {
           return false;
         }
-        if (this.dataItems[index] &&
-          typeof this.dataItems[index].id !== 'undefined' && this.dataItems[index].id !== null) {
+        if (id) {
           return false;
         }
         return true;
@@ -206,25 +206,30 @@
         return typeof value !== 'undefined' && value !== null && value !== '';
       },
 
-      _isValid: function(field, title, firstName, lastName, emailAddress, index) {
+      _isValid: function(field, title, firstName, lastName, emailAddress, phone, index) {
         var valid = true;
         switch (field) {
-          // TODO: decide if title is required field
-//          case 'title':
-//            if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
-//                 this._notEmpty(emailAddress))) {
-//              valid = false;
-//            }
-//            break;
+          case 'title':
+            if (!this._notEmpty(title) && (this._notEmpty(firstName) || this._notEmpty(lastName) ||
+                 this._notEmpty(emailAddress) || this._notEmpty(phone))) {
+              valid = false;
+            }
+            break;
           case 'firstName':
             if (!this._notEmpty(firstName) && (this._notEmpty(title) || this._notEmpty(lastName) ||
-                this._notEmpty(emailAddress))) {
+                this._notEmpty(emailAddress) || this._notEmpty(phone))) {
               valid = false;
             }
             break;
           case 'lastName':
             if (!this._notEmpty(lastName) && (this._notEmpty(title) || this._notEmpty(firstName) ||
-                 this._notEmpty(emailAddress))) {
+                 this._notEmpty(emailAddress) || this._notEmpty(phone))) {
+              valid = false;
+            }
+            break;
+          case 'phone':
+            if (!this._notEmpty(phone) && !this._notEmpty(emailAddress) &&
+                (this._notEmpty(title) || this._notEmpty(firstName) || this._notEmpty(lastName))) {
               valid = false;
             }
             break;
@@ -232,7 +237,8 @@
             if (this._notEmpty(emailAddress)) {
               valid = this._validStaffMemberEmailAddress(emailAddress, index);
             } else {
-              if (this._notEmpty(title) || this._notEmpty(firstName) || this._notEmpty(lastName)) {
+              if (!this._notEmpty(phone) && (this._notEmpty(title) || this._notEmpty(firstName) ||
+                  this._notEmpty(lastName))) {
                 valid = false;
               } else {
                 valid = true; // empty staff member data, hide error msgs
