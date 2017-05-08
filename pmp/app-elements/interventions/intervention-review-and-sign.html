@@ -70,7 +70,8 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[!signEditMode]]">
+                              readonly$="[[_isUploadFileReadonly(signEditMode, intervention.status, intervention.prc_review_document_file)]]"
+                              hide-delete-btn="[[_hideDeleteBtn(readonly, intervention.status, intervention.prc_review_document_file)]]">
           </etools-single-file>
         </div>
       </div>
@@ -204,7 +205,25 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
-
+        _isUploadFileReadonly: function() {
+          if (!this.signEditMode) {
+            return true;
+          }
+          if(!this.intervention || !this.intervention.id) {
+            return false;
+          }
+          if (this.intervention.status !== 'draft') {
+            return true;
+          }
+          return false;
+        },
+        _hideDeleteBtn: function() {
+          console.log(this.intervention.status);
+          if (this.intervention && this.intervention.status === 'draft' && this.intervention.prc_review_document_file) {
+            return true;
+          }
+          return false;
+        },
         _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();
