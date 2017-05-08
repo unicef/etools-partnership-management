@@ -99,9 +99,11 @@
                 noink bottom-item
                 fallback-selection="details">
 
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
+              <template is="dom-if" if="[[!_newIntervention(newGovInterventionActive)]]">
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+              </template>
               <paper-tab name="details" link>
                 <span class="tab-content">Government Details</span>
               </paper-tab>
@@ -142,12 +144,14 @@
                                 disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
             </government-details>
           </div>
-          <div class="page" name="overview">
-            <government-overview id="overview"
-                                 intervention="[[intervention]]"
-                                 disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
-            </government-overview>
-          </div>
+          <template is="dom-if" if="[[!_newIntervention(newGovInterventionActive)]]">
+            <div class="page" name="overview">
+              <government-overview id="overview"
+                                  intervention="[[intervention]]"
+                                  disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
+              </government-overview>
+            </div>
+          </template>
 
         </iron-pages>
       </div>
@@ -310,7 +314,11 @@
           (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
         }
-      }
+      },
+
+      _newIntervention: function(newInterventionActive) {
+        return newInterventionActive === true;
+      },
 
     });
 
