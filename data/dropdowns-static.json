@@ -38,7 +38,7 @@
       "value": "terminated",
       "label": "Terminated"
     }
-    ],
+  ],
   "agreement_types": [
     {
       "value": "PCA",
@@ -52,7 +52,7 @@
       "value": "MOU",
       "label": "Memorandum of Understanding"
     }
-    ],
+  ],
   "agency_choices": [
     {
       "value": "DPKO",
@@ -150,7 +150,7 @@
       "value": "WHO",
       "label": "WHO"
     }
-    ],
+  ],
   "agreement_amendment_types": [
     {
       "value": "Change IP name",
@@ -176,7 +176,7 @@
       "value": "Amend existing clause",
       "label": "Amend Existing Clause"
     }
-    ],
+  ],
   "local_currency": null,
   "cso_types": [
     {
@@ -211,7 +211,7 @@
       "value": null,
       "label": null
     }
-    ],
+  ],
   "partner_types": [
     {
       "value": "Bilateral / Multilateral",
@@ -229,7 +229,7 @@
       "value": "UN Agency",
       "label": "UN Agency"
     }
-    ],
+  ],
   "assessment_types": [
     {
       "value": "Micro Assessment",
@@ -255,7 +255,7 @@
       "value": "Other",
       "label": "Other"
     }
-    ],
+  ],
   "intervention_amendment_types": [
     {
       "value": "CPR",
@@ -289,7 +289,7 @@
       "value": "CABGT20FACE",
       "label": "Changes in Activity Budget >20% - No Change in Total Budget - Reporting at FACE"
     }
-    ],
+  ],
   "intervention_doc_type": [
     {
       "value": "PD",
@@ -303,7 +303,7 @@
       "value": "SSFA",
       "label": "SSFA TOR"
     }
-    ],
+  ],
   "intervention_status": [
     {
       "value": "draft",
@@ -329,5 +329,5 @@
       "value": "cancelled",
       "label": "Cancelled"
     }
-    ]
+  ]
 }
