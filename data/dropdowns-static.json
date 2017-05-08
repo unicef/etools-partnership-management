@@ -14,320 +14,320 @@
     }
   ],
   "agreement_status": [
-        {
-            "value": "draft",
-            "label": "Draft"
-        },
-        {
-            "value": "cancelled",
-            "label": "Cancelled"
-        },
-        {
-            "value": "active",
-            "label": "Active"
-        },
-        {
-            "value": "ended",
-            "label": "Ended"
-        },
-        {
-            "value": "suspended",
-            "label": "Suspended"
-        },
-        {
-            "value": "terminated",
-            "label": "Terminated"
-        }
+    {
+      "value": "draft",
+      "label": "Draft"
+    },
+    {
+      "value": "cancelled",
+      "label": "Cancelled"
+    },
+    {
+      "value": "active",
+      "label": "Active"
+    },
+    {
+      "value": "ended",
+      "label": "Ended"
+    },
+    {
+      "value": "suspended",
+      "label": "Suspended"
+    },
+    {
+      "value": "terminated",
+      "label": "Terminated"
+    }
     ],
-    "agreement_types": [
-        {
-            "value": "PCA",
-            "label": "Programme Cooperation Agreement"
-        },
-        {
-            "value": "SSFA",
-            "label": "Small Scale Funding Agreement"
-        },
-        {
-            "value": "MOU",
-            "label": "Memorandum of Understanding"
-        }
+  "agreement_types": [
+    {
+      "value": "PCA",
+      "label": "Programme Cooperation Agreement"
+    },
+    {
+      "value": "SSFA",
+      "label": "Small Scale Funding Agreement"
+    },
+    {
+      "value": "MOU",
+      "label": "Memorandum of Understanding"
+    }
     ],
-    "agency_choices": [
-        {
-            "value": "DPKO",
-            "label": "DPKO"
-        },
-        {
-            "value": "ECA",
-            "label": "ECA"
-        },
-        {
-            "value": "ECLAC",
-            "label": "ECLAC"
-        },
-        {
-            "value": "ESCWA",
-            "label": "ESCWA"
-        },
-        {
-            "value": "FAO",
-            "label": "FAO"
-        },
-        {
-            "value": "ILO",
-            "label": "ILO"
-        },
-        {
-            "value": "IOM",
-            "label": "IOM"
-        },
-        {
-            "value": "OHCHR",
-            "label": "OHCHR"
-        },
-        {
-            "value": "UN",
-            "label": "UN"
-        },
-        {
-            "value": "UN Women",
-            "label": "UN Women"
-        },
-        {
-            "value": "UNAIDS",
-            "label": "UNAIDS"
-        },
-        {
-            "value": "UNDP",
-            "label": "UNDP"
-        },
-        {
-            "value": "UNESCO",
-            "label": "UNESCO"
-        },
-        {
-            "value": "UNFPA",
-            "label": "UNFPA"
-        },
-        {
-            "value": "UN - Habitat",
-            "label": "UN - Habitat"
-        },
-        {
-            "value": "UNHCR",
-            "label": "UNHCR"
-        },
-        {
-            "value": "UNODC",
-            "label": "UNODC"
-        },
-        {
-            "value": "UNOPS",
-            "label": "UNOPS"
-        },
-        {
-            "value": "UNRWA",
-            "label": "UNRWA"
-        },
-        {
-            "value": "UNSC",
-            "label": "UNSC"
-        },
-        {
-            "value": "UNU",
-            "label": "UNU"
-        },
-        {
-            "value": "WB",
-            "label": "WB"
-        },
-        {
-            "value": "WFP",
-            "label": "WFP"
-        },
-        {
-            "value": "WHO",
-            "label": "WHO"
-        }
+  "agency_choices": [
+    {
+      "value": "DPKO",
+      "label": "DPKO"
+    },
+    {
+      "value": "ECA",
+      "label": "ECA"
+    },
+    {
+      "value": "ECLAC",
+      "label": "ECLAC"
+    },
+    {
+      "value": "ESCWA",
+      "label": "ESCWA"
+    },
+    {
+      "value": "FAO",
+      "label": "FAO"
+    },
+    {
+      "value": "ILO",
+      "label": "ILO"
+    },
+    {
+      "value": "IOM",
+      "label": "IOM"
+    },
+    {
+      "value": "OHCHR",
+      "label": "OHCHR"
+    },
+    {
+      "value": "UN",
+      "label": "UN"
+    },
+    {
+      "value": "UN Women",
+      "label": "UN Women"
+    },
+    {
+      "value": "UNAIDS",
+      "label": "UNAIDS"
+    },
+    {
+      "value": "UNDP",
+      "label": "UNDP"
+    },
+    {
+      "value": "UNESCO",
+      "label": "UNESCO"
+    },
+    {
+      "value": "UNFPA",
+      "label": "UNFPA"
+    },
+    {
+      "value": "UN - Habitat",
+      "label": "UN - Habitat"
+    },
+    {
+      "value": "UNHCR",
+      "label": "UNHCR"
+    },
+    {
+      "value": "UNODC",
+      "label": "UNODC"
+    },
+    {
+      "value": "UNOPS",
+      "label": "UNOPS"
+    },
+    {
+      "value": "UNRWA",
+      "label": "UNRWA"
+    },
+    {
+      "value": "UNSC",
+      "label": "UNSC"
+    },
+    {
+      "value": "UNU",
+      "label": "UNU"
+    },
+    {
+      "value": "WB",
+      "label": "WB"
+    },
+    {
+      "value": "WFP",
+      "label": "WFP"
+    },
+    {
+      "value": "WHO",
+      "label": "WHO"
+    }
     ],
-    "agreement_amendment_types": [
-        {
-            "value": "Change IP name",
-            "label": "Change in Legal Name of Implementing Partner"
-        },
-        {
-            "value": "CP extension",
-            "label": "Extension of Country Programme Cycle"
-        },
-        {
-            "value": "Change authorized officer",
-            "label": "Change Authorized Officer"
-        },
-        {
-            "value": "Change banking info",
-            "label": "Banking Information"
-        },
-        {
-            "value": "Additional clause",
-            "label": "Additional Clause"
-        },
-        {
-            "value": "Amend existing clause",
-            "label": "Amend Existing Clause"
-        }
+  "agreement_amendment_types": [
+    {
+      "value": "Change IP name",
+      "label": "Change in Legal Name of Implementing Partner"
+    },
+    {
+      "value": "CP extension",
+      "label": "Extension of Country Programme Cycle"
+    },
+    {
+      "value": "Change authorized officer",
+      "label": "Change Authorized Officer"
+    },
+    {
+      "value": "Change banking info",
+      "label": "Banking Information"
+    },
+    {
+      "value": "Additional clause",
+      "label": "Additional Clause"
+    },
+    {
+      "value": "Amend existing clause",
+      "label": "Amend Existing Clause"
+    }
     ],
-    "local_currency": null,
-    "cso_types": [
-        {
-            "value": "Academic Institution",
-            "label": "Academic Institution"
-        },
-        {
-            "value": "Community Based Organisation",
-            "label": "Community Based Organisation"
-        },
-        {
-            "value": "Community based organization",
-            "label": "Community based organization"
-        },
-        {
-            "value": "International",
-            "label": "International"
-        },
-        {
-            "value": "International NGO",
-            "label": "International NGO"
-        },
-        {
-            "value": "National",
-            "label": "National"
-        },
-        {
-            "value": "National NGO",
-            "label": "National NGO"
-        },
-        {
-            "value": null,
-            "label": null
-        }
+  "local_currency": null,
+  "cso_types": [
+    {
+      "value": "Academic Institution",
+      "label": "Academic Institution"
+    },
+    {
+      "value": "Community Based Organisation",
+      "label": "Community Based Organisation"
+    },
+    {
+      "value": "Community based organization",
+      "label": "Community based organization"
+    },
+    {
+      "value": "International",
+      "label": "International"
+    },
+    {
+      "value": "International NGO",
+      "label": "International NGO"
+    },
+    {
+      "value": "National",
+      "label": "National"
+    },
+    {
+      "value": "National NGO",
+      "label": "National NGO"
+    },
+    {
+      "value": null,
+      "label": null
+    }
     ],
-    "partner_types": [
-        {
-            "value": "Bilateral / Multilateral",
-            "label": "Bilateral / Multilateral"
-        },
-        {
-            "value": "Civil Society Organization",
-            "label": "Civil Society Organization"
-        },
-        {
-            "value": "Government",
-            "label": "Government"
-        },
-        {
-            "value": "UN Agency",
-            "label": "UN Agency"
-        }
+  "partner_types": [
+    {
+      "value": "Bilateral / Multilateral",
+      "label": "Bilateral / Multilateral"
+    },
+    {
+      "value": "Civil Society Organization",
+      "label": "Civil Society Organization"
+    },
+    {
+      "value": "Government",
+      "label": "Government"
+    },
+    {
+      "value": "UN Agency",
+      "label": "UN Agency"
+    }
     ],
-    "assessment_types": [
-        {
-            "value": "Micro Assessment",
-            "label": "Micro Assessment"
-        },
-        {
-            "value": "Simplified Checklist",
-            "label": "Simplified Checklist"
-        },
-        {
-            "value": "Scheduled Audit report",
-            "label": "Scheduled Audit report"
-        },
-        {
-            "value": "Special Audit report",
-            "label": "Special Audit report"
-        },
-        {
-            "value": "High Risk Assumed",
-            "label": "High Risk Assumed"
-        },
-        {
-            "value": "Other",
-            "label": "Other"
-        }
+  "assessment_types": [
+    {
+      "value": "Micro Assessment",
+      "label": "Micro Assessment"
+    },
+    {
+      "value": "Simplified Checklist",
+      "label": "Simplified Checklist"
+    },
+    {
+      "value": "Scheduled Audit report",
+      "label": "Scheduled Audit report"
+    },
+    {
+      "value": "Special Audit report",
+      "label": "Special Audit report"
+    },
+    {
+      "value": "High Risk Assumed",
+      "label": "High Risk Assumed"
+    },
+    {
+      "value": "Other",
+      "label": "Other"
+    }
     ],
-    "intervention_amendment_types": [
-        {
-            "value": "CPR",
-            "label": "Change in Programme Result"
-        },
-        {
-            "value": "CPF",
-            "label": "Change in Population Focus"
-        },
-        {
-            "value": "CGC",
-            "label": "Change in Georgraphical Coverage"
-        },
-        {
-            "value": "CTBGT20",
-            "label": "Change in Total Budget >20%"
-        },
-        {
-            "value": "CTBLT20",
-            "label": "Change in Total Budget <=20%"
-        },
-        {
-            "value": "CABLT20",
-            "label": "Changes in Activity Budget <=20% - No Change in Total Budget"
-        },
-        {
-            "value": "CABGT20",
-            "label": "Changes in Activity Budget >20% - No Change in Total Budget - Prior approval in authorized FACE"
-        },
-        {
-            "value": "CABGT20FACE",
-            "label": "Changes in Activity Budget >20% - No Change in Total Budget - Reporting at FACE"
-        }
+  "intervention_amendment_types": [
+    {
+      "value": "CPR",
+      "label": "Change in Programme Result"
+    },
+    {
+      "value": "CPF",
+      "label": "Change in Population Focus"
+    },
+    {
+      "value": "CGC",
+      "label": "Change in Georgraphical Coverage"
+    },
+    {
+      "value": "CTBGT20",
+      "label": "Change in Total Budget >20%"
+    },
+    {
+      "value": "CTBLT20",
+      "label": "Change in Total Budget <=20%"
+    },
+    {
+      "value": "CABLT20",
+      "label": "Changes in Activity Budget <=20% - No Change in Total Budget"
+    },
+    {
+      "value": "CABGT20",
+      "label": "Changes in Activity Budget >20% - No Change in Total Budget - Prior approval in authorized FACE"
+    },
+    {
+      "value": "CABGT20FACE",
+      "label": "Changes in Activity Budget >20% - No Change in Total Budget - Reporting at FACE"
+    }
     ],
-    "intervention_doc_type": [
-        {
-            "value": "PD",
-            "label": "Programme Document"
-        },
-        {
-            "value": "SHPD",
-            "label": "Simplified Humanitarian Programme Document"
-        },
-        {
-            "value": "SSFA",
-            "label": "SSFA TOR"
-        }
+  "intervention_doc_type": [
+    {
+      "value": "PD",
+      "label": "Programme Document"
+    },
+    {
+      "value": "SHPD",
+      "label": "Simplified Humanitarian Programme Document"
+    },
+    {
+      "value": "SSFA",
+      "label": "SSFA TOR"
+    }
     ],
-    "intervention_status": [
-        {
-            "value": "draft",
-            "label": "Draft"
-        },
-        {
-            "value": "active",
-            "label": "Active"
-        },
-        {
-            "value": "implemented",
-            "label": "Implemented"
-        },
-        {
-            "value": "suspended",
-            "label": "Suspended"
-        },
-        {
-            "value": "terminated",
-            "label": "Terminated"
-        },
-        {
-            "value": "cancelled",
-            "label": "Cancelled"
-        }
+  "intervention_status": [
+    {
+      "value": "draft",
+      "label": "Draft"
+    },
+    {
+      "value": "active",
+      "label": "Active"
+    },
+    {
+      "value": "implemented",
+      "label": "Implemented"
+    },
+    {
+      "value": "suspended",
+      "label": "Suspended"
+    },
+    {
+      "value": "terminated",
+      "label": "Terminated"
+    },
+    {
+      "value": "cancelled",
+      "label": "Cancelled"
+    }
     ]
 }
