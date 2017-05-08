@@ -5,7 +5,6 @@
 <link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
-
 <link rel="import" href="../../styles/nav-menu-styles.html">
 
 <dom-module id="app-sidebar-menu">
@@ -50,6 +49,12 @@
           <div class="name">Governments</div>
         </a>
 
+        <div class="divider"></div>
+        <span class="nav-menu-item" menu-name="refresh-data" on-tap="openDataRefreshDialog">
+          <iron-icon icon="refresh"></iron-icon>
+          <div class="name">Refresh data</div>
+        </span>
+
         <!--</template>-->
       </iron-selector>
 
@@ -86,6 +91,12 @@
           page: String,
           baseUrl: String,
           permissions: String // TODO: might not be needed
+        },
+
+        openDataRefreshDialog: function() {
+          this.debounce('openDataRefreshDialog', function() {
+            this.fire('open-data-refresh-dialog');
+          }.bind(this), 50);
         }
 
       });

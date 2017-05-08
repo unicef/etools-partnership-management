@@ -44,7 +44,7 @@
                          total-results="{{totalResults}}"
                          on-interventions-loaded="_requiredDataHasBeenLoaded"
                          list-data-path="filteredInterventions"
-                         fire-data-loaded show-loading>
+                         fire-data-loaded>
     </interventions-list-data>
 
     <paper-material id="listControls" elevation="1">
@@ -432,6 +432,10 @@ changed teh                  option-value="[[filter.optionValue]]"
           ]);
         },
 
+        attached: function() {
+          this.fire('global-loading', {message: 'Loading PD/SSFA ToR list data...', active: true});
+        },
+
         // Input: URL query params
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
@@ -579,7 +583,9 @@ changed teh                  option-value="[[filter.optionValue]]"
               this.startDate,
               this.endDate,
               this.pageNumber,
-              this.pageSize);
+              this.pageSize,
+              this.showQueryLoading
+            );
           }, this.debounceTime);
         },
 

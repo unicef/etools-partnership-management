@@ -2,7 +2,7 @@
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-
+<link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 
@@ -113,7 +113,8 @@
         countrySelectorVisible: Boolean
       },
       behaviors: [
-        etoolsAppConfig.globals
+        etoolsAppConfig.globals,
+        etoolsBehaviors.EtoolsRefreshBehavior
       ],
 
       _countrySelected: function(e) {
@@ -127,7 +128,7 @@
       },
       _handleResponse: function(res) {
         this.fire('update-main-path', {path: ''});
-        this.fire('main_refresh');
+        this.refresh();
       },
       _countrySelectorUpdate: function(countries) {
         if (Array.isArray(countries) && (countries.length > 1)) {
