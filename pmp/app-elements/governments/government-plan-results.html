@@ -312,6 +312,7 @@
           dataItems: {
             type: Array,
             notify: true,
+            observer: '_dataItemsChanged'
           },
           cpWbs: {
             type: String,
@@ -364,6 +365,9 @@
           this.set('missingCpOutputsUrl', this.getMissingOptionsEndpointUrl('cpOutputsByIdsAsValues'));
           this.set('missingUnicefUsersUrl', this.getMissingOptionsEndpointUrl('unicefUsers'));
         },
+        _dataItemsChanged: function() {
+          this._resetErrors();
+        },
         _cpWbsChanged: function() {
           if (!this.cpOutputDropdownData) {
             return;
@@ -414,6 +418,26 @@
             });
           }
           return valid;
+        },
+        _resetErrors: function() {
+          var self = this;
+          var indexedFields = [
+            'result',
+            'year',
+            'planned_amount',
+            'planned_visits'
+          ];
+
+          if (this.dataItems instanceof Array && this.dataItems.length) {
+            this.dataItems.forEach(function(item, index) {
+              indexedFields.forEach(function(field, fieldIndex) {
+                var el = self.$$('#' + field + '_' + index);
+                if (el) {
+                  el.invalid = false;
+                }
+              });
+            });
+          }
         },
         _yearsEmpty: function(years) {
           return _.isEmpty(years);
