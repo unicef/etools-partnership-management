@@ -163,6 +163,7 @@
                                   file="{{item.report}}"
                                   internal-file="{{item.report_file}}"
                                   label="Report"
+                                  hide-delete-btn="[[_hideDeleteBtn(item.report, item.report_file)]]"
                                   readonly="[[!editMode]]"
                                   accept=".doc,.docx,.pdf,.jpg,.png"
                                   error-message="Please select the report file"></etools-single-file>
@@ -232,6 +233,12 @@
             report: null,
             report_file: ''
           };
+        },
+        _hideDeleteBtn: function(itemReport, itemReportFile) {
+           if (!itemReport || !itemReportFile) {
+            return false;
+          }
+          return true;
         },
         /**
          * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
