@@ -171,7 +171,8 @@
 
         properties: {
           intervention: {
-            type: Object
+            type: Object,
+            observer: '_interventionChanged'
           },
           signedByUnicefUsers: {
             type: Array,
@@ -210,6 +211,10 @@
           }
         },
 
+        _interventionChanged: function(intervention) {
+          this._setNewEditMode(this.editMode);
+        },
+
         _setNewEditMode: function(editMode) {
           if (!editMode) {
             this.set('signEditMode', editMode);
@@ -220,6 +225,11 @@
             // TODO: revise this temporary permission
             // temporary edit permission for PM regardless status
             this.set('signEditMode', true);
+            return;
+          }
+
+          if (!this.intervention) {
+            this.set('detailsEditMode', false);
             return;
           }
 

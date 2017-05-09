@@ -104,7 +104,8 @@
             type: Boolean
           },
           intervention: {
-            type: Object
+            type: Object,
+            observer: '_interventionChanged',
           },
           attachments: {
             type: Array,
@@ -146,6 +147,10 @@
           }
         },
 
+        _interventionChanged: function() {
+          this._setNewEditMode(this.editMode);
+        },
+
         _attachmentsChanged: function(attachments) {
           if (Array.isArray(attachments) &&
               attachments.length > 0 &&
@@ -176,6 +181,11 @@
             // TODO: revise this temporary permission
             // temporary edit permission for PM regardless status
             this.set('attachmentEditMode', true);
+            return;
+          }
+
+          if (!this.intervention) {
+            this.set('detailsEditMode', false);
             return;
           }
 
