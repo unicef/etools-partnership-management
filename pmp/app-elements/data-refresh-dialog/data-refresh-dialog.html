@@ -1,0 +1,272 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
+<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<dom-module id="data-refresh-dialog">
+  <template>
+    <style include="shared-styles grid-layout-styles">
+      [hidden] {
+        display: none !important;
+      }
+
+      paper-material {
+        width: 100%;
+      }
+
+      paper-material {
+        padding: 0;
+      }
+
+      #content-box {
+        max-height: 600px;
+        min-height: 160px;
+        overflow-y: auto;
+        margin: 0 -20px;
+        padding: 0 15px;
+        height: 100%;
+      }
+    </style>
+    <etools-dialog
+        id="dataRefreshDialog"
+        size="sm"
+        ok-btn-text="Refresh data"
+        cancel-btn-text="Cancel"
+        dialog-title="Refresh data"
+        disable-confirm-btn="[[!anySelected]]"
+        on-close="_handleDialogClosed">
+      <div id="content-box">
+        <iron-label> Select the data you want to refresh:</iron-label>
+
+        <div class="custom-field-wrapper flex-c">
+
+          <div class="row-h">
+            <div class="col-6">
+              <etools-checkable-input checked="{{partnersSelected}}"
+                                      label="Partners data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+            <div class="col-6">
+              <etools-checkable-input checked="{{interventionsSelected}}"
+                                      label="PD/SSFA ToR data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+          </div>
+          <div class="row-h">
+            <div class="col-6">
+              <etools-checkable-input checked="{{agreementsSelected}}"
+                                      label="Agreements data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+            <div class="col-6">
+              <etools-checkable-input checked="{{governmentsSelected}}"
+                                      label="Governments data"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+          </div>
+
+          <div class="row-h">
+            <div class="col-12">
+              <etools-checkable-input checked="{{allSelected}}"
+                                      label="All"
+                                      label-alignment="right">
+              </etools-checkable-input>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'data-refresh-dialog',
+        behaviors: [
+          etoolsAppConfig,
+          EtoolsLogsBehavior,
+          etoolsBehaviors.EtoolsRefreshBehavior
+        ],
+        properties: {
+          name: String,
+          governmentsSelected: {
+            type: Boolean,
+            value: false
+          },
+          interventionsSelected: {
+            type: Boolean,
+            value: false
+          },
+          partnersSelected: {
+            type: Boolean,
+            value: false
+          },
+          agreementsSelected: {
+            type: Boolean,
+            value: false
+          },
+          allSelected: {
+            type: Boolean,
+            value: false
+          },
+          anySelected: {
+            type: Boolean,
+            value: false
+          },
+          page: {
+            type: String,
+            notify: true
+          }
+        },
+        observers: [
+          '_singleSectionChanged(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
+          '_allSelectedChanged(allSelected)'
+        ],
+
+        open: function() {
+          this.$.dataRefreshDialog.opened = true;
+        },
+
+        _allSelectedChanged: function() {
+          this.debounce('_selectedRefreshCheckbox', function() {
+            if (!this.allSelected) {
+              return;
+            }
+
+            this.set('governmentsSelected', true);
+            this.set('interventionsSelected', true);
+            this.set('partnersSelected', true);
+            this.set('agreementsSelected', true);
+            this.set('anySelected', true);
+          }.bind(this), 150);
+        },
+
+        _singleSectionChanged: function() {
+          this.debounce('_selectedRefreshCheckbox', function() {
+            var allSelected = this.governmentsSelected &&
+                this.interventionsSelected &&
+                this.partnersSelected &&
+                this.agreementsSelected;
+
+            var anySelected = this.governmentsSelected ||
+                this.interventionsSelected ||
+                this.partnersSelected ||
+                this.agreementsSelected;
+
+            this.set('allSelected', allSelected);
+            this.set('anySelected', anySelected);
+          }.bind(this), 150);
+        },
+
+        _handleDialogClosed: function(closingReason) {
+          if (closingReason.detail.confirmed) {
+            this.fire('global-loading', {message: 'Refreshing data...', active: true});
+
+            // clear all data
+            if (this.allSelected) {
+              this.fire('update-main-path', {path: ''});
+              this.refresh();
+              return;
+            }
+
+            // clear only data sets
+            var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
+            var restampLandingPage = this.page === afterDataRefreshLandingPage;
+
+            var self = this;
+            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements',
+                'governments', 'interventions', function() {
+              if (self.partnersSelected) {
+                self.db.partners.clear();
+                self.db.collectionsList.delete('partners');
+              }
+              if (self.agreementsSelected) {
+                self.db.agreements.clear();
+                self.db.collectionsList.delete('agreements');
+              }
+              if (self.interventionsSelected) {
+                self.db.interventions.clear();
+                self.db.collectionsList.delete('interventions');
+              }
+              if (self.governmentsSelected) {
+                self.db.governments.clear();
+                self.db.collectionsList.delete('governments');
+              }
+            }).then(function(result) {
+              // transaction succeeded
+              self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+            }).catch(function(error) {
+              // transaction failed
+              self.logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+              self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+            });
+          }
+        },
+
+        _handleSuccess: function(afterDataRefreshLandingPage, restampLandingPage) {
+          this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
+          this.fire('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
+        },
+
+        _handleFailure: function(afterDataRefreshLandingPage, restampLandingPage) {
+          this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
+          this.fire('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
+        },
+
+        _triggerMainRoutePathUpdate: function(afterDataRefreshLandingPage, restampLandingPage) {
+          var routePath = afterDataRefreshLandingPage + '/list';
+          var appShell = Polymer.dom(document.querySelector('body')).querySelector('app-shell');
+          if (restampLandingPage) {
+            this.set('page', null);
+            this.fire('update-main-path', {path: routePath});
+            setTimeout(function() {
+              this.fire('global-loading', {active: false});
+              this.set('page', afterDataRefreshLandingPage);
+            }.bind(this), 0);
+          } else {
+            this.fire('global-loading', {active: false});
+            this.fire('update-main-path', {path: routePath});
+          }
+          this._resetRefreshSelection();
+        },
+
+        _getAfterRefreshLandingPage: function() {
+          if (this.partnersSelected) {
+            return 'partners';
+          }
+          if (this.agreementsSelected) {
+            return 'agreements';
+          }
+          if (this.interventionsSelected) {
+            return 'interventions';
+          }
+          if (this.governmentsSelected) {
+            return 'governments';
+          }
+        },
+
+        _resetRefreshSelection: function() {
+          this.set('partnersSelected', false);
+          this.set('agreementsSelected', false);
+          this.set('interventionsSelected', false);
+          this.set('governmentsSelected', false);
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
+

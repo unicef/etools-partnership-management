@@ -58,22 +58,11 @@
 
           unicefUsersData: {
             type: Array
-          },
-          showLoading: {
-            type: Boolean,
-            value: false
           }
-        },
-
-        ready: function() {
-          if (this.showLoading) {
-            this.fire('global-loading', {message: 'Loading governement interventions data...', active: true});
-          }
-          this._elementReady();
         },
 
         query: function(field, order, searchString, selectedPartnerNames,
-                        unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize) {
+                        unicefFocalPoints, cpOutputs, sectors, years, pageNumber, pageSize, showQueryLoading) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -83,6 +72,10 @@
           }
 
           var _this = this;
+
+          if (showQueryLoading) {
+            this.fire('global-loading', {message: 'Loading government interventions list data...', active: true});
+          }
 
           this.db.transaction('r', this.db.governments, function() {
             this.currentQuery = Dexie.currentTransaction;
@@ -173,8 +166,10 @@
 
           }).then(function(result) {
             _this._setFilteredGovernments(result);
+            _this.fire('global-loading', {active: false});
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
+            _this.fire('global-loading', {active: false});
           });
         },
 
