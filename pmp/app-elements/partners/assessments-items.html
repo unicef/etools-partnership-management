@@ -163,7 +163,7 @@
                                   file="{{item.report}}"
                                   internal-file="{{item.report_file}}"
                                   label="Report"
-                                  hide-delete-btn="[[_hideDeleteBtn(item.report, item.report_file)]]"
+                                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
                                   readonly="[[!editMode]]"
                                   accept=".doc,.docx,.pdf,.jpg,.png"
                                   error-message="Please select the report file"></etools-single-file>
@@ -234,8 +234,8 @@
             report_file: ''
           };
         },
-        _hideDeleteBtn: function(itemReport, itemReportFile) {
-           if (!itemReport || !itemReportFile) {
+        _hideDeleteBtn: function(itemReportFile) {
+           if (!itemReportFile) {
             return false;
           }
           return true;
