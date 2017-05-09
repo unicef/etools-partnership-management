@@ -53,15 +53,15 @@
           <div class="top-content-row title-row">
             <h1 main-title>
 
-              <template is="dom-if" if="[[_showAgreementsListTitle(agreementPage)]]">
+              <template is="dom-if" if="[[agreementListActive]]">
                 <span>Agreements</span>
               </template>
 
-              <template is="dom-if" if="[[_showNewAgreementTitle(agreementPage, agreement, agreement.id)]]">
+              <template is="dom-if" if="[[newAgreementActive]]">
                 <span>Add Agreement</span>
               </template>
 
-              <template is="dom-if" if="[[_showAgreementDetailsTitle(agreementPage, agreement, agreement.id)]]">
+              <template is="dom-if" if="[[agreementDetailsActive]]">
                 <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
               </template>
 
@@ -239,27 +239,6 @@
           return false;
         }
         return true;
-      },
-
-      // check if greements list page title should be shown
-      _showAgreementsListTitle: function(agreementsPage) {
-        return agreementsPage === 'list';
-      },
-
-      // check if new greement page title should be shown
-      _showNewAgreementTitle: function(agreementsPage, agreement) {
-        if (agreementsPage === 'details' && this._isNewAgreement(agreement)) {
-          return true;
-        }
-        return false;
-      },
-
-      // check if agreement details page title should be shown
-      _showAgreementDetailsTitle: function(agreementsPage, agreement) {
-        if (agreementsPage === 'details' && !this._isNewAgreement(agreement)) {
-          return true;
-        }
-        return false;
       },
 
       // compute agreement details page title including partner name and agreement number
