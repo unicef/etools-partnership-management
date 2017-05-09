@@ -263,7 +263,24 @@ it doesn't need to be included in element's style -->
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
         this.fire('global-loading', {active: false});
+        this._resetErrors();
       },
+      _resetErrors: function() {
+        var partner = this.$$('#partner');
+        if (partner) {
+          partner.invalid = false;
+        }
+
+        var number = this.$$('#number');
+        if (number) {
+          number.invalid = false;
+        }
+
+        var countryProgramme = this.$$('#country_programme');
+        if (countryProgramme) {
+          countryProgramme.invalid = false;
+        }
+      }
     });
   </script>
 </dom-module>
