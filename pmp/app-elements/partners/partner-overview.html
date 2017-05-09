@@ -216,7 +216,7 @@
                   [[partnership.title]]
                 </div>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.total_planned_budget, '0', 0)]]
+              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
               </div>
               <div class="col col-2 center-text"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
               </div>
@@ -249,9 +249,6 @@
           pmpBehaviors.RiskRatingBehavior,
           etoolsBehaviors.EtoolsCurrencyBehavior
         ],
-        observers: [
-          '_prepareInterventionData(partner.interventions.*)'
-        ],
         properties: {
           user: Object,
           permissions: Object,
@@ -279,20 +276,7 @@
           } else {
             this.contentVisible = false;
           }
-        },
-
-        _prepareInterventionData: function() {
-          for (var key1 in this.partner.interventions) {
-            var intervention = this.partner.interventions[key1];
-            var total = 0;
-
-            for (var key2 in intervention.planned_budget) {
-              total += parseFloat(intervention.planned_budget[key2].total);
-            }
-
-            intervention.total_planned_budget = total;
-          }
-        },
+        }
       });
 
     })();

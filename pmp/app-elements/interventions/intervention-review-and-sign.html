@@ -171,8 +171,7 @@
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_interventionChanged'
+            type: Object
           },
           signedByUnicefUsers: {
             type: Array,
@@ -189,12 +188,11 @@
           },
           editMode: {
             type: Boolean,
-            value: false
-          },
-          signEditMode: {
-            type: Boolean,
             value: false,
             observer: '_editModeChanged'
+          },
+          signEditMode: {
+            type: Boolean
           },
           newIntervention: {
             type: Boolean
@@ -205,15 +203,16 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+        _editModeChanged: function(newValue) {
+          if (newValue !== this.signEditMode) {
+            this._setNewEditMode(newValue);
             this.updateStyles();
           }
         },
 
         _interventionChanged: function(intervention) {
           // ensure loading msg close
-          this._setNewEditMode();
+          this._setNewEditMode(this.editMode);
 
           // forces etools-single-file to redraw the element
           if (!intervention.prc_review_document_file) {
@@ -223,9 +222,9 @@
             this.set('intervention.prc_review_document', {});
           }
         },
-        _setNewEditMode: function() {
-          if (!this.editMode) {
-            this.set('signEditMode', this.editMode);
+        _setNewEditMode: function(editMode) {
+          if (!editMode) {
+            this.set('signEditMode', editMode);
             return;
           }
 
