@@ -40,7 +40,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -51,7 +51,7 @@
           <etools-date-input id="submissionDatePrcField"
                              label="Submission Date to PRC"
                              value="{{intervention.submission_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -60,7 +60,7 @@
           <etools-date-input id="reviewDatePrcField"
                              label="Review Date by PRC"
                              value="{{intervention.review_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -70,7 +70,7 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[!signEditMode]]">
+                              readonly$="[[!editMode]]">
           </etools-single-file>
         </div>
       </div>
@@ -85,7 +85,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -93,7 +93,7 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -112,7 +112,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -120,7 +120,7 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -143,14 +143,14 @@
       <etools-content-panel class="content-section" title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[signEditMode]]"></intervention-amendments>
+                                 edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[signEditMode]]"></intervention-fund-reservations>
+                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -171,8 +171,7 @@
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_interventionChanged'
+            type: Object
           },
           signedByUnicefUsers: {
             type: Array,
@@ -187,17 +186,13 @@
             type: Array,
             value: []
           },
-          editMode: {
-            type: Boolean,
-            value: false
-          },
-          signEditMode: {
-            type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          },
           newIntervention: {
             type: Boolean
+          },
+          editMode: {
+            type: Boolean,
+//            value: false,
+            observer: '_editModeChanged'
           }
         },
 
@@ -205,35 +200,8 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
-        },
-
-        _interventionChanged: function(intervention) {
-          // ensure loading msg close
-          this._setNewEditMode();
-        },
-        _setNewEditMode: function() {
-          if (!this.editMode) {
-            this.set('signEditMode', this.editMode);
-            return;
-          }
-
-          if (this.permissions.partnershipManager) {
-            // TODO: revise this temporary permission
-            // temporary edit permission for PM regardless status
-            this.set('signEditMode', true);
-            return;
-          }
-
-          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
-                (!this.intervention.status || this.intervention.status !== 'draft')) {
-            this.set('signEditMode', false);
-          } else {
-            this.set('signEditMode', true);
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
