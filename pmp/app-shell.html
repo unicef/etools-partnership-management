@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -104,38 +105,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-flex);
         @apply(--layout-end-justified);
       }
-
-      #global-loading-wrapper {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        background-color: rgba(180, 180, 180, 0.6);
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1000;
-      }
-      #global-loading-content {
-        background: var(--primary-background-color);
-        border: 1px solid var(--etools-loading-border-color);
-        box-shadow: 0px 2px 5px -2px var(--etools-loading-shadow-color);
-        padding: 10px;
-        border-radius: 4px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center-justified);
-        @apply(--layout-self-center);
-      }
-      #loading-message {
-        margin-left: 15px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-      }
-      paper-spinner {
-        width: 20px;
-        height: 20px;
-      }
-
     </style>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
@@ -174,13 +143,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <div id="global-loading-wrapper" hidden$="[[!showLoading]]">
-          <div id="global-loading-content">
-            <paper-spinner active></paper-spinner>
-            <span id="loading-message">Loading...</span>
-          </div>
-        </div>
-
         <template is="dom-if" if="[[_activePageIs(page, 'partners')]]" restamp>
           <page-partners id="partners" class="main-page"
                          route="[[subroute]]"
@@ -215,9 +177,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
+        <etools-loading id="pageLoading"
+                        loading-text="Loading data..."
+                        active$="[[showLoading]]"
+                        absolute></etools-loading>
+
         <page-footer></page-footer>
-
-
 
       </app-header-layout>
     </app-drawer-layout>
@@ -463,7 +428,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (e.detail && typeof e.detail.message === 'string' && e.detail.message !== '') {
             loadingMsg = e.detail.message;
           }
-          this.$$('#loading-message').innerHTML = loadingMsg;
+          //this.$$('#loading-message').innerHTML = loadingMsg;
+          this.$.pageLoading.set('loadingText', loadingMsg);
           // update loadings counter
           this.loadingsCounter++;
         } else {
