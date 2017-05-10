@@ -16,6 +16,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
+<link rel="import" href="intervention-behaviors/intervention-tab-edit-mode-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
@@ -40,7 +41,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!tabEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -51,7 +52,7 @@
           <etools-date-input id="submissionDatePrcField"
                              label="Submission Date to PRC"
                              value="{{intervention.submission_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!tabEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -60,7 +61,7 @@
           <etools-date-input id="reviewDatePrcField"
                              label="Review Date by PRC"
                              value="{{intervention.review_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!tabEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -70,8 +71,8 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[_isUploadFileReadonly(signEditMode, intervention.status, intervention.prc_review_document_file)]]"
-                              hide-delete-btn="[[_hideDeleteBtn(readonly, intervention.status, intervention.prc_review_document_file)]]">
+                              hide-delete-btn="[[_hideDeleteBtn(readonly, intervention.status, intervention.prc_review_document_file)]]"
+                              readonly$="[[!tabEditMode]]">
           </etools-single-file>
         </div>
       </div>
@@ -86,7 +87,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!tabEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -94,7 +95,7 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!tabEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -113,7 +114,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!tabEditMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -121,7 +122,7 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!tabEditMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -144,14 +145,14 @@
       <etools-content-panel class="content-section" title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[signEditMode]]"></intervention-amendments>
+                                 edit-mode$="[[tabEditMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[signEditMode]]"></intervention-fund-reservations>
+                                      edit-mode$="[[tabEditMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -167,12 +168,14 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior,
+          pmpBehaviors.InterventionTabEditModeBehavior
         ],
 
         properties: {
           intervention: {
-            type: Object
+            type: Object,
+            observer: '_interventionChanged'
           },
           signedByUnicefUsers: {
             type: Array,
@@ -186,14 +189,6 @@
           agreementAuthorizedOfficers: {
             type: Array,
             value: []
-          },
-          editMode: {
-            type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          },
-          signEditMode: {
-            type: Boolean
           },
           newIntervention: {
             type: Boolean
@@ -225,32 +220,8 @@
           }
           return false;
         },
-        _editModeChanged: function(newValue) {
-          if (newValue !== this.signEditMode) {
-            this._setNewEditMode(newValue);
-
-            this.updateStyles();
-          }
-        },
-        _setNewEditMode: function(editMode) {
-          if (!editMode) {
-            this.set('signEditMode', editMode);
-            return;
-          }
-
-          if (this.permissions.partnershipManager) {
-            // TODO: revise this temporary permission
-            // temporary edit permission for PM regardless status
-            this.set('signEditMode', true);
-            return;
-          }
-
-          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
-                (!this.intervention.status || this.intervention.status !== 'draft')) {
-            this.set('signEditMode', false);
-          } else {
-            this.set('signEditMode', true);
-          }
+        _interventionChanged: function(intervention) {
+          this.setTabEditMode(this.editMode);
         },
 
         _agreementChanged: function(agreement) {
