@@ -382,14 +382,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               // make the import
               let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
               // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              this.importHref(pageUrl, this._lazyLoadPage.bind(this, page) , null, false);
+              this.importHref(pageUrl, this._setPageLoaded.bind(this, page) , null, false);
             }
           }
         } catch (err) {
           console.error('An error occurred during pages lazy load', err);
         }
       },
-      _lazyLoadPage: function(page) {
+      _setPageLoaded: function(page) {
         this.lazyLoadPages[page] = true;
       },
       _activePageIs: function(activePage, expectedPage) {
