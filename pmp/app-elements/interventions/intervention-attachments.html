@@ -137,10 +137,8 @@
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _attachmentsChanged: function(attachments) {

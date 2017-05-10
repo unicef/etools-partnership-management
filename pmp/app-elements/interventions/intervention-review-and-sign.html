@@ -200,10 +200,8 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
