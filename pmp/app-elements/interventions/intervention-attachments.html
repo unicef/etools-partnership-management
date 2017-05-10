@@ -12,8 +12,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
 
-<link rel="import" href="intervention-status.html">
-
 <dom-module id="intervention-attachments">
 
   <template>
@@ -52,18 +50,19 @@
           padding: 15px 25px;
         };
       }
+
       #no-attach-warning {
         display: inline-block;
         width: 100%;
         padding: 20px 25px;
         position: absolute;
       }
+
       #no-attach-warning p {
         margin: 0;
+
       }
-      etools-file[readonly] {
-        margin-left: 25px;
-      }
+
     </style>
 
     <etools-content-panel class="content-section" title="Attachments">
@@ -74,14 +73,14 @@
 
       <div class="row-h flex-c">
         <etools-file id="attachments"
-          files="{{attachments}}"
-          file-model="[[fileModel]]"
-          file-types=[[fileTypes]]
-          label="Attachments"
-          multiple activate-file-types use-delete-events
-          on-delete-file="_deleteAttachment"
-          readonly$=[[!attachmentEditMode]]
-          no-file-attached-msg=""></etools-file>
+                     files="{{attachments}}"
+                     file-model="[[fileModel]]"
+                     file-types=[[fileTypes]]
+                     label="Attachments"
+                     multiple activate-file-types use-delete-events
+                     on-delete-file="_deleteAttachment"
+                     readonly$=[[!editMode]]
+                     no-file-attached-msg=""></etools-file>
       </div>
     </etools-content-panel>
 
@@ -94,9 +93,9 @@
       Polymer({
         is: 'intervention-attachments',
 
-         behaviors: [
+        behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
+          pmpBehaviors.CommonGeneralBehavior
         ],
 
         properties: {
@@ -120,11 +119,6 @@
             type: Object,
             value: null
           },
-          editMode: {
-            type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          },
           preparedAttachments: {
             type: Boolean,
             value: false
@@ -132,25 +126,22 @@
           newIntervention: {
             type: Boolean
           },
-          attachmentEditMode: {
-            type: Boolean
+          editMode: {
+            type: Boolean,
+//            value: false,
+            observer: '_editModeChanged'
           }
         },
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
-        _editModeChanged: function(newValue) {
-          if (newValue !== this.attachmentEditMode) {
-            this._setNewEditMode(newValue);
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _attachmentsChanged: function(attachments) {
           if (Array.isArray(attachments) &&
-              attachments.length > 0 &&
-              !this._hasPath(attachments[0]) &&
-              !this.preparedAttachments) {
+              attachments.length > 0 && !this._hasPath(attachments[0]) && !this.preparedAttachments) {
             // this should run only one time when attachments(intervention.attachments) are provided
             this.set('preparedAttachments', true);
             this.set('attachments', attachments.map(function(attachment) {
@@ -166,26 +157,7 @@
             }.bind(this)));
           }
         },
-        _setNewEditMode: function(editMode) {
-          if (!editMode) {
-            this.set('attachmentEditMode', editMode);
-            return;
-          }
 
-          if (this.permissions.partnershipManager) {
-            // TODO: revise this temporary permission
-            // temporary edit permission for PM regardless status
-            this.set('attachmentEditMode', true);
-            return;
-          }
-
-          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
-                (!this.intervention.status || this.intervention.status !== 'draft')) {
-            this.set('attachmentEditMode', false);
-          } else {
-            this.set('attachmentEditMode', true);
-          }
-        },
         _getPath: function(attachment) {
           if (typeof attachment.attachment_file === 'string' && attachment.attachment_file !== '') {
             return attachment.attachment_file;
