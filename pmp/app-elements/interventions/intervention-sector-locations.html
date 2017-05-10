@@ -219,19 +219,20 @@
 
         _sectorAlreadySelected: function(sectorId, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.sector');
-          var selected = false;
-          if (dropdowns && dropdowns.length) {
-            for (var i = 0; i < dropdowns.length; i++) {
-              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
-                if (dropdowns[i].value.value === sectorId) {
-                  // already selected sector
-                  selected = true;
-                  break;
-                }
+          if (!dropdowns || !dropdowns.length) {
+            return false;
+          }
+          var optionValue = dropdowns[0].optionValue;
+
+          for (var i = 0; i < dropdowns.length; i++) {
+            if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value[optionValue]) {
+              if (dropdowns[i].value[optionValue] == sectorId) {
+                // already selected sector
+                return true
               }
             }
           }
-          return selected;
+          return false;
         },
 
         /**
