@@ -72,7 +72,7 @@
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
                               hide-delete-btn="[[_hideDeleteBtn(readonly, intervention.status, intervention.prc_review_document_file)]]"
-                              readonly$="[[!tabEditMode]]">
+                              readonly$="[[_isUploadFileReadonly(tabEditMode, intervention.status, intervention.prc_review_document_file)]]">
           </etools-single-file>
         </div>
       </div>
@@ -199,7 +199,7 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
         _isUploadFileReadonly: function() {
-          if (!this.signEditMode) {
+          if (!this.tabEditMode) {
             return true;
           }
           if(!this.intervention || !this.intervention.id) {
