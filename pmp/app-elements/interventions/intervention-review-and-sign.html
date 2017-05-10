@@ -210,6 +210,9 @@
           if(!this.intervention || !this.intervention.id) {
             return false;
           }
+          if (!this.intervention.prc_review_document_file) {
+            return false;
+          }
           if (this.intervention.status !== 'draft') {
             return true;
           }
