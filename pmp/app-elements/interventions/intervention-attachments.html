@@ -12,9 +12,6 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
 
-<link rel="import" href="intervention-behaviors/intervention-tab-edit-mode-behavior.html">
-<link rel="import" href="intervention-status.html">
-
 <dom-module id="intervention-attachments">
 
   <template>
@@ -85,7 +82,7 @@
                      multiple activate-file-types use-delete-events
                      hide-delete-btn
                      on-delete-file="_deleteAttachment"
-                     readonly$=[[!tabEditMode]]
+                     readonly$=[[!editMode]]
                      no-file-attached-msg=""></etools-file>
       </div>
     </etools-content-panel>
@@ -101,8 +98,7 @@
 
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.InterventionTabEditModeBehavior
+          pmpBehaviors.CommonGeneralBehavior
         ],
 
         properties: {
@@ -110,8 +106,7 @@
             type: Boolean
           },
           intervention: {
-            type: Object,
-            observer: '_interventionChanged',
+            type: Object
           },
           attachments: {
             type: Array,
@@ -133,13 +128,20 @@
           },
           newIntervention: {
             type: Boolean
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
           }
         },
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
-        _interventionChanged: function() {
-          this.setTabEditMode(this.editMode);
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
         },
 
         _attachmentsChanged: function(attachments) {

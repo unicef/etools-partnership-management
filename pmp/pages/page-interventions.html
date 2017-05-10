@@ -169,7 +169,7 @@
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  edit-mode="[[_hasEditPermissions(permissions)]]"
+                                  edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
                                   on-update-intervention-status="_updateInterventionStatus"
                                   disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-details>
@@ -180,14 +180,14 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions)]]"
+                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
                                           disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
             <intervention-attachments id="intervAttachments"
                                       active="[[_isAttachementsTabActive(activeTab)]]"
-                                      edit-mode="[[_hasEditPermissions(permissions)]]"
+                                      edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
                                       permissions="[[permissions]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
@@ -206,7 +206,7 @@
                              intervention-agreement-status="[[agreement.status]]"
                              on-save-intervention="_validateAndSaveIntervention"
                              on-update-intervention-status="_updateInterventionStatus"
-                             show-save-btn$="[[editMode]]"></intervention-status>
+                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
 
       </div>
       <!-- sidebar content end -->
@@ -421,7 +421,7 @@
       _validateAndSaveIntervention: function(event) {
         event.stopImmediatePropagation();
         this.set('serverErrors', []);
-        if (!this._hasEditPermissions(this.permissions)) {
+        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
           return;
         }
 
@@ -691,8 +691,21 @@
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
 
-      _hasEditPermissions: function(permissions) {
+      _hasEditPermissions: function(permissions, intervention) {
+        if (permissions && permissions.partnershipManager) {
+          // TODO: revise this temporary permission, might not be needed
+          // temporary edit permission for PM regardless status or other checks
+          return true;
+        }
+
         if (permissions && permissions.editInterventionDetails === true) {
+          if (intervention) {
+            if (!(permissions.partnershipManager || permissions.PME) &&
+              (!intervention.status || intervention.status !== 'draft')) {
+              // other users than partnershipManager or PME will be able to edit only if intervention status is draft
+              return false;
+            }
+          }
           return true;
         }
         return false;
