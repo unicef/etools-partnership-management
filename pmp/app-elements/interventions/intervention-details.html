@@ -20,7 +20,6 @@
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
-<link rel="import" href="intervention-behaviors/intervention-tab-edit-mode-behavior.html">
 <link rel="import" href="intervention-form/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
@@ -79,7 +78,7 @@
             partner-id="{{selectedPartnerId}}"
             selected-agreement="{{agreement}}"
             intervention-id="[[intervention.id]]"
-            edit-mode$="[[tabEditMode]]"></agreement-selector>
+            edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
           <etools-searchable-multiselection-menu id="documentType"
@@ -94,7 +93,7 @@
                                                  dynamic-align
                                                  required auto-validate
                                                  error-message="Document type is required"
-                                                 readonly$="[[!tabEditMode]]">
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3" title$="[[intervention.number]]">
@@ -115,7 +114,7 @@
                      maxlength="256"
                      required auto-validate
                      error-message="Please add a title"
-                     readonly$="[[!tabEditMode]]"></paper-input>
+                     readonly$="[[!editMode]]"></paper-input>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
@@ -132,7 +131,7 @@
                                                  dynamic-align
                                                  multi required auto-validate
                                                  error-message="Please select intervention's office(s)"
-                                                 readonly$="[[!tabEditMode]]">
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-6">
@@ -151,7 +150,7 @@
                                                  required$="[[interventionRequiredField]]"
                                                  auto-validate
                                                  error-message="Please select UNICEF focal points"
-                                                 readonly$="[[!tabEditMode]]">
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
       </div>
@@ -172,7 +171,7 @@
                                                  required$="[[interventionRequiredField]]"
                                                  auto-validate
                                                  error-message="Please select partner focal points"
-                                                 readonly$="[[!tabEditMode]]">
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
       </div>
@@ -192,7 +191,7 @@
                                                  update-selected
                                                  selected-requires-valid-options
                                                  dynamic-align
-                                                 readonly$="[[!tabEditMode]]">
+                                                 readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -200,7 +199,7 @@
           <etools-date-input id="intStart"
                              label="Start date"
                              value="{{intervention.start}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              error-message="Please select start date"
                              required$="[[nterventionRequiredField]]"
                              auto-validate
@@ -212,7 +211,7 @@
           <etools-date-input id="intEnd"
                              label="End date"
                              value="{{intervention.end}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              error-message="Please select end date"
                              required$="[[nterventionRequiredField]]"
                              auto-validate
@@ -232,7 +231,7 @@
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
                                          data-items="{{intervention.sector_locations}}"
-                                         edit-mode$="[[tabEditMode]]"
+                                         edit-mode$="[[editMode]]"
                                          required$="[[interventionRequiredField]]">
           </intervention-sector-locations>
         </paper-material>
@@ -242,7 +241,7 @@
     <etools-content-panel class="content-section" title="PD Output or SSFA TOR Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
-          edit-mode$="[[tabEditMode]]"
+          edit-mode$="[[editMode]]"
           intervention-id="[[intervention.id]]"
           required$="[[interventionRequiredField]]">
       </intervention-expected-results>
@@ -252,14 +251,14 @@
       <intervention-planned-budget id="plannedBudget"
                                    data-items="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
-                                   edit-mode$="[[tabEditMode]]"
+                                   edit-mode$="[[editMode]]"
                                    years="[[years]]">
       </intervention-planned-budget>
     </etools-content-panel>
     <etools-content-panel class="content-section" title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
-                                   edit-mode$="[[tabEditMode]]"
+                                   edit-mode$="[[editMode]]"
                                    years="[[years]]">
       </intervention-planned-visits>
     </etools-content-panel>
@@ -276,8 +275,7 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior,
-          pmpBehaviors.InterventionTabEditModeBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
@@ -343,7 +341,12 @@
           },
           fieldsResetted: {
             type: Boolean
-          }
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
+          },
         },
 
         observers: [
@@ -368,8 +371,13 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
 
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
+        },
+
         _interventionChanged: function(intervention) {
-          this.setTabEditMode(this.editMode);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));

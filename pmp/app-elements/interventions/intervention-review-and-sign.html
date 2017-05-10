@@ -16,7 +16,6 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
-<link rel="import" href="intervention-behaviors/intervention-tab-edit-mode-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
@@ -41,7 +40,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -52,7 +51,7 @@
           <etools-date-input id="submissionDatePrcField"
                              label="Submission Date to PRC"
                              value="{{intervention.submission_date_prc}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -61,7 +60,7 @@
           <etools-date-input id="reviewDatePrcField"
                              label="Review Date by PRC"
                              value="{{intervention.review_date_prc}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -71,7 +70,7 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[!tabEditMode]]">
+                              readonly$="[[!editMode]]">
           </etools-single-file>
         </div>
       </div>
@@ -86,7 +85,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!tabEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -94,7 +93,7 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -113,7 +112,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!tabEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -121,7 +120,7 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!tabEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -144,14 +143,14 @@
       <etools-content-panel class="content-section" title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[tabEditMode]]"></intervention-amendments>
+                                 edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[tabEditMode]]"></intervention-fund-reservations>
+                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -167,14 +166,12 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior,
-          pmpBehaviors.InterventionTabEditModeBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_interventionChanged'
+            type: Object
           },
           signedByUnicefUsers: {
             type: Array,
@@ -191,6 +188,11 @@
           },
           newIntervention: {
             type: Boolean
+          },
+          editMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
           }
         },
 
@@ -198,8 +200,10 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
-        _interventionChanged: function(intervention) {
-          this.setTabEditMode(this.editMode);
+        _editModeChanged: function(newValue, oldValue) {
+          if (newValue !== oldValue) {
+            this.updateStyles();
+          }
         },
 
         _agreementChanged: function(agreement) {
