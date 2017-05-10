@@ -291,10 +291,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         event.stopImmediatePropagation();
       },
 
-      toggleDrawer: function() {
-        this.$.drawer.toggle();
-      },
-
       _routePageChanged: function(page) {
         if ((this.route) && (this.baseUrl)) {
           var subroute = JSON.parse(JSON.stringify(this.route));
@@ -335,7 +331,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
         currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
         // load the rest of the pages after current page render is complete
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._firstPageRenderCallback.bind(this, currentLoadingPage));
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl,
+                                             this._firstPageRenderCallback.bind(this, currentLoadingPage));
       },
       _firstPageRenderCallback: function(currentLoadedPage) {
         this.fire('global-loading', {active: false}); // deactivate first page loading msg
@@ -350,16 +347,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               // make the import
               let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
               // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              this.importHref(pageUrl, function() {
-                this.lazyLoadPages[page] = true;
-              }, null, false);
+              this.importHref(pageUrl, this._setPageLoaded.bind(this, page) , null, false);
             }
           }
         } catch (err) {
           console.error('An error occurred during pages lazy load', err);
         }
       },
-
+      _setPageLoaded: function(page) {
+        this.lazyLoadPages[page] = true;
+      },
       _activePageIs: function(activePage, expectedPage) {
         return activePage === expectedPage;
       },
