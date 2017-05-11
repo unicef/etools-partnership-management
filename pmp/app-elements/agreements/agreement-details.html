@@ -338,7 +338,7 @@
           if (!this.editMode) {
             return false;
           }
-          if (!this.agreement || ! this.agreement.id) {//new agreement
+          if (!this.agreement || !this.agreement.id) {//new agreement
             return true;
           }
           return (this.agreement.status === 'draft' || !this.agreement.attached_agreement_file);
