@@ -216,7 +216,6 @@
           return false;
         },
         _hideDeleteBtn: function() {
-          console.log(this.intervention.status);
           if (this.intervention && this.intervention.status === 'draft' && this.intervention.prc_review_document_file) {
             return true;
           }
