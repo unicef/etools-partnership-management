@@ -132,6 +132,7 @@
               <etools-single-file file="{{partner.core_values_assessment}}"
                            internal-file="{{partner.core_values_assessment_file}}"
                            label="Core Values Assessment"
+                           hide-delete-btn="[[_hideDeleteBtn(partner.core_values_assessment)]]"
                            readonly$="[[!editMode]]"
                            accept=".doc,.docx,.pdf,.jpg,.png">
               </etools-single-file>
@@ -274,7 +275,12 @@
             value: []
           }
         },
-
+        _hideDeleteBtn: function() {
+          if (!this.partner.core_values_assessment_file) {
+            return false;
+          }
+          return true;
+        },
         _partnerChanged: function(partner) {
           this.set('serverErrors', []);
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
