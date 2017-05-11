@@ -59,7 +59,7 @@
           <div class="row-v flex-c item-content">
             <div class="row-h">
               <div class="col col-3">
-                <etools-searchable-multiselection-menu id$="sector_[[index]]"
+                <!--<etools-searchable-multiselection-menu id$="sector_[[index]]"
                                                        class="sector"
                                                        label="Section/Cluster"
                                                        placeholder="&#8212;"
@@ -73,7 +73,21 @@
                                                        auto-validate
                                                        error-message="Please select a sector"
                                                        readonly$="[[!editMode]]">
-                </etools-searchable-multiselection-menu>
+                </etools-searchable-multiselection-menu>-->
+                 <etools-single-selection-menu id$="sector_[[index]]"
+                                                       class="sector"
+                                                       label="Section/Cluster"
+                                                       placeholder="&#8212;"
+                                                       selected="[[item.sector.id]]"
+                                                       options="[[sectors]]"
+                                                       option-label="name"
+                                                       option-value="id"
+                                                       on-iron-select="_sectorSelected"
+                                                       required$="[[required]]"
+                                                       auto-validate
+                                                       error-message="Please select a sector"
+                                                       readonly$="[[!editMode]]">
+                </etools-single-multiselection-menu>
               </div>
               <div class="col col-9">
                 <etools-searchable-multiselection-menu id$="locations_[[index]]"
@@ -161,15 +175,16 @@
         },
 
         _sectorSelected: function(event) {
-          var sectorSelected = event.detail.selectedValues;
+          var sectorSelected = event.detail.item.item;
+          console.log(sectorSelected);
           if (sectorSelected && Object.keys(sectorSelected).length > 0) {
             var sectorId = parseInt(sectorSelected.id, 10);
             if (this._sectorAlreadySelected(sectorId, event.model.index)) {
               this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
               var sectorDropdown = this.$$('#sector_' + event.model.index);
               if (sectorDropdown) {
-                sectorDropdown.value = [];
-                sectorDropdown.selectedValues = null;
+                sectorDropdown.selected = null;
+                sectorDropdown.selectedItem = null;
               }
               return;
             }
@@ -182,14 +197,15 @@
           }
         },
 
-        _setSector: function(sector) {
-          if (sector && Object.keys(sector).length > 0 && this.sectors.length) {
-            return this.sectors.filter(function(s) {
-              return parseInt(s.id, 10) === parseInt(sector.id, 10);
-            });
-          }
-          return [];
-        },
+        // _setSector: function(sector) {
+        //   var selected;
+        //   if (sector && Object.keys(sector).length > 0 && this.sectors.length) {
+        //      selected = this.sectors.filter(function(s) {
+        //       return parseInt(s.id, 10) === parseInt(sector.id, 10);
+        //     });
+        //   }
+        //   return selected;
+        // },
 
         _setSectorLocations: function(locations) {
           if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
@@ -223,11 +239,11 @@
             return false;
           }
           var optionValue = dropdowns[0].optionValue;
-
+ console.log('alreadyselected');
           for (var i = 0; i < dropdowns.length; i++) {
-            if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value[optionValue]) {
+            if (dropdowns[i].selectedItem && dropdowns[i].selectedItem[optionValue]) {
               /* jshint ignore:start */
-              if (dropdowns[i].value[optionValue] == sectorId) {
+              if (dropdownIdx !== i && dropdowns[i].selectedItem[optionValue] == sectorId) {
                 // already selected sector
                 return true;
               }
@@ -236,7 +252,6 @@
           }
           return false;
         },
-
         /**
          * Validate last added sector location and if is not empty add a new one
          */
