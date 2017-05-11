@@ -192,7 +192,7 @@
     <etools-content-panel class="content-section" title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="hrps"
+          <!--<etools-searchable-multiselection-menu id="hrps"
                                                  label="In response to an HRP, Select"
                                                  placeholder="&#8212;"
                                                  options="[[hrps]]"
@@ -204,7 +204,17 @@
                                                  selected-requires-valid-options
                                                  dynamic-align
                                                  readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+          </etools-searchable-multiselection-menu>-->
+            <etools-single-selection-menu id="hrps"
+                                          label="In response to an HRP, Select"
+                                          placeholder="&#8212;"
+                                          options="[[hrps]]"
+                                          option-value="id"
+                                          option-label="name"
+                                          selected="{{intervention.hrp}}"
+                                          dynamic-align
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
         </div>
         <div class="col col-3">
           <!-- Start date -->

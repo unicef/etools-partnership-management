@@ -175,8 +175,9 @@
         },
 
         _sectorSelected: function(event) {
+          console.log('event',event);
+
           var sectorSelected = event.detail.item.item;
-          console.log(sectorSelected);
           if (sectorSelected && Object.keys(sectorSelected).length > 0) {
             var sectorId = parseInt(sectorSelected.id, 10);
             if (this._sectorAlreadySelected(sectorId, event.model.index)) {
@@ -238,12 +239,13 @@
           if (!dropdowns || !dropdowns.length) {
             return false;
           }
+          console.log('dropdowns',dropdowns);
           var optionValue = dropdowns[0].optionValue;
- console.log('alreadyselected');
           for (var i = 0; i < dropdowns.length; i++) {
             if (dropdowns[i].selectedItem && dropdowns[i].selectedItem[optionValue]) {
               /* jshint ignore:start */
               if (dropdownIdx !== i && dropdowns[i].selectedItem[optionValue] == sectorId) {
+                console.log('sector already selected',sectorId, dropdowns[i].selectedItem[optionValue]);
                 // already selected sector
                 return true;
               }

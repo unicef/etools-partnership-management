@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-amount-input.html">
@@ -108,7 +109,7 @@
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <div class="row-h flex-c">
-        <etools-searchable-multiselection-menu id="currency"
+        <!--<etools-searchable-multiselection-menu id="currency"
                                                label="Local Currency"
                                                placeholder="&#8212;"
                                                options="[[currencies]]"
@@ -117,7 +118,17 @@
                                                auto-validate
                                                error-message="Please select the currency"
                                                readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        </etools-searchable-multiselection-menu>-->
+         <etools-single-selection-menu id="currency"
+                                        label="Local Currency"
+                                        placeholder="&#8212;"
+                                        options="[[currencies]]"
+                                        on-iron-select="_currencyChanged"
+                                        required$="[[required]]"
+                                        auto-validate
+                                        error-message="Please select the currency"
+                                        readonly$="[[!editMode]]">
+        </etools-single-selection-menu>
       </div>
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -375,6 +386,7 @@
         ],
 
         ready: function() {
+          console.log('ready',this.dataSetModel);
           this.dataSetModel = {
             id: null,
             partner_contribution: 0,
@@ -390,14 +402,17 @@
         },
 
         _dataItemsChanged: function(dataItems) {
+          console.log('dataItems',dataItems);
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
         },
 
         _interventionIdChanged: function(intervId) {
+            console.log('_interventionIdChanged',this.dataSetModel);
           this.set('localCurrencyId', null);
           this.set('localCurrency', null);
+          console.log('dataSetModel.currency',this.dataSetModel.currency);
           this.set('dataSetModel.currency', null);
           this._setCurrencyDropdownValue(null);
           this._initSelectedCurrency(this.dataItems, this.currencies);
@@ -417,18 +432,18 @@
                   this.set('localCurrencyId', currency.value);
                   this.set('localCurrency', currency.label);
                   this.set('dataSetModel.currency', currency.value);
-                  this._setCurrencyDropdownValue(currency);
+                  this._setCurrencyDropdownValue(currency.value);
                 }
               }
             }
           }.bind(this), 50);
         },
 
-        _setCurrencyDropdownValue: function(currency) {
+        _setCurrencyDropdownValue: function(currencyValue) {
           // set selected currency dropdown value
           var currencyDropdown = this.$.currency;
           if (currencyDropdown) {
-            currencyDropdown.set('value', currency);
+            currencyDropdown.set('selected', currencyValue);
           }
         },
 
@@ -520,14 +535,16 @@
         },
 
         _currencyChanged: function(event) {
-          var currencyNameSelected = null;
-          var currencyIdSelected = null;
-          if (event.detail.selectedValues && event.detail.selectedValues.label) {
-            currencyNameSelected = event.detail.selectedValues.label;
-            currencyIdSelected = event.detail.selectedValues.value;
+          var selCurrencyName = null;
+          var selCurrencyId = null;
+
+          var selectedItem = event.detail.item.item;
+          if (selectedItem && selectedItem.label) {
+            selCurrencyName = selectedItem.label;
+            selCurrencyId = selectedItem.value;
           }
-          this.set('localCurrency', currencyNameSelected);
-          this.set('localCurrencyId', currencyIdSelected);
+          this.set('localCurrency', selCurrencyName);
+          this.set('localCurrencyId', selCurrencyId);
         },
 
         _getPlannedBudgetTotal: function(val1, val2, currency) {
