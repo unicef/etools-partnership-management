@@ -70,8 +70,8 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              hide-delete-btn="[[_hideDeleteBtn(readonly, intervention.status, intervention.prc_review_document_file)]]"
-                              readonly$="[[_isUploadFileReadonly(tabEditMode, intervention.status, intervention.prc_review_document_file)]]">
+                              hide-delete-btn="[[_hideDeleteBtn(editMode, intervention.status, intervention.prc_review_document_file)]]"
+                              readonly$="[[_isUploadFileReadonly(editMode, intervention.status, intervention.prc_review_document_file)]]">
           </etools-single-file>
         </div>
       </div>
