@@ -60,11 +60,9 @@
 
       #no-attach-warning p {
         margin: 0;
+
       }
 
-      etools-file[readonly] {
-        margin-left: 25px;
-      }
     </style>
 
     <etools-content-panel class="content-section" title="Attachments">
@@ -131,17 +129,15 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
+//            value: false,
             observer: '_editModeChanged'
           }
         },
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _attachmentsChanged: function(attachments) {

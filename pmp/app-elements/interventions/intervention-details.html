@@ -344,7 +344,7 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
+//            value: false,
             observer: '_editModeChanged'
           },
         },
@@ -371,10 +371,8 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _interventionChanged: function(intervention) {

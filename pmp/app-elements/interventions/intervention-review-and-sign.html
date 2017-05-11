@@ -192,7 +192,7 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
+//            value: false,
             observer: '_editModeChanged'
           }
         },
@@ -222,10 +222,8 @@
           }
           return false;
         },
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
