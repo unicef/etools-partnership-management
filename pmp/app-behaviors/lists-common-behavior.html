@@ -41,6 +41,11 @@
       defaultListsSize: {
         type: Number,
         value: 10
+      },
+
+      showQueryLoading: {
+        type: Boolean,
+        value: false
       }
     },
 
@@ -78,12 +83,14 @@
     },
 
     // List fade in fade out effect
-    _listChanged: function(filteredList) {
+    _listChanged: function(filteredList, oldFilteredList) {
       var classList = this.$.list.classList;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
-        // dismiss global loading after the list becomes visible (fist page of the list is displayed)
-        this.fire('global-loading', {active: false});
+      }
+
+      if (typeof oldFilteredList === 'undefined') {
+        this.set('showQueryLoading', true);
       }
     },
 

@@ -15,10 +15,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
-
 <link rel="import" href="../bower_components/etools-loading/etools-loading.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
+<link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
@@ -48,7 +49,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="pages/page-partners.html">
 <link rel="import" href="pages/page-governments.html">
 <link rel="import" href="pages/page-not-found.html">
-<!-- -->
+-->
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
@@ -89,11 +90,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-center);
       }
 
-      #pageLoading {
-        position: fixed;
-        z-index: 1000;
-      }
-
       .main-page {
         @apply(--layout-flex);
       }
@@ -109,7 +105,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-flex);
         @apply(--layout-end-justified);
       }
-
     </style>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
@@ -182,10 +177,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
-        <etools-loading id="pageLoading" loading-text="Loading data..."></etools-loading>
+        <etools-loading id="pageLoading"
+                        loading-text="Loading data..."
+                        active$="[[showLoading]]"
+                        absolute></etools-loading>
+
         <page-footer></page-footer>
+
       </app-header-layout>
     </app-drawer-layout>
+    <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
 
   </template>
 
@@ -196,7 +197,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       properties: {
-
         page: {
           type: String,
           reflectToAttribute: true,
@@ -221,10 +221,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object
         },
         lazyLoadPages: {
-          type: Array,
-          value: ['partners', 'agreements', 'interventions', 'governments']
+          type: Object,
+          value: {
+            partners: false,
+            agreements: false,
+            interventions: false,
+            governments: false
+          }
         },
-        isIE: Boolean
+        isIE: Boolean,
+        loadingsCounter: {
+          type: Number,
+          value: 0,
+          observer: '_manageGlobalLoadingState'
+        },
+        showLoading: Boolean
       },
 
       behaviors: [
@@ -237,11 +248,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'global-loading': '_handleLoading',
+        'global-loading': '_handleGlobalLoading',
         'drawer': 'toggleDrawer',
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
-        'forbidden': '_onForbidden'
+        'forbidden': '_onForbidden',
+        'open-data-refresh-dialog': 'openDataRefreshDialog'
       },
 
       _onForbidden: function(event) {
@@ -260,9 +272,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.isIE) {
           this._addIEBrowserStylesAdjustments();
         }
-        // init loading element, used for global loading
-        this.globalLoadingElement = this.$.pageLoading;
-        this.fire('global-loading', {message: 'Loading main elements...', active: true});
+      },
+
+      openDataRefreshDialog: function() {
+        this.$.dataRefreshDialog.open();
+      },
+
+      toggleDrawer: function() {
+        this.$.drawer.toggle();
       },
 
       _updateMainPath: function(event) {
@@ -272,10 +289,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('route.__queryParams', null);
         }
         event.stopImmediatePropagation();
-      },
-
-      toggleDrawer: function() {
-        this.$.drawer.toggle();
       },
 
       _routePageChanged: function(page) {
@@ -295,7 +308,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
         var pageEl = this._getPageElement(page);
-        if (!this._pageLoaded(pageEl)) {
+        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[page] === false) {
           // activate the global loading with a propper message
           this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
           // make the import
@@ -309,60 +322,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.fire('toast', {text: 'Oops you hit a 404!'});
       },
 
-      /**
-       * Show loading when data is requested from server, or save is in progress...
-       */
-      _handleLoading: function(event) {
-        event.stopImmediatePropagation();
-        //        this.debounce('showGlobalLoading', function() {
-        if (this.globalLoadingElement) {
-          var loadingMsg = 'Loading...';
-          if (event.detail && typeof event.detail.message === 'string' && event.detail.message !== '') {
-            loadingMsg = event.detail.message;
-          }
-          this.globalLoadingElement.loadingText = loadingMsg;
-          var isActive = (event.detail.active === true) ? true : false;
-          this.globalLoadingElement.active = isActive;
-          //            console.log('start loading...open ' + isActive);
-        }
-        //        }, 50);
-      },
-
-      _pageLoaded: function(pageEl) {
-        return Polymer.isInstance(pageEl);
-      },
-
       _getPageElement: function(pageId) {
         return this.$$('#' + pageId);
       },
 
       // load all the other main pages after first page is loaded
       _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
+        this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
         currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._firstPageRenderCallback.bind(this, currentLoadingPage));
+        // load the rest of the pages after current page render is complete
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl,
+                                             this._firstPageRenderCallback.bind(this, currentLoadingPage));
       },
       _firstPageRenderCallback: function(currentLoadedPage) {
+        this.fire('global-loading', {active: false}); // deactivate first page loading msg
         this._redirectToProperListPage();
         this._lazyLoadPages(currentLoadedPage);
       },
       // load all the other main pages except the one just rendered
       _lazyLoadPages: function(currentLoadedPage) {
         try {
-          var pageUrl;
-          var self = this;
-          self.lazyLoadPages.forEach(function(page) {
-            if (page !== currentLoadedPage) {
+          for (let page in this.lazyLoadPages) {
+            if (page !== currentLoadedPage && this.lazyLoadPages[page] === false) {
               // make the import
-              pageUrl = self.resolveUrl('pages/page-' + page + '.html');
+              let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
               // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              self.importHref(pageUrl, null, null, false);
+              this.importHref(pageUrl, this._setPageLoaded.bind(this, page) , null, false);
             }
-          });
+          }
         } catch (err) {
           console.error('An error occurred during pages lazy load', err);
         }
       },
-
+      _setPageLoaded: function(page) {
+        this.lazyLoadPages[page] = true;
+      },
       _activePageIs: function(activePage, expectedPage) {
         return activePage === expectedPage;
       },
@@ -405,6 +399,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.route.path === this.baseUrl + this.routeData.page) {
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
           return;
+        }
+      },
+
+      // global loading functionality
+      _showLoading: function() {
+        if (!this.showLoading) {
+          this.set('showLoading', true);
+        }
+      },
+      _hideLoading: function() {
+        if (this.showLoading) {
+          this.set('showLoading', false);
+        }
+      },
+      _manageGlobalLoadingState: function(loadingsCounterVal) {
+        if (loadingsCounterVal > 0) {
+           this._showLoading();
+        } else {
+           this._hideLoading();
+        }
+      },
+      _handleGlobalLoading: function(e) {
+        e.stopImmediatePropagation();
+        if (e.detail.active === true) {
+          // set loading message
+          var loadingMsg = 'Loading...';
+          if (e.detail && typeof e.detail.message === 'string' && e.detail.message !== '') {
+            loadingMsg = e.detail.message;
+          }
+          //this.$$('#loading-message').innerHTML = loadingMsg;
+          this.$.pageLoading.set('loadingText', loadingMsg);
+          // update loadings counter
+          this.loadingsCounter++;
+        } else {
+          if (this.loadingsCounter > 0) {
+            this.loadingsCounter--;
+          }
         }
       }
 

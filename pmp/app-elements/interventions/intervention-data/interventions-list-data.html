@@ -56,16 +56,9 @@
           }
         },
 
-        ready: function() {
-          if (this.showLoading) {
-            this.fire('global-loading', {message: 'Loading interventions data...', active: true});
-          }
-          this._elementReady();
-        },
-
         query: function(field, order, searchString, documentTypes, cpOutputs,
                         interventionStatuses, sectors, unicefFocalPoints, offices, startDate,
-                        endDate, pageNumber, pageSize) {
+                        endDate, pageNumber, pageSize, showQueryLoading) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -74,6 +67,10 @@
           }
 
           var _this = this;
+
+          if (showQueryLoading) {
+            this.fire('global-loading', {message: 'Loading PD/SSFA ToR list data...', active: true});
+          }
 
           this.db.transaction('r', this.db.interventions, function() {
             this.currentQuery = Dexie.currentTransaction;
@@ -181,8 +178,10 @@
 
           }).then(function(result) {
             _this._setFilteredInterventions(result);
+            _this.fire('global-loading', {active: false});
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
+            _this.fire('global-loading', {active: false});
           });
         }
 
