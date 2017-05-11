@@ -82,7 +82,7 @@
                                                        options="[[sectors]]"
                                                        option-label="name"
                                                        option-value="id"
-                                                       on-iron-select="_sectorSelected"
+                                                       on-iron-activate="_sectorSelected"
                                                        required$="[[required]]"
                                                        auto-validate
                                                        error-message="Please select a sector"
@@ -184,8 +184,7 @@
               this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
               var sectorDropdown = this.$$('#sector_' + event.model.index);
               if (sectorDropdown) {
-                sectorDropdown.selected = null;
-                sectorDropdown.selectedItem = null;
+                event.preventDefault();
               }
               return;
             }
