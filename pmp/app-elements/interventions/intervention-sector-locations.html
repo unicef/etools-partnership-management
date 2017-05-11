@@ -226,10 +226,12 @@
 
           for (var i = 0; i < dropdowns.length; i++) {
             if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value[optionValue]) {
+              /* jshint ignore:start */
               if (dropdowns[i].value[optionValue] == sectorId) {
                 // already selected sector
-                return true
+                return true;
               }
+              /* jshint ignore:end */
             }
           }
           return false;
