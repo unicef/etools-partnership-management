@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -81,7 +82,7 @@
             edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="documentType"
+          <!--<etools-searchable-multiselection-menu id="documentType"
                                                  label="Document Type"
                                                  placeholder="&#8212;"
                                                  options="[[currentDocTypes]]"
@@ -94,7 +95,18 @@
                                                  required auto-validate
                                                  error-message="Document type is required"
                                                  readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+          </etools-searchable-multiselection-menu>-->
+           <etools-single-selection-menu id="documentType"
+                                          label="Document Type"
+                                          placeholder="&#8212;"
+                                          options="[[currentDocTypes]]"
+                                          selected="{{intervention.document_type}}"
+                                          hide-search
+                                          dynamic-align
+                                          required auto-validate
+                                          error-message="Document type is required"
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
         </div>
         <div class="col col-3" title$="[[intervention.number]]">
           <!-- Reference Number -->
@@ -437,7 +449,8 @@
         _selectedPartnerIdChanged: function(id, oldId) {
           if (typeof oldId === 'number'
               && id !== oldId
-              && !this.agreement) { //Prevent reset on changes caused by initialization of the fields
+              && !this.agreement) {
+                //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
         },
@@ -453,10 +466,10 @@
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
           }
-          var agrSel = this.$.agreementSelector;
-          if (agrSel) {
-            agrSel.resetDropdowns();
-          }
+          // var agrSel = this.$.agreementSelector;
+          // if (agrSel) {
+          //   agrSel.resetDropdowns();
+          // }
         },
         /**
          * When an agreement is selected then check it's type and update document types dropdown
