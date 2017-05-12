@@ -305,6 +305,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
+
+        // TODO: fire global-loading when page changes and it is already loaded;
+        // make sure to disable this loading on page-element ready
+
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
         var pageEl = this._getPageElement(page);

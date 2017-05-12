@@ -118,15 +118,14 @@
 
           // update the government interventions list in dexieDB
           var mappedResponse = this._formatResponseDataForDexie(response.detail);
-          etoolsAppConfig.db.table('governments').put(mappedResponse);
+          if (mappedResponse && Object.keys(mappedResponse).length) {
+            etoolsAppConfig.db.table('governments').put(mappedResponse);
+          }
 
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
             this.set('handleResponseAdditionalCallback', null);
-            // reset callback
           }
-
-          this.fire('response-received', {});
         },
 
         _interventionIdChanged: function(newId) {

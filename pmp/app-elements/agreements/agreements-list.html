@@ -37,13 +37,15 @@
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
     </style>
 
-    <agreement-list-data id="agreements"
-                         filtered-agreements="{{filteredAgreements}}"
-                         total-results="{{totalResults}}"
-                         list-data-path="filteredAgreements"
-                         on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
-    </agreement-list-data>
+    <template is="dom-if" if="[[stampListData]]">
+      <agreement-list-data id="agreements"
+                           filtered-agreements="{{filteredAgreements}}"
+                           total-results="{{totalResults}}"
+                           list-data-path="filteredAgreements"
+                           on-agreements-loaded="_requiredDataHasBeenLoaded"
+                           fire-data-loaded>
+      </agreement-list-data>
+    </template>
 
     <paper-material id="listControls" elevation="1">
 
@@ -368,7 +370,7 @@
         },
 
         attached: function() {
-          this.fire('global-loading', {message: 'Loading agreements list data...', active: true});
+          this.listAttachedCallback(this.active, 'Loading agreements list data...');
         },
 
         // Input: URL query params
@@ -464,7 +466,11 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            this.$.agreements.query(
+            var agreements = this.$$('#agreements');
+            if (!agreements) {
+              return;
+            }
+            agreements.query(
                 this.sortOrder.field,
                 this.sortOrder.direction,
                 this.q.toLowerCase(),
