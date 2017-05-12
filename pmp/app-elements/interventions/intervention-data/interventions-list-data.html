@@ -12,6 +12,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="custom"
                  dexie-db-collection="interventions"
+                 renew-data-on-expiry
                  on-success="_handleResponse"></etools-ajax>
 
   </template>
@@ -141,7 +142,7 @@
                   return false;
                 }
               }
-              
+
               if (startDate && startDate.length &&
                   (!intervention.start || moment(intervention.start).isBefore(startDate))) {
                 return false;
