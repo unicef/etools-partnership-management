@@ -147,7 +147,7 @@
               <div class="col col-4">
                 <div class="row-h flex-c left-col">
                   <div class="col col-4">
-                    <etools-searchable-multiselection-menu id$="year_[[index]]"
+                    <!--<etools-searchable-multiselection-menu id$="year_[[index]]"
                        class="year"
                        label="Year"
                        placeholder="&#8212;"
@@ -159,7 +159,20 @@
                        dynamic-align
                        error-message="Year required"
                        readonly$="[[!editMode]]">
-                    </etools-searchable-multiselection-menu>
+                    </etools-searchable-multiselection-menu>-->
+                     <etools-single-selection-menu id="year_[[index]]"
+                       class="year"
+                       label="Year"
+                       placeholder="&#8212;"
+                       selected="{{item.year}}"
+                       options="[[years]]"
+                       on-iron-activate="_yearChanged"
+                       required$="[[required]]"
+                       auto-validate
+                       dynamic-align
+                       error-message="Year required"
+                       readonly$="[[!editMode]]">
+                    </etools-single-selection-menu>
                   </div>
                   <div class="col col-8">
                     <etools-currency-amount-input id$="csoContLocal_[[index]]"
@@ -506,22 +519,22 @@
         },
 
         _yearChanged: function(event) {
-          var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
-              ? event.detail.selectedValues.value : null;
+          var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
 
           if (this._yearAlreadySelected(yearSelected, event.model.index)) {
-            this.fire('toast', {text: 'Year already selected on other planned budget item.', showCloseBtn: true});
+           this.fire('toast', {text: 'Year already selected on other planned budget item.', showCloseBtn: true});
+
             var yearDropdown = this.$$('#year_' + event.model.index);
             if (yearDropdown) {
-              yearDropdown.value = [];
-              yearDropdown.selectedValues = null;
+              yearDropdown.selected = null;
             }
+            this.set('dataItems.' + event.model.index + '.year', null);
+            event.preventDefault();
             return;
           }
 
           this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
-
         _localCurrencyIdChanged: function(currencyId) {
           if (!currencyId) {
             currencyId = null;
@@ -569,19 +582,20 @@
 
         _yearAlreadySelected: function(year, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
-          var selected = false;
-          if (dropdowns && dropdowns.length) {
-            for (var i = 0; i < dropdowns.length; i++) {
-              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
-                if (dropdowns[i].value.value === year) {
-                  // already selected sector
-                  selected = true;
-                  break;
-                }
+          if (!dropdowns || !dropdowns.length) {
+            return false;
+          }
+          for (var i = 0; i < dropdowns.length; i++) {
+            if (dropdowns[i].selected) {
+              /* jshint ignore:start */
+              if (dropdownIdx !== i && dropdowns[i].selected == year) {
+                // already selected sector
+                return true;
               }
+              /* jshint ignore:end */
             }
           }
-          return selected;
+          return false;
         },
 
         /**

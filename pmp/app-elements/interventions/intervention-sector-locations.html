@@ -78,7 +78,7 @@
                                                        class="sector"
                                                        label="Section/Cluster"
                                                        placeholder="&#8212;"
-                                                       selected="[[item.sector.id]]"
+                                                       selected="{{item.sector.id}}"
                                                        options="[[sectors]]"
                                                        option-label="name"
                                                        option-value="id"
@@ -175,26 +175,29 @@
         },
 
         _sectorSelected: function(event) {
-          console.log('event',event);
-
           var sectorSelected = event.detail.item.item;
-          if (sectorSelected && Object.keys(sectorSelected).length > 0) {
-            var sectorId = parseInt(sectorSelected.id, 10);
-            if (this._sectorAlreadySelected(sectorId, event.model.index)) {
-              this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
-              var sectorDropdown = this.$$('#sector_' + event.model.index);
-              if (sectorDropdown) {
-                event.preventDefault();
-              }
-              return;
-            }
-            this.set('dataItems.' + event.model.index + '.sector', {
-              id: sectorId,
-              name: sectorSelected.name
-            });
-          } else {
+          if (!sectorSelected || !Object.keys(sectorSelected).length > 0) {
             this.set('dataItems.' + event.model.index + '.sector', null);
+            return false;
           }
+
+          if (this._sectorAlreadySelected(sectorSelected.id, event.model.index)) {
+            this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
+
+            var sectorDropdown = this.$$('#sector_' + event.model.index);
+            if (sectorDropdown) {
+              sectorDropdown.selected = null;
+            }
+            this.set('dataItems.' + event.model.index + '.sector', null);
+            event.preventDefault();
+            return;
+          }
+
+          this.set('dataItems.' + event.model.index + '.sector', {
+            id: sectorSelected.id,
+            name: sectorSelected.name
+          });
+
         },
 
         // _setSector: function(sector) {
@@ -238,13 +241,10 @@
           if (!dropdowns || !dropdowns.length) {
             return false;
           }
-          console.log('dropdowns',dropdowns);
-          var optionValue = dropdowns[0].optionValue;
           for (var i = 0; i < dropdowns.length; i++) {
-            if (dropdowns[i].selectedItem && dropdowns[i].selectedItem[optionValue]) {
+            if (dropdowns[i].selected) {
               /* jshint ignore:start */
-              if (dropdownIdx !== i && dropdowns[i].selectedItem[optionValue] == sectorId) {
-                console.log('sector already selected',sectorId, dropdowns[i].selectedItem[optionValue]);
+              if (dropdownIdx !== i && dropdowns[i].selected == sectorId) {
                 // already selected sector
                 return true;
               }
