@@ -399,7 +399,6 @@
         ],
 
         ready: function() {
-          console.log('ready',this.dataSetModel);
           this.dataSetModel = {
             id: null,
             partner_contribution: 0,
@@ -415,17 +414,14 @@
         },
 
         _dataItemsChanged: function(dataItems) {
-          console.log('dataItems',dataItems);
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
         },
 
         _interventionIdChanged: function(intervId) {
-            console.log('_interventionIdChanged',this.dataSetModel);
           this.set('localCurrencyId', null);
           this.set('localCurrency', null);
-          console.log('dataSetModel.currency',this.dataSetModel.currency);
           this.set('dataSetModel.currency', null);
           this._setCurrencyDropdownValue(null);
           this._initSelectedCurrency(this.dataItems, this.currencies);

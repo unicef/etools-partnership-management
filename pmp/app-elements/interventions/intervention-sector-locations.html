@@ -178,7 +178,7 @@
           var sectorSelected = event.detail.item.item;
           if (!sectorSelected || !Object.keys(sectorSelected).length > 0) {
             this.set('dataItems.' + event.model.index + '.sector', null);
-            return false;
+            return;
           }
 
           if (this._sectorAlreadySelected(sectorSelected.id, event.model.index)) {
