@@ -137,7 +137,9 @@
         ],
 
         open: function() {
-          this.$.dataRefreshDialog.opened = true;
+          if (!this.$.dataRefreshDialog.opened) {
+            this.$.dataRefreshDialog.opened = true;
+          }
         },
 
         _allSelectedChanged: function() {
