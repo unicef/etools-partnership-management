@@ -1,15 +1,15 @@
 {
   "currencies": [
     {
-      "value": "EURO",
+      "value": 1,
       "label": "EURO"
     },
     {
-      "value": "LBP",
+      "value": 2,
       "label": "LBP"
     },
     {
-      "value": "USD",
+      "value": 3,
       "label": "USD"
     }
   ],
@@ -51,14 +51,6 @@
     {
       "value": "MOU",
       "label": "Memorandum of Understanding"
-    },
-    {
-      "value": "IC",
-      "label": "Institutional Contract"
-    },
-    {
-      "value": "AWP",
-      "label": "Work Plan"
     }
   ],
   "agency_choices": [
@@ -99,8 +91,8 @@
       "label": "UN"
     },
     {
-      "value": "Women",
-      "label": "Women"
+      "value": "UN Women",
+      "label": "UN Women"
     },
     {
       "value": "UNAIDS",
@@ -185,18 +177,35 @@
       "label": "Amend Existing Clause"
     }
   ],
+  "local_currency": null,
   "cso_types": [
     {
       "value": "Academic Institution",
       "label": "Academic Institution"
     },
     {
+      "value": "Community Based Organisation",
+      "label": "Community Based Organisation"
+    },
+    {
+      "value": "Community based organization",
+      "label": "Community based organization"
+    },
+    {
       "value": "International",
       "label": "International"
     },
     {
+      "value": "International NGO",
+      "label": "International NGO"
+    },
+    {
       "value": "National",
       "label": "National"
+    },
+    {
+      "value": "National NGO",
+      "label": "National NGO"
     },
     {
       "value": null,
@@ -223,12 +232,28 @@
   ],
   "assessment_types": [
     {
+      "value": "Micro Assessment",
+      "label": "Micro Assessment"
+    },
+    {
+      "value": "Simplified Checklist",
+      "label": "Simplified Checklist"
+    },
+    {
+      "value": "Scheduled Audit report",
+      "label": "Scheduled Audit report"
+    },
+    {
+      "value": "Special Audit report",
+      "label": "Special Audit report"
+    },
+    {
       "value": "High Risk Assumed",
       "label": "High Risk Assumed"
     },
     {
-      "value": "Micro Assessment",
-      "label": "Micro Assessment"
+      "value": "Other",
+      "label": "Other"
     }
   ],
   "intervention_amendment_types": [
