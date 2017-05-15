@@ -395,11 +395,8 @@
           }
         },
 
-        _interventionIdChanged: function(intervId) {
-          this.set('localCurrencyId', null);
-          this.set('localCurrency', null);
-          this.set('dataSetModel.currency', null);
-          this._setCurrencyDropdownValue(null);
+        // make sure we have the right currency selected when intervention is changed
+        _interventionIdChanged: function() {
           this._initSelectedCurrency(this.dataItems, this.currencies);
         },
 
@@ -416,11 +413,15 @@
                 if (currency) {
                   this.set('localCurrencyId', currency.value);
                   this.set('localCurrency', currency.label);
-                  this.set('dataSetModel.currency', currency.value);
                   this._setCurrencyDropdownValue(currency);
+                  return;
                 }
               }
             }
+            // reset local currency
+            this.set('localCurrencyId', null);
+            this.set('localCurrency', null);
+            this._setCurrencyDropdownValue(null);
           }.bind(this), 50);
         },
 
@@ -520,6 +521,7 @@
         },
 
         _currencyChanged: function(event) {
+          console.log(event.detail);
           var currencyNameSelected = null;
           var currencyIdSelected = null;
           if (event.detail.selectedValues && event.detail.selectedValues.label) {
