@@ -253,7 +253,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': 'openDataRefreshDialog'
+        'open-data-refresh-dialog': '_openDataRefreshDialog'
       },
 
       _onForbidden: function(event) {
@@ -274,7 +274,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      openDataRefreshDialog: function() {
+      _openDataRefreshDialog: function() {
         this.$.dataRefreshDialog.open();
       },
 
