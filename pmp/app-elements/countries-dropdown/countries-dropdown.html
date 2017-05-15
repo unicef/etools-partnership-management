@@ -101,6 +101,11 @@
 
       is: 'countries-dropdown',
 
+      behaviors: [
+        etoolsAppConfig.globals,
+        etoolsBehaviors.EtoolsRefreshBehavior
+      ],
+
       properties: {
         current: Number,
         country: {
@@ -112,10 +117,6 @@
         },
         countrySelectorVisible: Boolean
       },
-      behaviors: [
-        etoolsAppConfig.globals,
-        etoolsBehaviors.EtoolsRefreshBehavior
-      ],
 
       _countrySelected: function(e) {
         if (e.detail.item.countryId !== this.current) {
