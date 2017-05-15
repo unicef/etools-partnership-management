@@ -49,12 +49,6 @@
           <div class="name">Governments</div>
         </a>
 
-        <div class="divider"></div>
-        <span class="nav-menu-item" menu-name="refresh-data" on-tap="openDataRefreshDialog">
-          <iron-icon icon="refresh"></iron-icon>
-          <div class="name">Refresh data</div>
-        </span>
-
         <!--</template>-->
       </iron-selector>
 
@@ -91,12 +85,6 @@
           page: String,
           baseUrl: String,
           permissions: String // TODO: might not be needed
-        },
-
-        openDataRefreshDialog: function() {
-          this.debounce('openDataRefreshDialog', function() {
-            this.fire('open-data-refresh-dialog');
-          }.bind(this), 50);
         }
 
       });
