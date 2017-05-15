@@ -35,6 +35,7 @@
                                       required$="[[required]]"
                                       auto-validate
                                       error-message="Please select CP Output"
+                                      on-iron-activate="resetSelectedIndicators"
                                       readonly$="[[!editMode]]">
         </etools-single-selection-menu>
       </div>
@@ -82,7 +83,6 @@
           cpOutputId: {
             type: Number,
             notify: true
-          //  observer: '_cpOutputSelected'
           },
           cpIndicators: {
             type: Array,
@@ -125,51 +125,22 @@
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
-
-          // if (this.cpOutputs.length > 0 && this.cpOutputId) {
-          //   // set selected cp output when cpOutputs data exists
-          //   this._cpOutputSelected(this.cpOutputId);
-          // }
         },
 
-        _selectedCpIndicatorsIdsChanged: function(ids) {
-          console.trace();
-          console.log('_selectedCpIndicatorsIdsChanged',ids);
-          if (ids.length && this.firstLoadCpIndicatorsUse) {
-            // prepare cp indicators id to be set as selected, used only once, at element init
-            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
-            this.set('firstLoadCpIndicatorsUse', false);
-          }
+        _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
+            console.log('_selectedCpIndicatorsIdsChanged',ids);
+            if (ids.length && this.firstLoadCpIndicatorsUse ) {
+              // prepare cp indicators id to be set as selected, used only once, at element init
+              this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+              this.set('firstLoadCpIndicatorsUse', false);
+            }
         },
 
-        // _cpOutputSelected: function(cpOutputId) {
-        //   // select cpOutput by id
-        //   var cpOutputDropdown = this.$.cpOutput;
-        //   if (!Array.isArray(this.cpOutputs) || !cpOutputId) {
-        //     cpOutputDropdown.selectedItem = null;
-        //     return;
-        //   }
-        //   var currentCpItem = cpOutputDropdown.selectedItem;
-        //   if (!currentCpItem || (currentCpItem && currentCpItem.id && currentCpItem.id != cpOutputId)) {
-        //     // if no cpOut selected or selected cpOut id is different than cpOutputId, update selection
-        //     this._setSelectedCpOutput(cpOutputId);
-        //   }
-
-        // },
-
-        // set selected cp output on dropdown
-        // _setSelectedCpOutput: function(id) {
-        //   if (!Array.isArray(this.cpOutputs)) {
-        //     return;
-        //   }
-        //   var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
-        //     return cpOut.id == id;
-        //   })[0];
-        //   if (selectedCpOutput) {
-        //     this.$.cpOutput.selectedItem = selectedCpOutput;
-        //   }
-        // },
-
+        _resetSelectedIndicators: function() {
+           this.set('selectedCpIndicatorsIds', []);
+            this.$.indicators.value = [];
+            this.$.indicators.selectedValues = null;
+        },
         _cpIndicatorsChanged: function(cpIndicators) {
           console.log('_cpIndicatorsChanged', cpIndicators);
           if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
@@ -180,17 +151,12 @@
             // set selected cp indicators (searched by ids) on dropdown
             this.$.indicators.value = selectedCpIndicators;
             this.set('firstLoadCpIndicators', []);
-          } else {
-            // indicators list changed, reset selection
-            this.set('selectedCpIndicatorsIds', []);
-            this.$.indicators.value = [];
-            this.$.indicators.selectedValues = null;
           }
         },
 
          // prevent having cpoutputs already selected in the current cpOutput selector
         _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
-          console.log('_computeCpOutputsOptions', alreadySelectedCpo, cpOutputsLength);
+        //  console.log('_computeCpOutputsOptions', alreadySelectedCpo, cpOutputsLength);
           if (cpOutputsLength === 0) {
             return;
           }
@@ -202,7 +168,6 @@
             if (oldCpOutput) {
               cpOutputsOptions.push(oldCpOutput);
             }
-           // this.cpOutputsOptions = [];//Override dirty checking
             this.set('cpOutputsOptions', cpOutputsOptions);
           }.bind(this), 50);
         },

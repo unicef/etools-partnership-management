@@ -109,7 +109,7 @@
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <div class="row-h flex-c">
-        <!--<etools-searchable-multiselection-menu id="currency"
+        <etools-searchable-multiselection-menu id="currency"
                                                label="Local Currency"
                                                placeholder="&#8212;"
                                                options="[[currencies]]"
@@ -118,8 +118,8 @@
                                                auto-validate
                                                error-message="Please select the currency"
                                                readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>-->
-         <etools-single-selection-menu id="currency"
+        </etools-searchable-multiselection-menu>
+         <!--<etools-single-selection-menu id="currency"
                                         label="Local Currency"
                                         placeholder="&#8212;"
                                         options="[[currencies]]"
@@ -128,7 +128,7 @@
                                         auto-validate
                                         error-message="Please select the currency"
                                         readonly$="[[!editMode]]">
-        </etools-single-selection-menu>
+        </etools-single-selection-menu>-->
       </div>
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -449,11 +449,11 @@
           }.bind(this), 50);
         },
 
-        _setCurrencyDropdownValue: function(currencyValue) {
+         _setCurrencyDropdownValue: function(currency) {
           // set selected currency dropdown value
           var currencyDropdown = this.$.currency;
           if (currencyDropdown) {
-            currencyDropdown.set('selected', currencyValue);
+            currencyDropdown.set('value', currency);
           }
         },
 
