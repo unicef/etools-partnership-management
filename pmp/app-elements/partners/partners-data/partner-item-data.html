@@ -112,16 +112,19 @@
         _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
 
-          if (this.$.ajax.get('method') !== 'GET') {
-            // update the partners list in dexieDB
-            etoolsAppConfig.db.table('partners').put(response.detail);
-          }
-
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
             this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
             this.set('handleErrResponseAdditionalCallback', null);
+          }
+
+          if (this.$.ajax.get('method') !== 'GET') {
+            var self = this;
+            // update the partners list in dexieDB
+            etoolsAppConfig.db.table('partners').put(response.detail).then(function() {
+              self.fire('reload-list');
+            });
           }
         },
         _handleErrorResponse: function(response) {
