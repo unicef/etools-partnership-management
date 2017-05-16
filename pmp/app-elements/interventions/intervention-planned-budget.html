@@ -451,10 +451,10 @@
 
          _setCurrencyDropdownValue: function(currency) {
            console.log('_setCurrencyDropdownValue',currency);
-          // set selected currency dropdown value
+          var currencyValue = currency ? currency.value : null;
           var currencyDropdown = this.$.currency;
           if (currencyDropdown) {
-            currencyDropdown.set('selected', currency.value);
+            currencyDropdown.set('selected', currencyValue);
           }
         },
 
