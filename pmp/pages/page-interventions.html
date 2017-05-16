@@ -148,16 +148,14 @@
             <interventions-list
                 active="[[intervListActive]]"
                 csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[interventionsQueryParams]]"
-                disable-upgrade$="[[!intervListActive]]">
+                url-params="[[interventionsQueryParams]]">
             </interventions-list>
           </div>
 
           <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
             <div class="page" name="overview">
               <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]"
-                                     disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                     intervention-agreement="[[agreement]]">
               </intervention-overview>
             </div>
           </template>
@@ -170,8 +168,7 @@
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
                                   edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
-                                  on-update-intervention-status="_updateInterventionStatus"
-                                  disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                  on-update-intervention-status="_updateInterventionStatus">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
@@ -180,8 +177,7 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
-                                          disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
@@ -192,8 +188,7 @@
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                      disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
@@ -326,9 +321,10 @@
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
       },
-      _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
-        return !intervDetailsActive && !newInterventionActive;
-      },
+      // TODO: do not remove this, we might needed back
+      // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
+      //   return !intervDetailsActive && !newInterventionActive;
+      // },
       _interventionChanged: function(intervention) {
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {

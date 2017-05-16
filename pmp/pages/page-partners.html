@@ -109,18 +109,17 @@
 
       <div class="page" name="list">
         <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
-                       url-params="[[queryParams]]" disable-upgrade$="[[!listActive]]"></partners-list>
+                       url-params="[[queryParams]]"></partners-list>
       </div>
       <div class="page" name="overview">
-        <partner-overview partner="[[partner]]" disable-upgrade$="[[!tabsActive]]"></partner-overview>
+        <partner-overview partner="[[partner]]"></partner-overview>
       </div>
       <div class="page" name="details">
         <partner-details id="partnerDetails"
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"
-                         disable-upgrade$="[[!tabsActive]]"></partner-details>
+                         on-hide-partner="_hidePartner"></partner-details>
       </div>
     </iron-pages>
 
