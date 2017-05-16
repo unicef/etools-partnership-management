@@ -82,20 +82,6 @@
             edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
-          <!--<etools-searchable-multiselection-menu id="documentType"
-                                                 label="Document Type"
-                                                 placeholder="&#8212;"
-                                                 options="[[currentDocTypes]]"
-                                                 custom-object-options
-                                                 selected="{{intervention.document_type}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 hide-search
-                                                 dynamic-align
-                                                 required auto-validate
-                                                 error-message="Document type is required"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>-->
            <etools-single-selection-menu id="documentType"
                                           label="Document Type"
                                           placeholder="&#8212;"
@@ -192,19 +178,6 @@
     <etools-content-panel class="content-section" title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-          <!--<etools-searchable-multiselection-menu id="hrps"
-                                                 label="In response to an HRP, Select"
-                                                 placeholder="&#8212;"
-                                                 options="[[hrps]]"
-                                                 option-value="id"
-                                                 option-label="name"
-                                                 custom-object-options
-                                                 selected="{{intervention.hrp}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>-->
             <etools-single-selection-menu id="hrps"
                                           label="In response to an HRP, Select"
                                           placeholder="&#8212;"
@@ -417,7 +390,10 @@
           }
           if (newValue) {
             this.set('interventionRequiredField', false);
+            this.$.documentType.selected = null;
+            this.set('currentDocTypes', null);
           }
+
         },
 
         _resetValidations: function() {

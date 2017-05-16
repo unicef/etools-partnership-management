@@ -13,21 +13,6 @@
     <style include="grid-layout-styles shared-styles"></style>
     <div class="row-h flex-c">
       <div class="col col-6">
-        <!--<etools-searchable-multiselection-menu id="partner"
-                                               label="Partner Organization"
-                                               placeholder="&#8212;"
-                                               options="[[partnersDropdownData]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="name"
-                                               selected="{{partnerId}}"
-                                               update-selected
-                                               selected-requires-valid-options
-                                               dynamic-align
-                                               required auto-validate
-                                               error-message="Partner is required"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>-->
         <etools-single-selection-menu id="partner"
                                       label="Partner Organization"
                                       placeholder="&#8212;"
@@ -43,21 +28,6 @@
       </div>
 
       <div class="col col-6">
-        <!--<etools-searchable-multiselection-menu id="agreements"
-                                               label="Agreement"
-                                               placeholder="&#8212;"
-                                               options="[[filteredAgreements]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="agreement_number"
-                                               selected="{{agreementId}}"
-                                               update-selected
-                                               selected-requires-valid-options
-                                               dynamic-align
-                                               required auto-validate
-                                               error-message="Agreement required"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>-->
          <etools-single-selection-menu id="agreements"
                                         label="Agreement"
                                         placeholder="&#8212;"
