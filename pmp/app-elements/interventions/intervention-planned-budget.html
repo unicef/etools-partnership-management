@@ -437,7 +437,6 @@
         },
 
          _setCurrencyDropdownValue: function(currency) {
-           console.log('_setCurrencyDropdownValue',currency);
           var currencyValue = currency ? currency.value : null;
           var currencyDropdown = this.$.currency;
           if (currencyDropdown) {
@@ -521,7 +520,6 @@
           this.set('dataItems.' + event.model.index + '.year', yearSelected);
         },
         _localCurrencyIdChanged: function(currencyId) {
-          console.log('_localCurrencyIdChanged',currencyId);
           if (!currencyId) {
             currencyId = null;
           }

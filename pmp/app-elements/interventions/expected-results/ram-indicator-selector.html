@@ -127,7 +127,6 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
         _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
-            console.log('_selectedCpIndicatorsIdsChanged',ids);
             if (ids.length && this.firstLoadCpIndicatorsUse ) {
               // prepare cp indicators id to be set as selected, used only once, at element init
               this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
@@ -141,7 +140,6 @@
             this.$.indicators.selectedValues = null;
         },
         _cpIndicatorsChanged: function(cpIndicators) {
-          console.log('_cpIndicatorsChanged', cpIndicators);
           if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
               Array.isArray(cpIndicators) && cpIndicators.length) {
             var selectedCpIndicators = cpIndicators.filter(function(indicator) {
@@ -155,7 +153,6 @@
 
          // prevent having cpoutputs already selected in the current cpOutput selector
         _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
-          console.log('_computeCpOutputsOptions', alreadySelectedCpo, cpOutputsLength);
           if (cpOutputsLength === 0) {
             return;
           }
