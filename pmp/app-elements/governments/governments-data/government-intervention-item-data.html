@@ -116,10 +116,12 @@
           }
           this._setIntervention(response.detail);
 
-          // update the government interventions list in dexieDB
-          var mappedResponse = this._formatResponseDataForDexie(response.detail);
-          if (mappedResponse && Object.keys(mappedResponse).length) {
-            etoolsAppConfig.db.table('governments').put(mappedResponse);
+          if (this.$.ajax.get('method') !== 'GET') {
+            // update the government interventions list in dexieDB
+            var mappedResponse = this._formatResponseDataForDexie(response.detail);
+            if (mappedResponse && Object.keys(mappedResponse).length) {
+              etoolsAppConfig.db.table('governments').put(mappedResponse);
+            }
           }
 
           if (typeof this.handleResponseAdditionalCallback === 'function') {
