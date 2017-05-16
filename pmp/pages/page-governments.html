@@ -238,7 +238,8 @@
       ],
 
       listeners: {
-        'gov-intervention-save-error': '_govInterventionSaveErrors'
+        'gov-intervention-save-error': '_govInterventionSaveErrors',
+        'reload-list': '_reloadGovernmentInterventionsList'
       },
 
       ready: function() {
@@ -329,6 +330,18 @@
       _newIntervention: function(newInterventionActive) {
         return newInterventionActive === true;
       },
+
+      _reloadGovernmentInterventionsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var govInterventions = this.$.list;
+          if (!govInterventions.$.list.classList.contains('hidden')) {
+            govInterventions._filterGovernmentsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[governments-page]', err);
+        }
+      }
 
     });
 
