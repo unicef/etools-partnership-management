@@ -112,8 +112,10 @@
         _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
 
-          // update the partners list in dexieDB
-          etoolsAppConfig.db.table('partners').put(response.detail);
+          if (this.$.ajax.get('method') !== 'GET') {
+            // update the partners list in dexieDB
+            etoolsAppConfig.db.table('partners').put(response.detail);
+          }
 
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
             this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
