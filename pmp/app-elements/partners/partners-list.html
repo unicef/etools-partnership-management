@@ -43,13 +43,15 @@
       }
     </style>
 
-    <partners-list-data id="partners"
-                        filtered-partners="{{filteredPartners}}"
-                        total-results="{{totalResults}}"
-                        on-partners-loaded="_requiredDataHasBeenLoaded"
-                        list-data-path="filteredPartners"
-                        fire-data-loaded>
-    </partners-list-data>
+    <template is="dom-if" if="[[stampListData]]">
+      <partners-list-data id="partners"
+                          filtered-partners="{{filteredPartners}}"
+                          total-results="{{totalResults}}"
+                          on-partners-loaded="_requiredDataHasBeenLoaded"
+                          list-data-path="filteredPartners"
+                          fire-data-loaded>
+      </partners-list-data>
+    </template>
 
     <paper-material id="listControls" elevation="1">
 
@@ -262,7 +264,7 @@
           csvDownloadUrl: {
             type: String,
             notify: true
-          },
+          }
         },
 
         observers: [
@@ -298,7 +300,7 @@
         },
 
         attached: function() {
-          this.fire('global-loading', {message: 'Loading partners list data...', active: true});
+          this.listAttachedCallback(this.active, 'Loading partners list data...');
         },
 
         // Input: URL query params
@@ -380,7 +382,12 @@
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            this.$.partners.query(
+            var partners = this.$$('#partners');
+            if (!partners) {
+              return;
+            }
+
+            partners.query(
                 this.sortOrder.field,
                 this.sortOrder.direction,
                 this.q.toLowerCase(),
