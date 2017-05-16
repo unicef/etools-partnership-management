@@ -35,7 +35,7 @@
                                       required$="[[required]]"
                                       auto-validate
                                       error-message="Please select CP Output"
-                                      on-iron-activate="resetSelectedIndicators"
+                                      on-iron-activate="_resetSelectedIndicators"
                                       readonly$="[[!editMode]]">
         </etools-single-selection-menu>
       </div>
@@ -126,7 +126,6 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
-
         _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
             console.log('_selectedCpIndicatorsIdsChanged',ids);
             if (ids.length && this.firstLoadCpIndicatorsUse ) {
@@ -156,7 +155,7 @@
 
          // prevent having cpoutputs already selected in the current cpOutput selector
         _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
-        //  console.log('_computeCpOutputsOptions', alreadySelectedCpo, cpOutputsLength);
+          console.log('_computeCpOutputsOptions', alreadySelectedCpo, cpOutputsLength);
           if (cpOutputsLength === 0) {
             return;
           }
