@@ -484,7 +484,7 @@
           });
         },
 
-        _filterGovernmentsData: function() {
+        _filterGovernmentsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -518,7 +518,7 @@
 
               this.pageNumber,
               this.pageSize,
-              this.showQueryLoading
+              forceNoLoading ? false : this.showQueryLoading
             );
 
           }, this.debounceTime);

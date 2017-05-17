@@ -186,7 +186,6 @@
         routeData: {
           type: Object
         }
-
       },
 
       observers: [
@@ -195,7 +194,8 @@
       ],
 
       listeners: {
-        'agreement-save-error': '_agreementSaveErrors'
+        'agreement-save-error': '_agreementSaveErrors',
+        'reload-list': '_reloadAgreementsList'
       },
 
       ready: function() {
@@ -312,6 +312,18 @@
       },
       _observeRouteDataId: function(id) {
         this.set('selectedAgreementId', id);
+      },
+
+      _reloadAgreementsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var agreements = this.$.list;
+          if (!agreements.$.list.classList.contains('hidden')) {
+            agreements._filterAgreementsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[agreements-page]', err);
+        }
       }
 
     });

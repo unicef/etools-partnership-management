@@ -380,7 +380,7 @@
           }
         },
 
-        _filterPartnersData: function() {
+        _filterPartnersData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -398,7 +398,7 @@
                 this.pageNumber,
                 this.pageSize,
                 this.showHidden,
-                this.showQueryLoading
+                forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },
