@@ -138,12 +138,18 @@
       width: 100%;
       overflow-x: hidden;
     };
+
     --paper-item: {
         cursor: pointer;
-        /* Fixes a vertical alignment issue in ie */
-        height: 48px;
-        color: red;
     };
   }
+
+  .ie {
+    --paper-item: {
+      cursor: pointer;
+      /* Fixes a vertical alignment issue in ie */
+      height: 48px;
+    };
+  };
 
 </style>
