@@ -15,6 +15,7 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -202,6 +203,7 @@
         is: 'governments-list',
 
         behaviors: [
+          pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
@@ -480,7 +482,7 @@
           });
         },
 
-        _filterGovernmentsData: function() {
+        _filterGovernmentsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -514,7 +516,7 @@
 
               this.pageNumber,
               this.pageSize,
-              this.showQueryLoading
+              forceNoLoading ? false : this.showQueryLoading
             );
 
           }, this.debounceTime);

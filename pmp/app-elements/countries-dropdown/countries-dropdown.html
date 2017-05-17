@@ -128,6 +128,7 @@
         // this.set('country', this.$.repeat.itemForElement(e.detail.item));
       },
       _handleResponse: function(res) {
+        this.fire('global-loading', {message: 'Please wait while country is changing...', active: true});
         this.fire('update-main-path', {path: ''});
         this.refresh();
       },

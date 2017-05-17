@@ -15,6 +15,7 @@
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -230,6 +231,7 @@
 
         behaviors: [
           etoolsAppConfig.globals,
+          pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
@@ -543,7 +545,7 @@
           }
         },
 
-        _filterInterventionsData: function() {
+        _filterInterventionsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
@@ -590,7 +592,7 @@
               this.endDate,
               this.pageNumber,
               this.pageSize,
-              this.showQueryLoading
+              forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },
