@@ -13,6 +13,7 @@
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
@@ -217,6 +218,7 @@
         is: 'partners-list',
 
         behaviors: [
+          pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,

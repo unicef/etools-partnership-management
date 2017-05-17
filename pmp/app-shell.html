@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
+<link rel="import" href="app-behaviors/app-navigation-helper-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -196,6 +197,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       is: 'app-shell',
 
+      behaviors: [
+        etoolsAppConfig.globals,
+        pmpBehaviors.NotificationToastsBehavior,
+        pmpBehaviors.AppNavigationHelperBehavior
+      ],
+
       properties: {
         page: {
           type: String,
@@ -235,13 +242,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: 0,
           observer: '_manageGlobalLoadingState'
         },
-        showLoading: Boolean
+        showLoading: Boolean,
+        // loadingCounterDecrementAdjustment will be used to disable
+        // a loading that came from a link tap event(like menu)
+        loadingCounterDecrementAdjustment: {
+          type: Number,
+          value: 0
+        }
       },
-
-      behaviors: [
-        etoolsAppConfig.globals,
-        pmpBehaviors.NotificationToastsBehavior
-      ],
 
       observers: [
         '_routePageChanged(routeData.page)'
@@ -257,7 +265,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _onForbidden: function(event) {
-        console.error('unauthorized');
         window.location.href = this.loginPath;
       },
 
@@ -305,9 +312,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
-
-        // TODO: fire global-loading when page changes and it is already loaded;
-        // make sure to disable this loading on page-element ready
 
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
@@ -426,6 +430,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _handleGlobalLoading: function(e) {
         e.stopImmediatePropagation();
+        if (e.detail.resetCounter) {
+          // loading event came from menu tap event,
+          // it mean page will change and we need to reset the loadings counter
+          this.loadingsCounter = 0;
+        }
         if (e.detail.active === true) {
           // set loading message
           var loadingMsg = 'Loading...';
@@ -436,9 +445,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.pageLoading.set('loadingText', loadingMsg);
           // update loadings counter
           this.loadingsCounter++;
+
+          // got to new URL if needed, but using a delay to allow loading to show
+          if (e.detail.newUrl) {
+            this.async(function() {
+              this.changeAppState(e.detail.newUrl);
+              this.set('loadingCounterDecrementAdjustment', 1);
+            }, 50);
+          }
         } else {
           if (this.loadingsCounter > 0) {
             this.loadingsCounter--;
+            if (this.loadingCounterDecrementAdjustment) {
+              this.loadingsCounter--;
+              this.set('loadingCounterDecrementAdjustment', 0);
+              if (this.loadingsCounter < 0) {
+                this.loadingsCounter = 0;
+              }
+            }
           }
         }
       }
