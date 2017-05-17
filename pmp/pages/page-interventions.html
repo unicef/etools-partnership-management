@@ -145,19 +145,17 @@
                     role="main">
 
           <div class="page" name="list">
-            <interventions-list
+            <interventions-list id="intList"
                 active="[[intervListActive]]"
                 csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[interventionsQueryParams]]"
-                disable-upgrade$="[[!intervListActive]]">
+                url-params="[[interventionsQueryParams]]">
             </interventions-list>
           </div>
 
           <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
             <div class="page" name="overview">
               <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]"
-                                     disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                     intervention-agreement="[[agreement]]">
               </intervention-overview>
             </div>
           </template>
@@ -169,9 +167,8 @@
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  edit-mode="[[_hasEditPermissions(permissions)]]"
-                                  on-update-intervention-status="_updateInterventionStatus"
-                                  disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                  edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
+                                  on-update-intervention-status="_updateInterventionStatus">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
@@ -180,20 +177,18 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions)]]"
-                                          disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
             <intervention-attachments id="intervAttachments"
                                       active="[[_isAttachementsTabActive(activeTab)]]"
-                                      edit-mode="[[_hasEditPermissions(permissions)]]"
+                                      edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
                                       permissions="[[permissions]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                      disable-upgrade$="[[_detailsPageDisableUpgrade(intervDetailsActive, newInterventionActive)]]">
+                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
@@ -206,7 +201,7 @@
                              intervention-agreement-status="[[agreement.status]]"
                              on-save-intervention="_validateAndSaveIntervention"
                              on-update-intervention-status="_updateInterventionStatus"
-                             show-save-btn$="[[editMode]]"></intervention-status>
+                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
 
       </div>
       <!-- sidebar content end -->
@@ -318,7 +313,8 @@
       ],
 
       listeners: {
-        'intervention-save-error': '_interventionSaveErrors'
+        'intervention-save-error': '_interventionSaveErrors',
+        'reload-list': '_reloadInterventionsList'
       },
 
       ready: function() {
@@ -326,9 +322,10 @@
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
       },
-      _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
-        return !intervDetailsActive && !newInterventionActive;
-      },
+      // TODO: do not remove this, we might needed back
+      // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
+      //   return !intervDetailsActive && !newInterventionActive;
+      // },
       _interventionChanged: function(intervention) {
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
@@ -421,7 +418,7 @@
       _validateAndSaveIntervention: function(event) {
         event.stopImmediatePropagation();
         this.set('serverErrors', []);
-        if (!this._hasEditPermissions(this.permissions)) {
+        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
           return;
         }
 
@@ -691,8 +688,21 @@
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
 
-      _hasEditPermissions: function(permissions) {
+      _hasEditPermissions: function(permissions, intervention) {
+        if (permissions && permissions.partnershipManager) {
+          // TODO: revise this temporary permission, might not be needed
+          // temporary edit permission for PM regardless status or other checks
+          return true;
+        }
+
         if (permissions && permissions.editInterventionDetails === true) {
+          if (intervention) {
+            if (!(permissions.partnershipManager || permissions.PME) &&
+              (!intervention.status || intervention.status !== 'draft')) {
+              // other users than partnershipManager or PME will be able to edit only if intervention status is draft
+              return false;
+            }
+          }
           return true;
         }
         return false;
@@ -760,6 +770,18 @@
 
       _isAttachementsTabActive: function(activeTab) {
         return activeTab === 'attachments';
+      },
+
+      _reloadInterventionsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var interventions = this.$.intList;
+          if (!interventions.$.list.classList.contains('hidden')) {
+            interventions._filterInterventionsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[interventions-page]', err);
+        }
       }
 
     });

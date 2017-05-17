@@ -112,7 +112,7 @@ it doesn't need to be included in element's style -->
       <etools-content-panel class="content-section" title="Work Plan Results" id="results">
         <government-plan-results id="governmentResults"
                                  data-items="{{intervention.results}}"
-                                 allow-edit="[[governmentEditMode]]"
+                                 edit-mode$="[[governmentEditMode]]"
                                  year-options="[[yearOptions]]"
                                  cp-wbs="[[selectedCpWbs]]">
         </government-plan-results>
@@ -149,12 +149,11 @@ it doesn't need to be included in element's style -->
           type: Object,
         },
         editMode: {
-          type: Boolean,
-          value: true,
+          type: Boolean
         },
         governmentEditMode: {
           type: Boolean,
-          value: true,
+          value: false,
         },
         active: {
           type: Boolean,
@@ -254,7 +253,6 @@ it doesn't need to be included in element's style -->
 
       _initSidebar: function() {
         // TODO create sticky save button
-
       },
       _interventionChanged: function(intervention) {
         this._setNewEditMode();
@@ -262,8 +260,24 @@ it doesn't need to be included in element's style -->
             (_.has(this.originalIntervention, 'id') && this.intervention.id !== this.originalIntervention.id)) {
           this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         }
-        this.fire('global-loading', {active: false});
+        this._resetErrors();
       },
+      _resetErrors: function() {
+        var partner = this.$$('#partner');
+        if (partner) {
+          partner.invalid = false;
+        }
+
+        var number = this.$$('#number');
+        if (number) {
+          number.invalid = false;
+        }
+
+        var countryProgramme = this.$$('#country_programme');
+        if (countryProgramme) {
+          countryProgramme.invalid = false;
+        }
+      }
     });
   </script>
 </dom-module>

@@ -6,6 +6,8 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
@@ -109,18 +111,17 @@
 
       <div class="page" name="list">
         <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
-                       url-params="[[queryParams]]" disable-upgrade$="[[!listActive]]"></partners-list>
+                       url-params="[[queryParams]]"></partners-list>
       </div>
       <div class="page" name="overview">
-        <partner-overview partner="[[partner]]" disable-upgrade$="[[!tabsActive]]"></partner-overview>
+        <partner-overview partner="[[partner]]"></partner-overview>
       </div>
       <div class="page" name="details">
         <partner-details id="partnerDetails"
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"
-                         disable-upgrade$="[[!tabsActive]]"></partner-details>
+                         on-hide-partner="_hidePartner"></partner-details>
       </div>
     </iron-pages>
 
@@ -131,6 +132,8 @@
     Polymer({
 
       is: 'page-partners',
+
+      behaviors: [EtoolsLogsBehavior],
 
       properties: {
         user: {
@@ -168,7 +171,8 @@
 
       listeners: {
         'partner-save-error': '_partnerSaveError',
-        'create-partner': '_createPartner'
+        'create-partner': '_createPartner',
+        'reload-list': '_reloadPartnersList'
       },
       ready: function() {
         this.newPartnerDialog = document.createElement('new-partner-dialog');
@@ -267,6 +271,18 @@
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
           this.fire('global-loading', {active: false});
+        }
+      },
+
+      _reloadPartnersList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var partners = this.$.list;
+          if (!partners.$.list.classList.contains('hidden')) {
+            partners._filterPartnersData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[partners-page]', err);
         }
       }
 

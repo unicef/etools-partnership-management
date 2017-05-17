@@ -16,6 +16,7 @@
 
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -37,13 +38,15 @@
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
     </style>
 
-    <agreement-list-data id="agreements"
-                         filtered-agreements="{{filteredAgreements}}"
-                         total-results="{{totalResults}}"
-                         list-data-path="filteredAgreements"
-                         on-agreements-loaded="_requiredDataHasBeenLoaded"
-                         fire-data-loaded>
-    </agreement-list-data>
+    <template is="dom-if" if="[[stampListData]]">
+      <agreement-list-data id="agreements"
+                           filtered-agreements="{{filteredAgreements}}"
+                           total-results="{{totalResults}}"
+                           list-data-path="filteredAgreements"
+                           on-agreements-loaded="_requiredDataHasBeenLoaded"
+                           fire-data-loaded>
+      </agreement-list-data>
+    </template>
 
     <paper-material id="listControls" elevation="1">
 
@@ -177,14 +180,15 @@
                 initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-
-            <a class="col-data col-2 truncate"
-               href="agreements/[[agreement.id]]/details"
-               title="[[getDisplayValue(agreement.agreement_number)]]">
-              [[getDisplayValue(agreement.agreement_number)]]
-            </a>
-            <span class="col-data col-4 truncate" title="[[getDisplayValue(agreement.partner_name)]]">
-                [[getDisplayValue(agreement.partner_name)]]
+            <span class="col-data col-2 ">
+              <a class="truncate"
+                href="agreements/[[agreement.id]]/details"
+                title="[[getDisplayValue(agreement.agreement_number)]]">
+                [[getDisplayValue(agreement.agreement_number)]]
+              </a>
+            </span>
+            <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span class="truncate"> [[getDisplayValue(agreement.partner_name)]] </span>
             </span>
             <span class="col-data col-2">
                 [[getDisplayValue(agreement.agreement_type)]]
@@ -240,6 +244,7 @@
 
         behaviors: [
           etoolsAppConfig.globals,
+          pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
@@ -368,7 +373,7 @@
         },
 
         attached: function() {
-          this.fire('global-loading', {message: 'Loading agreements list data...', active: true});
+          this.listAttachedCallback(this.active, 'Loading agreements list data...');
         },
 
         // Input: URL query params
@@ -460,11 +465,15 @@
           }
         },
 
-        _filterAgreementsData: function() {
+        _filterAgreementsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            this.$.agreements.query(
+            var agreements = this.$$('#agreements');
+            if (!agreements) {
+              return;
+            }
+            agreements.query(
                 this.sortOrder.field,
                 this.sortOrder.direction,
                 this.q.toLowerCase(),
@@ -475,7 +484,7 @@
                 this.endDate,
                 this.pageNumber,
                 this.pageSize,
-                this.showQueryLoading
+                forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },
