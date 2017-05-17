@@ -160,13 +160,15 @@
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-            <a class="col-data col-2 truncate"
-               href="interventions/[[intervention.id]]/details"
-               title="[[getDisplayValue(intervention.number)]]">
-              [[getDisplayValue(intervention.number)]]
-            </a>
-            <span class="col-data col-3 truncate" title="[[getDisplayValue(intervention.partner_name)]]">
-                [[getDisplayValue(intervention.partner_name)]]
+            <span class="col-data col-2">
+              <a class="truncate"
+                href="interventions/[[intervention.id]]/details"
+                title="[[getDisplayValue(intervention.number)]]">
+                [[getDisplayValue(intervention.number)]]
+              </a>
+            </span>
+            <span class="col-data col-3" title="[[getDisplayValue(intervention.partner_name)]]">
+                <span class="truncate">[[getDisplayValue(intervention.partner_name)]]</span>
             </span>
             <span class="col-data flex-c">
                 [[getDisplayValue(intervention.document_type)]]

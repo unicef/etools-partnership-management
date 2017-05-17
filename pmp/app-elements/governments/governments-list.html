@@ -150,13 +150,17 @@
                 as="entry" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-            <a class="col-data col-2 truncate"
-               href="governments/[[entry.id]]/details"
-               title="[[getDisplayValue(entry.number)]]">
-              [[getDisplayValue(entry.number)]]
-            </a>
-            <span class="col-data col-4 truncate" title="[[getDisplayValue(entry.partner_name)]]">
+            <span class="col-data col-2">
+              <a class="truncate"
+                href="governments/[[entry.id]]/details"
+                title="[[getDisplayValue(entry.number)]]">
+                [[getDisplayValue(entry.number)]]
+              </a>
+            </span>
+            <span class="col-data col-4" title="[[getDisplayValue(entry.partner_name)]]">
+              <span class="truncate">
                 [[getDisplayValue(entry.partner_name)]]
+              </span>
             </span>
             <span class="col-data flex-c">
                 [[getDisplayValue(entry.country_programme_name)]]

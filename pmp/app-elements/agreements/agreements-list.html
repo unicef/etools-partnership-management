@@ -180,14 +180,15 @@
                 initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-
-            <a class="col-data col-2 truncate"
-               href="agreements/[[agreement.id]]/details"
-               title="[[getDisplayValue(agreement.agreement_number)]]">
-              [[getDisplayValue(agreement.agreement_number)]]
-            </a>
-            <span class="col-data col-4 truncate" title="[[getDisplayValue(agreement.partner_name)]]">
-                [[getDisplayValue(agreement.partner_name)]]
+            <span class="col-data col-2 ">
+              <a class="truncate"
+                href="agreements/[[agreement.id]]/details"
+                title="[[getDisplayValue(agreement.agreement_number)]]">
+                [[getDisplayValue(agreement.agreement_number)]]
+              </a>
+            </span>
+            <span class="col-data col-4" title="[[getDisplayValue(agreement.partner_name)]]">
+              <span class="truncate"> [[getDisplayValue(agreement.partner_name)]] </span>
             </span>
             <span class="col-data col-2">
                 [[getDisplayValue(agreement.agreement_type)]]
