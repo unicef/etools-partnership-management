@@ -145,7 +145,7 @@
                     role="main">
 
           <div class="page" name="list">
-            <interventions-list
+            <interventions-list id="intList"
                 active="[[intervListActive]]"
                 csv-download-url="{{csvDownloadUrl}}"
                 url-params="[[interventionsQueryParams]]">
@@ -313,7 +313,8 @@
       ],
 
       listeners: {
-        'intervention-save-error': '_interventionSaveErrors'
+        'intervention-save-error': '_interventionSaveErrors',
+        'reload-list': '_reloadInterventionsList'
       },
 
       ready: function() {
@@ -769,6 +770,18 @@
 
       _isAttachementsTabActive: function(activeTab) {
         return activeTab === 'attachments';
+      },
+
+      _reloadInterventionsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var interventions = this.$.intList;
+          if (!interventions.$.list.classList.contains('hidden')) {
+            interventions._filterInterventionsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[interventions-page]', err);
+        }
       }
 
     });
