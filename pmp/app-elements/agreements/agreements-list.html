@@ -36,6 +36,9 @@
   <template strip-whitespace>
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
+      :host {
+        width: 100%;
+      }
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
