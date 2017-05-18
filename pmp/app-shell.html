@@ -248,7 +248,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         loadingCounterDecrementAdjustment: {
           type: Number,
           value: 0
-        }
+        },
+        skipDecrementAdjustment: Boolean
       },
 
       observers: [
@@ -298,20 +299,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         event.stopImmediatePropagation();
       },
 
-      _routePageChanged: function(page) {
-        if ((this.route) && (this.baseUrl)) {
+      _setDefaultPage: function() {
+        if (!!!this.page) {
+          console.log('routePage changed debounce, set page partners');
+          this.fire('global-loading', {message: 'Loading page...', active: true});
+          this.async(function() {
+            this.set('page', 'partners');
+            this.set('loadingCounterDecrementAdjustment', 1);
+            this.set('skipDecrementAdjustment', true);
+          }, 10);
+        }
+      },
+
+      _routePageChanged: function(routePage) {
+        if (!!!routePage) {
+          var self = this;
+          this.debounce('routePageChange', function() {
+            self._setDefaultPage();
+          }, 10);
+          return;
+        }
+        if (this.route && this.baseUrl) {
           var subroute = JSON.parse(JSON.stringify(this.route));
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
           this.set('subroute', subroute);
         }
-
-        this.set('page', (page || 'partners'));
+        this.set('page', routePage);
       },
 
       _pageChanged: function(page) {
         if (!page) {
           return;
         }
+
+        console.log('page changed: ', page);
 
         var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
@@ -397,6 +418,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _redirectToProperListPage: function() {
+        console.log('redirect ', this.routeData, this.route);
         if (this.route.path === this.baseUrl || this.route.path === '/') {
           // setting the default path when user enters the app
           // redirect from /pmp/ to /pmp/partners/list
@@ -404,8 +426,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
-        if (this.route.path === this.baseUrl + this.routeData.page) {
+        var currentPath = this.route.path;
+        if (currentPath.substr(-1) === '/') {
+          currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
+        }
+        if (currentPath === this.baseUrl + this.routeData.page) {
+          this.fire('global-loading', {message: 'Loading ' + this.routeData.page + ' pages elements...', active: true});
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
+          this.set('loadingCounterDecrementAdjustment', 1);
           return;
         }
       },
@@ -422,6 +450,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       _manageGlobalLoadingState: function(loadingsCounterVal) {
+        console.log(loadingsCounterVal);
         if (loadingsCounterVal > 0) {
            this._showLoading();
         } else {
@@ -456,15 +485,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {
           if (this.loadingsCounter > 0) {
             this.loadingsCounter--;
-            if (this.loadingCounterDecrementAdjustment) {
-              this.loadingsCounter--;
+
+            // Check for loading counter adjustment
+            if (!!this.loadingCounterDecrementAdjustment) {
+
+              var loadingCounterNeedsAjustment = this._shouldAdjustLoadingCounter(this.loadingsCounter,
+                this.loadingCounterDecrementAdjustment);
+
+              /**
+               * Loading counter adjustment is needed but is blocked.
+               * For example this may occur because page has not been loaded yet and we need to keep loading active
+               */
+              if (loadingCounterNeedsAjustment && this.skipDecrementAdjustment) {
+                this.set('skipDecrementAdjustment', false);
+                return;
+              }
+
+              /**
+               * Make loading counter adjustment. This is needed because there might not be enough deactivate loading
+               * events to hide the loading.
+               */
+
+              this.loadingsCounter = this.loadingsCounter - this.loadingCounterDecrementAdjustment;
               this.set('loadingCounterDecrementAdjustment', 0);
+              this.set('skipDecrementAdjustment', false);
+
+              // Loading counter can not be negative after adjustment is done.
               if (this.loadingsCounter < 0) {
                 this.loadingsCounter = 0;
               }
             }
           }
         }
+      },
+      _shouldAdjustLoadingCounter: function(counter, adjustVal) {
+        return (counter - adjustVal) <= 0;
       }
 
     });
