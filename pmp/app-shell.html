@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
-<link rel="import" href="app-behaviors/app-navigation-helper-behavior.html">
+<link rel="import" href="app-behaviors/global-loading-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -200,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       behaviors: [
         etoolsAppConfig.globals,
         pmpBehaviors.NotificationToastsBehavior,
-        pmpBehaviors.AppNavigationHelperBehavior
+        pmpBehaviors.globalLoadingBehavior
       ],
 
       properties: {
@@ -236,19 +236,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             governments: false
           }
         },
-        isIE: Boolean,
-        loadingsCounter: {
-          type: Number,
-          value: 0,
-          observer: '_manageGlobalLoadingState'
-        },
-        showLoading: Boolean,
-        // loadingCounterDecrementAdjustment will be used to disable
-        // a loading that came from a link tap event(like menu)
-        loadingCounterDecrementAdjustment: {
-          type: Number,
-          value: 0
-        }
+        isIE: Boolean
       },
 
       observers: [
@@ -256,7 +244,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       listeners: {
-        'global-loading': '_handleGlobalLoading',
         'drawer': 'toggleDrawer',
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
@@ -298,14 +285,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         event.stopImmediatePropagation();
       },
 
-      _routePageChanged: function(page) {
-        if ((this.route) && (this.baseUrl)) {
+      _setDefaultPage: function() {
+        if (!!!this.page) {
+          this.fire('global-loading', {message: 'Loading page...', active: true});
+          this.async(function() {
+            this.set('page', 'partners');
+            this.set('loadingCounterDecrementAdjustment', 1);
+            this.set('skipDecrementAdjustment', true);
+          }, 10);
+        }
+      },
+
+      _routePageChanged: function(routePage) {
+        if (!!!routePage) {
+          var self = this;
+          this.debounce('routePageChange', function() {
+            self._setDefaultPage();
+          }, 10);
+          return;
+        }
+        if (this.route && this.baseUrl) {
           var subroute = JSON.parse(JSON.stringify(this.route));
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
           this.set('subroute', subroute);
         }
-
-        this.set('page', (page || 'partners'));
+        this.set('page', routePage);
       },
 
       _pageChanged: function(page) {
@@ -404,68 +408,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
-        if (this.route.path === this.baseUrl + this.routeData.page) {
+        var currentPath = this.route.path;
+        if (currentPath.substr(-1) === '/') {
+          currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
+        }
+        if (currentPath === this.baseUrl + this.routeData.page) {
+          this.fire('global-loading', {message: 'Loading ' + this.routeData.page + ' pages elements...', active: true});
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
+          this.set('loadingCounterDecrementAdjustment', 1);
           return;
         }
       },
 
       // global loading functionality
-      _showLoading: function() {
-        if (!this.showLoading) {
-          this.set('showLoading', true);
-        }
-      },
-      _hideLoading: function() {
-        if (this.showLoading) {
-          this.set('showLoading', false);
-        }
-      },
-      _manageGlobalLoadingState: function(loadingsCounterVal) {
-        if (loadingsCounterVal > 0) {
-           this._showLoading();
-        } else {
-           this._hideLoading();
-        }
-      },
-      _handleGlobalLoading: function(e) {
-        e.stopImmediatePropagation();
-        if (e.detail.resetCounter) {
-          // loading event came from menu tap event,
-          // it mean page will change and we need to reset the loadings counter
-          this.loadingsCounter = 0;
-        }
-        if (e.detail.active === true) {
-          // set loading message
-          var loadingMsg = 'Loading...';
-          if (e.detail && typeof e.detail.message === 'string' && e.detail.message !== '') {
-            loadingMsg = e.detail.message;
-          }
-          //this.$$('#loading-message').innerHTML = loadingMsg;
-          this.$.pageLoading.set('loadingText', loadingMsg);
-          // update loadings counter
-          this.loadingsCounter++;
 
-          // got to new URL if needed, but using a delay to allow loading to show
-          if (e.detail.newUrl) {
-            this.async(function() {
-              this.changeAppState(e.detail.newUrl);
-              this.set('loadingCounterDecrementAdjustment', 1);
-            }, 50);
-          }
-        } else {
-          if (this.loadingsCounter > 0) {
-            this.loadingsCounter--;
-            if (this.loadingCounterDecrementAdjustment) {
-              this.loadingsCounter--;
-              this.set('loadingCounterDecrementAdjustment', 0);
-              if (this.loadingsCounter < 0) {
-                this.loadingsCounter = 0;
-              }
-            }
-          }
-        }
-      }
 
     });
 
