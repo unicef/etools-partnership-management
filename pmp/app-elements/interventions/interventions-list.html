@@ -15,6 +15,7 @@
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
@@ -39,13 +40,15 @@
       }
     </style>
 
-    <interventions-list-data id="interventions"
-                         filtered-interventions="{{filteredInterventions}}"
-                         total-results="{{totalResults}}"
-                         on-interventions-loaded="_requiredDataHasBeenLoaded"
-                         list-data-path="filteredInterventions"
-                         fire-data-loaded>
-    </interventions-list-data>
+    <template is="dom-if" if="[[stampListData]]">
+      <interventions-list-data id="interventions"
+                           filtered-interventions="{{filteredInterventions}}"
+                           total-results="{{totalResults}}"
+                           on-interventions-loaded="_requiredDataHasBeenLoaded"
+                           list-data-path="filteredInterventions"
+                           fire-data-loaded>
+      </interventions-list-data>
+    </template>
 
     <paper-material id="listControls" elevation="1">
 
@@ -70,7 +73,7 @@
                   options="[[filter.selectionOptions]]"
                   value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
-changed teh                  option-value="[[filter.optionValue]]"
+                  option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
                   on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
@@ -157,13 +160,15 @@ changed teh                  option-value="[[filter.optionValue]]"
                 as="intervention" initial-count="10" on-dom-change="_listDataChanged">
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
-            <a class="col-data col-2 truncate"
-               href="interventions/[[intervention.id]]/details"
-               title="[[getDisplayValue(intervention.number)]]">
-              [[getDisplayValue(intervention.number)]]
-            </a>
-            <span class="col-data col-3 truncate" title="[[getDisplayValue(intervention.partner_name)]]">
-                [[getDisplayValue(intervention.partner_name)]]
+            <span class="col-data col-2">
+              <a class="truncate"
+                href="interventions/[[intervention.id]]/details"
+                title="[[getDisplayValue(intervention.number)]]">
+                [[getDisplayValue(intervention.number)]]
+              </a>
+            </span>
+            <span class="col-data col-3" title="[[getDisplayValue(intervention.partner_name)]]">
+                <span class="truncate">[[getDisplayValue(intervention.partner_name)]]</span>
             </span>
             <span class="col-data flex-c">
                 [[getDisplayValue(intervention.document_type)]]
@@ -228,6 +233,7 @@ changed teh                  option-value="[[filter.optionValue]]"
 
         behaviors: [
           etoolsAppConfig.globals,
+          pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
@@ -433,7 +439,7 @@ changed teh                  option-value="[[filter.optionValue]]"
         },
 
         attached: function() {
-          this.fire('global-loading', {message: 'Loading PD/SSFA ToR list data...', active: true});
+          this.listAttachedCallback(this.active, 'Loading PD/SSFA ToR list data...');
         },
 
         // Input: URL query params
@@ -541,11 +547,15 @@ changed teh                  option-value="[[filter.optionValue]]"
           }
         },
 
-        _filterInterventionsData: function() {
+        _filterInterventionsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
           this.debounce('query', function() {
-            this.$.interventions.query(
+            var interventions = this.$$('#interventions');
+            if (!interventions) {
+              return;
+            }
+            interventions.query(
               this.sortOrder.field,
               this.sortOrder.direction,
               this.q.toLowerCase(),
@@ -584,7 +594,7 @@ changed teh                  option-value="[[filter.optionValue]]"
               this.endDate,
               this.pageNumber,
               this.pageSize,
-              this.showQueryLoading
+              forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },

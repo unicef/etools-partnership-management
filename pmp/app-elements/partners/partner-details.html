@@ -127,7 +127,7 @@
               </div>
             </paper-input>
           </div>
-          <div class="col col-4 no-overflow">
+          <div class="col col-4">
             <div id="core-values-assessment" hidden$="[[!showCoreValuesAssessmentAttachment]]">
               <etools-single-file file="{{partner.core_values_assessment}}"
                            internal-file="{{partner.core_values_assessment_file}}"
@@ -360,7 +360,7 @@
             partnerChanges.id = this.partner.id;
             this.fire('save-partner', partnerChanges);
           } else {
-            this.fire('toast', {text: 'Please check assessments and partner contacts' +
+            this.fire('toast', {text: 'Please check assessments and partner contacts for ' +
               'invalid fields or empty data rows!', showCloseBtn: true});
           }
 

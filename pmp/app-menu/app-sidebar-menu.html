@@ -29,31 +29,25 @@
                      role="navigation">
         <!--<template is="dom-if" if="[[permissions.loggedInDefault]]">-->
 
-        <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list">
+        <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list" on-tap="_firePageChangeLoading">
           <iron-icon icon="social:people"></iron-icon>
           <div class="name">Partners</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list">
+        <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list" on-tap="_firePageChangeLoading">
           <iron-icon icon="av:playlist-add-check"></iron-icon>
           <div class="name">Agreements</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list">
+        <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list" on-tap="_firePageChangeLoading">
           <iron-icon icon="verified-user"></iron-icon>
           <div class="name">PD/SSFA ToR</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="governments" href$="[[baseUrl]]governments/list">
+        <a class="nav-menu-item" menu-name="governments" href$="[[baseUrl]]governments/list" on-tap="_firePageChangeLoading">
           <iron-icon icon="account-balance"></iron-icon>
           <div class="name">Governments</div>
         </a>
-
-        <div class="divider"></div>
-        <span class="nav-menu-item" menu-name="refresh-data" on-tap="openDataRefreshDialog">
-          <iron-icon icon="refresh"></iron-icon>
-          <div class="name">Refresh data</div>
-        </span>
 
         <!--</template>-->
       </iron-selector>
@@ -90,13 +84,21 @@
         properties: {
           page: String,
           baseUrl: String,
-          permissions: String // TODO: might not be needed
+          // permissions: String // TODO: might not be needed
         },
 
-        openDataRefreshDialog: function() {
-          this.debounce('openDataRefreshDialog', function() {
-            this.fire('open-data-refresh-dialog');
-          }.bind(this), 50);
+        _firePageChangeLoading: function(e) {
+          var menuOptionEl = e.currentTarget;
+          var newPageName = menuOptionEl.getAttribute('menu-name');
+          if (newPageName !== this.page) {
+            e.preventDefault();
+            this.fire('global-loading', {
+              message: 'Loading ' + newPageName + ' pages elements...',
+              active: true,
+              resetCounter: true,
+              newUrl: menuOptionEl.getAttribute('href')
+            });
+          }
         }
 
       });

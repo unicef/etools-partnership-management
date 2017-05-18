@@ -176,11 +176,13 @@
 
             <etools-data-table-row no-collapse>
               <div slot="row-data">
-                <a class="col-data col-2 truncate" href="#" title="[[record.fc_ref_number]]">
+                <span class="col-data col-2">
+                  <a class="truncate" href="#" title="[[record.fc_ref_number]]">
                     [[record.fc_ref_number]]
-                </a>
-                <span class="col-data col-2 truncate" title="[[getDateDisplayValue(record.due_date)]]">
-                    [[getDateDisplayValue(record.due_date)]]
+                  </a>
+                </span>
+                <span class="col-data col-2" title="[[getDateDisplayValue(record.due_date)]]">
+                  <span class="truncate"> [[getDateDisplayValue(record.due_date)]] </span>
                 </span>
                 <span class="col-data col-4" title="[[record.line_item_text]]">
                     [[record.line_item_text]]
@@ -298,7 +300,6 @@
          this._findProgramme();
          this._findPartner();
        }
-       this.fire('global-loading', {active: false});
      },
 
       _prepareCpOutputs: function() {

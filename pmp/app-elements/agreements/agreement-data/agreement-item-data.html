@@ -70,13 +70,19 @@
          */
         _handleResponse: function(response) {
           this._setAgreement(response.detail);
-          // update the agreement list in dexieDB
-          etoolsAppConfig.db.table('agreements').put(response.detail);
+
           // call additional callback, if any
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
             this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
+          }
+          if (this.$.ajax.get('method') !== 'GET') {
+            var self = this;
+            // update the agreement list in dexieDB
+            etoolsAppConfig.db.table('agreements').put(response.detail).then(function() {
+              self.fire('reload-list');
+            });
           }
           this.fire('global-loading', {active: false});
         },

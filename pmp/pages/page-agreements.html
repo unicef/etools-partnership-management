@@ -116,8 +116,7 @@
           <agreements-list id="list"
                            active="[[agreementListActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[agreementQueryParams]]"
-                           disable-upgrade$="[[!agreementListActive]]">
+                           url-params="[[agreementQueryParams]]">
           </agreements-list>
         </div>
         <div class="page" name="details">
@@ -128,8 +127,7 @@
               allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement"
-              disable-upgrade$="[[_detailsPageDisableUpgrade(agreementDetailsActive, newAgreementActive)]]">
+              on-save-agreement="_saveAgreement">
           </agreement-details>
         </div>
       </iron-pages>
@@ -188,7 +186,6 @@
         routeData: {
           type: Object
         }
-
       },
 
       observers: [
@@ -197,7 +194,8 @@
       ],
 
       listeners: {
-        'agreement-save-error': '_agreementSaveErrors'
+        'agreement-save-error': '_agreementSaveErrors',
+        'reload-list': '_reloadAgreementsList'
       },
 
       ready: function() {
@@ -206,10 +204,10 @@
           this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
-
-      _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
-        return !agreementDetailsActive && !newAgreementActive;
-      },
+      // TODO: do not remove this, we might needed back
+      // _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
+      //   return !agreementDetailsActive && !newAgreementActive;
+      // },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
         if (!agreementListActive || !permissions.partnershipManager) {
@@ -314,6 +312,18 @@
       },
       _observeRouteDataId: function(id) {
         this.set('selectedAgreementId', id);
+      },
+
+      _reloadAgreementsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var agreements = this.$.list;
+          if (!agreements.$.list.classList.contains('hidden')) {
+            agreements._filterAgreementsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[agreements-page]', err);
+        }
       }
 
     });
