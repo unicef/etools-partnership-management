@@ -1,0 +1,51 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dexiejs/dexie.html">
+
+<link rel="import" href="etools-ajax-request-behavior.html">
+
+<script>
+  // set logging level
+  window.EtoolsLogsLevel = window.EtoolsLogsLevel || 'INFO';
+  // custom dexie db that will be used by etoolsAjax
+  var etoolsCustomDexieDb = new Dexie('etoolsAjax2DexieDb');
+  etoolsCustomDexieDb.version(1).stores({
+    listsExpireMapTable: "&name, expire",
+    ajaxDefaultDataTable: "&cacheKey, data, expire",
+    countries: "&id, name"
+  });
+
+  // configure app dexie db to be used for caching
+  window.EtoolsRequestCacheDb = etoolsCustomDexieDb;
+
+</script>
+
+<dom-module id="etools-ajax-2">
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'etools-ajax-2',
+
+        behaviors: [EtoolsAjaxRequestBehavior],
+
+        properties: {
+          options: Object
+        },
+
+        ready: function() {
+
+        },
+        send: function(options) {
+          console.log(options, this.options);
+          var opt = options || this.options;
+
+          return this.sendRequest(opt);
+        },
+
+      });
+
+    })();
+  </script>
+</dom-module>
