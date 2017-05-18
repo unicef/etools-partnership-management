@@ -139,6 +139,17 @@
       overflow-x: hidden;
     };
 
+    --paper-item: {
+        cursor: pointer;
+    };
   }
+
+  .ie {
+    --paper-item: {
+      cursor: pointer;
+      /* Fixes a vertical alignment issue in ie */
+      height: 48px;
+    };
+  };
 
 </style>
