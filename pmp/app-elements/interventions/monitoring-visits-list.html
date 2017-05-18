@@ -54,11 +54,13 @@
       <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
-            <a class="col-data col-2 truncate" href="#" title="[[visit.reference_number]]">
+            <span class="col-data col-2">
+              <a class="truncate" href="#" title="[[visit.reference_number]]">
                 [[visit.reference_number]]
-            </a>
-            <span class="col-data col-2 truncate" title="[[visit.primary_traveler]]">
-                [[visit.primary_traveler]]
+              </a>
+            </span>
+            <span class="col-data col-2" title="[[visit.primary_traveler]]">
+              <span class="truncate"> [[visit.primary_traveler]] </span>
             </span>
             <span class="col-data col-2" title="[[visit.travel_type]]">
                 [[visit.travel_type]]
