@@ -13,7 +13,9 @@ App global configuration
      */
     var etoolsCustomDexieDb = new Dexie('pmpApp');
     etoolsCustomDexieDb.version(1).stores({
-      collectionsList: 'name, expire',
+//      collectionsList: 'name, expire',
+      listsExpireMapTable: 'name, expire',
+      ajaxDefaultDataTable: "&cacheKey, data, expire",
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
       agreements: 'id, name, agreement_number, partner_name, start, end',
@@ -23,6 +25,10 @@ App global configuration
       governments: 'id, number, country_programme, country_programme_name, cp_outputs, partner, ' +
         'partner_name, sectors, unicef_focal_points, years'
     });
+
+    // configure app dexie db to be used for caching
+    window.EtoolsRequestCacheDb = etoolsCustomDexieDb;
+
     /** @polymerBehavior etoolsAppConfig.globals */
     var etoolsAppConfig = {
 

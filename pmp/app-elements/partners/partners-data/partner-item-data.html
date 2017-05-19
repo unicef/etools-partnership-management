@@ -43,11 +43,9 @@
             type: Object,
             value: {
               endpoint: null
-            }
+            },
+            csrf: true
           },
-
-          withUpload: Boolean,
-          prepareMultipartData: Boolean,
 
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
@@ -57,7 +55,6 @@
           this.ajaxEl = this.$.ajax;
         },
         _prepareEndpoint: function(partnerId) {
-          console.log('prepare endpoint fired');
           if (partnerId > 0) {
             // prepare request endpoint
             this.set('options.endpoint', this.getEndpoint('partnerDetails', {id: partnerId}));
@@ -70,44 +67,11 @@
             // set the new endpoint
             this.set('options.endpoint', this.getEndpoint('partnerDetails', {id: newId}));
             this.fire('global-loading', {message: 'Loading partner data...', active: true});
-            this._prepareAndFireRequest();
+            this.$.ajax.send();
           }
         },
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          console.log(this.endpoint);
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.set('options.method', null);
-            this.set('options.body', null);
-            this.set('options.multiPart', null);
-            this.set('options.prepareMultipartData', null);
-          }
-
-          this.set('options.method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
-
-            this.set('options.body', data);
-          }
-          this.ajaxEl.send().then(function(data) {
-            console.log('and the data is', data);
-            this._handleSuccResponse(data);
-          }.bind(this));
-        },
-
         _handleSuccResponse: function(response) {
-          this._setPartner(response);
+          this._setPartner(response.detail);
 
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
             this.handleSuccResponseAdditionalCallback.bind(this, response)();
@@ -126,7 +90,10 @@
         },
 
         _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
+          // temporary. proof of concept only
+          var resp = {detail:{request:{detail:{request:{response: response}}}}};
+
+          this.handleErrorResponse(resp);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
             this.handleErrResponseAdditionalCallback.bind(this, this.tryGetResponseErrorMsg(response))();
@@ -158,9 +125,11 @@
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
 
+          this.set('options', {});
           this.set('options.endpoint', this.getEndpoint('createPartner', vendorNoObj));
           this.set('options.method', 'POST');
           this.set('options.body', {});
+
           this.ajaxEl.send();
         },
 
@@ -169,7 +138,6 @@
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
           } else {
             var isNew = false;
-            var url = null;
             if (partner.id) {
               // prepare PATCH endpoint
               this._prepareEndpoint(partner.id);
@@ -187,35 +155,35 @@
               if (callback) {
                 this.set('handleSuccResponseAdditionalCallback', callback);
               }
-              // this.withUpload = false; // used to set multipart prop on etools-ajax
-              // this.prepareMultipartData = false;
-              // if (partner.hasOwnProperty('core_values_assessment')) {
-              //   if (partner.core_values_assessment instanceof File) {
-              //     this.withUpload = true;
-              //     this.prepareMultipartData = true;
-              //   } else {
-              //      delete partner.core_values_assessment;
-              //   }
-              // }
-              // if (partner.hasOwnProperty('assessments')) {
 
-              //   if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
+              if (partner.hasOwnProperty('core_values_assessment')) {
+                if (partner.core_values_assessment instanceof File) {
+                  this.set('options.multiPart', true);
+                  this.set('options.prepareMultipartData', true);
+                } else {
+                   delete partner.core_values_assessment;
+                }
+              }
+              if (partner.hasOwnProperty('assessments')) {
+                if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
+                  partner.assessments = partner.assessments.map(function(assessment) {
+                      if (assessment.report instanceof File) {
+                        this.set('options.multiPart', true);
+                        this.set('options.prepareMultipartData', true);
+                      } else {
+                        delete assessment.report;
+                      }
+                      return assessment;
+                  }, this);
+                }
+              }
 
-              //     partner.assessments = partner.assessments.map(function(assessment) {
-              //         if (assessment.report instanceof File) {
-              //           this.withUpload = true;
-              //           this.prepareMultipartData = true;
-              //         } else {
-              //           delete assessment.report;
-              //         }
-              //         return assessment;
-              //     }, this);
-              //   }
-              // }
               this.fire('global-loading', {message: 'Saving partner data...', active: true});
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
+              this.set('options.body', partner);
+              this.set('options.method', action);
+              this.ajaxEl.send();
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',

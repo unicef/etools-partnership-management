@@ -3,22 +3,6 @@
 
 <link rel="import" href="etools-ajax-request-behavior.html">
 
-<script>
-  // set logging level
-  window.EtoolsLogsLevel = window.EtoolsLogsLevel || 'INFO';
-  // custom dexie db that will be used by etoolsAjax
-  var etoolsCustomDexieDb = new Dexie('etoolsAjax2DexieDb');
-  etoolsCustomDexieDb.version(1).stores({
-    listsExpireMapTable: "&name, expire",
-    ajaxDefaultDataTable: "&cacheKey, data, expire",
-    countries: "&id, name"
-  });
-
-  // configure app dexie db to be used for caching
-  window.EtoolsRequestCacheDb = etoolsCustomDexieDb;
-
-</script>
-
 <dom-module id="etools-ajax-2">
 
   <script>
@@ -38,12 +22,17 @@
 
         },
         send: function(options) {
-          console.log(options, this.options);
           var opt = options || this.options;
 
-          return this.sendRequest(opt);
+          return this.sendRequest(opt)
+          .then(function(data){
+            this.fire('success', data);
+            return data;
+          }.bind(this))
+          .catch(function (err) {
+            this.fire('fail', err);
+          }.bind(this));
         },
-
       });
 
     })();
