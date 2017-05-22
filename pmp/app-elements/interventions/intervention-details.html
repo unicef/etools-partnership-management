@@ -416,20 +416,18 @@
 
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
-              && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            this.debounce('setInterventionYears', function() {
-              var start = parseInt(interventionStart.substr(0, 4), 10);
-              var end = parseInt(interventionEnd.substr(0, 4), 10);
-              var years = [];
-              while (start <= end) {
-                years.push({
-                  value: start,
-                  label: start
-                });
-                start++;
-              }
-              this.set('years', years);
-            }.bind(this), 50);
+            && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            var start = parseInt(interventionStart.substr(0, 4), 10);
+            var end = parseInt(interventionEnd.substr(0, 4), 10);
+            var years = [];
+            while (start <= end) {
+              years.push({
+                value: start,
+                label: start
+              });
+              start++;
+            }
+            this.set('years', years);
           }
         },
 

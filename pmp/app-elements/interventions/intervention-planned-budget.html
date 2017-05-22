@@ -493,14 +493,14 @@
           return true;
         },
 
-        _getSelectedYear: function(year) {
-          if (year && this.years.length) {
-            return this.years.filter(function(y) {
-              return y.value === parseInt(year, 10);
-            });
-          }
-          return [];
-        },
+        // _getSelectedYear: function(year) {
+        //   if (year && this.years.length) {
+        //     return this.years.filter(function(y) {
+        //       return y.value === parseInt(year, 10);
+        //     });
+        //   }
+        //   return [];
+        // },
 
         _yearChanged: function(event) {
           var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;

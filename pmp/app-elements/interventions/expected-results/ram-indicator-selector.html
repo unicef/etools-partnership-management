@@ -179,7 +179,7 @@
           if (cpoDropdown.ajaxParams && cpoDropdown.ajaxParams.values) {
             // keep ghost data (old cp output previously requested from server)
             oldCpO = cpoDropdown.options.find(function(opt) {
-              return opt[cpoDropdown.optionValue] == cpoDropdown.ajaxParams.values;
+              return opt[cpoDropdown.optionValue] === cpoDropdown.ajaxParams.values;
             });
           }
           return oldCpO;
