@@ -345,7 +345,7 @@
         },
 
         observers: [
-          '_agreementSelected(agreement)',
+          '_agreementSelected(agreement, documentTypes)',
           '_setYears(intervention.start, intervention.end)'
         ],
 
@@ -374,9 +374,10 @@
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-              this._agreementSelected(this.agreement);
+              this._agreementSelected(this.agreement, this.documentTypes);
             } else {
               this.set('selectedPartnerId', null);
+              this.set('currentDocTypes', this.documentTypes);
             }
 
             this.set('fieldsResetted', false);
@@ -460,8 +461,8 @@
         /**
          * When an agreement is selected then check it's type and update document types dropdown
          */
-        _agreementSelected: function(agreement) {
-          var options = this.documentTypes;
+        _agreementSelected: function(agreement, documentTypes) {
+          var options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
               case 'PCA':
