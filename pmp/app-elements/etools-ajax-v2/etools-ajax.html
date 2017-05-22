@@ -15,12 +15,11 @@
         behaviors: [EtoolsAjaxRequestBehavior],
 
         properties: {
-          options: Object
+          options: Object,
         },
-
-        ready: function() {
-
-        },
+        observers: [
+          '_optionsChanged(options.*)'
+        ],
         send: function(options) {
           var opt = options || this.options;
 
@@ -33,6 +32,12 @@
             this.fire('fail', err);
           }.bind(this));
         },
+
+        _optionsChanged: function(options) {
+          this.debounce('etools-ajax-options-changed', function() {
+            this.send();
+          }.bind(this), 300)
+        }
       });
 
     })();

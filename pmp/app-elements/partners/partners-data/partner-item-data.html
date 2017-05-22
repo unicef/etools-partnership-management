@@ -67,14 +67,14 @@
             // set the new endpoint
             this.set('options.endpoint', this.getEndpoint('partnerDetails', {id: newId}));
             this.fire('global-loading', {message: 'Loading partner data...', active: true});
-            this.$.ajax.send();
+            // this.$.ajax.send();
           }
         },
         _handleSuccResponse: function(response) {
           this._setPartner(response.detail);
 
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-            this.handleSuccResponseAdditionalCallback.bind(this, response)();
+            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
             this.set('handleErrResponseAdditionalCallback', null);
@@ -83,7 +83,7 @@
           if (!this.get('options.method') || this.get('options.method') !== 'GET') {
             var self = this;
             // update the partners list in dexieDB
-            etoolsAppConfig.db.table('partners').put(response).then(function() {
+            etoolsAppConfig.db.table('partners').put(response.detail).then(function() {
               self.fire('reload-list');
             });
           }
@@ -111,7 +111,7 @@
           delete partner.id;
           this.set('options.method', 'PATCH');
           this.set('options.body', partner);
-          this.ajaxEl.send();
+          // this.ajaxEl.send();
         },
 
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
@@ -130,7 +130,7 @@
           this.set('options.method', 'POST');
           this.set('options.body', {});
 
-          this.ajaxEl.send();
+          // this.ajaxEl.send();
         },
 
         savePartner: function(partner, callback) {
@@ -183,7 +183,7 @@
               var action = (isNew) ? 'POST' : 'PATCH';
               this.set('options.body', partner);
               this.set('options.method', action);
-              this.ajaxEl.send();
+              // this.ajaxEl.send();
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',
