@@ -6,6 +6,8 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
@@ -131,6 +133,8 @@
 
       is: 'page-partners',
 
+      behaviors: [EtoolsLogsBehavior],
+
       properties: {
         user: {
           type: Object
@@ -167,7 +171,8 @@
 
       listeners: {
         'partner-save-error': '_partnerSaveError',
-        'create-partner': '_createPartner'
+        'create-partner': '_createPartner',
+        'reload-list': '_reloadPartnersList'
       },
       ready: function() {
         this.newPartnerDialog = document.createElement('new-partner-dialog');
@@ -266,6 +271,18 @@
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
           this.fire('global-loading', {active: false});
+        }
+      },
+
+      _reloadPartnersList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var partners = this.$.list;
+          if (!partners.$.list.classList.contains('hidden')) {
+            partners._filterPartnersData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[partners-page]', err);
         }
       }
 

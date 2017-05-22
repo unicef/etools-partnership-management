@@ -60,7 +60,7 @@
                                  title="Errors Saving Partner"
                                  errors="{{serverErrors}}"></etools-error-messages-box>
 
-      <etools-content-panel class="content-section" title="Partner Details">
+      <etools-content-panel class="content-section" panel-title="Partner Details">
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Organization name -->
@@ -175,7 +175,7 @@
 
       </etools-content-panel>
 
-      <etools-content-panel class="content-section" title="Risk Rating & Assessments">
+      <etools-content-panel class="content-section" panel-title="Risk Rating & Assessments">
         <div class="row-h flex-c">
           <div class="col col-4">
             <!-- Risk rating -->
@@ -212,7 +212,7 @@
       </etools-content-panel>
 
       <!-- Partner Contacts section-->
-      <etools-content-panel class="content-section" title$="Partner Contacts ([[partner.staff_members.length]])" show-expand-btn>
+      <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])" show-expand-btn>
         <staff-members id="staffMembersList" data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
 
@@ -360,7 +360,7 @@
             partnerChanges.id = this.partner.id;
             this.fire('save-partner', partnerChanges);
           } else {
-            this.fire('toast', {text: 'Please check assessments and partner contacts' +
+            this.fire('toast', {text: 'Please check assessments and partner contacts for ' +
               'invalid fields or empty data rows!', showCloseBtn: true});
           }
 

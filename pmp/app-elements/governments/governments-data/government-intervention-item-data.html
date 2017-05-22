@@ -52,6 +52,10 @@
             type: Array,
             statePath: 'partners'
           },
+          countryProgrammeDropdownData: {
+            type: Array,
+            statePath: 'countryProgrammes',
+          },
 
           handleResponseAdditionalCallback: Object,
           ajaxEl: Object
@@ -116,17 +120,20 @@
           }
           this._setIntervention(response.detail);
 
+          if (typeof this.handleResponseAdditionalCallback === 'function') {
+            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            this.set('handleResponseAdditionalCallback', null);
+          }
+
           if (this.$.ajax.get('method') !== 'GET') {
             // update the government interventions list in dexieDB
             var mappedResponse = this._formatResponseDataForDexie(response.detail);
             if (mappedResponse && Object.keys(mappedResponse).length) {
-              etoolsAppConfig.db.table('governments').put(mappedResponse);
+              var self = this;
+              etoolsAppConfig.db.table('governments').put(mappedResponse).then(function() {
+                self.fire('reload-list');
+              });
             }
-          }
-
-          if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
-            this.set('handleResponseAdditionalCallback', null);
           }
         },
 
@@ -157,6 +164,16 @@
           dexieObject.partner = responseDetail.partner;
           dexieObject.created_at = responseDetail.created_at;
           dexieObject.country_programme = responseDetail.country_programme;
+
+          if (this.countryProgrammeDropdownData instanceof Array && this.countryProgrammeDropdownData.length) {
+            var cpObj = this.countryProgrammeDropdownData.find(function(cp) {
+              return cp.id === responseDetail.country_programme;
+            });
+            if (cpObj) {
+              dexieObject.country_programme_name = cpObj.name;
+            }
+          }
+
           dexieObject.years = [];
           dexieObject.sectors = [];
           dexieObject.cp_outputs = [];
