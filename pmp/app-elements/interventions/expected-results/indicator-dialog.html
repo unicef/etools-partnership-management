@@ -320,7 +320,7 @@
             }
           }
           // set disaggregations
-          if (data.disaggregation_logic) {
+          if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
             var disaggregationsKeys = Object.keys(data.disaggregation_logic);
             this.set('disaggregations', []);
             if (disaggregationsKeys.length) {
