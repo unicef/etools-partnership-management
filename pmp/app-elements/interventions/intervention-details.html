@@ -382,12 +382,11 @@
               this._agreementSelected(this.agreement, this.documentTypes);
             } else {
               this.set('selectedPartnerId', null);
+              this.set('currentDocTypes', this.documentTypes);
             }
 
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
-
-            this.set('currentDocTypes', this.documentTypes);
           }
         },
 
