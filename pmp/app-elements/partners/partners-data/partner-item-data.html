@@ -92,7 +92,7 @@
         _handleErrorResponse: function(response) {
           // temporary. proof of concept only
           var resp = {detail:{request:{detail:{request:{response: response}}}}};
-
+          this.fire('global-loading', {active: false});
           this.handleErrorResponse(resp);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {

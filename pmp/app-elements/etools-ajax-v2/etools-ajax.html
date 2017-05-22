@@ -28,8 +28,8 @@
             this.fire('success', data);
             return data;
           }.bind(this))
-          .catch(function (err) {
-            this.fire('fail', err);
+          .catch(function (error) {
+            this.handleError(error);
           }.bind(this));
         },
 
@@ -37,7 +37,25 @@
           this.debounce('etools-ajax-options-changed', function() {
             this.send();
           }.bind(this), 300)
-        }
+        },
+
+        handleError: function (error) {
+          if (error.status === 401) {
+            this.fire('unauthorized', {error: error});
+            return;
+          }
+
+          if (error.status === 403) {
+            this.fire('forbidden', {error: error});
+            return;
+          }
+          this._log('error', error.error);
+
+          this.fire('fail', {
+            error: error.error
+          });
+        },
+
       });
 
     })();
