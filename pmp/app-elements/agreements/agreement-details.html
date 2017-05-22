@@ -63,7 +63,7 @@
                                  title="Errors Saving Agreement"
                                  errors="{{serverErrors}}"></etools-error-messages-box>
 
-      <etools-content-panel class="content-section" title="Agreement Details">
+      <etools-content-panel class="content-section" panel-title="Agreement Details">
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Partner name -->
@@ -222,7 +222,7 @@
 
       <!-- Partner Authorized Officers (partner staff members) -->
       <etools-content-panel class="content-section"
-                            title$="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
+                            panel-title="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
         <partner-authorized-officers id="authorizedOfficers"
                                      selected-officers="{{agreement.authorized_officers}}"
                                      officers-dropdown-data="[[staffMembers]]"
@@ -233,7 +233,7 @@
 
       <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
         <!-- Amendments -->
-        <etools-content-panel class="content-section" title$="Amendments ([[agreement.amendments.length]])">
+        <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
           <agreement-amendments id="agreementAmendments" data-items="{{agreement.amendments}}"
                                 staff-members="[[staffMembers]]"
                                 partner-name="[[agreement.partner_name]]"
