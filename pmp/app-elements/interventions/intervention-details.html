@@ -391,8 +391,6 @@
           }
           if (newValue) {
             this.set('interventionRequiredField', false);
-            this.$.documentType.selected = null;
-            this.set('currentDocTypes', null);
           }
 
         },
@@ -440,7 +438,6 @@
           }
         },
         _resetDropdowns: function() {
-          //**TODO - this has to be handled inside the new version of dropdown component
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
@@ -451,10 +448,6 @@
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
           }
-          // var agrSel = this.$.agreementSelector;
-          // if (agrSel) {
-          //   agrSel.resetDropdowns();
-          // }
         },
         /**
          * When an agreement is selected then check it's type and update document types dropdown
