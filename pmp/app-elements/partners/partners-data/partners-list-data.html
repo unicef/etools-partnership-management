@@ -14,6 +14,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="custom"
                  dexie-db-collection="partners"
+                 renew-data-on-expiry
                  on-success="_handleMyResponse"></etools-ajax>
 
   </template>
@@ -103,13 +104,6 @@
           }
         },
 
-        ready: function() {
-          if (this.showLoading) {
-            this.fire('global-loading', {message: 'Loading partners data...', active: true});
-          }
-          this._elementReady();
-        },
-
         _handleMyResponse: function(res) {
           this._handleResponse(res);
           if (res.detail && res.detail.length) {
@@ -141,7 +135,7 @@
         },
 
         query: function(field, order, searchString, partnerType, csoType,
-                        pageNumber, pageSize, showHidden) {
+                        pageNumber, pageSize, showHidden, showQueryLoading) {
 
           // If an active query transaction exists, abort it and start
           // a new one
@@ -150,6 +144,10 @@
           }
 
           var _this = this;
+
+          if (showQueryLoading) {
+            this.fire('global-loading', {message: 'Loading partners list data...', active: true});
+          }
 
           this.db.transaction('r', this.db.partners, function() {
             this.currentQuery = Dexie.currentTransaction;
@@ -207,8 +205,10 @@
 
           }).then(function(result) {
             _this._setFilteredPartners(result);
+            _this.fire('global-loading', {active: false});
           }).catch(function(error) {
             console.error('Error querying partners: ' + error);
+            _this.fire('global-loading', {active: false});
           });
         }
 

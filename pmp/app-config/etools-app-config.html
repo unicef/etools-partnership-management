@@ -297,6 +297,8 @@ App global configuration
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;
+
+    window.EtoolsLogsLevel = window.EtoolsLogsLevel || 'WARN';
     /* jshint ignore:end */
 
 </script>

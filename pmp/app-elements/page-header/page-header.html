@@ -2,7 +2,6 @@
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-page-refresh/etools-page-refresh.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
 <link rel="import" href="../user-profile-dialog/user-profile-dialog.html">
 <link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
@@ -29,10 +28,16 @@
         background-size: auto 48px;
         padding-left: 48px;
         font-size: 30px;
+      }
+
+      div[main-title],
+      .titlebar {
         color: var(--light-primary-text-color);
       }
 
-      etools-page-refresh, #profile {
+      #profile,
+      a.logout,
+      #refresh {
         color: var(--title-toolbar-secondary-text-color);
       }
 
@@ -45,16 +50,13 @@
         @apply(--layout-center);
       }
 
-      etools-page-refresh {
-        margin-left: 25px;
-      }
       .titlebar {
-        flex: 1 ;
+        flex: 1;
         font-size: 28px;
         font-weight: 300;
-        color: var(--light-primary-text-color);
       }
-      .titlebar img{
+
+      .titlebar img {
         width: 34px;
         margin: 0 8px 0 24px;
       }
@@ -63,15 +65,17 @@
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
+
       #second-logo {
         height: 32px;
         width: auto;
       }
+
       a.logout {
         font-size: 16px;
-        color: var(--light-primary-text-color);
         font-weight: 400;
         margin-left: 24px;
+        margin-right: 24px;
         cursor: pointer;
         -webkit-font-smoothing: antialiased;
       }
@@ -80,6 +84,7 @@
         #menuButton {
           display: none;
         }
+
         div[main-title] {
           margin-left: 32px;
         }
@@ -92,10 +97,12 @@
         <img id="second-logo" src="../../../images/etools-logo-color-white.svg">
       </div>
       <div class="content-align">
-        <countries-dropdown id="countries" countries="[[countries]]" current="[[user.profile.country]]"></countries-dropdown>
-         <paper-icon-button id="profile" icon="social:person" role="button" on-tap="_openUserProfileDialog" aria-disabled="false"></paper-icon-button>
+        <countries-dropdown id="countries" countries="[[countries]]"
+                            current="[[user.profile.country]]"></countries-dropdown>
+        <paper-icon-button id="profile" icon="social:person" role="button" on-tap="_openUserProfileDialog"
+                           aria-disabled="false"></paper-icon-button>
         <a class="logout" on-tap="_logout">Sign out</a>
-        <etools-page-refresh id="refresh"></etools-page-refresh>
+        <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
       </div>
     </app-toolbar>
   </template>
@@ -116,15 +123,9 @@
         observers: [
           '_updateCountriesList(user.profile.countries_available)'
         ],
-        listeners: {
-        'main_refresh': '_refresh_page'
-        },
+
         openDrawer: function() {
           this.fire('drawer');
-        },
-        _refresh_page: function(event) {
-            event.stopImmediatePropagation();
-            this.$.refresh._refresh();
         },
         _getFlagIconClass: function(id) {
           var flagIdMap = {
@@ -143,14 +144,16 @@
           }
           var arrayObj = countries.map(function(arrayItem) {
             return {
-                id: arrayItem.id,
-                name: arrayItem.name,
-                imgClass: this._getFlagIconClass(arrayItem.business_area_code)
-              };
+              id: arrayItem.id,
+              name: arrayItem.name,
+              imgClass: this._getFlagIconClass(arrayItem.business_area_code)
+            };
           }.bind(this));
-          arrayObj = _.sortBy(arrayObj, function(c) { return c.name; });
+          arrayObj = _.sortBy(arrayObj, function(c) {
+            return c.name;
+          });
           this.set('countries', arrayObj);
-          },
+        },
         ready: function() {
           // init indicator dialog data
           this.userProfileDialog = document.createElement('user-profile-dialog');
@@ -186,7 +189,10 @@
         _openUserProfileDialog: function(event) {
           this.userProfileDialog.openUserProfileDialog();
         },
-        });
+        _openDataRefreshDialog: function() {
+          this.fire('open-data-refresh-dialog');
+        }
+      });
     })();
   </script>
 

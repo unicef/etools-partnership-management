@@ -25,7 +25,7 @@
       etools-content-panel {
         width: 100%;
         --ecp-content: {
-          padding: 25px 25px 0;
+          padding: 25px;
         };
       }
 
@@ -42,7 +42,7 @@
       }
 
       .buttons-section {
-        margin: 25px -25px 0 -25px;
+        margin: 25px -25px -25px;
       }
       #hide-btn[hidden] + #save-btn {
         margin-top: 0;
@@ -149,10 +149,10 @@
         ready: function() {
           var statusChangeWarningDialogContent = document.createElement('p');
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('Status change', 'md', 'Yes', 'No',
+          this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
         },
-        detach: function() {
+        detached: function() {
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }

@@ -15,7 +15,7 @@
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-signed-by-unicef-users-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="intervention-fund-reservations.html">
 
@@ -40,7 +40,7 @@
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -51,7 +51,7 @@
           <etools-date-input id="submissionDatePrcField"
                              label="Submission Date to PRC"
                              value="{{intervention.submission_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -60,7 +60,7 @@
           <etools-date-input id="reviewDatePrcField"
                              label="Review Date by PRC"
                              value="{{intervention.review_date_prc}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -70,7 +70,8 @@
                               internal-file=[[intervention.prc_review_document_file]]
                               file={{intervention.prc_review_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              readonly$="[[!signEditMode]]">
+                              hide-delete-btn="[[_hideDeleteBtn(editMode, intervention.status, intervention.prc_review_document_file)]]"
+                              readonly$="[[_isUploadFileReadonly(editMode, intervention.status, intervention.prc_review_document_file)]]">
           </etools-single-file>
         </div>
       </div>
@@ -85,7 +86,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -93,7 +94,7 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -104,7 +105,7 @@
           <etools-searchable-multiselection-menu id="signedByUnicef"
              label="Signed by UNICEF"
              placeholder="&#8212;"
-             options="[[signedByUnicefUsers]]"
+             options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
              custom-object-options
              option-value="user_id"
              option-label="full_name"
@@ -112,9 +113,7 @@
              update-selected
              selected-requires-valid-options
              dynamic-align
-             url="[[missingSignedByUnicefUsersUrl]]"
-             ajax-params="[[missingSignedByUnicefAjaxParams]]"
-             readonly$="[[!signEditMode]]">
+             readonly$="[[!editMode]]">
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-3">
@@ -122,7 +121,7 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!signEditMode]]"
+                             readonly$="[[!editMode]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -145,14 +144,14 @@
       <etools-content-panel class="content-section" title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[signEditMode]]"></intervention-amendments>
+                                 edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <etools-content-panel class="content-section" title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[signEditMode]]"></intervention-fund-reservations>
+                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
     </etools-content-panel>
 
   </template>
@@ -168,17 +167,13 @@
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingSignedByUnicefUsersBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior
         ],
 
         properties: {
           intervention: {
             type: Object,
-            observer: '_interventionChanged'
-          },
-          unicefUsersData: {
-            type: Array,
-            statePath: 'unicefUsersData'
+            observer: '_interventionChanged',
           },
           signedByUnicefUsers: {
             type: Array,
@@ -193,53 +188,53 @@
             type: Array,
             value: []
           },
-          editMode: {
-            type: Boolean,
-            value: false
-          },
-          signEditMode: {
-            type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          },
           newIntervention: {
             type: Boolean
+          },
+          editMode: {
+            type: Boolean,
+//            value: false,
+            observer: '_editModeChanged'
           }
         },
 
         ready: function() {
-          this.setMissingSignedByUnicefUsersUrl();
-        },
-
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
+          this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
         _interventionChanged: function(intervention) {
-          // ensure loading msg close
-          this._setNewEditMode();
+          // forces etools-single-file to redraw the element
+          if (!intervention.prc_review_document_file) {
+            this.set('intervention.prc_review_document_file', '');
+          }
+          if (!intervention.prc_review_document) {
+            this.set('intervention.prc_review_document', {});
+          }
         },
-        _setNewEditMode: function() {
+
+        _isUploadFileReadonly: function() {
           if (!this.editMode) {
-            this.set('signEditMode', this.editMode);
-            return;
+            return true;
           }
-
-          if (this.permissions.partnershipManager) {
-            // TODO: revise this temporary permission
-            // temporary edit permission for PM regardless status
-            this.set('signEditMode', true);
-            return;
+          if (!this.intervention || !this.intervention.id) {
+            return false;
           }
-
-          if (!(this.permissions.partnershipManager || this.permissions.PME) &&
-                (!this.intervention.status || this.intervention.status !== 'draft')) {
-            this.set('signEditMode', false);
-          } else {
-            this.set('signEditMode', true);
+          if (!this.intervention.prc_review_document_file) {
+            return false;
           }
+          if (this.intervention.status !== 'draft') {
+            return true;
+          }
+          return false;
+        },
+        _hideDeleteBtn: function() {
+          if (this.intervention && this.intervention.status === 'draft' && this.intervention.prc_review_document_file) {
+            return true;
+          }
+          return false;
+        },
+        _editModeChanged: function() {
+          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
@@ -252,7 +247,6 @@
             });
             this.set('agreementAuthorizedOfficers', authorizedOfficerData);
           }
-          this.fire('global-loading', {active: false});
         },
 
         getDaysFromSubmissionToSign: function(dateStr, signedByPartnerDateStr, signedByUnicefDateStr) {
@@ -266,15 +260,6 @@
             }
           }
           return null;
-        },
-
-        _setSignedByUnicef: function(unicefUserId, unicefUsersLength) {
-          if (unicefUserId && unicefUsersLength) {
-            return this.unicefUsersData.filter(function(user) {
-              return parseInt(user.user_id) === parseInt(unicefUserId, 10);
-            });
-          }
-          return [];
         },
 
         _isNotDraft: function(status) {

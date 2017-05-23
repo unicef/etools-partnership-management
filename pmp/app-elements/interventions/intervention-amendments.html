@@ -94,7 +94,7 @@
                                     file={{item.signed_amendment}}
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
-                                    readonly="[[!editMode]]"></etools-single-file>
+                                    readonly="[[_isUploadFileReadonly(item, editMode, item.signed_amendment_file)]]"></etools-single-file>
               </div>
             </div>
             <template is="dom-if" if="[[!_showReadonlyDetails(item.id, editMode)]]">
@@ -143,7 +143,6 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
             observer: '_editModeChanged'
           }
         },
@@ -160,7 +159,20 @@
             amendment_number: null
           };
         },
-
+        //intervention-amendments is displayed only if intervention status is != than draft
+        //so that check is not neccesary
+       _isUploadFileReadonly: function(item) {
+          if (!this.editMode) {
+            return true;
+          }
+          if (!item || !item.id) {
+            return false;
+          }
+          if (!item.signed_amendment_file) {
+            return false;
+          }
+          return true;
+        },
         _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();

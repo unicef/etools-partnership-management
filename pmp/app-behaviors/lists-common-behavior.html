@@ -41,7 +41,14 @@
       defaultListsSize: {
         type: Number,
         value: 10
-      }
+      },
+
+      showQueryLoading: {
+        type: Boolean,
+        value: false
+      },
+
+      stampListData: Boolean
     },
 
     // When the list data rows are changing check and close any details opened
@@ -78,12 +85,13 @@
     },
 
     // List fade in fade out effect
-    _listChanged: function(filteredList) {
+    _listChanged: function(filteredList, oldFilteredList) {
       var classList = this.$.list.classList;
       if (filteredList instanceof Array && classList.contains('hidden')) {
         classList.remove('hidden');
-        // dismiss global loading after the list becomes visible (fist page of the list is displayed)
-        this.fire('global-loading', {active: false});
+      }
+      if (typeof oldFilteredList === 'undefined') {
+        this.set('showQueryLoading', true);
       }
     },
 
@@ -108,5 +116,14 @@
       this.set('requiredDataLoaded', true);
       this._init(this.active);
     },
+
+    listAttachedCallback: function(active, loadingMsg) {
+      this.set('stampListData', true);
+      if (active) {
+        this.fire('global-loading', {message: loadingMsg, active: true});
+      } else {
+        this.set('showQueryLoading', true);
+      }
+    }
   };
 </script>

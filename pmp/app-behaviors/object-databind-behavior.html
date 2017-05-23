@@ -38,6 +38,9 @@
       var entries = this._mapItemFromId(id, collection);
       if (Array.isArray(entries)) {
         return _.map(entries, function(e) {
+          if (!e) {
+            return null;
+          }
           return e.name || e.full_name;
         }).join(', ');
       }

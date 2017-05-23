@@ -6,11 +6,13 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/object-databind-behavior.html">
+<link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="government-result-activities.html">
 
@@ -99,17 +101,19 @@
             <div class="col col-6">
               <template is="dom-if" if="[[editMode]]">
                 <etools-searchable-multiselection-menu id$="result_[[index]]"
-                         label="CP Output"
-                         index="[[index]]"
-                         placeholder="&#8212;"
-                         options="[[filteredCpOutputDropdownData]]"
-                         option-value="id"
-                         option-label="name"
-                         custom-object-options
-                         selected="{{result.result}}"
-                         update-selected
-                         error-message="Please select a CP Output. If there aren't any to choose from, check the Country Programme."
-                         required>
+                                                       label="CP Output"
+                                                       index="[[index]]"
+                                                       placeholder="&#8212;"
+                                                       options="[[getCleanEsmmOptions(filteredCpOutputDropdownData, dataItems)]]"
+                                                       option-value="id"
+                                                       option-label="name"
+                                                       custom-object-options
+                                                       selected="{{result.result}}"
+                                                       update-selected
+                                                       error-message="Please select a CP Output. If there aren't any to choose from, check the Country Programme."
+                                                       required
+                                                       url="[[missingCpOutputsUrl]]"
+                                                       ajax-params="[[_getMissingEsmmOptAjaxParams()]]">
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
@@ -124,16 +128,16 @@
             <div class="col">
               <template is="dom-if" if="[[editMode]]">
                 <etools-searchable-multiselection-menu id$="year_[[index]]"
-                             label="Year"
-                             index="[[index]]"
-                             class="fixed-width"
-                             placeholder="&#8212;"
-                             options="[[yearOptions]]"
-                             selected="{{result.year}}"
-                             update-selected
-                             error-message="Please select a year"
-                             disabled="[[_yearsEmpty(yearOptions)]]"
-                             required>
+                                                       label="Year"
+                                                       index="[[index]]"
+                                                       class="fixed-width"
+                                                       placeholder="&#8212;"
+                                                       options="[[yearOptions]]"
+                                                       selected="{{result.year}}"
+                                                       update-selected
+                                                       error-message="Please select a year"
+                                                       disabled="[[_yearsEmpty(yearOptions)]]"
+                                                       required>
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
@@ -200,50 +204,50 @@
             <div class="col col-6">
               <template is="dom-if" if="[[editMode]]">
                 <etools-searchable-multiselection-menu id="sectors"
-                       label="Programme(s)/Sector(s)"
-                       index="[[index]]"
-                       placeholder="&#8212;"
-                       options="[[sectorsDropdownData]]"
-                       custom-object-options
-                       option-label="name"
-                       option-value="id"
-                       error-message="Please select a programme(s)/sector(s)"
-                       update-selected
-                       selected="{{result.sectors}}"
-                       multi>
+                                                       label="Programme(s)/Sector(s)"
+                                                       index="[[index]]"
+                                                       placeholder="&#8212;"
+                                                       options="[[sectorsDropdownData]]"
+                                                       custom-object-options
+                                                       option-label="name"
+                                                       option-value="id"
+                                                       error-message="Please select a programme(s)/sector(s)"
+                                                       update-selected
+                                                       selected="{{result.sectors}}"
+                                                       multi>
                 </etools-searchable-multiselection-menu>
               </template>
-                <template is="dom-if" if="[[!editMode]]">
-                  <paper-input
+              <template is="dom-if" if="[[!editMode]]">
+                <paper-input
                     id="sector"
                     label="Programme(s)/Sector(s)"
-                    value="[[_displayMultiple(result.sectors,sectorsDropdownData)]]"
+                    value="[[_displayMultiple(result.sectors, sectorsDropdownData)]]"
                     placeholder="&#8212;"
                     readonly>
-                  </paper-input>
-                </template>
-                </div>
-                <div class="col col-6">
+                </paper-input>
+              </template>
+            </div>
+            <div class="col col-6">
               <template is="dom-if" if="[[editMode]]">
                 <etools-searchable-multiselection-menu id="sections"
-                       label="Section(s)"
-                       index="[[index]]"
-                       placeholder="&#8212;"
-                       options="[[sectionsDropdownData]]"
-                       custom-object-options
-                       option-label="name"
-                       option-value="id"
-                       update-selected
-                       selected="{{result.sections}}"
-                       error-message="Please select a section(s)"
-                       multi>
+                                                       label="Section(s)"
+                                                       index="[[index]]"
+                                                       placeholder="&#8212;"
+                                                       options="[[sectionsDropdownData]]"
+                                                       custom-object-options
+                                                       option-label="name"
+                                                       option-value="id"
+                                                       update-selected
+                                                       selected="{{result.sections}}"
+                                                       error-message="Please select a section(s)"
+                                                       multi>
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     id="section"
                     label="Section(s)"
-                    value="[[_displayMultiple(result.sections,sectionsDropdownData)]]"
+                    value="[[_displayMultiple(result.sections, sectionsDropdownData)]]"
                     placeholder="&#8212;"
                     readonly>
                 </paper-input>
@@ -254,25 +258,27 @@
             <div class="flex-1">
               <template is="dom-if" if="[[editMode]]">
                 <etools-searchable-multiselection-menu id="unicef_managers"
-                         label="UNICEF Focal Points"
-                         index="[[index]]"
-                         placeholder="&#8212;"
-                         options="[[unicefUsersDropdownData]]"
-                         custom-object-options
-                         option-label="full_name"
-                         option-value="user_id"
-                         update-selected
-                         selected="{{result.unicef_managers}}"
-                         error-message="Please select a UNICEF manager"
-                         multi
-                         required>
+                                                       label="UNICEF Focal Points"
+                                                       index="[[index]]"
+                                                       placeholder="&#8212;"
+                                                       options="[[getCleanEsmmOptions(unicefUsersDropdownData, dataItems)]]"
+                                                       custom-object-options
+                                                       option-label="full_name"
+                                                       option-value="user_id"
+                                                       update-selected
+                                                       selected="{{result.unicef_managers}}"
+                                                       error-message="Please select a UNICEF manager"
+                                                       multi
+                                                       required
+                                                       url="[[missingUnicefUsersUrl]]"
+                                                       ajax-params="[[_getMissingEsmmOptAjaxParams()]]">
                 </etools-searchable-multiselection-menu>
               </template>
               <template is="dom-if" if="[[!editMode]]">
                 <paper-input
                     id="focalPoints"
                     label="UNICEF Focal Points"
-                    value="[[_displayMultiple(result.unicef_managers,unicefUsersDropdownData)]]"
+                    value="[[_displayMultiple(result.unicef_managers, unicefUsersDropdownData)]]"
                     placeholder="&#8212;"
                     readonly>
                 </paper-input>
@@ -282,140 +288,172 @@
           <div class="activities">
             <government-result-activities data-items="{{result.result_activities}}"></government-result-activities>
           </div>
-          <a on-tap="_addActivity" index="[[index]]" class="text-button" hidden$="[[!editMode]]">Add Work Plan Activity</a>
+          <a on-tap="_addActivity" index="[[index]]" class="text-button" hidden$="[[!editMode]]">Add Work Plan
+            Activity</a>
         </div>
       </div>
     </template>
-
 
   </template>
 
   <script>
     (function() {
-          Polymer({
-            is: 'government-plan-results',
-            behaviors: [
-              pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-              pmpBehaviors.RepeatableDataSetsBehavior,
-              pmpBehaviors.ObjectDatabindBehavior,
-              etoolsAppConfig.globals
-            ],
+      Polymer({
+        is: 'government-plan-results',
+        behaviors: [
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          pmpBehaviors.RepeatableDataSetsBehavior,
+          pmpBehaviors.ObjectDatabindBehavior,
+          etoolsAppConfig.globals,
+          pmpBehaviors.MissingDropdownOptionsBehavior
+        ],
 
-            properties: {
-              dataItems: {
-                type: Array,
-                notify: true,
-              },
-              cpWbs: {
-                type: String,
-                value: ''
-              },
-              cpOutputDropdownData: {
-                type: Array,
-                value: [],
-                statePath: 'cpOutputs'
-              },
-              filteredCpOutputDropdownData: {
-                type: Array
-              },
-              yearOptions: {
-                type: Array,
-                notify: true,
-                value: []
-              },
-              sectorsDropdownData: {
-                type: Array,
-                statePath: 'sectors'
-              },
-              sectionsDropdownData: {
-                type: Array,
-                statePath: 'sections'
-              },
-              unicefUsersDropdownData: {
-                type: Array,
-                statePath: 'unicefUsersData'
-              },
-              activities: {
-                type: Array,
-                notify: true,
-              },
-              editMode: {
-                type: Boolean,
-                notify: true,
-              },
-              _deleteEpName: {
-                type: String,
-                value: 'governmentIntResultDelete',
-                readOnly: true
-              }
-            },
-            observers: [
-              '_cpWbsChanged(cpWbs)'
-            ],
-            _cpWbsChanged: function() {
-              if (!this.cpOutputDropdownData) {
-                return;
-              }
+        properties: {
+          dataItems: {
+            type: Array,
+            notify: true,
+            observer: '_dataItemsChanged'
+          },
+          cpWbs: {
+            type: String,
+            value: ''
+          },
+          cpOutputDropdownData: {
+            type: Array,
+            statePath: 'cpOutputs'
+          },
+          filteredCpOutputDropdownData: {
+            type: Array
+          },
+          yearOptions: {
+            type: Array,
+            notify: true,
+            value: []
+          },
+          sectorsDropdownData: {
+            type: Array,
+            statePath: 'sectors'
+          },
+          sectionsDropdownData: {
+            type: Array,
+            statePath: 'sections'
+          },
+          unicefUsersDropdownData: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+          activities: {
+            type: Array,
+            notify: true,
+          },
+          editMode: {
+            type: Boolean,
+            notify: true,
+          },
+          _deleteEpName: {
+            type: String,
+            value: 'governmentIntResultDelete',
+            readOnly: true
+          },
+          missingCpOutputsUrl: String,
+          missingUnicefUsersUrl: String
+        },
+        observers: [
+          '_cpWbsChanged(cpWbs)'
+        ],
+        ready: function() {
+          this.set('missingCpOutputsUrl', this.getMissingOptionsEndpointUrl('cpOutputsByIdsAsValues'));
+          this.set('missingUnicefUsersUrl', this.getMissingOptionsEndpointUrl('unicefUsers'));
+        },
+        _dataItemsChanged: function() {
+          this._resetErrors();
+        },
+        _cpWbsChanged: function() {
+          if (!this.cpOutputDropdownData) {
+            return;
+          }
 
-              var cpWbs = this.cpWbs;
-              var filteredCpOutputDropdownData;
-
-              filteredCpOutputDropdownData = this.cpOutputDropdownData.filter(function(cpo) {
-                return (cpo.wbs.indexOf(cpWbs) !== -1);
-              });
-
-              this.set('filteredCpOutputDropdownData', filteredCpOutputDropdownData);
-            },
-            _handleValueChange: function(e) {
-              var id = e.target.id;
-              var index = e.target.index;
-              var dataItemsPath = 'dataItems.' + index;
-              // ensure this.result observes subproperty change
-              var updatedResult = _.has(e, 'detail.selectedValues') ?
-                  this._getUpdatedObject(id, e.detail.selectedValues, this.dataItems[index]) :
-                  this._getUpdatedObject(id, this.dataItems[index].id, this.dataItems[index]);
-              this.set(dataItemsPath, updatedResult);
-              e.target.invalid = false;
-            },
-            _handleInputChange: function(e) {
-              if (e.target.value) {
-                e.target.invalid = false;
-              }
-            },
-            _addActivity: function(e) {
-              var activitiesPath = 'dataItems.' + e.target.index + '.result_activities';
-              this.push(activitiesPath, {
-                'code': '',
-                'description': ''
-              });
-            },
-            _fieldsAreValid: function(fields) {
-              var self = this;
-              var valid = true;
-              // looping through result elements and  setting to invalid any with no value assigned
-              if (this.dataItems instanceof Array && this.dataItems.length) {
-                this.dataItems.forEach(function(item, index) {
-                  fields.forEach(function(field, fieldIndex) {
-                    var el = self.$$('#' + field + '_' + index);
-                    if (el && !el.validate()) {
-                      valid = false;
-                    }
-                  });
-                });
-              }
-              return valid;
-            },
-            _yearsEmpty: function(years) {
-              return _.isEmpty(years);
-            },
-            _isCpoIdInDropdown: function(cpoId) {
-              var matchedElems = this.filteredCpOutputDropdownData.filter(function(elem) {
-                 return elem.value === cpoId;
-              });
-              return !!matchedElems.length;
-            }
-
+          var cpWbs = this.cpWbs;
+          var filteredCpOutputDropdownData = this.cpOutputDropdownData.filter(function(cpo) {
+            return (cpo.wbs.indexOf(cpWbs) !== -1);
           });
-        })();
+
+          this.set('filteredCpOutputDropdownData', filteredCpOutputDropdownData);
+        },
+        _handleValueChange: function(e) {
+          var id = e.target.id;
+          var index = e.target.index;
+          var dataItemsPath = 'dataItems.' + index;
+          // ensure this.result observes subproperty change
+          var updatedResult = _.has(e, 'detail.selectedValues') ?
+              this._getUpdatedObject(id, e.detail.selectedValues, this.dataItems[index]) :
+              this._getUpdatedObject(id, this.dataItems[index].id, this.dataItems[index]);
+          this.set(dataItemsPath, updatedResult);
+          e.target.invalid = false;
+        },
+        _handleInputChange: function(e) {
+          if (e.target.value) {
+            e.target.invalid = false;
+          }
+        },
+        _addActivity: function(e) {
+          var activitiesPath = 'dataItems.' + e.target.index + '.result_activities';
+          this.push(activitiesPath, {
+            'code': '',
+            'description': ''
+          });
+        },
+        _fieldsAreValid: function(fields) {
+          var self = this;
+          var valid = true;
+          // looping through result elements and  setting to invalid any with no value assigned
+          if (this.dataItems instanceof Array && this.dataItems.length) {
+            this.dataItems.forEach(function(item, index) {
+              fields.forEach(function(field, fieldIndex) {
+                var el = self.$$('#' + field + '_' + index);
+                if (el && !el.validate()) {
+                  valid = false;
+                }
+              });
+            });
+          }
+          return valid;
+        },
+        _resetErrors: function() {
+          var self = this;
+          var indexedFields = [
+            'result',
+            'year',
+            'planned_amount',
+            'planned_visits'
+          ];
+
+          if (this.dataItems instanceof Array && this.dataItems.length) {
+            this.dataItems.forEach(function(item, index) {
+              indexedFields.forEach(function(field, fieldIndex) {
+                var el = self.$$('#' + field + '_' + index);
+                if (el) {
+                  el.invalid = false;
+                }
+              });
+            });
+          }
+        },
+        _yearsEmpty: function(years) {
+          return _.isEmpty(years);
+        },
+        _isCpoIdInDropdown: function(cpoId) {
+          var matchedElems = this.filteredCpOutputDropdownData.filter(function(elem) {
+            return elem.value === cpoId;
+          });
+          return !!matchedElems.length;
+        },
+
+        _getMissingEsmmOptAjaxParams: function() {
+          return {dropdown: true};
+        }
+
+      });
+    })();
   </script>
 </dom-module>

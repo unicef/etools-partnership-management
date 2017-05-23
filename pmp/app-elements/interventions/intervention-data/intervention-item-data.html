@@ -64,15 +64,20 @@
         _handleResponse: function(response) {
           this._setIntervention(response.detail);
 
-          // update the interventions list in dexieDB
-          var mappedResponse = this._formatResponseDataForDexie(response.detail);
-          etoolsAppConfig.db.table('interventions').put(mappedResponse);
-
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
             // reset callback
             this.set('handleResponseAdditionalCallback', null);
+          }
+
+          if (this.$.ajax.get('method') !== 'GET') {
+            var self = this;
+            // update the interventions list in dexieDB
+            var mappedResponse = this._formatResponseDataForDexie(response.detail);
+            etoolsAppConfig.db.table('interventions').put(mappedResponse).then(function() {
+              self.fire('reload-list');
+            });
           }
         },
 

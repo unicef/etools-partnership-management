@@ -129,6 +129,27 @@
       margin: 0;
     };
 
+    /* global loading box content */
+    --etools-loading-border-color: rgba(255, 255, 255, 0.12);
+    --etools-loading-shadow-color: #333333;
+
+    /* dialog scollable element */
+    --paper-dialog-scrollable: {
+      width: 100%;
+      overflow-x: hidden;
+    };
+
+    --paper-item: {
+        cursor: pointer;
+    };
   }
+
+  .ie {
+    --paper-item: {
+      cursor: pointer;
+      /* Fixes a vertical alignment issue in ie */
+      height: 48px;
+    };
+  };
 
 </style>

@@ -130,7 +130,7 @@
                                                                custom-object-options
                                                                update-selected
                                                                dynamic-align
-                                                               error-message="Assessment type is required">
+                                                               error-message="[[dateSubmitedErrorMessages.missing]]">
                         </etools-searchable-multiselection-menu>
                       </template>
                     </div>
@@ -163,6 +163,7 @@
                                   file="{{item.report}}"
                                   internal-file="{{item.report_file}}"
                                   label="Report"
+                                  hide-delete-btn="[[_hideDeleteBtn(item.report_file, item.report)]]"
                                   readonly="[[!editMode]]"
                                   accept=".doc,.docx,.pdf,.jpg,.png"
                                   error-message="Please select the report file"></etools-single-file>
@@ -217,6 +218,13 @@
             value: [],
             statePath: 'assessmentTypes'
           },
+          dateSubmitedErrorMessages: {
+            type: Object,
+            value: {
+              missing: 'Assessment type is required',
+              futureDate: 'The Date of Report cannot be in the future'
+            }
+          }
         },
 
         observers: [
@@ -232,6 +240,12 @@
             report: null,
             report_file: ''
           };
+        },
+        _hideDeleteBtn: function(itemReportFile) {
+           if (!itemReportFile) {
+            return false;
+          }
+          return true;
         },
         /**
          * TODO: this !Array check is common to many elements that use repeatable-data-sets behavior,
@@ -270,7 +284,7 @@
           return typeof value !== 'undefined' && value !== null && value !== '';
         },
 
-        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength) {
+        _isValid: function(field, assessmentType, completedDate, reportFile, reportFileLength, element) {
           var valid = true;
           switch (field) {
             case 'assessmentType':
@@ -284,6 +298,14 @@
                   reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
+
+              if (this.isFutureDate(completedDate)) {
+                valid = false;
+                element.errorMessage = this.dateSubmitedErrorMessages.futureDate;
+              } else {
+                element.errorMessage = this.dateSubmitedErrorMessages.missing;
+              }
+
               break;
             case 'report':
               if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||
@@ -336,7 +358,7 @@
               var fieldName = this._getFileTypeForValidation(fieldSelector);
               var validField = this._isValid(fieldName, this.dataItems[index].type,
                   this.dataItems[index].completed_date, this.dataItems[index].report,
-                  this.dataItems[index].report_file.length);
+                  this.dataItems[index].report_file.length, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
                 valid = false;

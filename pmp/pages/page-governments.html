@@ -52,7 +52,6 @@
     <government-intervention-item-data id="interventionData"
                                        intervention="{{intervention}}"
                                        intervention-id="[[selectedInterventionId]]"
-                                       on-response-received="_refreshGovernmentsList"
                                        error-event-name="gov-intervention-save-error"></government-intervention-item-data>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(governmentListActive)]]">
@@ -99,9 +98,11 @@
                 noink bottom-item
                 fallback-selection="details">
 
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
+              <template is="dom-if" if="[[!_newIntervention(newGovInterventionActive)]]">
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+              </template>
               <paper-tab name="details" link>
                 <span class="tab-content">Government Details</span>
               </paper-tab>
@@ -128,8 +129,7 @@
                               active="[[governmentListActive]]"
                               url-params="[[governmentQueryParams]]"
                               csv-download-url="{{csvDownloadUrl}}"
-                              partners-dropdown-data="[[partnersDropdownData]]"
-                              disable-upgrade$="[[!governmentListActive]]">
+                              partners-dropdown-data="[[partnersDropdownData]]">
             </governments-list>
           </div>
           <div class="page" name="details">
@@ -137,17 +137,17 @@
                                 active="[[newGovInterventionActive]]"
                                 on-details-refresh="_goToNewGovernmentPage"
                                 intervention="[[intervention]]"
-                                edit-mode="[[_hasEditPermissions(permissions)]]"
-                                on-save-intervention="_saveIntervention"
-                                disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
+                                edit-mode$="[[_hasEditPermissions(permissions)]]"
+                                on-save-intervention="_saveIntervention">
             </government-details>
           </div>
-          <div class="page" name="overview">
-            <government-overview id="overview"
-                                 intervention="[[intervention]]"
-                                 disable-upgrade$="[[_detailsPageDisableUpgrade(govTabsActive, newGovInterventionActive)]]">
-            </government-overview>
-          </div>
+          <template is="dom-if" if="[[!_newIntervention(newGovInterventionActive)]]">
+            <div class="page" name="overview">
+              <government-overview id="overview"
+                                  intervention="[[intervention]]">
+              </government-overview>
+            </div>
+          </template>
 
         </iron-pages>
       </div>
@@ -183,7 +183,17 @@
         newInterventionModel: {
           type: Object,
           value: {
-            results: [],
+            results: [{
+              'intervention': '',
+              'result': '',
+              'year': '',
+              'planned_amount': '',
+              'planned_visits': '',
+              'result_activities': [],
+              'unicef_managers': [],
+              'sectors': [],
+              'sections': [],
+            }],
             partner: undefined,
             country_programme: undefined
           }
@@ -215,6 +225,10 @@
           type: Array,
           value: []
         },
+        intervention: {
+          type: Object,
+          observer: '_interventionChanged'
+        }
       },
 
       observers: [
@@ -224,7 +238,8 @@
       ],
 
       listeners: {
-        'gov-intervention-save-error': '_govInterventionSaveErrors'
+        'gov-intervention-save-error': '_govInterventionSaveErrors',
+        'reload-list': '_reloadGovernmentInterventionsList'
       },
 
       ready: function() {
@@ -234,9 +249,13 @@
           {name: 'SSFA', label: 'Small Scale Funding Agreement'}
         ]);
       },
-      _detailsPageDisableUpgrade: function(govTabsActive, newGovInterventionActive) {
-        return !govTabsActive && !newGovInterventionActive;
+      _interventionChanged: function(intervention) {
+        this.fire('global-loading', {active: false});
       },
+      // TODO: do not remove this, we might needed back
+      // _detailsPageDisableUpgrade: function(govTabsActive, newGovInterventionActive) {
+      //   return !govTabsActive && !newGovInterventionActive;
+      // },
       _getActivePage: function(listActive, tab, isNew) {
         var result = listActive ? 'list' :
           isNew ? 'details' : tab;
@@ -244,6 +263,7 @@
       },
       _saveIntervention: function(e) {
         e.stopImmediatePropagation();
+        this.set('serverErrors', []);
         if (_.has(e.detail, 'intervention')) {
           this.$.interventionData.saveIntervention(e.detail.intervention, this._interventionSaved);
         }
@@ -294,11 +314,7 @@
         }
         return false;
       },
-      _refreshGovernmentsList: function() {
-        if (!this.$.list.hasAttribute('disable-upgrade')) {
-          this.$.list._filterGovernmentsData();
-        }
-      },
+
       _validateSave: function() {
         return this.$.details._validateSave();
       },
@@ -308,6 +324,22 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
           (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
+        }
+      },
+
+      _newIntervention: function(newInterventionActive) {
+        return newInterventionActive === true;
+      },
+
+      _reloadGovernmentInterventionsList: function(e) {
+        e.stopImmediatePropagation();
+        try {
+          var govInterventions = this.$.list;
+          if (!govInterventions.$.list.classList.contains('hidden')) {
+            govInterventions._filterGovernmentsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[governments-page]', err);
         }
       }
 
