@@ -162,7 +162,7 @@
 
         _sectorSelected: function(event) {
           var sectorSelected = event.detail.item.item;
-          if (!sectorSelected || !Object.keys(sectorSelected).length > 0) {
+          if (!sectorSelected || Object.keys(sectorSelected).length === 0) {
             this.set('dataItems.' + event.model.index + '.sector', null);
             return;
           }
