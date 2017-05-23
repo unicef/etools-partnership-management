@@ -182,7 +182,7 @@
          * Save intervention data
          */
         saveIntervention: function(intervention, callback) {
-          if (typeof intervention === 'object' && Object.keys(intervention).length === 0) {
+          if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
             this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
           } else {
             var url = null;
