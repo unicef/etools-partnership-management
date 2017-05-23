@@ -3,7 +3,6 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
@@ -109,16 +108,6 @@
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <div class="row-h flex-c">
-        <!--<etools-searchable-multiselection-menu id="currency"
-                                               label="Local Currency"
-                                               placeholder="&#8212;"
-                                               options="[[currencies]]"
-                                               on-value-change="_currencyChanged"
-                                               required$="[[required]]"
-                                               auto-validate
-                                               error-message="Please select the currency"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>-->
          <etools-single-selection-menu id="currency"
                                         label="Local Currency"
                                         placeholder="&#8212;"
