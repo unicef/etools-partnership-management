@@ -297,7 +297,8 @@
           },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes'
+            statePath: 'interventionDocTypes',
+            observer: '_initDocTypes'
           },
           pcaDocTypes: {
             type: Array,
@@ -350,9 +351,16 @@
         ],
 
         ready: function() {
+          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+
+        _initDocTypes: function(documentTypes) {
+          if (!(documentTypes instanceof Array && documentTypes.length)) {
+            return;
+          }
           var pcaTypes = [];
           var ssfaTypes = [];
-          this.documentTypes.forEach(function(type) {
+          documentTypes.forEach(function(type) {
             if (type.value !== 'SSFA') {
               pcaTypes.push(type);
             }
@@ -362,8 +370,6 @@
           });
           this.set('pcaDocTypes', pcaTypes);
           this.set('ssfaDocTypes', ssfaTypes);
-
-          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
 
         _editModeChanged: function() {
