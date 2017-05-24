@@ -37,7 +37,7 @@
     "paper-toggle-button": "^1.2.1",
     "etools-datepicker": "^1.0.0",
     "etools-checkable-input": "^1.0.0",
-    "etools-content-panel": "^1.0.4",
+    "etools-content-panel": "1.0.3",
     "iron-form": "PolymerElements/iron-form#^1.1.4",
     "etools-page-refresh": "^1.1.0",
     "etools-data-table": "^1.0.0",
