@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -81,20 +82,18 @@
             edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="documentType"
-                                                 label="Document Type"
-                                                 placeholder="&#8212;"
-                                                 options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
-                                                 custom-object-options
-                                                 selected="{{intervention.document_type}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 hide-search
-                                                 dynamic-align
-                                                 required auto-validate
-                                                 error-message="Document type is required"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+           <etools-single-selection-menu id="documentType"
+                                          label="Document Type"
+                                          placeholder="&#8212;"
+                                          options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
+                                          selected="{{intervention.document_type}}"
+                                          hide-search
+                                          dynamic-align
+                                          required auto-validate
+                                          error-message="Document type is required"
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
+
         </div>
         <div class="col col-3" title$="[[intervention.number]]">
           <!-- Reference Number -->
@@ -180,19 +179,16 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="hrps"
-                                                 label="In response to an HRP, Select"
-                                                 placeholder="&#8212;"
-                                                 options="[[hrps]]"
-                                                 option-value="id"
-                                                 option-label="name"
-                                                 custom-object-options
-                                                 selected="{{intervention.hrp}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+            <etools-single-selection-menu id="hrps"
+                                          label="In response to an HRP, Select"
+                                          placeholder="&#8212;"
+                                          options="[[hrps]]"
+                                          option-value="id"
+                                          option-label="name"
+                                          selected="{{intervention.hrp}}"
+                                          dynamic-align
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
         </div>
         <div class="col col-3">
           <!-- Start date -->
@@ -396,6 +392,7 @@
           if (newValue) {
             this.set('interventionRequiredField', false);
           }
+
         },
 
         _resetValidations: function() {
@@ -417,32 +414,30 @@
 
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
-              && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            this.debounce('setInterventionYears', function() {
-              var start = parseInt(interventionStart.substr(0, 4), 10);
-              var end = parseInt(interventionEnd.substr(0, 4), 10);
-              var years = [];
-              while (start <= end) {
-                years.push({
-                  value: start,
-                  label: start
-                });
-                start++;
-              }
-              this.set('years', years);
-            }.bind(this), 50);
+            && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            var start = parseInt(interventionStart.substr(0, 4), 10);
+            var end = parseInt(interventionEnd.substr(0, 4), 10);
+            var years = [];
+            while (start <= end) {
+              years.push({
+                value: start,
+                label: start
+              });
+              start++;
+            }
+            this.set('years', years);
           }
         },
 
         _selectedPartnerIdChanged: function(id, oldId) {
           if (typeof oldId === 'number'
               && id !== oldId
-              && !this.agreement) { //Prevent reset on changes caused by initialization of the fields
+              && !this.agreement) {
+                //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
         },
         _resetDropdowns: function() {
-          //**TODO - this has to be handled inside the new version of dropdown component
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
@@ -452,10 +447,6 @@
           if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
-          }
-          var agrSel = this.$.agreementSelector;
-          if (agrSel) {
-            agrSel.resetDropdowns();
           }
         },
         /**
