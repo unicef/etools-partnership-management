@@ -230,14 +230,13 @@
 
         _triggerMainRoutePathUpdate: function(afterDataRefreshLandingPage, restampLandingPage) {
           var routePath = afterDataRefreshLandingPage + '/list';
-          var appShell = Polymer.dom(document.querySelector('body')).querySelector('app-shell');
           if (restampLandingPage) {
             this.set('page', null);
-            this.fire('update-main-path', {path: routePath});
             setTimeout(function() {
               this.fire('global-loading', {active: false});
               this.set('page', afterDataRefreshLandingPage);
-            }.bind(this), 0);
+              this.fire('update-main-path', {path: routePath});
+            }.bind(this), 10);
           } else {
             this.fire('global-loading', {active: false});
             this.fire('update-main-path', {path: routePath});
