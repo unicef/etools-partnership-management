@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -59,21 +60,20 @@
           <div class="row-v flex-c item-content">
             <div class="row-h">
               <div class="col col-3">
-                <etools-searchable-multiselection-menu id$="sector_[[index]]"
+                 <etools-single-selection-menu id$="sector_[[index]]"
                                                        class="sector"
                                                        label="Section/Cluster"
                                                        placeholder="&#8212;"
-                                                       value="[[_setSector(item.sector, sectors.length)]]"
+                                                       selected="{{item.sector.id}}"
                                                        options="[[sectors]]"
-                                                       custom-object-options
                                                        option-label="name"
                                                        option-value="id"
-                                                       on-value-change="_sectorSelected"
+                                                       on-iron-activate="_sectorSelected"
                                                        required$="[[required]]"
                                                        auto-validate
                                                        error-message="Please select a sector"
                                                        readonly$="[[!editMode]]">
-                </etools-searchable-multiselection-menu>
+                </etools-single-selection-menu>
               </div>
               <div class="col col-9">
                 <etools-searchable-multiselection-menu id$="locations_[[index]]"
@@ -161,36 +161,29 @@
         },
 
         _sectorSelected: function(event) {
-          var sectorSelected = event.detail.selectedValues;
-          if (sectorSelected && typeof sectorSelected === 'object' && Object.keys(sectorSelected).length > 0) {
-            var sectorId = parseInt(sectorSelected.id, 10);
-            if (this._sectorAlreadySelected(sectorId, event.model.index)) {
-              this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
-              var sectorDropdown = this.$$('#sector_' + event.model.index);
-              if (sectorDropdown) {
-                sectorDropdown.value = [];
-                sectorDropdown.selectedValues = null;
-              }
-              return;
-            }
-            this.set('dataItems.' + event.model.index + '.sector', {
-              id: sectorId,
-              name: sectorSelected.name
-            });
-          } else {
+          var sectorSelected = event.detail.item.item;
+          if (!sectorSelected || Object.keys(sectorSelected).length === 0) {
             this.set('dataItems.' + event.model.index + '.sector', null);
+            return;
           }
-        },
+          if (this._sectorAlreadySelected(sectorSelected.id, event.model.index)) {
+            this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
 
-        _setSector: function(sector) {
-          if (sector && typeof sector === 'object' && Object.keys(sector).length > 0 && this.sectors.length) {
-            return this.sectors.filter(function(s) {
-              return parseInt(s.id, 10) === parseInt(sector.id, 10);
-            });
+            var sectorDropdown = this.$$('#sector_' + event.model.index);
+            if (sectorDropdown) {
+              sectorDropdown.selected = null;
+            }
+            this.set('dataItems.' + event.model.index + '.sector', null);
+            event.preventDefault();
+            return;
           }
-          return [];
-        },
 
+          this.set('dataItems.' + event.model.index + '.sector', {
+            id: sectorSelected.id,
+            name: sectorSelected.name
+          });
+
+        },
         _setSectorLocations: function(locations) {
           if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
             var selectedLocationsIds = locations.map(function(location) {
@@ -222,12 +215,10 @@
           if (!dropdowns || !dropdowns.length) {
             return false;
           }
-          var optionValue = dropdowns[0].optionValue;
-
           for (var i = 0; i < dropdowns.length; i++) {
-            if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value[optionValue]) {
+            if (dropdowns[i].selected) {
               /* jshint ignore:start */
-              if (dropdowns[i].value[optionValue] == sectorId) {
+              if (dropdownIdx !== i && dropdowns[i].selected == sectorId) {
                 // already selected sector
                 return true;
               }
@@ -236,7 +227,6 @@
           }
           return false;
         },
-
         /**
          * Validate last added sector location and if is not empty add a new one
          */
