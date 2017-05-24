@@ -10,8 +10,7 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
-<link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -67,36 +66,32 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Partner name -->
-            <etools-searchable-multiselection-menu
+            <etools-single-selection-menu
                 id="partner"
                 label="Partner Name"
                 placeholder="&#8212;"
                 options="[[partnersDropdownData]]"
-                custom-object-options
                 selected="{{agreement.partner}}"
-                update-selected
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('partnerName', agreement.status)]]"
                 error-message="Please select a partner"
                 required>
-            </etools-searchable-multiselection-menu>
+            </etools-single-selection-menu>
           </div>
           <div class="col col-3">
             <!-- Agreement Type -->
-            <etools-searchable-multiselection-menu
+            <etools-single-selection-menu
                 id="agreementType"
                 label="Agreement Type"
                 placeholder="&#8212;"
                 options="[[agreementTypes]]"
-                custom-object-options
                 selected="{{agreement.agreement_type}}"
-                update-selected
                 dynamic-align
                 hide-search
                 readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
                 error-message="Please select agreement type"
                 required>
-            </etools-searchable-multiselection-menu>
+            </etools-single-selection-menu>
           </div>
           <div class="col col-3" title$="[[agreement.agreement_number]]">
             <!-- Reference Number -->
@@ -146,22 +141,19 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By Partner -->
-            <etools-searchable-multiselection-menu
+            <etools-single-selection-menu
                 id="signedByPartner"
                 label="Signed By Partner"
                 placeholder="&#8212;"
                 options="[[staffMembers]]"
-                custom-object-options
                 option-value="id"
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
-                update-selected
-                selected-requires-valid-options
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]"
                 error-message="Please select a partner"
                 required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
-            </etools-searchable-multiselection-menu>
+            </etools-single-selection-menu>
           </div>
           <div class="col col-3">
             <!-- Signed By Partner Date -->
@@ -178,22 +170,19 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By UNICEF -->
-            <etools-searchable-multiselection-menu
+            <etools-single-selection-menu
                 id="signedByUnicef"
                 label="Signed By UNICEF"
                 placeholder="&#8212;"
                 options="[[unicefSeniorStaff]]"
-                custom-object-options
                 option-value="user_id"
                 option-label="full_name"
                 selected="{{agreement.signed_by}}"
-                update-selected
-                selected-requires-valid-options
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
                 error-message="Please select UNICEF staff"
                 required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
-            </etools-searchable-multiselection-menu>
+            </etools-single-selection-menu>
           </div>
           <div class="col col-3">
             <!-- Signed By UNICEF Date -->
