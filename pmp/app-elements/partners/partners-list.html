@@ -141,8 +141,8 @@
             <div slot="row-data">
               <span class="col-data flex">
                 <a class="truncate"
-                  href="partners/[[partner.id]]/details"
-                  title="[[getDisplayValue(partner.vendor_number)]]">
+                  href$="[[currentPage]]/[[partner.id]]/details"
+                  title$="[[getDisplayValue(partner.vendor_number)]]">
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
@@ -268,7 +268,13 @@
           csvDownloadUrl: {
             type: String,
             notify: true
-          }
+          },
+          showOnlyGovernmentType: {
+            type: Boolean,
+            value: false,
+            observer: '_showOnlyGovernmentTypeFlagChanged'
+          },
+          currentPage: String
         },
 
         observers: [
@@ -351,6 +357,7 @@
 
           }.bind(this), 100);
         },
+
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
           if (!this.requiredDataLoaded || !this.initComplete) {
@@ -363,7 +370,7 @@
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
             // update URL
-            this.updateAppState('partners/list', qs, true);
+            this.updateAppState(this.currentPage + '/list', qs, true);
             // filter partners, but only after data has been loaded
             if (this.requiredDataLoaded) {
               this._filterPartnersData();
@@ -371,7 +378,7 @@
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
-              this.updateAppState('partners/list', qs, false);
+              this.updateAppState(this.currentPage + '/list', qs, false);
             }
             if (this.forceDataRefresh && this.requiredDataLoaded) {
               // refilter partners data
@@ -479,6 +486,18 @@
             return 'CSO / ' + csoType;
           }
         },
+
+        _showOnlyGovernmentTypeFlagChanged: function(showOnlyGovernmentType) {
+          console.log('show only gov type: ', showOnlyGovernmentType);
+          if (showOnlyGovernmentType) {
+            // lock list to government partners only
+
+          } else {
+            // unlock list from government partners only
+
+          }
+        }
+
       });
     })();
 

@@ -48,7 +48,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="pages/page-agreements.html">
 <link rel="import" href="pages/page-interventions.html">
 <link rel="import" href="pages/page-partners.html">
-<link rel="import" href="pages/page-governments.html">
 <link rel="import" href="pages/page-not-found.html">
 -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -144,10 +143,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'partners')]]" restamp>
+        <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
           <page-partners id="partners" class="main-page"
+                         show-only-government-type="[[_showOnlyGovernmentPartners(page)]]"
+                         current-page="[[page]]"
                          route="[[subroute]]"
-                         user="[[user]]"
                          permissions="[[permissions]]">
           </page-partners>
         </template>
@@ -155,7 +155,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
           <page-agreements id="agreements" class="main-page"
                            route="[[subroute]]"
-                           user="[[user]]"
                            permissions="[[permissions]]">
           </page-agreements>
         </template>
@@ -165,13 +164,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               route="[[subroute]]"
                               permissions="[[permissions]]">
           </page-interventions>
-        </template>
-
-        <template is="dom-if" if="[[_activePageIs(page, 'governments')]]" restamp>
-          <page-governments id="governments" class="main-page"
-                            route="[[subroute]]"
-                            permissions="[[permissions]]">
-          </page-governments>
         </template>
 
         <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
@@ -232,8 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {
             partners: false,
             agreements: false,
-            interventions: false,
-            governments: false
+            interventions: false
           }
         },
         isIE: Boolean
@@ -316,17 +307,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
-
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + page + '.html');
+        console.log('page changed: ', page);
+        var displayedPageCat = this._getDisplayedPageCategory(page);
+        var resolvedPageUrl = this.resolveUrl('pages/page-' + displayedPageCat + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(page);
-        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[page] === false) {
+        var pageEl = this._getPageElement(displayedPageCat);
+        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[displayedPageCat] === false) {
           // activate the global loading with a propper message
           this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
           // make the import
-          this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, page, pageEl),
+          this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, displayedPageCat, pageEl),
               this._pageNotFound, false);
         }
+      },
+
+      _getDisplayedPageCategory: function(page) {
+        return page === 'government-partners' ? 'partners' : page;
       },
 
       _pageNotFound: function() {
@@ -369,8 +365,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _setPageLoaded: function(page) {
         this.lazyLoadPages[page] = true;
       },
-      _activePageIs: function(activePage, expectedPage) {
-        return activePage === expectedPage;
+      _activePageIs: function(activePage, expectedPages) {
+        let pagesToMatch = expectedPages.split('|');
+        return pagesToMatch.indexOf(activePage) > -1;
       },
 
       isIEBrowser: function() {
@@ -418,6 +415,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('loadingCounterDecrementAdjustment', 1);
           return;
         }
+      },
+
+      _showOnlyGovernmentPartners: function(page) {
+        return page === 'government-partners';
       }
 
     });
