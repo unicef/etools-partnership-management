@@ -97,7 +97,10 @@
               government.unicef_focal_point_names = [];
 
               for (var key in government.unicef_focal_points) {
-                government.unicef_focal_point_names.push(_this.getUserNameFromId(government.unicef_focal_points[key]));
+                var name = government.unicef_focal_points[key].name;
+                if (name) {
+                  government.unicef_focal_point_names.push(name);
+                }
               }
 
               if (selectedPartnerNames &&
@@ -108,7 +111,7 @@
 
               if (unicefFocalPoints.length) {
                 var matchUnicefFocalPoints = government.unicef_focal_points.filter(function(fPt) {
-                  return unicefFocalPoints.indexOf(fPt) > -1;
+                  return unicefFocalPoints.indexOf(fPt.id) > -1;
                 });
                 if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
                   return false;
@@ -180,6 +183,7 @@
               return this.unicefUsersData[i].full_name;
             }
           }
+          return null;
         }
 
       });
