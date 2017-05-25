@@ -50,7 +50,8 @@
     "etools-file": "1.0.9",
     "etools-loading": "1.0.8",
     "etools-page-refresh": "1.1.1",
-    "etools-searchable-multiselection-menu": "2.0.0"
+    "etools-searchable-multiselection-menu": "2.0.0",
+    "etools-profile-dropdown": "^1.0.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

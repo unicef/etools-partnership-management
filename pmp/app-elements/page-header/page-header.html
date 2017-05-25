@@ -3,11 +3,12 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../countries-dropdown/countries-dropdown.html">
-<link rel="import" href="../user-profile-dialog/user-profile-dialog.html">
-<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../../bower_components/etools-app-selector/etools-app-selector.html">
-
+<link rel="import" href="../user-profile-dialog/user-profile-data/user-profile-data.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../bower_components/etools-profile-dropdown/etools-profile-dropdown.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
 
 <dom-module id="page-header">
 
@@ -36,7 +37,6 @@
       }
 
       #profile,
-      a.logout,
       #refresh {
         color: var(--title-toolbar-secondary-text-color);
       }
@@ -71,15 +71,6 @@
         width: auto;
       }
 
-      a.logout {
-        font-size: 16px;
-        font-weight: 400;
-        margin-left: 24px;
-        margin-right: 24px;
-        cursor: pointer;
-        -webkit-font-smoothing: antialiased;
-      }
-
       @media (min-width: 850px) {
         #menuButton {
           display: none;
@@ -90,6 +81,7 @@
         }
       }
     </style>
+    <user-profile-data id="userProfileData" user-profile="{{profile}}"></user-profile-data>
     <app-toolbar sticky class="content-align">
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div class="titlebar content-align">
@@ -99,9 +91,13 @@
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
                             current="[[user.profile.country]]"></countries-dropdown>
-        <paper-icon-button id="profile" icon="social:person" role="button" on-tap="_openUserProfileDialog"
-                           aria-disabled="false"></paper-icon-button>
-        <a class="logout" on-tap="_logout">Sign out</a>
+        <etools-profile-dropdown
+            sections="[[allSections]]"
+            offices="[[allOffices]]"
+            users="[[allUsers]]"
+            profile="{{profile}}"
+            on-save-profile="_saveProfile"
+        ></etools-profile-dropdown>
         <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
       </div>
     </app-toolbar>
@@ -111,6 +107,7 @@
     (function() {
       Polymer({
         is: 'page-header',
+        behaviors: [pmpBehaviors.EtoolsStaticCommonDataReduxBehavior],
         properties: {
           countries: {
             type: Array
@@ -118,6 +115,24 @@
           user: {
             type: Object,
           },
+          allOffices: {
+            type: Object,
+            notify: true
+          },
+          offices: {
+            type: Array,
+            statePath: 'offices',
+            observer: '_convertOffices'
+          },
+          allSections: {
+            type: Object,
+            statePath: 'sections'
+          },
+          allUsers: {
+            type: Object,
+            statePath: 'unicefUsersData'
+          },
+
           userProfileDialog: Object
         },
         observers: [
@@ -155,18 +170,6 @@
           this.set('countries', arrayObj);
         },
         ready: function() {
-          // init indicator dialog data
-          this.userProfileDialog = document.createElement('user-profile-dialog');
-          this.userProfileDialog.setAttribute('id', 'userProfileDialog');
-
-          // this will handle the outside app-shell toast event that comes from profile dialog
-          this.userProfileDialog.addEventListener('user-profile-toast', function(e) {
-            e.stopImmediatePropagation();
-            this.fire('toast', e.detail);
-          }.bind(this), false);
-
-          Polymer.dom(document.querySelector('body')).appendChild(this.userProfileDialog);
-
           var location = window.location.href;
           var production = 'etools.unicef.org';
 
@@ -180,18 +183,19 @@
           window.location.href = window.location.origin + '/saml2/logout';
         },
 
-        detached: function() {
-          if (this.userProfileDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.userProfileDialog);
-          }
-        },
-        // open indicator dialog to add or edit indicator
-        _openUserProfileDialog: function(event) {
-          this.userProfileDialog.openUserProfileDialog();
-        },
         _openDataRefreshDialog: function() {
           this.fire('open-data-refresh-dialog');
-        }
+        },
+        _convertOffices: function(data) {
+          var offices = data.map(function(office) {
+            return {label: office.name, value: office.id}
+          });
+          this.set('allOffices', offices);
+        },
+        _saveProfile: function(e) {
+          this.set('profile', e.detail.profile);
+          this.$.userProfileData.saveProfile(this.profile);
+        },
       });
     })();
   </script>
