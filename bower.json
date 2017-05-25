@@ -49,7 +49,7 @@
     "etools-dropdown": "1.0.4",
     "etools-file": "1.0.9",
     "etools-loading": "1.0.8",
-    "etools-page-refresh": "^1.1.1",
+    "etools-page-refresh": "1.1.1",
     "etools-searchable-multiselection-menu": "2.0.0"
   },
   "devDependencies": {
