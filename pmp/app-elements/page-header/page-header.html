@@ -117,20 +117,30 @@
           },
           allOffices: {
             type: Object,
-            notify: true
+            notify: true,
+            computed : '_convertCollection(offices)'
           },
           offices: {
             type: Array,
             statePath: 'offices',
-            observer: '_convertOffices'
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections',
+          },
+          users: {
+            type: Array,
+            statePath: 'unicefUsersData'
           },
           allSections: {
             type: Object,
-            statePath: 'sections'
+            notify: true,
+            computed: '_convertCollection(sections)'
           },
           allUsers: {
             type: Object,
-            statePath: 'unicefUsersData'
+            notify: true,
+            computed: '_convertUsers(users)'
           },
 
           userProfileDialog: Object
@@ -186,11 +196,18 @@
         _openDataRefreshDialog: function() {
           this.fire('open-data-refresh-dialog');
         },
-        _convertOffices: function(data) {
-          var offices = data.map(function(office) {
-            return {label: office.name, value: office.id}
+        _convertCollection: function(data) {
+          return data.map(function(item) {
+            return {label: item.name, value: item.id}
           });
-          this.set('allOffices', offices);
+        },
+        _convertUsers: function(data) {
+          return data.map(function(d) {
+            return {
+              value: parseInt(d.user_id, 10),
+              label: d.full_name
+            };
+          });
         },
         _saveProfile: function(e) {
           this.set('profile', e.detail.profile);
