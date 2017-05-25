@@ -3,6 +3,7 @@
   "authors": [
     "The eTools Team"
   ],
+  "version": "1.0.0",
   "private": true,
   "license": "https://github.com/unicef-polymer/etools-partnership-management/blob/master/LICENSE.md",
   "dependencies": {
