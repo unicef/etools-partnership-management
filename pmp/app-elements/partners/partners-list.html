@@ -68,8 +68,11 @@
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <div class="dropdown-with-clear-btn">
-            <paper-icon-button class="clear dark" icon="close" on-tap="clearDropdown"></paper-icon-button>
-            <paper-dropdown-menu label$="[[filter.filterName]]" noink>
+            <paper-icon-button class="clear dark" icon="close"
+                               on-tap="clearDropdown"
+                               disabled$="[[filter.disabled]]"
+                               hidden$="[[filter.disabled]]"></paper-icon-button>
+            <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
               <paper-menu class="dropdown-content"
                           attr-for-selected="name"
                           on-iron-select="filterValueChanged"
@@ -85,7 +88,9 @@
             <paper-icon-button class="remove" icon="cancel"
                                on-tap="removeFilter"
                                data-filter-name$="[[filter.filterName]]"
-                               data-reset-path$="[[filter.path]]">
+                               data-reset-path$="[[filter.path]]"
+                               disabled$="[[filter.disabled]]"
+                               hidden$="[[filter.disabled]]">
             </paper-icon-button>
           </div>
         </template>
@@ -297,20 +302,29 @@
               type: 'dropdown',
               alreadySelected: null,
               selectionOptions: _.map(this.partnerTypes, 'value'),
-              path: 'partnerType'
+              path: 'partnerType',
+              disabled: false
             },
             {
               filterName: 'CSO Type',
               alreadySelected: null,
               type: 'dropdown',
               selectionOptions: _.map(this.csoTypes, 'value'),
-              path: 'csoType'
+              path: 'csoType',
+              disabled: false
             }
           ]);
         },
 
         attached: function() {
           this.listAttachedCallback(this.active, 'Loading partners list data...');
+        },
+
+        _getPartnerType: function(partnerType) {
+          if (this.showOnlyGovernmentType) {
+            return 'Government';
+          }
+          return partnerType ? partnerType : '';
         },
 
         // Input: URL query params
@@ -323,7 +337,7 @@
           }
           this.set('initComplete', false);
           this.set('q', parms.q ? parms.q : '');
-          this.set('partnerType', parms.partner_type ? parms.partner_type : '');
+          this.set('partnerType', this._getPartnerType(parms.partner_type));
           this.set('csoType', parms.cso_type ? parms.cso_type : '');
           this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
           this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
@@ -346,7 +360,8 @@
             var filtersValues = [
               {
                 filterName: 'Partner Type',
-                selectedValue: this.partnerType
+                selectedValue: this.partnerType,
+                disabled: this.showOnlyGovernmentType ? true : false
               },
               {
                 filterName: 'CSO Type',
@@ -488,13 +503,13 @@
         },
 
         _showOnlyGovernmentTypeFlagChanged: function(showOnlyGovernmentType) {
-          console.log('show only gov type: ', showOnlyGovernmentType);
           if (showOnlyGovernmentType) {
             // lock list to government partners only
+            this.set('partnerType', 'Government');
 
           } else {
             // unlock list from government partners only
-
+            this.removeFilterOption('Partner Type', 'partnerType');
           }
         }
 
