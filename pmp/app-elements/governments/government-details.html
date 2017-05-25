@@ -53,7 +53,7 @@ it doesn't need to be included in element's style -->
     </style>
     <div id="detailsContent">
       <!--Partnership Details-->
-      <etools-content-panel class="content-section" title="Partnership Details">
+      <etools-content-panel class="content-section" panel-title="Partnership Details">
         <div class="row-h flex-c">
           <div class="col flex-2">
             <template is="dom-if" if="[[!governmentEditMode]]">
@@ -109,7 +109,7 @@ it doesn't need to be included in element's style -->
         </div>
       </etools-content-panel>
       <!--Work Plan Results-->
-      <etools-content-panel class="content-section" title="Work Plan Results" id="results">
+      <etools-content-panel class="content-section" panel-title="Work Plan Results" id="results">
         <government-plan-results id="governmentResults"
                                  data-items="{{intervention.results}}"
                                  edit-mode$="[[governmentEditMode]]"

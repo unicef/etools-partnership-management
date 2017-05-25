@@ -33,7 +33,7 @@
       }
     </style>
 
-    <etools-content-panel class="content-section" title="Signatures & Dates">
+    <etools-content-panel class="content-section" panel-title="Signatures & Dates">
       <div class="row-h flex-c">
         <div class="col col-3">
           <!-- Document Start Date -->
@@ -141,14 +141,14 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[_isNotDraft(intervention.status)]]">
-      <etools-content-panel class="content-section" title="Amendments">
+      <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  data-items="{{intervention.amendments}}"
                                  edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
-    <etools-content-panel class="content-section" title="Fund Reservations">
+    <etools-content-panel class="content-section" panel-title="Fund Reservations">
       <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
                                       fr-numbers-details="[[intervention.fr_numbers_details]]"
                                       edit-mode$="[[editMode]]"></intervention-fund-reservations>

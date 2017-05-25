@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -24,20 +25,19 @@
 
     <div class="row-h flex-c">
       <div class="col col-4">
-        <etools-searchable-multiselection-menu id="cpOutput"
-                                               label="CP Output"
-                                               placeholder="&#8212;"
-                                               options="{{cpOutputsOptions}}"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="name"
-                                               selected="{{cpOutputId}}"
-                                               update-selected
-                                               required$="[[required]]"
-                                               auto-validate
-                                               error-message="Please select CP Output"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        <etools-single-selection-menu id="cpOutput"
+                                      label="CP Output"
+                                      placeholder="&#8212;"
+                                      options="{{cpOutputsOptions}}"
+                                      option-value="id"
+                                      option-label="name"
+                                      selected="{{cpOutputId}}"
+                                      required$="[[required]]"
+                                      auto-validate
+                                      error-message="Please select CP Output"
+                                      on-iron-activate="_resetSelectedIndicators"
+                                      readonly$="[[!editMode]]">
+        </etools-single-selection-menu>
       </div>
 
       <div class="col col-8">
@@ -82,8 +82,7 @@
           },
           cpOutputId: {
             type: Number,
-            notify: true,
-            observer: '_cpOutputSelected'
+            notify: true
           },
           cpIndicators: {
             type: Array,
@@ -121,56 +120,25 @@
         },
 
         observers: [
-          '_removeAlreadySelectedCpOs(alreadySelectedCpo, cpOutputs.length)'
+          '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length)'
         ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
-
-          if (this.cpOutputs.length > 0 && this.cpOutputId) {
-            // set selected cp output when cpOutputs data exists
-            this._cpOutputSelected(this.cpOutputId);
-          }
         },
-
-        _selectedCpIndicatorsIdsChanged: function(ids) {
-          if (ids.length && this.firstLoadCpIndicatorsUse) {
-            // prepare cp indicators id to be set as selected, used only once, at element init
-            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
-            this.set('firstLoadCpIndicatorsUse', false);
-          }
-        },
-
-        _cpOutputSelected: function(cpOutputId) {
-          // select cpOutput by id
-          if (!Array.isArray(this.cpOutputs)) {
-            return;
-          }
-          var cpOutputSelector = this.$.cpOutput;
-          if (cpOutputId > 0) {
-            var currentCpValue = cpOutputSelector.value;
-            if (!currentCpValue || (currentCpValue && currentCpValue.id && currentCpValue.id !== cpOutputId)) {
-              // if no cpOut selected or selected cpOut id is different than cpOutputId, update selection
-              this._setSelectedCpOutput(cpOutputId);
+        _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
+            if (ids.length && this.firstLoadCpIndicatorsUse) {
+              // prepare cp indicators id to be set as selected, used only once, at element init
+              this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+              this.set('firstLoadCpIndicatorsUse', false);
             }
-          } else {
-            cpOutputSelector.value = null;
-          }
         },
 
-        // set selected cp output on dropdown
-        _setSelectedCpOutput: function(id) {
-          if (!Array.isArray(this.cpOutputs)) {
-            return;
-          }
-          var selectedCpOutput = this.cpOutputs.filter(function(cpOut) {
-            return cpOut.id === id;
-          })[0];
-          if (selectedCpOutput) {
-            this.$.cpOutput.value = selectedCpOutput;
-          }
+        _resetSelectedIndicators: function() {
+           this.set('selectedCpIndicatorsIds', []);
+            this.$.indicators.value = [];
+            this.$.indicators.selectedValues = null;
         },
-
         _cpIndicatorsChanged: function(cpIndicators) {
           if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
               Array.isArray(cpIndicators) && cpIndicators.length) {
@@ -180,48 +148,38 @@
             // set selected cp indicators (searched by ids) on dropdown
             this.$.indicators.value = selectedCpIndicators;
             this.set('firstLoadCpIndicators', []);
-          } else {
-            // indicators list changed, reset selection
-            this.set('selectedCpIndicatorsIds', []);
-            this.$.indicators.value = [];
-            this.$.indicators.selectedValues = null;
           }
         },
 
-        _removeAlreadySelectedCpOs: function(alreadySelectedCpo, cpOutputsLength) {
-          // prevent having cpoutputs already selected in the current cpOutput selector
+         // prevent having cpoutputs already selected in the current cpOutput selector
+        _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
           if (cpOutputsLength === 0) {
             return;
           }
-          this.debounce('removeAlreadySelected', function() {
-            // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
-            var cpOutputsSelectorOptions = this.cpOutputs.filter(function(cpO) {
-              return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
-            }.bind(this));
+          this.debounce('computeCpOutputsOptions', function() {
+            var cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(alreadySelectedCpo);
             var cpoDropdown = this.$.cpOutput;
             // keep old cpOutputs requested from server
             var oldCpOutput = this._getExistingOldCpO(cpoDropdown);
             if (oldCpOutput) {
-              cpOutputsSelectorOptions.push(oldCpOutput);
+              cpOutputsOptions.push(oldCpOutput);
             }
-            if (!this.cpOutputId) {
-              this.set('cpOutputsOptions', cpOutputsSelectorOptions);
-            } else {
-              // update dropdown options without triggering any data change observers
-              cpoDropdown.splice.apply(cpoDropdown,
-                  ['options', 0, cpoDropdown.options.length].concat(cpOutputsSelectorOptions));
-              // force dropdown shown options to update using search value updates
-              cpoDropdown.set('search', (cpoDropdown.search === null) ? '' : null);
-            }
+            this.set('cpOutputsOptions', cpOutputsOptions);
           }.bind(this), 50);
         },
 
+        // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
+        _excludeAlreadySelectedInOtherDropdowns: function(alreadySelectedCpo) {
+          return this.cpOutputs.filter(function(cpO) {
+              return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
+            }.bind(this));
+        },
         _getExistingOldCpO: function(cpoDropdown) {
           var oldCpO;
           if (cpoDropdown.ajaxParams && cpoDropdown.ajaxParams.values) {
             // keep ghost data (old cp output previously requested from server)
             oldCpO = cpoDropdown.options.find(function(opt) {
-              return opt[cpoDropdown.optionValue] === parseInt(cpoDropdown.ajaxParams.values, 10);
+              return opt[cpoDropdown.optionValue] === cpoDropdown.ajaxParams.values;
             });
           }
           return oldCpO;

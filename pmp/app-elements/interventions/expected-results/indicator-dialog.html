@@ -27,6 +27,10 @@
         --etools-checkable-input-label: {
           font-size: 14px;
         };
+        --paper-dialog-scrollable: {
+          width: 100%;
+          overflow-x: hidden;
+        };
       }
 
       etools-checkable-input:not(:last-of-type) {
@@ -320,7 +324,7 @@
             }
           }
           // set disaggregations
-          if (data.disaggregation_logic) {
+          if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
             var disaggregationsKeys = Object.keys(data.disaggregation_logic);
             this.set('disaggregations', []);
             if (disaggregationsKeys.length) {

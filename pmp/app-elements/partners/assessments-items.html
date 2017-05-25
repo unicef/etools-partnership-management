@@ -12,7 +12,7 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
@@ -123,15 +123,13 @@
                                      readonly></paper-input>
                       </template>
                       <template is="dom-if" if="[[editMode]]">
-                        <etools-searchable-multiselection-menu id$="assessmentType_[[index]]"
-                                                               label="Assessment Type"
-                                                               options="[[assessmentTypesOptions]]"
-                                                               selected="{{item.type}}"
-                                                               custom-object-options
-                                                               update-selected
-                                                               dynamic-align
-                                                               error-message="[[dateSubmitedErrorMessages.missing]]">
-                        </etools-searchable-multiselection-menu>
+                        <etools-single-selection-menu id$="assessmentType_[[index]]"
+                                                      label="Assessment Type"
+                                                      options="[[assessmentTypesOptions]]"
+                                                      selected="{{item.type}}"
+                                                      dynamic-align
+                                                      error-message="[[dateSubmitedErrorMessages.missing]]">
+                        </etools-single-selection-menu>
                       </template>
                     </div>
                     <div class="col col-4">
