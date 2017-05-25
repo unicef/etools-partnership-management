@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -12,39 +13,33 @@
     <style include="grid-layout-styles shared-styles"></style>
     <div class="row-h flex-c">
       <div class="col col-6">
-        <etools-searchable-multiselection-menu id="partner"
-                                               label="Partner Organization"
-                                               placeholder="&#8212;"
-                                               options="[[partnersDropdownData]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="name"
-                                               selected="{{partnerId}}"
-                                               update-selected
-                                               selected-requires-valid-options
-                                               dynamic-align
-                                               required auto-validate
-                                               error-message="Partner is required"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        <etools-single-selection-menu id="partner"
+                                      label="Partner Organization"
+                                      placeholder="&#8212;"
+                                      options="[[partnersDropdownData]]"
+                                      option-value="id"
+                                      option-label="name"
+                                      selected="{{partnerId}}"
+                                      dynamic-align
+                                      required auto-validate
+                                      error-message="Partner is required"
+                                      readonly$="[[!editMode]]">
+        </etools-single-selection-menu>
       </div>
 
       <div class="col col-6">
-        <etools-searchable-multiselection-menu id="agreements"
-                                               label="Agreement"
-                                               placeholder="&#8212;"
-                                               options="[[filteredAgreements]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="agreement_number"
-                                               selected="{{agreementId}}"
-                                               update-selected
-                                               selected-requires-valid-options
-                                               dynamic-align
-                                               required auto-validate
-                                               error-message="Agreement required"
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+         <etools-single-selection-menu id="agreements"
+                                        label="Agreement"
+                                        placeholder="&#8212;"
+                                        options="[[filteredAgreements]]"
+                                        option-value="id"
+                                        option-label="agreement_number"
+                                        selected="{{agreementId}}"
+                                        dynamic-align
+                                        required auto-validate
+                                        error-message="Agreement required"
+                                        readonly$="[[!editMode]]">
+        </etools-single-selection-menu>
 
       </div>
     </div>
@@ -95,13 +90,7 @@
           },
           interventionId: Number
         },
-        resetDropdowns: function() { //TODO - this has to de handled inside the new version of dropdown component
-          var agrDropDown = this.$.agreements;
-          if (agrDropDown && (!agrDropDown.options || !agrDropDown.options.length)) {
-            agrDropDown.value = null;
-            agrDropDown.selected = null;
-          }
-        },
+
         _partnersDropdownDataChanged: function() {
           this._setSelectedPartnerId();
         },
@@ -169,15 +158,8 @@
         },
         _partnerSelected: function(partnerId) {
           // clear agreementSelection
-          this._filterAgreements(partnerId);
+          this._filterAgreements(+partnerId);
         },
-
-//        _resetSelectorData: function(partnerDropdown, agreementDropdown) {
-//          this.set('agreementId', null);
-//          this.set('partnerId', null);
-//          partnerDropdown.set('value', []);
-//          agreementDropdown.set('value', []);
-//        },
 
         resetValidations: function() {
           this.$.agreements.resetInvalidState();
