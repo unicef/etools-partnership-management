@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -191,6 +192,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       behaviors: [
         etoolsAppConfig.globals,
+        EtoolsLogsBehavior,
         pmpBehaviors.NotificationToastsBehavior,
         pmpBehaviors.globalLoadingBehavior
       ],
@@ -359,7 +361,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           }
         } catch (err) {
-          console.error('An error occurred during pages lazy load', err);
+          this.logError('An error occurred during pages lazy load', null, err);
         }
       },
       _setPageLoaded: function(page) {
