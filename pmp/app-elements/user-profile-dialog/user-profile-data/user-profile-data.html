@@ -31,6 +31,9 @@
           notify: true
         },
       },
+      ready: function () {
+        this.ajaxEl = this.$.ajaxEl;
+      },
       saveProfile: function (profile) {
         var url = this.endpoint.url;
         if (_.isEmpty(profile)) {
@@ -51,17 +54,17 @@
         if (!method) {
           method = 'GET';
         }
-        this.$.ajax.set('method', method);
+        this.ajaxEl.set('method', method);
         if (typeof data === 'object' && Object.keys(data).length > 0
             && ['PATCH', 'POST'].indexOf(method) > -1) {
-          this.$.ajax.set('body', data);
-          this.$.ajax.set('url', url);
+          this.ajaxEl.set('body', data);
+          this.ajaxEl.set('url', url);
         }
       },
       _resetAjax: function(){
-        this.$.ajax.set('params', null);
-        this.$.ajax.set('body', null);
-        this.$.ajax.set('url', null);
+        this.ajaxEl.set('params', null);
+        this.ajaxEl.set('body', null);
+        this.ajaxEl.set('url', null);
       },
       _handleResponse: function(response) {
         this.set('userProfile', response.detail);
