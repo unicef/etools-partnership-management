@@ -99,12 +99,12 @@
                   <div class="row-h flex-c left-col">
                     <div class="col col-3">
                       <etools-single-selection-menu id="currency_[[index]]" placeholder="&#8212;" options="[[currencies]]" on-iron-select="_currencyChanged"
-                        required$="[[required]]" auto-validate error-message="Please select the currency" readonly$="[[!editablePlannedBudget]]">
+                        required$="[[required]]" auto-validate error-message="Please select the currency" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                       </etools-single-selection-menu>
                     </div>
                     <div class="col col-9">
                       <etools-currency-amount-input id$="csoContLocal_[[index]]" value="{{item.partner_contribution_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
                         error-message="CSO Cont. (Local) required">
                       </etools-currency-amount-input>
                     </div>
@@ -114,13 +114,13 @@
                   <div class="row-h flex-c left-col">
                     <div class="col col-4">
                       <etools-currency-amount-input id$="unicefCashLocal_[[index]]" value="{{item.unicef_cash_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
                         error-message="UNICEF Cash (Local) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
                       <etools-currency-amount-input id$="inKindAmountLocal_[[index]]" value="{{item.in_kind_amount_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
                         error-message="UNICEF Supply (Local) required">
                       </etools-currency-amount-input>
                     </div>
@@ -141,7 +141,7 @@
                     </div>
                     <div class="col col-9">
                       <etools-currency-amount-input id$="csoContUsd_[[index]]" value="{{item.partner_contribution}}" type="number"
-                        placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate error-message="CSO Cont. (USD) required">
+                        placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate error-message="CSO Cont. (USD) required">
                       </etools-currency-amount-input>
                     </div>
                   </div>
@@ -150,12 +150,12 @@
                   <div class="row-h flex-c left-col">
                     <div class="col col-4">
                       <etools-currency-amount-input id$="unicefCashUsd_[[index]]" value="{{item.unicef_cash}}" type="number"
-                        placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate error-message="UNICEF Cash (USD) required">
+                        placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate error-message="UNICEF Cash (USD) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
                       <etools-currency-amount-input id$="inKindAmountUsd_[[index]]" value="{{item.in_kind_amount}}"
-                        type="number" placeholder="&#8212;" readonly$="[[!editablePlannedBudget]]" required$="[[required]]" auto-validate
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
                         error-message="UNICEF Supply (USD) required">
                       </etools-currency-amount-input>
                     </div>
@@ -179,7 +179,7 @@
       </div>
 
       <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-        <paper-fab icon="create" hidden="[[!editMode]]" title="Edit" on-tap="_editPlannedBudget"></paper-fab> <paper-fab icon="add" on-tap="_addNewPlannedBudget" title="Add"></paper-fab>
+        <paper-fab icon="create" hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]" title="Edit" on-tap="_editPlannedBudget"></paper-fab> <paper-fab icon="add" on-tap="_addNewPlannedBudget" title="Add"></paper-fab>
       </div>
 
   </template>
@@ -245,6 +245,24 @@
             currency: null
           };
         },
+        _showEditBtn: function() {
+          if (!this.editMode) {
+            return false;
+          }
+          if (this.editablePlannedBudget) {
+            return false;
+          }
+          return true;
+        },
+        _isReadonly: function() {
+          if (!this.editMode) {
+            return true;
+          }
+          if (!this.interventionId) {
+            return false;
+          }
+          return !this.editablePlannedBudget;
+        },
         _editPlannedBudget: function() {
           // TODO show cancel btn
           this.editablePlannedBudget = true;
@@ -258,6 +276,9 @@
 
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function () {
+          if (this.interventionId) {
+            this.editablePlannedBudget = false;
+          }
           this._initSelectedCurrency(this.dataItems, this.currencies);
         },
 
