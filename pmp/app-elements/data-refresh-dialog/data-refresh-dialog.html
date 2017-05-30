@@ -67,15 +67,6 @@
               </etools-checkable-input>
             </div>
             <div class="col-6">
-              <etools-checkable-input checked="{{governmentsSelected}}"
-                                      label="Governments data"
-                                      label-alignment="right">
-              </etools-checkable-input>
-            </div>
-          </div>
-
-          <div class="row-h">
-            <div class="col-12">
               <etools-checkable-input checked="{{allSelected}}"
                                       label="All"
                                       label-alignment="right">
@@ -101,11 +92,6 @@
           etoolsBehaviors.EtoolsRefreshBehavior
         ],
         properties: {
-          name: String,
-          governmentsSelected: {
-            type: Boolean,
-            value: false
-          },
           interventionsSelected: {
             type: Boolean,
             value: false
@@ -132,7 +118,7 @@
           }
         },
         observers: [
-          '_singleSectionChanged(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
+          '_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)',
           '_allSelectedChanged(allSelected)'
         ],
 
@@ -148,7 +134,6 @@
               return;
             }
 
-            this.set('governmentsSelected', true);
             this.set('interventionsSelected', true);
             this.set('partnersSelected', true);
             this.set('agreementsSelected', true);
@@ -158,15 +143,9 @@
 
         _singleSectionChanged: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
-            var allSelected = this.governmentsSelected &&
-                this.interventionsSelected &&
-                this.partnersSelected &&
-                this.agreementsSelected;
+            var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
 
-            var anySelected = this.governmentsSelected ||
-                this.interventionsSelected ||
-                this.partnersSelected ||
-                this.agreementsSelected;
+            var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
             this.set('allSelected', allSelected);
             this.set('anySelected', anySelected);
@@ -189,8 +168,7 @@
             var restampLandingPage = this.page === afterDataRefreshLandingPage;
 
             var self = this;
-            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements',
-                'governments', 'interventions', function() {
+            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions', function() {
               if (self.partnersSelected) {
                 self.db.partners.clear();
                 self.db.collectionsList.delete('partners');
@@ -202,10 +180,6 @@
               if (self.interventionsSelected) {
                 self.db.interventions.clear();
                 self.db.collectionsList.delete('interventions');
-              }
-              if (self.governmentsSelected) {
-                self.db.governments.clear();
-                self.db.collectionsList.delete('governments');
               }
             }).then(function(result) {
               // transaction succeeded
@@ -254,16 +228,12 @@
           if (this.interventionsSelected) {
             return 'interventions';
           }
-          if (this.governmentsSelected) {
-            return 'governments';
-          }
         },
 
         _resetRefreshSelection: function() {
           this.set('partnersSelected', false);
           this.set('agreementsSelected', false);
           this.set('interventionsSelected', false);
-          this.set('governmentsSelected', false);
         }
 
       });
