@@ -107,7 +107,7 @@
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
-      <div class="row-h flex-c">
+      <!--<div class="row-h flex-c">
          <etools-single-selection-menu id="currency"
                                         label="Currency"
                                         placeholder="&#8212;"
@@ -118,7 +118,7 @@
                                         error-message="Please select the currency"
                                         readonly$="[[!editMode]]">
         </etools-single-selection-menu>
-      </div>
+      </div>-->
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <!--<div class="row-h item-actions-container">
@@ -135,7 +135,18 @@
             <div class="row-h">
               <div class="col col-3">
                 <div class="row-h flex-c left-col">
-                  <div class="col col-2"></div>
+                  <div class="col col-3">
+                    <etools-single-selection-menu id="currency_[[index]]"
+                                        label="Currency"
+                                        placeholder="&#8212;"
+                                        options="[[currencies]]"
+                                        on-iron-select="_currencyChanged"
+                                        required$="[[required]]"
+                                        auto-validate
+                                        error-message="Please select the currency"
+                                        readonly$="[[!editMode]]">
+                   </etools-single-selection-menu>
+                  </div>
                   <!--<div class="col col-4">
                      <etools-single-selection-menu id="year_[[index]]"
                        class="year"
@@ -151,7 +162,7 @@
                        readonly$="[[!editMode]]">
                     </etools-single-selection-menu>
                   </div>-->
-                  <div class="col col-10">
+                  <div class="col col-9">
                     <etools-currency-amount-input id$="csoContLocal_[[index]]"
                       label="CSO Cont. (Local)"
                       value="{{item.partner_contribution_local}}"
@@ -203,8 +214,10 @@
             <div class="row-h">
               <div class="col col-3">
                 <div class="row-h flex-c left-col">
-                  <div class="col col-2"></div>
-                  <div class="col col-10">
+                  <div class="col col-3">
+                    USD
+                  </div>
+                  <div class="col col-9">
                     <etools-currency-amount-input id$="csoContUsd_[[index]]"
                       label="CSO Cont. (USD)"
                       value="{{item.partner_contribution}}"
@@ -427,11 +440,13 @@
         },
 
          _setCurrencyDropdownValue: function(currency) {
-          var currencyValue = currency ? currency.value : null;
-          var currencyDropdown = this.$.currency;
-          if (currencyDropdown) {
-            currencyDropdown.set('selected', currencyValue);
-          }
+           var currencyValue = currency ? currency.value : null;
+            this.dataItems.forEach(function(item, index) {
+              var dropdown = this.$$('#currency_' + index);
+              if (dropdown) {
+               dropdown.set('selected', currencyValue);
+              }
+            }.bind(this));
         },
 
         _dataItemChange: function(dataItem) {
@@ -469,19 +484,19 @@
         /**
          * The planned budget row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
-            return false;
-          }
-          var plannedBudget = this.dataItems[index];
-          plannedBudget = parseInt(plannedBudget.id, 10);
+        // _canBeRemoved: function(index, editMode) {
+        //   if (!editMode) {
+        //     return false;
+        //   }
+        //   var plannedBudget = this.dataItems[index];
+        //   plannedBudget = parseInt(plannedBudget.id, 10);
 
-          if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
-            // planned budget already saved (has an id assigned)
-            return false;
-          }
-          return true;
-        },
+        //   if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
+        //     // planned budget already saved (has an id assigned)
+        //     return false;
+        //   }
+        //   return true;
+        // },
 
         // _yearChanged: function(event) {
         //   var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
@@ -574,13 +589,14 @@
         validate: function() {
           var valid = true;
           if (this.dataItems.length > 0) {
-            var currency = this.$.currency;
-            if (!currency.validate()) {
-              valid = false;
-            }
+            // var currency = this.$.currency;
+            // if (!currency.validate()) {
+            //   valid = false;
+            // }
             this.dataItems.forEach(function(item, index) {
               var elementsSelectorsToValidate = [
                 // '#year_' + index,
+                '#currency_' + index,
                 '#csoContLocal_' + index,
                 '#unicefCashLocal_' + index,
                 '#inKindAmountLocal_' + index,
@@ -601,11 +617,13 @@
 
         // reset validation errors
         resetValidations: function() {
-          this.$.currency.invalid = false;
+         // this.$.currency.invalid = false;
+
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
               var elementsSelectorsToValidate = [
                 // '#year_' + index,
+                '#currency_'+ index,
                 '#csoContLocal_' + index,
                 '#unicefCashLocal_' + index,
                 '#inKindAmountLocal_' + index,
