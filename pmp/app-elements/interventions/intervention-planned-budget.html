@@ -345,22 +345,22 @@
           //   type: Array,
           //   value: []
           // },
-          _localUnicefTotal: {
-            type: Number,
-            value: 0
-          },
-          _usdUnicefTotal: {
-            type: Number,
-            value: 0
-          },
-          _localCsoTotal: {
-            type: Number,
-            value: 0
-          },
-          _usdCsoTotal: {
-            type: Number,
-            value: 0
-          },
+          // _localUnicefTotal: {
+          //   type: Number,
+          //   value: 0
+          // },
+          // _usdUnicefTotal: {
+          //   type: Number,
+          //   value: 0
+          // },
+          // _localCsoTotal: {
+          //   type: Number,
+          //   value: 0
+          // },
+          // _usdCsoTotal: {
+          //   type: Number,
+          //   value: 0
+          // },
           currencies: {
             type: Array,
             statePath: 'currencies'
@@ -453,37 +453,37 @@
             }.bind(this));
         },
 
-        _dataItemChange: function(dataItem) {
-          if (dataItem.path !== 'dataItems.splices') {
-            this._computeTotals(this.dataItems);
-          }
-        },
+        // _dataItemChange: function(dataItem) {
+        //   if (dataItem.path !== 'dataItems.splices') {
+        //     this._computeTotals(this.dataItems);
+        //   }
+        // },
 
-        _computeTotals: function(data) {
-          var localUnicefTotal = 0;
-          var usdUnicefTotal = 0;
-          var localCsoTotal = 0;
-          var usdCsoTotal = 0;
-          data.forEach(function(plannedBudget) {
-            usdUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
-            localUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash_local,
-                plannedBudget.in_kind_amount_local);
+        // _computeTotals: function(data) {
+        //   var localUnicefTotal = 0;
+        //   var usdUnicefTotal = 0;
+        //   var localCsoTotal = 0;
+        //   var usdCsoTotal = 0;
+        //   data.forEach(function(plannedBudget) {
+        //     usdUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
+        //     localUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash_local,
+        //         plannedBudget.in_kind_amount_local);
 
-            var contLocal = parseFloat(plannedBudget.partner_contribution_local);
-            if (!isNaN(contLocal)) {
-              localCsoTotal += contLocal;
-            }
+        //     var contLocal = parseFloat(plannedBudget.partner_contribution_local);
+        //     if (!isNaN(contLocal)) {
+        //       localCsoTotal += contLocal;
+        //     }
 
-            var contUsd = parseFloat(plannedBudget.partner_contribution);
-            if (!isNaN(contUsd)) {
-              usdCsoTotal += contUsd;
-            }
-          }.bind(this));
-          this.set('_localUnicefTotal', localUnicefTotal);
-          this.set('_usdUnicefTotal', usdUnicefTotal);
-          this.set('_localCsoTotal', localCsoTotal);
-          this.set('_usdCsoTotal', usdCsoTotal);
-        },
+        //     var contUsd = parseFloat(plannedBudget.partner_contribution);
+        //     if (!isNaN(contUsd)) {
+        //       usdCsoTotal += contUsd;
+        //     }
+        //   }.bind(this));
+        //   this.set('_localUnicefTotal', localUnicefTotal);
+        //   this.set('_usdUnicefTotal', usdUnicefTotal);
+        //   this.set('_localCsoTotal', localCsoTotal);
+        //   this.set('_usdCsoTotal', usdCsoTotal);
+        // },
 
         /**
          * The planned budget row data can be removed only if it doesn't have and id assigned(only if is not saved)
