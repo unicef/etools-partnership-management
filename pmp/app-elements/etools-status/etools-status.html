@@ -1,0 +1,275 @@
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="etools-status-button.html">
+
+<dom-module id="etools-status">
+
+  <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
+
+    :host {
+      display: block;
+    }
+    .float-container {
+      position: relative;
+      top: 0;
+      width: 200px;
+      height: 100%;
+    }
+
+    paper-card {
+      position: absolute;
+      top: 0;
+
+      background-color: white;
+      --paper-card-header-color: white;
+      --paper-card-header-text: {
+        font-size: 20px;
+        text-align: center;
+        padding-top: 9px;
+        padding-bottom: 9px;
+      }
+      --paper-card-header: {
+        background-color: var(--etools-blue, #0099FF);
+        height: 48px;
+        padding: 0;
+      }
+      --paper-card-content: {
+        min-width: 200px;
+        padding: 0;
+        background-color: white;
+      }
+      --paper-card-actions: {
+        padding: 0;
+        background-color: white;
+      }
+    }
+    .big {
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    .reject {
+      display: none;
+    }
+    .reject.blue {
+      display: block;
+    }
+    .circlenr {
+      display: block;
+      float: left;
+      width: 24px;
+      height: 24px;
+      background-color: var(--gray-light, rgba(0,0,0,.38));
+      color: white;
+      font-size: 12px;
+      line-height: 24px;
+      border-radius: 50%;
+      text-align: center;
+    }
+    .circlenr iron-icon {
+      color: white;
+      display: none;
+    }
+    .red, .statuscont span.status.red {
+      color: var(--et2f-error, #EA4022);
+    }
+    .status {
+      color: var(--gray-mid, rgba(0,0,0,.54));
+      font-size: 14px;
+      padding-left: 6px;
+    }
+    .status.black {
+      color: var(--gray-dark, rgba(0,0,0,.87));
+      font-weight: 500;
+    }
+    .statusdate {
+      color: var(--gray-mid, rgba(0,0,0,.54));
+      font-size: 12px;
+      line-height: 20px;
+      padding-left: 6px;
+    }
+    .statuscont.appr.rejected {
+      display: none;
+    }
+    .statuscont.blue .status {
+      color: var(--gray-dark, rgba(0,0,0,.87));
+      font-weight: 500;
+    }
+    .statuscont.blue .circlenr {
+      background-color: var(--et2f-primary, #00AEEF);
+    }
+    .statuscont.green .status {
+      color: var(--gray-dark, rgba(0,0,0,.87));
+      font-weight: 500;
+    }
+    .statuscont.green .circlenr {
+      background-color: var(--et2f-sec-lightgreen, #8DC63F);
+    }
+    .circlenr span.green {
+      display: none;
+    }
+    .circlenr iron-icon.green {
+      display: block;
+    }
+    .circlenr iron-icon.green {
+      width: 18px;
+      padding-left: 3px;
+    }
+    .circlenr iron-icon.green.thumbs {
+      width: 16px;
+      padding-left: 4px;
+    }
+    .vertline {
+      margin: 7px 12px;
+      border-left: 2px solid var(--gray-light, rgba(0,0,0,.38));
+      transform: translate(-1px,0);
+      padding-top: 45px;
+    }
+    .vertline:first-child {
+      display: none;
+    }
+  </style>
+
+  <template>
+    <div class="float-container">
+      <paper-card id="main-card" heading="Status">
+
+        <!-- Travel statuses -->
+
+          <div class="card-content">
+            <div class="big vertical layout">
+
+              <template is="dom-repeat" items="[[statuses]]" as="status">
+                <div class="vertline flex"></div>
+
+                <div class$="statuscont [[_getStatusCssClass(status.completed, index)]]">
+                  <div class="circlenr">
+                    <span class$="[[_getStatusCssClass(status.completed, index)]]">[[_getTrueIndex(index)]]</span>
+                      <iron-icon class$="[[_getStatusCssClass(status.completed, index)]]" icon="icons:done"></iron-icon>
+                  </div>
+                  <span class="status">[[status.label]]</span>
+                </div>
+              </template>
+            </div>
+
+          </div>
+
+          <div class="card-actions">
+            <etools-status-button actions="[[actions]]">
+            </etools-status-button>
+          </div>
+
+      </paper-card>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'etools-status',
+      properties: {
+        scrollTopMargin: {
+          type: Number,
+          value: 0
+        },
+        statuses: {
+          type: Array,
+          value: [
+            {
+              label: 'Draft',
+              completed: false
+            },
+            {
+              label: 'Signed',
+              completed: true
+            },
+            {
+              label: 'Active',
+              completed: false
+            },
+            {
+              label: 'Ended',
+              completed: false
+            },
+            {
+              label: 'Closed',
+              completed: true
+            },
+          ]
+        },
+        actions: {
+          type: Array,
+          value: [
+            {
+              label: 'Save',
+              primary: true,
+              event: 'intervention-save-event'
+            },
+            {
+              label: 'Change to draft',
+              primary: false,
+              event: 'intervention-draft-event'
+            },
+            {
+              label: 'Activate',
+              primary: false,
+              event: 'intervention-activate-event'
+            },
+            {
+              label: 'Suspend',
+              primary: false,
+              event: 'intervention-suspend-event'
+            },
+            {
+              label: 'Terminate',
+              primary: false,
+              event: 'intervention-terminate-event'
+            },
+          ]
+        },
+      },
+      _getStatusCssClass: function(completed, index) {
+        if (completed === true) {
+           return 'green';
+        }
+        if (index === 0) {
+          return 'blue';
+        }
+        return '';
+      },
+      _getTrueIndex: function(index) {
+        return 1 + index;
+      },
+      attached: function() {
+        var self = this;
+        self._previousOnScroll = window.onscroll;
+
+        if (!self.scrollTopMargin) {
+          return;
+        }
+        // i have no idea why, but at the moment window.onscroll does nothing
+        window.onscroll = function() {
+          if (self.getBoundingClientRect().top < self.scrollTopMargin) {
+            self.$['main-card'].style.position = 'fixed';
+            self.$['main-card'].style.top = self.scrollTopMargin + 'px';
+          } else {
+            self.resetPosition();
+          }
+          if (self._previousOnScroll) {
+            self._previousOnScroll();
+          }
+        };
+      },
+      resetPosition: function() {
+        this.$['main-card'].style.position = 'absolute';
+        this.$['main-card'].style.top = '0';
+      },
+
+      detached: function() {
+        window.onscroll = this._previousOnScroll;
+      }
+    });
+  </script>
+
+</dom-module>

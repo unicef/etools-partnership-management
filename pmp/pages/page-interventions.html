@@ -18,6 +18,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
+<link rel="import" href="../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -196,12 +197,13 @@
 
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[intervListActive]]">
-        <intervention-status status="[[intervention.status]]"
+        <!--<intervention-status status="[[intervention.status]]"
                              intervention-id$="[[intervention.id]]"
                              intervention-agreement-status="[[agreement.status]]"
                              on-save-intervention="_validateAndSaveIntervention"
                              on-update-intervention-status="_updateInterventionStatus"
-                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
+                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>-->
+        <etools-status></etools-status>
 
       </div>
       <!-- sidebar content end -->

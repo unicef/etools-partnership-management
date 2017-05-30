@@ -1,0 +1,103 @@
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="etools-status-button">
+
+  <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
+    :host {
+      display: block;
+    }
+    paper-button {
+      margin: 24px;
+      padding: 0;
+      height: 36px;
+      background-color: var(--et2f-primary, #00AEEF);
+      color: white;
+    }
+    paper-button.grey {
+      background-color: var(--gray-mid, rgba(0,0,0,.54));
+    }
+    paper-menu-button {
+      padding: 0 4px;
+    }
+    paper-icon-button {
+      border-left: 1px solid rgba(255,255,255,0.3);
+    }
+    .main-btn-part {
+      text-align: center;
+      font-weight: 500;
+      line-height: 34px;
+      height:100%;
+    }
+    .dropdown-content, .dropdown-content paper-item {
+      background-color: white;
+    }
+  </style>
+
+  <template>
+
+    <template is="dom-if" if="[[actions.length]]">
+      <paper-button raised class="layout horizontal">
+
+        <div on-tap="_handlePrimaryClick" class="flex main-btn-part"> [[primaryAction.label]] </div>
+
+        <template is="dom-if" if="[[1]]">
+          <paper-menu-button horizontal-align="right">
+
+            <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content">
+              <template is="dom-repeat" items="[[secondaryActions]]" as="item">
+                <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
+              </template>
+            </paper-menu>
+
+          </paper-menu-button>
+        </template>
+      </paper-button>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'etools-status-button',
+      properties: {
+        actions: {
+          type: Array,
+          value: [],
+          observer: '_actionsChanged'
+        },
+        primaryAction: {
+          type: Object
+        },
+        secondaryActions: {
+          type: Array
+        }
+      },
+      _actionsChanged: function (actions) {
+        var primaryAction = actions.find(function(elem) {
+          return elem.primary;
+        });
+        var secondaryActions = actions.filter(function(elem) {
+          return !elem.primary;
+        });
+        this.set('primaryAction', primaryAction);
+        this.set('secondaryActions', secondaryActions);
+      },
+      _handleSecondaryClick: function(event) {
+        var action = event.model.item;
+        this.fire(action.event);
+      },
+      _handlePrimaryClick: function() {
+        this.fire(this.primaryAction.event);
+      }
+    });
+  </script>
+
+</dom-module>
