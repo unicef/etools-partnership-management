@@ -1,8 +1,7 @@
-<link rel="import" href="app-navigation-helper-behavior.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.globalLoadingBehaviorImpl */
-  pmpBehaviors.globalLoadingBehaviorImpl = {
+  /** @polymerBehavior pmpBehaviors.globalLoadingBehavior */
+  pmpBehaviors.globalLoadingBehavior = {
 
     properties: {
       loadingsCounter: {
@@ -62,8 +61,8 @@
         // got to new URL if needed, but using a delay to allow loading to show
         if (e.detail.newUrl) {
           this.async(function() {
-            this.changeAppState(e.detail.newUrl);
             this.set('loadingCounterDecrementAdjustment', 1);
+            this.fire('update-main-path', {path: e.detail.newUrl});
           }, 50);
         }
       } else {
@@ -107,9 +106,4 @@
     }
   };
 
-  /** @polymerBehavior pmpBehaviors.globalLoadingBehavior */
-  pmpBehaviors.globalLoadingBehavior = [
-    pmpBehaviors.AppNavigationHelperBehavior,
-    pmpBehaviors.globalLoadingBehaviorImpl
-  ];
 </script>
