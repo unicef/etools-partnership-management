@@ -28,7 +28,7 @@
 
 <dom-module id="agreement-amendment-types">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -37,34 +37,6 @@
         display: block;
         width: 100%;
         padding: 7px 0;
-      }
-
-      .item-container {
-        background-color: var(--medium-theme-background-color);
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-      }
-
-      .item-container,
-      .item-container + .item-container {
-        margin-top: 15px;
-      }
-
-      .item-container .item-content {
-        border-left-style: dashed;
-      }
-
-      .action.delete:not(:hover) {
-        color: var(--medium-icon-color);
-      }
-
-      .action.delete[disabled] {
-        visibility: hidden;
-      }
-
-      .add-amendment-type-wrapper {
-        margin-top: 25px;
       }
 
       paper-input,
@@ -82,9 +54,6 @@
         padding-bottom: 10px;
       }
 
-      .item-content .row-h + .row-h {
-        margin-top: 0;
-      }
 
     </style>
     <etools-ajax id="deleteAjax"
@@ -177,7 +146,7 @@
       </template>
     </div>
 
-    <div class="row-h add-amendment-type-wrapper">
+    <div class="row-h add-btn-wrapper">
       <paper-button class="secondary-btn"
                     on-tap="_addNewAmendmentType"
                     title="Add Amendment Type">

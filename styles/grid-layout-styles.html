@@ -16,12 +16,28 @@
         /* flex container */
         @apply(--layout-flex);
       }
-      .row-h + .row-h, .row-v + .row-v {
-        margin-top: 20px;
+      /*.row-h + .row-h, .row-v + .row-v {*/
+        /*margin-top: 20px;*/
+      /*}*/
+      /*.row-h:first-child + .row-v {*/
+        /*margin-top: 0;*/
+      /*}*/
+
+      /*.row-h, .row-v {*/
+        /*margin-bottom: 20px;*/
+      /*}*/
+      /*.row-h:last-of-type, .row-v:last-of-type {*/
+        /*margin-bottom: 0;*/
+      /*}*/
+
+      .row-h, .row-v {
+        padding: 15px 25px;
       }
-      .row-h:first-child + .row-v {
-        margin-top: 0;
+
+      .row-second-bg {
+        background-color: var(--light-theme-background-color);
       }
+
       .no-overflow {
         /* used to prevent flexbox to change it's size if content grows */
         overflow: hidden;

@@ -31,8 +31,10 @@
       :host {
         display: block;
         width: 100%;
-        padding: 7px 0;
-
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
@@ -43,21 +45,24 @@
         color: var(--warning-color);
       }
 
+      #amendments-wrapper {
+        margin-top: 15px;
+      }
     </style>
 
-    <div hidden$="[[_emptyList(dataItems.length)]]">
+    <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class$="row-h item-actions-container [[_getLockedClass(item.id, editMode)]]"
+          <div class$="item-actions-container [[_getLockedClass(item.id, editMode)]]"
                data-item-nr$="[[_getItemNr(index)]]">
-            <div class="row-v actions">
+            <div class="actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
                                  icon="cancel"></paper-icon-button>
             </div>
           </div>
-          <div class="flex-c item-content">
+          <div class="item-content">
             <div class="row-h flex-c">
               <div class="col col-5">
                 <!-- Amendment Type -->

@@ -7,6 +7,7 @@
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -28,26 +29,10 @@
         --paper-fab: {
           @apply(--paper-fab-btn-green);
         };
-
-        --etools-checkable-input-font-size: 16px;
-        --etools-checkable-input-label: {
-          color: var(--primary-text-color);
-          @apply(--layout-vertical);
-          @apply(--layout-center-justified);
-        };
-        --etools-checkable-input-size: 16px;
       }
 
       paper-icon-button[disabled] {
         visibility: hidden;
-      }
-
-      .active-box {
-        box-sizing: border-box;
-        min-height: 60px;
-        padding-bottom: 10px;
-        @apply(--layout-vertical);
-        @apply(--layout-end-justified);
       }
 
     </style>
@@ -127,14 +112,14 @@
               </div>
               <div class="col col-4">
                 <!-- Active? -->
-                <div class="active-box">
+                <etools-form-element-wrapper>
                   <etools-checkable-input checked="{{item.active}}"
                                           label="Active?"
                                           type="checkbox"
                                           label-alignment="right"
                                           readonly$="[[!editMode]]">
                   </etools-checkable-input>
-                </div>
+                </etools-form-element-wrapper>
               </div>
             </div>
 
