@@ -74,10 +74,14 @@
         @apply(--layout-vertical);
       }
 
-      .total-unicef-label {
+      /*.total-unicef-label {
         @apply(--layout-end-justified);
       }
       .total-unicef-label span {
+        display: flex;
+        align-self: center;
+      }*/
+      .usd-label {
         display: flex;
         align-self: center;
       }
@@ -204,7 +208,7 @@
                   </div>
                   <div class="col col-4">
                     <etools-form-element-wrapper label="UNICEF Total (Local)">
-                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
+                      [[_getPlannedBudgetTotalFormatted(item.partner_contribution_local, item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
                     </etools-form-element-wrapper>
                   </div>
                 </div>
@@ -214,8 +218,8 @@
             <div class="row-h">
               <div class="col col-3">
                 <div class="row-h flex-c left-col">
-                  <div class="col col-3">
-                    USD
+                  <div class="col col-3 usd-label">
+                    <span>USD</span>
                   </div>
                   <div class="col col-9">
                     <etools-currency-amount-input id$="csoContUsd_[[index]]"
@@ -259,7 +263,7 @@
                   </div>
                   <div class="col col-4">
                     <etools-form-element-wrapper label="UNICEF Total (USD)">
-                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] USD
+                      [[_getPlannedBudgetTotalFormatted(item.partner_contribution, item.unicef_cash, item.in_kind_amount)]] USD
                     </etools-form-element-wrapper>
                   </div>
                 </div>
@@ -270,7 +274,7 @@
 
         </div>
       </template>
-      <div id="totals" class="row-h">
+      <!--<div id="totals" class="row-h">
         <div id="totals-content-wrapper" class="col col-8">
           <div class="darkbg">
             <div class="col flex-c total-unicef-label">
@@ -308,7 +312,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
 
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
@@ -540,7 +544,7 @@
           this.set('localCurrencyId', selCurrencyId);
         },
 
-        _getPlannedBudgetTotal: function(val1, val2, currency) {
+        _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
           val1 = parseFloat(val1);
           if (!isNaN(val1)) {
@@ -550,14 +554,18 @@
           if (!isNaN(val2)) {
             t += val2;
           }
+           val3 = parseFloat(val3);
+          if (!isNaN(val3)) {
+            t += val3;
+          }
           if (typeof currency === 'string' && currency !== '') {
             return t + ' ' + currency;
           }
           return t;
         },
 
-        _getPlannedBudgetTotalFormatted: function(val1, val2) {
-          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0', 0);
+        _getPlannedBudgetTotalFormatted: function(val1, val2, val3) {
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2, val3), '0', 0);
         },
 
         // _yearAlreadySelected: function(year, dropdownIdx) {
