@@ -248,7 +248,7 @@
         newInterventionModel: {
           type: Object,
           value: {
-            id: undefined,
+            id: null, // Required null, not undefined in order to trigger the observer
             agreement: undefined,
             document_type: undefined,
             hrp: undefined,

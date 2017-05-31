@@ -61,7 +61,7 @@
       }
     </style>
 
-    <div hidden$="[[!plannedBudget]]">
+    <div>
         <div class="row-h item-container">
           <div class="row-v flex-c">
             <div class="row-h">
@@ -174,11 +174,8 @@
           </div>
       </div>
 
-      <div class="row-h" hidden$="[[plannedBudget]]">
-        <p>There are no planned budgets added.</p>
-      </div>
       <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-        <paper-fab icon="cancel"  hidden="[[_showEditBtn(editMode, editablePlannedBudget)]]" title="Cancel" on-tap="_cancelEdit"></paper-fab>
+        <paper-fab icon="cancel"  hidden="[[!_showCancelBtn(editMode, editablePlannedBudget)]]" title="Cancel" on-tap="_cancelEdit"></paper-fab>
         <paper-fab icon="create" hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]" title="Edit" on-tap="_editPlannedBudget"></paper-fab>
       </div>
 
@@ -229,6 +226,9 @@
           this.editablePlannedBudget = false;
 
         },
+        _showCancelBtn: function() {
+          return !this._showEditBtn() && this.interventionId;
+        },
         _showEditBtn: function() {
           if (!this.editMode) {
             return false;
@@ -236,7 +236,6 @@
           if (this.editablePlannedBudget) {
             return false;
           }
-          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           return true;
         },
         _isReadonly: function() {
@@ -250,17 +249,20 @@
         },
         _editPlannedBudget: function() {
           this.editablePlannedBudget = true;
+          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
         },
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function () {
-          console.log(this.plannedBudget);
+          console.log('_interventionIdChanged',this.plannedBudget);
           this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           this.editablePlannedBudget = !!!this.interventionId;
 
-          //TODO -remove , this was just for testing
-          if (this.plannedBudget && Array.isArray(this.plannedBudget)) {
+          //TODO -remove , this was just for testing----------
+          if (this.interventionId && this.plannedBudget && Array.isArray(this.plannedBudget)) {
+            console.log('HERE');
             this.plannedBudget = this.plannedBudget[0];
           }
+          //-------------------------------------------------
         },
         _getPlannedBudgetTotal: function (val1, val2, val3, currency) {
           var t = 0;
