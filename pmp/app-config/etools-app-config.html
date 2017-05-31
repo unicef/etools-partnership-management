@@ -16,12 +16,10 @@ App global configuration
       collectionsList: 'name, expire',
       countries: 'id',
       partners: 'id, name, rating, vendor_number',
-      agreements: 'id, name, agreement_number, partner_name, start, end',
+      agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
       interventions: 'id, number, partner_name, document_type, ' +
         'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
-      user: 'id',
-      governments: 'id, number, country_programme, country_programme_name, cp_outputs, partner, ' +
-        'partner_name, sectors, unicef_focal_points, years'
+      user: 'id'
     });
     /** @polymerBehavior etoolsAppConfig.globals */
     var etoolsAppConfig = {
@@ -257,14 +255,7 @@ App global configuration
         exp: 6 * 60 * 60 * 1000, // 6h
         cachingKey: 'offices'
       },
-      governments: {
-        cachingKey: 'governments',
-        exp: 5 * 60 * 1000, // 5min
-        url: '/api/v2/government_interventions/'
-      },
-      governmentsDetails: {
-        template: '/api/v2/government_interventions/<%=id%>/'
-      },
+      // TODO: might not be needed, gov in simple removed
       countryProgrammes: {
         cachingKey: 'countryProgrammes',
         exp: 5 * 60 * 1000, // 5min
@@ -277,12 +268,6 @@ App global configuration
       },
       ramIndicators: {
         template: '/api/v2/reports/results/<%=id%>/indicators/',
-      },
-      governmentIntResultDelete: {
-        template: '/api/v2/government_interventions/results/<%=id%>/'
-      },
-      governmentResultActivityDelete: {
-        template: '/api/v2/government_interventions/results/activities/<%=id%>/'
       },
       monitoringVisits: {
         template: '/api/t2f/travels/activities/<%=id%>/',

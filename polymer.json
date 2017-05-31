@@ -5,7 +5,6 @@
     "pmp/pages/page-partners.html",
     "pmp/pages/page-agreements.html",
     "pmp/pages/page-interventions.html",
-    "pmp/pages/page-governments.html",
     "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [
