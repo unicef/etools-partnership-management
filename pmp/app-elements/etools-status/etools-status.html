@@ -3,7 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-card/paper-card.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="etools-status-button.html">
+<link rel="import" href="etools-action-button.html">
 
 <dom-module id="etools-status">
 
@@ -157,8 +157,8 @@
           </div>
 
           <div class="card-actions">
-            <etools-status-button actions="[[actions]]">
-            </etools-status-button>
+            <etools-action-button actions="[[actions]]">
+            </etools-action-button>
           </div>
 
       </paper-card>
@@ -175,28 +175,7 @@
         },
         statuses: {
           type: Array,
-          value: [
-            {
-              label: 'Draft',
-              completed: false
-            },
-            {
-              label: 'Signed',
-              completed: true
-            },
-            {
-              label: 'Active',
-              completed: false
-            },
-            {
-              label: 'Ended',
-              completed: false
-            },
-            {
-              label: 'Closed',
-              completed: true
-            },
-          ]
+          value: []
         },
         actions: {
           type: Array,
