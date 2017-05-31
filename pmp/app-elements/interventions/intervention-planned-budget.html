@@ -96,8 +96,7 @@
                   <div class="row-h flex-c left-col">
                     <div class="col col-3">
                       <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
-                        on-iron-select="_currencyChanged"
-                        selected="{{localCurrencyId}}"
+                        selected="{{plannedBudget.currency}}"
                         required$="[[required]]" auto-validate error-message="Please select the currency"
                         readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                       </etools-single-selection-menu>
@@ -205,13 +204,6 @@
             type: Array,
             statePath: 'currencies'
           },
-          localCurrency: {
-            type: String,
-            value: ''
-          },
-          localCurrencyId: {
-            type: Number
-          },
           required: {
             type: Boolean,
             value: true
@@ -232,10 +224,6 @@
             type: Object
           }
         },
-        observers: [
-          '_initSelectedCurrency(dataItems, currencies)'
-        ],
-
         _cancelEdit: function() {
           this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
           this.editablePlannedBudget = false;
@@ -265,55 +253,15 @@
         },
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function () {
-          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           console.log(this.plannedBudget);
-          if (this.interventionId) {
-            this.editablePlannedBudget = false;
-          }
+          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
+          this.editablePlannedBudget = !!!this.interventionId;
+
+          //TODO -remove , this was just for testing
           if (this.plannedBudget && Array.isArray(this.plannedBudget)) {
             this.plannedBudget = this.plannedBudget[0];
           }
-           console.log(this.plannedBudget);
-          this._initSelectedCurrency(this.currencies);
         },
-
-        _initSelectedCurrency: function (currencies) {
-          this.debounce('initSelectedCurrency', function () {
-            if (Array.isArray(currencies) && currencies.length > 0 && this.plannedBudget) {
-              // check and set the currency
-              if (this.plannedBudget.currency) {
-                // plannedBudget.currency should be the currency ID
-                var currency = currencies.filter(function (c) {
-                  return parseInt(c.value, 10) === parseInt(this.plannedBudget.currency, 10);
-                }.bind(this))[0];
-                if (currency) {
-                  this.set('localCurrencyId', currency.value);
-                  this.set('localCurrency', currency.label);
-                 // this._setCurrencyDropdownValue(currency);
-                  return;
-                }
-              }
-            }
-            // reset local currency
-            this.set('localCurrencyId', null);
-            this.set('localCurrency', null);
-           // this._setCurrencyDropdownValue(null);
-          }.bind(this), 50);
-        },
-
-        _currencyChanged: function (event) {
-          var selCurrencyName = null;
-          var selCurrencyId = null;
-
-          var selectedItem = event.detail.item.item;
-          if (selectedItem && selectedItem.label) {
-            selCurrencyName = selectedItem.label;
-            selCurrencyId = selectedItem.value;
-          }
-          this.set('localCurrency', selCurrencyName);
-          this.set('localCurrencyId', selCurrencyId);
-        },
-
         _getPlannedBudgetTotal: function (val1, val2, val3, currency) {
           var t = 0;
           val1 = parseFloat(val1);
