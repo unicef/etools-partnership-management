@@ -92,9 +92,7 @@
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      <p>There are no sector locations added.</p>
-    </div>
+    <p hidden$="[[!_emptyList(dataItems.length)]]">There are no sector locations added.</p>
 
     <div id="bottom-actions" hidden$="[[!editMode]]">
       <paper-fab icon="add"
