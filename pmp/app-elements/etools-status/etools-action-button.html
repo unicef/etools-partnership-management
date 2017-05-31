@@ -42,12 +42,12 @@
 
   <template>
 
-    <template is="dom-if" if="[[actions.length]]">
+    <template is="dom-if" if="[[primaryAction]]">
       <paper-button raised class="layout horizontal">
 
         <div on-tap="_handlePrimaryClick" class="flex main-btn-part"> [[primaryAction.label]] </div>
 
-        <template is="dom-if" if="[[1]]">
+        <template is="dom-if" if="[[secondaryActions.length]]">
           <paper-menu-button horizontal-align="right">
 
             <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
@@ -70,23 +70,36 @@
         actions: {
           type: Array,
           value: [],
-          observer: '_actionsChanged'
         },
         primaryAction: {
           type: Object
         },
         secondaryActions: {
-          type: Array
+          type: Array,
+          value: []
         }
       },
-      _actionsChanged: function (actions) {
+      observers:['_actionsChanged(actions, actions.*)'],
+      _actionsChanged: function () {
+        let actions = this.actions;
+        if(!actions.length) {
+          return;
+        }
         var primaryAction = actions.find(function(elem) {
-          return elem.primary;
+          return elem.primary && elem.available;
         });
+
         var secondaryActions = actions.filter(function(elem) {
-          return !elem.primary;
+          return !elem.primary && elem.available;
         });
+
+        if(!primaryAction && secondaryActions && secondaryActions.length) {
+          primaryAction = actions.pop();
+        }
+
+        this.set('primaryAction', {});
         this.set('primaryAction', primaryAction);
+        this.set('secondaryActions', []);
         this.set('secondaryActions', secondaryActions);
       },
       _handleSecondaryClick: function(event) {

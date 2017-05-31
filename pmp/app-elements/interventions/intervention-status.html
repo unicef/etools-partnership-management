@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../../styles/buttons-styles.html">
 
@@ -79,37 +80,33 @@
             value: [
               {
                 label: 'Save',
+                available: false,
                 primary: true,
                 event: 'intervention-save-event'
               },
               {
                 label: 'Change to draft',
                 available: false,
-                primary: false,
                 event: 'intervention-draft-event'
               },
               {
                 label: 'Activate',
                 available: false,
-                primary: false,
                 event: 'intervention-active-event'
               },
               {
                 label: 'Suspend',
                 available: false,
-                primary: false,
                 event: 'intervention-suspend-event'
               },
               {
                 label: 'Terminate',
                 available: false,
-                primary: false,
                 event: 'intervention-terminate-event'
               },
               {
                 label: 'Cancel',
                 available: false,
-                primary: false,
                 event: 'intervention-cancel-event'
               },
             ]
@@ -161,13 +158,7 @@
 
         _computeAvailableActions: function(status) {
             this._setAllActionsToUnavailable();
-            let availableOptions = [];
-
-            'draft';
-            'canceled';
-            'active';
-            'suspended';
-            'terminated';
+            let availableOptions = ['Save'];
 
             switch(status) {
               case 'draft':
@@ -181,10 +172,30 @@
                 availableOptions.push('Terminate');
                 break;
               case 'terminated':
+                // removes Save option
+                availableOptions.pop();
                 availableOptions.push('Activate');
                 availableOptions.push('Suspend');
                 break;
+              case 'cancelled':
+                // removes Save option
+                availableOptions.pop();
+                availableOptions.push('Change to draft');
+              case 'closed':
+                // removes Save option
+                availableOptions.pop();
+                break;
             };
+
+            for(let key in this.possibleActions) {
+              let actionName = this.possibleActions[key].label;
+              if (availableOptions.indexOf(actionName) > -1 ) {
+                let config = this.possibleActions[key];
+                config.available = true;
+                this.set(['possibleActions', key], config);
+              }
+            }
+            // this.notifyPath('possibleActions');
         },
 
 
