@@ -21,18 +21,18 @@
         display: none !important;
       }
 
-       :host {
+      :host {
         display: block;
         width: 100%;
-        padding: 7px 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
-        }
-        ;
+        };
       }
-
       etools-currency-amount-input {
         width: 100%;
       }
@@ -40,13 +40,11 @@
       etools-currency-amount-input.total-input {
         --etools-currency-container-input: {
           font-weight: bold;
-        }
-        ;
+        };
       }
 
       .left-col {
-        padding-top: 15px;
-        padding-bottom: 15px;
+        padding: 15px 0;
       }
       .usd-label {
         display: flex;
@@ -54,10 +52,6 @@
       }
       #currency {
         width: auto;
-      }
-
-      .action.delete[disabled] {
-        visibility: hidden;
       }
     </style>
 
