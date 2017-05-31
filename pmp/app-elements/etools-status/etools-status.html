@@ -179,33 +179,7 @@
         },
         actions: {
           type: Array,
-          value: [
-            {
-              label: 'Save',
-              primary: true,
-              event: 'intervention-save-event'
-            },
-            {
-              label: 'Change to draft',
-              primary: false,
-              event: 'intervention-draft-event'
-            },
-            {
-              label: 'Activate',
-              primary: false,
-              event: 'intervention-activate-event'
-            },
-            {
-              label: 'Suspend',
-              primary: false,
-              event: 'intervention-suspend-event'
-            },
-            {
-              label: 'Terminate',
-              primary: false,
-              event: 'intervention-terminate-event'
-            },
-          ]
+          value: []
         },
       },
       _getStatusCssClass: function(completed, index) {
