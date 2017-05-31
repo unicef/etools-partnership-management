@@ -96,16 +96,16 @@
                 <div class="col col-3">
                   <div class="row-h flex-c left-col">
                     <div class="col col-3">
-                      <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]" 
+                      <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
                         on-iron-select="_currencyChanged"
-                        selected="localCurrencyId"
+                        selected="{{localCurrencyId}}"
                         required$="[[required]]" auto-validate error-message="Please select the currency"
                         readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]">
                       </etools-single-selection-menu>
                     </div>
                     <div class="col col-9">
-                      <etools-currency-amount-input id$="csoContLocal" value="{{partner_contribution_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" 
+                      <etools-currency-amount-input id$="csoContLocal" value="{{plannedBudget.partner_contribution_local}}"
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
                         required$="[[required]]" auto-validate
                         error-message="CSO Cont. (Local) required">
                       </etools-currency-amount-input>
@@ -115,20 +115,22 @@
                 <div class="col col-9">
                   <div class="row-h flex-c left-col">
                     <div class="col col-4">
-                      <etools-currency-amount-input id$="unicefCashLocal" value="{{unicef_cash_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
+                      <etools-currency-amount-input id$="unicefCashLocal" value="{{plannedBudget.unicef_cash_local}}"
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                        required$="[[required]]" auto-validate
                         error-message="UNICEF Cash (Local) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
-                      <etools-currency-amount-input id$="inKindAmountLocal" value="{{in_kind_amount_local}}"
-                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
+                      <etools-currency-amount-input id$="inKindAmountLocal" value="{{plannedBudget.in_kind_amount_local}}"
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                        required$="[[required]]" auto-validate
                         error-message="UNICEF Supply (Local) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
                       <etools-form-element-wrapper>
-                        [[_getPlannedBudgetTotalFormatted(partner_contribution_local, unicef_cash_local, in_kind_amount_local)]]
+                        [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local, plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]
                       </etools-form-element-wrapper>
                     </div>
                   </div>
@@ -142,7 +144,7 @@
                       <span>USD</span>
                     </div>
                     <div class="col col-9">
-                      <etools-currency-amount-input id$="csoContUsd" value="{{partner_contribution}}" type="number"
+                      <etools-currency-amount-input id$="csoContUsd" value="{{plannedBudget.partner_contribution}}" type="number"
                         placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate error-message="CSO Cont. (USD) required">
                       </etools-currency-amount-input>
                     </div>
@@ -151,19 +153,20 @@
                 <div class="col col-9">
                   <div class="row-h flex-c left-col">
                     <div class="col col-4">
-                      <etools-currency-amount-input id$="unicefCashUsd" value="{{unicef_cash}}" type="number"
+                      <etools-currency-amount-input id$="unicefCashUsd" value="{{plannedBudget.unicef_cash}}" type="number"
                         placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate error-message="UNICEF Cash (USD) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
-                      <etools-currency-amount-input id$="inKindAmountUsd" value="{{in_kind_amount}}"
-                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]" required$="[[required]]" auto-validate
+                      <etools-currency-amount-input id$="inKindAmountUsd" value="{{plannedBudget.in_kind_amount}}"
+                        type="number" placeholder="&#8212;" readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                        required$="[[required]]" auto-validate
                         error-message="UNICEF Supply (USD) required">
                       </etools-currency-amount-input>
                     </div>
                     <div class="col col-4">
                       <etools-form-element-wrapper>
-                        [[_getPlannedBudgetTotalFormatted(partner_contribution, unicef_cash, in_kind_amount)]]
+                        [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash, plannedBudget.in_kind_amount)]]
                       </etools-form-element-wrapper>
                     </div>
                   </div>
@@ -198,7 +201,8 @@
 
         properties: {
           plannedBudget: {
-            type: Object
+            type: Object,
+            observer: 'plannedBudgetchanged'
           },
           currencies: {
             type: Array,
@@ -247,6 +251,9 @@
         //     currency: null
         //   };
         // },
+        plannedBudgetchanged: function() {
+
+        },
         _showEditBtn: function() {
           if (!this.editMode) {
             return false;
@@ -278,21 +285,26 @@
 
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function () {
+          console.log(this.plannedBudget);
           if (this.interventionId) {
             this.editablePlannedBudget = false;
           }
-          this._initSelectedCurrency(this.dataItems, this.currencies);
+          if (this.plannedBudget && Array.isArray(this.plannedBudget)) {
+            this.plannedBudget = this.plannedBudget[0];
+          }
+           console.log(this.plannedBudget);
+          this._initSelectedCurrency(this.currencies);
         },
 
-        _initSelectedCurrency: function (dataItems, currencies) {
+        _initSelectedCurrency: function (currencies) {
           this.debounce('initSelectedCurrency', function () {
             if (Array.isArray(currencies) && currencies.length > 0 && this.plannedBudget) {
               // check and set the currency
-              if (plannedBudget.currency) {
+              if (this.plannedBudget.currency) {
                 // plannedBudget.currency should be the currency ID
                 var currency = currencies.filter(function (c) {
-                  return parseInt(c.value, 10) === parseInt(plannedBudget.currency, 10);
-                })[0];
+                  return parseInt(c.value, 10) === parseInt(this.plannedBudget.currency, 10);
+                }.bind(this))[0];
                 if (currency) {
                   this.set('localCurrencyId', currency.value);
                   this.set('localCurrency', currency.label);
@@ -370,50 +382,41 @@
         // validate fields
         validate: function () {
           var valid = true;
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function (item, index) {
-              var elementsSelectorsToValidate = [
-                '#currency' ,
-                '#csoContLocal',
-                '#unicefCashLocal',
-                '#inKindAmountLocal',
-                '#csoContUsd',
-                '#unicefCashUsd',
-                '#inKindAmountUsd'
-              ];
-              elementsSelectorsToValidate.forEach(function (selector) {
-                var el = this.$$(selector);
-                if (el && !el.validate()) {
-                  valid = false;
-                }
-              }.bind(this));
-            }.bind(this));
-          }
+          var elementsSelectorsToValidate = [
+            '#currency' ,
+            '#csoContLocal',
+            '#unicefCashLocal',
+            '#inKindAmountLocal',
+            '#csoContUsd',
+            '#unicefCashUsd',
+            '#inKindAmountUsd'
+          ];
+          elementsSelectorsToValidate.forEach(function (selector) {
+            var el = this.$$(selector);
+            if (el && !el.validate()) {
+              valid = false;
+            }
+          }.bind(this));
           return valid;
         },
 
         // reset validation errors
         resetValidations: function () {
-
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function (item, index) {
-              var elementsSelectorsToValidate = [
-                '#currency',
-                '#csoContLocal',
-                '#unicefCashLocal',
-                '#inKindAmountLocal',
-                '#csoContUsd',
-                '#unicefCashUsd',
-                '#inKindAmountUsd'
-              ];
-              elementsSelectorsToValidate.forEach(function (selector) {
-                var el = this.$$(selector);
-                if (el) {
-                  el.set('invalid', false);
-                }
-              }.bind(this));
-            }.bind(this));
-          }
+          var elementsSelectorsToValidate = [
+            '#currency',
+            '#csoContLocal',
+            '#unicefCashLocal',
+            '#inKindAmountLocal',
+            '#csoContUsd',
+            '#unicefCashUsd',
+            '#inKindAmountUsd'
+          ];
+          elementsSelectorsToValidate.forEach(function (selector) {
+            var el = this.$$(selector);
+            if (el) {
+              el.set('invalid', false);
+            }
+          }.bind(this));
         },
 
         _editModeChanged: function (newValue, oldValue) {
