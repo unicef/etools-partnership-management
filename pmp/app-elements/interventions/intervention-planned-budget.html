@@ -62,7 +62,6 @@
     </style>
 
     <div hidden$="[[!plannedBudget]]">
-      <!--<template is="dom-repeat" items="{{dataItems}}">-->
         <div class="row-h item-container">
           <div class="row-v flex-c">
             <div class="row-h">
@@ -174,15 +173,14 @@
               </div>
             </div>
           </div>
-      <!--</template>-->
       </div>
 
       <div class="row-h" hidden$="[[plannedBudget]]">
         <p>There are no planned budgets added.</p>
       </div>
-
       <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-        <paper-fab icon="create" hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]" title="Edit" on-tap="_editPlannedBudget">
+        <paper-fab icon="cancel"  hidden="[[_showEditBtn(editMode, editablePlannedBudget)]]" title="Cancel" on-tap="_cancelEdit"></paper-fab>
+        <paper-fab icon="create" hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]" title="Edit" on-tap="_editPlannedBudget"></paper-fab>
       </div>
 
   </template>
@@ -201,8 +199,7 @@
 
         properties: {
           plannedBudget: {
-            type: Object,
-            observer: 'plannedBudgetchanged'
+            type: Object
           },
           currencies: {
             type: Array,
@@ -214,7 +211,6 @@
           },
           localCurrencyId: {
             type: Number
-           // observer: '_localCurrencyIdChanged'
           },
           required: {
             type: Boolean,
@@ -231,27 +227,18 @@
           interventionId: {
             type: Number,
             observer: '_interventionIdChanged'
+          },
+          initialPlannedBudget: {
+            type: Object
           }
         },
         observers: [
-          // '_dataItemsChanged(dataItems)',
           '_initSelectedCurrency(dataItems, currencies)'
         ],
 
-        // ready: function () {
-        //   this.dataSetModel = {
-        //     id: null,
-        //     partner_contribution: 0,
-        //     unicef_cash: 0,
-        //     in_kind_amount: 0,
-        //     partner_contribution_local: 0,
-        //     unicef_cash_local: 0,
-        //     in_kind_amount_local: 0,
-        //     total: 0,
-        //     currency: null
-        //   };
-        // },
-        plannedBudgetchanged: function() {
+        _cancelEdit: function() {
+          this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
+          this.editablePlannedBudget = false;
 
         },
         _showEditBtn: function() {
@@ -261,6 +248,7 @@
           if (this.editablePlannedBudget) {
             return false;
           }
+          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           return true;
         },
         _isReadonly: function() {
@@ -273,18 +261,11 @@
           return !this.editablePlannedBudget;
         },
         _editPlannedBudget: function() {
-          // TODO show cancel btn
           this.editablePlannedBudget = true;
         },
-
-        // _dataItemsChanged: function (dataItems) {
-        //   if (!Array.isArray(dataItems)) {
-        //     this.set('dataItems', []);
-        //   }
-        // },
-
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function () {
+          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           console.log(this.plannedBudget);
           if (this.interventionId) {
             this.editablePlannedBudget = false;
@@ -319,28 +300,6 @@
            // this._setCurrencyDropdownValue(null);
           }.bind(this), 50);
         },
-
-        // _setCurrencyDropdownValue: function (currency) {
-        //   var currencyValue = currency ? currency.value : null;
-        //   this.dataItems.forEach(function (item, index) {
-        //     var dropdown = this.$$('#currency_' + index);
-        //     if (dropdown) {
-        //       dropdown.set('selected', currencyValue);
-        //     }
-        //   }.bind(this));
-        // },
-
-        // _localCurrencyIdChanged: function (currencyId) {
-        //   if (!currencyId) {
-        //     currencyId = null;
-        //   }
-        //   if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-        //     this.dataItems.forEach(function (item) {
-        //       item.currency = currencyId;
-        //     });
-        //   }
-        //   this.set('dataSetModel.currency', currencyId);
-        // },
 
         _currencyChanged: function (event) {
           var selCurrencyName = null;
