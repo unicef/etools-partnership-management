@@ -182,7 +182,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       Polymer({
@@ -252,19 +252,17 @@
           this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
         },
         // make sure we have the right currency selected when intervention is changed
-        _interventionIdChanged: function () {
-          console.log('_interventionIdChanged',this.plannedBudget);
+        _interventionIdChanged: function() {
           this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           this.editablePlannedBudget = !!!this.interventionId;
 
-          //TODO -remove , this was just for testing----------
+          //TODO -remove / this was just for testing----------
           if (this.interventionId && this.plannedBudget && Array.isArray(this.plannedBudget)) {
-            console.log('HERE');
             this.plannedBudget = this.plannedBudget[0];
           }
           //-------------------------------------------------
         },
-        _getPlannedBudgetTotal: function (val1, val2, val3, currency) {
+        _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
           val1 = parseFloat(val1);
           if (!isNaN(val1)) {
@@ -284,12 +282,12 @@
           return t;
         },
 
-        _getPlannedBudgetTotalFormatted: function (val1, val2, val3) {
+        _getPlannedBudgetTotalFormatted: function(val1, val2, val3) {
           return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2, val3), '0', 0);
         },
 
         // validate fields
-        validate: function () {
+        validate: function() {
           var valid = true;
           var elementsSelectorsToValidate = [
             '#currency' ,
@@ -300,7 +298,7 @@
             '#unicefCashUsd',
             '#inKindAmountUsd'
           ];
-          elementsSelectorsToValidate.forEach(function (selector) {
+          elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
             if (el && !el.validate()) {
               valid = false;
@@ -310,7 +308,7 @@
         },
 
         // reset validation errors
-        resetValidations: function () {
+        resetValidations: function() {
           var elementsSelectorsToValidate = [
             '#currency',
             '#csoContLocal',
@@ -320,7 +318,7 @@
             '#unicefCashUsd',
             '#inKindAmountUsd'
           ];
-          elementsSelectorsToValidate.forEach(function (selector) {
+          elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
             if (el) {
               el.set('invalid', false);
@@ -328,7 +326,7 @@
           }.bind(this));
         },
 
-        _editModeChanged: function (newValue, oldValue) {
+        _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();
           }
