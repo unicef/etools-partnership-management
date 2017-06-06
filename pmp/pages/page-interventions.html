@@ -386,6 +386,7 @@
         this.debounce('pageChange', function() {
           var activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
           if (activePage === 'list') {
+            this.set('serverErrors', []);
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
