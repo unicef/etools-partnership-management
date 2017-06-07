@@ -49,45 +49,49 @@
           },
           possibleStatuses: {
           type: Array,
-          value:  [
-              {
-                label: 'Draft',
-                hidden: false,
-                completed: false
-              },
-              {
-                label: 'Signed',
-                hidden: false,
-                completed: true
-              },
-              {
-                label: 'Active',
-                hidden: false,
-                completed: false
-              },
-              {
-                label: 'Ended',
-                hidden: false,
-                completed: false
-              },
-              {
-                label: 'Closed',
-                hidden: false,
-                completed: false
-              },
-              {
-                label: 'Suspended',
-                icon: 'av:pause-circle-filled',
-                hidden: false,
-                completed: true
-              },
-              {
-                label: 'Terminated',
-                icon: 'report-problem',
-                hidden: false,
-                completed: false
-              },
-            ]
+          value: function() {
+              return [
+                {
+                  label: 'Draft',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Signed',
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Active',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Suspended',
+                  icon: 'av:pause-circle-filled',
+                  iconColor: this.getComputedStyleValue('--warning-color'),
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Terminated',
+                  icon: 'report-problem',
+                  iconColor: this.getComputedStyleValue('--error-color'),
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Ended',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Closed',
+                  hidden: false,
+                  completed: false
+                },
+              ];
+            }
           },
           possibleActions: {
             type: Array,
@@ -136,6 +140,9 @@
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+        },
+        _getPossibleStatuses: function() {
+
         },
 
         detached: function() {

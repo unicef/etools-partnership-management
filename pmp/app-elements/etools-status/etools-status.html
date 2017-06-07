@@ -42,9 +42,6 @@
         color: white;
         display: none;
       }
-      .red, .status-container span.status.red {
-        color: var(--et2f-error, #EA4022);
-      }
       .status {
         color: var(--gray-mid, rgba(0,0,0,.54));
         font-size: 14px;
@@ -65,7 +62,7 @@
       }
       .custom .custom-icon {
         display: block;
-        color: red;
+        color: var(--et2f-primary, #00AEEF);
       }
       .status-container.completed .number-circle {
         background-color: var(--et2f-sec-lightgreen, #8DC63F);
@@ -97,7 +94,7 @@
               <div class="number-circle">
                 <span>[[_getTrueIndex(index)]]</span>
                 <iron-icon class="done-icon" icon="done"></iron-icon>
-                <iron-icon class="custom-icon" icon="report-problem"></iron-icon>
+                <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
               </div>
               <span class="status">[[status.label]]</span>
             </div>
@@ -135,6 +132,12 @@
       },
       _getStatusIcon: function(icon) {
         return icon || 'done';
+      },
+      _getCustomIconColor: function(color) {
+        if(color) {
+          return 'color: '+ color;
+        }
+        return '';
       },
       _getStatusCssClass: function(status, index) {
         if (status.completed && !status.icon) {
