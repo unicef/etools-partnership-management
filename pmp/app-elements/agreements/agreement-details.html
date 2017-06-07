@@ -31,6 +31,7 @@
 <link rel="import" href="partner-authorized-officers.html">
 <link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
+<link rel="import" href="generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
 
@@ -213,20 +214,18 @@
           </div>
         </div>
         <div class="row-h flex-c t-border">
-          <div id="generate-pca" class="col col-3">
+          <div id="generate-pca" class="col col-3" hidden="[[!_showGeneratePCABtn(agreement, agreement.agreement_type)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label
                 >
               <!--hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]"-->
               <!-- Generate PCA -->
-              <label aria-hidden="true">Auto-generated PCA</label>
-              <a target="_blank" href$="/api/v2/agreements/[[agreement.id]]/pdf/">
-                <paper-button class="paper-input-input secondary-btn">
+              <label aria-hidden="true">PCA Agreement to Sign</label>
+                <paper-button class="paper-input-input secondary-btn" on-tap="_openGeneratePCADialog">
                   <iron-icon icon="refresh"></iron-icon>
-                  GENERATE PCA
+                  GENERATE
                 </paper-button>
-              </a>
             </paper-input-container>
           </div>
           <div class="col col-9">
@@ -356,6 +355,18 @@
         ],
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+
+          this.generatePCADialog = document.createElement('generate-pca-dialog');
+          this.generatePCADialog.setAttribute('id','generatePCADialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
+        },
+        detached: function() {
+          if (this.generatePCADialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
+          }
+        },
+        _showGeneratePCABtn: function() {
+          return this.agreement && this.agreement.agreement_type === 'PCA';
         },
         _hideDeleteBtn: function() {
           if (this.agreement && this.agreement.status === 'draft' && this.agreement.attached_agreement_file) {
@@ -398,6 +409,7 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
+          this.generatePCADialog.agreementId = agreement.id;
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
@@ -876,6 +888,9 @@
           return countryProgrammes.filter(function(cp) {
             // return self.isFutureDate(cp.to_date + 'T23:59:59') && ;
           });
+        },
+        _openGeneratePCADialog: function() {
+          this.generatePCADialog.open();
         }
 
       });

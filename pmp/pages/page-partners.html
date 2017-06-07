@@ -253,7 +253,7 @@
         return listActive && this._hasEditPermissions(permissions);
       },
       _openNewPartnerDialog: function() {
-        this.newPartnerDialog._openNewPartnerDialog();
+        this.newPartnerDialog.openNewPartnerDialog();
       },
       _createPartner: function(event) {
         this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
