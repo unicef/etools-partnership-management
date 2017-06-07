@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
@@ -28,7 +29,6 @@
 <link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="agreement-behaviors/agreements-common-behavior.html">
-<link rel="import" href="partner-authorized-officers.html">
 <link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
 
@@ -207,6 +207,22 @@
             </etools-date-input>
           </div>
         </div>
+        <div class="row-h flex-c">
+          <!-- Partner Authorized Officers (partner staff members) -->
+          <etools-searchable-multiselection-menu id="officers"
+                                                 label="Authorized Officers"
+                                                 placeholder="Select Authorized Officers"
+                                                 options="[[staffMembers]]"
+                                                 custom-object-options
+                                                 option-value="id"
+                                                 option-label="name"
+                                                 selected="{{authorizedOfficers}}"
+                                                 update-selected
+                                                 readonly$="[[!_allowFieldEditing('officers', agreement.status)]]"
+                                                 dynamic-align
+                                                 multi>
+          </etools-searchable-multiselection-menu>
+        </div>
         <div class="row-h flex-c t-border">
           <div id="generate-pca" class="col col-3">
             <paper-input-container
@@ -234,16 +250,6 @@
                 readonly$="[[!_allowEditAgreementDoc(agreement.status)]]"></etools-single-file>
           </div>
         </div>
-      </etools-content-panel>
-
-      <!-- Partner Authorized Officers (partner staff members) -->
-      <etools-content-panel class="content-section"
-                            panel-title="Partner Authorized Officers ([[agreement.authorized_officers.length]])">
-        <partner-authorized-officers id="authorizedOfficers"
-                                     selected-officers="{{agreement.authorized_officers}}"
-                                     officers-dropdown-data="[[staffMembers]]"
-                                     edit-mode="[[_allowFieldEditing('officers', agreement.status)]]">
-        </partner-authorized-officers>
       </etools-content-panel>
 
       <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
@@ -315,8 +321,10 @@
             statePath: 'agreementTypes'
           },
           staffMembers: {
-            type: Array
+            type: Array,
+            value: []
           },
+          authorizedOfficers: Array,
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
@@ -402,9 +410,6 @@
 
             this.set('oldSelectedPartnerId', agreement.partner);
 
-            // reset authorized officers invalid messages
-            this._resetOfficersField();
-
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
 
@@ -415,6 +420,9 @@
             if (!agreement.attached_agreement_file) {
               this.set('agreement.attached_agreement_file', '');
             }
+
+            this._initAuthorizedOfficers(agreement.authorized_officers);
+
           } else {
             this.set('agreement.attached_agreement', {});
             this.set('agreement.attached_agreement_file', '');
@@ -422,33 +430,24 @@
             this._setDraftStatus(this.editMode, this.isNewAgreement);
             this._resetDropdown('#partner');
             this._resetDropdown('#agreementType');
-            this._resetDropdown('#signedByUnicef');
-            this._resetDropdown('#signedByPartner', true);
-
-            this._resetOfficersField();
+            // this._resetDropdown('#officers', true);
           }
           this.fire('global-loading', {active: false});
         },
 
-        _resetDropdown: function(selector, clearOptions) {
-          if (!clearOptions) {
-            clearOptions = false;
-          }
+        _resetDropdown: function(selector, multi) {
           var field = this.fieldValidationReset(selector);
           if (field) {
-            field.value = [];
-            field.selectedValues = null;
-            field.search = '';
-            if (clearOptions) {
-              field.options = [];
+            if (multi) {
+//              field.value = [];
+//              field.selectedValues = null;
+//              field.search = '';
+            } else {
+              field.set('selected', null);
             }
-          }
-        },
 
-        _resetOfficersField: function() {
-          var selectedOfficers = this.$.authorizedOfficers;
-          selectedOfficers._updateInvalidState(false);
-          selectedOfficers.resetSelection();
+
+          }
         },
 
         /**
@@ -500,9 +499,8 @@
             // partner not set or changed, reset related fields
             this.set('agreement.partner_manager', null);
             this.set('staffMembers', []);
+            this.set('authorizedOfficers', []);
             this.set('agreement.authorized_officers', []);
-            this.fieldValidationReset('#signedByPartnerDateField', true);
-            this._resetOfficersField();
             this.set('oldSelectedPartnerId', currentPartnerId);
           }
         },
@@ -553,20 +551,12 @@
               valid = false;
             }
           }
-
-          if (!this._validateAmendments()) {
+          var agreementAmendmentsElem = this.$$('#agreementAmendments');
+          if (agreementAmendmentsElem && !agreementAmendmentsElem.validate()) {
             valid = false;
           }
 
           return valid;
-        },
-
-        _validateAmendments: function() {
-           var agreementAmendmentsElem = this.$$('#agreementAmendments');
-           if (agreementAmendmentsElem) {
-             return agreementAmendmentsElem.validate();
-           }
-           return true;
         },
 
         /**
@@ -582,10 +572,8 @@
             // TODO: include amendments to above array with proper checkings
             availableChangingFields.forEach(function(fieldName) {
               if (fieldName === 'authorized_officers') {
-                // TODO: authorized_officers more checkings?
-                changes[fieldName] = this.agreement.authorized_officers.map(function(officer) {
-                  return officer.id;
-                });
+                // TODO: verify authorizedOfficers against agreement.authorized_officers and check the difference
+                changes[fieldName] = this.authorizedOfficers;
               } else if (fieldName === 'attached_agreement') {
                 if ((this.agreement.hasOwnProperty('attached_agreement')) &&
                     (this.agreement.attached_agreement instanceof File)) {
@@ -593,6 +581,16 @@
                 }
               } else if (fieldName === 'amendments') {
                 changes[fieldName] = this.agreement[fieldName];
+              } else if (fieldName === 'start' || fieldName === 'end') {
+                // start and end dates are sent to server only is agreement type is MOU and were modified
+                if (this.agreement.agreement_type === 'MOU') {
+                  if (this.agreement.start !== this.originalAgreementData.start) {
+                    changes['start'] = this.agreement.start;
+                  }
+                  if (this.agreement.end !== this.originalAgreementData.end) {
+                    changes['end'] = this.agreement.end;
+                  }
+                }
               } else {
                 if (this.agreement[fieldName] !== this.originalAgreementData[fieldName]) {
                   changes[fieldName] = this.agreement[fieldName];
@@ -630,13 +628,11 @@
           // we do not need all the agreement object data for the first save
           return {
             id: null,
-            authorized_officers: agreement.authorized_officers.map(function(officer) {
-              return officer.id;
-            }),
+            authorized_officers: this.authorizedOfficers,
             agreement_type: agreement.agreement_type,
             attached_agreement: agreement.attached_agreement,
-            start: agreement.start,
-            end: agreement.end,
+            start: agreement.agreement_type === 'MOU' ? agreement.start : null,
+            end: agreement.agreement_type === 'MOU' ? agreement.end : null,
             cp_structure: agreement.cp_structure,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
             signed_by_partner_date: agreement.signed_by_partner_date,
@@ -678,10 +674,11 @@
          */
         _filterCountryProgrammesForAgreements: function(countryProgrammes) {
           var self = this;
+          // TODO: change this and use only cp. active: true, future: true and special: false
           return countryProgrammes.filter(function(cp) {
             let cpParts = cp.wbs.split('/');
              return self.isFutureDate(cp.to_date + 'T23:59:59') &&
-               cpParts[cpParts.length - 1].slice(-2) !== '99' &&
+               cpParts[cpParts.length - 1] !== '99' &&
                cpParts[1] === 'A0';
           });
         },
@@ -696,6 +693,15 @@
           if (cpStructure.length === 1) {
             this.set('agreement.cp_structure', cpStructure[0].id);
           }
+        },
+
+        _initAuthorizedOfficers: function(authOfficers) {
+          if (authOfficers instanceof Array && authOfficers.length) {
+            this.set('authorizedOfficers', authOfficers.map(function(authOfficer) {
+              return parseInt(authOfficer.id, 10);
+            }));
+          }
+          this.set('authorizedOfficers', []);
         }
 
       });
