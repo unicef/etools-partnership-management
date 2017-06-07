@@ -7,10 +7,12 @@
 
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -49,6 +51,11 @@
         width: 100%;
       }
 
+      #generate-pca {
+        /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
+        border-right: 1px solid var(--dark-divider-color);
+      }
+
     </style>
 
     <partner-staff-members-data partner-id="[[agreement.partner]]"
@@ -63,6 +70,39 @@
                                  errors="{{serverErrors}}"></etools-error-messages-box>
 
       <etools-content-panel class="content-section" panel-title="Agreement Details">
+
+        <div class="row-h flex-c headings-row row-second-bg">
+          <div class="col col-6">
+            <!-- Agreement Type -->
+            <etools-single-selection-menu
+                id="agreementType"
+                label="Agreement Type"
+                placeholder="&#8212;"
+                options="[[agreementTypes]]"
+                selected="{{agreement.agreement_type}}"
+                dynamic-align
+                hide-search
+                readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
+                error-message="Please select agreement type"
+                required>
+            </etools-single-selection-menu>
+          </div>
+          <div class="col col-2">
+            <!-- Reference Number -->
+            <paper-input label="Reference Number"
+                         value="[[agreement.agreement_number]]"
+                         title$="[[agreement.agreement_number]]"
+                         hidden$="[[!agreement.id]]"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-4">
+            <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
+              <span class="placeholder">&#8212;</span>
+            </etools-form-element-wrapper>
+          </div>
+        </div>
+
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Partner name -->
@@ -78,66 +118,42 @@
                 required>
             </etools-single-selection-menu>
           </div>
-          <div class="col col-3">
-            <!-- Agreement Type -->
-            <etools-single-selection-menu
-                id="agreementType"
-                label="Agreement Type"
-                placeholder="&#8212;"
-                options="[[agreementTypes]]"
-                selected="{{agreement.agreement_type}}"
-                dynamic-align
-                hide-search
-                readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
-                error-message="Please select agreement type"
-                required>
-            </etools-single-selection-menu>
-          </div>
-          <div class="col col-3" title$="[[agreement.agreement_number]]">
-            <!-- Reference Number -->
-            <paper-input label="Reference Number"
-                         value="[[agreement.agreement_number]]"
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
+          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'MOU')]]">
+            <div class="col col-3">
+              <!-- Start date -->
+              <etools-date-input id="startDateField"
+                                 label="Start date"
+                                 value="{{agreement.start}}"
+                                 readonly$="[[!_allowFieldEditing('startDate', agreement.status)]]"
+                                 no-init show-clear-btn>
+              </etools-date-input>
+            </div>
+            <div class="col col-3">
+              <!-- End date -->
+              <etools-date-input id="endDateField"
+                                 label="End date"
+                                 value="{{agreement.end}}"
+                                 readonly$="[[!_allowFieldEditing('endDate', agreement.status)]]"
+                                 error-message="Please select end date"
+                                 required$="[[validateStringValue(agreement.start)]]"
+                                 no-init show-clear-btn>
+              </etools-date-input>
+            </div>
+          </template>
+          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'PCA')]]">
+            <div class="col col-6">
+              <etools-single-selection-menu
+                  id="cpStructure"
+                  label="CP Structure"
+                  placeholder="&#8212;"
+                  options="[[cpStructureOptions]]"
+                  error-message="Please select CP Structure"
+                  required>
+              </etools-single-selection-menu>
+            </div>
+          </template>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <!-- Start date -->
-            <etools-date-input id="startDateField"
-                               label="Start date"
-                               value="{{agreement.start}}"
-                               readonly$="[[!_allowFieldEditing('startDate', agreement.status)]]"
-                               no-init show-clear-btn>
-            </etools-date-input>
-          </div>
-          <div class="col col-3">
-            <!-- End date -->
-            <etools-date-input id="endDateField"
-                               label="End date"
-                               value="{{agreement.end}}"
-                               readonly$="[[!_allowFieldEditing('endDate', agreement.status)]]"
-                               error-message="Please select end date"
-                               required$="[[validateStringValue(agreement.start)]]"
-                               no-init show-clear-btn>
-            </etools-date-input>
-          </div>
-          <div class="col col-6">
-            <paper-input-container
-                class="form-field-wrapper secondary-btn-wrapper"
-                always-float-label
-                hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
-              <!-- Generate PCA -->
-              <label aria-hidden="true">Auto-generated PCA</label>
-              <a target="_blank" href$="/api/v2/agreements/[[agreement.id]]/pdf/">
-                <paper-button class="paper-input-input secondary-btn">
-                  <iron-icon icon="refresh"></iron-icon>
-                  GENERATE PCA
-                </paper-button>
-              </a>
-            </paper-input-container>
-          </div>
-        </div>
+
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Signed By Partner -->
@@ -196,8 +212,24 @@
             </etools-date-input>
           </div>
         </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
+        <div class="row-h flex-c t-border">
+          <div id="generate-pca" class="col col-3">
+            <paper-input-container
+                class="form-field-wrapper secondary-btn-wrapper"
+                always-float-label
+                >
+              <!--hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]"-->
+              <!-- Generate PCA -->
+              <label aria-hidden="true">Auto-generated PCA</label>
+              <a target="_blank" href$="/api/v2/agreements/[[agreement.id]]/pdf/">
+                <paper-button class="paper-input-input secondary-btn">
+                  <iron-icon icon="refresh"></iron-icon>
+                  GENERATE PCA
+                </paper-button>
+              </a>
+            </paper-input-container>
+          </div>
+          <div class="col col-9">
             <etools-single-file
                 file="{{agreement.attached_agreement}}"
                 internal-file="[[agreement.attached_agreement_file]]"
@@ -307,7 +339,15 @@
             type: Array,
             value: []
           },
-          oldSelectedPartnerId: Number
+          oldSelectedPartnerId: Number,
+          countryProgrammes: {
+            type: Array,
+            statePath: 'countryProgrammes'
+          },
+          cpStructureOptions: {
+            type: Object,
+            value: []
+          }
         },
 
         observers: [
@@ -825,6 +865,17 @@
             }
           }
           return [];
+        },
+
+        _showIfTypeMatches: function(agreementType, expectedType) {
+          return agreementType === expectedType;
+        },
+
+        _filterCountryProgrammesForAgreements: function(countryProgrammes) {
+          var self = this;
+          return countryProgrammes.filter(function(cp) {
+            // return self.isFutureDate(cp.to_date + 'T23:59:59') && ;
+          });
         }
 
       });
