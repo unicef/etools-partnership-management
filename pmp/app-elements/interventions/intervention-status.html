@@ -11,6 +11,11 @@
 
 <dom-module id="intervention-status">
   <template strip-whitespace>
+    <style>
+      :host {
+        width: 100%;
+      }
+    </style>
     <etools-status statuses="[[possibleStatuses]]"
                        actions="[[possibleActions]]"
                        on-intervention-save-event="_validateAndSaveIntervention"
@@ -47,30 +52,39 @@
           value:  [
               {
                 label: 'Draft',
+                hidden: false,
                 completed: false
               },
               {
                 label: 'Signed',
+                hidden: false,
                 completed: true
               },
               {
                 label: 'Active',
+                hidden: false,
                 completed: false
               },
               {
                 label: 'Ended',
+                hidden: false,
                 completed: false
               },
               {
                 label: 'Closed',
+                hidden: false,
                 completed: false
               },
               {
                 label: 'Suspended',
-                completed: false
+                icon: 'av:pause-circle-filled',
+                hidden: false,
+                completed: true
               },
               {
                 label: 'Terminated',
+                icon: 'report-problem',
+                hidden: false,
                 completed: false
               },
             ]
@@ -80,33 +94,33 @@
             value: [
               {
                 label: 'Save',
-                available: false,
+                hidden: true,
                 primary: true,
                 event: 'intervention-save-event'
               },
               {
                 label: 'Change to draft',
-                available: false,
+                hidden: true,
                 event: 'intervention-draft-event'
               },
               {
                 label: 'Activate',
-                available: false,
+                hidden: true,
                 event: 'intervention-active-event'
               },
               {
                 label: 'Suspend',
-                available: false,
+                hidden: true,
                 event: 'intervention-suspend-event'
               },
               {
                 label: 'Terminate',
-                available: false,
+                hidden: true,
                 event: 'intervention-terminate-event'
               },
               {
                 label: 'Cancel',
-                available: false,
+                hidden: true,
                 event: 'intervention-cancel-event'
               },
             ]
@@ -146,18 +160,27 @@
           }
         },
 
-        _setAllActionsToUnavailable: function() {
+        _setAllActionsToHidden: function() {
           var possibleActions = this.possibleActions;
           possibleActions.forEach(function(elem) {
-            elem.available = false;
+            elem.hidden = true;
           });
 
           this.set('possibleActions', possibleActions);
-          console.log(this.possibleActions);
+          // console.log(this.possibleActions);
+        },
+        _setAllStatusesToHidden: function() {
+          var possibleStatuses = this.possibleStatuses;
+          possibleStatuses.forEach(function(elem) {
+            elem.hidden = true;
+          });
+
+          this.set('possibleStatuses', possibleStatuses);
+          // console.log(this.possibleStatuses);
         },
 
         _computeAvailableActions: function(status) {
-            this._setAllActionsToUnavailable();
+            this._setAllActionsToHidden();
             let availableOptions = ['Save'];
 
             switch(status) {
@@ -191,28 +214,16 @@
               let actionName = this.possibleActions[key].label;
               if (availableOptions.indexOf(actionName) > -1 ) {
                 let config = this.possibleActions[key];
-                config.available = true;
+                config.hidden = false;
                 this.set(['possibleActions', key], config);
               }
             }
             // this.notifyPath('possibleActions');
         },
 
-
-
-
-
         _handleStatusChange: function(status) {
           this.debounce('reset-status-actions', this._computeAvailableActions.bind(this, status), 50);
         },
-
-
-
-
-
-
-
-
 
         _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {

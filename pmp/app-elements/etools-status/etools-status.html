@@ -6,161 +6,110 @@
 <link rel="import" href="etools-action-button.html">
 
 <dom-module id="etools-status">
+  <template>
+    <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
 
-  <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
-
-    :host {
-      display: block;
-      position: relative;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-
-    paper-card {
-      /*position: absolute;*/
-      /*top: 0;*/
-
-      background-color: white;
-      --paper-card-header-color: white;
-      --paper-card-header-text: {
-        font-size: 21px;
-        text-align: center;
-        padding-top: 9px;
-        padding-bottom: 9px;
+      :host {
+        display: block;
+        position: relative;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-        font-weight: bold;
-      };
-      --paper-card-header: {
-        background-color: var(--etools-blue, #0099FF);
-        height: 48px;
-        padding: 0;
-      };
-      --paper-card-content: {
-        min-width: 200px;
-        padding: 0;
-        background-color: white;
-      };
-      --paper-card-actions: {
-        padding: 0;
-        background-color: white;
-      };
-    }
-    .big {
-      padding: 24px;
-      box-sizing: border-box;
-    }
-    .reject {
-      display: none;
-    }
-    .reject.blue {
-      display: block;
-    }
-    .circlenr {
-      display: block;
-      float: left;
-      width: 24px;
-      height: 24px;
-      background-color: var(--gray-light, rgba(0,0,0,.38));
-      color: white;
-      font-size: 12px;
-      line-height: 24px;
-      border-radius: 50%;
-      text-align: center;
-    }
-    .circlenr iron-icon {
-      color: white;
-      display: none;
-    }
-    .red, .statuscont span.status.red {
-      color: var(--et2f-error, #EA4022);
-    }
-    .status {
-      color: var(--gray-mid, rgba(0,0,0,.54));
-      font-size: 14px;
-      padding-left: 6px;
-    }
-    .status.black {
-      color: var(--gray-dark, rgba(0,0,0,.87));
-      font-weight: 500;
-    }
-    .statusdate {
-      color: var(--gray-mid, rgba(0,0,0,.54));
-      font-size: 12px;
-      line-height: 20px;
-      padding-left: 6px;
-    }
-    .statuscont.appr.rejected {
-      display: none;
-    }
-    .statuscont.blue .status {
-      color: var(--gray-dark, rgba(0,0,0,.87));
-      font-weight: 500;
-    }
-    .statuscont.blue .circlenr {
-      background-color: var(--et2f-primary, #00AEEF);
-    }
-    .statuscont.green .status {
-      color: var(--gray-dark, rgba(0,0,0,.87));
-      font-weight: 500;
-    }
-    .statuscont.green .circlenr {
-      background-color: var(--et2f-sec-lightgreen, #8DC63F);
-    }
-    .circlenr span.green {
-      display: none;
-    }
-    .circlenr iron-icon.green {
-      display: block;
-    }
-    .circlenr iron-icon.green {
-      width: 18px;
-      padding-left: 3px;
-    }
-    .circlenr iron-icon.green.thumbs {
-      width: 16px;
-      padding-left: 4px;
-    }
-    .vertline {
-      margin: 7px 12px;
-      border-left: 2px solid var(--gray-light, rgba(0,0,0,.38));
-      transform: translate(-1px,0);
-      padding-top: 45px;
-    }
-    .vertline:first-child {
-      display: none;
-    }
-  </style>
+      }
+      etools-content-panel {
+        width: 100%;
+        --ecp-content: {
+          /*padding: 25px;*/
+        };
+      }
+      etools-action-button {
+        margin-top: 24px;
+        margin-bottom: 24px;
+      }
+      .number-circle {
+        display: block;
+        float: left;
+        width: 24px;
+        height: 24px;
+        background-color: var(--gray-light, rgba(0, 0, 0, .38));
+        color: white;
+        font-size: 12px;
+        line-height: 24px;
+        border-radius: 50%;
+        text-align: center;
+      }
+      .number-circle iron-icon {
+        color: white;
+        display: none;
+      }
+      .red, .status-container span.status.red {
+        color: var(--et2f-error, #EA4022);
+      }
+      .status {
+        color: var(--gray-mid, rgba(0,0,0,.54));
+        font-size: 14px;
+        padding-left: 6px;
+      }
+      .status-container.pending .status {
+        color: var(--gray-dark, rgba(0,0,0,.87));
+        font-weight: 500;
+      }
+      .status-container.pending .number-circle {
+        background-color: var(--et2f-primary, #00AEEF);
+      }
+      .status-container.custom .number-circle {
+        background-color: initial;
+      }
+      .custom .number-circle span {
+        display: none;
+      }
+      .custom .custom-icon {
+        display: block;
+        color: red;
+      }
+      .status-container.completed .number-circle {
+        background-color: var(--et2f-sec-lightgreen, #8DC63F);
+      }
+      .completed .number-circle span {
+        display: none;
+      }
+      .completed .number-circle iron-icon.done-icon {
+        display: block;
+        width: 18px;
+        padding-left: 3px;
+      }
+      .vertical-line {
+        margin: 7px 12px;
+        border-left: 1px solid var(--gray-light, rgba(0, 0, 0, .38));
+        padding-top: 45px;
+      }
+      .vertical-line:first-child {
+        display: none;
+      }
+    </style>
 
-  <template>
-    <paper-card id="main-card" heading="Status">
+    <etools-content-panel panel-title="Status">
 
-        <div class="card-content">
-          <div class="big vertical layout">
+          <template is="dom-repeat" items="[[availableStatuses]]" as="status">
+            <div class="vertical-line flex"></div>
 
-            <template is="dom-repeat" items="[[statuses]]" as="status">
-              <div class="vertline flex"></div>
-
-              <div class$="statuscont [[_getStatusCssClass(status.completed, index)]]">
-                <div class="circlenr">
-                  <span class$="[[_getStatusCssClass(status.completed, index)]]">[[_getTrueIndex(index)]]</span>
-                    <iron-icon class$="[[_getStatusCssClass(status.completed, index)]]" icon="icons:done"></iron-icon>
-                </div>
-                <span class="status">[[status.label]]</span>
+            <div class$="status-container [[_getStatusCssClass(status, index)]]">
+              <div class="number-circle">
+                <span>[[_getTrueIndex(index)]]</span>
+                <iron-icon class="done-icon" icon="done"></iron-icon>
+                <iron-icon class="custom-icon" icon="report-problem"></iron-icon>
               </div>
-            </template>
-          </div>
+              <span class="status">[[status.label]]</span>
+            </div>
+          </template>
 
-        </div>
 
         <div class="card-actions">
           <etools-action-button actions="[[actions]]">
           </etools-action-button>
         </div>
 
-    </paper-card>
+    </etools-content-panel>
   </template>
 
   <script>
@@ -175,17 +124,27 @@
           type: Array,
           value: []
         },
+        availableStatuses: {
+          type: Array,
+          computed: '_computeAvailableStatuses(statuses)'
+        },
         actions: {
           type: Array,
           value: []
         },
       },
-      _getStatusCssClass: function(completed, index) {
-        if (completed === true) {
-           return 'green';
+      _getStatusIcon: function(icon) {
+        return icon || 'done';
+      },
+      _getStatusCssClass: function(status, index) {
+        if (status.completed && !status.icon) {
+          return 'completed';
+        }
+        if (status.completed && status.icon) {
+          return 'custom';
         }
         if (index === 0) {
-          return 'blue';
+          return 'pending';
         }
         return '';
       },
@@ -219,7 +178,12 @@
 
       detached: function() {
         window.onscroll = this._previousOnScroll;
-      }
+      },
+      _computeAvailableStatuses: function(statuses) {
+        return statuses.filter(function(elem) {
+          return !elem.hidden;
+        });
+      },
     });
   </script>
 

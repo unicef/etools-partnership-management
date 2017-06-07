@@ -14,7 +14,7 @@
       display: block;
     }
     paper-button {
-      margin: 24px;
+      /*margin: 24px;*/
       padding: 0;
       height: 36px;
       background-color: var(--et2f-primary, #00AEEF);
@@ -86,11 +86,11 @@
           return;
         }
         var primaryAction = actions.find(function(elem) {
-          return elem.primary && elem.available;
+          return elem.primary && !elem.hidden;
         });
 
         var secondaryActions = actions.filter(function(elem) {
-          return !elem.primary && elem.available;
+          return !elem.primary && !elem.hidden;
         });
 
         if(!primaryAction && secondaryActions && secondaryActions.length) {
