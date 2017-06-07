@@ -412,7 +412,10 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          this.generatePCADialog.agreementId = agreement.id;
+          if (this.generatePCADialog) {
+            this.generatePCADialog.agreementId = agreement.id;
+          }
+
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
@@ -697,7 +700,7 @@
 
         _openGeneratePCADialog: function() {
           this.generatePCADialog.open();
-        }
+        },
 
         /**
          * Filter CP to obtain agreement CP Structure options.
