@@ -298,6 +298,12 @@
         },
 
         _mapDropdownOptions: function() {
+          if(!this.partnerTypes || !this.partnerTypes.length) {
+            return;
+          }
+          if(!this.csoTypes.length || !this.csoTypes.length) {
+            return;
+          }
           // init list filter options
           this.initListFiltersData([
             {
