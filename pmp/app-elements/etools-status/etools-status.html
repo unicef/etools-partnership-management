@@ -11,40 +11,42 @@
 
     :host {
       display: block;
-    }
-    .float-container {
       position: relative;
-      top: 0;
-      width: 200px;
-      height: 100%;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     paper-card {
-      position: absolute;
-      top: 0;
+      /*position: absolute;*/
+      /*top: 0;*/
 
       background-color: white;
       --paper-card-header-color: white;
       --paper-card-header-text: {
-        font-size: 20px;
+        font-size: 21px;
         text-align: center;
         padding-top: 9px;
         padding-bottom: 9px;
-      }
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-weight: bold;
+      };
       --paper-card-header: {
         background-color: var(--etools-blue, #0099FF);
         height: 48px;
         padding: 0;
-      }
+      };
       --paper-card-content: {
         min-width: 200px;
         padding: 0;
         background-color: white;
-      }
+      };
       --paper-card-actions: {
         padding: 0;
         background-color: white;
-      }
+      };
     }
     .big {
       padding: 24px;
@@ -133,36 +135,32 @@
   </style>
 
   <template>
-    <div class="float-container">
-      <paper-card id="main-card" heading="Status">
+    <paper-card id="main-card" heading="Status">
 
-        <!-- Travel statuses -->
+        <div class="card-content">
+          <div class="big vertical layout">
 
-          <div class="card-content">
-            <div class="big vertical layout">
+            <template is="dom-repeat" items="[[statuses]]" as="status">
+              <div class="vertline flex"></div>
 
-              <template is="dom-repeat" items="[[statuses]]" as="status">
-                <div class="vertline flex"></div>
-
-                <div class$="statuscont [[_getStatusCssClass(status.completed, index)]]">
-                  <div class="circlenr">
-                    <span class$="[[_getStatusCssClass(status.completed, index)]]">[[_getTrueIndex(index)]]</span>
-                      <iron-icon class$="[[_getStatusCssClass(status.completed, index)]]" icon="icons:done"></iron-icon>
-                  </div>
-                  <span class="status">[[status.label]]</span>
+              <div class$="statuscont [[_getStatusCssClass(status.completed, index)]]">
+                <div class="circlenr">
+                  <span class$="[[_getStatusCssClass(status.completed, index)]]">[[_getTrueIndex(index)]]</span>
+                    <iron-icon class$="[[_getStatusCssClass(status.completed, index)]]" icon="icons:done"></iron-icon>
                 </div>
-              </template>
-            </div>
-
+                <span class="status">[[status.label]]</span>
+              </div>
+            </template>
           </div>
 
-          <div class="card-actions">
-            <etools-action-button actions="[[actions]]">
-            </etools-action-button>
-          </div>
+        </div>
 
-      </paper-card>
-    </div>
+        <div class="card-actions">
+          <etools-action-button actions="[[actions]]">
+          </etools-action-button>
+        </div>
+
+    </paper-card>
   </template>
 
   <script>
