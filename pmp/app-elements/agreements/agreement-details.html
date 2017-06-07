@@ -134,8 +134,6 @@
                                  label="End date"
                                  value="{{agreement.end}}"
                                  readonly$="[[!_allowFieldEditing('endDate', agreement.status)]]"
-                                 error-message="Please select end date"
-                                 required$="[[validateStringValue(agreement.start)]]"
                                  no-init show-clear-btn>
               </etools-date-input>
             </div>
@@ -147,6 +145,11 @@
                   label="CP Structure"
                   placeholder="&#8212;"
                   options="[[cpStructureOptions]]"
+                  option-value="id"
+                  option-label="name"
+                  hide-search
+                  selected="{{agreement.cp_structure}}"
+                  readonly$="[[!_allowFieldEditing('cpStructure', agreement.status, agreement.agreement_type)]]"
                   error-message="Please select CP Structure"
                   required>
               </etools-single-selection-menu>
@@ -166,9 +169,7 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 dynamic-align
-                readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]"
-                error-message="Please select a partner"
-                required$="[[validateStringValue(agreement.signed_by_partner_date)]]">
+                readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]">
             </etools-single-selection-menu>
           </div>
           <div class="col col-3">
@@ -177,8 +178,6 @@
                                label="Signed By Partner Date"
                                value="{{agreement.signed_by_partner_date}}"
                                readonly$="[[!_allowFieldEditing('signedByPartnerDate', agreement.status)]]"
-                               error-message="Please select signed by partner date"
-                               required$="[[validateIdValue(agreement.partner_manager)]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -195,9 +194,7 @@
                 option-label="full_name"
                 selected="{{agreement.signed_by}}"
                 dynamic-align
-                readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]"
-                error-message="Please select UNICEF staff"
-                required$="[[validateStringValue(agreement.signed_by_unicef_date)]]">
+                readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]">
             </etools-single-selection-menu>
           </div>
           <div class="col col-3">
@@ -206,8 +203,6 @@
                                label="Signed By UNICEF Date"
                                value="{{agreement.signed_by_unicef_date}}"
                                readonly$="[[!_allowFieldEditing('signedByUnicefDate', agreement.status)]]"
-                               error-message="Please select signed by UNICEF date"
-                               required$="[[validateIdValue(agreement.signed_by)]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -247,8 +242,7 @@
         <partner-authorized-officers id="authorizedOfficers"
                                      selected-officers="{{agreement.authorized_officers}}"
                                      officers-dropdown-data="[[staffMembers]]"
-                                     edit-mode="[[_allowFieldEditing('officers', agreement.status)]]"
-                                     required$="[[_signedByValuesFilledAndValid(agreement.signed_by, agreement.signed_by_unicef_date, agreement.partner_manager, agreement.signed_by_partner_date)]]">
+                                     edit-mode="[[_allowFieldEditing('officers', agreement.status)]]">
         </partner-authorized-officers>
       </etools-content-panel>
 
@@ -342,7 +336,8 @@
           oldSelectedPartnerId: Number,
           countryProgrammes: {
             type: Array,
-            statePath: 'countryProgrammes'
+            statePath: 'countryProgrammes',
+            observer: '_countryProgrammesChanged'
           },
           cpStructureOptions: {
             type: Object,
@@ -407,9 +402,6 @@
 
             this.set('oldSelectedPartnerId', agreement.partner);
 
-            // reset invalid state for signed by values
-            this._resetSignedByValidations();
-
             // reset authorized officers invalid messages
             this._resetOfficersField();
 
@@ -432,7 +424,7 @@
             this._resetDropdown('#agreementType');
             this._resetDropdown('#signedByUnicef');
             this._resetDropdown('#signedByPartner', true);
-            this._resetSignedByValidations();
+
             this._resetOfficersField();
           }
           this.fire('global-loading', {active: false});
@@ -453,14 +445,6 @@
           }
         },
 
-        _resetSignedByValidations: function() {
-          this.fieldValidationReset('#endDateField');
-          this.fieldValidationReset('#signedByPartner');
-          this.fieldValidationReset('#signedByPartnerDateField');
-          this.fieldValidationReset('#signedByUnicef');
-          this.fieldValidationReset('#signedByUnicefDateField');
-        },
-
         _resetOfficersField: function() {
           var selectedOfficers = this.$.authorizedOfficers;
           selectedOfficers._updateInvalidState(false);
@@ -477,8 +461,9 @@
           return this.agreement.status === 'draft';
         },
 
-        _allowEdit: function(agreementStatus) {
-          if (!this.editMode) {
+        _allowEdit: function(agreementStatus, editMode) {
+          editMode = editMode || this.editMode;
+          if (!editMode) {
             return false;
           }
           if (this.allowEditRegardlessStatus) {
@@ -498,7 +483,7 @@
         _allowFieldEditing: function(fieldName, agreementStatus) {
 
           var allowEdit = false;
-          if (['partnerName', 'agreementType', 'startDate', 'endDate', 'signedByPartner',
+          if (['partnerName', 'agreementType', 'startDate', 'endDate', 'cpStructure', 'signedByPartner',
                 'signedByUnicef', 'signedByPartnerDate', 'signedByUnicefDate', 'officers'].indexOf(fieldName) > -1) {
             allowEdit = this._allowEdit(agreementStatus);
           }
@@ -508,18 +493,6 @@
         _showGenerateReportBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
           return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
               (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
-        },
-
-        /**
-         * Check if signed by fields have at least one valid value
-         */
-        _signedByValuesFilledAndValid: function(signedByUnicefStaffId, signedByUnicefDate,
-                                                signedByPartnerStaffId, signedByPartnerDate) {
-          return this.validateIdValue(signedByUnicefStaffId)
-              || this.validateStringValue(signedByUnicefDate)
-              || this.validateIdValue(signedByPartnerStaffId)
-              || this.validateStringValue(signedByPartnerDate);
-
         },
 
         _partnerChanged: function(currentPartnerId) {
@@ -543,93 +516,20 @@
             return;
           }
 
-          if (agreementProperty) {
-            if (agreementProperty.path === 'agreement.start' || agreementProperty.path === 'agreement.end') {
-              this._validateStartAndEndDateField();
-            } else if (agreementProperty.path === 'agreement.signed_by'
-                || agreementProperty.path === 'agreement.signed_by_unicef_date') {
-              this._validateSignedByUnicefFields(this.agreement.signed_by, this.agreement.signed_by_unicef_date);
-            } else if (agreementProperty.path === 'agreement.partner_manager'
-                || agreementProperty.path === 'agreement.signed_by_partner_date') {
-              this._validateSignedByPartnerFields(this.agreement.partner_manager,
-                  this.agreement.signed_by_partner_date);
-            } else if (agreementProperty.path === 'agreement.partner') {
-              this.fieldValidationReset('#partner');
-            } else if (agreementProperty.path === 'agreement.agreement_type') {
-              this.fieldValidationReset('#agreementType');
+          if (agreementProperty && agreementProperty.path === 'agreement.agreement_type') {
+            if (agreementProperty.value !== 'PCA') {
+              // reset cp_structure as it's available only for PCA type
+              this.set('agreement.cp_structure', null);
+              // reset start and end date
+              this.set('agreement.start', null);
+              this.set('agreement.end', null);
+            } else {
+              if (this.cpStructureOptions instanceof Array && this.cpStructureOptions.length === 1) {
+                this.set('agreement.cp_structure', this.cpStructureOptions[0].id);
+              }
             }
           }
 
-        },
-
-        /**
-         * End date is conditioned by the start date
-         * if start date is entered, then the end date is required;
-         * also, when end date changes, trigger the validation again.
-         */
-        _validateStartAndEndDateField: function() {
-          // check edit permissions and continue only if true
-          if (!this._allowEdit(this.agreement.status)) {
-            return;
-          }
-          var endDateField = this.$$('#endDateField');
-          if (endDateField) {
-            endDateField.validate();
-          }
-        },
-
-        /**
-         * Signed by unicef field is required in case signed by unicef date field is filed, and
-         * signed by unicef date field is required in case signed by unicef is selected.
-         * Also officers are required if at least one of these fields are populated.
-         */
-        _validateSignedByUnicefFields: function(singedByUnicefStaffId, signedByUnicefDateString) {
-          setTimeout(function() {
-            // setTimeout with 0 delay will ensure signedByUnicef dropdown
-            // selected value will be set before this validation
-            var signedByUnicefField = this.$$('#signedByUnicef');
-            var signedByUnicefDateField = this.$$('#signedByUnicefDateField');
-            if (singedByUnicefStaffId !== null || signedByUnicefDateString !== null) {
-              if (signedByUnicefField) {
-                signedByUnicefField.validate();
-              }
-              if (signedByUnicefDateField) {
-                signedByUnicefDateField.validate();
-              }
-            }
-            // also partner authorized officers field is required if at least one of these 2 fields was filed
-            var authorizedOfficers = this.$$('#authorizedOfficers');
-            if (authorizedOfficers) {
-              authorizedOfficers.validateOfficersSelection();
-            }
-          }.bind(this), 0);
-        },
-
-        /**
-         * Signed by partner field is required in case signed by partner date field is filed, and
-         * signed by partner date field is required in case signed by partner is selected.
-         * Also officers are required if at least one of these fields are populated.
-         */
-        _validateSignedByPartnerFields: function(singedByPartnerStaffId, signedByPartnerDateString) {
-          setTimeout(function() {
-            // setTimeout with 0 delay will ensure signedByPartner dropdown
-            // selected value will be set before this validation
-            var signedByPartnerField = this.$$('#signedByPartner');
-            var signedByPartnerDateField = this.$$('#signedByPartnerDateField');
-            if (singedByPartnerStaffId !== null || signedByPartnerDateString !== null) {
-              if (signedByPartnerField) {
-                signedByPartnerField.validate();
-              }
-              if (signedByPartnerDateField) {
-                signedByPartnerDateField.validate();
-              }
-            }
-            // also partner authorized officers field is required if at least one of these 2 fields was filed
-            var authorizedOfficers = this.$$('#authorizedOfficers');
-            if (authorizedOfficers) {
-              authorizedOfficers.validateOfficersSelection();
-            }
-          }.bind(this), 0);
         },
 
         /**
@@ -640,40 +540,18 @@
 
           // validate partner
           if (this.validateIdValue(this.agreement.partner) === false) {
-            valid = false;
             var partnerField = this.$$('#partner');
-            if (partnerField) {
-              this.$$('#partner').invalid = true;
+            if (!partnerField.validate()) {
+              valid = false;
             }
           }
 
           // validate agreement type
           if (this.validateStringValue(this.agreement.agreement_type) === false) {
-            valid = false;
             var agreementTypeField = this.$$('#agreementType');
-            if (agreementTypeField) {
-              this.$$('#agreementType').invalid = true;
-            }
-          }
-
-          // validate start date
-          if (this.validateStringValue(this.agreement.start)) {
-            // end date is required only if start date was selected
-            var endDateField = this.$$('#endDateField');
-            if (endDateField && endDateField.validate() === false) {
+            if (!agreementTypeField.validate()) {
               valid = false;
             }
-          }
-
-          // validate signedByPartner and signedByPartnerDate and signedByManager and signedByManagerDate fields
-          if (this._validSignedByFields(this.agreement.partner_manager, this.agreement.signed_by_partner_date,
-                  this.agreement.signed_by, this.agreement.signed_by_unicef_date) === false) {
-            valid = false;
-          }
-
-          // validate partner authorized officers in case
-          if (this._validateSelectedOfficers() === false) {
-            valid = false;
           }
 
           if (!this._validateAmendments()) {
@@ -682,85 +560,13 @@
 
           return valid;
         },
+
         _validateAmendments: function() {
            var agreementAmendmentsElem = this.$$('#agreementAmendments');
            if (agreementAmendmentsElem) {
              return agreementAmendmentsElem.validate();
            }
            return true;
-        },
-        /**
-         * Validate signed by fields
-         */
-        _validSignedByFields: function(partnerStaffId, partnerSignedDate, unicefStaffId, unicefSignedDate) {
-          var valid = true;
-
-          // validate signedByPartner and signedByPartnerDate
-          var validSignedByPartner = this.validateIdValue(partnerStaffId);
-          var validSignedByPartnerDate = this.validateStringValue(partnerSignedDate);
-
-          if (validSignedByPartnerDate) {
-            // partner_manager is required only if sign_by_partner_date was selected
-            if (validSignedByPartner === false) {
-              valid = false;
-              var signedByPartnerField = this.$$('#signedByPartner');
-              if (signedByPartnerField) {
-                signedByPartnerField.invalid = true;
-              }
-            }
-          }
-
-          if (validSignedByPartner) {
-            if (validSignedByPartnerDate === false) {
-              valid = false;
-              var signedByPartnerDateField = this.$$('#signedByPartnerDateField');
-              if (signedByPartnerDateField) {
-                signedByPartnerDateField.validate();
-              }
-            }
-          }
-
-          // validate signedByUnicef and signedByUnicefDate fields
-          var validSignedByUnicefStaff = this.validateIdValue(unicefStaffId);
-          var validSignedByUnicefDate = this.validateStringValue(unicefSignedDate);
-
-          if (validSignedByUnicefDate) {
-            // signed_by is required only if sign_by_unicef_date was selected
-            if (validSignedByUnicefStaff === false) {
-              valid = false;
-              var signedByUnicefField = this.$$('#signedByUnicef');
-              if (signedByUnicefField) {
-                signedByUnicefField.invalid = true;
-              }
-            }
-          }
-
-          // validate signedByUnicefDate
-          if (validSignedByUnicefStaff) {
-            if (validSignedByUnicefDate === false) {
-              valid = false;
-              var signedByUnicefDateField = this.$$('#signedByUnicefDateField');
-              if (signedByUnicefDateField) {
-                signedByUnicefDateField.validate();
-              }
-            }
-          }
-
-          return valid;
-        },
-
-        /**
-         * Validate officers selection
-         */
-        _validateSelectedOfficers: function() {
-          var valid = true;
-          if (this._signedByValuesFilledAndValid(this.agreement.signed_by, this.agreement.signed_by_unicef_date,
-                  this.agreement.partner_manager, this.agreement.signed_by_partner_date)) {
-            if (this.$.authorizedOfficers.validateOfficersSelection() === false) {
-              valid = false;
-            }
-          }
-          return valid;
         },
 
         /**
@@ -769,20 +575,9 @@
         _getCurrentChanges: function() {
           var changes = {};
           if (this.agreement && this.agreement.id === this.originalAgreementData.id) {
-            // check for missing start date
-            if (!(typeof this.agreement.start === 'string' && this.agreement.changes !== '')) {
-              var maxDateStr = this.getMaxDateStr(this.agreement.signed_by_partner_date,
-                  this.agreement.signed_by_unicef_date);
-              if (maxDateStr) {
-                this.set('agreement.start', maxDateStr);
-                this.fire('toast', {text: '\'Start date\' has been set to latest date between' +
-                  ' \'Signed By Partner Date\' and \'Signed By UNICEF Date\'', showCloseBtn: true});
-              }
-            }
-
             // prevent the possibility of checking 2 different agreements
-            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'attached_agreement',
-              'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
+            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'cp_structure',
+              'attached_agreement', 'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
               'authorized_officers', 'amendments'];
             // TODO: include amendments to above array with proper checkings
             availableChangingFields.forEach(function(fieldName) {
@@ -842,6 +637,7 @@
             attached_agreement: agreement.attached_agreement,
             start: agreement.start,
             end: agreement.end,
+            cp_structure: agreement.cp_structure,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
             signed_by_partner_date: agreement.signed_by_partner_date,
             status: 'draft',
@@ -867,15 +663,39 @@
           return [];
         },
 
+        /**
+         * Check if agreement type is expected type
+         */
         _showIfTypeMatches: function(agreementType, expectedType) {
           return agreementType === expectedType;
         },
 
+        /**
+         * Filter Country programmes:
+         *    - omit any CP where the end date is in the past
+         *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
+         *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
+         */
         _filterCountryProgrammesForAgreements: function(countryProgrammes) {
           var self = this;
           return countryProgrammes.filter(function(cp) {
-            // return self.isFutureDate(cp.to_date + 'T23:59:59') && ;
+            let cpParts = cp.wbs.split('/');
+             return self.isFutureDate(cp.to_date + 'T23:59:59') &&
+               cpParts[cpParts.length - 1].slice(-2) !== '99' &&
+               cpParts[1] === 'A0';
           });
+        },
+
+        /**
+         * Filter CP to obtain agreement CP Structure options.
+         * If the result is just one option then set it as selected by default, make dropdown readonly
+         */
+        _countryProgrammesChanged: function(cp) {
+          let cpStructure = this._filterCountryProgrammesForAgreements(cp);
+          this.set('cpStructureOptions', cpStructure);
+          if (cpStructure.length === 1) {
+            this.set('agreement.cp_structure', cpStructure[0].id);
+          }
         }
 
       });
