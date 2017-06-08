@@ -285,7 +285,8 @@
         observers: [
           '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
             'requiredDataLoaded, initComplete)',
-          '_init(active)'
+          '_init(active)',
+          '_mapDropdownOptions(partnerTypes.length, csoTypes.length)'
         ],
 
         listeners: {
@@ -294,7 +295,15 @@
 
         ready: function() {
           this.$.list.classList.add('hidden');
+        },
 
+        _mapDropdownOptions: function() {
+          if(!this.partnerTypes || !this.partnerTypes.length) {
+            return;
+          }
+          if(!this.csoTypes || !this.csoTypes.length) {
+            return;
+          }
           // init list filter options
           this.initListFiltersData([
             {
@@ -315,6 +324,7 @@
             }
           ]);
         },
+
 
         attached: function() {
           this.listAttachedCallback(this.active, 'Loading partners list data...');
