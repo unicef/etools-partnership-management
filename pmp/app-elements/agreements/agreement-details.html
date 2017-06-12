@@ -16,6 +16,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -34,7 +35,7 @@
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles buttons-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles buttons-styles required-field-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -75,7 +76,7 @@
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('partnerName', agreement.status)]]"
                 error-message="Please select a partner"
-                required>
+                required starred>
             </etools-single-selection-menu>
           </div>
           <div class="col col-3">
@@ -98,7 +99,7 @@
             <paper-input label="Reference Number"
                          value="[[agreement.agreement_number]]"
                          placeholder="&#8212;"
-                         readonly></paper-input>
+                         readonly starred></paper-input>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -109,7 +110,7 @@
                                value="{{agreement.start}}"
                                readonly$="[[!_allowFieldEditing('startDate', agreement.status)]]"
                                no-init show-clear-btn>
-            </etools-date-input>
+            </etools-date-input starred>
           </div>
           <div class="col col-3">
             <!-- End date -->
