@@ -133,8 +133,8 @@
         '_handleStatusChanged(statuses, statuses.*)'
       ],
       _handleStatusChanged(statuses) {
+        this.set('availableStatuses', []);
         this.debounce('etools-status-options-changed-handler', function() {
-          this.set('availableStatuses', null);
           this.set('availableStatuses', this._computeAvailableStatuses(statuses));
         }.bind(this), 50);
       },

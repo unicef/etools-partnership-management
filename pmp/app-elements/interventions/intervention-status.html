@@ -181,7 +181,6 @@
           });
 
           this.set('possibleActions', possibleActions);
-          // console.log(this.possibleActions);
         },
         _setAllStatusesToHidden: function() {
           var possibleStatuses = this.possibleStatuses;
@@ -304,12 +303,10 @@
               activeStatus = 'Closed';
               break;
           };
-          console.log(activeStatus, status);
 
           for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
             let workingStatus = this.possibleStatuses[key];
             if (workingStatus.label === activeStatus) {
-              console.log(workingStatus);
               completedFlag = true;
             }
             if (availableStatuses.indexOf(workingStatus.label) > -1 ) {
@@ -369,27 +366,22 @@
 
         _setStatusTerminated: function() {
           this._updateStatus('terminated');
-          console.log('status change: terminated');
         },
 
         _setStatusDraft: function() {
           this._updateStatus('draft');
-          console.log('status change: draft');
         },
 
         _setStatusActive: function() {
           this._updateStatus('active');
-          console.log('status change: active');
         },
 
         _setStatusSuspended: function() {
           this._updateStatus('suspended');
-          console.log('status change: suspended');
         },
 
         _setStatusCanceled: function() {
           this._updateStatus('canceled');
-          console.log('status change: canceled');
         },
 
         /**
