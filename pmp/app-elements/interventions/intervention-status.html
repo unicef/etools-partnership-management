@@ -59,7 +59,7 @@
                 {
                   label: 'Signed',
                   hidden: false,
-                  completed: true
+                  completed: false
                 },
                 {
                   label: 'Active',
@@ -71,14 +71,14 @@
                   icon: 'av:pause-circle-filled',
                   iconColor: this.getComputedStyleValue('--warning-color'),
                   hidden: false,
-                  completed: true
+                  completed: false
                 },
                 {
                   label: 'Terminated',
                   icon: 'report-problem',
                   iconColor: this.getComputedStyleValue('--error-color'),
                   hidden: false,
-                  completed: true
+                  completed: false
                 },
                 {
                   label: 'Ended',
@@ -87,6 +87,11 @@
                 },
                 {
                   label: 'Closed',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Cancelled',
                   hidden: false,
                   completed: false
                 },
@@ -118,6 +123,11 @@
                 event: 'intervention-suspend-event'
               },
               {
+                label: 'Unsuspend',
+                hidden: true,
+                event: 'intervention-unsuspend-event'
+              },
+              {
                 label: 'Terminate',
                 hidden: true,
                 event: 'intervention-terminate-event'
@@ -140,9 +150,6 @@
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
-        },
-        _getPossibleStatuses: function() {
-
         },
 
         detached: function() {
@@ -183,7 +190,6 @@
           });
 
           this.set('possibleStatuses', possibleStatuses);
-          // console.log(this.possibleStatuses);
         },
 
         _computeAvailableActions: function(status) {
@@ -200,12 +206,11 @@
                 break;
               case 'suspended':
                 availableOptions.push('Terminate');
+                // availableOptions.push('Unsuspend');
                 break;
               case 'terminated':
                 // removes Save option
                 availableOptions.pop();
-                availableOptions.push('Activate');
-                availableOptions.push('Suspend');
                 break;
               case 'cancelled':
                 // removes Save option
@@ -225,13 +230,104 @@
                 this.set(['possibleActions', key], config);
               }
             }
-            // this.notifyPath('possibleActions');
+        },
+
+        _computeAvailableStatuses: function(status) {
+          this._setAllStatusesToHidden();
+          let availableStatuses = [];
+          let completedFlag = false;
+          let activeStatus;
+
+          switch(status) {
+            case 'draft':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Draft';
+              break;
+
+            case 'active':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Active';
+              break;
+
+            case 'suspended':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Suspended',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Suspended';
+              break;
+
+            case 'terminated':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Terminated',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Terminated';
+              break;
+
+            case 'cancelled':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Cancelled',
+                'Closed',
+              ];
+              activeStatus = 'Cancelled';
+              break;
+
+            case 'closed':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Closed';
+              break;
+          };
+          console.log(activeStatus, status);
+
+          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+            let workingStatus = this.possibleStatuses[key];
+            if (workingStatus.label === activeStatus) {
+              console.log(workingStatus);
+              completedFlag = true;
+            }
+            if (availableStatuses.indexOf(workingStatus.label) > -1 ) {
+              workingStatus.hidden = false;
+            }
+            workingStatus.completed = completedFlag;
+            this.set(['possibleStatuses', key], null);
+            this.set(['possibleStatuses', key], workingStatus);
+          }
         },
 
         _handleStatusChange: function(status) {
-          this.debounce('reset-status-actions', this._computeAvailableActions.bind(this, status), 50);
+          this.debounce('reset-status-actions', function() {
+            this._computeAvailableStatuses(status);
+            // this._setCompletedStatuses();
+            this._computeAvailableActions(status);
+          }.bind(this), 50);
         },
-
         _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this.fire('update-intervention-status', {

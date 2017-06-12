@@ -87,24 +87,24 @@
 
     <etools-content-panel panel-title="Status">
 
-          <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="vertical-line flex"></div>
-
-            <div class$="status-container [[_getStatusCssClass(status, index)]]">
-              <div class="number-circle">
-                <span>[[_getTrueIndex(index)]]</span>
-                <iron-icon class="done-icon" icon="done"></iron-icon>
-                <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
-              </div>
-              <span class="status">[[status.label]]</span>
+      <template is="dom-repeat" items="[[availableStatuses]]" as="status" observe="availableStatuses.*">
+        <!--<template is="dom-if" if="[[!status.hidden]]">-->
+          <div class="vertical-line flex"></div>
+          <div class$="status-container [[_getStatusCssClass(status, index)]]">
+            <div class="number-circle">
+              <span>[[_getTrueIndex(index)]]</span>
+              <iron-icon class="done-icon" icon="done"></iron-icon>
+              <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
             </div>
-          </template>
+            <span class="status">[[status.label]]</span>
+          </div>
+        <!--</template>-->
+      </template>
 
-
-        <div class="card-actions">
-          <etools-action-button actions="[[actions]]">
-          </etools-action-button>
-        </div>
+      <div class="card-actions">
+        <etools-action-button actions="[[actions]]">
+        </etools-action-button>
+      </div>
 
     </etools-content-panel>
   </template>
@@ -123,12 +123,20 @@
         },
         availableStatuses: {
           type: Array,
-          computed: '_computeAvailableStatuses(statuses)'
         },
         actions: {
           type: Array,
           value: []
         },
+      },
+      observers: [
+        '_handleStatusChanged(statuses, statuses.*)'
+      ],
+      _handleStatusChanged(statuses) {
+        this.debounce('etools-status-options-changed-handler', function() {
+          this.set('availableStatuses', null);
+          this.set('availableStatuses', this._computeAvailableStatuses(statuses));
+        }.bind(this), 50);
       },
       _getStatusIcon: function(icon) {
         return icon || 'done';
