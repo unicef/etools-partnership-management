@@ -71,6 +71,7 @@
                 <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
                                         cp-output-id="{{item.cp_output}}"
                                         selected-cp-indicators-ids="{{item.ram_indicators}}"
+                                        selected-cp-structure="[[selectedCpStructure]]"
                                         already-selected-cpo="[[alreadySelectedCpOutputs]]"
                                         required$="[[required]]"
                                         edit-mode$="[[editMode]]">
@@ -136,6 +137,10 @@
           },
           indicatorDialog: {
             type: Object
+          },
+          selectedCpStructure: {
+            type: String,
+            observer: 'selectedCpStructureChanged'
           }
         },
 
@@ -170,7 +175,9 @@
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
         },
-
+        selectedCpStructureChanged: function() {
+          console.log('expected-results -selectedCpStructureChanged');
+        },
         /**
          * Add/update indicators data
          */

@@ -179,13 +179,13 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-            <etools-single-selection-menu id="hrps"
-                                          label="In response to an HRP, Select"
+            <etools-single-selection-menu id="cpStructure"
+                                          label="CP Structure"
                                           placeholder="&#8212;"
-                                          options="[[hrps]]"
+                                          options="[[cpStructureOptions]]"
                                           option-value="id"
                                           option-label="name"
-                                          selected="{{intervention.hrp}}"
+                                          selected="{{intervention.cp_structure}}"
                                           dynamic-align
                                           readonly$="[[!editMode]]">
           </etools-single-selection-menu>
@@ -237,6 +237,7 @@
     <etools-content-panel class="content-section" panel-title="PD Output or SSFA TOR Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
+          selected-cp-structure="[[intervention.cp_structure]]"
           edit-mode$="[[editMode]]"
           intervention-id="[[intervention.id]]"
           required$="[[interventionRequiredField]]">
@@ -312,9 +313,14 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          hrps: {
+          countryProgrammes: {
             type: Array,
-            statePath: 'hrps'
+            statePath: 'countryProgrammes',
+            observer: '_countryProgrammesChanged'
+          },
+          cpStructureOptions: {
+             type: Object,
+            value: []
           },
           years: {
             type: Array,
@@ -349,7 +355,34 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
+          /**
+          * Filter Country programmes:
+          *    - omit any CP where the end date is in the past
+          *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
+          *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
+          */
+         _filterCountryProgrammes: function(countryProgrammes) {
+           var self = this;
+           // TODO: change this and use only cp. active: true, future: true and special: false
+          return countryProgrammes.filter(function(cp) {
+             let cpParts = cp.wbs.split('/');
+              return self.isFutureDate(cp.to_date + 'T23:59:59') &&
+                cpParts[cpParts.length - 1] !== '99' &&
+                cpParts[1] === 'A0';
+           });
+         },
 
+         /**
+          * Filter CP to obtain agreement CP Structure options.
+          * If the result is just one option then set it as selected by default, make dropdown readonly
+          */
+         _countryProgrammesChanged: function(cp) {
+           let cpStructure = this._filterCountryProgrammes(cp);
+           this.set('cpStructureOptions', cpStructure);
+           if (cpStructure.length === 1) {
+             this.set('intervention.cp_structure', cpStructure[0].id);
+           }
+         },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
             return;
@@ -383,6 +416,9 @@
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           }
+          if (this.cpStructureOptions && this.cpStructureOptions.length === 1) {
+            this.set('intervention.cp_structure', this.cpStructureOptions[0].id);
+          }
         },
 
         newInterventionFlagChanged: function(newValue) {
@@ -399,7 +435,7 @@
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
+            'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));

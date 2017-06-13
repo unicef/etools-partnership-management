@@ -80,6 +80,10 @@
             type: Array,
             value: []
           },
+          selectedCpStructure: {
+            type: String,
+            observer:'selectedCpStructureChanged'
+          },
           cpOutputId: {
             type: Number,
             notify: true
@@ -120,11 +124,14 @@
         },
 
         observers: [
-          '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length)'
+          '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length, selectedCpStructure)'
         ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
+        },
+        selectedCpStructureChanged: function() {
+          console.log('selectedCpStructureChanged', this.selectedCpStructure);
         },
         _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
             if (ids.length && this.firstLoadCpIndicatorsUse) {
@@ -152,10 +159,11 @@
         },
 
          // prevent having cpoutputs already selected in the current cpOutput selector
-        _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
+        _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength, selectedCpStructure) {
           if (cpOutputsLength === 0) {
             return;
           }
+          console.log('cp outputs', this.cpOutputs, this.selectedCpStructure);
           this.debounce('computeCpOutputsOptions', function() {
             var cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(alreadySelectedCpo);
             var cpoDropdown = this.$.cpOutput;
