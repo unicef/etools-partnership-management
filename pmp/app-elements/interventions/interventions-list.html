@@ -406,8 +406,8 @@
               filterName: 'UNICEF focal point',
               type: 'esmm', // etools-searchable-multiselection-menu
               multiple: true,
-              optionValue: 'user_id',
-              optionLabel: 'full_name',
+              optionValue: 'id',
+              optionLabel: 'name',
               selectionOptions: this.unicefUsersData,
               alreadySelected: [],
               path: 'selectedUnicefFocalPoints'
@@ -724,7 +724,7 @@
               return parseInt(fPtsIdStr, 10);
             });
             return this.unicefUsersData.filter(function(u) {
-              return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
+              return focalPtsStrArr.indexOf(parseInt(u.id, 10)) > -1;
             });
           }
           return [];
