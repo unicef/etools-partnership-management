@@ -17,13 +17,13 @@
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
-                       actions="[[possibleActions]]"
-                       on-intervention-save-event="_validateAndSaveIntervention"
-                       on-intervention-draft-event="_setStatusDraft"
-                       on-intervention-active-event="_setStatusActive"
-                       on-intervention-cancel-event="_setStatusCanceled"
-                       on-intervention-suspend-event="_setStatusSuspended"
-                       on-intervention-terminate-event="_setStatusTerminated">
+                   actions="[[possibleActions]]"
+                   on-intervention-save-event="_validateAndSaveIntervention"
+                   on-intervention-draft-event="_setStatusDraft"
+                   on-intervention-active-event="_setStatusActive"
+                   on-intervention-cancel-event="_setStatusCanceled"
+                   on-intervention-suspend-event="_setStatusSuspended"
+                   on-intervention-terminate-event="_setStatusTerminated">
         </etools-status>
   </template>
 
@@ -223,11 +223,14 @@
 
             for(let key in this.possibleActions) {
               let actionName = this.possibleActions[key].label;
+              let config = this.possibleActions[key];
+
               if (availableOptions.indexOf(actionName) > -1 ) {
-                let config = this.possibleActions[key];
                 config.hidden = false;
-                this.set(['possibleActions', key], config);
               }
+
+              this.set(['possibleActions', key], null);
+              this.set(['possibleActions', key], config);
             }
         },
 
@@ -321,7 +324,6 @@
         _handleStatusChange: function(status) {
           this.debounce('reset-status-actions', function() {
             this._computeAvailableStatuses(status);
-            // this._setCompletedStatuses();
             this._computeAvailableActions(status);
           }.bind(this), 50);
         },

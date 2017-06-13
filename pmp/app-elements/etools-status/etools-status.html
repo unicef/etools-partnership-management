@@ -135,7 +135,6 @@
       _handleStatusChanged(statuses) {
         this.debounce('etools-status-options-changed-handler', function() {
           this._computeAvailableStatuses(statuses);
-          console.log('status changed');
         }.bind(this), 10);
       },
       _getStatusIcon: function(icon) {

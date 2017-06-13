@@ -79,11 +79,20 @@
         }
       },
       observers:['_actionsChanged(actions, actions.*)'],
-      _actionsChanged: function () {
+      _actionsChanged: function() {
+        this.debounce('etools-button-actions-changed-handler', function () {
+          this._handleActionsChanged();
+        }.bind(this), 10);
+      },
+      _handleActionsChanged: function () {
         let actions = this.actions;
         if(!actions.length) {
           return;
         }
+
+        this.set('primaryAction', {});
+        this.set('secondaryActions', []);
+
         var primaryAction = actions.find(function(elem) {
           return elem.primary && !elem.hidden;
         });
@@ -96,9 +105,7 @@
           primaryAction = actions.pop();
         }
 
-        this.set('primaryAction', {});
         this.set('primaryAction', primaryAction);
-        this.set('secondaryActions', []);
         this.set('secondaryActions', secondaryActions);
       },
       _handleSecondaryClick: function(event) {
