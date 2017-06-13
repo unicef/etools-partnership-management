@@ -1,16 +1,32 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<dom-module id="required-field-styles">
+<dom-module id="required-field-starred-styles">
   <template>
     <style>
-      /** /deep/ *[starred] /deep/ label::after {*/
-        /*content: " *";*/
-        /*font-weight: bold;*/
-        /*color: var(--error-color, #E54F2E);*/
-      /*}*/
-      /** /deep/ *[starred] /deep/ .search-input /deep/ label::after {*/
-        /**/
-      /*}*/
+      :root {
+        --required-star-style: {
+          background: url(../images/required.svg) no-repeat 99% 20%/8px;
+          width: auto !important;
+          max-width: 100%;
+          right: initial;
+          padding-right: 15px;
+        };
+      }
+
+      paper-input[starred],
+      etools-date-input[starred],
+      etools-single-selection-menu[starred],
+      etools-searchable-multiselection-menu[starred] {
+        --paper-input-container-label: {
+          @apply(--required-star-style);
+        };
+      }
+
+      etools-currency-amount-input[starred] {
+        --etools-currency-container-label: {
+          @apply(--required-star-style);
+        }
+      }
     </style>
   </template>
 </dom-module>
