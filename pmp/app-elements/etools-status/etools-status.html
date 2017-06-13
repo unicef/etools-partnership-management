@@ -87,7 +87,7 @@
 
     <etools-content-panel panel-title="Status">
 
-      <template is="dom-repeat" items="[[availableStatuses]]" as="status" observe="availableStatuses.*">
+      <template is="dom-repeat" items="[[availableStatuses]]" as="status">
         <!--<template is="dom-if" if="[[!status.hidden]]">-->
           <div class="vertical-line flex"></div>
           <div class$="status-container [[_getStatusCssClass(status, index)]]">
@@ -133,10 +133,10 @@
         '_handleStatusChanged(statuses, statuses.*)'
       ],
       _handleStatusChanged(statuses) {
-        this.set('availableStatuses', []);
         this.debounce('etools-status-options-changed-handler', function() {
-          this.set('availableStatuses', this._computeAvailableStatuses(statuses));
-        }.bind(this), 50);
+          this._computeAvailableStatuses(statuses);
+          console.log('status changed');
+        }.bind(this), 10);
       },
       _getStatusIcon: function(icon) {
         return icon || 'done';
@@ -191,8 +191,12 @@
         window.onscroll = this._previousOnScroll;
       },
       _computeAvailableStatuses: function(statuses) {
-        return statuses.filter(function(elem) {
-          return !elem.hidden;
+        this.set('availableStatuses', []);
+        this.async(function() {
+          let filteredStatuses =  statuses.filter(function(elem) {
+            return !elem.hidden;
+          });
+          this.set('availableStatuses', filteredStatuses);
         });
       },
     });
