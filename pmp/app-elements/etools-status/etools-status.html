@@ -18,15 +18,12 @@
       }
       etools-content-panel {
         width: 100%;
-        --ecp-content: {
-          /*padding: 25px;*/
-        };
       }
       etools-action-button {
         margin-top: 24px;
         margin-bottom: 24px;
       }
-      .number-circle {
+      .icon-wrapper {
         display: block;
         float: left;
         width: 24px;
@@ -38,7 +35,7 @@
         border-radius: 50%;
         text-align: center;
       }
-      .number-circle iron-icon {
+      .icon-wrapper iron-icon {
         color: white;
         display: none;
       }
@@ -51,32 +48,42 @@
         color: var(--gray-dark, rgba(0,0,0,.87));
         font-weight: 500;
       }
-      .status-container.pending .number-circle {
+      .status-container.pending .icon-wrapper {
         background-color: var(--et2f-primary, #00AEEF);
       }
-      .status-container.custom .number-circle {
+      .status-container.custom .icon-wrapper {
         background-color: initial;
       }
-      .custom .number-circle span {
+      .custom .icon-wrapper {
+        width: 29px;
+        height: 29px;
+        margin-left: -3px;
+        margin-top: -4px;
+      }
+      .custom .custom-icon  {
+        --iron-icon-height: 100%;
+        --iron-icon-width: 100%;
+      }
+      .custom .icon-wrapper span {
         display: none;
       }
       .custom .custom-icon {
         display: block;
         color: var(--et2f-primary, #00AEEF);
       }
-      .status-container.completed .number-circle {
+      .status-container.completed .icon-wrapper {
         background-color: var(--et2f-sec-lightgreen, #8DC63F);
       }
-      .completed .number-circle span {
+      .completed .icon-wrapper span {
         display: none;
       }
-      .completed .number-circle iron-icon.done-icon {
+      .completed .icon-wrapper iron-icon.done-icon {
         display: block;
         width: 18px;
         padding-left: 3px;
       }
       .vertical-line {
-        margin: 7px 12px;
+        margin: 7px 11px;
         border-left: 1px solid var(--gray-light, rgba(0, 0, 0, .38));
         padding-top: 45px;
       }
@@ -91,7 +98,7 @@
         <!--<template is="dom-if" if="[[!status.hidden]]">-->
           <div class="vertical-line flex"></div>
           <div class$="status-container [[_getStatusCssClass(status, index)]]">
-            <div class="number-circle">
+            <div class="icon-wrapper">
               <span>[[_getTrueIndex(index)]]</span>
               <iron-icon class="done-icon" icon="done"></iron-icon>
               <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
