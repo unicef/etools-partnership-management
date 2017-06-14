@@ -520,7 +520,6 @@
           if (!this.requiredDataLoaded || !this.initComplete) {
             return;
           }
-
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
@@ -581,7 +580,7 @@
 
               (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
                   ? this.selectedUnicefFocalPoints.map(function(fPt) {
-                return parseInt(fPt.user_id);
+                return parseInt(fPt.id);
               }) : [],
 
               (this.selectedOffices && this.selectedOffices.length)
