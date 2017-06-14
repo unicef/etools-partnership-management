@@ -187,7 +187,7 @@
                                           option-label="name"
                                           selected="{{intervention.cp_structure}}"
                                           dynamic-align
-                                          readonly$="[[!editMode]]">
+                                          readonly$="[[!isCpStructureEditable(editMode, intervention.status)]]">
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
@@ -354,6 +354,15 @@
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+        isCpStructureEditable: function(editMode, status){
+          if (!editMode) {
+            return false;
+          }
+          if (status && status != 'draft') {
+            return false;
+          }
+          return true;
         },
           /**
           * Filter Country programmes:

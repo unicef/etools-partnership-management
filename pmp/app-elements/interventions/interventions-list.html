@@ -297,7 +297,7 @@
           // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
           hrps: {
             type: Array,
-            statePath:  'hrps' //function(state) { console.log(state); return state.hrps; }
+            statePath:  'hrps'
           },
           cpOutputs: {
             type: Array,
@@ -779,7 +779,7 @@
           return this.getDisplayValue(dateString, true);
         },
 
-        /**
+        /** TODO
          * Get HRP name to be shown in the intervention details(collapsible content) row
          */
         _getHrpValue: function(hrpId) {

@@ -165,10 +165,12 @@
           }
           console.log('cp outputs', this.cpOutputs, this.selectedCpStructure);
           this.debounce('computeCpOutputsOptions', function() {
-            var cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(alreadySelectedCpo);
-            var cpoDropdown = this.$.cpOutput;
+            var cpOutputsOptions = this._filterByCpStructure(this.cpOutputs)
+            cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(cpOutputsOptions, alreadySelectedCpo);
+
+
             // keep old cpOutputs requested from server
-            var oldCpOutput = this._getExistingOldCpO(cpoDropdown);
+            var oldCpOutput = this._getExistingOldCpO();
             if (oldCpOutput) {
               cpOutputsOptions.push(oldCpOutput);
             }
@@ -177,12 +179,20 @@
         },
 
         // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
-        _excludeAlreadySelectedInOtherDropdowns: function(alreadySelectedCpo) {
-          return this.cpOutputs.filter(function(cpO) {
+        _excludeAlreadySelectedInOtherDropdowns: function(cpOutputsOptions, alreadySelectedCpo) {
+          return cpOutputsOptions.filter(function(cpO) {
               return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
             }.bind(this));
         },
-        _getExistingOldCpO: function(cpoDropdown) {
+        _filterByCpStructure: function(cpOutputsOptions) {
+          //TODO
+          // return cpOutputsOptions.filter(function(option) {
+          //   return option.country_programme === this.selectedCpStructure;
+          // }.bind(this));
+          return cpOutputsOptions;
+        },
+        _getExistingOldCpO: function() {
+          var cpoDropdown = this.$.cpOutput;
           var oldCpO;
           if (cpoDropdown.ajaxParams && cpoDropdown.ajaxParams.values) {
             // keep ghost data (old cp output previously requested from server)
