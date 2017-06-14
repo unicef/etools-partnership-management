@@ -67,7 +67,6 @@
         this.ajaxEl.set('url', null);
       },
       _handleResponse: function(response) {
-        console.log('profile',response.detail);
         this.set('userProfile', response.detail);
         this.fire('global-loading');
       }

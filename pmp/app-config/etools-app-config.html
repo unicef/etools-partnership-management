@@ -166,12 +166,12 @@ App global configuration
       // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
       unicefUsers: {
         url: '/api/v2/users/?verbosity=minimal',//&group=Senior%20Management%20Team',
-    //  exp: 60 * 60 * 1000, // 1h TODO put back
+        exp: 60 * 60 * 1000, // 1h
         cachingKey: 'unicefUsers'
       },
       user: {
         url: '/api/v2/users/profile/',
-     // exp: 30 * 60 * 1000, // 30min TODO put back
+        exp: 30 * 60 * 1000, // 30min
         cachingKey: 'user'
       },
       agreements: {

@@ -45,10 +45,8 @@
         },
 
         _handleResponse: function(response) {
-          console.log('here',response);
           if (response.detail && response.detail.length > 0) {
             // set setUsersData values
-            console.log('unicefUsers', response.detail);
             this.dispatch('setUsersData', response.detail);
           }
         },
