@@ -264,12 +264,6 @@
         _interventionIdChanged: function() {
           this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           this.editablePlannedBudget = !this.interventionId;
-
-          // TODO: remove once the API is changed / this was just for testing
-          if (this.interventionId && this.plannedBudget && Array.isArray(this.plannedBudget)) {
-            this.plannedBudget = this.plannedBudget[0];
-          }
-          //-------------------------------------------------
         },
         _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
