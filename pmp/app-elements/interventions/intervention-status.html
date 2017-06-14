@@ -18,7 +18,6 @@
     </style>
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
-                   on-intervention-save-event="_validateAndSaveIntervention"
                    on-intervention-draft-event="_setStatusDraft"
                    on-intervention-active-event="_setStatusActive"
                    on-intervention-cancel-event="_setStatusCanceled"
@@ -105,7 +104,8 @@
                 label: 'Save',
                 hidden: true,
                 primary: true,
-                event: 'intervention-save-event'
+                event: 'save-intervention'
+                // save-intervention event is handeled by the parnent
               },
               {
                 label: 'Change to draft',
@@ -219,6 +219,10 @@
                 // removes Save option
                 availableOptions.pop();
                 break;
+              case 'implemented':
+                // removes Save option
+                availableOptions.pop();
+                break;
             };
 
             for(let key in this.possibleActions) {
@@ -305,6 +309,16 @@
               ];
               activeStatus = 'Closed';
               break;
+
+            case 'implemented':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+              ];
+              activeStatus = 'Ended';
+              break;
           };
 
           for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
@@ -384,13 +398,6 @@
 
         _setStatusCanceled: function() {
           this._updateStatus('canceled');
-        },
-
-        /**
-         * Fire custom event to notify parent element to execute intervention save
-         */
-        _triggerInterventionSave: function() {
-          this.fire('save-intervention', {});
         },
 
         _agreementStatusChanged: function(status, oldStatus) {
