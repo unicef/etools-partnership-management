@@ -10,6 +10,9 @@
     <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
 
       :host {
+        --ecp-content: {
+          padding: 0px;
+        }
         display: block;
         position: relative;
         -webkit-box-sizing: border-box;
@@ -19,60 +22,107 @@
       etools-content-panel {
         width: 100%;
       }
-      etools-action-button {
-        margin-top: 24px;
-        margin-bottom: 24px;
+      .top-container {
+        padding:30px;
+      }
+      .bottom-container {
+        border-top: 2px solid var(--dark-divider-color, rgba(0, 0, 0, .78));
+        padding: 30px;
+      }
+      .vertical-line {
+        margin: 7px 11px;
+        border-left: 1px solid var(--dark-divider-color, rgba(0, 0, 0, .78));
+        padding-top: 45px;
+      }
+      .vertical-line:first-child {
+        display: none;
+      }
+
+      .status-container {
+        @apply(--layout-horizontal);
+      }
+      .status-container {
+        height: 40px;
+      }
+      .status-icon, .status {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        @apply(--layout-warp);
+      }
+      .status {
+        margin-left: 10px;
       }
       .icon-wrapper {
-        display: block;
-        float: left;
+        background-color: var(--medium-icon-color);
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
         width: 24px;
         height: 24px;
-        background-color: var(--gray-light, rgba(0, 0, 0, .38));
-        color: white;
-        font-size: 12px;
         line-height: 24px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
         border-radius: 50%;
-        text-align: center;
+        color: var(--light-primary-text-color, #FFFFFF);
+        font-size: 12px;
       }
       .icon-wrapper iron-icon {
+        --iron-icon-height: 16px;
+        --iron-icon-width: 16px;
         color: white;
         display: none;
       }
-      .status {
-        color: var(--gray-mid, rgba(0,0,0,.54));
-        font-size: 14px;
-        padding-left: 6px;
+      .icon-wrapper iron-icon,
+      .icon-wrapper span {
+        @apply(--layout-self-center);
       }
-      .status-container.pending .status {
+      .icon-wrapper span {
+        height: 14px;
+        line-height: 14px;
+      }
+      .status {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        text-transform: capitalize;
+        color: var(--medium-primary-text-color, #9D9D9D);
+      }
+       .pending .status {
         color: var(--gray-dark, rgba(0,0,0,.87));
         font-weight: 500;
       }
-      .status-container.pending .icon-wrapper {
-        background-color: var(--et2f-primary, #00AEEF);
+      .pending .status-icon .icon-wrapper {
+        background-color: var(--secondary-color, #0099FF);
       }
-      .status-container.custom .icon-wrapper {
+      .custom .status-icon .icon-wrapper {
         background-color: initial;
       }
-      .custom .icon-wrapper {
+      .custom .status-icon .icon-wrapper {
         width: 29px;
         height: 29px;
         margin-left: -3px;
         margin-top: -4px;
       }
-      .custom .custom-icon  {
+      .custom .status-icon .icon-wrapper .custom-icon  {
         --iron-icon-height: 100%;
         --iron-icon-width: 100%;
+        width: 100%;
+        height: 100%;
       }
-      .custom .icon-wrapper span {
+      .custom .status-icon .icon-wrapper span {
         display: none;
       }
-      .custom .custom-icon {
+      .custom .status-icon .icon-wrapper .custom-icon {
         display: block;
-        color: var(--et2f-primary, #00AEEF);
+        color: var(--secondary-color, #0099FF);
       }
-      .status-container.completed .icon-wrapper {
-        background-color: var(--et2f-sec-lightgreen, #8DC63F);
+      .completed .status-icon .icon-wrapper {
+        background-color: var(--success-color, #75c300);
+      }
+      .custom .status {
+         margin-top: 12px;
+      }
+      .completed .status, .custom .status {
+        font-weight: bold;
+        color: var(--dark-primary-text-color, rgba(0, 0, 0, 0.87));
       }
       .completed .icon-wrapper span {
         display: none;
@@ -80,39 +130,37 @@
       .completed .icon-wrapper iron-icon.done-icon {
         display: block;
         width: 18px;
-        padding-left: 3px;
       }
-      .vertical-line {
-        margin: 7px 11px;
-        border-left: 1px solid var(--gray-light, rgba(0, 0, 0, .38));
-        padding-top: 45px;
-      }
-      .vertical-line:first-child {
-        display: none;
-      }
+
     </style>
 
     <etools-content-panel panel-title="Status">
+      <div class="top-container">
+        <template is="dom-repeat" items="[[availableStatuses]]" as="status">
+            <div class="vertical-line flex"></div>
 
-      <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-        <!--<template is="dom-if" if="[[!status.hidden]]">-->
-          <div class="vertical-line flex"></div>
-          <div class$="status-container [[_getStatusCssClass(status, index)]]">
-            <div class="icon-wrapper">
-              <span>[[_getTrueIndex(index)]]</span>
-              <iron-icon class="done-icon" icon="done"></iron-icon>
-              <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
+            <div class$="status-container [[_getStatusCssClass(status, index)]]">
+              <div class="status-icon">
+                <span class="icon-wrapper">
+                  <span>[[_getTrueIndex(index)]]</span>
+                  <iron-icon class="done-icon" icon="done"></iron-icon>
+                  <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
+                </span>
+              </div>
+
+              <div class="status">
+                <span>[[status.label]]</span>
+              </div>
+
             </div>
-            <span class="status">[[status.label]]</span>
-          </div>
-        <!--</template>-->
-      </template>
-
-      <div class="card-actions">
-        <etools-action-button actions="[[actions]]">
-        </etools-action-button>
+        </template>
       </div>
-
+      <div class="bottom-container" hidden$="[[hideActions]]">
+        <div class="card-actions">
+          <etools-action-button actions="[[actions]]">
+          </etools-action-button>
+        </div>
+      </div>
     </etools-content-panel>
   </template>
 
@@ -135,13 +183,28 @@
           type: Array,
           value: []
         },
+        hideActions: {
+          type: Boolean,
+          value: true
+        }
       },
       observers: [
-        '_handleStatusChanged(statuses, statuses.*)'
+        '_handleStatusChanged(statuses, statuses.*)',
+        '_handleActionsChanged(actions, actions.*)'
       ],
       _handleStatusChanged(statuses) {
         this.debounce('etools-status-options-changed-handler', function() {
           this._computeAvailableStatuses(statuses);
+        }.bind(this), 10);
+      },
+      _handleActionsChanged(statuses) {
+        this.debounce('etools-actions-options-changed-handler', function() {
+          let hidden = true;
+          this.actions.forEach(function(elem) {
+            hidden = elem.hidden && hidden;
+          }.bind(this));
+
+          this.set('hideActions', hidden);
         }.bind(this), 10);
       },
       _getStatusIcon: function(icon) {
@@ -168,34 +231,35 @@
       _getTrueIndex: function(index) {
         return 1 + index;
       },
-      attached: function() {
-        var self = this;
-        self._previousOnScroll = window.onscroll;
+    /* Next couple of methods are for making the status elem sticky */
+      // attached: function() {
+      //   var self = this;
+      //   self._previousOnScroll = window.onscroll;
 
-        if (!self.scrollTopMargin) {
-          return;
-        }
-        // i have no idea why, but at the moment window.onscroll does nothing
-        window.onscroll = function() {
-          if (self.getBoundingClientRect().top < self.scrollTopMargin) {
-            self.$['main-card'].style.position = 'fixed';
-            self.$['main-card'].style.top = self.scrollTopMargin + 'px';
-          } else {
-            self.resetPosition();
-          }
-          if (self._previousOnScroll) {
-            self._previousOnScroll();
-          }
-        };
-      },
-      resetPosition: function() {
-        this.$['main-card'].style.position = 'absolute';
-        this.$['main-card'].style.top = '0';
-      },
+      //   if (!self.scrollTopMargin) {
+      //     return;
+      //   }
+      //   // i have no idea why, but at the moment window.onscroll does nothing
+      //   window.onscroll = function() {
+      //     if (self.getBoundingClientRect().top < self.scrollTopMargin) {
+      //       self.$['main-card'].style.position = 'fixed';
+      //       self.$['main-card'].style.top = self.scrollTopMargin + 'px';
+      //     } else {
+      //       self.resetPosition();
+      //     }
+      //     if (self._previousOnScroll) {
+      //       self._previousOnScroll();
+      //     }
+      //   };
+      // },
+      // resetPosition: function() {
+      //   this.$['main-card'].style.position = 'absolute';
+      //   this.$['main-card'].style.top = '0';
+      // },
 
-      detached: function() {
-        window.onscroll = this._previousOnScroll;
-      },
+      // detached: function() {
+      //   window.onscroll = this._previousOnScroll;
+      // },
       _computeAvailableStatuses: function(statuses) {
         this.set('availableStatuses', []);
         this.async(function() {

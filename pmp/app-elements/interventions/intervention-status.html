@@ -85,12 +85,12 @@
                   completed: false
                 },
                 {
-                  label: 'Closed',
+                  label: 'Cancelled',
                   hidden: false,
                   completed: false
                 },
                 {
-                  label: 'Cancelled',
+                  label: 'Closed',
                   hidden: false,
                   completed: false
                 },
@@ -318,6 +318,16 @@
                 'Ended',
               ];
               activeStatus = 'Ended';
+              break;
+            default:
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = '';
               break;
           };
 
