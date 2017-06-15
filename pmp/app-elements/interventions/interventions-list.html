@@ -188,11 +188,9 @@
           <div slot="row-data-details">
 
             <div class="row-details-content col-2">
-              <span class="rdc-title">In response to HRP?</span>
-              <span>[[_getHrpValue(intervention.hrp)]]</span>
             </div>
             <div class="row-details-content col-2">
-              <span class="rdc-title">Sectors</span>
+              <span class="rdc-title">Sections</span>
               <span>[[getDisplayValue(intervention.sectors)]]</span>
             </div>
             <div class="row-details-content col-2">
@@ -292,12 +290,6 @@
           initComplete: {
             type: Boolean,
             value: false
-          },
-
-          // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
-          hrps: {
-            type: Array,
-            statePath:  'hrps'
           },
           cpOutputs: {
             type: Array,
@@ -779,19 +771,19 @@
           return this.getDisplayValue(dateString, true);
         },
 
-        /** TODO
-         * Get HRP name to be shown in the intervention details(collapsible content) row
-         */
-        _getHrpValue: function(hrpId) {
-          var hrpData = this.hrps.filter(function(hrp) {
-            return parseInt(hrp.id, 10) === parseInt(hrpId, 10);
-          })[0];
-          if (hrpData) {
-            return this.getDisplayValue(hrpData.name);
-          } else {
-            return '-';
-          }
-        },
+        // /** TODO
+        //  * Get HRP name to be shown in the intervention details(collapsible content) row
+        //  */
+        // _getHrpValue: function(hrpId) {
+        //   var hrpData = this.hrps.filter(function(hrp) {
+        //     return parseInt(hrp.id, 10) === parseInt(hrpId, 10);
+        //   })[0];
+        //   if (hrpData) {
+        //     return this.getDisplayValue(hrpData.name);
+        //   } else {
+        //     return '-';
+        //   }
+        // },
 
         _filtersChanged: function() {
           this.set('debounceTime', 200);
