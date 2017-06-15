@@ -70,10 +70,10 @@
         <div class="top-content-row title-row">
           <h1 main-title>
             <template is="dom-if" if="[[intervListActive]]">
-              PD/SSFA ToRs
+              PD/SSFAs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
-              Add Programme Document or PD/SSFA ToRs
+              Add Programme Document or SSFA
             </template>
             <template is="dom-if" if="[[intervDetailsActive]]">
               [[_getInterventionDetailsTitle(intervention)]]
@@ -98,7 +98,7 @@
             <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
-                Add new PD/SSFA ToR
+                Add new PD/SSFA
               </paper-button>
             </div>
           </div>
