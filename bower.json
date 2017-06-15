@@ -40,7 +40,7 @@
     "etools-ajax": "1.2.2",
     "etools-app-selector": "1.0.5",
     "etools-behaviors": "1.0.1",
-    "etools-checkable-input": "1.0.5",
+    "etools-checkable-input": "1.0.8",
     "etools-content-panel": "1.0.5",
     "etools-content-toggle-button": "1.0.1",
     "etools-currency-amount-input": "1.0.8",
@@ -52,7 +52,9 @@
     "etools-file": "1.0.10",
     "etools-loading": "1.0.9",
     "etools-page-refresh": "1.1.2",
-    "etools-searchable-multiselection-menu": "2.0.0"
+    "etools-searchable-multiselection-menu": "2.0.0",
+    "etools-profile-dropdown": "1.0.3"
+
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
