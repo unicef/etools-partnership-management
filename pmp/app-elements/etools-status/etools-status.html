@@ -1,14 +1,12 @@
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
 
-<link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="etools-action-button.html">
 
 <dom-module id="etools-status">
   <template>
-    <style include="shared-styles iron-flex iron-flex-alignment" is="custom-style">
+    <style>
 
       :host {
         --ecp-content: {
@@ -27,12 +25,13 @@
         padding:30px;
       }
       .bottom-container {
-        border-top: 2px solid var(--dark-divider-color, rgba(0, 0, 0, .78));
-        padding: 30px;
+        border-top: 2px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        padding: 25px;
       }
       .vertical-line {
+        @apply(--layout-flex);
         margin: 7px 11px;
-        border-left: 1px solid var(--dark-divider-color, rgba(0, 0, 0, .78));
+        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding-top: 45px;
       }
       .vertical-line:first-child {
@@ -54,16 +53,16 @@
         margin-left: 10px;
       }
       .icon-wrapper {
-        background-color: var(--medium-icon-color);
         @apply(--layout-vertical);
         @apply(--layout-center-justified);
+        background-color: var(--etools-status-icon-inactive-color, #9D9D9D);
         width: 24px;
         height: 24px;
         line-height: 24px;
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         border-radius: 50%;
-        color: var(--light-primary-text-color, #FFFFFF);
+        color: var(--etools-status-icon-text-color, #FFFFFF);
         font-size: 12px;
       }
       .icon-wrapper iron-icon {
@@ -84,14 +83,14 @@
         margin-top: 15px;
         margin-bottom: 15px;
         text-transform: capitalize;
-        color: var(--medium-primary-text-color, #9D9D9D);
+        color: var(--etools-status-text-color, #9D9D9D);
       }
        .pending .status {
-        color: var(--gray-dark, rgba(0,0,0,.87));
+        color: var(--etools-status-inactive-text-color, rgba(0,0,0,.87));
         font-weight: 500;
       }
       .pending .status-icon .icon-wrapper {
-        background-color: var(--secondary-color, #0099FF);
+        background-color: var(--etools-status-icon-pending-color, #0099FF);
       }
       .custom .status-icon .icon-wrapper {
         background-color: initial;
@@ -113,17 +112,17 @@
       }
       .custom .status-icon .icon-wrapper .custom-icon {
         display: block;
-        color: var(--secondary-color, #0099FF);
+        color: var(--etools-status-icon-pending-color, #0099FF);
       }
       .completed .status-icon .icon-wrapper {
-        background-color: var(--success-color, #75c300);
+        background-color: var(--etools-status-icon-completed-color, #75c300);
       }
       .custom .status {
          margin-top: 12px;
       }
       .completed .status, .custom .status {
         font-weight: bold;
-        color: var(--dark-primary-text-color, rgba(0, 0, 0, 0.87));
+        color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
       }
       .completed .icon-wrapper span {
         display: none;
@@ -138,7 +137,7 @@
     <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="vertical-line flex"></div>
+            <div class="vertical-line"></div>
 
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
