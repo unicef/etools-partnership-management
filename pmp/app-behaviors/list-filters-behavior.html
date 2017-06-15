@@ -75,6 +75,9 @@
 
     // update ADD FILTER menu options
     _updateAvailableFilterOptions: function() {
+      if (!(this.listFilterOptions instanceof Array && this.listFilterOptions.length > 0)) {
+        return;
+      }
       var availableOptions = this.listFilterOptions.filter(function(option) {
         var selectedOpt = this.selectedFilters.filter(function(selectedFilter) {
           return selectedFilter.filterName === option.filterName;
