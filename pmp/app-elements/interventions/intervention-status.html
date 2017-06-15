@@ -21,7 +21,8 @@
                    on-intervention-active-event="_setStatusActive"
                    on-intervention-cancel-event="_setStatusCanceled"
                    on-intervention-suspend-event="_setStatusSuspended"
-                   on-intervention-terminate-event="_setStatusTerminated">
+                   on-intervention-terminate-event="_setStatusTerminated"
+                   on-intervention-unsuspend-event="_setStatusNotSuspended">
         </etools-status>
   </template>
 
@@ -203,8 +204,9 @@
                 availableOptions.push('Terminate');
                 break;
               case 'suspended':
-                availableOptions.push('Terminate');
-                // availableOptions.push('Unsuspend');
+                // removes Save option
+                availableOptions.pop();
+                availableOptions.push('Unsuspend');
                 break;
               case 'terminated':
                 // removes Save option
@@ -408,6 +410,9 @@
 
         _setStatusCanceled: function() {
           this._updateStatus('cancelled');
+        },
+        _setStatusNotSuspended: function() {
+          this.fire('toast', { text: 'Unsuspend action not implemented yet', showCloseBtn: true });
         },
 
         _agreementStatusChanged: function(status, oldStatus) {

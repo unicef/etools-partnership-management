@@ -92,7 +92,7 @@
           return;
         }
 
-        this.set('primaryAction', {});
+        this.set('primaryAction', null);
         this.set('secondaryActions', []);
 
         var primaryAction = actions.find(function(elem) {
@@ -104,7 +104,7 @@
         });
 
         if (!primaryAction && secondaryActions && secondaryActions.length) {
-          primaryAction = actions.pop();
+          primaryAction = secondaryActions.pop();
         }
 
         this.set('primaryAction', primaryAction);
