@@ -26,7 +26,7 @@
     </style>
 
     <paper-input-container always-float-label>
-      <label aria-hidden="true">[[label]]</label>
+      <label hidden$=[[!label]] slot="label">[[label]]</label>
       <div class="paper-input-input">
         <slot></slot>
       </div>
