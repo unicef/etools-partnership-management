@@ -56,14 +56,14 @@
                                     label="Submitted to PRC?"
                                     type="checkbox"
                                     label-alignment="right"
-                                    readonly$="[[!editMode]]"
+                                    readonly$="[[_isSubmittedToPrcCheckReadonly(editMode, _lockSubmitToPrc)]]"
                                     unchanged-readonly-style
                                     hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
             </etools-checkable-input>
           </etools-form-element-wrapper>
         </div>
       </div>
-      <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc, intervention.document_type)]]">
+      <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
         <div class="row-h flex-c row-second-bg">
           <div class="col col-3">
             <!-- Submission Date to PRC -->
@@ -231,20 +231,34 @@
             type: Boolean,
 //            value: false,
             observer: '_editModeChanged'
+          },
+          _lockSubmitToPrc: {
+            type: Boolean,
+            value: false
           }
         },
+        observers: ['_interventionDocTypeChanged(intervention.document_type)'],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
 
         _interventionChanged: function(intervention) {
+          // check if submitted to PRC was already saved
+          if (intervention && intervention.id && intervention.submitted_to_prc) {
+            this.set('_lockSubmitToPrc', true);
+          } else {
+            this.set('_lockSubmitToPrc', false);
+          }
+          this._refreshPrcDocumentField(intervention, '', {});
+        },
+        _refreshPrcDocumentField: function(intervention, path, file) {
           // forces etools-single-file to redraw the element
           if (!intervention.prc_review_document_file) {
-            this.set('intervention.prc_review_document_file', '');
+            this.set('intervention.prc_review_document_file', path);
           }
           if (!intervention.prc_review_document) {
-            this.set('intervention.prc_review_document', {});
+            this.set('intervention.prc_review_document', file);
           }
         },
 
@@ -310,14 +324,33 @@
           return true;
         },
 
-        _showSubmittedToPrcFields: function(submittedToPrc, documentType) {
-          return this._submittedToPrcAvailable(documentType) && submittedToPrc;
+        _showSubmittedToPrcFields: function(submittedToPrc) {
+          return this._submittedToPrcAvailable(this.intervention.documentType) && submittedToPrc;
         },
         _submittedToPrcAvailable: function(documentType) {
           return documentType !== 'SSFA';
         },
         _showDaysToSignedFields: function(status) {
           return status !== 'draft';
+        },
+
+        _isSubmittedToPrcCheckReadonly: function(editMode, _lockSubmitToPrc) {
+          return !editMode || _lockSubmitToPrc;
+        },
+
+        _interventionDocTypeChanged: function(interventionDocumentType) {
+          let submittedToPrc = this._submittedToPrcAvailable(interventionDocumentType);
+          if (!submittedToPrc) {
+            this.set('intervention.submitted_to_prc', false);
+            this._resetPrcFields();
+          }
+        },
+
+        _resetPrcFields: function() {
+          this.set('intervention.intervention.submission_date_prc', null);
+          this.set('intervention.review_date_prc', null);
+          this.set('intervention.prc_review_document_file', null);
+          this.set('intervention.prc_review_document', null);
         }
 
       });
