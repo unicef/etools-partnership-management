@@ -255,7 +255,7 @@
             number: undefined,
             prc_review_document_file: undefined,
             title: undefined,
-            status: 'draft',
+            status: '',
             start: undefined,
             end: undefined,
             submission_date_prc: undefined,
@@ -469,6 +469,8 @@
           delete interventionData.prc_review_document;
         }
 
+        // If it's a new intervention it has no status, so it should be a draft
+        interventionData.status = interventionData.status || 'draft';
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {

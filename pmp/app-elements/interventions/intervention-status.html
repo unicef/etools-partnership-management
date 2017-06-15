@@ -43,7 +43,7 @@
           },
           status: {
             type: String,
-            value: 'draft'
+            value: ''
           },
           possibleStatuses: {
           type: Array,
@@ -366,9 +366,9 @@
             return;
           }
 
-          if (newStatus === 'draft' || newStatus === 'canceled') {
+          if (newStatus === 'draft' || newStatus === 'cancelled') {
             // if agreement was not saved (is new) or the status is already changed
-            // from draft/canceled, stop status change
+            // from draft/cancelled, stop status change
             if (this.status !== 'draft' && this.status !== 'cancelled') {
               return false;
             }
@@ -407,7 +407,7 @@
         },
 
         _setStatusCanceled: function() {
-          this._updateStatus('canceled');
+          this._updateStatus('cancelled');
         },
 
         _agreementStatusChanged: function(status, oldStatus) {
