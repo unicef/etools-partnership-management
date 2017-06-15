@@ -185,8 +185,9 @@
                                           options="[[cpStructureOptions]]"
                                           option-value="id"
                                           option-label="name"
-                                          selected="{{intervention.cp_structure}}"
+                                          selected="{{intervention.country_programme}}"
                                           dynamic-align
+                                          hide-search
                                           readonly$="[[!isCpStructureEditable(editMode, intervention.status)]]">
           </etools-single-selection-menu>
         </div>
@@ -237,7 +238,7 @@
     <etools-content-panel class="content-section" panel-title="PD Output or SSFA TOR Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
-          selected-cp-structure="[[intervention.cp_structure]]"
+          selected-cp-structure="[[intervention.country_programme]]"
           edit-mode$="[[editMode]]"
           intervention-id="[[intervention.id]]"
           required$="[[interventionRequiredField]]">
@@ -372,25 +373,40 @@
           *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
           */
          _filterCountryProgrammes: function(countryProgrammes) {
-           var self = this;
-           // TODO: change this and use only cp. active: true, future: true and special: false
+           console.log('countryProgrammes',countryProgrammes);
           return countryProgrammes.filter(function(cp) {
-             let cpParts = cp.wbs.split('/');
-              return self.isFutureDate(cp.to_date + 'T23:59:59') &&
-                cpParts[cpParts.length - 1] !== '99' &&
-                cpParts[1] === 'A0';
+              return cp.active || cp.future;
            });
          },
-
+         _getCurrentCountryProgramme: function(countryProgrammes) {
+           if (countryProgrammes && countryProgrammes.length > 1) {
+             return countryProgrammes.find(function(cp) {
+               return !cp.future && !cp.special;
+             });
+           }
+           return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
+         },
          /**
           * Filter CP to obtain agreement CP Structure options.
           * If the result is just one option then set it as selected by default, make dropdown readonly
           */
          _countryProgrammesChanged: function(cp) {
-           let cpStructure = this._filterCountryProgrammes(cp);
-           this.set('cpStructureOptions', cpStructure);
-           if (cpStructure.length === 1) {
-             this.set('intervention.cp_structure', cpStructure[0].id);
+           let cpStructures = this._filterCountryProgrammes(cp);
+           this.set('cpStructureOptions', cpStructures);
+           this._setDefaultSelectedCpStructure(cpStructures);
+         },
+         _setDefaultSelectedCpStructure: function(cpStructures) {
+           if (this.intervention && this.intervention.country_programme) {
+             return;
+           }
+           let currentCP;
+           if (cpStructures && cpStructures.length) {
+             if (cpStructures.length === 1) {
+               currentCP = cpStructures[0].id;
+             } else {
+               currentCP = this._getCurrentCountryProgramme(cpStructures);
+             }
+             this.set('intervention.country_programme', currentCP ? currentCP.id : null);
            }
          },
         _initDocTypes: function(documentTypes) {
@@ -416,6 +432,7 @@
         },
 
         _interventionChanged: function(intervention) {
+          console.log('intervention',intervention, intervention.hrp);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
@@ -426,9 +443,7 @@
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           }
-          if (this.cpStructureOptions && this.cpStructureOptions.length === 1) {
-            this.set('intervention.cp_structure', this.cpStructureOptions[0].id);
-          }
+          this._setDefaultSelectedCpStructure(this.cpStructureOptions);
         },
 
         newInterventionFlagChanged: function(newValue) {

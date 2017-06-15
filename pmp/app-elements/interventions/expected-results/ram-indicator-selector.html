@@ -88,6 +88,7 @@
           },
           selectedCpStructure: {
             type: String,
+            value: null,
             observer:'selectedCpStructureChanged'
           },
           cpOutputId: {
@@ -191,11 +192,13 @@
             }.bind(this));
         },
         _filterByCpStructure: function(cpOutputsOptions) {
-          //TODO
-          // return cpOutputsOptions.filter(function(option) {
-          //   return option.country_programme === this.selectedCpStructure;
-          // }.bind(this));
-          return cpOutputsOptions;
+          console.log('_filterByCpStructure', this.selectedCpStructure);
+          if (!this.selectedCpStructure) {
+            return cpOutputsOptions;
+          }
+          return cpOutputsOptions.filter(function(option) {
+            return option.country_programme === this.selectedCpStructure;
+          }.bind(this));
         },
         _getExistingOldCpO: function() {
           var cpoDropdown = this.$.cpOutput;
