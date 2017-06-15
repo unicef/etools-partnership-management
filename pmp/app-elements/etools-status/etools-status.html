@@ -168,10 +168,6 @@
     Polymer({
       is: 'etools-status',
       properties: {
-        scrollTopMargin: {
-          type: Number,
-          value: 0
-        },
         statuses: {
           type: Array,
           value: []
@@ -192,12 +188,12 @@
         '_handleStatusChanged(statuses, statuses.*)',
         '_handleActionsChanged(actions, actions.*)'
       ],
-      _handleStatusChanged(statuses) {
+      _handleStatusChanged: function(statuses) {
         this.debounce('etools-status-options-changed-handler', function() {
           this._computeAvailableStatuses(statuses);
         }.bind(this), 10);
       },
-      _handleActionsChanged(statuses) {
+      _handleActionsChanged: function(statuses) {
         this.debounce('etools-actions-options-changed-handler', function() {
           let hidden = true;
           this.actions.forEach(function(elem) {
@@ -231,35 +227,6 @@
       _getTrueIndex: function(index) {
         return 1 + index;
       },
-    /* Next couple of methods are for making the status elem sticky */
-      // attached: function() {
-      //   var self = this;
-      //   self._previousOnScroll = window.onscroll;
-
-      //   if (!self.scrollTopMargin) {
-      //     return;
-      //   }
-      //   // i have no idea why, but at the moment window.onscroll does nothing
-      //   window.onscroll = function() {
-      //     if (self.getBoundingClientRect().top < self.scrollTopMargin) {
-      //       self.$['main-card'].style.position = 'fixed';
-      //       self.$['main-card'].style.top = self.scrollTopMargin + 'px';
-      //     } else {
-      //       self.resetPosition();
-      //     }
-      //     if (self._previousOnScroll) {
-      //       self._previousOnScroll();
-      //     }
-      //   };
-      // },
-      // resetPosition: function() {
-      //   this.$['main-card'].style.position = 'absolute';
-      //   this.$['main-card'].style.top = '0';
-      // },
-
-      // detached: function() {
-      //   window.onscroll = this._previousOnScroll;
-      // },
       _computeAvailableStatuses: function(statuses) {
         this.set('availableStatuses', []);
         this.async(function() {
