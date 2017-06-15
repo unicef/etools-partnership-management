@@ -3,7 +3,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
@@ -195,7 +194,7 @@
             this._setAllActionsToHidden();
             let availableOptions = ['Save'];
 
-            switch(status) {
+            switch (status) {
               case 'draft':
                 availableOptions.push('Cancel');
                 break;
@@ -215,6 +214,7 @@
                 // removes Save option
                 availableOptions.pop();
                 availableOptions.push('Change to draft');
+                break;
               case 'closed':
                 // removes Save option
                 availableOptions.pop();
@@ -223,13 +223,13 @@
                 // removes Save option
                 availableOptions.pop();
                 break;
-            };
+            }
 
-            for(let key in this.possibleActions) {
+            for (let key in this.possibleActions) {
               let actionName = this.possibleActions[key].label;
               let config = this.possibleActions[key];
 
-              if (availableOptions.indexOf(actionName) > -1 ) {
+              if (availableOptions.indexOf(actionName) > -1) {
                 config.hidden = false;
               }
 
@@ -244,7 +244,7 @@
           let completedFlag = false;
           let activeStatus;
 
-          switch(status) {
+          switch (status) {
             case 'draft':
               availableStatuses = [
                 'Draft',
@@ -329,14 +329,14 @@
               ];
               activeStatus = '';
               break;
-          };
+          }
 
           for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
             let workingStatus = this.possibleStatuses[key];
             if (workingStatus.label === activeStatus) {
               completedFlag = true;
             }
-            if (availableStatuses.indexOf(workingStatus.label) > -1 ) {
+            if (availableStatuses.indexOf(workingStatus.label) > -1) {
               workingStatus.hidden = false;
             }
             workingStatus.completed = completedFlag;

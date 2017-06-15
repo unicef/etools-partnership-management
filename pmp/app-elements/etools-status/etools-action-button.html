@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 
@@ -78,15 +79,15 @@
           value: []
         }
       },
-      observers:['_actionsChanged(actions, actions.*)'],
+      observers: ['_actionsChanged(actions, actions.*)'],
       _actionsChanged: function() {
-        this.debounce('etools-button-actions-changed-handler', function () {
+        this.debounce('etools-button-actions-changed-handler', function() {
           this._handleActionsChanged();
         }.bind(this), 10);
       },
-      _handleActionsChanged: function () {
+      _handleActionsChanged: function() {
         let actions = this.actions;
-        if(!actions.length) {
+        if (!actions.length) {
           return;
         }
 
@@ -101,7 +102,7 @@
           return !elem.primary && !elem.hidden;
         });
 
-        if(!primaryAction && secondaryActions && secondaryActions.length) {
+        if (!primaryAction && secondaryActions && secondaryActions.length) {
           primaryAction = actions.pop();
         }
 
