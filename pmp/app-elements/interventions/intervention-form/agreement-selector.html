@@ -10,8 +10,12 @@
 
 <dom-module id="agreement-selector">
   <template>
-    <style include="grid-layout-styles shared-styles"></style>
-    <div class="row-h flex-c">
+    <style include="grid-layout-styles shared-styles">
+      #agreement-selector-content {
+        padding: 0;
+      }
+    </style>
+    <div id="agreement-selector-content" class="row-h flex-c">
       <div class="col col-6">
         <etools-single-selection-menu id="partner"
                                       label="Partner Organization"

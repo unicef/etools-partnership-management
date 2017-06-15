@@ -85,7 +85,7 @@
         </div>
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
-            <paper-tabs
+            <paper-tabs id="partnerTabs"
                 selected="{{routeData.tab}}"
                 attr-for-selected="name" noink bottom-item>
 
@@ -219,6 +219,10 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
+          var tabs = this.$$('#partnerTabs');
+          if (tabs) {
+            tabs.notifyResize();
+          }
           this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },

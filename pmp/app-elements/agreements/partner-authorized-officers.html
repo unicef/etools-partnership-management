@@ -40,9 +40,12 @@
         padding-left: 25px;
         border-left: 1px solid var(--darker-divider-color);
       }
+      #auth-officers-dropdown {
+        margin-bottom: 25px;
+      }
     </style>
     <template is="dom-if" if="[[editMode]]">
-      <div class="row-h flex-c">
+      <div id="auth-officers-dropdown" class="row-h flex-c">
         <etools-searchable-multiselection-menu id="officers"
                                                label="Officers"
                                                placeholder="Select authorized officers"
