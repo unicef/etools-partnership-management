@@ -366,14 +366,7 @@
           }
           return true;
         },
-          /**
-          * Filter Country programmes:
-          *    - omit any CP where the end date is in the past
-          *    - omit any CP with indicator 99 as the last two digits of WBS (e.g. 3930/A0/99)
-          *    - omit any CP that has an indicator other than “A0” after the first slash (e.g. omit 2490/PC/07)
-          */
          _filterCountryProgrammes: function(countryProgrammes) {
-           console.log('countryProgrammes',countryProgrammes);
           return countryProgrammes.filter(function(cp) {
               return cp.active || cp.future;
            });
@@ -386,10 +379,6 @@
            }
            return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
          },
-         /**
-          * Filter CP to obtain agreement CP Structure options.
-          * If the result is just one option then set it as selected by default, make dropdown readonly
-          */
          _countryProgrammesChanged: function(cp) {
            let cpStructures = this._filterCountryProgrammes(cp);
            this.set('cpStructureOptions', cpStructures);
@@ -432,7 +421,6 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log('intervention',intervention);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));

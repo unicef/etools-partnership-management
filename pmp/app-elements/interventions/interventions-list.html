@@ -771,20 +771,6 @@
           return this.getDisplayValue(dateString, true);
         },
 
-        // /** TODO
-        //  * Get HRP name to be shown in the intervention details(collapsible content) row
-        //  */
-        // _getHrpValue: function(hrpId) {
-        //   var hrpData = this.hrps.filter(function(hrp) {
-        //     return parseInt(hrp.id, 10) === parseInt(hrpId, 10);
-        //   })[0];
-        //   if (hrpData) {
-        //     return this.getDisplayValue(hrpData.name);
-        //   } else {
-        //     return '-';
-        //   }
-        // },
-
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);

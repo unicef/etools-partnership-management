@@ -127,8 +127,7 @@
             type: Object
           },
           selectedCpStructure: {
-            type: String,
-            observer: 'selectedCpStructureChanged'
+            type: String
           }
         },
 
@@ -162,9 +161,6 @@
           if (this.indicatorDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
-        },
-        selectedCpStructureChanged: function() {
-          console.log('expected-results -selectedCpStructureChanged');
         },
         /**
          * Add/update indicators data

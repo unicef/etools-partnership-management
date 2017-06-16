@@ -88,8 +88,7 @@
           },
           selectedCpStructure: {
             type: String,
-            value: null,
-            observer:'selectedCpStructureChanged'
+            value: null
           },
           cpOutputId: {
             type: Number,
@@ -137,9 +136,6 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
-        selectedCpStructureChanged: function() {
-          console.log('selectedCpStructureChanged', this.selectedCpStructure);
-        },
         _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
             if (ids.length && this.firstLoadCpIndicatorsUse) {
               // prepare cp indicators id to be set as selected, used only once, at element init
@@ -170,7 +166,6 @@
           if (cpOutputsLength === 0) {
             return;
           }
-          console.log('cp outputs', this.cpOutputs, this.selectedCpStructure);
           this.debounce('computeCpOutputsOptions', function() {
             var cpOutputsOptions = this._filterByCpStructure(this.cpOutputs)
             cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(cpOutputsOptions, alreadySelectedCpo);
@@ -192,12 +187,11 @@
             }.bind(this));
         },
         _filterByCpStructure: function(cpOutputsOptions) {
-          console.log('_filterByCpStructure', this.selectedCpStructure);
           if (!this.selectedCpStructure) {
             return cpOutputsOptions;
           }
           return cpOutputsOptions.filter(function(option) {
-            return option.country_programme === this.selectedCpStructure;
+            return parseInt(option.country_programme, 10) === parseInt(this.selectedCpStructure, 10);
           }.bind(this));
         },
         _getExistingOldCpO: function() {
