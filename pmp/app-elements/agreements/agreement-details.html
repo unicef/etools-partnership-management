@@ -18,6 +18,7 @@
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-config/etools-app-config.html">
@@ -36,7 +37,7 @@
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles buttons-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -76,15 +77,16 @@
             <!-- Agreement Type -->
             <etools-single-selection-menu
                 id="agreementType"
-                label="Agreement Type *"
+                label="Agreement Type"
                 placeholder="&#8212;"
                 options="[[agreementTypes]]"
                 selected="{{agreement.agreement_type}}"
                 dynamic-align
                 hide-search
                 readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
+                auto-validate
                 error-message="Please select agreement type"
-                required>
+                required starred>
             </etools-single-selection-menu>
           </div>
           <div class="col col-2">
@@ -99,7 +101,7 @@
           <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-4">
               <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
-                <span class="placeholder">[[prettyDate(agreement.start)]] - [[prettyDate(agreement.end)]]</span>
+                <span>[[prettyDate(agreement.start)]] - [[prettyDate(agreement.end)]]</span>
               </etools-form-element-wrapper>
             </div>
           </template>
@@ -110,17 +112,18 @@
             <!-- Partner name -->
             <etools-single-selection-menu
                 id="partner"
-                label="Partner Name *"
+                label="Partner Name"
                 placeholder="&#8212;"
                 options="[[partnersDropdownData]]"
                 selected="{{agreement.partner}}"
                 dynamic-align
                 readonly$="[[!_allowFieldEditing('partnerName', agreement.status)]]"
+                auto-validate
                 error-message="Please select a partner"
-                required>
+                required starred>
             </etools-single-selection-menu>
           </div>
-          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'MOU')]]">
+          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
               <!-- Start date -->
               <etools-date-input id="startDateField"
@@ -140,20 +143,20 @@
               </etools-date-input>
             </div>
           </template>
-          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'PCA')]]">
+          <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'PCA')]]" restamp>
             <div class="col col-6">
               <etools-single-selection-menu
                   id="cpStructure"
-                  label="CP Structure *"
+                  label="CP Structure"
                   placeholder="&#8212;"
                   options="[[cpStructureOptions]]"
                   option-value="id"
                   option-label="name"
                   hide-search
-                  selected="{{agreement.cp_structure}}"
+                  selected="{{agreement.country_programme}}"
                   readonly$="[[!_allowFieldEditing('cpStructure', agreement.status, agreement.agreement_type)]]"
                   error-message="Please select CP Structure"
-                  required>
+                  required starred>
               </etools-single-selection-menu>
             </div>
           </template>
@@ -418,7 +421,6 @@
             if (!agreement.attached_agreement_file) {
               this.set('agreement.attached_agreement_file', '');
             }
-            console.log('init officers: ', agreement.authorized_officers);
             this._initAuthorizedOfficers(agreement.authorized_officers);
 
           } else {
@@ -514,14 +516,14 @@
 
           if (agreementProperty && agreementProperty.path === 'agreement.agreement_type') {
             if (agreementProperty.value !== 'PCA') {
-              // reset cp_structure as it's available only for PCA type
-              this.set('agreement.cp_structure', null);
+              // reset country_programme as it's available only for PCA type
+              this.set('agreement.country_programme', null);
               // reset start and end date
               this.set('agreement.start', null);
               this.set('agreement.end', null);
             } else {
               if (this.cpStructureOptions instanceof Array && this.cpStructureOptions.length === 1) {
-                this.set('agreement.cp_structure', this.cpStructureOptions[0].id);
+                this.set('agreement.country_programme', this.cpStructureOptions[0].id);
               }
             }
           }
@@ -533,27 +535,14 @@
          */
         _validateAgreement: function() {
           var valid = true;
-
-          // validate partner
-          if (this.validateIdValue(this.agreement.partner) === false) {
-            var partnerField = this.$$('#partner');
-            if (!partnerField.validate()) {
+          var self = this;
+          var requiredFieldsSelectors = ['#partner', '#agreementType', '#cpStructure', '#agreementAmendments'];
+          requiredFieldsSelectors.forEach(function(fSelector) {
+            let field = self.$$(fSelector);
+            if (field && !field.validate()) {
               valid = false;
             }
-          }
-
-          // validate agreement type
-          if (this.validateStringValue(this.agreement.agreement_type) === false) {
-            var agreementTypeField = this.$$('#agreementType');
-            if (!agreementTypeField.validate()) {
-              valid = false;
-            }
-          }
-          var agreementAmendmentsElem = this.$$('#agreementAmendments');
-          if (agreementAmendmentsElem && !agreementAmendmentsElem.validate()) {
-            valid = false;
-          }
-
+          });
           return valid;
         },
 
@@ -564,7 +553,7 @@
           var changes = {};
           if (this.agreement && this.agreement.id === this.originalAgreementData.id) {
             // prevent the possibility of checking 2 different agreements
-            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'cp_structure',
+            var availableChangingFields = ['partner', 'agreement_type', 'start', 'end', 'country_programme',
               'attached_agreement', 'partner_manager', 'signed_by_partner_date', 'signed_by', 'signed_by_unicef_date',
               'authorized_officers', 'amendments'];
             // TODO: include amendments to above array with proper checkings
@@ -631,7 +620,7 @@
             attached_agreement: agreement.attached_agreement,
             start: agreement.agreement_type === 'MOU' ? agreement.start : null,
             end: agreement.agreement_type === 'MOU' ? agreement.end : null,
-            cp_structure: agreement.cp_structure,
+            country_programme: agreement.country_programme,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
             signed_by_partner_date: agreement.signed_by_partner_date,
             status: 'draft',
@@ -688,7 +677,7 @@
           let cpStructure = this._filterCountryProgrammesForAgreements(cp);
           this.set('cpStructureOptions', cpStructure);
           if (cpStructure.length === 1) {
-            this.set('agreement.cp_structure', cpStructure[0].id);
+            this.set('agreement.country_programme', cpStructure[0].id);
           }
         },
 
