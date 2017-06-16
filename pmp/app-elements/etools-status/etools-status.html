@@ -80,8 +80,8 @@
         line-height: 14px;
       }
       .status {
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin-top: auto;
+        margin-bottom: auto;
         text-transform: capitalize;
         color: var(--etools-status-text-color, #9D9D9D);
       }
@@ -93,7 +93,8 @@
         background-color: var(--etools-status-icon-pending-color, #0099FF);
       }
       .custom .status-icon .icon-wrapper {
-        background-color: initial;
+        /* I don't know why, but ie11 doens't like "initial" */
+        background-color: inherit;
       }
       .custom .status-icon .icon-wrapper {
         width: 29px;

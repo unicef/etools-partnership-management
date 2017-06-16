@@ -138,21 +138,25 @@
             ]
           },
           warningDialog: Object,
+          statusChangeWarningDialogContent: Object,
         },
         observers: [
             '_handleStatusChange(status)'
         ],
 
         ready: function() {
-          var statusChangeWarningDialogContent = document.createElement('p');
-          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+        this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
         },
 
         detached: function() {
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
+          }
+          if (this.statusChangeWarningDialogContent) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.statusChangeWarningDialogContent);
           }
         },
 
@@ -160,7 +164,7 @@
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change agreement status from: <strong>\''
                 + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+            var msgEl = this.statusChangeWarningDialogContent;
             if (msgEl) {
               msgEl.innerHTML = warningMessage;
               this.warningDialog.opened = true;
