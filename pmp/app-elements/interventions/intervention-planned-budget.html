@@ -91,7 +91,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="csoContUsd"
+              <etools-currency-amount-input id="csoContUsd"
                                             value="{{plannedBudget.partner_contribution}}"
                                             type="number"
                                             placeholder="&#8212;"
@@ -104,7 +104,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="unicefCashUsd"
+              <etools-currency-amount-input id="unicefCashUsd"
                                             value="{{plannedBudget.unicef_cash}}" type="number"
                                             placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -116,7 +116,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="inKindAmountUsd"
+              <etools-currency-amount-input id="inKindAmountUsd"
                                             value="{{plannedBudget.in_kind_amount}}"
                                             type="number" placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -145,7 +145,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="csoContLocal"
+              <etools-currency-amount-input id="csoContLocal"
                                             value="{{plannedBudget.partner_contribution_local}}"
                                             type="number" placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -157,7 +157,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="unicefCashLocal"
+              <etools-currency-amount-input id="unicefCashLocal"
                                             value="{{plannedBudget.unicef_cash_local}}"
                                             type="number" placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -169,7 +169,7 @@
           </td>
           <td>
             <div class="table-content-wrapper">
-              <etools-currency-amount-input id$="inKindAmountLocal"
+              <etools-currency-amount-input id="inKindAmountLocal"
                                             value="{{plannedBudget.in_kind_amount_local}}"
                                             type="number" placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -284,7 +284,6 @@
           }
           return t;
         },
-
         _getPlannedBudgetTotalFormatted: function(val1, val2, val3) {
           return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2, val3), '0', 0);
         },
