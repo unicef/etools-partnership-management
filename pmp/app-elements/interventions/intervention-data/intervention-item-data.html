@@ -259,10 +259,8 @@
           dexieObject.document_type = responseDetail.document_type;
           dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
 
-          responseDetail.planned_budget.forEach(function(elem) {
-            dexieObject.unicef_budget += parseInt(elem.unicef_cash);
-            dexieObject.cso_contribution += parseInt(elem.partner_contribution);
-          });
+          dexieObject.unicef_budget = parseInt(responseDetail.planned_budget.unicef_cash);
+          dexieObject.cso_contribution = parseInt(responseDetail.planned_budget.partner_contribution);
 
           responseDetail.sector_locations.forEach(function(elem) {
             dexieObject.sectors.push(elem.sector.name);
