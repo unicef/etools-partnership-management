@@ -460,7 +460,11 @@
         //no need to send planned_budget.total to backend
         if (interventionData.planned_budget) {
           delete interventionData.planned_budget.total;
+          if (interventionData.planned_budget.interventionWasSaved !== undefined) {
+            delete interventionData.planned_budget.interventionWasSaved;
+          }
         }
+
 
         // fr_numbers_details are readonly, we do not have to send them to backend
         delete interventionData.fr_numbers_details;
