@@ -83,7 +83,7 @@
                 selected="{{agreement.agreement_type}}"
                 dynamic-align
                 hide-search
-                readonly$="[[!_allowFieldEditing('agreementType', agreement.status)]]"
+                readonly$="[[!_allowFieldEditing('agreementType', agreement.status, editMode)]]"
                 auto-validate
                 error-message="Please select agreement type"
                 required starred>
@@ -117,7 +117,7 @@
                 options="[[partnersDropdownData]]"
                 selected="{{agreement.partner}}"
                 dynamic-align
-                readonly$="[[!_allowFieldEditing('partnerName', agreement.status)]]"
+                readonly$="[[!_allowFieldEditing('partnerName', agreement.status, editMode)]]"
                 auto-validate
                 error-message="Please select a partner"
                 required starred>
@@ -129,7 +129,7 @@
               <etools-date-input id="startDateField"
                                  label="Start date"
                                  value="{{agreement.start}}"
-                                 readonly$="[[!_allowFieldEditing('startDate', agreement.status)]]"
+                                 readonly$="[[!_allowFieldEditing('startDate', agreement.status, editMode)]]"
                                  no-init show-clear-btn>
               </etools-date-input>
             </div>
@@ -138,7 +138,7 @@
               <etools-date-input id="endDateField"
                                  label="End date"
                                  value="{{agreement.end}}"
-                                 readonly$="[[!_allowFieldEditing('endDate', agreement.status)]]"
+                                 readonly$="[[!_allowFieldEditing('endDate', agreement.status, editMode)]]"
                                  no-init show-clear-btn>
               </etools-date-input>
             </div>
@@ -154,7 +154,7 @@
                   option-label="name"
                   hide-search
                   selected="{{agreement.country_programme}}"
-                  readonly$="[[!_allowFieldEditing('cpStructure', agreement.status, agreement.agreement_type)]]"
+                  readonly$="[[!_allowFieldEditing('cpStructure', agreement.status, editMode, agreement.agreement_type)]]"
                   error-message="Please select CP Structure"
                   required starred>
               </etools-single-selection-menu>
@@ -174,7 +174,7 @@
                 option-label="name"
                 selected="{{agreement.partner_manager}}"
                 dynamic-align
-                readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status)]]">
+                readonly$="[[!_allowFieldEditing('signedByPartner', agreement.status, editMode)]]">
             </etools-single-selection-menu>
           </div>
           <div class="col col-3">
@@ -182,7 +182,7 @@
             <etools-date-input id="signedByPartnerDateField"
                                label="Signed By Partner Date"
                                value="{{agreement.signed_by_partner_date}}"
-                               readonly$="[[!_allowFieldEditing('signedByPartnerDate', agreement.status)]]"
+                               readonly$="[[!_allowFieldEditing('signedByPartnerDate', agreement.status, editMode)]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -199,7 +199,7 @@
                 option-label="full_name"
                 selected="{{agreement.signed_by}}"
                 dynamic-align
-                readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status)]]">
+                readonly$="[[!_allowFieldEditing('signedByUnicef', agreement.status, editMode)]]">
             </etools-single-selection-menu>
           </div>
           <div class="col col-3">
@@ -207,7 +207,7 @@
             <etools-date-input id="signedByUnicefDateField"
                                label="Signed By UNICEF Date"
                                value="{{agreement.signed_by_unicef_date}}"
-                               readonly$="[[!_allowFieldEditing('signedByUnicefDate', agreement.status)]]"
+                               readonly$="[[!_allowFieldEditing('signedByUnicefDate', agreement.status, editMode)]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -221,7 +221,7 @@
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{authorizedOfficers}}"
-                                       readonly$="[[!_allowFieldEditing('officers', agreement.status)]]">
+                                       readonly$="[[!_allowFieldEditing('officers', agreement.status, editMode)]]">
           </etools-multi-selection-menu>
         </div>
         <div class="row-h flex-c t-border">
@@ -479,12 +479,12 @@
         /**
          * Check field edit permissions
          */
-        _allowFieldEditing: function(fieldName, agreementStatus) {
+        _allowFieldEditing: function(fieldName, agreementStatus, editMode) {
 
           var allowEdit = false;
           if (['partnerName', 'agreementType', 'startDate', 'endDate', 'cpStructure', 'signedByPartner',
                 'signedByUnicef', 'signedByPartnerDate', 'signedByUnicefDate', 'officers'].indexOf(fieldName) > -1) {
-            allowEdit = this._allowEdit(agreementStatus);
+            allowEdit = this._allowEdit(agreementStatus, editMode);
           }
           return allowEdit;
         },
