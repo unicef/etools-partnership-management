@@ -304,10 +304,6 @@
             value: false,
             observer: '_editModeChanged'
           },
-          allowEditRegardlessStatus: {
-            type: Boolean,
-            value: false
-          },
           isNewAgreement: {
             type: Boolean,
             value: false,
@@ -345,8 +341,7 @@
           oldSelectedPartnerId: Number,
           countryProgrammes: {
             type: Array,
-            statePath: 'countryProgrammes',
-            observer: '_countryProgrammesChanged'
+            statePath: 'countryProgrammes'
           },
           cpStructureOptions: {
             type: Object,
@@ -356,7 +351,8 @@
 
         observers: [
           '_agreementFieldChanged(agreement.*)',
-          '_partnerChanged(agreement.partner)'
+          '_partnerChanged(agreement.partner)',
+          '_countryProgrammesChanged(countryProgrammes, agreement)'
         ],
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
@@ -464,11 +460,6 @@
           editMode = editMode || this.editMode;
           if (!editMode) {
             return false;
-          }
-          if (this.allowEditRegardlessStatus) {
-            // TODO: revise this temporary permission
-            // temporary edit permission for PM regardless status
-            return true;
           }
           if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
             return true;
@@ -660,12 +651,8 @@
          */
         _filterCountryProgrammesForAgreements: function(countryProgrammes) {
           var self = this;
-          // TODO: change this and use only cp. active: true, future: true and special: false
           return countryProgrammes.filter(function(cp) {
-            let cpParts = cp.wbs.split('/');
-             return self.isFutureDate(cp.to_date + 'T23:59:59') &&
-               cpParts[cpParts.length - 1] !== '99' &&
-               cpParts[1] === 'A0';
+            return (cp.active || cp.future) && !cp.special;
           });
         },
 
@@ -673,8 +660,18 @@
          * Filter CP to obtain agreement CP Structure options.
          * If the result is just one option then set it as selected by default, make dropdown readonly
          */
-        _countryProgrammesChanged: function(cp) {
-          let cpStructure = this._filterCountryProgrammesForAgreements(cp);
+        _countryProgrammesChanged: function(cp, agreement) {
+          let cpStructure = [];
+          if (agreement && !this._allowFieldEditing('cpStructure', agreement.status, this.editMode)) {
+            // old agreement / agreement not in 'draft' status
+            console.log('old agreement', cp);
+            cpStructure = cp;
+          } else {
+            // editable agreement
+            cpStructure = this._filterCountryProgrammesForAgreements(cp);
+            console.log('new agreement', cpStructure);
+          }
+
           this.set('cpStructureOptions', cpStructure);
           if (cpStructure.length === 1) {
             this.set('agreement.country_programme', cpStructure[0].id);
