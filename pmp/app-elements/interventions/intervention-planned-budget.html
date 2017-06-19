@@ -288,7 +288,7 @@
           this._defaultToWorkspaceCurrency();
         },
         _defaultToWorkspaceCurrency: function() {
-          if (this.plannedBudget && !this.interventionID) {
+          if (this.plannedBudget && !this.interventionId) {
             this.set('plannedBudget.currency', this.localCurrency);
           }
         },
