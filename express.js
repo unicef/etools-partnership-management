@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var basedir = __dirname + '/build/pmp/bundled/';
 //var basedir = '/Users/rob/Desktop/etools/etools-infra/pmp/build/pmp/bundled/';
-var node_modulesReduxDir = '/code/node_modules/redux/dist/';
+var node_modulesReduxDir = __dirname + '/node_modules/redux/dist/';
 //var node_modulesReduxDir = '/Users/rob/Desktop/etools/etools-infra/pmp/node_modules/redux/dist/';
 
 
