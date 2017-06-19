@@ -196,12 +196,12 @@
 
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[intervListActive]]">
-        <intervention-status status="[[intervention.status]]"
-                             intervention-id$="[[intervention.id]]"
-                             intervention-agreement-status="[[agreement.status]]"
-                             on-save-intervention="_validateAndSaveIntervention"
-                             on-update-intervention-status="_updateInterventionStatus"
-                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
+      <intervention-status status="[[intervention.status]]"
+                           intervention-id$="[[intervention.id]]"
+                           intervention-agreement-status="[[agreement.status]]"
+                           on-save-intervention="_validateAndSaveIntervention"
+                           on-update-intervention-status="_updateInterventionStatus"
+                           show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
 
       </div>
       <!-- sidebar content end -->
@@ -255,7 +255,7 @@
             number: undefined,
             prc_review_document_file: undefined,
             title: undefined,
-            status: 'draft',
+            status: '',
             start: undefined,
             end: undefined,
             submitted_to_prc: false,
@@ -471,6 +471,8 @@
           delete interventionData.prc_review_document;
         }
 
+        // If it's a new intervention it has no status, so it should be a draft
+        interventionData.status = interventionData.status || 'draft';
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
