@@ -232,12 +232,6 @@
             type: Number,
             value: 145 //TODO will be taken from user profile and set globally
           },
-          interventionWasSaved: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            observer: 'interventionWasSavedChanged'
-          },
           initialPlannedBudget: Object
         },
 
@@ -248,7 +242,7 @@
         interventionWasSavedChanged: function(newValue) {
           if (newValue) {
             this.editablePlannedBudget = false;
-            this.interventionWasSaved = false;
+            this.set('plannedBudget.interventionWasSaved', false);
           }
         },
         _cancelEdit: function() {
