@@ -276,7 +276,8 @@
         properties: {
           intervention: {
             type: Object,
-            observer: '_interventionChanged'
+            observer: '_interventionChanged',
+            notify: true
           },
           permissions: {
             type: Object
@@ -397,14 +398,15 @@
         _resetValidations: function() {
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
+          this.$.plannedBudget.resetValidations();
+
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults',
-            'plannedBudget', 'plannedVisits'];
+          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
           }.bind(this));
