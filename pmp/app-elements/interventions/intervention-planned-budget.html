@@ -228,7 +228,28 @@
             type: Number,
             observer: '_interventionIdChanged'
           },
+          localCurrency: {
+            type: Number,
+            value: 145 //TODO will be taken from user profile and set globally
+          },
+          interventionWasSaved: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            observer: 'interventionWasSavedChanged'
+          },
           initialPlannedBudget: Object
+        },
+
+        observers: [
+          'interventionWasSavedChanged(plannedBudget.interventionWasSaved)'
+        ],
+
+        interventionWasSavedChanged: function(newValue) {
+          if (newValue) {
+            this.editablePlannedBudget = false;
+            this.interventionWasSaved = false;
+          }
         },
         _cancelEdit: function() {
           this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
@@ -264,6 +285,12 @@
         _interventionIdChanged: function() {
           this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
           this.editablePlannedBudget = !this.interventionId;
+          this._defaultToWorkspaceCurrency();
+        },
+        _defaultToWorkspaceCurrency: function() {
+          if (this.plannedBudget && !this.interventionID) {
+            this.set('plannedBudget.currency', this.localCurrency);
+          }
         },
         _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
