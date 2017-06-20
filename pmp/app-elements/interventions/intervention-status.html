@@ -145,7 +145,7 @@
         ],
 
         ready: function() {
-        this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
@@ -154,9 +154,6 @@
         detached: function() {
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
-          }
-          if (this.statusChangeWarningDialogContent) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.statusChangeWarningDialogContent);
           }
         },
 

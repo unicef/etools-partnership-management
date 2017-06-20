@@ -148,9 +148,6 @@
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }
-          if (this.statusChangeWarningDialogContent) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.statusChangeWarningDialogContent);
-          }
         },
 
         _showStatusChangeConfirmationDialog: function() {
