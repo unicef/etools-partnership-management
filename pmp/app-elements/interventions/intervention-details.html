@@ -247,10 +247,9 @@
 
     <etools-content-panel class="content-section" panel-title="Planned Budget">
       <intervention-planned-budget id="plannedBudget"
-                                   data-items="{{intervention.planned_budget}}"
+                                   planned-budget="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
-                                   edit-mode$="[[editMode]]"
-                                   years="[[years]]">
+                                   edit-mode$="[[editMode]]">
       </intervention-planned-budget>
     </etools-content-panel>
     <etools-content-panel class="content-section" panel-title="Planned Visits">
@@ -447,14 +446,15 @@
         _resetValidations: function() {
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
+          this.$.plannedBudget.resetValidations();
+
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults',
-            'plannedBudget', 'plannedVisits'];
+          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
           }.bind(this));

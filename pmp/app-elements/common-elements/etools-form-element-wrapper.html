@@ -20,8 +20,7 @@
         };
       }
     </style>
-
-    <paper-input-container always-float-label>
+    <paper-input-container always-float-label="[[alwaysFloatLabel]]" no-label-float="[[noLabelFloat]]">
       <label hidden$=[[!label]] slot="label">[[label]]</label>
       <div class="paper-input-input">
         <slot></slot>
@@ -36,7 +35,12 @@
       Polymer({
         is: 'etools-form-element-wrapper',
         properties: {
-          label: String
+          label: String,
+          alwaysFloatLabel: {
+            type: Boolean,
+            value: true
+          },
+          noLabelFloat: Boolean
         }
       });
     })();

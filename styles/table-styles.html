@@ -1,0 +1,100 @@
+<!-- This file will be dedicated for displaying content in tables format -->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="table-styles">
+  <template>
+    <style>
+      table {
+        background-color: transparent;
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+      *,
+      *:before,
+      *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      td,
+      th {
+        padding: 0;
+      }
+      caption {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        color: var(--dark-secondary-text-color, #777777);
+        text-align: left;
+      }
+      .table {
+        width: 100%;
+        max-width: 100%;
+      }
+      .table > thead > tr > th,
+      .table > tbody > tr > th,
+      .table > tfoot > tr > th,
+      .table > thead > tr > td,
+      .table > tbody > tr > td,
+      .table > tfoot > tr > td {
+        padding: 8px 15px;
+        line-height: 1.4;
+        vertical-align: top;
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .table > thead > tr > th {
+        padding: 25px 15px;
+        vertical-align: bottom;
+        border-bottom: 1px solid var(--darker-divider-color);
+        color: var(--dark-secondary-text-color);
+      }
+      .table > caption + thead > tr:first-child > th,
+      .table > colgroup + thead > tr:first-child > th,
+      .table > thead:first-child > tr:first-child > th,
+      .table > caption + thead > tr:first-child > td,
+      .table > colgroup + thead > tr:first-child > td,
+      .table > thead:first-child > tr:first-child > td {
+        border-top: 0;
+      }
+      .table > tbody + tbody {
+        border-top: 1px solid var(--darker-divider-color);
+      }
+      .table > thead > tr > th:first-child,
+      .table > tbody > tr > th:first-child,
+      .table > tfoot > tr > th:first-child,
+      .table > thead > tr > td:first-child,
+      .table > tbody > tr > td:first-child,
+      .table > tfoot > tr > td:first-child {
+        padding-left: 25px;
+      }
+      .table > thead > tr > th:last-child,
+      .table > tbody > tr > th:last-child,
+      .table > tfoot > tr > th:last-child,
+      .table > thead > tr > td:last-child,
+      .table > tbody > tr > td:last-child,
+      .table > tfoot > tr > td:last-child {
+        padding-right: 25px;
+      }
+
+      .table.r-align > thead > tr > th,
+      .table.r-align > tbody > tr > th,
+      .table.r-align > tfoot > tr > th,
+      .table.r-align > thead > tr > td,
+      .table.r-align > tbody > tr > td,
+      .table.r-align > tfoot > tr > td {
+        text-align: right;
+      }
+
+      .table.first-c-always-left > thead > tr > th:first-child,
+      .table.first-c-always-left > tbody > tr > th:first-child,
+      .table.first-c-always-left > tfoot > tr > th:first-child,
+      .table.first-c-always-left > thead > tr > td:first-child,
+      .table.first-c-always-left > tbody > tr > td:first-child,
+      .table.first-c-always-left > tfoot > tr > td:first-child {
+        text-align: left;
+      }
+
+    </style>
+  </template>
+</dom-module>
