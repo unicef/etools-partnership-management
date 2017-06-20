@@ -367,8 +367,7 @@
         },
 
         _updateStatus: function (newStatus) {
-          console.log('update status triggered', newStatus);
-          if (this.newAgreement) {
+           if (this.newAgreement) {
             return;
           }
 
@@ -381,7 +380,7 @@
           }
           if (newStatus === 'suspended' || newStatus === 'terminated') {
             if (this.newAgreement || (this.status !== 'suspended'
-              && this.status !== 'terminated')) {
+              && this.status !== 'terminated' && this.status !== 'active')) {
               return false;
             }
           }
