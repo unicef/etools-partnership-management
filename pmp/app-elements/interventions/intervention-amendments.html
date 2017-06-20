@@ -6,7 +6,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
 <link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -66,24 +66,24 @@
             <div class="row-h flex-c">
               <div class="col col-5">
                 <!-- Amendment Type -->
-                <etools-single-selection-menu id$="amendmentType_[[index]]"
+                <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
                                                        label="Amendment Type"
                                                        placeholder="&#8212;"
                                                        options="[[amendmentTypes]]"
-                                                       selected="{{item.type}}"
+                                                       selected-values="{{item.types}}"
                                                        dynamic-align
                                                        required
                                                        auto-validate
                                                        error-message="Type is required"
-                                                       readonly="[[_showReadonlyDetails(item.id, editMode)]]">
-                </etools-single-selection-menu>
+                                                       readonly="[[_isReadonlyAmendment(item.id, editMode)]]">
+                </etools-multi-selection-menu>
               </div>
               <div class="col col-2">
                 <!-- Signed Date -->
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
                                    value="{{item.signed_date}}"
-                                   readonly$="[[_showReadonlyDetails(item.id, editMode)]]"
+                                   readonly$="[[_isReadonlyAmendment(item.id, editMode)]]"
                                    required
                                    error-message="Please select signed date"
                                    auto-validate
@@ -99,10 +99,10 @@
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
                                     required
-                                    readonly="[[_showReadonlyDetails(item.id, editMode)]]"></etools-single-file>
+                                    readonly="[[_isReadonlyAmendment(item.id, editMode)]]"></etools-single-file>
               </div>
             </div>
-            <template is="dom-if" if="[[!_showReadonlyDetails(item.id, editMode)]]">
+            <template is="dom-if" if="[[!_isReadonlyAmendment(item.id, editMode)]]">
               <div class="row-h flex-c" hidden$="[[!item.type]]">
                 <span class="type-warning">
                   [[_getSelectedAmendmentTypeWarning(item.type)]]
@@ -143,7 +143,7 @@
 
         properties: {
           amendmentTypes: {
-            type: Array,
+            type: Object,
             // value: function() {
             //   return [{label:'Dates', value:'1'},
             //     {label:'Results', value:'2'},
@@ -199,38 +199,72 @@
         // observe amendments property changes and validate
         _dataItemsPropertyChange: function(data) {
           console.log('_dataItemsPropertyChange');
-          if (data.path.indexOf('dataItems.#') > -1) {
-            var path = data.path.replace('dataItems.#', '');
-            var index = parseInt(path.substring(0, path.indexOf('.')), 10);
-            if (!isNaN(index)) {
-              var amendment = this.dataItems[index];
-              if (this._showReadonlyDetails(amendment.id, this.editMode)) {
-                this._resetAmendmentValidations(index);
-                return;
-              }
 
-              this._validateAmendment(index);
-            }
+          if (data.path.indexOf('dataItems.#') === -1) {
+            return;
           }
-        },
+          var index = this._getIndex(data);
+          if (isNaN(index)) {
+            return;
+          }
 
+          var amendment = this.dataItems[index];
+          if (this._isReadonlyAmendment(amendment.id, this.editMode)) {
+            this._resetAmendmentValidations(index);
+            return;
+          }
+
+          this._validateAmendment(index);
+        },
+        _getIndex: function(data) {
+          var path = data.path.replace('dataItems.#', '');
+          var index = parseInt(path.substring(0, path.indexOf('.')), 10);
+          return index;
+        },
         _validateAmendment: function(index) {
           var valid = true;
           var amendment = this.dataItems[index];
-          if (amendment) {
-            var typeEl = this.$$('#amendmentType_' + index);
-            if (typeEl && !typeEl.validate()) {
-              valid = false;
-            }
-            var signedDateEl = this.$$('#signedDate_' + index);
-            if (signedDateEl && !signedDateEl.validate()) {
-              valid = false;
-            }
-
-            if (!amendment.signed_amendment) {
-                this.$$('#fileUpload_' + index).invalid = true;
-            }
+          if (!amendment) {
+            return valid;
           }
+          valid = this._validateAmendmentTypes(index);
+          valid = this._validateSignedDate(amendment, index);
+          valid = this._validateFileUpload(amendment, index);
+
+          return valid;
+        },
+        _validateAmendmentTypes: function(index) {
+          var valid = true;
+          var typeEl = this.$$('#amendmentTypes_' + index);
+          if (typeEl && !typeEl.validate()) {
+            valid = false;
+          }
+          return valid;
+        },
+        _validateFileUpload: function(amendment, index) {
+          var valid = !!amendment.signed_amendment;
+          var fileUplodEl = this.$$('#fileUpload_' + index);
+          fileUplodEl.invalid = !valid;
+          return valid;
+        },
+        _validateSignedDate: function(amendment, index) {
+          var valid = true;
+
+          var signedDateEl = this.$$('#signedDate_' + index);
+          if (!signedDateEl) {
+            return valid;
+          }
+          if (!signedDateEl.validate()) {
+            signedDateEl.errorMessage = "Please select signed date";
+            valid = false;
+          } else if (this.isFutureDate(amendment.signed_date)){
+            console.log('is in the future');
+            signedDateEl.errorMessage = "Signed date can not be in the future";
+            valid = false;
+          }
+          signedDateEl.invalid = null;// *This is neccessary because sometimes it doesn't work without it
+          signedDateEl.invalid = !valid;
+
           return valid;
         },
 
@@ -263,7 +297,7 @@
          * This class will help with that.
          */
         _getLockedClass: function(id, editMode) {
-          if (this._showReadonlyDetails(id, editMode)) {
+          if (this._isReadonlyAmendment(id, editMode)) {
             return 'locked';
           }
           return '';
@@ -276,12 +310,12 @@
         /**
          * Check if amendment fields are empty
          */
-        _amendmentFieldsAreEmpty: function(amendmentItem) {
-          return (amendmentItem.signed_date === null || amendmentItem.signed_date === '') &&
-              (amendmentItem.signed_amendment_file === null ||
-              (typeof amendmentItem.signed_amendment_file === 'string' &&
-              amendmentItem.signed_amendment_file === '')) &&
-              amendmentItem.signed_amendment instanceof File === false && !amendmentItem.type;
+        _amendmentFieldsAreEmpty: function(amendment) {
+          return (amendment.signed_date === null || amendment.signed_date === '') &&
+              (amendment.signed_amendment_file === null ||
+              (typeof amendment.signed_amendment_file === 'string' &&
+              amendment.signed_amendment_file === '')) &&
+              amendment.signed_amendment instanceof File === false && !amendment.type;
         },
 
         /**
@@ -299,7 +333,6 @@
           }
 
           this._addElement();
-
         },
 
         // /**
@@ -316,32 +349,35 @@
         // validate fields
         validate: function() {
           var valid = true;
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(amendment, index) {
-              if (!this._validateAmendment(index)) {
+          if (!this.dataItems.length) {
+            return valid;
+          }
+          this.dataItems.forEach(function(amendment, index) {
+            if (!this._validateAmendment(index)) {
+              valid = false;
+            }
+            if (this.dataItems.length - 1 === index) {
+              // last amendment
+              if (this._amendmentFieldsAreEmpty(amendment)) {
                 valid = false;
               }
-              if (this.dataItems.length - 1 === index) {
-                // last amendment
-                if (this._amendmentFieldsAreEmpty(amendment)) {
-                  valid = false;
-                }
-              }
-            }.bind(this));
-          }
+            }
+          }.bind(this));
           return valid;
         },
 
         resetValidations: function() {
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(amendment, index) {
-              this._resetAmendmentValidations(index);
-            }.bind(this));
+          if (!this.dataItems.length) {
+            return;
           }
+          this.dataItems.forEach(function(amendment, index) {
+            this._resetAmendmentValidations(index);
+          }.bind(this));
+
         },
 
         _resetAmendmentValidations: function(index) {
-          var typeEl = this.$$('#amendmentType_' + index);
+          var typeEl = this.$$('#amendmentTypes_' + index);
           if (typeEl) {
             typeEl.invalid = false;
           }
@@ -349,9 +385,13 @@
           if (signedDateEl) {
             signedDateEl.invalid = false;
           }
+          var fileUpload = this.$$('#fileUpload_' + index);
+          if (fileUpload) {
+            fileUpload.invalid = false;
+          }
         },
 
-        _showReadonlyDetails: function(amendmentId, editMode) {
+        _isReadonlyAmendment: function(amendmentId, editMode) {
           if (!editMode) {
             return true;
           }
@@ -361,34 +401,53 @@
           return false;
         },
 
-        _getSelectedAmendmentTypeWarning: function(type) {
-          if (!type) {
+        _getSelectedAmendmentTypeWarning: function(types) {
+          if (!types || !types.length) {
             return;
           }
-          type = type.toLowerCase();
-          switch (type) {
-            case 'cpr':
-              return 'Please ensure that you update Programme Results section of this PD/SSFA.';
-            case 'cpf':
-              return 'Please ensure that you update the Population Focus field on this PD/SSFA.';
-            case 'cgc':
-              return 'Please ensure that you update the Locations field on this PD/SSFA.';
-            case 'ctbgt20':
-              return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-                  'also ensure this PD/SSFA goes for PRC review and is approved by your Representative.';
-            case 'ctblt20':
-              return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-                  'also ensure the amended PD/SSFA is signed.';
-            case 'cablt20':
-              return 'Please ensure that you update the Planned Budget section of this PD/SSFA.';
-            case 'cabgt20':
-              return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-                  'also ensure to manage changes through the FACE form and document reasoning for change.';
-            case 'cabgt20face':
-              return 'Please ensure that you update the Planned Budget section of this PD/SSFA; also ensure ' +
-                  'to manage changes through the FACE form and document reasoning for change A Note for ' +
-                  'the Record is required for approval.';
-          }
+         var message = "Please ensure that you update ";
+         types.forEach(function(amdType) {
+           switch(amdType) {
+             case '1':
+               messages += "Dates, ";
+               break;
+             case '1':
+               messages += "Programme Results, ";
+               break;
+             case '1':
+               messages += "Planned Budget, ";
+               break;
+             case '1':
+               messages += "Other, ";
+               break;
+           }
+         });
+          message = message.substring(0, message.length - 3);
+          message += "section" + message.indexOf(',') > -1 ? "s" : "" + " of this PD/SSFA";
+
+          // switch (type) {
+          //   case 'cpr':
+          //     return 'Please ensure that you update Programme Results section of this PD/SSFA.';
+          //   case 'cpf':
+          //     return 'Please ensure that you update the Population Focus field on this PD/SSFA.';
+          //   case 'cgc':
+          //     return 'Please ensure that you update the Locations field on this PD/SSFA.';
+          //   case 'ctbgt20':
+          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
+          //         'also ensure this PD/SSFA goes for PRC review and is approved by your Representative.';
+          //   case 'ctblt20':
+          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
+          //         'also ensure the amended PD/SSFA is signed.';
+          //   case 'cablt20':
+          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA.';
+          //   case 'cabgt20':
+          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
+          //         'also ensure to manage changes through the FACE form and document reasoning for change.';
+          //   case 'cabgt20face':
+          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; also ensure ' +
+          //         'to manage changes through the FACE form and document reasoning for change A Note for ' +
+          //         'the Record is required for approval.';
+          // }
         }
 
       });
