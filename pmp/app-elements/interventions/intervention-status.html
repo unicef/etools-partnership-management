@@ -162,17 +162,17 @@
 
         _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
-            var warningMessage = 'Are you sure you want to change agreement status from: <strong>\''
+            var warningMessage = 'Are you sure you want to change status from: <strong>\''
                 + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
             var msgEl = this.statusChangeWarningDialogContent;
             if (msgEl) {
               msgEl.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+              console.warn('[pmp intervetnion status change] #statusChangeWarningContent element not found!');
             }
           } else {
-            console.warn('[pmp agreement status change] warningDialog not created!');
+            console.warn('[pmp intervetnion status change] warningDialog not created!');
           }
         },
 
@@ -416,12 +416,6 @@
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
-
-        _agreementStatusChanged: function(status, oldStatus) {
-          if ((typeof oldStatus === 'undefined' || oldStatus === null) && status) {
-            this.set('_hideSecondaryButtons', false);
-          }
-        }
 
       });
     })();
