@@ -6,7 +6,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
 <link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -34,7 +34,7 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-        
+
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
           @apply(--paper-fab-btn-green);
@@ -66,19 +66,17 @@
             <div class="row-h flex-c">
               <div class="col col-5">
                 <!-- Amendment Type -->
-                <etools-searchable-multiselection-menu id$="amendmentType_[[index]]"
+                <etools-single-selection-menu id$="amendmentType_[[index]]"
                                                        label="Amendment Type"
                                                        placeholder="&#8212;"
                                                        options="[[amendmentTypes]]"
-                                                       custom-object-options
                                                        selected="{{item.type}}"
-                                                       update-selected
                                                        dynamic-align
-                                                       required="[[_amendmentTypeRequired(item.signed_date, item.signed_amendment, item.signed_amendment_file)]]"
+                                                       required
                                                        auto-validate
                                                        error-message="Type is required"
                                                        readonly="[[_showReadonlyDetails(item.id, editMode)]]">
-                </etools-searchable-multiselection-menu>
+                </etools-single-selection-menu>
               </div>
               <div class="col col-2">
                 <!-- Signed Date -->
@@ -86,7 +84,7 @@
                                    label="Signed date"
                                    value="{{item.signed_date}}"
                                    readonly$="[[_showReadonlyDetails(item.id, editMode)]]"
-                                   required="[[_requireSignedDate(item.signed_amendment, item.signed_amendment_file, item.type)]]"
+                                   required
                                    error-message="Please select signed date"
                                    auto-validate
                                    no-init show-clear-btn>
@@ -94,18 +92,20 @@
               </div>
               <div class="col col-5 file-container">
                 <!-- Signed Agreement -->
-                <etools-single-file label="Signed Agreement"
+                <etools-single-file id="fileUpload_[[index]]"
+                                    label="Signed Agreement"
                                     internal-file=[[item.signed_amendment_file]]
                                     file={{item.signed_amendment}}
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
-                                    readonly="[[_isUploadFileReadonly(item, editMode, item.signed_amendment_file)]]"></etools-single-file>
+                                    required
+                                    readonly="[[_showReadonlyDetails(item.id, editMode)]]"></etools-single-file>
               </div>
             </div>
             <template is="dom-if" if="[[!_showReadonlyDetails(item.id, editMode)]]">
               <div class="row-h flex-c" hidden$="[[!item.type]]">
                 <span class="type-warning">
-                  [[_getSemectedAmendmentTypeWarning(item.type)]]
+                  [[_getSelectedAmendmentTypeWarning(item.type)]]
                 </span>
               </div>
             </template>
@@ -144,6 +144,12 @@
         properties: {
           amendmentTypes: {
             type: Array,
+            // value: function() {
+            //   return [{label:'Dates', value:'1'},
+            //     {label:'Results', value:'2'},
+            //     {label:'Budget', value:'3'},
+            //     {label:'Other', value:'4'}]
+            // }
             statePath: 'interventionAmendmentTypes'
           },
           editMode: {
@@ -157,7 +163,7 @@
         ready: function() {
           this.dataSetModel = {
             id: null,
-            type: null,
+            type: undefined,
             signed_date: null,
             signed_amendment: null,
             signed_amendment_file: '',
@@ -166,19 +172,19 @@
         },
         //intervention-amendments is displayed only if intervention status is != than draft
         //so that check is not neccesary
-       _isUploadFileReadonly: function(item) {
-          if (!this.editMode) {
-            return true;
-          }
-          if (!item || !item.id) {
-            return false;
-          }
-          if (!item.signed_amendment_file) {
-            return false;
-          }
-          return true;
-        },
-        _editModeChanged: function(newValue, oldValue) {
+      //  _isUploadFileReadonly: function(item) {
+      //     if (!this.editMode) {
+      //       return true;
+      //     }
+      //     if (!item || !item.id) {
+      //       return false;
+      //     }
+      //     if (!item.signed_amendment_file) {
+      //       return false;
+      //     }
+      //     return true;
+      //   },
+       _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();
           }
@@ -192,6 +198,7 @@
 
         // observe amendments property changes and validate
         _dataItemsPropertyChange: function(data) {
+          console.log('_dataItemsPropertyChange');
           if (data.path.indexOf('dataItems.#') > -1) {
             var path = data.path.replace('dataItems.#', '');
             var index = parseInt(path.substring(0, path.indexOf('.')), 10);
@@ -201,6 +208,7 @@
                 this._resetAmendmentValidations(index);
                 return;
               }
+
               this._validateAmendment(index);
             }
           }
@@ -217,6 +225,10 @@
             var signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl && !signedDateEl.validate()) {
               valid = false;
+            }
+
+            if (!amendment.signed_amendment) {
+                this.$$('#fileUpload_' + index).invalid = true;
             }
           }
           return valid;
@@ -238,13 +250,13 @@
           return true;
         },
 
-        _amendmentTypeRequired: function(signedDate, signedAmendment, signedAmendmentFilePath) {
-          if (signedDate || signedAmendment instanceof File ||
-              (typeof signedAmendmentFilePath === 'string' && signedAmendmentFilePath !== '')) {
-            return true;
-          }
-          return false;
-        },
+        // _amendmentTypeRequired: function(signedDate, signedAmendment, signedAmendmentFilePath) {
+        //   if (signedDate || signedAmendment instanceof File ||
+        //       (typeof signedAmendmentFilePath === 'string' && signedAmendmentFilePath !== '')) {
+        //     return true;
+        //   }
+        //   return false;
+        // },
 
         /**
          * If the amendment readonly, the left border and top badge needs to have a different style.
@@ -276,33 +288,30 @@
          * Validate last added amendment and if is not empty add a new one
          */
         _addNewAmendment: function() {
-          var lastAmendmentItemIndex = this.dataItems.length - 1;
-          if (lastAmendmentItemIndex > -1) {
-            var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
-            if (!lastAmendmentItem.id) {
-              if (this._amendmentFieldsAreEmpty(lastAmendmentItem)) {
-                this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
-              } else {
-                this._addElement();
-              }
-            } else {
-              this._addElement();
+          var lastAmendmIndex = this.dataItems.length - 1;
+
+          if (lastAmendmIndex > -1) {
+            var lastAmendmIndex = this.dataItems[lastAmendmIndex];
+            if (!lastAmendmIndex.id && this._amendmentFieldsAreEmpty(lastAmendmIndex)) {
+              this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
+              return;
             }
-          } else {
-            this._addElement();
           }
+
+          this._addElement();
+
         },
 
-        /**
-         * Check if amendment signed date is required
-         */
-        _requireSignedDate: function(signedAgreement, signedAgreementFilePath, type) {
-          if ((typeof signedAgreementFilePath === 'string' && signedAgreementFilePath !== '') ||
-              type || signedAgreement instanceof File) {
-            return true;
-          }
-          return false;
-        },
+        // /**
+        //  * Check if amendment signed date is required
+        //  */
+        // _requireSignedDate: function(signedAgreement, signedAgreementFilePath, type) {
+        //   if ((typeof signedAgreementFilePath === 'string' && signedAgreementFilePath !== '') ||
+        //       type || signedAgreement instanceof File) {
+        //     return true;
+        //   }
+        //   return false;
+        // },
 
         // validate fields
         validate: function() {
@@ -352,7 +361,7 @@
           return false;
         },
 
-        _getSemectedAmendmentTypeWarning: function(type) {
+        _getSelectedAmendmentTypeWarning: function(type) {
           if (!type) {
             return;
           }
