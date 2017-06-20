@@ -179,6 +179,7 @@
     <template is="dom-if" if="[[_isNotDraft(intervention.status)]]">
       <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
+                                 intervention-status="[[intervention.status]]"
                                  data-items="{{intervention.amendments}}"
                                  edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
@@ -313,7 +314,7 @@
         },
 
         _isNotDraft: function(status) {
-          return status !== 'draft';
+          return status !== 'draft' && status !== '';
         },
 
         validate: function() {

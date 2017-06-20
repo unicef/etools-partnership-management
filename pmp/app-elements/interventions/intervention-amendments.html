@@ -67,7 +67,7 @@
               <div class="col col-5">
                 <!-- Amendment Type -->
                 <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
-                                                       label="Amendment Type"
+                                                       label="Amendment Types"
                                                        placeholder="&#8212;"
                                                        options="[[amendmentTypes]]"
                                                        selected-values="{{item.types}}"
@@ -120,7 +120,7 @@
       <p>There are no amendments added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, editMode)]]">
       <paper-fab icon="add"
                  on-tap="_addNewAmendment"
                  title="Add"></paper-fab>
@@ -155,7 +155,8 @@
           editMode: {
             type: Boolean,
             observer: '_editModeChanged'
-          }
+          },
+          interventionStatus: String
         },
 
         observers: ['_dataHasChanged(dataItems)', '_dataItemsPropertyChange(dataItems.*)'],
@@ -163,7 +164,7 @@
         ready: function() {
           this.dataSetModel = {
             id: null,
-            type: undefined,
+            types: undefined,
             signed_date: null,
             signed_amendment: null,
             signed_amendment_file: '',
@@ -184,6 +185,15 @@
       //     }
       //     return true;
       //   },
+       _allowToAddAmendment: function(interventionStatus, editMode) {
+         if (!editMode) {
+           return false;
+         }
+         if (['active', 'signed'].indexOf(interventionStatus) === -1) {
+           return false;
+         }
+         return true;
+       },
        _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();
@@ -411,13 +421,13 @@
              case '1':
                messages += "Dates, ";
                break;
-             case '1':
+             case '2':
                messages += "Programme Results, ";
                break;
-             case '1':
+             case '3':
                messages += "Planned Budget, ";
                break;
-             case '1':
+             case '4':
                messages += "Other, ";
                break;
            }
