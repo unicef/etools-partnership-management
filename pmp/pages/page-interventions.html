@@ -248,7 +248,7 @@
         newInterventionModel: {
           type: Object,
           value: {
-            id: undefined,
+            id: null, // Required null, not undefined in order to trigger the observer
             agreement: undefined,
             document_type: undefined,
             hrp: undefined,
@@ -273,7 +273,7 @@
             fr_numbers: undefined,
             planned_visits: [],
             sector_locations: [],
-            planned_budget: [],
+            planned_budget: {},
             result_links: [],
             amendments: [],
             attachments: [],
@@ -388,6 +388,7 @@
         this.debounce('pageChange', function() {
           var activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
           if (activePage === 'list') {
+            this.set('serverErrors', []);
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
@@ -456,6 +457,14 @@
             return frNumber.value;
           });
         }
+        //no need to send planned_budget.total to backend
+        if (interventionData.planned_budget) {
+          delete interventionData.planned_budget.total;
+          if (interventionData.planned_budget.interventionWasSaved !== undefined) {
+            delete interventionData.planned_budget.interventionWasSaved;
+          }
+        }
+
         // fr_numbers_details are readonly, we do not have to send them to backend
         delete interventionData.fr_numbers_details;
 
@@ -473,6 +482,7 @@
 
         // If it's a new intervention it has no status, so it should be a draft
         interventionData.status = interventionData.status || 'draft';
+
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
