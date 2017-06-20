@@ -20,7 +20,7 @@
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       // TODO: Very important! this is 99% the same as agreement status.
@@ -49,7 +49,7 @@
           },
           possibleStatuses: {
             type: Array,
-            value: function () {
+            value: function() {
               return [
                 {
                   label: 'Draft',
@@ -137,14 +137,14 @@
           '_handleStatusChange(status)'
         ],
 
-        ready: function () {
+        ready: function() {
           this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
             this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
         },
 
-        detached: function () {
+        detached: function() {
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }
@@ -153,7 +153,7 @@
           }
         },
 
-        _showStatusChangeConfirmationDialog: function () {
+        _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
               + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
@@ -169,24 +169,24 @@
           }
         },
 
-        _setAllActionsToHidden: function () {
+        _setAllActionsToHidden: function() {
           var possibleActions = this.possibleActions;
-          possibleActions.forEach(function (elem) {
+          possibleActions.forEach(function(elem) {
             elem.hidden = true;
           });
 
           this.set('possibleActions', possibleActions);
         },
-        _setAllStatusesToHidden: function () {
+        _setAllStatusesToHidden: function() {
           var possibleStatuses = this.possibleStatuses;
-          possibleStatuses.forEach(function (elem) {
+          possibleStatuses.forEach(function(elem) {
             elem.hidden = true;
           });
 
           this.set('possibleStatuses', possibleStatuses);
         },
 
-        _computeAvailableActions: function (status) {
+        _computeAvailableActions: function(status) {
           this._setAllActionsToHidden();
           let availableOptions = ['Save'];
 
@@ -239,7 +239,7 @@
           }
         },
 
-        _computeAvailableStatuses: function (status) {
+        _computeAvailableStatuses: function(status) {
           this._setAllStatusesToHidden();
           let availableStatuses = [];
           let completedFlag = false;
@@ -350,13 +350,13 @@
           }
         },
 
-        _handleStatusChange: function (status) {
-          this.debounce('reset-status-actions', function () {
+        _handleStatusChange: function(status) {
+          this.debounce('reset-status-actions', function() {
             this._computeAvailableStatuses(status);
             this._computeAvailableActions(status);
           }.bind(this), 50);
         },
-        _statusChangeConfirmationCallback: function (event) {
+        _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this.fire('update-agreement-status', {
               agreementId: this.agreementId,
@@ -366,7 +366,7 @@
           this.set('newStatus', '');
         },
 
-        _updateStatus: function (newStatus) {
+        _updateStatus: function(newStatus) {
            if (this.newAgreement) {
             return;
           }
@@ -388,23 +388,23 @@
           this._showStatusChangeConfirmationDialog();
         },
 
-        _setStatusTerminated: function () {
+        _setStatusTerminated: function() {
           this._updateStatus('terminated');
         },
 
-        _setStatusDraft: function () {
+        _setStatusDraft: function() {
           this._updateStatus('draft');
         },
 
-        _setStatusSuspended: function () {
+        _setStatusSuspended: function() {
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function () {
+        _setStatusCanceled: function() {
           this._updateStatus('cancelled');
         },
-        _setStatusNotSuspended: function () {
-          this.fire('toast', { text: 'Unsuspend action not implemented yet', showCloseBtn: true });
+        _setStatusNotSuspended: function() {
+          this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
 
       });
