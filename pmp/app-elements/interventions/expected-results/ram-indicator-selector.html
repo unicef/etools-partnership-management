@@ -1,6 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -20,6 +22,7 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
+
       .row-h {
         padding: 15px 0;
       }
@@ -137,17 +140,17 @@
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
         _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
-            if (ids.length && this.firstLoadCpIndicatorsUse) {
-              // prepare cp indicators id to be set as selected, used only once, at element init
-              this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
-              this.set('firstLoadCpIndicatorsUse', false);
-            }
+          if (ids.length && this.firstLoadCpIndicatorsUse) {
+            // prepare cp indicators id to be set as selected, used only once, at element init
+            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+            this.set('firstLoadCpIndicatorsUse', false);
+          }
         },
 
         _resetSelectedIndicators: function() {
-           this.set('selectedCpIndicatorsIds', []);
-            this.$.indicators.value = [];
-            this.$.indicators.selectedValues = null;
+          this.set('selectedCpIndicatorsIds', []);
+          this.$.indicators.value = [];
+          this.$.indicators.selectedValues = null;
         },
         _cpIndicatorsChanged: function(cpIndicators) {
           if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
@@ -161,16 +164,14 @@
           }
         },
 
-         // prevent having cpoutputs already selected in the current cpOutput selector
+        // prevent having cpoutputs already selected in the current cpOutput selector
         _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength, selectedCpStructure) {
           if (cpOutputsLength === 0) {
             return;
           }
           this.debounce('computeCpOutputsOptions', function() {
-            var cpOutputsOptions = this._filterByCpStructure(this.cpOutputs)
+            var cpOutputsOptions = this._filterByCpStructure(this.cpOutputs);
             cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(cpOutputsOptions, alreadySelectedCpo);
-
-
             // keep old cpOutputs requested from server
             var oldCpOutput = this._getExistingOldCpO();
             if (oldCpOutput) {
@@ -183,8 +184,8 @@
         // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
         _excludeAlreadySelectedInOtherDropdowns: function(cpOutputsOptions, alreadySelectedCpo) {
           return cpOutputsOptions.filter(function(cpO) {
-              return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
-            }.bind(this));
+            return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
+          }.bind(this));
         },
         _filterByCpStructure: function(cpOutputsOptions) {
           if (!this.selectedCpStructure) {

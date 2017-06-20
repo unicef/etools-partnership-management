@@ -31,10 +31,10 @@
           notify: true
         },
       },
-      ready: function () {
+      ready: function() {
         this.ajaxEl = this.$.ajaxEl;
       },
-      saveProfile: function (profile) {
+      saveProfile: function(profile) {
         var url = this.endpoint.url;
         if (_.isEmpty(profile)) {
           return;
@@ -61,7 +61,7 @@
           this.ajaxEl.set('url', url);
         }
       },
-      _resetAjax: function(){
+      _resetAjax: function() {
         this.ajaxEl.set('params', null);
         this.ajaxEl.set('body', null);
         this.ajaxEl.set('url', null);
