@@ -180,6 +180,7 @@
       <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  intervention-status="[[intervention.status]]"
+                                 permissions="[[permissions]]"
                                  data-items="{{intervention.amendments}}"
                                  edit-mode$="[[editMode]]"></intervention-amendments>
       </etools-content-panel>
@@ -236,7 +237,8 @@
           _lockSubmitToPrc: {
             type: Boolean,
             value: false
-          }
+          },
+          permissions: Object
         },
         observers: ['_interventionDocTypeChanged(intervention.document_type)'],
 

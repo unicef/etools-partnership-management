@@ -136,7 +136,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving PD/SSFA ToR"
+                                   title="Errors Saving PD/SSFA"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"
@@ -168,7 +168,7 @@
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
+                                  edit-mode="[[_isEditMode(permissions, intervention, addingAmendment, 'details')]]"
                                   on-update-intervention-status="_updateInterventionStatus">
             </intervention-details>
           </div>
@@ -178,7 +178,7 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
+                                          edit-mode="[[_isEditMode(permissions, intervention, addingAmendment)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
@@ -202,7 +202,7 @@
                            intervention-agreement-status="[[agreement.status]]"
                            on-save-intervention="_validateAndSaveIntervention"
                            on-update-intervention-status="_updateInterventionStatus"
-                           show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
+                           show-save-btn$="[[_isEditMode(permissions, intervention, addingAmendment, 'details')]]"></intervention-status>
 
       </div>
       <!-- sidebar content end -->
@@ -303,6 +303,10 @@
         editMode: {
           type: Boolean
         },
+        addingAmendment: {
+          type: Boolean,
+          value: false
+        }
       },
 
       observers: [
@@ -318,7 +322,8 @@
 
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
-        'reload-list': '_reloadInterventionsList'
+        'reload-list': '_reloadInterventionsList',
+        'adding-amendment':'_onAddingAmendment'
       },
 
       ready: function() {
@@ -336,6 +341,10 @@
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
       },
+      _onAddingAmendment: function(e) {
+         e.stopImmediatePropagation();
+         this.addingAmendment = true;
+      },
       _showFinalizeAmendmentDialog: function() {
         if (this.finalizeAmendmentConfirmationDialog) {
           this.finalizeAmendmentConfirmationDialog.opened = true;
@@ -347,6 +356,7 @@
       //   return !intervDetailsActive && !newInterventionActive;
       // },
       _interventionChanged: function(intervention) {
+        this.addingAmendment = false;
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           this.async(function() {
@@ -447,7 +457,7 @@
         }
 
         this.set('serverErrors', []);
-        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
+        if (!this._isEditMode(this.permissions, this.intervention, this.addingAmendment, 'details')) {
           return;
         }
 
@@ -737,14 +747,22 @@
         event.stopImmediatePropagation();
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
-
-      _hasEditPermissions: function(permissions, intervention) {
-        if (permissions && permissions.partnershipManager) {
-          // TODO: revise this temporary permission, might not be needed
-          // temporary edit permission for PM regardless status or other checks
+      _isEditMode: function(permissions, intervention, addingAmendment, page) {
+        if (!this._hasEditPermissions(permissions, intervention)){
+          return false;
+        }
+        if (this.intervention && page ==='details'&& (addingAmendment || this.addingAmendment)) {
           return true;
         }
-
+        if (this._isReadonlyByStatus(intervention)) {
+          return false;
+        }
+        return true;
+      },
+      _isReadonlyByStatus: function(intervention) {
+          return (intervention.status && intervention.status !== 'draft');
+      },
+      _hasEditPermissions: function(permissions, intervention) {
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&

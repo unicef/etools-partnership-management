@@ -120,7 +120,7 @@
       <p>There are no amendments added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, editMode)]]">
+    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, editMode, permissions)]]">
       <paper-fab icon="add"
                  on-tap="_addNewAmendment"
                  title="Add"></paper-fab>
@@ -157,7 +157,8 @@
             type: Boolean,
             observer: '_editModeChanged'
           },
-          interventionStatus: String
+          interventionStatus: String,
+          permissions: Object
         },
 
         observers: ['_dataHasChanged(dataItems)', '_dataItemsPropertyChange(dataItems.*)'],
@@ -192,6 +193,7 @@
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this._addElement();
+            this.fire('adding-amendment');
           }
         },
         //intervention-amendments is displayed only if intervention status is != than draft
@@ -208,8 +210,19 @@
       //     }
       //     return true;
       //   },
-       _allowToAddAmendment: function(interventionStatus, editMode) {
-         if (!editMode) {
+      _hasEditPermissions: function() {
+        if (this.permissions && this.permissions.editInterventionDetails === true) {
+            if (!(this.permissions.partnershipManager || this.permissions.PME) &&
+              (!interventionStatus || interventionStatus !== 'draft')) {
+              // other users than partnershipManager or PME will be able to edit only if intervention status is draft
+              return false;
+            }
+            return true;
+        }
+        return false;
+      },
+      _allowToAddAmendment: function(interventionStatus, editMode) {
+         if (!this._hasEditPermissions()) {
            return false;
          }
          if (['active', 'signed'].indexOf(interventionStatus) === -1) {
@@ -422,9 +435,6 @@
         },
 
         _isReadonlyAmendment: function(amendmentId, editMode) {
-          if (!editMode) {
-            return true;
-          }
           if (parseInt(amendmentId, 10) > 0) {
             return true;
           }
