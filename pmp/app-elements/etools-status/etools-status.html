@@ -117,6 +117,7 @@
       .completed .status, .custom .status {
         font-weight: bold;
         color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
+        @apply(--etools-status-label-style);
       }
       .completed .icon-wrapper span {
         display: none;
@@ -135,10 +136,10 @@
 
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
-                <span class="icon-wrapper">
+                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
                   <span>[[_getTrueIndex(index)]]</span>
                   <iron-icon class="done-icon" icon="done"></iron-icon>
-                  <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
+                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
                 </span>
               </div>
 

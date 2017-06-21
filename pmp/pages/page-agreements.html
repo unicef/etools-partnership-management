@@ -279,7 +279,9 @@
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
         var newAgreement = event.detail;
-        newAgreement.status = newAgreement.status || 'draft';
+        if(!newAgreement.id) {
+          newAgreement.status = 'draft';
+        }
         this.$.agreementData.saveAgreement(newAgreement, this._newAgreementSaved);
       },
 

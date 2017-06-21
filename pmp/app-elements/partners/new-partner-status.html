@@ -1,0 +1,203 @@
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../app-elements/etools-status/etools-status.html">
+
+<dom-module id="new-partner-status">
+  <template strip-whitespace>
+    <style>
+      :host {
+        width: 100%;
+        --etools-status-label-style: {
+          font-weight: normal;
+        }
+      }
+    </style>
+    <etools-status statuses="[[possibleStatuses]]"
+                   actions="[[possibleActions]]"
+                   on-partner-save="[[_triggerPartnerSave]]"
+                   on-partner-hide="[[_triggerHidePartner]]"
+                   on-partner-delete="[[_handlePartnerDelete]]">
+    </etools-status>
+  </template>
+ <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'new-partner-status',
+
+        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+
+        properties: {
+          partner: {
+            type: Object,
+            notify: true
+          },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          statusChangeWarningDialogContent: {
+            type: Object
+          },
+          possibleStatuses: {
+          type: Array,
+          value: function() {
+              return [
+                {
+                  label: 'Not Synced',
+                  icon: 'info',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' +
+                    this.getComputedStyleValue('--status-not-synced-color'),
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Synced from VISION',
+                  icon: 'autorenew',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Blocked in VISION',
+                  icon: 'block',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
+                  hidden: false,
+                  completed: true
+                },
+                {
+                  label: 'Marked For Deletion in VISION',
+                  icon: 'delete',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+                  iconContainerStyles: 'background-color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  hidden: false,
+                  completed: true
+                },
+              ];
+            }
+          },
+          possibleActions: {
+            type: Array,
+            value: [
+              {
+                label: 'Save',
+                hidden: false,
+                primary: true,
+                event: 'partner-save'
+              },
+              {
+                label: 'Hide',
+                hidden: false,
+                event: 'partner-hide'
+              },
+              {
+                label: 'Delete',
+                hidden: false,
+                event: 'partner-delete'
+              },
+            ]
+          },
+
+        },
+        /*
+_showNotSyncedStatus
+_showSyncedStatus
+_showBlockedStatus
+_showMakedForDeletionStatus
+_isHidden
+editMode //daca nu-i in edit mode, no actions
+        */
+        ready: function() {
+          this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
+              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+        },
+        detached: function() {
+          if (this.warningDialog) {
+            this.removeDialog(this.warningDialog);
+          }
+        },
+        _isHidden: function(hidden) {
+          if (typeof hidden === 'undefined' || hidden === null) {
+            return true;
+          }
+          return hidden;
+        },
+        _showStatusChangeConfirmationDialog: function() {
+          if (!this.warningDialog) {
+            console.warn('[pmp partner status change] warningDialog not created!');
+            return;
+          }
+          var msgEl = this.statusChangeWarningDialogContent;
+          if (!msgEl) {
+             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
+             return;
+          }
+          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+          msgEl.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
+        },
+
+        _statusChangeConfirmationCallback: function(event) {
+          if (event.detail.confirmed) {
+            if (!this.editMode) {
+              return;
+            }
+            this.fire('hide-partner', {
+              id: this.partner.id,
+              hidden: true
+            });
+          }
+        },
+        _showSyncedStatus: function(partner) {
+          if (partner.vision_synced === true && partner.deleted_flag === false &&
+              (typeof partner.blocked === 'undefined' || partner.blocked === false)) {
+            return true;
+          }
+          return false;
+        },
+
+        _showBlockedStatus: function(partner) {
+          if (partner.deleted_flag === false &&
+            (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
+            return true;
+          }
+          return false;
+        },
+
+        _showMakedForDeletionStatus: function(partner) {
+          if (partner.deleted_flag === true) {
+            return true;
+          }
+          return false;
+        },
+
+        _showNotSyncedStatus: function(partner) {
+          return partner.vision_synced === false;
+        },
+        _triggerPartnerSave: function() {
+          this.fire('save-partner', {});
+        },
+
+        _triggerHidePartner: function() {
+          if (this.partner.hidden) {
+            return;
+          }
+          this._showStatusChangeConfirmationDialog();
+        },
+
+        _triggerDeletePartner: function() {
+          this.fire('toast', {text: 'Delete action not implemented yet', showCloseBtn: true});
+        }
+      });
+    })();
+
+  </script>
+</dom-module>
