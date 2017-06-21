@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 
@@ -214,7 +215,9 @@
     Polymer({
 
       is: 'page-interventions',
-
+      behaviors: [
+        etoolsBehaviors.DynamicDialogBehavior
+      ],
       properties: {
         interventionPage: {
           type: String,
@@ -322,7 +325,23 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
+        var dialog = document.createElement('p');
+        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
+        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
+        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
+            this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
       },
+      detached: function() {
+        if (this.finalizeAmendmentConfirmationDialog) {
+          this.removeDialog(this.finalizeAmendmentConfirmationDialog);
+        }
+      },
+      _showFinalizeAmendmentDialog: function() {
+        if (this.finalizeAmendmentConfirmationDialog) {
+          this.finalizeAmendmentConfirmationDialog.opened = true;
+        }
+      },
+
       // TODO: do not remove this, we might needed back
       // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
       //   return !intervDetailsActive && !newInterventionActive;
@@ -417,19 +436,26 @@
           this.$.intervAttachments.set('preparedAttachments', false);
         }.bind(this));
       },
-
+      _finalizeAmendmentConfirmationCallback: function() {
+        if (event.detail.confirmed) {
+          this._validateAndSaveIntervention(null)
+        }
+      },
       _validateAndSaveIntervention: function(event) {
-        event.stopImmediatePropagation();
+        if (event) {
+          event.stopImmediatePropagation();
+        }
+
         this.set('serverErrors', []);
         if (!this._hasEditPermissions(this.permissions, this.intervention)) {
           return;
         }
 
-        var interventionDetails = this.$.interventionDetails;
-        var interventionDetailsAreValid = interventionDetails.validate();
+        var interventionDetailsEl = this.$.interventionDetails;
+        var interventionDetailsAreValid = interventionDetailsEl.validate();
 
-        var reviewAndSign = this.$.interventionReviewAndSign;
-        var reviewAndSignIsValid = reviewAndSign.validate();
+        var reviewAndSignEl = this.$.interventionReviewAndSign;
+        var reviewAndSignIsValid = reviewAndSignEl.validate();
 
         if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
           this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
@@ -445,9 +471,20 @@
           interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
-        // on save sector_locations sector prop needs to be sector ID and not the sector obj
+        if (event && interventionData.amendments) {//* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
+          this._showFinalizeAmendmentDialog();
+          return;
+        }
+
+        this._prepareDataForSave(interventionData, interventionDetailsEl);
+
+        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+      },
+
+      _prepareDataForSave: function(interventionData, interventionDetailsEl) {
+         // on save sector_locations sector prop needs to be sector ID and not the sector obj
         if (interventionData.sector_locations) {//if there were any modifications
-          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
+          interventionData.sector_locations = interventionDetailsEl.prepareSectorLocations();
         }
 
         // prepare fr numbers
@@ -482,8 +519,6 @@
 
         // If it's a new intervention it has no status, so it should be a draft
         interventionData.status = interventionData.status || 'draft';
-
-        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
         var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',

@@ -4,7 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
@@ -138,6 +138,7 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
+          etoolsBehaviors.DynamicDialogBehavior,
           pmpBehaviors.DateBehavior
         ],
 
@@ -170,6 +171,28 @@
             signed_amendment_file: '',
             amendment_number: null
           };
+
+          var dialog = document.createElement('p');
+          dialog.setAttribute('id', 'addAmendmendConfirmation');
+          dialog.innerHTML = 'All fields in the details tab will now be open for editing. '+
+            'Please change all necessary fields before hitting save.'
+          this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
+              this._addAmendmentConfirmationCallback.bind(this), dialog);
+        },
+        detached: function() {
+          if (this.addAmendmentConfirmationDialog) {
+            this.removeDialog(this.addAmendmentConfirmationDialog);
+          }
+        },
+        _showAddAmendmentConfirmationDialog: function() {
+          if (this.addAmendmentConfirmationDialog) {
+            this.addAmendmentConfirmationDialog.opened = true;
+          }
+        },
+        _addAmendmentConfirmationCallback: function(event) {
+          if (event.detail.confirmed) {
+            this._addElement();
+          }
         },
         //intervention-amendments is displayed only if intervention status is != than draft
         //so that check is not neccesary
@@ -208,8 +231,6 @@
 
         // observe amendments property changes and validate
         _dataItemsPropertyChange: function(data) {
-          console.log('_dataItemsPropertyChange');
-
           if (data.path.indexOf('dataItems.#') === -1) {
             return;
           }
@@ -341,8 +362,7 @@
               return;
             }
           }
-
-          this._addElement();
+          this._showAddAmendmentConfirmationDialog();
         },
 
         // /**
