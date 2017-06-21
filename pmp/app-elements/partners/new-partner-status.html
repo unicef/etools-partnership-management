@@ -13,17 +13,15 @@
     </style>
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
-                   on-partner-save="[[_triggerPartnerSave]]"
-                   on-partner-hide="[[_triggerHidePartner]]"
-                   on-partner-delete="[[_handlePartnerDelete]]">
+                   on-partner-hide="_triggerHidePartner"
+                   on-partner-delete="_triggerDeletePartner">
     </etools-status>
   </template>
- <script>
+  <script>
     (function() {
       'use strict';
       Polymer({
         is: 'new-partner-status',
-
         behaviors: [etoolsBehaviors.DynamicDialogBehavior],
 
         properties: {
@@ -49,8 +47,8 @@
                     this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' +
                     this.getComputedStyleValue('--status-not-synced-color'),
-                  hidden: false,
-                  completed: true
+                  hidden: true,
+                  completed: false
                 },
                 {
                   label: 'Synced from VISION',
@@ -58,8 +56,8 @@
                   iconStyles: 'width: 19px; height: 19px; color: ' +
                     this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
-                  hidden: false,
-                  completed: true
+                  hidden: true,
+                  completed: false
                 },
                 {
                   label: 'Blocked in VISION',
@@ -67,17 +65,17 @@
                   iconStyles: 'width: 19px; height: 19px; color: ' +
                     this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
-                  hidden: false,
-                  completed: true
+                  hidden: true,
+                  completed: false
                 },
                 {
                   label: 'Marked For Deletion in VISION',
-                  icon: 'delete',
+                  icon: 'delete-forever',
                   iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   iconContainerStyles: 'background-color: ' +
                     this.getComputedStyleValue('--primary-background-color'),
-                  hidden: false,
-                  completed: true
+                  hidden: true,
+                  completed: false
                 },
               ];
             }
@@ -87,32 +85,30 @@
             value: [
               {
                 label: 'Save',
-                hidden: false,
+                hidden: true,
                 primary: true,
-                event: 'partner-save'
+                //save action is hadled inside the parent
+                event: 'save-partner'
               },
               {
                 label: 'Hide',
-                hidden: false,
+                hidden: true,
                 event: 'partner-hide'
               },
               {
                 label: 'Delete',
-                hidden: false,
+                hidden: true,
                 event: 'partner-delete'
               },
             ]
           },
 
         },
-        /*
-_showNotSyncedStatus
-_showSyncedStatus
-_showBlockedStatus
-_showMakedForDeletionStatus
-_isHidden
-editMode //daca nu-i in edit mode, no actions
-        */
+
+        observers: [
+          '_computeAvailableStatuses(partner.vision_synced, partner.deleted_flag, partner.blocked)',
+          '_computeAvailableActions(partner.hidden, editMode)'
+        ],
         ready: function() {
           this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
@@ -156,34 +152,100 @@ editMode //daca nu-i in edit mode, no actions
             });
           }
         },
-        _showSyncedStatus: function(partner) {
-          if (partner.vision_synced === true && partner.deleted_flag === false &&
-              (typeof partner.blocked === 'undefined' || partner.blocked === false)) {
+
+        _setAllActionsToHidden: function() {
+          var possibleActions = this.possibleActions;
+          possibleActions.forEach(function(elem) {
+            elem.hidden = true;
+          });
+
+          this.set('possibleActions', possibleActions);
+        },
+        _setAllStatusesToHidden: function() {
+          var possibleStatuses = this.possibleStatuses;
+          possibleStatuses.forEach(function(elem) {
+            elem.hidden = true;
+            elem.completed = false;
+          });
+
+          this.set('possibleStatuses', possibleStatuses);
+        },
+
+        _computeAvailableActions: function(hidden, editMode) {
+            this._setAllActionsToHidden();
+            let availableOptions = ['Save'];
+            if (!editMode) {
+              return;
+            }
+            if (!hidden) {
+              availableOptions.push('Hide');
+            }
+
+            for (let key in this.possibleActions) {
+              let actionName = this.possibleActions[key].label;
+              let config = this.possibleActions[key];
+
+              if (availableOptions.indexOf(actionName) > -1) {
+                config.hidden = false;
+              }
+
+              this.set(['possibleActions', key], null);
+              this.set(['possibleActions', key], config);
+            }
+        },
+        _computeAvailableStatuses: function() {
+          var activeStatus;
+          this._setAllStatusesToHidden();
+          switch (true) {
+            case this._showNotSyncedStatus():
+              activeStatus = 'Not Synced';
+              break;
+            case this._showSyncedStatus():
+              activeStatus = 'Synced from VISION';
+              break;
+            case this._showBlockedStatus():
+              activeStatus = 'Blocked in VISION';
+              break;
+            case this._showMakedForDeletionStatus():
+              activeStatus = 'Marked For Deletion in VISION';
+              break;
+          }
+
+          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+            let workingStatus = this.possibleStatuses[key];
+            if (workingStatus.label === activeStatus) {
+              workingStatus.completed = true;
+              workingStatus.hidden = false;
+            }
+            this.set(['possibleStatuses', key], null);
+            this.set(['possibleStatuses', key], workingStatus);
+          }
+        },
+        _showSyncedStatus: function() {
+          if (this.partner.vision_synced === true && this.partner.deleted_flag === false &&
+              (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)) {
             return true;
           }
           return false;
         },
 
-        _showBlockedStatus: function(partner) {
-          if (partner.deleted_flag === false &&
-            (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
+        _showBlockedStatus: function() {
+          if (this.partner.deleted_flag === false &&
+            (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
             return true;
           }
           return false;
         },
 
-        _showMakedForDeletionStatus: function(partner) {
-          if (partner.deleted_flag === true) {
+        _showMakedForDeletionStatus: function() {
+          if (this.partner.deleted_flag === true) {
             return true;
           }
           return false;
         },
 
-        _showNotSyncedStatus: function(partner) {
-          return partner.vision_synced === false;
-        },
-        _triggerPartnerSave: function() {
-          this.fire('save-partner', {});
+        _showNotSyncedStatus: function() {
+          return this.partner.vision_synced === false;
         },
 
         _triggerHidePartner: function() {

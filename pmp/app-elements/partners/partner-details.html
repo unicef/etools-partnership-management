@@ -25,6 +25,7 @@
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
 <link rel="import" href="partner-status.html">
+<link rel="import" href="new-partner-status.html">
 
 <dom-module id="partner-details">
 
@@ -220,10 +221,10 @@
 
     <!-- sidebar content start -->
     <div id="sidebar">
-      <partner-status on-save-partner="_validateAndTriggerPartnerSave"
+      <new-partner-status on-save-partner="_validateAndTriggerPartnerSave"
         partner="[[partner]]"
         edit-mode$="[[editMode]]">
-      </partner-status>
+      </new-partner-status>
     </div>
     <!-- sidebar content end -->
 
