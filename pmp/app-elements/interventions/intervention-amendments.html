@@ -86,7 +86,7 @@
                                    readonly$="[[_isReadonlyAmendment(item.id, editMode)]]"
                                    required
                                    error-message="Please select signed date"
-                                   auto-validate
+                                   auto-validate$="[[_autoValidateIsOn(editMode, item.types)]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -103,13 +103,19 @@
               </div>
             </div>
             <template is="dom-if" if="[[!_isReadonlyAmendment(item.id, editMode)]]">
-              <div class="row-h flex-c" hidden$="[[!item.type]]">
+              <div class="row-h flex-c" hidden$="[[!item.types]]">
                 <span class="type-warning">
-                  [[_getSelectedAmendmentTypeWarning(item.type)]]
+                  [[_getSelectedAmendmentTypeWarning(item.types, item.types.length)]]
                 </span>
               </div>
             </template>
-
+            <div class="row-h">
+             <paper-input hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
+                           label="Other"
+                           value="[[item.other]]"
+                           readonly="[[_isReadonlyAmendment(item.id, editMode)]]">
+              </paper-input>
+             </div>
           </div>
 
         </div>
@@ -145,13 +151,13 @@
         properties: {
           amendmentTypes: {
             type: Object,
-            // value: function() {
-            //   return [{label:'Dates', value:'1'},
-            //     {label:'Results', value:'2'},
-            //     {label:'Budget', value:'3'},
-            //     {label:'Other', value:'4'}]
-            // }
-            statePath: 'interventionAmendmentTypes'
+            value: function() {
+              return [{label:'Dates', value:'1'},
+                {label:'Results', value:'2'},
+                {label:'Budget', value:'3'},
+                {label:'Other', value:'4'}]
+            }
+           // statePath: 'interventionAmendmentTypes'
           },
           editMode: {
             type: Boolean,
@@ -170,7 +176,8 @@
         ready: function() {
           this.dataSetModel = {
             id: null,
-            types: undefined,
+            types: [],
+            other: null,
             signed_date: null,
             signed_amendment: null,
             signed_amendment_file: '',
@@ -189,6 +196,24 @@
             this.removeDialog(this.addAmendmentConfirmationDialog);
           }
         },
+        _showOtherInput: function(amendmentTypes) {
+          console.log(amendmentTypes);
+          if (!amendmentTypes || !amendmentTypes.length) {
+            return false;
+          }
+          if (amendmentTypes.indexOf('4') > -1) {
+            return true;
+          }
+          return false;
+        },
+        _autoValidateIsOn: function(editMode, selectedValues) {
+          console.log('autovallidate', selectedValues);
+          if (selectedValues && selectedValues.length) {
+            console.log('here');
+            return true;
+          }
+          return false;
+        },
         _showAddAmendmentConfirmationDialog: function() {
           if (this.addAmendmentConfirmationDialog) {
             this.addAmendmentConfirmationDialog.opened = true;
@@ -200,20 +225,7 @@
             this.fire('adding-amendment');
           }
         },
-        //intervention-amendments is displayed only if intervention status is != than draft
-        //so that check is not neccesary
-      //  _isUploadFileReadonly: function(item) {
-      //     if (!this.editMode) {
-      //       return true;
-      //     }
-      //     if (!item || !item.id) {
-      //       return false;
-      //     }
-      //     if (!item.signed_amendment_file) {
-      //       return false;
-      //     }
-      //     return true;
-      //   },
+
       _hasEditPermissions: function() {
         if (this.permissions && this.permissions.editInterventionDetails === true) {
             if (!(this.permissions.partnershipManager || this.permissions.PME) &&
@@ -337,14 +349,6 @@
           return true;
         },
 
-        // _amendmentTypeRequired: function(signedDate, signedAmendment, signedAmendmentFilePath) {
-        //   if (signedDate || signedAmendment instanceof File ||
-        //       (typeof signedAmendmentFilePath === 'string' && signedAmendmentFilePath !== '')) {
-        //     return true;
-        //   }
-        //   return false;
-        // },
-
         /**
          * If the amendment readonly, the left border and top badge needs to have a different style.
          * This class will help with that.
@@ -458,22 +462,22 @@
          types.forEach(function(amdType) {
            switch(amdType) {
              case '1':
-               messages += "Dates, ";
+               message += "Dates, ";
                break;
              case '2':
-               messages += "Programme Results, ";
+               message += "Programme Results, ";
                break;
              case '3':
-               messages += "Planned Budget, ";
+               message += "Planned Budget, ";
                break;
              case '4':
-               messages += "Other, ";
+               message += "Other, ";
                break;
            }
          });
-          message = message.substring(0, message.length - 3);
+          message = message.substring(0, message.length - 2);
           message += "section" + message.indexOf(',') > -1 ? "s" : "" + " of this PD/SSFA";
-
+          return message;
           // switch (type) {
           //   case 'cpr':
           //     return 'Please ensure that you update Programme Results section of this PD/SSFA.';
