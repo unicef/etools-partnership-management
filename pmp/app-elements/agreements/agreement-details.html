@@ -255,11 +255,10 @@
       <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
         <!-- Amendments -->
         <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
-          <agreement-amendments id="agreementAmendments" data-items="{{agreement.amendments}}"
-                                staff-members="[[staffMembers]]"
-                                partner-name="[[agreement.partner_name]]"
-                                edit-mode$="[[editMode]]"></agreement-amendments>
-          <!--partner-authorized-officers="[[_getAuthorizedOfficers(staffMembers, agreement.authorized_officers)]]"-->
+          <agreement-amendments id="agreementAmendments"
+                                data-items="{{agreement.amendments}}"
+                                agreement-type="[[agreement.agreement_type]]"
+                                edit-mode$="[[_canAddAmendments(editMode, agreement.status)]]"></agreement-amendments>
         </etools-content-panel>
       </template>
 
@@ -386,10 +385,15 @@
         },
 
         _showAmendments: function(type, status) {
-          if (type === 'PCA' && status !== 'draft') {
+          if (type !== 'MOU' && status !== 'draft') {
             return true;
           }
           return false;
+        },
+
+        _canAddAmendments: function(editMode, agreementStatus) {
+          // TODO: remove active, keep only signed once API is ready
+          return editMode && (agreementStatus === 'signed' || agreementStatus === 'active');
         },
 
         /**

@@ -3,15 +3,15 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+
 <link rel="import" href="../../app-config/etools-app-config.html">
-<link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
+
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -23,11 +23,11 @@
 <link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
 <link rel="import" href="./agreement-behaviors/agreements-common-behavior.html">
 <link rel="import" href="agreement-amendment-details.html">
-<link rel="import" href="agreement-amendment-types.html">
 
 <dom-module id="agreement-amendments">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles buttons-styles">
+    <style
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -46,7 +46,7 @@
       }
 
       .file-wrapper {
-        width: 450px;
+        width: 100%;
         max-width: 100%;
       }
 
@@ -74,57 +74,43 @@
           </div>
           <div class="item-content">
 
-            <!-- already saved amendment, readonly -->
-            <template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">
-              <agreement-amendment-details amendment="[[item]]"
-                                           staff-members="[[staffMembers]]"></agreement-amendment-details>
-            </template>
-
-            <!-- new, unsaved amendment, edit mode -->
-            <template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">
-              <div class="row-h">
-
-                <!-- Uncomment this block once PCA agreement generation is ready on backend side -->
-
-                <!--<div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_amendment)]]">-->
-                  <!--<paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>-->
-                    <!--&lt;!&ndash; Auto-generated PCA Amendment &ndash;&gt;-->
-                    <!--<label aria-hidden="true">Auto-generated PCA Amendment</label>-->
-                    <!--<paper-button class="paper-input-input secondary-btn">-->
-                      <!--<iron-icon icon="refresh"></iron-icon>-->
-                      <!--GENERATE PCA-->
-                    <!--</paper-button>-->
-                  <!--</paper-input-container>-->
-                <!--</div>-->
-                <div class="col col-4">
-                  <!-- Signed Date -->
-                  <etools-date-input id$="signedDate_[[index]]"
-                                     label="Signed Date"
-                                     value="{{item.signed_date}}"
-                                     error-message="Please select signed date"
-                                     no-init show-clear-btn>
-                  </etools-date-input>
-                </div>
-                <div class="col col-8 file-container">
-                  <!-- Signed Agreement -->
-                  <div class="file-wrapper">
-                    <etools-single-file id$="fileUpload_[[index]]" label="Signed Amendment"
-                                        file="{{item.signed_amendment}}"
-                                        internal-file="{{item.signed_amendment_file}}"
-                                        error-message="Signed Amendment file is required"
-                                        accept=".doc,.docx,.pdf,.jpg,.png"></etools-single-file>
-                  </div>
+            <div class="row-h flex-c">
+              <div class="col col-4">
+                <!-- Signed Date -->
+                <etools-date-input id$="signedDate_[[index]]"
+                                   label="Signed Date"
+                                   value="{{item.signed_date}}"
+                                   error-message="Please select signed date"
+                                   no-init show-clear-btn
+                                   readonly$="[[_showReadonlyDetails(item.id)]]">
+                </etools-date-input>
+              </div>
+              <div class="col col-8 file-container">
+                <!-- Signed Agreement -->
+                <div class="file-wrapper">
+                  <etools-single-file id$="fileUpload_[[index]]"
+                                      label="Signed Amendment"
+                                      file="{{item.signed_amendment}}"
+                                      internal-file="{{item.signed_amendment_file}}"
+                                      error-message="Signed Amendment file is required"
+                                      accept=".doc,.docx,.pdf,.jpg,.png"
+                                      readonly$="[[_showReadonlyDetails(item.id)]]"></etools-single-file>
                 </div>
               </div>
+            </div>
+            <div class="row-h flex-c">
+              <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
+                                           label="Authorized Officers"
+                                           placeholder="&#8212;"
+                                           options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
+                                           selected-values="{{item.amendment_types}}"
+                                           hide-search
+                                           error-message="Please select amendment type"
+                                           required
+                                           readonly$="[[_showReadonlyDetails(item.id)]]">
+              </etools-multi-selection-menu>
+            </div>
 
-              <agreement-amendment-types id$="amendmentTypes_[[index]]"
-                                         data-items="{{item.amendment_types}}"
-                                         partner-name="[[partnerName]]"
-                                         partner-authorized-officers="[[partnerAuthorizedOfficers]]"
-                                         on-amendment-selected="_amendmentTypeSelected">
-              </agreement-amendment-types>
-
-            </template>
 
           </div>
 
@@ -153,6 +139,7 @@
 
         behaviors: [
           etoolsAppConfig.globals,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.AgreementsCommonBehavior
         ],
@@ -163,14 +150,14 @@
             value: 'agreementAmendmentsDelete',
             readOnly: true,
           },
-          partnerName: {
-            type: String
+          agreementType: {
+            type: String,
+            value: ''
           },
-          partnerAuthorizedOfficers: {
+          _amendmentTypes: {
             type: Array,
-            notify: true
-          },
-          staffMembers: Array
+            statePath: 'agreementAmendmentTypes'
+          }
         },
 
         observers: [
@@ -181,18 +168,20 @@
           this.dataSetModel = {
             id: null,
             signed_date: null,
-            signed_agreement: [],
-            amendment_types: [{ //TODO - how to not duplicate model here and in agreement-amendment-types.html?
-              id: null,
-              type: null,
-              officer: null,
-              bank_info: null,
-              legal_name_of_ip: null,
-              cp_cycle_end: null,
-              additional_clauses: null,
-              existing_clause_amended: null
-            }]
+            signed_amendment: null,
+            amendment_types: []
           };
+        },
+        _getAmendmentTypes: function(agreementType, _amendmentTypes) {
+          if (['PCA', 'SSFA'].indexOf(agreementType) === -1 || !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
+            return [];
+          }
+          if (agreementType === 'SSFA') {
+            return _amendmentTypes.filter(function(type) {
+              return type.value === 'Change authorized officer';
+            });
+          }
+          return _amendmentTypes;
         },
         validate: function() {
           if (!this.dataItems) {
@@ -215,26 +204,18 @@
               this.$$('#fileUpload_' + index).invalid = true;
               isValid = false;
             }
-
-            var amendmTypesEl = this.$$('#amendmentTypes_' + index);
-            if (!this._validateAmendmentTypes(amendm, amendmTypesEl)) {
-              isValid = false;
+            if (!amendm.amendment_types.length) {
+              let amendmentTypes = this.$$('#amendmentTypes_' + index);
+              if (amendmentTypes) {
+                isValid = amendmentTypes.validate();
+              }
             }
 
           }.bind(this));
 
           return isValid;
         },
-        _validateAmendmentTypes: function(amendment, amendmentTypesEl) {
-          var isValid = true;
-          amendment.amendment_types.forEach(function(amendmType, index) {
-            if (!amendmType.type) {
-              isValid = false;
-              amendmentTypesEl._invalidAmendmentTypeField(true, '#amendmentType_' + index);
-            }
-          });
-          return isValid;
-        },
+
         _signedDateIsInTheFuture: function(signedDate) {
           var signedDt = Date.parse(signedDate);
           if (signedDt) {
@@ -286,10 +267,8 @@
          */
         _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
-            && (amendmentItem.signed_agreement)
-            && (amendmentItem.amendment_types.length === 0
-            || (amendmentItem.amendment_types.length > 0
-            && this._hasAmendmentTypesSelected(index) === false));
+              && !amendmentItem.signed_amendment &&
+              amendmentItem.amendment_types instanceof Array && amendmentItem.amendment_types.length === 0;
         },
 
         /**
@@ -297,8 +276,7 @@
          */
         _addNewAmendment: function() {
           var lastAmendmentItemIndex = this.dataItems.length - 1;
-          if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] &&
-              !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
+          if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] && !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
             var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
             if (this._amendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
@@ -308,58 +286,6 @@
           } else {
             this._addElement();
           }
-        },
-
-        /**
-         * Check if amendment signed date is required
-         */
-        _requireSignedDate: function(signedAmendment, date, index) {
-          if (signedAmendment || this._hasAmendmentTypesSelected(index)) {
-            if (date === null || date === '') {
-              return true;
-            }
-          }
-          return false;
-        },
-
-        /**
-         *  TODO: to be revised
-         *  uncomment when PCA Amendment generation will be available
-         */
-        /* _hideGenerateBtn: function(signedAmendment) {
-          if (signedAmendment) {
-            return true;
-          }
-          return false;
-        }, */
-
-        /**
-         * Check if amendment has at least an amendment type selected
-         */
-        _hasAmendmentTypesSelected: function(index) {
-          var amendmentItem = this.dataItems[index];
-          if (amendmentItem && amendmentItem.amendment_types.length > 0) {
-            var atLeastOneIsSelected = false;
-            for (var i = 0; i <= amendmentItem.amendment_types.length - 1; i++) {
-              if (amendmentItem.amendment_types[i].amendment_type !== null
-                && amendmentItem.amendment_types[i].amendment_type !== '') {
-                atLeastOneIsSelected = true;
-                break;
-              }
-            }
-            return atLeastOneIsSelected;
-          }
-          return false;
-        },
-
-        /**
-         * Validate signed date if an amendment type is selected
-         */
-        _amendmentTypeSelected: function(event) {
-          var amendmentIndex = event.model.index;
-          var amendment = this.dataItems[amendmentIndex];
-          this.$$('#signedDate_' + amendmentIndex).invalid = this._requireSignedDate(amendment.signed_amendment,
-            amendment.signed_date, amendmentIndex);
         },
 
         _dataItemsChanged: function(data) {
@@ -390,6 +316,12 @@
               }
             } else {
               uploadFileEl.invalid = true;
+            }
+          }
+          if (path === 'amendment_types') {
+            let amendmentTypes = this.$$('#amendmentTypes_' + index);
+            if (amendmentTypes) {
+              amendmentTypes.validate();
             }
           }
         }
