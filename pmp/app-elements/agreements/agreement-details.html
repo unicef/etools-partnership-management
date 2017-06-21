@@ -5,7 +5,6 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
@@ -101,7 +100,7 @@
           <template is="dom-if" if="[[_showIfTypeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-4">
               <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
-                <span>[[prettyDate(agreement.start)]] - [[prettyDate(agreement.end)]]</span>
+                <span>[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]</span>
               </etools-form-element-wrapper>
             </div>
           </template>
@@ -426,23 +425,14 @@
             this._setDraftStatus(this.editMode, this.isNewAgreement);
             this._resetDropdown('#partner');
             this._resetDropdown('#agreementType');
-            // this._resetDropdown('#officers', true);
           }
           this.fire('global-loading', {active: false});
         },
 
-        _resetDropdown: function(selector, multi) {
+        _resetDropdown: function(selector) {
           var field = this.fieldValidationReset(selector);
           if (field) {
-            if (multi) {
-//              field.value = [];
-//              field.selectedValues = null;
-//              field.search = '';
-            } else {
-              field.set('selected', null);
-            }
-
-
+            field.set('selected', null);
           }
         },
 
@@ -510,8 +500,9 @@
               // reset country_programme as it's available only for PCA type
               this.set('agreement.country_programme', null);
               // reset start and end date
-              this.set('agreement.start', null);
-              this.set('agreement.end', null);
+              // TODO: decide if we reset start and end dates when type is changed
+              // this.set('agreement.start', null);
+              // this.set('agreement.end', null);
             } else {
               if (this.cpStructureOptions instanceof Array && this.cpStructureOptions.length === 1) {
                 this.set('agreement.country_programme', this.cpStructureOptions[0].id);
@@ -664,12 +655,10 @@
           let cpStructure = [];
           if (agreement && !this._allowFieldEditing('cpStructure', agreement.status, this.editMode)) {
             // old agreement / agreement not in 'draft' status
-            console.log('old agreement', cp);
             cpStructure = cp;
           } else {
             // editable agreement
             cpStructure = this._filterCountryProgrammesForAgreements(cp);
-            console.log('new agreement', cpStructure);
           }
 
           this.set('cpStructureOptions', cpStructure);
