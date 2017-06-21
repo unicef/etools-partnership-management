@@ -323,7 +323,8 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'adding-amendment':'_onAddingAmendment'
+        'adding-amendment':'_onAddingAmendment',
+        'cancel-adding-amendment': '_onCancelAddingAmendment'
       },
 
       ready: function() {
@@ -340,6 +341,10 @@
         if (this.finalizeAmendmentConfirmationDialog) {
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
+      },
+      _onCancelAddingAmendment: function(e) {
+        e.stopImmediatePropagation();
+        this.addingAmendment = false;
       },
       _onAddingAmendment: function(e) {
          e.stopImmediatePropagation();

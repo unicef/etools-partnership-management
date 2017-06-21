@@ -161,7 +161,11 @@
           permissions: Object
         },
 
-        observers: ['_dataHasChanged(dataItems)', '_dataItemsPropertyChange(dataItems.*)'],
+        observers: [
+          '_dataHasChanged(dataItems)',
+          '_dataItemsLengthChanged(dataItems.length)',
+          '_dataItemsPropertyChange(dataItems.*)'
+         ],
 
         ready: function() {
           this.dataSetModel = {
@@ -239,6 +243,11 @@
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
+          }
+        },
+        _dataItemsLengthChanged: function() {
+          if (!this.dataItems.length) {
+            this.fire('cancel-adding-amendment');
           }
         },
 
