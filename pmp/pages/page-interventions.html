@@ -323,7 +323,7 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'adding-amendment':'_onAddingAmendment',
+        'adding-amendment': '_onAddingAmendment',
         'cancel-adding-amendment': '_onCancelAddingAmendment'
       },
 
@@ -453,7 +453,7 @@
       },
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
-          this._validateAndSaveIntervention(null)
+          this._validateAndSaveIntervention(null);
         }
       },
       _validateAndSaveIntervention: function(event) {
@@ -486,7 +486,8 @@
           interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
-        if (event && interventionData.amendments) {//* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
+        if (event && interventionData.amendments) {
+          //* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
           this._showFinalizeAmendmentDialog();
           return;
         }
@@ -753,10 +754,10 @@
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
       _isEditMode: function(permissions, intervention, addingAmendment, page) {
-        if (!this._hasEditPermissions(permissions, intervention)){
+        if (!this._hasEditPermissions(permissions, intervention)) {
           return false;
         }
-        if (this.intervention && page ==='details'&& (addingAmendment || this.addingAmendment)) {
+        if (this.intervention && page === 'details' && (addingAmendment || this.addingAmendment)) {
           return true;
         }
         if (this._isReadonlyByStatus(intervention)) {

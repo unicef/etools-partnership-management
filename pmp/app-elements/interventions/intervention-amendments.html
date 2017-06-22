@@ -155,10 +155,10 @@
           amendmentTypes: {
             type: Object,
             value: function() {
-              return [{label:'Dates', value:'1'},
-                {label:'Results', value:'2'},
-                {label:'Budget', value:'3'},
-                {label:'Other', value:'4'}]
+              return [{label: 'Dates', value: '1'},
+                {label: 'Results', value: '2'},
+                {label: 'Budget', value: '3'},
+                {label: 'Other', value: '4'}];
             }
            // statePath: 'interventionAmendmentTypes'
           },
@@ -185,8 +185,8 @@
 
           var dialog = document.createElement('p');
           dialog.setAttribute('id', 'addAmendmendConfirmation');
-          dialog.innerHTML = 'All fields in the details tab will now be open for editing. '+
-            'Please change all necessary fields before hitting save.'
+          dialog.innerHTML = 'All fields in the details tab will now be open for editing. ' +
+            'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
         },
@@ -205,9 +205,7 @@
           return false;
         },
         _autoValidateIsOn: function(selectedValues) {
-          console.log('autovallidate', selectedValues);
           if (selectedValues && selectedValues.length) {
-            console.log('here');
             return true;
           }
           return false;
@@ -224,7 +222,7 @@
           }
         },
 
-      _hasEditPermissions: function() {
+      _hasEditPermissions: function(interventionStatus) {
         if (this.permissions && this.permissions.editInterventionDetails === true) {
             if (!(this.permissions.partnershipManager || this.permissions.PME) &&
               (!interventionStatus || interventionStatus !== 'draft')) {
@@ -236,7 +234,7 @@
         return false;
       },
       _allowToAddAmendment: function(interventionStatus) {
-         if (!this._hasEditPermissions()) {
+         if (!this._hasEditPermissions(interventionStatus)) {
            return false;
          }
          if (['active', 'signed'].indexOf(interventionStatus) === -1) {
@@ -312,11 +310,10 @@
             return valid;
           }
           if (!signedDateEl.validate()) {
-            signedDateEl.errorMessage = "Please select signed date";
+            signedDateEl.errorMessage = 'Please select signed date';
             valid = false;
-          } else if (this.isFutureDate(amendment.signed_date)){
-            console.log('is in the future');
-            signedDateEl.errorMessage = "Signed date can not be in the future";
+          } else if (this.isFutureDate(amendment.signed_date)) {
+            signedDateEl.errorMessage = 'Signed date can not be in the future';
             valid = false;
           }
           signedDateEl.invalid = null;// *This is neccessary because sometimes it doesn't work without it
@@ -371,7 +368,7 @@
           var lastAmendmIndex = this.dataItems.length - 1;
 
           if (lastAmendmIndex > -1) {
-            var lastAmendmIndex = this.dataItems[lastAmendmIndex];
+            lastAmendmIndex = this.dataItems[lastAmendmIndex];
             if (!lastAmendmIndex.id && this._amendmentFieldsAreEmpty(lastAmendmIndex)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
               return;
@@ -449,7 +446,7 @@
           }
          var message = 'Please make sure you update ';
          types.forEach(function(amdType) {
-           switch(amdType) {
+           switch (amdType) {
              case '1':
                message += 'Dates, ';
                break;
@@ -465,7 +462,7 @@
            }
          });
           message = message.substring(0, message.length - 2);
-          message += ' section' +(message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
+          message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
           return message;
           // switch (type) {
           //   case 'cpr':

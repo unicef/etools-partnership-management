@@ -185,7 +185,6 @@
           this.dataSetModel = {value: null};
         },
         _interventionStatusChanged: function(interventionStatus) {
-          console.log('intervstatus',interventionStatus);
           if (['', 'draft', 'signed'].indexOf(interventionStatus) > -1) {
             //* For status Signed, FRs(and Amendments) have to be editable , unlike the rest of the PD/SSFA
             this.editMode = true;
