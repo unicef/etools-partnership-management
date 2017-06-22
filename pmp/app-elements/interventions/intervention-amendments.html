@@ -53,13 +53,14 @@
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class$="item-actions-container [[_getLockedClass(item.id, editMode)]]"
+          <div class$="item-actions-container [[_getLockedClass(item.id)]]"
                data-item-nr$="[[_getItemNr(index)]]">
             <div class="actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 icon="cancel"></paper-icon-button>
+                                 icon="cancel"
+                                 disabled$="[[_isReadonlyAmendment(item.id)]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
@@ -73,9 +74,9 @@
                                                        selected-values="{{item.types}}"
                                                        dynamic-align
                                                        required
-                                                       auto-validate
+                                                       auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                                        error-message="Type is required"
-                                                       readonly="[[_isReadonlyAmendment(item.id, editMode)]]">
+                                                       readonly="[[_isReadonlyAmendment(item.id)]]">
                 </etools-multi-selection-menu>
               </div>
               <div class="col col-2">
@@ -83,10 +84,10 @@
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
                                    value="{{item.signed_date}}"
-                                   readonly$="[[_isReadonlyAmendment(item.id, editMode)]]"
+                                   readonly$="[[_isReadonlyAmendment(item.id)]]"
                                    required
                                    error-message="Please select signed date"
-                                   auto-validate$="[[_autoValidateIsOn(editMode, item.types)]]"
+                                   auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -98,11 +99,10 @@
                                     file={{item.signed_amendment}}
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
-                                    required
-                                    readonly="[[_isReadonlyAmendment(item.id, editMode)]]"></etools-single-file>
+                                    readonly="[[_isReadonlyAmendment(item.id)]]"></etools-single-file>
               </div>
             </div>
-            <template is="dom-if" if="[[!_isReadonlyAmendment(item.id, editMode)]]">
+            <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
               <div class="row-h flex-c" hidden$="[[!item.types]]">
                 <span class="type-warning">
                   [[_getSelectedAmendmentTypeWarning(item.types, item.types.length)]]
@@ -113,7 +113,7 @@
              <paper-input hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
                            label="Other"
                            value="[[item.other]]"
-                           readonly="[[_isReadonlyAmendment(item.id, editMode)]]">
+                           readonly="[[_isReadonlyAmendment(item.id)]]">
               </paper-input>
              </div>
           </div>
@@ -126,7 +126,7 @@
       <p>There are no amendments added.</p>
     </div>
 
-    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, editMode, permissions)]]">
+    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, permissions)]]">
       <paper-fab icon="add"
                  on-tap="_addNewAmendment"
                  title="Add"></paper-fab>
@@ -158,10 +158,6 @@
                 {label:'Other', value:'4'}]
             }
            // statePath: 'interventionAmendmentTypes'
-          },
-          editMode: {
-            type: Boolean,
-            observer: '_editModeChanged'
           },
           interventionStatus: String,
           permissions: Object
@@ -197,16 +193,15 @@
           }
         },
         _showOtherInput: function(amendmentTypes) {
-          console.log(amendmentTypes);
           if (!amendmentTypes || !amendmentTypes.length) {
             return false;
           }
-          if (amendmentTypes.indexOf('4') > -1) {
+          if (amendmentTypes.indexOf('4') > -1) { //TODO
             return true;
           }
           return false;
         },
-        _autoValidateIsOn: function(editMode, selectedValues) {
+        _autoValidateIsOn: function(selectedValues) {
           console.log('autovallidate', selectedValues);
           if (selectedValues && selectedValues.length) {
             console.log('here');
@@ -237,7 +232,7 @@
         }
         return false;
       },
-      _allowToAddAmendment: function(interventionStatus, editMode) {
+      _allowToAddAmendment: function(interventionStatus) {
          if (!this._hasEditPermissions()) {
            return false;
          }
@@ -246,12 +241,6 @@
          }
          return true;
        },
-       _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
-          }
-        },
-
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
@@ -274,7 +263,7 @@
           }
 
           var amendment = this.dataItems[index];
-          if (this._isReadonlyAmendment(amendment.id, this.editMode)) {
+          if (this._isReadonlyAmendment(amendment.id)) {
             this._resetAmendmentValidations(index);
             return;
           }
@@ -336,10 +325,7 @@
         /**
          * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
-            return false;
-          }
+        _canBeRemoved: function(index) {
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
           if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {
@@ -353,8 +339,8 @@
          * If the amendment readonly, the left border and top badge needs to have a different style.
          * This class will help with that.
          */
-        _getLockedClass: function(id, editMode) {
-          if (this._isReadonlyAmendment(id, editMode)) {
+        _getLockedClass: function(id) {
+          if (this._isReadonlyAmendment(id)) {
             return 'locked';
           }
           return '';
@@ -447,7 +433,7 @@
           }
         },
 
-        _isReadonlyAmendment: function(amendmentId, editMode) {
+        _isReadonlyAmendment: function(amendmentId) {
           if (parseInt(amendmentId, 10) > 0) {
             return true;
           }
