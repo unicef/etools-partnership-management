@@ -70,7 +70,11 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Amendment Type -->
-                <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
+                <template is="dom-if" if="[[item.oldTypeLabel]]">
+                  [[item.oldTypeLabel]]
+                </template>
+                <template is="dom-if" if="[[!item.oldTypeLabel]]">
+                  <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
                                                        label="Amendment Types"
                                                        placeholder="&#8212;"
                                                        options="[[amendmentTypes]]"
@@ -81,7 +85,8 @@
                                                        auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                                        error-message="Type is required"
                                                        readonly="[[_isReadonlyAmendment(item.id)]]">
-                </etools-multi-selection-menu>
+                  </etools-multi-selection-menu>
+                </template>
               </div>
               <div class="col col-3">
                 <!-- Signed Date -->
@@ -202,7 +207,14 @@
           if (amendmentTypes.indexOf('4') > -1) { //TODO
             return true;
           }
+          this._clearOtherInput();
           return false;
+        },
+        _clearOtherInput: function() {
+          var otherInput = this.$$('#other');
+          if (otherInput) {
+            otherInput.value = null;
+          }
         },
         _autoValidateIsOn: function(selectedValues) {
           if (selectedValues && selectedValues.length) {
