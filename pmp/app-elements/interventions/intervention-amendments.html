@@ -48,6 +48,9 @@
       #amendments-wrapper {
         margin-top: 15px;
       }
+      paper-input#other {
+        width: 100%;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
@@ -65,7 +68,7 @@
           </div>
           <div class="item-content">
             <div class="row-h flex-c">
-              <div class="col col-5">
+              <div class="col col-4">
                 <!-- Amendment Type -->
                 <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
                                                        label="Amendment Types"
@@ -74,12 +77,13 @@
                                                        selected-values="{{item.types}}"
                                                        dynamic-align
                                                        required
+                                                       hide-search
                                                        auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                                        error-message="Type is required"
                                                        readonly="[[_isReadonlyAmendment(item.id)]]">
                 </etools-multi-selection-menu>
               </div>
-              <div class="col col-2">
+              <div class="col col-3">
                 <!-- Signed Date -->
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
@@ -109,13 +113,14 @@
                 </span>
               </div>
             </template>
-            <div class="row-h">
-             <paper-input hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
-                           label="Other"
-                           value="[[item.other]]"
-                           readonly="[[_isReadonlyAmendment(item.id)]]">
-              </paper-input>
-             </div>
+              <div class="row-h">
+                <paper-input id="other" hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
+                                placeholder="&#8212;"
+                                label="Other"
+                                value="{{item.other}}"
+                                readonly="[[_isReadonlyAmendment(item.id)]]">
+                  </paper-input>
+              </div>
           </div>
 
         </div>
@@ -125,13 +130,11 @@
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
       <p>There are no amendments added.</p>
     </div>
-
     <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, permissions)]]">
       <paper-fab icon="add"
-                 on-tap="_addNewAmendment"
-                 title="Add"></paper-fab>
+                  on-tap="_addNewAmendment"
+                  title="Add"></paper-fab>
     </div>
-
   </template>
 
   <script>
@@ -440,29 +443,29 @@
           return false;
         },
 
-        _getSelectedAmendmentTypeWarning: function(types) {
+        _getSelectedAmendmentTypeWarning: function(types) {//TODO
           if (!types || !types.length) {
             return;
           }
-         var message = "Please ensure that you update ";
+         var message = 'Please make sure you update ';
          types.forEach(function(amdType) {
            switch(amdType) {
              case '1':
-               message += "Dates, ";
+               message += 'Dates, ';
                break;
              case '2':
-               message += "Programme Results, ";
+               message += 'Programme Results, ';
                break;
              case '3':
-               message += "Planned Budget, ";
+               message += 'Planned Budget, ';
                break;
              case '4':
-               message += "Other, ";
+               message += 'Other, ';
                break;
            }
          });
           message = message.substring(0, message.length - 2);
-          message += "section" + message.indexOf(',') > -1 ? "s" : "" + " of this PD/SSFA";
+          message += ' section' +(message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
           return message;
           // switch (type) {
           //   case 'cpr':
