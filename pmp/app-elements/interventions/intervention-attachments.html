@@ -26,13 +26,14 @@
         };
 
         --ecp-content: {
-          padding: 0 0 25px;
+          padding: 0;
           overflow: hidden;
         };
 
       }
 
       #attachments {
+        padding-bottom: 17px;
         --etools-file-upload-button-paper-btn: {
           font-weight: bold;
           padding: 5px 10px;
@@ -71,18 +72,17 @@
         <p>There are no attachments added.</p>
       </div>
 
-      <div class="row-h flex-c">
-        <etools-file id="attachments"
-                     files="{{attachments}}"
-                     file-model="[[fileModel]]"
-                     file-types=[[fileTypes]]
-                     label="Attachments"
-                     multiple activate-file-types use-delete-events
-                     hide-delete-btn
-                     on-delete-file="_deleteAttachment"
-                     readonly$=[[!editMode]]
-                     no-file-attached-msg=""></etools-file>
-      </div>
+      <etools-file id="attachments"
+                   files="{{attachments}}"
+                   file-model="[[fileModel]]"
+                   file-types=[[fileTypes]]
+                   label="Attachments"
+                   multiple activate-file-types use-delete-events
+                   hide-delete-btn
+                   on-delete-file="_deleteAttachment"
+                   readonly$=[[!editMode]]
+                   no-file-attached-msg=""></etools-file>
+
     </etools-content-panel>
 
   </template>

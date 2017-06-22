@@ -62,8 +62,12 @@
          * Handle received data from request
          */
         _handleResponse: function(response) {
+
           this._setIntervention(response.detail);
 
+          if (this.intervention && this.intervention.planned_budget) {
+            this.set('intervention.planned_budget.interventionWasSaved', true);
+          }
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
@@ -194,8 +198,8 @@
               url = this.endpoint.url;
             } else {
               // new intervention, use POST method for the same endpoint
-              var agreementsEndpoint = this.getEndpoint('interventions');
-              url = agreementsEndpoint.url;
+              var interventionsEndpoint = this.getEndpoint('interventions');
+              url = interventionsEndpoint.url;
               isNew = true;
             }
             // remove id from data
@@ -213,11 +217,19 @@
               withUpload = true;
               prepareMultipartData = true;
             }
+            // check prc_review_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'prc_review_document')) {
               withUpload = true;
               prepareMultipartData = true;
             } else {
               delete intervention.prc_review_document;
+            }
+            // check signed_pd_document doc, if no file delete the property from the object
+            if (this._fileField(intervention, 'signed_pd_document')) {
+              withUpload = true;
+              prepareMultipartData = true;
+            } else {
+              delete intervention.signed_pd_document;
             }
 
             if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
@@ -240,7 +252,7 @@
           dexieObject.cso_contribution = 0;
 
           dexieObject.id = responseDetail.id;
-          dexieObject.hrp = responseDetail.hrp;
+          dexieObject.country_programme = responseDetail.country_programme;
           dexieObject.end = responseDetail.end;
           dexieObject.title = responseDetail.title;
           dexieObject.start = responseDetail.start;
@@ -251,10 +263,8 @@
           dexieObject.document_type = responseDetail.document_type;
           dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
 
-          responseDetail.planned_budget.forEach(function(elem) {
-            dexieObject.unicef_budget += parseInt(elem.unicef_cash);
-            dexieObject.cso_contribution += parseInt(elem.partner_contribution);
-          });
+          dexieObject.unicef_budget = parseInt(responseDetail.planned_budget.unicef_cash);
+          dexieObject.cso_contribution = parseInt(responseDetail.planned_budget.partner_contribution);
 
           responseDetail.sector_locations.forEach(function(elem) {
             dexieObject.sectors.push(elem.sector.name);

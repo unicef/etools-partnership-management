@@ -138,7 +138,8 @@
       }
 
       etools-searchable-multiselection-menu,
-      etools-single-selection-menu {
+      etools-single-selection-menu,
+      etools-multi-selection-menu {
         --esmm-readonly-input-container-underline: {
           display: none;
         };
@@ -171,6 +172,17 @@
         --etools-checkable-input-label: {
           margin-top: 1px;
         }
+      }
+
+      etools-checkable-input[label-alignment="right"] {
+        --etools-checkable-input-font-size: 16px;
+        --etools-checkable-input-label: {
+          color: var(--primary-text-color);
+          line-height: 24px;
+          @apply(--layout-vertical);
+          @apply(--layout-center-justified);
+        };
+        --etools-checkable-input-size: 18px;
       }
 
       .capitalize {
