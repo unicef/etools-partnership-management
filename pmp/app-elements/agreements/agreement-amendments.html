@@ -20,9 +20,6 @@
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="./agreement-behaviors/agreement-amendments-behavior.html">
-<link rel="import" href="./agreement-behaviors/agreements-common-behavior.html">
-<link rel="import" href="agreement-amendment-details.html">
 
 <dom-module id="agreement-amendments">
   <template strip-whitespace>
@@ -140,8 +137,7 @@
         behaviors: [
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.AgreementsCommonBehavior
+          pmpBehaviors.RepeatableDataSetsBehavior
         ],
 
         properties: {
@@ -173,7 +169,8 @@
           };
         },
         _getAmendmentTypes: function(agreementType, _amendmentTypes) {
-          if (['PCA', 'SSFA'].indexOf(agreementType) === -1 || !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
+          if (['PCA', 'SSFA'].indexOf(agreementType) === -1 ||
+              !(_amendmentTypes instanceof Array && _amendmentTypes.length > 0)) {
             return [];
           }
           if (agreementType === 'SSFA') {
@@ -268,7 +265,8 @@
         _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
               && !amendmentItem.signed_amendment &&
-              amendmentItem.amendment_types instanceof Array && amendmentItem.amendment_types.length === 0;
+              ((amendmentItem.amendment_types instanceof Array && amendmentItem.amendment_types.length === 0) ||
+              !amendmentItem.amendment_types);
         },
 
         /**
@@ -276,7 +274,8 @@
          */
         _addNewAmendment: function() {
           var lastAmendmentItemIndex = this.dataItems.length - 1;
-          if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] && !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
+          if (lastAmendmentItemIndex > 0 && this.dataItems[lastAmendmentItemIndex] &&
+              !this._showReadonlyDetails(this.dataItems[lastAmendmentItemIndex].id)) {
             var lastAmendmentItem = this.dataItems[lastAmendmentItemIndex];
             if (this._amendmentFieldsAreEmpty(lastAmendmentItem, lastAmendmentItemIndex)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
@@ -289,40 +288,93 @@
         },
 
         _dataItemsChanged: function(data) {
-          var path = data.path.slice(data.path.lastIndexOf('.') + 1);
-          var ind = data.path.slice(data.path.indexOf('#') + 1);
-          var index = ind.slice(0, ind.indexOf('.'));
-          if (path === 'signed_date') {
-            // reset invalid state is field is not empty
-            var signedDateEl = this.$$('#signedDate_' + index);
-            if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
-              if (this._signedDateIsInTheFuture(data.value)) {
-                signedDateEl.errorMessage = 'Signed Date can not be in the future';
-                signedDateEl.invalid = true;
+          let self = this;
+           this.debounce('itemsChangeDebouncer', function() {
+            let pathAtr = data.path.split('.');
+            let dataItem = pathAtr.length > 1 ? self.get(pathAtr[0] + '.' + pathAtr[1]) : null;
+            let index = -1;
+            if (dataItem) {
+              index = self.dataItems.findIndex(function(dItem) {
+                return JSON.stringify(dItem) === JSON.stringify(dataItem);
+              });
+            }
+            let path = pathAtr.length > 2 ? pathAtr[2] : null;
+            console.log(data, dataItem, index);
+            if (path === 'signed_date') {
+              // reset invalid state is field is not empty
+              let signedDateEl = self.$$('#signedDate_' + index);
+              if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
+                if (self._signedDateIsInTheFuture(data.value)) {
+                  signedDateEl.errorMessage = 'Signed Date can not be in the future';
+                  signedDateEl.invalid = true;
+                } else {
+                  signedDateEl.invalid = false;
+                  signedDateEl.errorMessage = 'Please select signed date';
+                }
               } else {
-                signedDateEl.invalid = false;
+                signedDateEl.invalid = true;
                 signedDateEl.errorMessage = 'Please select signed date';
               }
-            } else {
-              signedDateEl.invalid = true;
-              signedDateEl.errorMessage = 'Please select signed date';
             }
-          }
-          if (path === 'signed_amendment') {
-            var uploadFileEl = this.$$('#fileUpload_' + index);
-            if (uploadFileEl && data.value) {
-              if (data.value instanceof File) {
-                uploadFileEl.invalid = false;
+            if (path === 'signed_amendment') {
+              let uploadFileEl = self.$$('#fileUpload_' + index);
+              if (uploadFileEl && data.value) {
+                if (data.value instanceof File) {
+                  uploadFileEl.invalid = false;
+                }
+              } else {
+                uploadFileEl.invalid = true;
               }
-            } else {
-              uploadFileEl.invalid = true;
             }
+            if (path === 'amendment_types') {
+              let amendmentTypes = self.$$('#amendmentTypes_' + index);
+              if (amendmentTypes) {
+                amendmentTypes.validate();
+              }
+              if (self._changeAuthorizedOfficersTypeSelected(self.dataItems[index].amendment_types)) {
+                // unlock authorized officers
+                self._triggerAuthorizedOfficersUnlock();
+              } else {
+                self._handleNoChangeAuthorizedOfficersTypeInAmendments();
+              }
+            }
+
+            // check for 'Change authorized officer' when amendments length changes
+            if (data.path === 'dataItems.length') {
+              self._handleNoChangeAuthorizedOfficersTypeInAmendments();
+            }
+           }, 10);
+        },
+
+        // amendment_types array contains 'Change authorized officer'
+        _changeAuthorizedOfficersTypeSelected: function(amendmentTypes) {
+          if (!(amendmentTypes instanceof Array && amendmentTypes.length > 0)) {
+            return false;
           }
-          if (path === 'amendment_types') {
-            let amendmentTypes = this.$$('#amendmentTypes_' + index);
-            if (amendmentTypes) {
-              amendmentTypes.validate();
-            }
+          return amendmentTypes.indexOf('Change authorized officer') > -1
+        },
+
+        // unlock authorized officers field from agreement details
+        _triggerAuthorizedOfficersUnlock: function() {
+          this.fire('unlock-authorized-officers');
+        },
+        // lock authorized officers field from agreement details
+        _triggerAuthorizedOfficersLock: function() {
+          this.fire('lock-authorized-officers');
+        },
+
+        _newAmendmentsHaveChangeAuthOfficersSelected: function() {
+          let self = this;
+          let changeAuthOfficersTypeSelected = this.dataItems.find(function(amendment) {
+            return !amendment.id && self._changeAuthorizedOfficersTypeSelected(amendment.amendment_types);
+          });
+
+          return !!changeAuthOfficersTypeSelected;
+        },
+        _handleNoChangeAuthorizedOfficersTypeInAmendments: function() {
+          if (!this._newAmendmentsHaveChangeAuthOfficersSelected()) {
+            // lock authorized officers
+            this._triggerAuthorizedOfficersLock();
           }
         }
       });
