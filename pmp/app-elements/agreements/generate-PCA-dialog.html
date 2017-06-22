@@ -13,8 +13,8 @@
 </style>
     <etools-dialog id="etoolsDialog" size="lg" ok-btn-text="Download" dialog-title="Generate PCA"
       on-close="_handleDialogClosed">
-      <paper-dropdown-menu label="Choose Template">
-        <paper-listbox class="dropdown-content" selected="{{selectedTemplate}}">
+      <paper-dropdown-menu label="Choose Template" value="{{selectedTemplate}}">
+        <paper-listbox class="dropdown-content">
           <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
             <paper-item>[[item]]</paper-item>
           </template>
@@ -48,7 +48,8 @@
       },
       _handleDialogClosed: function(closingReason) {
          if (closingReason.detail.confirmed) {//TODO update url to include template type
-          window.open('/api/v2/agreements/' + this.agreementId + '/pdf/', '_blank');
+          window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
+           encodeURIComponent(this.selectedTemplate), '_blank');
         }
       }
     });
