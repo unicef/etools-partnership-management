@@ -229,7 +229,7 @@
         </div>
         <div class="row-h flex-c t-border">
           <div id="generate-pca" class="col col-3"
-               hidden="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
+               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -366,9 +366,6 @@
             Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
           }
         },
-        _showGeneratePCABtn: function() {
-          return this.agreement && this.agreement.agreement_type === 'PCA';
-        },
         _hideDeleteBtn: function() {
           if (this.agreement && this.agreement.status === 'draft' && this.agreement.attached_agreement_file) {
             return true;
@@ -487,7 +484,7 @@
           return allowEdit;
         },
 
-        _showGenerateReportBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
+        _showGeneratePcaBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
           return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
               (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
         },
