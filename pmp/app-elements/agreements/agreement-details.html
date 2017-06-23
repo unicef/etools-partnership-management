@@ -56,6 +56,9 @@
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
       }
+      #generate-pca[hidden] + .col {
+        padding-left: 0;
+      }
 
     </style>
 
@@ -225,18 +228,17 @@
           </etools-multi-selection-menu>
         </div>
         <div class="row-h flex-c t-border">
-          <div id="generate-pca" class="col col-3" hidden="[[!_showGeneratePCABtn(agreement, agreement.agreement_type)]]">
+          <div id="generate-pca" class="col col-3"
+               hidden="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
-                always-float-label
-                >
-              <!--hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]"-->
+                always-float-label>
               <!-- Generate PCA -->
               <label aria-hidden="true">PCA Agreement to Sign</label>
-                <paper-button class="paper-input-input secondary-btn" on-tap="_openGeneratePCADialog">
-                  <iron-icon icon="refresh"></iron-icon>
-                  GENERATE
-                </paper-button>
+              <paper-button class="paper-input-input secondary-btn" on-tap="_openGeneratePCADialog">
+                <iron-icon icon="refresh"></iron-icon>
+                GENERATE
+              </paper-button>
             </paper-input-container>
           </div>
           <div class="col col-9">
