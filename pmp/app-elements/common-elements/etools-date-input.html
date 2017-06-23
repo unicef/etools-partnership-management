@@ -30,7 +30,7 @@
                  required$="[[required]]"
                  invalid$="[[invalid]]"
                  auto-validate$="[[autoValidate]]"
-                 error-message="[[errorMessage]]">
+                 error-message="[[errorMessage]]" validator="[[validator]]">
       <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
       <etools-datepicker-button id="datePickerButton"
                                 prefix
@@ -105,7 +105,8 @@
           format: {
             type: String,
             value: 'YYYY-MM-DD'
-          }
+          },
+          validator: String
         },
 
         _readonlyStateChange: function(newValue, oldValue) {

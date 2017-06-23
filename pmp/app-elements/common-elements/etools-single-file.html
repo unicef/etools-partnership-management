@@ -46,12 +46,19 @@
               return [];
             }
           },
-          readonly: Boolean,
+          readonly: {
+            type: Boolean,
+            value: false,
+            observer: '_readonlyStateChanged'
+          },
+          required: Boolean,
+          autoValidate: Boolean,
           accept: String,
           label: String,
           file: {
             type: Object,
             notify: true,
+            observer: '_autoValidateFile'
           },
           internalFile: {
             type: Object,
@@ -99,6 +106,26 @@
             // file changed
             this._attachmentChanged(this.attachments.length);
           }
+        },
+
+        validate: function() {
+          if (this.required && !this.readonly &&
+              (!this.file || this.file instanceof File === false)) {
+            this.set('invalid', true);
+            return false;
+          }
+          this.set('invalid', false);
+          return true;
+        },
+
+        _autoValidateFile: function() {
+          if (this.autoValidate) {
+            this.validate();
+          }
+        },
+
+        _readonlyStateChanged: function() {
+          this.validate();
         }
       });
     })();

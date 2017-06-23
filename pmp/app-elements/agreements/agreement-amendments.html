@@ -21,6 +21,8 @@
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 
+<link rel="import" href="../validators/required-and-not-future-date-validator.html">
+
 <dom-module id="agreement-amendments">
   <template strip-whitespace>
     <style
@@ -56,6 +58,9 @@
                  on-success="_handleDeleteResponse"
                  on-fail="_handleDeleteError"></etools-ajax>
 
+    <!-- include required and not future date validator -->
+    <required-and-not-future-date-validator></required-and-not-future-date-validator>
+
     <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -79,7 +84,10 @@
                                    value="{{item.signed_date}}"
                                    error-message="Please select signed date"
                                    no-init show-clear-btn
-                                   readonly$="[[_showReadonlyDetails(item.id)]]">
+                                   readonly$="[[_showReadonlyDetails(item.id)]]"
+                                   validator="required-and-not-future-date-validator"
+                                   auto-validate
+                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]">
                 </etools-date-input>
               </div>
               <div class="col col-8 file-container">
@@ -90,6 +98,8 @@
                                       file="{{item.signed_amendment}}"
                                       internal-file="{{item.signed_amendment_file}}"
                                       error-message="Signed Amendment file is required"
+                                      required
+                                      auto-validate
                                       accept=".doc,.docx,.pdf,.jpg,.png"
                                       readonly$="[[_showReadonlyDetails(item.id)]]"></etools-single-file>
                 </div>
@@ -104,7 +114,10 @@
                                            hide-search
                                            error-message="Please select amendment type"
                                            required
-                                           readonly$="[[_showReadonlyDetails(item.id)]]">
+                                           readonly$="[[_showReadonlyDetails(item.id)]]"
+                                           trigger-value-change-event
+                                           on-etools-selected-items-changed="_onAmendmentTypesSelected"
+                                           on-focused-changed="_onAmendmentTypesFocusChanged">
               </etools-multi-selection-menu>
             </div>
 
@@ -157,7 +170,7 @@
         },
 
         observers: [
-          '_dataItemsChanged(dataItems.*)',
+          '_dataItemsChanged(dataItems.length)',
         ],
 
         ready: function() {
@@ -287,62 +300,11 @@
           }
         },
 
-        _dataItemsChanged: function(data) {
+        _dataItemsChanged: function(dataLength) {
           let self = this;
            this.debounce('itemsChangeDebouncer', function() {
-            let pathAtr = data.path.split('.');
-            let dataItem = pathAtr.length > 1 ? self.get(pathAtr[0] + '.' + pathAtr[1]) : null;
-            let index = -1;
-            if (dataItem) {
-              index = self.dataItems.findIndex(function(dItem) {
-                return JSON.stringify(dItem) === JSON.stringify(dataItem);
-              });
-            }
-            let path = pathAtr.length > 2 ? pathAtr[2] : null;
-            console.log(data, dataItem, index);
-            if (path === 'signed_date') {
-              // reset invalid state is field is not empty
-              let signedDateEl = self.$$('#signedDate_' + index);
-              if (signedDateEl && typeof data.value === 'string' && data.value !== '') {
-                if (self._signedDateIsInTheFuture(data.value)) {
-                  signedDateEl.errorMessage = 'Signed Date can not be in the future';
-                  signedDateEl.invalid = true;
-                } else {
-                  signedDateEl.invalid = false;
-                  signedDateEl.errorMessage = 'Please select signed date';
-                }
-              } else {
-                signedDateEl.invalid = true;
-                signedDateEl.errorMessage = 'Please select signed date';
-              }
-            }
-            if (path === 'signed_amendment') {
-              let uploadFileEl = self.$$('#fileUpload_' + index);
-              if (uploadFileEl && data.value) {
-                if (data.value instanceof File) {
-                  uploadFileEl.invalid = false;
-                }
-              } else {
-                uploadFileEl.invalid = true;
-              }
-            }
-            if (path === 'amendment_types') {
-              let amendmentTypes = self.$$('#amendmentTypes_' + index);
-              if (amendmentTypes) {
-                amendmentTypes.validate();
-              }
-              if (self._changeAuthorizedOfficersTypeSelected(self.dataItems[index].amendment_types)) {
-                // unlock authorized officers
-                self._triggerAuthorizedOfficersUnlock();
-              } else {
-                self._handleNoChangeAuthorizedOfficersTypeInAmendments();
-              }
-            }
-
-            // check for 'Change authorized officer' when amendments length changes
-            if (data.path === 'dataItems.length') {
-              self._handleNoChangeAuthorizedOfficersTypeInAmendments();
-            }
+             // check for 'Change authorized officer' when amendments length changes
+             self._handleNoChangeAuthorizedOfficersTypeInAmendments();
            }, 10);
         },
 
@@ -376,7 +338,37 @@
             // lock authorized officers
             this._triggerAuthorizedOfficersLock();
           }
+        },
+        _getSignedDateErrorMessage: function(signedDate) {
+          return this._signedDateIsInTheFuture(signedDate)
+              ? 'Signed Date can not be in the future'
+              : 'Please select Signed Date';
+        },
+
+        _onAmendmentTypesSelected: function(e) {
+          e.stopImmediatePropagation();
+          if (this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].amendment_types)) {
+            // unlock authorized officers
+            this._triggerAuthorizedOfficersUnlock();
+          } else {
+            this._handleNoChangeAuthorizedOfficersTypeInAmendments();
+          }
+        },
+
+        // set autoValidate to true on first focus
+        // TODO: revise auto validate behavior, this could be made global using a behavior
+        _onAmendmentTypesFocusChanged: function(e) {
+          let target = e.target;
+          this.debounce('dropdown-focus', function() {
+            if (e.detail && e.detail.value) {
+              if (target.is && target.is === 'etools-multi-selection-menu' &&
+                  !target.autoValidate) {
+                target.set('autoValidate', true);
+              }
+            }
+          }, 10);
         }
+
       });
     })();
   </script>

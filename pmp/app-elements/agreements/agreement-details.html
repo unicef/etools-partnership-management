@@ -532,7 +532,7 @@
         _validateAgreement: function() {
           var valid = true;
           var self = this;
-          var requiredFieldsSelectors = ['#partner', '#agreementType', '#cpStructure', '#agreementAmendments'];
+          var requiredFieldsSelectors = ['#partner', '#agreementType', '#cpStructure', '#officers', '#agreementAmendments'];
           requiredFieldsSelectors.forEach(function(fSelector) {
             let field = self.$$(fSelector);
             if (field && !field.validate()) {
