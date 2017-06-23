@@ -229,7 +229,7 @@
         </div>
         <div class="row-h flex-c t-border">
           <div id="generate-pca" class="col col-3"
-               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]">
+               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -367,7 +367,7 @@
           }
         },
         _hideDeleteBtn: function() {
-          if (this.agreement && this.agreement.status === 'draft' && this.agreement.attached_agreement_file) {
+          if (this._isDraft() && this.agreement.attached_agreement_file) {
             return true;
           }
           return false;
@@ -379,7 +379,7 @@
           if (!this.agreement || !this.agreement.id) {//new agreement
             return true;
           }
-          return (this.agreement.status === 'draft' || !this.agreement.attached_agreement_file);
+          return this.agreement.status === 'draft';
         },
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);
@@ -484,9 +484,8 @@
           return allowEdit;
         },
 
-        _showGeneratePcaBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
-          return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
-              (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
+        _showGeneratePcaBtn: function(type) {
+          return type === 'PCA' && this._isDraft();
         },
 
         _partnerChanged: function(currentPartnerId) {
