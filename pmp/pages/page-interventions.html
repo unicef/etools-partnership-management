@@ -251,7 +251,7 @@
             id: null, // Required null, not undefined in order to trigger the observer
             agreement: undefined,
             document_type: undefined,
-            hrp: undefined,
+            country_programme: undefined,
             number: undefined,
             prc_review_document_file: undefined,
             title: undefined,
@@ -495,7 +495,7 @@
         return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
       },
       _getModifiedInterventionDetails: function() {
-        var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
+        var updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
           'start', 'end'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
           'sector_locations', 'planned_budget', 'planned_visits'];

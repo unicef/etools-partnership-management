@@ -6,7 +6,6 @@
   var PolymerRedux = PolymerRedux || {};
 
   var initialDropdownPmpData = {
-    hrps: [],
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -39,10 +38,6 @@
     }
 
     switch (action.type) {
-      case 'SET_HRPS':
-        // console.log('set hrps data...', action.hrps);
-        return Object.assign({}, state, {hrps: action.hrps});
-
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
         return Object.assign({}, state, {fileTypes: action.fileTypes});
