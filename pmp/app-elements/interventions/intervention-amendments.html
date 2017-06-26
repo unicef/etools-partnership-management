@@ -16,6 +16,7 @@
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 
+<link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -194,6 +195,8 @@
             'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
+          this.deleteDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.deleteDialog.updateStyles();
         },
         detached: function() {
           if (this.addAmendmentConfirmationDialog) {
