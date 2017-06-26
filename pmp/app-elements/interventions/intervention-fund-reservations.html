@@ -174,7 +174,8 @@
           },
           interventionStatus: {
             type: String
-          }
+          },
+          permissions: Object
         },
         observers: [
           '_dataItemsChanged(dataItems)',
@@ -185,12 +186,23 @@
           this.dataSetModel = {value: null};
         },
         _interventionStatusChanged: function(interventionStatus) {
-          if (['', 'draft', 'signed'].indexOf(interventionStatus) > -1) {
+          if (['', 'draft', 'signed'].indexOf(interventionStatus) > -1 && this._hasEditPermissions(this.interventionStatus)) {
             //* For status Signed, FRs(and Amendments) have to be editable , unlike the rest of the PD/SSFA
             this.editMode = true;
           } else {
             this.editMode = false;
           }
+        },
+        _hasEditPermissions: function(interventionStatus) {
+          if (this.permissions && this.permissions.editInterventionDetails === true) {
+              if (!(this.permissions.partnershipManager || this.permissions.PME) &&
+                (!interventionStatus || interventionStatus !== 'draft')) {
+                // other users than partnershipManager or PME will be able to edit only if intervention status is draft
+                return false;
+              }
+              return true;
+          }
+          return false;
         },
         _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
