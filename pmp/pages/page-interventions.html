@@ -32,6 +32,9 @@
       :host {
         display: block;
       }
+      .no-capitalization {
+        text-transform: none;
+      }
     </style>
 
     <app-route
@@ -73,7 +76,7 @@
               PD/SSFAs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
-              Add Programme Document or SSFA
+              <span class="no-capitalization">Add Programme Document or SSFA</span>
             </template>
             <template is="dom-if" if="[[intervDetailsActive]]">
               [[_getInterventionDetailsTitle(intervention)]]
@@ -135,7 +138,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving PD/SSFA ToR"
+                                   title="Errors Saving PD/SSFA"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"

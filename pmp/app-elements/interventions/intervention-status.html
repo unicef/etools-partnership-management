@@ -2,6 +2,8 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
+
 <dom-module id="intervention-status">
   <template strip-whitespace>
     <style>
@@ -147,8 +149,11 @@
         ready: function() {
         this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
+          this.warningDialog = this.createDialog('PD/SSFA status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+
+          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
         },
 
         detached: function() {
