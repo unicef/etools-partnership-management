@@ -6,6 +6,8 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../app-behaviors/array-helper-behavior.html">
+
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
@@ -217,7 +219,9 @@
     Polymer({
 
       is: 'page-interventions',
-
+      behaviors: [
+        pmpBehaviors.ArrayHelperBehavior
+      ],
       properties: {
         interventionPage: {
           type: String,
@@ -458,8 +462,8 @@
         if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
           interventionData.frs = this.intervention.frs;
         }
-        // fr_details are readonly, we do not have to send them to backend
-        delete interventionData.fr_details;
+        // frs_details are readonly, we do not have to send them to backend
+        delete interventionData.frs_details;
 
         //no need to send planned_budget.total to backend
         if (interventionData.planned_budget) {

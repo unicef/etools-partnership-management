@@ -8,7 +8,7 @@
 
 <link rel="import" href="../../app-config/etools-app-config.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="../../app-behaviors/array-helper-behavior.html">
 
@@ -17,7 +17,7 @@
 
 <dom-module id="intervention-fund-reservations">
   <template strip-whitespace>
-    <style include="grid-layout-styles">
+    <style>
       [hidden] {
         display: none !important;
       }
@@ -39,6 +39,9 @@
         line-height: 24px;
         box-sizing: border-box;
       }
+      #warning {
+        padding: 16px 24px;
+      }
     </style>
 
     <etools-ajax url="[[_frsDetailsRequestUrl]]"
@@ -57,7 +60,7 @@
           <span class="fr-number">[[item.fr_number]]</span>
         </template>
       </div>
-      <div class="row-h" hidden$="[[noFrsWarning(frsDetails)]]">
+      <div id="warning" hidden$="[[noFrsWarning(frsDetails)]]">
         <p>There are no fund reservations numbers added.</p>
       </div>
     </etools-content-panel>
@@ -140,6 +143,8 @@
 
           this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
               this._frsUpdatesWarningConfirmationHandler.bind(this), frsConfirmationsDialogMessage);
+          this.frsConfirmationsDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.frsConfirmationsDialog.updateStyles();
         },
 
         _openFrsUpdateDialog: function(frNumbersList) {
