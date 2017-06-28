@@ -1,140 +1,27 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-
-<link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/partner-status-styles.html">
-<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <dom-module id="partner-status">
   <template strip-whitespace>
-    <style include="buttons-styles"></style>
-    <style include="partner-status-styles">
-      [hidden] {
-        display: none !important;
-      }
-
+    <style>
       :host {
-        display: block;
         width: 100%;
+        --etools-status-label-style: {
+          font-weight: normal;
+        }
       }
-
-      etools-content-panel {
-        width: 100%;
-        --ecp-content: {
-          padding: 25px;
-        };
-      }
-
-      .status-container {
-        @apply(--layout-horizontal);
-      }
-      .status-icon, .status {
-        @apply(--layout-vertical);
-        @apply(--layout-warp);
-        @apply(--layout-center-justified);
-      }
-      .status {
-        margin-left: 10px;
-      }
-
-      .buttons-section {
-        margin: 25px -25px -25px;
-      }
-      #hide-btn[hidden] + #save-btn {
-        margin-top: 0;
-      }
-      #hide-btn {
-        background-color: var(--dark-theme-background-color);
-        color: var(--error-color);
-      }
-
-      #hide-btn iron-icon {
-        color: var(--dark-icon-color);
-        @apply(--layout-self-start);
-      }
-
     </style>
-
-    <etools-content-panel panel-title="Partner status">
-
-      <div class="status-container" hidden$="[[!_showNotSyncedStatus(partner)]]">
-        <div class="status-icon">
-          <span class="not-synced">
-            <iron-icon icon="info"></iron-icon>
-          </span>
-        </div>
-        <div class="status">
-          <p>Not Synced</p>
-        </div>
-      </div>
-
-      <div class="status-container" hidden$="[[!_showSyncedStatus(partner)]]">
-        <div class="status-icon">
-          <span class="synced">
-            <iron-icon icon="autorenew"></iron-icon>
-          </span>
-        </div>
-        <div class="status">
-          <p>Synced from VISION</p>
-        </div>
-      </div>
-
-      <div class="status-container" hidden$="[[!_showBlockedStatus(partner)]]">
-        <div class="status-icon">
-          <span class="blocked">
-            <iron-icon icon="block"></iron-icon>
-          </span>
-        </div>
-        <div class="status">
-          <p>Blocked in VISION</p>
-        </div>
-      </div>
-
-      <div class="status-container" hidden$="[[!_showMakedForDeletionStatus(partner)]]">
-        <div class="status-icon">
-          <span class="marked-for-deletion">
-            <iron-icon icon="delete"></iron-icon>
-          </span>
-        </div>
-        <div class="status">
-          <p>Marked For Deletion in VISION</p>
-        </div>
-      </div>
-
-      <template is="dom-if" if="[[editMode]]">
-        <div class="buttons-section vertical">
-           <paper-button
-              id="hide-btn"
-              class="primary-btn with-prefix w100"
-              on-tap="_triggerHidePartner"
-              hidden$=[[_isHidden(partner.hidden)]]>
-            <iron-icon icon="cancel"></iron-icon>
-            <span class="btn-label">Hide</span>
-          </paper-button>
-          <paper-button
-              id="save-btn"
-              class="primary-btn w100"
-              on-tap="_triggerPartnerSave">
-            Save
-          </paper-button>
-        </div>
-      </template>
-
-    </etools-content-panel>
-
+    <etools-status statuses="[[possibleStatuses]]"
+                   actions="[[possibleActions]]"
+                   on-partner-hide="_triggerHidePartner"
+                   on-partner-delete="_triggerDeletePartner">
+    </etools-status>
   </template>
-
   <script>
     (function() {
       'use strict';
       Polymer({
         is: 'partner-status',
-
         behaviors: [etoolsBehaviors.DynamicDialogBehavior],
 
         properties: {
@@ -145,15 +32,88 @@
           editMode: {
             type: Boolean,
             value: false
-          }
+          },
+          statusChangeWarningDialogContent: {
+            type: Object
+          },
+          possibleStatuses: {
+          type: Array,
+          value: function() {
+              return [
+                {
+                  label: 'Not Synced',
+                  icon: 'info',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' +
+                    this.getComputedStyleValue('--status-not-synced-color'),
+                  hidden: true,
+                  completed: false
+                },
+                {
+                  label: 'Synced from VISION',
+                  icon: 'autorenew',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
+                  hidden: true,
+                  completed: false
+                },
+                {
+                  label: 'Blocked in VISION',
+                  icon: 'block',
+                  iconStyles: 'width: 19px; height: 19px; color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
+                  hidden: true,
+                  completed: false
+                },
+                {
+                  label: 'Marked For Deletion in VISION',
+                  icon: 'delete-forever',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+                  iconContainerStyles: 'background-color: ' +
+                    this.getComputedStyleValue('--primary-background-color'),
+                  hidden: true,
+                  completed: false
+                },
+              ];
+            }
+          },
+          possibleActions: {
+            type: Array,
+            value: [
+              {
+                label: 'Save',
+                hidden: true,
+                primary: true,
+                //save action is hadled inside the parent
+                event: 'save-partner'
+              },
+              {
+                label: 'Hide',
+                hidden: true,
+                event: 'partner-hide'
+              },
+              {
+                label: 'Delete',
+                hidden: true,
+                event: 'partner-delete'
+              },
+            ]
+          },
+
         },
+
+        observers: [
+          '_computeAvailableStatuses(partner.vision_synced, partner.deleted_flag, partner.blocked)',
+          '_computeAvailableActions(partner.hidden, editMode)'
+        ],
         ready: function() {
-          var statusChangeWarningDialogContent = document.createElement('p');
-          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
-          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.warningDialog.updateStyles();
+              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
         },
         detached: function() {
           if (this.warningDialog) {
@@ -171,7 +131,7 @@
             console.warn('[pmp partner status change] warningDialog not created!');
             return;
           }
-          var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
+          var msgEl = this.statusChangeWarningDialogContent;
           if (!msgEl) {
              console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
              return;
@@ -192,34 +152,100 @@
             });
           }
         },
-        _showSyncedStatus: function(partner) {
-          if (partner.vision_synced === true && partner.deleted_flag === false &&
-              (typeof partner.blocked === 'undefined' || partner.blocked === false)) {
+
+        _setAllActionsToHidden: function() {
+          var possibleActions = this.possibleActions;
+          possibleActions.forEach(function(elem) {
+            elem.hidden = true;
+          });
+
+          this.set('possibleActions', possibleActions);
+        },
+        _setAllStatusesToHidden: function() {
+          var possibleStatuses = this.possibleStatuses;
+          possibleStatuses.forEach(function(elem) {
+            elem.hidden = true;
+            elem.completed = false;
+          });
+
+          this.set('possibleStatuses', possibleStatuses);
+        },
+
+        _computeAvailableActions: function(hidden, editMode) {
+            this._setAllActionsToHidden();
+            let availableOptions = ['Save'];
+            if (!editMode) {
+              return;
+            }
+            if (!hidden) {
+              availableOptions.push('Hide');
+            }
+
+            for (let key in this.possibleActions) {
+              let actionName = this.possibleActions[key].label;
+              let config = this.possibleActions[key];
+
+              if (availableOptions.indexOf(actionName) > -1) {
+                config.hidden = false;
+              }
+
+              this.set(['possibleActions', key], null);
+              this.set(['possibleActions', key], config);
+            }
+        },
+        _computeAvailableStatuses: function() {
+          var activeStatus;
+          this._setAllStatusesToHidden();
+          switch (true) {
+            case this._showNotSyncedStatus():
+              activeStatus = 'Not Synced';
+              break;
+            case this._showSyncedStatus():
+              activeStatus = 'Synced from VISION';
+              break;
+            case this._showBlockedStatus():
+              activeStatus = 'Blocked in VISION';
+              break;
+            case this._showMakedForDeletionStatus():
+              activeStatus = 'Marked For Deletion in VISION';
+              break;
+          }
+
+          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+            let workingStatus = this.possibleStatuses[key];
+            if (workingStatus.label === activeStatus) {
+              workingStatus.completed = true;
+              workingStatus.hidden = false;
+            }
+            this.set(['possibleStatuses', key], null);
+            this.set(['possibleStatuses', key], workingStatus);
+          }
+        },
+        _showSyncedStatus: function() {
+          if (this.partner.vision_synced === true && this.partner.deleted_flag === false &&
+              (typeof this.partner.blocked === 'undefined' || this.partner.blocked === false)) {
             return true;
           }
           return false;
         },
 
-        _showBlockedStatus: function(partner) {
-          if (partner.deleted_flag === false &&
-            (typeof partner.blocked !== 'undefined' && partner.blocked === true)) {
+        _showBlockedStatus: function() {
+          if (this.partner.deleted_flag === false &&
+            (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
             return true;
           }
           return false;
         },
 
-        _showMakedForDeletionStatus: function(partner) {
-          if (partner.deleted_flag === true) {
+        _showMakedForDeletionStatus: function() {
+          if (this.partner.deleted_flag === true) {
             return true;
           }
           return false;
         },
 
-        _showNotSyncedStatus: function(partner) {
-          return partner.vision_synced === false;
-        },
-        _triggerPartnerSave: function() {
-          this.fire('save-partner', {});
+        _showNotSyncedStatus: function() {
+          return this.partner.vision_synced === false;
         },
 
         _triggerHidePartner: function() {
@@ -227,6 +253,10 @@
             return;
           }
           this._showStatusChangeConfirmationDialog();
+        },
+
+        _triggerDeletePartner: function() {
+          this.fire('toast', {text: 'Delete action not implemented yet', showCloseBtn: true});
         }
       });
     })();
