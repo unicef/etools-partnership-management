@@ -34,6 +34,9 @@
       :host {
         display: block;
       }
+      .no-capitalization {
+        text-transform: none;
+      }
     </style>
 
     <app-route
@@ -75,7 +78,7 @@
               PD/SSFAs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
-              Add Programme Document or SSFA
+              <span class="no-capitalization">Add Programme Document or SSFA</span>
             </template>
             <template is="dom-if" if="[[intervDetailsActive]]">
               [[_getInterventionDetailsTitle(intervention)]]
@@ -483,6 +486,7 @@
         var interventionData;
         if (this._isNewIntervention()) {
           interventionData = Object.assign({}, this.intervention);
+          interventionData.status = 'draft';
         } else {
           var modifiedDetails = this._getModifiedInterventionDetails();
           var modifiedReviewAndSign = this._getModifiedReviewAndSign();
@@ -536,8 +540,7 @@
           delete interventionData.prc_review_document;
         }
 
-        // If it's a new intervention it has no status, so it should be a draft
-        interventionData.status = interventionData.status || 'draft';
+        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
         var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
