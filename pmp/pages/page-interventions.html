@@ -442,6 +442,7 @@
         var interventionData;
         if (this._isNewIntervention()) {
           interventionData = Object.assign({}, this.intervention);
+          interventionData.status = 'draft';
         } else {
           var modifiedDetails = this._getModifiedInterventionDetails();
           var modifiedReviewAndSign = this._getModifiedReviewAndSign();
@@ -479,9 +480,6 @@
         if (this.intervention.hasOwnProperty('prc_review_document') && !this.intervention.prc_review_document) {
           delete interventionData.prc_review_document;
         }
-
-        // If it's a new intervention it has no status, so it should be a draft
-        interventionData.status = interventionData.status || 'draft';
 
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
