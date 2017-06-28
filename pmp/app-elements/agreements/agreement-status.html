@@ -14,7 +14,6 @@
     <etools-status statuses="[[possibleStatuses]]"
                     actions="[[possibleActions]]"
                     on-agreement-draft-event="_setStatusDraft"
-                    on-agreement-cancel-event="_setStatusCanceled"
                     on-agreement-suspend-event="_setStatusSuspended"
                     on-agreement-terminate-event="_setStatusTerminated"
                     on-agreement-unsuspend-event="_setStatusNotSuspended">
@@ -129,11 +128,6 @@
                 hidden: true,
                 event: 'agreement-terminate-event'
               },
-              {
-                label: 'Cancel',
-                hidden: true,
-                event: 'agreement-cancel-event'
-              },
             ]
           },
           warningDialog: Object,
@@ -196,9 +190,6 @@
           let availableOptions = ['Save'];
 
           switch (status) {
-            case 'draft':
-              availableOptions.push('Cancel');
-              break;
             case 'signed':
               if (agreementType !== 'SSFA') {
                 availableOptions.push('Suspend');
@@ -409,9 +400,6 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function() {
-          this._updateStatus('cancelled');
-        },
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
