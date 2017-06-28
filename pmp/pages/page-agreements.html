@@ -124,7 +124,6 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
-              allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
               is-new-agreement="[[_isNewAgreement(agreement)]]"
               on-update-agreement-status="_updateAgreementStatus"
               on-save-agreement="_saveAgreement">
@@ -160,7 +159,7 @@
             id: undefined,
             authorized_officers: [],
             amendments: [],
-            agreement_type: '',
+            agreement_type: null,
             agreement_number: undefined,
             attached_agreement: undefined,
             start: undefined,
@@ -168,7 +167,7 @@
             signed_by_unicef_date: undefined,
             signed_by_partner_date: undefined,
             status: undefined,
-            partner: undefined,
+            partner: null,
             country_programme: undefined,
             signed_by: undefined,
             partner_manager: undefined
@@ -269,20 +268,13 @@
         return false;
       },
 
-      /**
-       * Temporary permission for PM
-       */
-      _allowPmToEditRegardlessStatus: function(permissions) {
-        return permissions && permissions.partnershipManager === true;
-      },
-
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
-        var newAgreement = event.detail;
-        if(!newAgreement.id) {
-          newAgreement.status = 'draft';
+        var agreementData = event.detail;
+        if(!agreementData.id) {
+          agreementData.status = 'draft';
         }
-        this.$.agreementData.saveAgreement(newAgreement, this._newAgreementSaved);
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       },
 
       _updateAgreementStatus: function(event) {

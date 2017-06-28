@@ -56,14 +56,14 @@
             </div>
           </div>
           <div class="item-content">
-
-              <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
-                                      cp-output-id="{{item.cp_output}}"
-                                      selected-cp-indicators-ids="{{item.ram_indicators}}"
-                                      already-selected-cpo="[[alreadySelectedCpOutputs]]"
-                                      required$="[[required]]"
-                                      edit-mode$="[[editMode]]">
-              </ram-indicator-selector>
+             <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
+                                        cp-output-id="{{item.cp_output}}"
+                                        selected-cp-indicators-ids="{{item.ram_indicators}}"
+                                        selected-cp-structure="[[selectedCpStructure]]"
+                                        already-selected-cpo="[[alreadySelectedCpOutputs]]"
+                                        required$="[[required]]"
+                                        edit-mode$="[[editMode]]">
+               </ram-indicator-selector>
 
               <result-link-lower-results id$="lowerResult_[[index]]"
                                          data-items="{{item.ll_results}}"
@@ -125,6 +125,9 @@
           },
           indicatorDialog: {
             type: Object
+          },
+          selectedCpStructure: {
+            type: String
           }
         },
 
@@ -159,7 +162,6 @@
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
         },
-
         /**
          * Add/update indicators data
          */

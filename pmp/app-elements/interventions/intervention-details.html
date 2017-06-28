@@ -7,8 +7,10 @@
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -38,6 +40,7 @@
         @apply(--layout-vertical);
         width: 100%;
       }
+
       paper-input,
       paper-textarea,
       agreement-selector,
@@ -49,6 +52,7 @@
         padding: 0;
         background-color: var(--ecp-content-bg-color, #FFFFFF);
       }
+
       paper-material paper-toolbar {
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: var(--medium-theme-background-color);
@@ -62,6 +66,7 @@
           margin-left: 0;
         };
       }
+
       .expiry-warning {
         @apply(--layout-vertical);
         @apply(--layout-flex);
@@ -75,23 +80,23 @@
       <div class="row-h flex-c">
         <div class="col col-6">
           <agreement-selector id="agreementSelector"
-            agreement-id="{{intervention.agreement}}"
-            partner-id="{{selectedPartnerId}}"
-            selected-agreement="{{agreement}}"
-            intervention-id="[[intervention.id]]"
-            edit-mode$="[[editMode]]"></agreement-selector>
+                              agreement-id="{{intervention.agreement}}"
+                              partner-id="{{selectedPartnerId}}"
+                              selected-agreement="{{agreement}}"
+                              intervention-id="[[intervention.id]]"
+                              edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
-           <etools-single-selection-menu id="documentType"
-                                          label="Document Type"
-                                          placeholder="&#8212;"
-                                          options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
-                                          selected="{{intervention.document_type}}"
-                                          hide-search
-                                          dynamic-align
-                                          required auto-validate
-                                          error-message="Document type is required"
-                                          readonly$="[[!editMode]]">
+          <etools-single-selection-menu id="documentType"
+                                        label="Document Type"
+                                        placeholder="&#8212;"
+                                        options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
+                                        selected="{{intervention.document_type}}"
+                                        hide-search
+                                        dynamic-align
+                                        required auto-validate
+                                        error-message="Document type is required"
+                                        readonly$="[[!editMode]]">
           </etools-single-selection-menu>
 
         </div>
@@ -179,15 +184,16 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-            <etools-single-selection-menu id="hrps"
-                                          label="In response to an HRP, Select"
-                                          placeholder="&#8212;"
-                                          options="[[hrps]]"
-                                          option-value="id"
-                                          option-label="name"
-                                          selected="{{intervention.hrp}}"
-                                          dynamic-align
-                                          readonly$="[[!editMode]]">
+          <etools-single-selection-menu id="cpStructure"
+                                        label="CP Structure"
+                                        placeholder="&#8212;"
+                                        options="[[cpStructureOptions]]"
+                                        option-value="id"
+                                        option-label="name"
+                                        selected="{{intervention.country_programme}}"
+                                        dynamic-align
+                                        hide-search
+                                        readonly$="[[!isCpStructureEditable(editMode, intervention.status)]]">
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
@@ -234,12 +240,13 @@
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="PD Output or SSFA TOR Expected results">
+    <etools-content-panel class="content-section" panel-title="PD Output or SSFA Expected results">
       <intervention-expected-results id="expectedResults"
-          data-items="{{intervention.result_links}}"
-          edit-mode$="[[editMode]]"
-          intervention-id="[[intervention.id]]"
-          required$="[[interventionRequiredField]]">
+                                     data-items="{{intervention.result_links}}"
+                                     selected-cp-structure="[[intervention.country_programme]]"
+                                     edit-mode$="[[editMode]]"
+                                     intervention-id="[[intervention.id]]"
+                                     required$="[[interventionRequiredField]]">
       </intervention-expected-results>
     </etools-content-panel>
 
@@ -312,9 +319,14 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          hrps: {
+          countryProgrammes: {
             type: Array,
-            statePath: 'hrps'
+            statePath: 'countryProgrammes',
+            observer: '_countryProgrammesChanged'
+          },
+          cpStructureOptions: {
+            type: Object,
+            value: []
           },
           years: {
             type: Array,
@@ -349,7 +361,47 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-
+        isCpStructureEditable: function(editMode, status) {
+          if (!editMode) {
+            return false;
+          }
+          if (status && status !== 'draft') {
+            return false;
+          }
+          return true;
+        },
+        _filterCountryProgrammes: function(countryProgrammes) {
+          return countryProgrammes.filter(function(cp) {
+            return cp.active || cp.future;
+          });
+        },
+        _getCurrentCountryProgramme: function(countryProgrammes) {
+          if (countryProgrammes && countryProgrammes.length > 1) {
+            return countryProgrammes.find(function(cp) {
+              return !cp.future && !cp.special;
+            });
+          }
+          return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
+        },
+        _countryProgrammesChanged: function(cp) {
+          let cpStructures = this._filterCountryProgrammes(cp);
+          this.set('cpStructureOptions', cpStructures);
+          this._setDefaultSelectedCpStructure(cpStructures);
+        },
+        _setDefaultSelectedCpStructure: function(cpStructures) {
+          if (this.intervention && this.intervention.country_programme) {
+            return;
+          }
+          let currentCP;
+          if (cpStructures && cpStructures.length) {
+            if (cpStructures.length === 1) {
+              currentCP = cpStructures[0].id;
+            } else {
+              currentCP = this._getCurrentCountryProgramme(cpStructures);
+            }
+            this.set('intervention.country_programme', currentCP ? currentCP.id : null);
+          }
+        },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
             return;
@@ -383,6 +435,7 @@
             this.set('fieldsResetted', false);
             this.newInterventionFlagChanged();
           }
+          this._setDefaultSelectedCpStructure(this.cpStructureOptions);
         },
 
         newInterventionFlagChanged: function(newValue) {
@@ -401,7 +454,7 @@
           this.$.plannedBudget.resetValidations();
 
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
+            'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
@@ -415,7 +468,7 @@
 
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
-            && typeof interventionEnd === 'string' && interventionEnd !== '') {
+              && typeof interventionEnd === 'string' && interventionEnd !== '') {
             var start = parseInt(interventionStart.substr(0, 4), 10);
             var end = parseInt(interventionEnd.substr(0, 4), 10);
             var years = [];
@@ -434,7 +487,7 @@
           if (typeof oldId === 'number'
               && id !== oldId
               && !this.agreement) {
-                //Prevent reset on changes caused by initialization of the fields
+            //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
         },

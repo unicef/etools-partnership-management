@@ -1,0 +1,58 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+
+<dom-module id="generate-pca-dialog">
+  <template>
+    <style>
+  paper-dropdown-menu, paper-listbox {
+    width: 250px;
+  }
+</style>
+    <etools-dialog id="etoolsDialog" size="lg" ok-btn-text="Download" dialog-title="Generate PCA"
+      on-close="_handleDialogClosed">
+      <paper-dropdown-menu label="Choose Template" value="{{selectedTemplate}}">
+        <paper-listbox class="dropdown-content">
+          <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
+            <paper-item>[[item]]</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </etools-dialog>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'generate-pca-dialog',
+      properties: {
+        agreementId: {
+          type: String
+        },
+        templateOptions: {
+          type: Object,
+          value: function() {
+            return ['Arabic', 'English', 'French', 'Portuguese','Russian', 'Spanish', 'IFRC English', 'IFRC French'];
+         },
+         selectedTemplate: {
+           type: String
+         }
+        }
+      },
+      open: function() {
+        this.$.etoolsDialog.opened = true;
+      },
+      _handleDialogClosed: function(closingReason) {
+         if (closingReason.detail.confirmed) {//TODO update url to include template type
+          window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
+           encodeURIComponent(this.selectedTemplate), '_blank');
+        }
+      }
+    });
+  })();
+
+</script>

@@ -163,7 +163,7 @@
           if (!data.interventionId) {
             this.fire('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
           } else {
-            if (['draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+            if (['', 'draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
               // status change is allowed
               // set additional callback if any
               if (callback) {
@@ -252,7 +252,7 @@
           dexieObject.cso_contribution = 0;
 
           dexieObject.id = responseDetail.id;
-          dexieObject.hrp = responseDetail.hrp;
+          dexieObject.country_programme = responseDetail.country_programme;
           dexieObject.end = responseDetail.end;
           dexieObject.title = responseDetail.title;
           dexieObject.start = responseDetail.start;

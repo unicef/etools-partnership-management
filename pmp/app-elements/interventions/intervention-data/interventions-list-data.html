@@ -70,7 +70,7 @@
           var _this = this;
 
           if (showQueryLoading) {
-            this.fire('global-loading', {message: 'Loading PD/SSFA ToR list data...', active: true});
+            this.fire('global-loading', {message: 'Loading PD/SSFA list data...', active: true});
           }
 
           this.db.transaction('r', this.db.interventions, function() {
