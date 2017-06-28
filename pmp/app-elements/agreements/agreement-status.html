@@ -144,10 +144,10 @@
         ],
 
         ready: function() {
-          var statusChangeWarningDialogContent = document.createElement('p');
-          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Agreement status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
         },
@@ -167,10 +167,10 @@
               msgEl.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp intervetnion status change] #statusChangeWarningContent element not found!');
+              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
             }
           } else {
-            console.warn('[pmp intervetnion status change] warningDialog not created!');
+            console.warn('[pmp agreement status change] warningDialog not created!');
           }
         },
 
