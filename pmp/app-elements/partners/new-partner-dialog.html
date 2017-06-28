@@ -2,21 +2,30 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
+
 <dom-module id="new-partner-dialog">
   <template>
     <style>
+      :host {
+        --paper-dialog-scrollable: {
+          @apply(--pmp-paper-dialog-content);
+        }
+      }
       #vendorNo {
         margin-bottom: 30px;
       }
     </style>
     <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
                    dialog-title="New Partner" on-close="_handleDialogClosed">
+
       <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
                    placeholder="&#8212;" autofocus
                    required auto-validate error-message="Vendor# is required"
                    allowed-pattern="[0-9]"
                    char-counter
                    maxlength="11"></paper-input>
+
     </etools-dialog>
   </template>
 </dom-module>
@@ -35,7 +44,7 @@
           computed: '_vendorNumberIsEmpty(vendor_number)'
         }
       },
-      _openNewPartnerDialog: function() {
+      openNewPartnerDialog: function() {
         this.$.vendorNo.invalid = false;
         this.$.newPartnerDialog.opened = true;
       },

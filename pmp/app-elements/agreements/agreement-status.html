@@ -1,6 +1,8 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <dom-module id="agreement-status">
   <template strip-whitespace>
@@ -142,10 +144,12 @@
         ],
 
         ready: function() {
-          this.statusChangeWarningDialogContent = document.createElement('p');
-          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
-            this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+          var statusChangeWarningDialogContent = document.createElement('p');
+          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.warningDialog = this.createDialog('Agreement status change', 'md', 'Yes', 'No',
+              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
         },
 
         detached: function() {
