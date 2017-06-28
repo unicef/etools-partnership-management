@@ -15,7 +15,6 @@
                    actions="[[possibleActions]]"
                    on-intervention-draft-event="_setStatusDraft"
                    on-intervention-active-event="_setStatusActive"
-                   on-intervention-cancel-event="_setStatusCanceled"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_setStatusNotSuspended">
@@ -132,11 +131,6 @@
                 hidden: true,
                 event: 'intervention-terminate-event'
               },
-              {
-                label: 'Cancel',
-                hidden: true,
-                event: 'intervention-cancel-event'
-              },
             ]
           },
           warningDialog: Object,
@@ -203,9 +197,6 @@
             let availableOptions = ['Save'];
 
             switch (status) {
-              case 'draft':
-                availableOptions.push('Cancel');
-                break;
               case 'active':
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
@@ -415,9 +406,6 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function() {
-          this._updateStatus('cancelled');
-        },
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
