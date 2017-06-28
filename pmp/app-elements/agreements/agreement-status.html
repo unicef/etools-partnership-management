@@ -35,6 +35,10 @@
           agreementId: {
             type: Number
           },
+          agreementType: {
+            type: String,
+            value: ''
+          },
           status: {
             type: String,
             value: ''
@@ -192,12 +196,16 @@
               availableOptions.push('Cancel');
               break;
             case 'signed':
-              availableOptions.push('Suspend');
-              availableOptions.push('Terminate');
+              if (agreementType !== 'SSFA') {
+                availableOptions.push('Suspend');
+                availableOptions.push('Terminate');
+              }
               break;
             case 'active':
-              availableOptions.push('Suspend');
-              availableOptions.push('Terminate');
+              if (agreementType !== 'SSFA') {
+                availableOptions.push('Suspend');
+                availableOptions.push('Terminate');
+              }
               break;
             case 'suspended':
               // removes Save option
