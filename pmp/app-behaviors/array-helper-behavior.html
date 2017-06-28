@@ -1,0 +1,53 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.ArrayHelperBehavior */
+  pmpBehaviors.ArrayHelperBehavior = {
+    /**
+     * Compare arrays.
+     * base array can be an array of values or an array of objects (if objects use basePropertyToVerify for matches)
+     */
+    getArraysDiff: function(base, valuesToVerify, basePropertyToVerify) {
+      try {
+        if (base instanceof Array === false || valuesToVerify instanceof Array === false) {
+          // both method arguments have to be arrays
+          throw new Error('Only array arguments accepted');
+          return null;
+        }
+
+        if (base.length === 0) {
+          return valuesToVerify;
+        }
+        if (valuesToVerify.length === 0) {
+          if (basePropertyToVerify) {
+            return this.getArrayFromObjsProp(base, basePropertyToVerify);
+          }
+          return base;
+        }
+
+        let diffVals = [];
+        base.forEach(function(arrayVal) {
+          let valToSearch = basePropertyToVerify ? arrayVal[basePropertyToVerify] : arrayVal;
+          if (valuesToVerify.indexOf(valToSearch) === -1) {
+            diffVals.push(valToSearch);
+          }
+        });
+
+        return diffVals;
+      } catch(err) {
+        console.error('pmpBehaviors.ArrayHelperBehavior.compareArrays error occurred', err);
+      }
+    },
+    /**
+     * get an array of objects and return an array a property values
+     */
+    getArrayFromObjsProp: function(arr, prop) {
+      if (arr.length === 0) {
+        return [];
+      }
+      return arr.map(function(a) {
+        return a[prop];
+      });
+    }
+
+  };
+</script>

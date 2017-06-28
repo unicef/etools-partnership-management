@@ -270,7 +270,7 @@
             partner_focal_points: [],
             partner_authorized_officer_signatory: undefined,
             offices: [],
-            fr_numbers: undefined,
+            frs: [],
             planned_visits: [],
             sector_locations: [],
             planned_budget: {},
@@ -451,12 +451,12 @@
         }
 
         // prepare fr numbers
-        if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
-          && this._objectFieldIsModified('fr_numbers')) {
-          interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
-            return frNumber.value;
-          });
+        if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
+          interventionData.frs = this.intervention.frs;
         }
+        // fr_details are readonly, we do not have to send them to backend
+        delete interventionData.fr_details;
+
         //no need to send planned_budget.total to backend
         if (interventionData.planned_budget) {
           delete interventionData.planned_budget.total;
@@ -464,9 +464,6 @@
             delete interventionData.planned_budget.interventionWasSaved;
           }
         }
-
-        // fr_numbers_details are readonly, we do not have to send them to backend
-        delete interventionData.fr_numbers_details;
 
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
@@ -484,6 +481,10 @@
         interventionData.status = interventionData.status || 'draft';
 
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+      },
+      _needFrsUpdate: function(frs) {
+        let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
+        return diff.length > 0;
       },
       _getModifiedReviewAndSign: function() {
         var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',

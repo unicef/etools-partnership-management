@@ -250,13 +250,13 @@
       </intervention-expected-results>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="Planned Budget">
-      <intervention-planned-budget id="plannedBudget"
-                                   planned-budget="{{intervention.planned_budget}}"
-                                   intervention-id="[[intervention.id]]"
-                                   edit-mode$="[[editMode]]">
-      </intervention-planned-budget>
-    </etools-content-panel>
+    <intervention-planned-budget id="plannedBudget"
+                                 class="content-section"
+                                 planned-budget="{{intervention.planned_budget}}"
+                                 intervention-id="[[intervention.id]]"
+                                 edit-mode$="[[editMode]]">
+    </intervention-planned-budget>
+
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"

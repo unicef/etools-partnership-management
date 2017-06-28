@@ -1,0 +1,21 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.FrNumbersValidationsBehavior */
+  pmpBehaviors.FrNumbersValidationsBehavior = {
+
+    /**
+     * Validate FR numbers total amount against planned budget unicef total contribution
+     * TODO: check what total unicef contribution represents
+     */
+    validateAgainstPlannedBudget: function(totalFrsAmount, plannedBudget) {
+      let totalUnicefContribution = parseFloat(plannedBudget.partner_contribution) +
+          parseFloat(plannedBudget.unicef_cash) +
+          parseFloat(plannedBudget.in_kind_amount);
+      totalFrsAmount = parseFloat(totalFrsAmount);
+
+      return (totalUnicefContribution - 10) < totalFrsAmount &&
+          totalFrsAmount < (totalUnicefContribution + 10);
+    }
+
+  };
+</script>
