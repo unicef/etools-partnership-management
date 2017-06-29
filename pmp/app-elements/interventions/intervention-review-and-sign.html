@@ -186,10 +186,9 @@
     </template>
 
     <intervention-fund-reservations class="content-section"
-                                    intervention-id="[[intervention.id]]"
-                                    frs-details="[[intervention.frs_details]]"
-                                    planned-budget="[[intervention.planned_budget]]"
-                                    edit-mode$="[[editMode]]" on-frs-update="_handleFrsUpdate">
+                                    intervention="[[intervention]]"
+                                    edit-mode="[[_getFrNumbersEditMode(editMode, intervention.id, intervention.status)]]"
+                                    on-frs-update="_handleFrsUpdate">
     </intervention-fund-reservations>
 
   </template>
@@ -368,6 +367,13 @@
             this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
           }
           this.fire('global-loading', {active: false});
+        },
+
+        _getFrNumbersEditMode: function(editMode, interventionId, interventionStatus) {
+          if (!editMode || !interventionId || (interventionStatus !== 'draft' && interventionStatus !== 'signed')) {
+            return false;
+          }
+          return true;
         }
 
       });
