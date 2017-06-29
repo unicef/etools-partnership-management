@@ -5,7 +5,9 @@
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
     <style include="table-styles">
-
+      .no-frs {
+        padding: 0 20px;
+      }
     </style>
     <table class="table r-align first-c-always-left">
         <thead>
@@ -27,9 +29,16 @@
             <td>[[fr.outstanding_amt]]</td>
           </tr>
           </template>
+          <tr>
+            <td></td>
+            <td>TOTAL</td>
+            <td>[[frsDetails.total_frs_amt]] </td>
+            <td>[[frsDetails.total_actual_amt]]</td>
+            <td>[[frsDetails.total_outstanding_amt]]</td>
+          </tr>
         </tbody>
     </table>
-    <div hidden$="true">
+    <div class="no-frs" hidden$="[[_noFrs()]]">
       <p>There are no fund reservations added for this intervention.</p>
     </div>
   </template>
@@ -47,6 +56,9 @@
             type: Object
           }
         },
+        _noFrs: function() {
+          return !this.frDetails || !this.frDetails.frs || !this.frDetails.frs.length;
+        }
       });
 
     })();
