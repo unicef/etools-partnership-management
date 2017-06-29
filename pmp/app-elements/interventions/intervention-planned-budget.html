@@ -16,6 +16,8 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
+<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
+
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
     <style include="shared-styles table-styles fields-inside-table-styles">
@@ -53,6 +55,12 @@
 
       #currency {
         width: auto;
+      }
+
+      .frs-warning {
+        padding: 24px;
+        color: var(--error-color);
+        border-top: 1px solid var(--dark-divider-color);
       }
     </style>
 
@@ -187,6 +195,9 @@
           </tr>
         </tbody>
       </table>
+      <div class="frs-warning" hidden$="[[_hideFrsWarning(intervention.frs_details)]]">
+        [[_frsWarning]]
+      </div>
     </etools-content-panel>
 
   </template>
@@ -200,10 +211,12 @@
 
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsBehaviors.EtoolsCurrencyBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          pmpBehaviors.FrNumbersValidationsBehavior
         ],
 
         properties: {
+          intervention: Object,
           plannedBudget: {
             type: Object,
             notify: true
@@ -232,7 +245,8 @@
             type: Number,
             value: 145 //TODO will be taken from user profile and set globally
           },
-          initialPlannedBudget: Object
+          initialPlannedBudget: Object,
+          _frsWarning: String
         },
 
         observers: [
@@ -353,6 +367,15 @@
           if (newValue !== oldValue) {
             this.updateStyles();
           }
+        },
+
+        _hideFrsWarning: function(frsDetails) {
+          if (frsDetails.frs instanceof Array && frsDetails.frs.length) {
+            let warn = this.compareFrsTotalAmountWithIntervData(frsDetails, this.intervention);
+            this.set('_frsWarning', warn);
+            return !!!warn;
+          }
+          return true;
         }
 
       });
