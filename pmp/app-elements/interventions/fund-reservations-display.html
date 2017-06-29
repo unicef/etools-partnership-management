@@ -8,6 +8,15 @@
       .no-frs {
         padding: 0 20px;
       }
+      .totals-row {
+        font-weight: bold;
+      }
+      .table > tbody > tr > td {
+        padding: 16px 15px;
+        line-height: 1.4;
+        vertical-align: top;
+        border-top: 1px solid var(--dark-divider-color);
+      }
     </style>
     <table class="table r-align first-c-always-left">
         <thead>
@@ -29,7 +38,7 @@
             <td>[[fr.outstanding_amt]]</td>
           </tr>
           </template>
-          <tr>
+          <tr class="totals-row">
             <td></td>
             <td>TOTAL</td>
             <td>[[frsDetails.total_frs_amt]] </td>
@@ -48,9 +57,6 @@
        Polymer({
         is: 'fund-reservations-display',
 
-        behaviors: [
-
-        ],
         properties: {
           frsDetails: {
             type: Object
