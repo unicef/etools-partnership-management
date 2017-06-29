@@ -32,6 +32,9 @@
       :host {
         display: block;
       }
+      .no-capitalization {
+        text-transform: none;
+      }
     </style>
 
     <app-route
@@ -73,7 +76,7 @@
               PD/SSFAs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
-              Add Programme Document or SSFA
+              <span class="no-capitalization">Add Programme Document or SSFA</span>
             </template>
             <template is="dom-if" if="[[intervDetailsActive]]">
               [[_getInterventionDetailsTitle(intervention)]]
@@ -135,7 +138,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving PD/SSFA ToR"
+                                   title="Errors Saving PD/SSFA"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"
@@ -251,7 +254,7 @@
             id: null, // Required null, not undefined in order to trigger the observer
             agreement: undefined,
             document_type: undefined,
-            hrp: undefined,
+            country_programme: undefined,
             number: undefined,
             prc_review_document_file: undefined,
             title: undefined,
@@ -439,6 +442,7 @@
         var interventionData;
         if (this._isNewIntervention()) {
           interventionData = Object.assign({}, this.intervention);
+          interventionData.status = 'draft';
         } else {
           var modifiedDetails = this._getModifiedInterventionDetails();
           var modifiedReviewAndSign = this._getModifiedReviewAndSign();
@@ -480,9 +484,6 @@
           delete interventionData.prc_review_document;
         }
 
-        // If it's a new intervention it has no status, so it should be a draft
-        interventionData.status = interventionData.status || 'draft';
-
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _getModifiedReviewAndSign: function() {
@@ -495,7 +496,7 @@
         return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
       },
       _getModifiedInterventionDetails: function() {
-        var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
+        var updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
           'start', 'end'];
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
           'sector_locations', 'planned_budget', 'planned_visits'];
