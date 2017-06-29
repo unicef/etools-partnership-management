@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../styles/table-styles.html">
 
@@ -6,7 +7,7 @@
   <template strip-whitespace>
     <style include="table-styles">
       .no-frs {
-        padding: 0 20px;
+        padding: 16px 20px;
       }
       .totals-row {
         font-weight: bold;
@@ -18,7 +19,7 @@
         border-top: 1px solid var(--dark-divider-color);
       }
     </style>
-    <table class="table r-align first-c-always-left">
+    <table class="table r-align first-c-always-left" hidden$="[[_noFrs(frsDetails)]]">
         <thead>
           <tr>
             <th>FR#</th>
@@ -33,21 +34,21 @@
           <tr>
             <td>[[fr.fr_number]]</td>
             <td>[[fr.start_date]] </td>
-            <td>[[fr.total_amt]] </td>
-            <td>[[fr.actual_amt]]</td>
-            <td>[[fr.outstanding_amt]]</td>
+            <td>[[displayCurrencyAmount(fr.total_amt, '0.00')]] </td>
+            <td>[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</td>
+            <td>[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</td>
           </tr>
           </template>
           <tr class="totals-row">
             <td></td>
             <td>TOTAL</td>
-            <td>[[frsDetails.total_frs_amt]] </td>
-            <td>[[frsDetails.total_actual_amt]]</td>
-            <td>[[frsDetails.total_outstanding_amt]]</td>
+            <td>[[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]] </td>
+            <td>[[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</td>
+            <td>[[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</td>
           </tr>
         </tbody>
     </table>
-    <div class="no-frs" hidden$="[[_noFrs()]]">
+    <div class="no-frs" hidden$="[[!_noFrs(frsDetails)]]">
       <p>There are no fund reservations added for this intervention.</p>
     </div>
   </template>
@@ -57,13 +58,17 @@
        Polymer({
         is: 'fund-reservations-display',
 
+        behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior
+        ],
+
         properties: {
           frsDetails: {
             type: Object
           }
         },
         _noFrs: function() {
-          return !this.frDetails || !this.frDetails.frs || !this.frDetails.frs.length;
+          return (!this.frsDetails || !this.frsDetails.frs || !this.frsDetails.frs.length);
         }
       });
 
