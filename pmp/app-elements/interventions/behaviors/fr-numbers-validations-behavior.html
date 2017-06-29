@@ -1,18 +1,59 @@
+<link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../app-behaviors/date-behavior.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.FrNumbersValidationsBehavior */
-  pmpBehaviors.FrNumbersValidationsBehavior = {
+  /** @polymerBehavior pmpBehaviors.FrNumbersValidationsBehaviorImpl */
+  pmpBehaviors.FrNumbersValidationsBehaviorImpl = {
 
     /**
-     * Validate FR numbers total amount against planned budget unicef total contribution
+     * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
      */
-    validateAgainstPlannedBudget: function(totalFrsAmount, plannedBudget) {
-      let totalUnicefContribution = parseFloat(plannedBudget.unicef_cash);
-      totalFrsAmount = parseFloat(totalFrsAmount);
+    compareFrsTotalAmountWithIntervData: function(frsDetails, intervention) {
+      let compareResult = null;
+      let pdDataNotMatched = [];
+      let frsDataNotMatched = [];
 
-      return (totalUnicefContribution - 10) < totalFrsAmount &&
-          totalFrsAmount < (totalUnicefContribution + 10);
+      // check start dates
+      if (intervention.start !== frsDetails.earliest_start_date) {
+        pdDataNotMatched.push('Start Date (' + this.prettyDate(intervention.start) + ')');
+        frsDataNotMatched.push('FR Start Date (' + this.prettyDate(intervention.earliest_start_date) + ')');
+      }
+
+      // check end dates
+      if (intervention.end !== frsDetails.latest_end_date) {
+        pdDataNotMatched.push('End Date (' + this.prettyDate(intervention.end) + ')');
+        frsDataNotMatched.push('FR End Date (' + this.prettyDate(intervention.latest_end_date) + ')');
+      }
+
+      // check amount
+      let totalUnicefContribution = parseFloat(intervention.planned_budget.unicef_cash);
+      let totalFrsAmount = parseFloat(frsDetails.total_frs_amt);
+      let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
+      if (unicefContibutionDiff > 10) {
+        pdDataNotMatched.push('Unicef Cash Contribution (' +
+            this.displayCurrencyAmount(totalUnicefContribution, '0') + ' USD)');
+        frsDataNotMatched.push('FR Total Amount (' +
+            this.displayCurrencyAmount(totalFrsAmount, '0') + ' USD)');
+      }
+
+      if (pdDataNotMatched.length > 0) {
+        compareResult = 'The ' + pdDataNotMatched.join(', ') + ' is not the same as the ' +
+            frsDataNotMatched.join(', ') + '.';
+      }
+
+      /**
+       * compareResult:
+       *    - null: all good, correct compare values
+       *    - string: warning, frs details values are not matching intervention values
+       */
+      return compareResult;
     }
-
   };
+
+  /** @polymerBehavior pmpBehaviors.FrNumbersValidationsBehavior */
+  pmpBehaviors.FrNumbersValidationsBehavior = [
+    pmpBehaviors.DateBehavior,
+    etoolsBehaviors.EtoolsCurrencyBehavior,
+    pmpBehaviors.FrNumbersValidationsBehaviorImpl
+  ];
 </script>
