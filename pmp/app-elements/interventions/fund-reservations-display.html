@@ -1,0 +1,54 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../styles/table-styles.html">
+
+<dom-module id="fund-reservations-display">
+  <template strip-whitespace>
+    <style include="table-styles">
+
+    </style>
+    <table class="table r-align first-c-always-left">
+        <thead>
+          <tr>
+            <th>FR#</th>
+            <th>FR Posting Date</th>
+            <th>FR Amount $</th>
+            <th>Actual $</th>
+            <th>Outstanding $</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
+          <tr>
+            <td>[[fr.fr_number]]</td>
+            <td>[[fr.start_date]] </td>
+            <td>[[fr.total_amt]] </td>
+            <td>[[fr.actual_amt]]</td>
+            <td>[[fr.outstanding_amt]]</td>
+          </tr>
+          </template>
+        </tbody>
+    </table>
+    <div hidden$="true">
+      <p>There are no fund reservations added for this intervention.</p>
+    </div>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+       Polymer({
+        is: 'fund-reservations-display',
+
+        behaviors: [
+
+        ],
+        properties: {
+          frsDetails: {
+            type: Object
+          }
+        },
+      });
+
+    })();
+  </script>
+</dom-module>
