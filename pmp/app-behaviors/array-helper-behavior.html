@@ -25,12 +25,20 @@
         }
 
         let diffVals = [];
+        let valuesToCheck = JSON.parse(JSON.stringify(valuesToVerify));
         base.forEach(function(arrayVal) {
           let valToSearch = basePropertyToVerify ? arrayVal[basePropertyToVerify] : arrayVal;
-          if (valuesToVerify.indexOf(valToSearch) === -1) {
+          let searchedIdx = valuesToCheck.indexOf(valToSearch);
+          if (searchedIdx === -1) {
             diffVals.push(valToSearch);
+          } else {
+            valuesToCheck.splice(searchedIdx, 1);
           }
         });
+        if (valuesToCheck.length) {
+          // if base values were checked and there are still valuesToVerify values left unchecked
+          diffVals = diffVals.concat(valuesToCheck);
+        }
 
         return diffVals;
       } catch(err) {
