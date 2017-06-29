@@ -84,11 +84,6 @@
                   completed: false
                 },
                 {
-                  label: 'Cancelled',
-                  hidden: false,
-                  completed: false
-                },
-                {
                   label: 'Closed',
                   hidden: false,
                   completed: false
@@ -210,11 +205,6 @@
                 // removes Save option
                 availableOptions.pop();
                 break;
-              case 'cancelled':
-                // removes Save option
-                availableOptions.pop();
-                availableOptions.push('Change to draft');
-                break;
               case 'closed':
                 // removes Save option
                 availableOptions.pop();
@@ -289,16 +279,6 @@
               activeStatus = 'Terminated';
               break;
 
-            case 'cancelled':
-              availableStatuses = [
-                'Draft',
-                'Signed',
-                'Cancelled',
-                'Closed',
-              ];
-              activeStatus = 'Cancelled';
-              break;
-
             case 'closed':
               availableStatuses = [
                 'Draft',
@@ -366,12 +346,10 @@
             return;
           }
 
-          if (newStatus === 'draft' || newStatus === 'cancelled') {
+          if (newStatus === 'draft' && this.status !== 'draft') {
             // if agreement was not saved (is new) or the status is already changed
-            // from draft/cancelled, stop status change
-            if (this.status !== 'draft' && this.status !== 'cancelled') {
-              return false;
-            }
+            // from draft, stop status change
+            return false;
           }
 
           if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
