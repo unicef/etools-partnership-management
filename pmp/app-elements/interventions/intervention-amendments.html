@@ -16,7 +16,7 @@
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 
-<link rel="import" href="../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -71,14 +71,14 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Amendment Type -->
-                <template is="dom-if" if="[[item.oldTypeLabel]]">
-                  [[item.oldTypeLabel]]
+                <template is="dom-if" if="[[_isReadonlyAmendment(item.id)]]">
+                  [[_firstItem(item.types)]]
                 </template>
-                <template is="dom-if" if="[[!item.oldTypeLabel]]">
+                <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
                   <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
                                                        label="Amendment Types"
                                                        placeholder="&#8212;"
-                                                       options="[[amendmentTypes]]"
+                                                       options="[[filteredAmendmentTypes]]"
                                                        selected-values="{{item.types}}"
                                                        dynamic-align
                                                        required
@@ -123,7 +123,7 @@
                 <paper-input id="other" hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
                                 placeholder="&#8212;"
                                 label="Other"
-                                value="{{item.other}}"
+                                value="{{item.other_description}}"
                                 readonly="[[_isReadonlyAmendment(item.id)]]">
                   </paper-input>
               </div>
@@ -161,12 +161,16 @@
           amendmentTypes: {
             type: Object,
             value: function() {
-              return [{label: 'Dates', value: '1'},
-                {label: 'Results', value: '2'},
-                {label: 'Budget', value: '3'},
-                {label: 'Other', value: '4'}];
+              return [{label: 'Dates', value: 'dates'},
+                {label: 'Results', value: 'results'},
+                {label: 'Budget', value: 'budget'},
+                {label: 'Other', value: 'other'}];
             }
            // statePath: 'interventionAmendmentTypes'
+          },
+          filteredAmendmentTypes: Object,
+          interventionDocumentType: {
+            type: String
           },
           interventionStatus: String,
           permissions: Object
@@ -175,7 +179,8 @@
         observers: [
           '_dataHasChanged(dataItems)',
           '_dataItemsLengthChanged(dataItems.length)',
-          '_dataItemsPropertyChange(dataItems.*)'
+          '_dataItemsPropertyChange(dataItems.*)',
+          '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
          ],
 
         ready: function() {
@@ -195,19 +200,34 @@
             'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
-          this.deleteDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.deleteDialog.updateStyles();
+          this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.addAmendmentConfirmationDialog.updateStyles();
+        },
+        _firstItem: function(types) {
+          if (!types || !types.length) {
+            return '';
+          }
+          return types[0];
         },
         detached: function() {
           if (this.addAmendmentConfirmationDialog) {
             this.removeDialog(this.addAmendmentConfirmationDialog);
           }
         },
-        _showOtherInput: function(amendmentTypes) {
-          if (!amendmentTypes || !amendmentTypes.length) {
+        _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
+          if (interventionDocumentType === 'SSFA') {
+            this.filteredAmendmentTypes = this.amendmentTypes.filter(function(item) {
+              return ['Dates','Other'].indexOf(item.label) > -1;
+            });
+          } else {
+            this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes))
+          }
+        },
+        _showOtherInput: function(selectedAmdTypes) {
+          if (!selectedAmdTypes || !selectedAmdTypes.length) {
             return false;
           }
-          if (amendmentTypes.indexOf('4') > -1) { //TODO
+          if (selectedAmdTypes.indexOf('other') > -1) { //TODO
             return true;
           }
           this._clearOtherInput();
@@ -219,8 +239,8 @@
             otherInput.value = null;
           }
         },
-        _autoValidateIsOn: function(selectedValues) {
-          if (selectedValues && selectedValues.length) {
+        _autoValidateIsOn: function(selectedAmdTypes) {
+          if (selectedAmdTypes && selectedAmdTypes.length) {
             return true;
           }
           return false;
@@ -392,17 +412,6 @@
           this._showAddAmendmentConfirmationDialog();
         },
 
-        // /**
-        //  * Check if amendment signed date is required
-        //  */
-        // _requireSignedDate: function(signedAgreement, signedAgreementFilePath, type) {
-        //   if ((typeof signedAgreementFilePath === 'string' && signedAgreementFilePath !== '') ||
-        //       type || signedAgreement instanceof File) {
-        //     return true;
-        //   }
-        //   return false;
-        // },
-
         // validate fields
         validate: function() {
           var valid = true;
@@ -449,10 +458,7 @@
         },
 
         _isReadonlyAmendment: function(amendmentId) {
-          if (parseInt(amendmentId, 10) > 0) {
-            return true;
-          }
-          return false;
+          return !!amendmentId;
         },
 
         _getSelectedAmendmentTypeWarning: function(types) {//TODO
@@ -462,16 +468,16 @@
          var message = 'Please make sure you update ';
          types.forEach(function(amdType) {
            switch (amdType) {
-             case '1':
+             case 'dates':
                message += 'Dates, ';
                break;
-             case '2':
+             case 'results':
                message += 'Programme Results, ';
                break;
-             case '3':
+             case 'budget':
                message += 'Planned Budget, ';
                break;
-             case '4':
+             case 'other':
                message += 'Other, ';
                break;
            }
@@ -479,29 +485,6 @@
           message = message.substring(0, message.length - 2);
           message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
           return message;
-          // switch (type) {
-          //   case 'cpr':
-          //     return 'Please ensure that you update Programme Results section of this PD/SSFA.';
-          //   case 'cpf':
-          //     return 'Please ensure that you update the Population Focus field on this PD/SSFA.';
-          //   case 'cgc':
-          //     return 'Please ensure that you update the Locations field on this PD/SSFA.';
-          //   case 'ctbgt20':
-          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-          //         'also ensure this PD/SSFA goes for PRC review and is approved by your Representative.';
-          //   case 'ctblt20':
-          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-          //         'also ensure the amended PD/SSFA is signed.';
-          //   case 'cablt20':
-          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA.';
-          //   case 'cabgt20':
-          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; ' +
-          //         'also ensure to manage changes through the FACE form and document reasoning for change.';
-          //   case 'cabgt20face':
-          //     return 'Please ensure that you update the Planned Budget section of this PD/SSFA; also ensure ' +
-          //         'to manage changes through the FACE form and document reasoning for change A Note for ' +
-          //         'the Record is required for approval.';
-          // }
         }
 
       });
