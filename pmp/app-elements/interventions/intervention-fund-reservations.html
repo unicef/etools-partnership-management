@@ -114,7 +114,8 @@
           _frsValuesCheckWarning: {
             type: String,
             value: ''
-          }
+          },
+          _frsConfirmationsDialogMessage: String
         },
 
         observers: ['_frsDetailsChanged(intervention.frs_details)'],
@@ -152,20 +153,19 @@
 
         _createFrsConfirmationsDialog: function() {
           // init frs confirmations dialog element
-          var frsConfirmationsDialogMessage = document.createElement('span');
-          frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
+          this._frsConfirmationsDialogMessage = document.createElement('span');
+          this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
 
           this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
-              this._frsUpdatesWarningConfirmationHandler.bind(this), frsConfirmationsDialogMessage);
+              this._frsUpdatesWarningConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
           this.frsConfirmationsDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.frsConfirmationsDialog.updateStyles();
         },
 
         _frsUpdateWarningMessage: function(warning) {
-          if (this.frsConfirmationsDialog) {
-            let msgEl = Polymer.dom(this.frsConfirmationsDialog.root).querySelector('#frsConfirmationsDialogMessage');
-            if (msgEl) {
-              msgEl.innerHTML = warning + '<br><br>Do you want to continue?';
+          if (this.frsConfirmationsDialog && this._frsConfirmationsDialogMessage) {
+            if (this._frsConfirmationsDialogMessage) {
+              this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
             } else {
               this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
             }

@@ -147,7 +147,7 @@
         ],
 
         ready: function() {
-        this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
