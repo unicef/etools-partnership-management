@@ -2,13 +2,14 @@
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
 
 <link rel="import" href="../../../styles/table-styles.html">
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
     <style include="table-styles">
-      .no-frs {
+      .padding {
         padding: 16px 20px;
       }
       .totals-row {
@@ -18,6 +19,11 @@
         padding: 16px 15px;
         line-height: 1.4;
         vertical-align: top;
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .frs-warning {
+        padding: 24px;
+        color: var(--error-color);
         border-top: 1px solid var(--dark-divider-color);
       }
     </style>
@@ -43,7 +49,7 @@
             <td>[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</td>
           </tr>
           </template>
-          <tr class="totals-row">
+          <tr class="darkRow totals-row">
             <td></td>
             <td>TOTAL</td>
             <td>[[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]] </td>
@@ -52,7 +58,10 @@
           </tr>
         </tbody>
     </table>
-    <div class="no-frs" hidden$="[[!_noFrs(frsDetails)]]">
+    <div class="frs-warning" hidden$="[[_hideFrsWarning(intervention, frsDetails)]]">
+        [[_frsWarning]]
+    </div>
+    <div class="padding" hidden$="[[!_noFrs(frsDetails)]]">
       <p>There are no fund reservations added for this intervention.</p>
     </div>
   </template>
@@ -64,20 +73,33 @@
 
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          pmpBehaviors.DateBehavior
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.FrNumbersValidationsBehavior
         ],
         // listeners: {
         //   'sort-changed': '_sortByDate'
         // },
 
         properties: {
+          intervention: {
+            type: Object
+          },
           frsDetails: {
             type: Object
-          }
+          },
+          _frsWarning: String
         },
         _noFrs: function() {
           return (!this.frsDetails || !this.frsDetails.frs || !this.frsDetails.frs.length);
         },
+        _hideFrsWarning: function() {
+          if (this._noFrs()) {
+            return true;
+          }
+          let warn = this.compareFrsTotalAmountWithIntervData(this.frsDetails, this.intervention);
+          this.set('_frsWarning', warn);
+          return !!!warn;
+        }
         // _sortByDate: function(event) {
         //   if (this._noFrs()) {
         //     return;
