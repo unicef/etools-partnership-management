@@ -53,6 +53,23 @@
         margin-top: 15px;
       }
 
+      /* amendment template download section styles start */
+      #download-template-wrapper {
+        @apply(--layout-justified);
+      }
+      #download-template-msg {
+        max-width: calc(100% - 210px);
+      }
+      #download-template-btn {
+        max-width: 185px;
+        margin: 0 0 0 25px;
+        padding: 0;
+      }
+      #download-template-a {
+        display: inherit;
+      }
+      /* amendment template download section styles end */
+
     </style>
     <etools-ajax id="deleteAjax"
                  on-success="_handleDeleteResponse"
@@ -60,6 +77,20 @@
 
     <!-- include required and not future date validator -->
     <required-and-not-future-date-validator></required-and-not-future-date-validator>
+
+    <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
+      <!-- Amendments template download -->
+      <div id="download-template-msg">
+        Use the amendment template for documenting changes and signing.
+      </div>
+      <!-- Download template btn -->
+      <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.pdf">
+        <paper-button id="download-template-btn" class="secondary-btn">
+          <iron-icon icon="cloud-download"></iron-icon>
+          Download template
+        </paper-button>
+      </a>
+    </div>
 
     <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">

@@ -30,6 +30,7 @@
 
 <link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
+<link rel="import" href="generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
 
@@ -53,6 +54,9 @@
       #generate-pca {
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
+      }
+      #generate-pca[hidden] + .col {
+        padding-left: 0;
       }
 
     </style>
@@ -227,20 +231,17 @@
           </etools-multi-selection-menu>
         </div>
         <div class="row-h flex-c t-border">
-          <div id="generate-pca" class="col col-3">
+          <div id="generate-pca" class="col col-3"
+               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
-                always-float-label
-                >
-              <!--hidden$="[[!_showGenerateReportBtn(agreement.agreement_type, agreement.attached_agreement, agreement.attached_agreement_file)]]"-->
+                always-float-label>
               <!-- Generate PCA -->
-              <label aria-hidden="true">Auto-generated PCA</label>
-              <a target="_blank" href$="/api/v2/agreements/[[agreement.id]]/pdf/">
-                <paper-button class="paper-input-input secondary-btn">
-                  <iron-icon icon="refresh"></iron-icon>
-                  GENERATE PCA
-                </paper-button>
-              </a>
+              <label aria-hidden="true">PCA Agreement to Sign</label>
+              <paper-button class="paper-input-input secondary-btn" on-tap="_openGeneratePCADialog">
+                <iron-icon icon="refresh"></iron-icon>
+                GENERATE
+              </paper-button>
             </paper-input-container>
           </div>
           <div class="col col-9">
@@ -363,9 +364,18 @@
         ],
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+
+          this.generatePCADialog = document.createElement('generate-pca-dialog');
+          this.generatePCADialog.setAttribute('id', 'generatePCADialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
+        },
+        detached: function() {
+          if (this.generatePCADialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
+          }
         },
         _hideDeleteBtn: function() {
-          if (this.agreement && this.agreement.status === 'draft' && this.agreement.attached_agreement_file) {
+          if (this._isDraft() && this.agreement.attached_agreement_file) {
             return true;
           }
           return false;
@@ -377,7 +387,7 @@
           if (!this.agreement || !this.agreement.id) {//new agreement
             return true;
           }
-          return (this.agreement.status === 'draft' || !this.agreement.attached_agreement_file);
+          return this.agreement.status === 'draft';
         },
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);
@@ -410,6 +420,10 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
+          if (this.generatePCADialog) {
+            this.generatePCADialog.agreementId = agreement.id;
+          }
+
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
@@ -484,9 +498,8 @@
           return allowEdit;
         },
 
-        _showGenerateReportBtn: function(type, attachedAgreementFile, attachedAgreementFilePath) {
-          return type === 'PCA' && (attachedAgreementFile instanceof File === false &&
-              (!attachedAgreementFilePath || attachedAgreementFilePath === ''));
+        _showGeneratePcaBtn: function(type) {
+          return type === 'PCA' && this._isDraft();
         },
 
         _partnerChanged: function(currentPartnerId) {
@@ -661,6 +674,10 @@
           });
         },
 
+        _openGeneratePCADialog: function() {
+          this.generatePCADialog.open();
+        },
+
         /**
          * Filter CP to obtain agreement CP Structure options.
          * If the result is just one option then set it as selected by default, make dropdown readonly
@@ -730,7 +747,6 @@
         }
 
       });
-
     })();
   </script>
 
