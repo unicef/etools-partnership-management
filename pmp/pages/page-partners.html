@@ -125,6 +125,7 @@
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
+                         on-delete-partner="_deletePartner"
                          on-hide-partner="_hidePartner"></partner-details>
       </div>
     </iron-pages>
@@ -236,6 +237,10 @@
       _savePartner: function(event) {
         event.stopImmediatePropagation();
         this.$.partnerData.savePartner(event.detail);
+      },
+      _deletePartner: function(event) {
+        event.stopImmediatePropagation();
+        this.$.partnerData.deletePartner(this.partner);
       },
       _hidePartner: function(event) {
         event.stopImmediatePropagation();

@@ -168,6 +168,17 @@
           this.ajaxEl.set('body', {});
 
         },
+        deletePartner: function(partner) {
+          if (!partner.id) {
+            return;
+          }
+          var endpoint = this.getEndpoint('deletePartner', {id: partner.id})
+          delete partner.id;
+          this.ajaxEl.set('method', 'DELETE');
+          this.ajaxEl.set('multiPart', false);
+          this.ajaxEl.set('prepareMultipartData', false);
+          this.ajaxEl.set('url', endpoint.url);
+        },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
