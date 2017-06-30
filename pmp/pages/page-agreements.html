@@ -270,11 +270,11 @@
 
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
-        var newAgreement = event.detail;
-        if (!newAgreement.id) {
-          newAgreement.status = 'draft';
+        var agreement = event.detail;
+        if (!agreement.id) {
+          agreement.status = 'draft';
         }
-        this.$.agreementData.saveAgreement(newAgreement, this._newAgreementSaved);
+        this.$.agreementData.saveAgreement(agreement, this._newAgreementSaved);
       },
 
       _updateAgreementStatus: function(event) {

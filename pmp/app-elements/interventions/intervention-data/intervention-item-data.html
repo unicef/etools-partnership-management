@@ -163,7 +163,7 @@
           if (!data.interventionId) {
             this.fire('toast', {text: 'Invalid intervention ID', showCloseBtn: true});
           } else {
-            if (['', 'draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+            if (['', 'draft', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
               // status change is allowed
               // set additional callback if any
               if (callback) {

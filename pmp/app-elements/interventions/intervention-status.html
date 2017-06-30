@@ -166,9 +166,9 @@
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
                 + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = this.statusChangeWarningDialogContent;
-            if (msgEl) {
-              msgEl.innerHTML = warningMessage;
+
+            if (this.statusChangeWarningDialogContent) {
+              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
               console.warn('[pmp intervetnion status change] #statusChangeWarningContent element not found!');

@@ -274,7 +274,7 @@
           if (!fileUrl) {
             return false;
           }
-          if (this._isDraft(status)) {
+          if (!this._isDraft(status)) {
             return true;
           }
           return false;
