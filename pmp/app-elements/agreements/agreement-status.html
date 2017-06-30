@@ -148,10 +148,10 @@
               this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              this.logWarn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp agreement status change');
             }
           } else {
-            this.logWarn('[pmp agreement status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp agreement status change');
           }
         },
 
