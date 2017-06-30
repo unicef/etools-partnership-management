@@ -31,9 +31,7 @@
         <thead>
           <tr>
             <th>FR#</th>
-            <th>
-               FR Posting Date
-            </th>
+            <th>FR Posting Date</th>
             <th>FR Amount $</th>
             <th>Actual $</th>
             <th>Outstanding $</th>
@@ -76,10 +74,6 @@
           pmpBehaviors.DateBehavior,
           pmpBehaviors.FrNumbersValidationsBehavior
         ],
-        // listeners: {
-        //   'sort-changed': '_sortByDate'
-        // },
-
         properties: {
           intervention: {
             type: Object
@@ -100,23 +94,6 @@
           this.set('_frsWarning', warn);
           return !!!warn;
         }
-        // _sortByDate: function(event) {
-        //   if (this._noFrs()) {
-        //     return;
-        //   }
-        //   if (event.detail.direction === 'desc') {
-        //     this.frsDetails.frs.sort(this._desc);
-        //   } else {
-        //     this.frsDetails.frs.sort(this._asc);
-        //   }
-        //   this.$.repeater.render();
-        // },
-        // _asc: function(a, b) {
-        //   return (new Date(a.start_date) - new Date(b.start_date));
-        // },
-        // _desc: function(a, b) {
-        //   return (new Date(b.start_date) - new Date(a.start_date));
-        // }
       });
 
     })();
