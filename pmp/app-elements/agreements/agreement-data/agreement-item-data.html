@@ -146,7 +146,7 @@
           if (!data.agreementId) {
             this.fire('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
           } else {
-            if (['', 'draft', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+            if (['draft', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
               // status change is allowed
               // set additional callback if any
               if (callback) {
