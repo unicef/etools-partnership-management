@@ -176,7 +176,7 @@
       </div>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[_isNotDraft(intervention.status)]]">
+    <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
       <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  intervention-status="[[intervention.status]]"
@@ -247,7 +247,9 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
-
+        _isDraft: function(status) {
+          return status === 'draft' || status === '';
+        },
         _interventionChanged: function(intervention) {
           // check if submitted to PRC was already saved
           if (intervention && intervention.id && intervention.submitted_to_prc) {
@@ -277,13 +279,13 @@
           if (!fileUrl) {
             return false;
           }
-          if (status !== 'draft') {
+          if (!this._isDraft(status)) {
             return true;
           }
           return false;
         },
         _hideDeleteBtn: function(editMode, status, fileUrl) {
-          if (status === 'draft' && fileUrl) {
+          if (this._isDraft(status) && fileUrl) {
             return true;
           }
           return false;
@@ -316,11 +318,6 @@
           }
           return null;
         },
-
-        _isNotDraft: function(status) {
-          return status !== 'draft' && status !== '';
-        },
-
         validate: function() {
           var amendments = this.$$('#intervAmendments');
           if (amendments) {
@@ -336,7 +333,7 @@
           return documentType !== 'SSFA';
         },
         _showDaysToSignedFields: function(status) {
-          return status !== 'draft';
+          return !this._isDraft(status);
         },
 
         _isSubmittedToPrcCheckReadonly: function(editMode, _lockSubmitToPrc) {
