@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -32,7 +33,10 @@
       Polymer({
         is: 'intervention-status',
 
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           interventionId: {
@@ -171,10 +175,10 @@
               this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp intervetnion status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp intervetnion status change');
             }
           } else {
-            console.warn('[pmp intervetnion status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp intervetnion status change');
           }
         },
 
