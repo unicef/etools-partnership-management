@@ -192,7 +192,6 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log(intervention);
           if (intervention && typeof intervention === 'object' && parseInt(intervention.id, 10) > 0) {
             this._parseCpOutputs();
             this._parseLocationsAndSectors();

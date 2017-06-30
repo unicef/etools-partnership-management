@@ -1,6 +1,8 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
+<link rel="import" href="../../app-behaviors/date-behavior.html">
+
 <link rel="import" href="../../../styles/table-styles.html">
 
 <dom-module id="fund-reservations-display">
@@ -24,9 +26,7 @@
           <tr>
             <th>FR#</th>
             <th>
-                <etools-data-table-column field="number" sortable>
-                  FR Posting Date
-                </etools-data-table-column>
+               FR Posting Date
             </th>
             <th>FR Amount $</th>
             <th>Actual $</th>
@@ -37,7 +37,7 @@
           <template id="repeater" is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
           <tr>
             <td>[[fr.fr_number]]</td>
-            <td>[[fr.start_date]] </td>
+            <td>[[prettyDate(fr.start_date)]] </td>
             <td>[[displayCurrencyAmount(fr.total_amt, '0.00')]] </td>
             <td>[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</td>
             <td>[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</td>
@@ -63,11 +63,12 @@
         is: 'fund-reservations-display',
 
         behaviors: [
-          etoolsBehaviors.EtoolsCurrencyBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          pmpBehaviors.DateBehavior
         ],
-        listeners: {
-          'sort-changed': '_sortByDate'
-        },
+        // listeners: {
+        //   'sort-changed': '_sortByDate'
+        // },
 
         properties: {
           frsDetails: {
@@ -77,23 +78,23 @@
         _noFrs: function() {
           return (!this.frsDetails || !this.frsDetails.frs || !this.frsDetails.frs.length);
         },
-        _sortByDate: function(event) {
-          if (this._noFrs()) {
-            return;
-          }
-          if (event.detail.direction === 'desc') {
-            this.frsDetails.frs.sort(this._desc);
-          } else {
-            this.frsDetails.frs.sort(this._asc);
-          }
-          this.$.repeater.render();
-        },
-        _asc: function(a, b) {
-          return (new Date(a.start_date) - new Date(b.start_date));
-        },
-        _desc: function(a, b) {
-          return (new Date(b.start_date) - new Date(a.start_date));
-        }
+        // _sortByDate: function(event) {
+        //   if (this._noFrs()) {
+        //     return;
+        //   }
+        //   if (event.detail.direction === 'desc') {
+        //     this.frsDetails.frs.sort(this._desc);
+        //   } else {
+        //     this.frsDetails.frs.sort(this._asc);
+        //   }
+        //   this.$.repeater.render();
+        // },
+        // _asc: function(a, b) {
+        //   return (new Date(a.start_date) - new Date(b.start_date));
+        // },
+        // _desc: function(a, b) {
+        //   return (new Date(b.start_date) - new Date(a.start_date));
+        // }
       });
 
     })();
