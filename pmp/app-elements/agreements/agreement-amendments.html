@@ -202,27 +202,22 @@
             if (amendm.id) {
               return;
             }
-            if (!amendm.signed_date) {
-              this.$$('#signedDate_' + index).invalid = true;
-              isValid = false;
-            } else if (this._signedDateIsInTheFuture(amendm.signed_date)) {
-              this.$$('#signedDate_' + index).errorMessage = 'Signed Date can not be in the future';
-              this.$$('#signedDate_' + index).invalid = true;
-              isValid = false;
+            let signedDateEl = this.$$('#signedDate_' + index);
+            if (signedDateEl) {
+              signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendm.signed_date);
+              if (!signedDateEl.validate()) {
+                isValid = false;
+              }
             }
             if (!amendm.signed_amendment) {
               this.$$('#fileUpload_' + index).invalid = true;
               isValid = false;
             }
-            if (!amendm.amendment_types.length) {
-              let amendmentTypes = this.$$('#amendmentTypes_' + index);
-              if (amendmentTypes) {
-                isValid = amendmentTypes.validate();
-              }
+            let amendmentTypes = this.$$('#amendmentTypes_' + index);
+            if (amendmentTypes && !amendmentTypes.validate()) {
+              isValid = false;
             }
-
           }.bind(this));
-
           return isValid;
         },
 

@@ -13,14 +13,12 @@
         return false;
       }
       var d = Date.parse(dateValueStr);
-      if (!isNaN(d)) {
-        // date ca not be in the future
-        return d <= Date.now();
-      } else {
+      if (isNaN(d)) {
         // invalid date string
         return false;
       }
-      return true;
+      // date ca not be in the future
+      return d <= Date.now();
     }
 
   });
