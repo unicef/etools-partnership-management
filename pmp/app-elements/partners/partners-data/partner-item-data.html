@@ -181,7 +181,7 @@
           if (!partner.id) {
             return;
           }
-          var endpoint = this.getEndpoint('deletePartner', {id: partner.id})
+          var endpoint = this.getEndpoint('deletePartner', {id: partner.id});
           this.modifiedPartnerId = partner.id;
 
           this.handleSuccResponseAdditionalCallback = succCallback;

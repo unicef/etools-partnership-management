@@ -126,7 +126,7 @@
           this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
-          this._dialogConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+            this._dialogConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
         },
