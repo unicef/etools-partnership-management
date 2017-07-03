@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -32,7 +33,10 @@
       Polymer({
         is: 'intervention-status',
 
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           interventionId: {
@@ -147,7 +151,7 @@
         ],
 
         ready: function() {
-        this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('PD/SSFA status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
@@ -160,24 +164,21 @@
           if (this.warningDialog) {
             this.removeDialog(this.warningDialog);
           }
-          if (this.statusChangeWarningDialogContent) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.statusChangeWarningDialogContent);
-          }
         },
 
         _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
-            var warningMessage = 'Are you sure you want to change agreement status from: <strong>\''
+            var warningMessage = 'Are you sure you want to change status from: <strong>\''
                 + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = this.statusChangeWarningDialogContent;
-            if (msgEl) {
-              msgEl.innerHTML = warningMessage;
+
+            if (this.statusChangeWarningDialogContent) {
+              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp intervetnion status change');
             }
           } else {
-            console.warn('[pmp agreement status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp intervetnion status change');
           }
         },
 
@@ -421,12 +422,6 @@
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
-
-        _agreementStatusChanged: function(status, oldStatus) {
-          if ((typeof oldStatus === 'undefined' || oldStatus === null) && status) {
-            this.set('_hideSecondaryButtons', false);
-          }
-        }
 
       });
     })();
