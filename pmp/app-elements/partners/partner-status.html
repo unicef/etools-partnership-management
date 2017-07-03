@@ -1,4 +1,6 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <dom-module id="partner-status">
@@ -22,7 +24,10 @@
       'use strict';
       Polymer({
         is: 'partner-status',
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           partner: {
@@ -116,6 +121,7 @@
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
 
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
         },
         detached: function() {
           if (this.warningDialog) {
@@ -130,12 +136,12 @@
         },
         _showStatusChangeConfirmationDialog: function() {
           if (!this.warningDialog) {
-            console.warn('[pmp partner status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp partner status change');
             return;
           }
 
           if (!this.statusChangeWarningDialogContent) {
-             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
+             this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
              return;
           }
           var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
