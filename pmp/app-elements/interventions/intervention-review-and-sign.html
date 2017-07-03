@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
@@ -184,11 +185,11 @@
       </etools-content-panel>
     </template>
 
-    <etools-content-panel class="content-section" panel-title="Fund Reservations">
-      <intervention-fund-reservations data-items="{{intervention.fr_numbers}}"
-                                      fr-numbers-details="[[intervention.fr_numbers_details]]"
-                                      edit-mode$="[[editMode]]"></intervention-fund-reservations>
-    </etools-content-panel>
+    <intervention-fund-reservations class="content-section"
+                                    intervention="[[intervention]]"
+                                    edit-mode="[[_getFrNumbersEditMode(editMode, intervention.id, intervention.status)]]"
+                                    on-frs-update="_handleFrsUpdate">
+    </intervention-fund-reservations>
 
   </template>
 
@@ -200,6 +201,7 @@
         is: 'intervention-review-and-sign',
 
         behaviors: [
+          EtoolsLogsBehavior,
           etoolsAppConfig.globals,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
@@ -349,6 +351,27 @@
           this.set('intervention.review_date_prc', null);
           this.set('intervention.prc_review_document_file', null);
           this.set('intervention.prc_review_document', null);
+        },
+
+        // update FR Number on intervention
+        _handleFrsUpdate: function(e) {
+          e.stopImmediatePropagation();
+          try {
+            this.set('intervention.frs_details', e.detail.frsDetails);
+            this.set('intervention.frs', e.detail.frsDetails.frs.map(function(fr) {
+              return fr.id;
+            }));
+          } catch(err) {
+            this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
+          }
+          this.fire('global-loading', {active: false});
+        },
+
+        _getFrNumbersEditMode: function(editMode, interventionId, interventionStatus) {
+          if (!editMode || !interventionId || (interventionStatus !== 'draft' && interventionStatus !== 'signed')) {
+            return false;
+          }
+          return true;
         }
 
       });

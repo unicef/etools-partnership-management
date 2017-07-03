@@ -1,21 +1,24 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../app-config/etools-app-config.html">
 
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="../../../styles/app-mixins.html">
+
+<link rel="import" href="../../app-behaviors/array-helper-behavior.html">
+
+<link rel="import" href="fr-numbers/update-fr-numbers.html">
+<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
 
 <dom-module id="intervention-fund-reservations">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style>
       [hidden] {
         display: none !important;
       }
@@ -26,127 +29,52 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply(--paper-fab-btn-green);
-        };
       }
 
-      paper-input {
-        width: 200px;
+      #frs-container {
+        padding: 16px 0;
       }
-
-      .left-col {
-        padding: 15px 0;
+      .fr-number {
+        padding: 8px 24px;
+        font-size: 16px;
+        box-sizing: border-box;
       }
-
-      .darkbg {
-        padding: 15px;
-        background-color: var(--medium-theme-background-color);
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
+      .warning {
+        padding: 24px;
       }
-      .fr-det {
-        padding: 0;
+      .warning,
+      .fr-number {
+        line-height: 24px;
+      }
+      .alert-warning {
+        padding: 0 24px 24px;
+        color: var(--error-color);
       }
     </style>
 
-    <div hidden$="[[_emptyList(dataItems.length)]]">
-      <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
-          <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$="[[!editMode]]">
-              </paper-icon-button>
-            </div>
-          </div>
-          <div class="item-content">
-            <div class="row-h">
-              <!-- FR Number -->
-              <paper-input id$="frNumber_[[index]]"
-                           label="FR Number"
-                           value="{{item.value}}"
-                           placeholder="&#8212;" readonly$="[[!editMode]]">
-              </paper-input>
-            </div>
+    <etools-ajax url="[[_frsDetailsRequestUrl]]"
+                 on-success="_frsDetailsSuccessHandler"
+                 on-fail="_frsDetailsErrorHandler">
+    </etools-ajax>
 
-            <template is="dom-if" if="[[_showFrNrDetails(item.value)]]">
-              <template is="dom-repeat" items="[[_getFrNrDetails(item.value)]]" as="itemDetail">
-                <div class="row-h fr-nrs-detalis">
-                  <div class="col col-4 left-col">
-                    <!-- Grant -->
-                    <etools-form-element-wrapper label="Grant">
-                      [[itemDetail.grant_number]]
-                    </etools-form-element-wrapper>
-                  </div>
-                  <div class="col col-8 darkbg">
-                    <div class="flex-c">
-                      <div class="row-h flex-c fr-det">
-                        <div class="col col-4">
-                          <!-- WBS -->
-                          <etools-form-element-wrapper label="WBS">
-                            [[itemDetail.wbs]]
-                          </etools-form-element-wrapper>
-                        </div>
-                        <div class="col col-4">
-                          <!-- FC Type -->
-                          <etools-form-element-wrapper label="FC Type">
-                            [[itemDetail.fc_type]]
-                          </etools-form-element-wrapper>
-                        </div>
-                        <div class="col col-4">
-                          <!-- FC Reference -->
-                          <etools-form-element-wrapper label="FC Reference">
-                            [[itemDetail.fc_ref_number]]
-                          </etools-form-element-wrapper>
-                        </div>
-                      </div>
-                      <div class="row-h flex-c fr-det">
-                        <div class="col col-4">
-                          <!-- Agreement Amount -->
-                          <etools-form-element-wrapper label="Agreement Amount">
-                            $ [[_getFormattedAmount(itemDetail.agreement_amount)]]
-                          </etools-form-element-wrapper>
-                        </div>
-                        <div class="col col-4">
-                          <!-- Commitment Amount -->
-                          <etools-form-element-wrapper label="Commitment Amount">
-                            $ [[_getFormattedAmount(itemDetail.commitment_amount)]]
-                          </etools-form-element-wrapper>
-                        </div>
-                        <div class="col col-4">
-                          <!-- Expenditure Amount -->
-                          <etools-form-element-wrapper label="Expenditure Amount">
-                            $ [[_getFormattedAmount(itemDetail.expenditure_amount)]]
-                          </etools-form-element-wrapper>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-            </template>
-          </div>
-        </div>
-      </template>
-
-    </div>
-
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      <p>There are no fund reservations added.</p>
-    </div>
-
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewFundReservation"
-                 title="Add"></paper-fab>
-    </div>
+    <etools-content-panel panel-title="Fund Reservations">
+      <paper-icon-button slot="panel-btns"
+                         icon="add"
+                         on-tap="_openFrsUpdateDialog"
+                         hidden="[[!editMode]]"
+                         disabled$="[[!editMode]]"></paper-icon-button>
+      <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
+        <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
+          <span class="fr-number">[[item.fr_number]]</span>
+        </template>
+      </div>
+      <div class="warning" hidden$="[[noFrsWarning(intervention.frs_details)]]">
+        [[_getFrsWarningText(intervention.id)]]
+      </div>
+      <div class="alert-warning" hidden$="[[_hideFrsValuesCheckWarning(intervention.frs_details, _frsValuesCheckWarning)]]">
+        [[_frsValuesCheckWarning]]
+      </div>
+    </etools-content-panel>
 
   </template>
 
@@ -158,86 +86,260 @@
         is: 'intervention-fund-reservations',
 
         behaviors: [
-          etoolsBehaviors.EtoolsCurrencyBehavior,
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsLogsBehavior,
+          etoolsAppConfig.globals,
+          pmpBehaviors.ArrayHelperBehavior,
+          etoolsBehaviors.DynamicDialogBehavior,
+          pmpBehaviors.FrNumbersValidationsBehavior
         ],
 
         properties: {
-          frNumbersDetails: {
-            type: Object,
-            value: null,
-            observer: '_detailsChanged'
-          },
+          intervention: Object,
           editMode: {
-            type: Boolean,
-            observer: '_editModeChanged'
-          }
+            type: Boolean
+          },
+          updateFrNumbersEl: {
+            type: Object
+          },
+          frsConfirmationsDialog: {
+            type: Object
+          },
+          _frsDetailsRequestUrl: String,
+          _frsDetailsRequestEndpoint: Object,
+          _lastFrsDetailsRequested: {
+            type: Array,
+            value: []
+          },
+          _lastFrsDetailsReceived: Object,
+          _frsValuesCheckWarning: {
+            type: String,
+            value: ''
+          },
+          _frsConfirmationsDialogMessage: String
         },
-        observers: [
-          '_dataItemsChanged(dataItems)'
-        ],
+
+        observers: ['_frsDetailsChanged(intervention.frs_details)'],
 
         ready: function() {
-          this.dataSetModel = {value: null};
+          this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'))
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
+        attached: function() {
+          this._createUpdateFrNumbersEl();
+          this._createFrsConfirmationsDialog();
+        },
+
+        detached: function() {
+          // remove update frs el on fr el detached
+          if (this.updateFrNumbersEl) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.updateFrNumbersEl);
+          }
+          // remove confirmations frs dialog on fr element detached
+          if (this.frsConfirmationsDialog) {
+            this.removeDialog(this.frsConfirmationsDialog);
           }
         },
 
-        _detailsChanged: function(details) {
-          if (!details) {
-            this.set('frNumbersDetails', []);
-          }
+        _createUpdateFrNumbersEl: function() {
+          // init frs update element
+          this.updateFrNumbersEl = document.createElement('update-fr-numbers');
+          this.updateFrNumbersEl.setAttribute('id', 'frNumbersUpdateEl');
+
+          // attach frs update handler (on modal/dialog close)
+          this.updateFrNumbersEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler.bind(this));
+
+          Polymer.dom(document.querySelector('body')).appendChild(this.updateFrNumbersEl);
         },
 
-        _dataItemsChanged: function(dataItems) {
-          if (!Array.isArray(dataItems)) {
-            this.set('dataItems', []);
-          } else {
-            if (dataItems.length) {
-              if (dataItems[0].value) {
-                return;
-              }
-              this.set('dataItems', dataItems.map(function(frNr) {
-                return {value: frNr};
-              }));
+        _createFrsConfirmationsDialog: function() {
+          // init frs confirmations dialog element
+          this._frsConfirmationsDialogMessage = document.createElement('span');
+          this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
+
+          this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
+              this._frsUpdatesWarningConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
+          this.frsConfirmationsDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.frsConfirmationsDialog.updateStyles();
+        },
+
+        _frsUpdateWarningMessage: function(warning) {
+          if (this.frsConfirmationsDialog && this._frsConfirmationsDialogMessage) {
+            if (this._frsConfirmationsDialogMessage) {
+              this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
+            } else {
+              this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
             }
           }
+        },
+
+        _openFrsUpdateDialog: function(frNumbersList) {
+          if (!this.editMode) {
+            return;
+          }
+          if (this.updateFrNumbersEl) {
+            // populate dialog with current frs numbers deep copy
+            let currentFrs = this._getCurrentFrs();
+            let frs = frNumbersList instanceof Array
+                ? frNumbersList
+                : currentFrs.map(function(fr) {
+                  return {fr_number: fr.fr_number};
+                });
+            this.updateFrNumbersEl.set('dataItems', frs);
+            // deactivate save button until any valid change is made
+            this.updateFrNumbersEl.set('disableConfirmBtn', true);
+            // open dialog
+            this.updateFrNumbersEl.openDialog();
+            // reset frs details request URL
+            this.set('_frsDetailsRequestUrl', null);
+          }
+        },
+
+        // get current intervention frs numbers
+        _getCurrentFrs: function() {
+          return (this.intervention.frs_details && this.intervention.frs_details.frs instanceof Array)
+              ? this.intervention.frs_details.frs : [];
+        },
+
+        frNumbersUpdateHandler: function(e) {
+          e.stopImmediatePropagation();
+          let frNumbers = e.detail.frs;
+          this.fire('global-loading', {message: 'Checking FR Numbers updates...', active: true});
+          if (frNumbers.length === 0) {
+            this._handleEmptyFrsAfterUpdate();
+            return;
+          }
+          // FR Numbers not empty
+          this._handleNotEmptyFrsAfterUpdate(frNumbers);
         },
 
         /**
-         * Add new fund reservation
+         * After FR Numbers update the numbers list might be empty.
+         * This can happen is the user removed all the existing numbers or if there is no change made
          */
-        _addNewFundReservation: function() {
-          this._addElement();
+        _handleEmptyFrsAfterUpdate: function() {
+          let currentInterventionFrs = this._getCurrentFrs();
+          if (currentInterventionFrs.length === 0) {
+            // there is no change on FR Numbers
+            this.fire('global-loading', {active: false});
+            return;
+          }
+          // all FR Numbers have been deleted
+          this._triggerPdFrsUpdate({frs: []});
+          this.fire('global-loading', {active: false});
         },
 
-        _showFrNrDetails: function(frNumber) {
-          return typeof this.frNumbersDetails === 'object' && this.frNumbersDetails[frNumber];
+        /**
+         * Updates made and FR Numbers list is not empty
+         */
+        _handleNotEmptyFrsAfterUpdate: function(frNumbers) {
+          let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
+          if (diff.length) {
+            // request FR Numbers details from server
+            this._triggerFrsDetailsRequest(frNumbers);
+            return;
+          } // else no changes have been made to FR Numbers
+          this.fire('global-loading', {active: false});
         },
 
-        _getFrNumberDetails: function(frNumber, detailProperty) {
-          if (this._showFrNrDetails(frNumber)) {
-            var value = this.frNumbersDetails[frNumber][detailProperty];
-            if (!value || (typeof value === 'string' && value === '')) {
-              return '-';
-            }
-            return value;
+        // handle frs validations warning confirmation
+        _frsUpdatesWarningConfirmationHandler: function(e) {
+          e.stopImmediatePropagation();
+          if (e.detail.confirmed) {
+            // confirmed, add numbers to intervention
+            this._triggerPdFrsUpdate(Object.assign({}, this._lastFrsDetailsReceived));
+            this.set('_lastFrsDetailsReceived', null);
+          }
+          // frs warning not confirmed/cancelled, frs update is canceled
+        },
+
+        /**
+         * Get FR Numbers details from server
+         */
+        _triggerFrsDetailsRequest: function(frNumbers) {
+          let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
+          if (this.intervention.id) {
+            url += '&intervention=' + this.intervention.id;
+          }
+          this.set('_lastFrsDetailsRequested', frNumbers);
+          this.set('_frsDetailsRequestUrl', url);
+        },
+
+        _frsDetailsSuccessHandler: function(e) {
+          e.stopImmediatePropagation();
+          let frsDetails = e.detail;
+          let warning = this.compareFrsTotalAmountWithIntervData(frsDetails, this.intervention);
+          this.set('_frsValuesCheckWarning', warning);
+          if (warning) {
+            this._frsUpdateWarningMessage(warning);
+            this.fire('global-loading', {active: false});
+            // show warning
+            this.set('_lastFrsDetailsReceived', frsDetails);
+            this._openFrNumbersAmountsValidationWarning();
+            return;
+          }
+          // append FR numbers to intervention
+          this._triggerPdFrsUpdate(frsDetails);
+        },
+
+        /**
+         * frs details request failed
+         */
+        _frsDetailsErrorHandler: function(e) {
+          e.stopImmediatePropagation();
+          this.fire('global-loading', {active: false});
+          let frs = this._lastFrsDetailsRequested.map(function(fr) {
+            return {fr_number: fr};
+          });
+          // open FR Numbers modal with the same state as before details request
+          this._openFrsUpdateDialog(frs);
+          this.set('_lastFrsDetailsRequested', []);
+          // show the invalid frs warning
+          this.fire('toast', {
+            text: e.detail.request.detail.request.response.error,
+            showCloseBtn: true
+          });
+
+        },
+
+        // trigger new FR Numbers update on main intervention
+        _triggerPdFrsUpdate: function(newFrsDetails) {
+          this.fire('frs-update', {frsDetails: newFrsDetails});
+        },
+
+        noFrsWarning: function(frsDetails) {
+          let frs = this._getCurrentFrs();
+          return !!frs.length;
+        },
+
+        _openFrNumbersAmountsValidationWarning: function() {
+          if (this.frsConfirmationsDialog) {
+            this.frsConfirmationsDialog.opened = true;
           }
         },
-        _getFrNrDetails: function(frNumber) {
-          if (this._showFrNrDetails(frNumber)) {
-            return this.frNumbersDetails[frNumber];
+
+        _getFrsWarningText: function(interventionId) {
+          let msg = 'There are no fund reservations numbers added.';
+          if (!interventionId) {
+            msg = 'You can not add FR Numbers. The PD/SSFA needs to be saved first.';
           }
-          return [];
+          return msg;
         },
 
-        _getFormattedAmount: function(amount) {
-          return this.displayCurrencyAmount(amount, '0');
+        _hideFrsValuesCheckWarning: function(frsDetails, frsValuesCheckWarningMsg) {
+          let frs = this._getCurrentFrs();
+          if (frs.length === 0) {
+            return true;
+          }
+          return !frsValuesCheckWarningMsg;
+        },
+
+        _frsDetailsChanged: function(frsDetails) {
+          let self = this;
+          this.debounce('init-frs-warning', function() {
+            self.set('_frsValuesCheckWarning', self.compareFrsTotalAmountWithIntervData(frsDetails, self.intervention));
+          }, 10);
         }
+
       });
     })();
   </script>
