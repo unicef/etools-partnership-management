@@ -493,7 +493,7 @@
           interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
         }
 
-        if (event && interventionData.amendments) {
+        if (event && !_.isEmpty(interventionData.amendments)) {
           //* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
           this._showFinalizeAmendmentDialog();
           return;
