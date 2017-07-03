@@ -7,6 +7,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
+<link rel="import" href="../app-behaviors/array-helper-behavior.html">
+
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
@@ -221,6 +223,7 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior
+        pmpBehaviors.ArrayHelperBehavior
       ],
       properties: {
         interventionPage: {
@@ -277,7 +280,13 @@
             partner_focal_points: [],
             partner_authorized_officer_signatory: undefined,
             offices: [],
-            fr_numbers: undefined,
+            frs: [],
+            frs_details: {
+              frs: [],
+              total_frs_amt: 0,
+              earliest_start_date: null,
+              latest_end_date: null
+            },
             planned_visits: [],
             sector_locations: [],
             planned_budget: {},
@@ -511,12 +520,12 @@
         }
 
         // prepare fr numbers
-        if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
-          && this._objectFieldIsModified('fr_numbers')) {
-          interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
-            return frNumber.value;
-          });
+        if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
+          interventionData.frs = this.intervention.frs;
         }
+        // frs_details are readonly, we do not have to send them to backend
+        delete interventionData.frs_details;
+
         //no need to send planned_budget.total to backend
         if (interventionData.planned_budget) {
           delete interventionData.planned_budget.total;
@@ -524,9 +533,6 @@
             delete interventionData.planned_budget.interventionWasSaved;
           }
         }
-
-        // fr_numbers_details are readonly, we do not have to send them to backend
-        delete interventionData.fr_numbers_details;
 
         // prepare attachments
         interventionData.attachments = this._prepareAttachments();
@@ -541,6 +547,10 @@
         }
 
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+      },
+      _needFrsUpdate: function(frs) {
+        let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
+        return diff.length > 0;
       },
       _getModifiedReviewAndSign: function() {
         var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
