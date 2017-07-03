@@ -4,13 +4,14 @@
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-selector">
   <template>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       #agreement-selector-content {
         padding: 0;
       }
@@ -27,7 +28,7 @@
                                       dynamic-align
                                       required auto-validate
                                       error-message="Partner is required"
-                                      readonly$="[[!editMode]]">
+                                      readonly$="[[!editMode]]" starred>
         </etools-single-selection-menu>
       </div>
 
@@ -42,7 +43,7 @@
                                         dynamic-align
                                         required auto-validate
                                         error-message="Agreement required"
-                                        readonly$="[[!editMode]]">
+                                        readonly$="[[!editMode]]" starred>
         </etools-single-selection-menu>
 
       </div>
