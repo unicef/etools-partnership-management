@@ -11,7 +11,7 @@
       :host {
         --ecp-content: {
           padding: 0px;
-        }
+        };
         display: block;
         position: relative;
         -webkit-box-sizing: border-box;
@@ -41,6 +41,7 @@
       .status-container {
         @apply(--layout-horizontal);
         height: 40px;
+        @apply(--etools-status-container);
       }
       .status-icon, .status {
         @apply(--layout-vertical);

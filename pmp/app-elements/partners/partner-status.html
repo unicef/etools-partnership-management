@@ -10,7 +10,11 @@
         width: 100%;
         --etools-status-label-style: {
           font-weight: normal;
-        }
+        };
+        --etools-status-container: {
+          height: auto;
+          min-height: 40px;
+        };
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
@@ -42,16 +46,16 @@
             type: Object
           },
           possibleStatuses: {
-          type: Array,
-          value: function() {
+            type: Array,
+            value: function() {
               return [
                 {
                   label: 'Not Synced',
                   icon: 'info',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' +
-                    this.getComputedStyleValue('--status-not-synced-color'),
+                  this.getComputedStyleValue('--status-not-synced-color'),
                   hidden: true,
                   completed: false
                 },
@@ -59,7 +63,7 @@
                   label: 'Synced from VISION',
                   icon: 'autorenew',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
                   hidden: true,
                   completed: false
@@ -68,7 +72,7 @@
                   label: 'Blocked in VISION',
                   icon: 'block',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
                   hidden: true,
                   completed: false
@@ -78,7 +82,7 @@
                   icon: 'delete-forever',
                   iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   iconContainerStyles: 'background-color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   hidden: true,
                   completed: false
                 },
@@ -141,8 +145,8 @@
           }
 
           if (!this.statusChangeWarningDialogContent) {
-             this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
-             return;
+            this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
+            return;
           }
           var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
           this.statusChangeWarningDialogContent.innerHTML = warningMessage;
@@ -180,26 +184,26 @@
         },
 
         _computeAvailableActions: function(hidden, editMode) {
-            this._setAllActionsToHidden();
-            let availableOptions = ['Save'];
-            if (!editMode) {
-              return;
-            }
-            if (!hidden) {
-              availableOptions.push('Hide');
+          this._setAllActionsToHidden();
+          let availableOptions = ['Save'];
+          if (!editMode) {
+            return;
+          }
+          if (!hidden) {
+            availableOptions.push('Hide');
+          }
+
+          for (let key in this.possibleActions) {
+            let actionName = this.possibleActions[key].label;
+            let config = this.possibleActions[key];
+
+            if (availableOptions.indexOf(actionName) > -1) {
+              config.hidden = false;
             }
 
-            for (let key in this.possibleActions) {
-              let actionName = this.possibleActions[key].label;
-              let config = this.possibleActions[key];
-
-              if (availableOptions.indexOf(actionName) > -1) {
-                config.hidden = false;
-              }
-
-              this.set(['possibleActions', key], null);
-              this.set(['possibleActions', key], config);
-            }
+            this.set(['possibleActions', key], null);
+            this.set(['possibleActions', key], config);
+          }
         },
         _computeAvailableStatuses: function() {
           var activeStatus;
@@ -219,7 +223,7 @@
               break;
           }
 
-          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+          for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
             let workingStatus = this.possibleStatuses[key];
             if (workingStatus.label === activeStatus) {
               workingStatus.completed = true;
@@ -239,7 +243,7 @@
 
         _showBlockedStatus: function() {
           if (this.partner.deleted_flag === false &&
-            (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
+              (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
             return true;
           }
           return false;
