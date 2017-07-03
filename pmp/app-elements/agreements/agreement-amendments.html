@@ -10,6 +10,7 @@
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -117,7 +118,7 @@
                                    no-init show-clear-btn
                                    readonly$="[[_showReadonlyDetails(item.id)]]"
                                    validator="required-and-not-future-date-validator"
-                                   auto-validate
+                                   auto-validate$="[[!_showReadonlyDetails(item.id)]]"
                                    error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]">
                 </etools-date-input>
               </div>
@@ -137,19 +138,30 @@
               </div>
             </div>
             <div class="row-h flex-c">
-              <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
-                                           label="Authorized Officers"
-                                           placeholder="&#8212;"
-                                           options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
-                                           selected-values="{{item.amendment_types}}"
-                                           hide-search
-                                           error-message="Please select amendment type"
-                                           required
-                                           readonly$="[[_showReadonlyDetails(item.id)]]"
-                                           trigger-value-change-event
-                                           on-etools-selected-items-changed="_onAmendmentTypesSelected"
-                                           on-focused-changed="_onAmendmentTypesFocusChanged">
-              </etools-multi-selection-menu>
+              <template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">
+                <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
+                                             label="Amendment Types"
+                                             placeholder="&#8212;"
+                                             options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
+                                             selected-values="{{item.amendment_types}}"
+                                             hide-search
+                                             error-message="Please select amendment type"
+                                             required
+                                             trigger-value-change-event
+                                             on-etools-selected-items-changed="_onAmendmentTypesSelected"
+                                             on-focused-changed="_onAmendmentTypesFocusChanged">
+                </etools-multi-selection-menu>
+              </template>
+              <template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">
+                <!-- readonly amendment types -->
+                <etools-form-element-wrapper label="Amendment Types">
+                  <span class="placeholder" hidden$="[[item.amendment_types.length]]">&#8212;</span>
+                  <span hidden$="[[!item.amendment_types.length]]">
+                    [[_getReadonlyAmendmentTypes(item.amendment_types)]]
+                  </span>
+                </etools-form-element-wrapper>
+              </template>
+
             </div>
 
 
@@ -211,6 +223,14 @@
             signed_amendment: null,
             amendment_types: []
           };
+
+          // test
+          this.push('dataItems', {
+            id: 3,
+            signed_date: null,
+            signed_amendment: null,
+            amendment_types: ['Change IP name', 'CP extension']
+          });
         },
         _getAmendmentTypes: function(agreementType, _amendmentTypes) {
           if (['PCA', 'SSFA'].indexOf(agreementType) === -1 ||
@@ -393,6 +413,23 @@
               }
             }
           }, 10);
+        },
+
+        _getReadonlyAmendmentTypes: function(types) {
+          if (types instanceof Array && types.length > 0) {
+            // search for item amendments types
+            let amTypes = this._amendmentTypes.filter(function(t) {
+              return types.indexOf(t.value) > -1;
+            });
+            if (amTypes.length) {
+              // map to get the labels
+              let amTypesFiltered = amTypes.map(function(t) {
+                return t.label;
+              });
+              return amTypesFiltered.join(' | ');
+            }
+          }
+          return null;
         }
 
       });
