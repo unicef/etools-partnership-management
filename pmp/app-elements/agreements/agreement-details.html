@@ -435,6 +435,8 @@
 
             // keep a copy of the agreement before changes are made and use it later to save only the changes
             this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+
+            this.fieldValidationReset('#cpStructure');
             this.set('enableEditForAuthorizedOfficers', false);
 
             // forces etools-single-file to redraw the element
@@ -684,7 +686,8 @@
          */
         _countryProgrammesChanged: function(cp, agreement) {
           let cpStructure = [];
-          if (agreement && !this._allowFieldEditing('cpStructure', agreement.status, this.editMode)) {
+          let isEditableField = this._allowFieldEditing('cpStructure', agreement.status, this.editMode);
+          if (agreement && !isEditableField) {
             // old agreement / agreement not in 'draft' status
             cpStructure = cp;
           } else {
@@ -693,8 +696,14 @@
           }
 
           this.set('cpStructureOptions', cpStructure);
-          if (cpStructure.length === 1) {
+          let cpStructureIsOld = this._hasNotAvailableCpAssigned(this.agreement.country_programme);
+          if (cpStructure.length === 1 && !cpStructureIsOld) {
             this.set('agreement.country_programme', cpStructure[0].id);
+          }
+          if (cpStructureIsOld && isEditableField && this.agreement && this.agreement.agreement_type === 'PCA') {
+            // let the user know cp structure is expired/old
+            this.fire('toast', {text: 'This agreement has an old/expired CP Structure!', showCloseBtn: true});
+            this.set('agreement.country_programme', null);
           }
         },
 
@@ -744,6 +753,18 @@
           // restore officers selection (because you do not have any new amendment for changing this field)
           this._initAuthorizedOfficers(this.originalAgreementData.authorized_officers);
           this.set('enableEditForAuthorizedOfficers', false);
+        },
+
+        _hasNotAvailableCpAssigned: function(agCp) {
+          if (agCp > 0 && this.cpStructureOptions instanceof Array) {
+            let cp = this.cpStructureOptions.find(function(cp) {
+              return parseInt(cp.id, 10) === parseInt(agCp, 10);
+            });
+            if (!cp) {
+              return true;
+            }
+          }
+          return false;
         }
 
       });
