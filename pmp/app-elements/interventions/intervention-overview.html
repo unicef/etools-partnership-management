@@ -17,6 +17,7 @@
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
+<link rel="import" href="fund-reservations-display.html">
 
 <dom-module id="intervention-overview">
 
@@ -137,6 +138,10 @@
         </div>
       </div>
     </paper-material>
+
+    <etools-content-panel id="fund-reservation-display" class="content-section" panel-title="Implementation Status">
+      <fund-reservations-display intervention="[[intervention]]" frs-details="[[intervention.frs_details]]"></fund-reservations-display>
+    </etools-content-panel>
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Visits">
       <monitoring-visits-list intervention-id="[[intervention.id]]"></monitoring-visits-list>

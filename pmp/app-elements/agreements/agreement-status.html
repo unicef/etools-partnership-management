@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
@@ -13,8 +14,6 @@
     </style>
     <etools-status statuses="[[possibleStatuses]]"
                     actions="[[possibleActions]]"
-                    on-agreement-draft-event="_setStatusDraft"
-                    on-agreement-cancel-event="_setStatusCanceled"
                     on-agreement-suspend-event="_setStatusSuspended"
                     on-agreement-terminate-event="_setStatusTerminated"
                     on-agreement-unsuspend-event="_setStatusNotSuspended">
@@ -31,8 +30,10 @@
       Polymer({
         is: 'agreement-status',
 
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
-
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
         properties: {
           agreementId: {
             type: Number
@@ -86,16 +87,6 @@
                   hidden: false,
                   completed: false
                 },
-                {
-                  label: 'Cancelled',
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Closed',
-                  hidden: false,
-                  completed: false
-                },
               ];
             }
           },
@@ -108,11 +99,6 @@
                 primary: true,
                 event: 'save-agreement'
                 // save-agreement event is handeled by the parnent
-              },
-              {
-                label: 'Change to draft',
-                hidden: true,
-                event: 'agreement-draft-event'
               },
               {
                 label: 'Suspend',
@@ -128,11 +114,6 @@
                 label: 'Terminate',
                 hidden: true,
                 event: 'agreement-terminate-event'
-              },
-              {
-                label: 'Cancel',
-                hidden: true,
-                event: 'agreement-cancel-event'
               },
             ]
           },
@@ -162,15 +143,15 @@
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
               + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = this.statusChangeWarningDialogContent;
-            if (msgEl) {
-              msgEl.innerHTML = warningMessage;
+
+            if (this.statusChangeWarningDialogContent) {
+              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp agreement status change');
             }
           } else {
-            console.warn('[pmp agreement status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp agreement status change');
           }
         },
 
@@ -196,17 +177,14 @@
           let availableOptions = ['Save'];
 
           switch (status) {
-            case 'draft':
-              availableOptions.push('Cancel');
-              break;
             case 'signed':
-              if (agreementType !== 'SSFA') {
+              if (this.agreementType !== 'SSFA') {
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
               }
               break;
             case 'active':
-              if (agreementType !== 'SSFA') {
+              if (this.agreementType !== 'SSFA') {
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
               }
@@ -217,15 +195,6 @@
               availableOptions.push('Unsuspend');
               break;
             case 'terminated':
-              // removes Save option
-              availableOptions.pop();
-              break;
-            case 'cancelled':
-              // removes Save option
-              availableOptions.pop();
-              availableOptions.push('Change to draft');
-              break;
-            case 'closed':
               // removes Save option
               availableOptions.pop();
               break;
@@ -260,7 +229,6 @@
                 'Draft',
                 'Signed',
                 'Ended',
-                'Closed',
               ];
               activeStatus = 'Draft';
               break;
@@ -270,7 +238,6 @@
                 'Draft',
                 'Signed',
                 'Ended',
-                'Closed',
               ];
               activeStatus = 'Signed';
               break;
@@ -280,7 +247,6 @@
                 'Draft',
                 'Signed',
                 'Ended',
-                'Closed',
               ];
               activeStatus = 'Signed';
               break;
@@ -291,7 +257,6 @@
                 'Signed',
                 'Suspended',
                 'Ended',
-                'Closed',
               ];
               activeStatus = 'Suspended';
               break;
@@ -302,28 +267,8 @@
                 'Signed',
                 'Terminated',
                 'Ended',
-                'Closed',
               ];
               activeStatus = 'Terminated';
-              break;
-
-            case 'cancelled':
-              availableStatuses = [
-                'Draft',
-                'Cancelled',
-                'Closed',
-              ];
-              activeStatus = 'Cancelled';
-              break;
-
-            case 'closed':
-              availableStatuses = [
-                'Draft',
-                'Signed',
-                'Ended',
-                'Closed',
-              ];
-              activeStatus = 'Closed';
               break;
 
             case 'ended':
@@ -339,7 +284,6 @@
                 'Draft',
                 'Signed',
                 'Ended',
-                'Closed',
               ];
               activeStatus = '';
               break;
@@ -380,10 +324,10 @@
             return;
           }
 
-          if (newStatus === 'draft' || newStatus === 'canceled') {
+          if (newStatus === 'draft') {
             // if agreement was not saved (is new) or the status is already changed
-            // from draft/canceled, stop status change
-            if (this.newAgreement || (this.status !== 'draft' && this.status !== 'cancelled')) {
+            // from draft, stop status change
+            if (this.newAgreement || this.status !== 'draft') {
               return false;
             }
           }
@@ -401,17 +345,10 @@
           this._updateStatus('terminated');
         },
 
-        _setStatusDraft: function() {
-          this._updateStatus('draft');
-        },
-
         _setStatusSuspended: function() {
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function() {
-          this._updateStatus('cancelled');
-        },
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },
