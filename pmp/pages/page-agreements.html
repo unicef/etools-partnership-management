@@ -271,7 +271,7 @@
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
         var agreementData = event.detail;
-        if(!agreementData.id) {
+        if (!agreementData.id) {
           agreementData.status = 'draft';
         }
         this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
