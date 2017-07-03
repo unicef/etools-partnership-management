@@ -54,10 +54,41 @@
         margin-top: 15px;
       }
 
+      /* amendment template download section styles start */
+      #download-template-wrapper {
+        @apply(--layout-justified);
+      }
+      #download-template-msg {
+        max-width: calc(100% - 210px);
+      }
+      #download-template-btn {
+        max-width: 185px;
+        margin: 0 0 0 25px;
+        padding: 0;
+      }
+      #download-template-a {
+        display: inherit;
+      }
+      /* amendment template download section styles end */
+
     </style>
     <etools-ajax id="deleteAjax"
                  on-success="_handleDeleteResponse"
                  on-fail="_handleDeleteError"></etools-ajax>
+
+    <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
+      <!-- Amendments template download -->
+      <div id="download-template-msg">
+        Use the amendment template for documenting changes and signing.
+      </div>
+      <!-- Download template btn -->
+      <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.pdf">
+        <paper-button id="download-template-btn" class="secondary-btn">
+          <iron-icon icon="cloud-download"></iron-icon>
+          Download template
+        </paper-button>
+      </a>
+    </div>
 
     <div id="amendments-wrapper" hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
@@ -83,19 +114,6 @@
             <!-- new, unsaved amendment, edit mode -->
             <template is="dom-if" if="[[!_showReadonlyDetails(item.id)]]">
               <div class="row-h">
-
-                <!-- Uncomment this block once PCA agreement generation is ready on backend side -->
-
-                <!--<div class="col col-3" hidden$="[[_hideGenerateBtn(item.signed_amendment)]]">-->
-                  <!--<paper-input-container class="form-field-wrapper secondary-btn-wrapper" always-float-label>-->
-                    <!--&lt;!&ndash; Auto-generated PCA Amendment &ndash;&gt;-->
-                    <!--<label aria-hidden="true">Auto-generated PCA Amendment</label>-->
-                    <!--<paper-button class="paper-input-input secondary-btn">-->
-                      <!--<iron-icon icon="refresh"></iron-icon>-->
-                      <!--GENERATE PCA-->
-                    <!--</paper-button>-->
-                  <!--</paper-input-container>-->
-                <!--</div>-->
                 <div class="col col-4">
                   <!-- Signed Date -->
                   <etools-date-input id$="signedDate_[[index]]"
@@ -321,17 +339,6 @@
           }
           return false;
         },
-
-        /**
-         *  TODO: to be revised
-         *  uncomment when PCA Amendment generation will be available
-         */
-        /* _hideGenerateBtn: function(signedAmendment) {
-          if (signedAmendment) {
-            return true;
-          }
-          return false;
-        }, */
 
         /**
          * Check if amendment has at least an amendment type selected

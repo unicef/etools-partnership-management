@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -15,7 +16,6 @@
                    actions="[[possibleActions]]"
                    on-intervention-draft-event="_setStatusDraft"
                    on-intervention-active-event="_setStatusActive"
-                   on-intervention-cancel-event="_setStatusCanceled"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_setStatusNotSuspended">
@@ -32,7 +32,10 @@
       Polymer({
         is: 'intervention-status',
 
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           interventionId: {
@@ -85,11 +88,6 @@
                   completed: false
                 },
                 {
-                  label: 'Cancelled',
-                  hidden: false,
-                  completed: false
-                },
-                {
                   label: 'Closed',
                   hidden: false,
                   completed: false
@@ -132,11 +130,6 @@
                 hidden: true,
                 event: 'intervention-terminate-event'
               },
-              {
-                label: 'Cancel',
-                hidden: true,
-                event: 'intervention-cancel-event'
-              },
             ]
           },
           warningDialog: Object,
@@ -166,15 +159,15 @@
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
                 + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = this.statusChangeWarningDialogContent;
-            if (msgEl) {
-              msgEl.innerHTML = warningMessage;
+
+            if (this.statusChangeWarningDialogContent) {
+              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp intervetnion status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp intervetnion status change');
             }
           } else {
-            console.warn('[pmp intervetnion status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp intervetnion status change');
           }
         },
 
@@ -200,9 +193,6 @@
             let availableOptions = ['Save'];
 
             switch (status) {
-              case 'draft':
-                availableOptions.push('Cancel');
-                break;
               case 'active':
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
@@ -215,11 +205,6 @@
               case 'terminated':
                 // removes Save option
                 availableOptions.pop();
-                break;
-              case 'cancelled':
-                // removes Save option
-                availableOptions.pop();
-                availableOptions.push('Change to draft');
                 break;
               case 'closed':
                 // removes Save option
@@ -295,16 +280,6 @@
               activeStatus = 'Terminated';
               break;
 
-            case 'cancelled':
-              availableStatuses = [
-                'Draft',
-                'Signed',
-                'Cancelled',
-                'Closed',
-              ];
-              activeStatus = 'Cancelled';
-              break;
-
             case 'closed':
               availableStatuses = [
                 'Draft',
@@ -372,12 +347,10 @@
             return;
           }
 
-          if (newStatus === 'draft' || newStatus === 'cancelled') {
+          if (newStatus === 'draft' && this.status !== 'draft') {
             // if agreement was not saved (is new) or the status is already changed
-            // from draft/cancelled, stop status change
-            if (this.status !== 'draft' && this.status !== 'cancelled') {
-              return false;
-            }
+            // from draft, stop status change
+            return false;
           }
 
           if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
@@ -412,9 +385,6 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function() {
-          this._updateStatus('cancelled');
-        },
         _setStatusNotSuspended: function() {
           this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
         },

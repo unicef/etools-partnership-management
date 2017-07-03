@@ -229,7 +229,7 @@
         </div>
         <div class="row-h flex-c t-border">
           <div id="generate-pca" class="col col-3"
-               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
+               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -339,10 +339,6 @@
             type: Array,
             value: []
           },
-          isDraft: {
-            type: Boolean,
-            value: true
-          },
           oldSelectedPartnerId: Number,
           countryProgrammes: {
             type: Array,
@@ -357,7 +353,6 @@
         observers: [
           '_agreementFieldChanged(agreement.*)',
           '_partnerChanged(agreement.partner)',
-          '_computeIsDraft(agreement.status)',
           '_countryProgrammesChanged(countryProgrammes, agreement)'
         ],
         ready: function() {
@@ -373,7 +368,7 @@
           }
         },
         _hideDeleteBtn: function() {
-          if (this.agreement && this.agreement.attached_agreement_file && this.isDraft) {
+          if (this._isDraft() && this.agreement && this.agreement.attached_agreement_file) {
             return true;
           }
           return false;
@@ -385,7 +380,7 @@
           if (!this.agreement || !this.agreement.id) {//new agreement
             return true;
           }
-          return (this.isDraft);
+          return this._isDraft();
         },
         _isNewAgreementChanged: function(isNew) {
           this._setDraftStatus(this.editMode, isNew);
@@ -396,13 +391,13 @@
         },
 
         _setDraftStatus: function(editMode, isNewAgreement) {
-          if (editMode && isNewAgreement && this.agreement && !this.isDraft) {
+          if (editMode && isNewAgreement && this.agreement && this.agreement.status !== 'draft') {
             this.set('agreement.status', 'draft');
           }
         },
 
         _showAmendments: function(type, status) {
-          if (type === 'PCA' && status !== 'draft' && status !== '') {
+          if (type === 'PCA' && status !== 'draft') {
             return true;
           }
           return false;
@@ -456,23 +451,14 @@
           }
         },
 
-        _resetSignedByValidations: function() {
-          this.fieldValidationReset('#endDateField');
-          this.fieldValidationReset('#signedByPartner');
-          this.fieldValidationReset('#signedByPartnerDateField');
-          this.fieldValidationReset('#signedByUnicef');
-          this.fieldValidationReset('#signedByUnicefDateField');
-        },
-
-        _resetOfficersField: function() {
-          var selectedOfficers = this.$.authorizedOfficers;
-          selectedOfficers._updateInvalidState(false);
-          selectedOfficers.resetSelection();
-        },
-
-        _computeIsDraft: function(status) {
-          let isDraft = (status === 'draft' || status === '');
-          this.set('isDraft', isDraft);
+        /**
+         * Verify if agreement status is 'draft'
+         */
+        _isDraft: function() {
+          if (!this.agreement || !this.agreement.status) {
+            return false;
+          }
+          return this.agreement.status === 'draft' || this.agreement.status === '';
         },
 
         _allowEdit: function(agreementStatus, editMode) {
@@ -480,7 +466,7 @@
           if (!editMode) {
             return false;
           }
-          if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this.isDraft)) {
+          if (!(this.agreement && this.agreement.id > 0) || (agreementStatus && this._isDraft())) {
             return true;
           }
           return false;
@@ -500,7 +486,7 @@
         },
 
         _showGeneratePcaBtn: function(type) {
-          return type === 'PCA' && this.isDraft;
+          return type === 'PCA' && this._isDraft();
         },
 
         _partnerChanged: function(currentPartnerId) {
@@ -582,10 +568,10 @@
                 // start and end dates are sent to server only is agreement type is MOU and were modified
                 if (this.agreement.agreement_type === 'MOU') {
                   if (this.agreement.start !== this.originalAgreementData.start) {
-                    changes['start'] = this.agreement.start;
+                    changes.start = this.agreement.start;
                   }
                   if (this.agreement.end !== this.originalAgreementData.end) {
-                    changes['end'] = this.agreement.end;
+                    changes.end = this.agreement.end;
                   }
                 }
               } else {

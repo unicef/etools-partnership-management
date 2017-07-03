@@ -1,4 +1,6 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <dom-module id="partner-status">
@@ -8,7 +10,11 @@
         width: 100%;
         --etools-status-label-style: {
           font-weight: normal;
-        }
+        };
+        --etools-status-container: {
+          height: auto;
+          min-height: 40px;
+        };
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
@@ -22,7 +28,10 @@
       'use strict';
       Polymer({
         is: 'partner-status',
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           partner: {
@@ -41,16 +50,16 @@
             type: Object
           },
           possibleStatuses: {
-          type: Array,
-          value: function() {
+            type: Array,
+            value: function() {
               return [
                 {
                   label: 'Not Synced',
                   icon: 'info',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' +
-                    this.getComputedStyleValue('--status-not-synced-color'),
+                  this.getComputedStyleValue('--status-not-synced-color'),
                   hidden: true,
                   completed: false
                 },
@@ -58,7 +67,7 @@
                   label: 'Synced from VISION',
                   icon: 'autorenew',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
                   hidden: true,
                   completed: false
@@ -67,7 +76,7 @@
                   label: 'Blocked in VISION',
                   icon: 'block',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
                   hidden: true,
                   completed: false
@@ -77,7 +86,7 @@
                   icon: 'delete-forever',
                   iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   iconContainerStyles: 'background-color: ' +
-                    this.getComputedStyleValue('--primary-background-color'),
+                  this.getComputedStyleValue('--primary-background-color'),
                   hidden: true,
                   completed: false
                 },
@@ -117,7 +126,9 @@
           this.statusChangeWarningDialogContent = document.createElement('p');
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
-              this._dialogConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+          this._dialogConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
         },
         detached: function() {
           if (this.warningDialog) {
@@ -142,15 +153,16 @@
         },
         _showConfirmationDialog: function(message) {
           if (!this.warningDialog) {
-            console.warn('[pmp partner status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp partner status change');
             return;
           }
 
           if (!this.statusChangeWarningDialogContent) {
-             console.warn('[pmp partner status change] #statusChangeWarningContent element not found!');
-             return;
+            this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
+            return;
           }
-          this.statusChangeWarningDialogContent.innerHTML = message;
+          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
           this.warningDialog.opened = true;
         },
 
@@ -185,26 +197,26 @@
         },
 
         _computeAvailableActions: function(hidden, editMode) {
-            this._setAllActionsToHidden();
-            let availableOptions = ['Save', 'Delete'];
-            if (!editMode) {
-              return;
-            }
-            if (!hidden) {
-              availableOptions.push('Hide');
+          this._setAllActionsToHidden();
+          let availableOptions = ['Save', 'Delete'];
+          if (!editMode) {
+            return;
+          }
+          if (!hidden) {
+            availableOptions.push('Hide');
+          }
+
+          for (let key in this.possibleActions) {
+            let actionName = this.possibleActions[key].label;
+            let config = this.possibleActions[key];
+
+            if (availableOptions.indexOf(actionName) > -1) {
+              config.hidden = false;
             }
 
-            for (let key in this.possibleActions) {
-              let actionName = this.possibleActions[key].label;
-              let config = this.possibleActions[key];
-
-              if (availableOptions.indexOf(actionName) > -1) {
-                config.hidden = false;
-              }
-
-              this.set(['possibleActions', key], null);
-              this.set(['possibleActions', key], config);
-            }
+            this.set(['possibleActions', key], null);
+            this.set(['possibleActions', key], config);
+          }
         },
         _computeAvailableStatuses: function() {
           var activeStatus;
@@ -224,7 +236,7 @@
               break;
           }
 
-          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+          for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
             let workingStatus = this.possibleStatuses[key];
             if (workingStatus.label === activeStatus) {
               workingStatus.completed = true;
@@ -244,7 +256,7 @@
 
         _showBlockedStatus: function() {
           if (this.partner.deleted_flag === false &&
-            (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
+              (typeof this.partner.blocked !== 'undefined' && this.partner.blocked === true)) {
             return true;
           }
           return false;
