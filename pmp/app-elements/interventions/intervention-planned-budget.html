@@ -68,12 +68,12 @@
 
       <div slot="panel-btns" id="edit-btns" hidden$="[[!editMode]]">
         <paper-icon-button icon="cancel"
-                           hidden="[[!_showCancelBtn(editMode, editablePlannedBudget)]]"
+                           hidden$="[[!_showCancelBtn(editMode, editablePlannedBudget)]]"
                            title="Cancel"
                            on-tap="_cancelEdit">
         </paper-icon-button>
         <paper-icon-button icon="create"
-                           hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]"
+                           hidden$="[[!_showEditBtn(editMode, editablePlannedBudget)]]"
                            title="Edit"
                            on-tap="_editPlannedBudget">
         </paper-icon-button>
