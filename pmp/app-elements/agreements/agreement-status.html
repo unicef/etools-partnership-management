@@ -71,14 +71,14 @@
                 {
                   label: 'Suspended',
                   icon: 'av:pause-circle-filled',
-                  iconColor: this.getComputedStyleValue('--warning-color'),
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
                   hidden: false,
                   completed: false
                 },
                 {
                   label: 'Terminated',
                   icon: 'report-problem',
-                  iconColor: this.getComputedStyleValue('--error-color'),
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   hidden: false,
                   completed: false
                 },
@@ -333,7 +333,7 @@
           }
           if (newStatus === 'suspended' || newStatus === 'terminated') {
             if (this.newAgreement || (this.status !== 'suspended'
-              && this.status !== 'terminated' && this.status !== 'active')) {
+              && this.status !== 'terminated' && this.status !== 'signed')) {
               return false;
             }
           }
@@ -350,7 +350,7 @@
         },
 
         _setStatusNotSuspended: function() {
-          this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
+          this._updateStatus('signed');
         },
 
       });
