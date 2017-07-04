@@ -42,7 +42,7 @@
             notify: true,
             observer: '_partnerIdChanged'
           },
-          modifiedPartnerId: {
+          deletedPartnerId: {
             type: Number,
           },
           withUpload: Boolean,
@@ -130,7 +130,7 @@
             });
           }
           if (this.$.ajax.get('method') === 'DELETE') {
-            etoolsAppConfig.db.table('partners').delete(this.modifiedPartnerId).then(function() {
+            etoolsAppConfig.db.table('partners').delete(this.deletedPartnerId).then(function() {
               self.fire('reload-list');
             });
           }
@@ -168,7 +168,7 @@
             return;
           }
           var endpoint = this.getEndpoint('deletePartner', {id: partner.id});
-          this.modifiedPartnerId = partner.id;
+          this.deletedPartnerId = partner.id;
 
           this.handleSuccResponseAdditionalCallback = succCallback;
           this.handleErrResponseAdditionalCallback = errCallback;

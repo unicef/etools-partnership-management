@@ -41,10 +41,7 @@
             type: Boolean,
             value: false
           },
-          dialogClosedEventToTrigger: {
-            type: String,
-          },
-          statusChangeWarningDialogContent: {
+          deleteWarningDialogContent: {
             type: Object
           },
           possibleStatuses: {
@@ -116,10 +113,10 @@
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
-          this.statusChangeWarningDialogContent = document.createElement('p');
-          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.deleteWarningDialogContent = document.createElement('p');
+          this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
           this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
-            this._dialogConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+            this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
         },
@@ -135,22 +132,17 @@
           return hidden;
         },
         _showDeleteConfirmationDialog: function() {
-          var warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
-          this.set('dialogClosedEventToTrigger', 'delete-partner');
-          return this._showConfirmationDialog(warningMessage);
-        },
-        _showConfirmationDialog: function(warningMessage) {
           if (!this.warningDialog) {
             this.logWarn('warningDialog not created!', 'pmp partner status change');
             return;
           }
 
-          if (!this.statusChangeWarningDialogContent) {
-            this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
+          if (!this.deleteWarningDialogContent) {
+            this.logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
             return;
           }
-
-          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          var warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
+          this.deleteWarningDialogContent.innerHTML = warningMessage;
           this.warningDialog.opened = true;
         },
 
@@ -159,7 +151,7 @@
             if (!this.editMode) {
               return;
             }
-            this.fire(this.dialogClosedEventToTrigger, {
+            this.fire('delete-partner', {
               id: this.partner.id,
             });
           }
