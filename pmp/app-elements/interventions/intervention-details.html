@@ -258,7 +258,8 @@
                                  planned-budget="{{intervention.planned_budget}}"
                                  intervention-id="[[intervention.id]]"
                                  intervention="[[intervention]]"
-                                 edit-mode$="[[editMode]]">
+                                 edit-mode="[[_getPlannedBudgetEditMode(editMode, intervention.status)]]"
+                                 unicef-cash-edit-mode="[[_getUnicefCashEditMode(editMode, intervention.status)]]">
     </intervention-planned-budget>
 
     <etools-content-panel class="content-section" panel-title="Planned Visits">
@@ -578,6 +579,16 @@
               return diff + ' days until expiry';
             }
           }
+        },
+
+        // General edit mode for planned budget. it should be editable for new and draft
+        _getPlannedBudgetEditMode: function(editMode, interventionStatus) {
+          return editMode && ['', 'draft'].indexOf(interventionStatus) > -1;
+        },
+
+        // Planned budget unicef cash should be editable in signed status
+        _getUnicefCashEditMode: function(editMode, interventionStatus) {
+          return editMode && ['', 'draft', 'signed'].indexOf(interventionStatus) > -1;
         }
 
       });
