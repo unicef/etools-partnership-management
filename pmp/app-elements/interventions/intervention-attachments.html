@@ -33,7 +33,6 @@
       }
 
       #attachments {
-        padding-bottom: 17px;
         --etools-file-upload-button-paper-btn: {
           font-weight: bold;
           padding: 5px 10px;
@@ -53,10 +52,9 @@
       }
 
       #no-attach-warning {
-        display: inline-block;
-        width: 100%;
-        padding: 20px 25px;
-        position: absolute;
+        display: block;
+        padding-left: 25px;
+        padding-bottom: 25px;
       }
 
       #no-attach-warning p {
@@ -67,22 +65,20 @@
     </style>
 
     <etools-content-panel class="content-section" panel-title="Attachments">
-
+      <etools-file id="attachments"
+                      files="{{attachments}}"
+                      file-model="[[fileModel]]"
+                      file-types=[[fileTypes]]
+                      label="Attachments"
+                      multiple activate-file-types use-delete-events
+                      hide-delete-btn show-upload-date show-upload-btn-above
+                      on-delete-file="_deleteAttachment"
+                      readonly$=[[!editMode]]
+                      no-file-attached-msg="">
+      </etools-file>
       <div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>
         <p>There are no attachments added.</p>
       </div>
-
-      <etools-file id="attachments"
-                   files="{{attachments}}"
-                   file-model="[[fileModel]]"
-                   file-types=[[fileTypes]]
-                   label="Attachments"
-                   multiple activate-file-types use-delete-events
-                   hide-delete-btn
-                   on-delete-file="_deleteAttachment"
-                   readonly$=[[!editMode]]
-                   no-file-attached-msg=""></etools-file>
-
     </etools-content-panel>
 
   </template>
