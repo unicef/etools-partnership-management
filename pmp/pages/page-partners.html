@@ -125,8 +125,7 @@
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-delete-partner="_deletePartner"
-                         on-hide-partner="_hidePartner"></partner-details>
+                         on-delete-partner="_deletePartner"></partner-details>
       </div>
     </iron-pages>
 
@@ -250,10 +249,6 @@
       },
       _handlePartnerNotDeleted: function() {
         this.fire('global-loading', {active: false});
-      },
-      _hidePartner: function(event) {
-        event.stopImmediatePropagation();
-        this.$.partnerData.hidePartner(event.detail);
       },
       _observeRouteDataId: function(id) {
         this.set('selectedPartnerId', id);
