@@ -19,7 +19,6 @@
     </style>
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
-                   on-partner-hide="_triggerHidePartner"
                    on-partner-delete="_showDeleteConfirmationDialog">
     </etools-status>
   </template>
@@ -44,7 +43,6 @@
           },
           dialogClosedEventToTrigger: {
             type: String,
-            value: 'hide-partner'
           },
           statusChangeWarningDialogContent: {
             type: Object
@@ -104,11 +102,6 @@
                 event: 'save-partner'
               },
               {
-                label: 'Hide',
-                hidden: true,
-                event: 'partner-hide'
-              },
-              {
                 label: 'Delete',
                 hidden: true,
                 event: 'partner-delete'
@@ -141,17 +134,12 @@
           }
           return hidden;
         },
-        _showStatusChangeConfirmationDialog: function() {
-          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
-          this.set('dialogClosedEventToTrigger', 'hide-partner');
-          return this._showConfirmationDialog(warningMessage);
-        },
         _showDeleteConfirmationDialog: function() {
           var warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
           this.set('dialogClosedEventToTrigger', 'delete-partner');
           return this._showConfirmationDialog(warningMessage);
         },
-        _showConfirmationDialog: function(message) {
+        _showConfirmationDialog: function(warningMessage) {
           if (!this.warningDialog) {
             this.logWarn('warningDialog not created!', 'pmp partner status change');
             return;
@@ -161,7 +149,7 @@
             this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
             return;
           }
-          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
+
           this.statusChangeWarningDialogContent.innerHTML = warningMessage;
           this.warningDialog.opened = true;
         },
@@ -173,7 +161,6 @@
             }
             this.fire(this.dialogClosedEventToTrigger, {
               id: this.partner.id,
-              hidden: true
             });
           }
         },
@@ -201,9 +188,6 @@
           let availableOptions = ['Save', 'Delete'];
           if (!editMode) {
             return;
-          }
-          if (!hidden) {
-            availableOptions.push('Hide');
           }
 
           for (let key in this.possibleActions) {
@@ -273,12 +257,6 @@
           return this.partner.vision_synced === false;
         },
 
-        _triggerHidePartner: function() {
-          if (this.partner.hidden) {
-            return;
-          }
-          this._showStatusChangeConfirmationDialog();
-        },
       });
     })();
 
