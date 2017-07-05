@@ -532,7 +532,6 @@
           delete interventionData.prc_review_document;
         }
 
-        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
       _needFrsUpdate: function(frs) {
         let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
