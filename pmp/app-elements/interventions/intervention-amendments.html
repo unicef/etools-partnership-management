@@ -160,19 +160,17 @@
         properties: {
           amendmentTypes: {
             type: Object,
-            value: function() {
-              return [{label: 'Dates', value: 'dates'},
-                {label: 'Results', value: 'results'},
-                {label: 'Budget', value: 'budget'},
-                {label: 'Other', value: 'other'}];
-            }
-           // statePath: 'interventionAmendmentTypes'
+            statePath: 'interventionAmendmentTypes'
           },
           filteredAmendmentTypes: Object,
           interventionDocumentType: {
             type: String
           },
-          permissions: Object
+          permissions: {
+            type: Object,
+            observer: '_permissionsChanged'
+          },
+          initialPermissions: Object
         },
 
         observers: [
@@ -202,7 +200,10 @@
           this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.addAmendmentConfirmationDialog.updateStyles();
         },
-       _getReadonlyAmendmentTypes: function(types) {
+        _permissionsChanged: function() {
+          this.initialPermissions = JSON.parse(JSON.stringify(this.permissions));
+        },
+        _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
             return null;
           }
@@ -217,6 +218,7 @@
           }
           return null;
         },
+
         detached: function() {
           if (this.addAmendmentConfirmationDialog) {
             this.removeDialog(this.addAmendmentConfirmationDialog);
@@ -261,7 +263,7 @@
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this._addElement();
-            this.fire('adding-amendment');
+            this._makeInterventionFieldsEditable();
           }
         },
         _dataHasChanged: function(dataItems) {
@@ -271,10 +273,28 @@
         },
         _dataItemsLengthChanged: function() {
           if (!this.dataItems.length) {
-            this.fire('cancel-adding-amendment');
+            //cancel adding amendment
+            this._resetInterventionFieldsEditMode();
           }
         },
-
+        _makeInterventionFieldsEditable: function() {
+          //TODO
+          return;
+          if (!this.permissions) {
+            return;
+          }
+          for (var prop in this.permissions.read_only) {
+            this.set('permissions.read_only.'+ prop, true);
+            //this.notifyPath('permissions.read_only..//if necessasry
+          }
+        },
+        _resetInterventionFieldsEditMode: function() {
+          //TODO
+          return;
+          for (var prop in this.initialPermissions.read_only) {
+            this.set('permissions.read_only.'+ prop, this.initialPermissions.read_only[prop]);
+          }
+        },
         // observe amendments property changes and validate
         _dataItemsPropertyChange: function(data) {
           if (data.path.indexOf('dataItems.#') === -1) {

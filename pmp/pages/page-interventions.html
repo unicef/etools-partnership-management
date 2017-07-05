@@ -315,10 +315,6 @@
         },
         editMode: {
           type: Boolean
-        },
-        addingAmendment: {
-          type: Boolean,
-          value: false
         }
       },
 
@@ -336,8 +332,6 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'adding-amendment': '_onAddingAmendment',
-        'cancel-adding-amendment': '_onCancelAddingAmendment'
       },
 
       ready: function() {
@@ -357,14 +351,7 @@
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
       },
-      _onCancelAddingAmendment: function(e) {
-        e.stopImmediatePropagation();
-        this.addingAmendment = false;
-      },
-      _onAddingAmendment: function(e) {
-         e.stopImmediatePropagation();
-         this.addingAmendment = true;
-      },
+
       _showFinalizeAmendmentDialog: function() {
         if (this.finalizeAmendmentConfirmationDialog) {
           this.finalizeAmendmentConfirmationDialog.opened = true;
@@ -376,7 +363,6 @@
       //   return !intervDetailsActive && !newInterventionActive;
       // },
       _interventionChanged: function(intervention) {
-        this.addingAmendment = false;
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           this.async(function() {
