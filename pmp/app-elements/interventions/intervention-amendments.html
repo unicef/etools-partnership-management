@@ -72,7 +72,7 @@
               <div class="col col-4">
                 <!-- Amendment Type -->
                 <template is="dom-if" if="[[_isReadonlyAmendment(item.id)]]">
-                  [[_firstItem(item.types)]]
+                  [[_getReadonlyAmendmentTypes(item.types)]]
                 </template>
                 <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
                   <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
