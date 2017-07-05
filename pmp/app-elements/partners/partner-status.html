@@ -115,7 +115,7 @@
         ready: function() {
           this.deleteWarningDialogContent = document.createElement('p');
           this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
-          this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
+          this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
             this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
