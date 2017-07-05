@@ -174,7 +174,7 @@
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  edit-mode="[[_isEditMode(permissions, intervention, addingAmendment, 'details')]]"
+                                  edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
                                   on-update-intervention-status="_updateInterventionStatus">
             </intervention-details>
           </div>
@@ -184,7 +184,7 @@
                                           permissions="[[permissions]]"
                                           agreement="[[agreement]]"
                                           new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_isEditMode(permissions, intervention, addingAmendment)]]">
+                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
@@ -208,7 +208,7 @@
                            intervention-agreement-status="[[agreement.status]]"
                            on-save-intervention="_validateAndSaveIntervention"
                            on-update-intervention-status="_updateInterventionStatus"
-                           show-save-btn$="[[_isEditMode(permissions, intervention, addingAmendment, 'details')]]"></intervention-status>
+                           show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
 
       </div>
       <!-- sidebar content end -->
@@ -477,7 +477,7 @@
         }
 
         this.set('serverErrors', []);
-        if (!this._isEditMode(this.permissions, this.intervention, this.addingAmendment, 'details')) {
+        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
           return;
         }
 
@@ -768,21 +768,6 @@
       _updateInterventionStatus: function(event) {
         event.stopImmediatePropagation();
         this.$.interventionData.updateInterventionStatus(event.detail);
-      },
-      _isEditMode: function(permissions, intervention, addingAmendment, page) {
-        if (!this._hasEditPermissions(permissions, intervention)) {
-          return false;
-        }
-        if (this.intervention && page === 'details' && (addingAmendment || this.addingAmendment)) {
-          return true;
-        }
-        if (this._isReadonlyByStatus(intervention)) {
-          return false;
-        }
-        return true;
-      },
-      _isReadonlyByStatus: function(intervention) {
-          return (intervention.status && intervention.status !== 'draft');
       },
       _hasEditPermissions: function(permissions, intervention) {
         if (permissions && permissions.editInterventionDetails === true) {

@@ -136,7 +136,7 @@
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
       <p>There are no amendments added.</p>
     </div>
-    <div id="bottom-actions" class="row-h" hidden$="[[!_allowToAddAmendment(interventionStatus, permissions)]]">
+    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
                   on-tap="_addNewAmendment"
                   title="Add"></paper-fab>
@@ -172,7 +172,6 @@
           interventionDocumentType: {
             type: String
           },
-          interventionStatus: String,
           permissions: Object
         },
 
@@ -203,11 +202,20 @@
           this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.addAmendmentConfirmationDialog.updateStyles();
         },
-        _firstItem: function(types) {
+       _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
-            return '';
+            return null;
           }
-          return types[0];
+          let amdTypes = this.amendmentTypes.filter(function(t) {
+            return types.indexOf(t.value) > -1;
+          });
+          if (amdTypes.length) {
+            let amdTypesLabels = amTypes.map(function(t) {
+              return t.label;
+            });
+            return amdTypesLabels.join(' | ');
+          }
+          return null;
         },
         detached: function() {
           if (this.addAmendmentConfirmationDialog) {
@@ -256,27 +264,6 @@
             this.fire('adding-amendment');
           }
         },
-
-      _hasEditPermissions: function(interventionStatus) {
-        if (this.permissions && this.permissions.editInterventionDetails === true) {
-            if (!(this.permissions.partnershipManager || this.permissions.PME) &&
-              (!interventionStatus || interventionStatus !== 'draft')) {
-              // other users than partnershipManager or PME will be able to edit only if intervention status is draft
-              return false;
-            }
-            return true;
-        }
-        return false;
-      },
-      _allowToAddAmendment: function(interventionStatus) {
-         if (!this._hasEditPermissions(interventionStatus)) {
-           return false;
-         }
-         if (['active', 'signed'].indexOf(interventionStatus) === -1) {
-           return false;
-         }
-         return true;
-       },
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);

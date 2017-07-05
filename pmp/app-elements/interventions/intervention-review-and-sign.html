@@ -180,11 +180,10 @@
     <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
       <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
-                                 intervention-status="[[intervention.status]]"
                                  intervention-document-type="[[intervention.document_type]]"
                                  permissions="[[permissions]]"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[editMode]]"></intervention-amendments>
+                                 edit-mode$="[[_getAmendmentsEditMode(editMode, intervention.id, intervention.status)]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
@@ -372,6 +371,13 @@
 
         _getFrNumbersEditMode: function(editMode, interventionId, interventionStatus) {
           if (!editMode || !interventionId || (interventionStatus !== 'draft' && interventionStatus !== 'signed')) {
+            return false;
+          }
+          return true;
+        },
+
+        _getAmendmentsEditMode: function(editMode, interventionId, interventionStatus) {
+          if (!editMode || !interventionId || ['active', 'signed'].indexOf(interventionStatus) === -1) {
             return false;
           }
           return true;

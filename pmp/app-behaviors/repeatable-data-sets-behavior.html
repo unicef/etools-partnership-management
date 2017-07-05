@@ -75,6 +75,9 @@
     },
 
     _addElement: function() {
+      if (!this.editMode) {
+        return;
+      }
       this._makeSureDataItemsAreValid();
 
       var newObj = this._getItemModelObject();
@@ -82,6 +85,9 @@
     },
 
     _openDeleteConfirmation: function(event) {
+      if (!this.editMode) {
+        return;
+      }
       this.elToDeleteIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
       this.deleteDialog.opened = true;
     },
@@ -130,6 +136,9 @@
     },
 
     _deleteElement: function() {
+      if (!this.editMode) {
+        return;
+      }
       var index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
