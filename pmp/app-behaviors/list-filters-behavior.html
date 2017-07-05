@@ -144,7 +144,7 @@
     // 'esmm' (etools-searchable-multiselection-menu) filter value changed
     esmmValueChanged: function(event) {
       var filterPath = Polymer.dom(event).localTarget.getAttribute('data-filter-path');
-      var filterVal = event.detail.selectedValues;
+      var filterVal = event.detail.selectedItems;
       this.set(filterPath, filterVal);
     },
 

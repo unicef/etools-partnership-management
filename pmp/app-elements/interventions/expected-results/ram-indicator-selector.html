@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import"
-      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
@@ -50,21 +50,19 @@
       </div>
 
       <div class="col col-8">
-        <etools-searchable-multiselection-menu id="indicators"
+        <etools-multi-selection-menu id="indicators"
                                                label="CP Indicators"
                                                placeholder="&#8212;"
                                                options="[[cpIndicators]]"
-                                               custom-object-options
                                                option-value="id"
                                                option-label="name"
-                                               selected="{{selectedCpIndicatorsIds}}"
-                                               update-selected
+                                               selected-values="{{selectedCpIndicatorsIds}}"
                                                required$="[[required]]"
                                                auto-validate
                                                error-message="Please select CP Indicators"
                                                multi
                                                readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        </etools-multi-selection-menu>
 
       </div>
     </div>

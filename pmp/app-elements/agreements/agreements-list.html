@@ -8,7 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
@@ -91,16 +91,16 @@
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
-              <etools-searchable-multiselection-menu
+              <etools-multi-selection-menu
                   label="[[filter.filterName]]"
                   placeholder="&#8212;"
                   disabled$="[[!filter.selectionOptions.length]"
                   options="[[filter.selectionOptions]]"
-                  value="[[filter.alreadySelected]]"
+                  selected-value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
-                  on-value-change="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
-                  custom-object-options></etools-searchable-multiselection-menu>
+                  on-etools-selected-items-changed="esmmValueChanged"
+                  trigger-value-change-event></etools-multi-selection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"

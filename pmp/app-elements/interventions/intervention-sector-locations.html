@@ -4,7 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -70,21 +70,19 @@
                 </etools-single-selection-menu>
               </div>
               <div class="col col-9">
-                <etools-searchable-multiselection-menu id$="locations_[[index]]"
+                <etools-multi-selection-menu id$="locations_[[index]]"
                                                        label="Locations"
                                                        placeholder="&#8212;"
-                                                       value="[[_setSectorLocations(item.locations, locations.length)]]"
+                                                       selected-items="{{item.locations}}"
                                                        options="[[locations]]"
-                                                       custom-object-options
+
                                                        option-label="name"
                                                        option-value="id"
-                                                       on-value-change="_locationsSelected"
-                                                       multi
                                                        required$="[[required]]"
                                                        auto-validate
                                                        error-message="Please select sector locations"
                                                        readonly$="[[!editMode]]">
-                </etools-searchable-multiselection-menu>
+                </etools-multi-selection-menu>
               </div>
             </div>
           </div>
@@ -186,20 +184,6 @@
             });
           }
           return [];
-        },
-
-        _locationsSelected: function(event) {
-          var locationsSelected = event.detail.selectedValues;
-          if (Array.isArray(locationsSelected) && locationsSelected.length > 0) {
-            this.set('dataItems.' + event.model.index + '.locations', locationsSelected.map(function(l) {
-              return {
-                id: parseInt(l.id, 10),
-                name: l.name
-              };
-            }));
-          } else {
-            this.set('dataItems.' + event.model.index + '.locations', []);
-          }
         },
 
         _sectorAlreadySelected: function(sectorId, dropdownIdx) {
