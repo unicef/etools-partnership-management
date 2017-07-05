@@ -18,7 +18,7 @@
                    on-intervention-active-event="_setStatusActive"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
-                   on-intervention-unsuspend-event="_setStatusNotSuspended">
+                   on-intervention-unsuspend-event="_unsuspendIntervention">
         </etools-status>
   </template>
 
@@ -385,7 +385,7 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusNotSuspended: function() {
+        _unsuspendIntervention: function() {
           this._updateStatus('signed');
         },
 

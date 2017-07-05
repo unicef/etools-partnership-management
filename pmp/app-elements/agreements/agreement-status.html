@@ -16,7 +16,7 @@
                     actions="[[possibleActions]]"
                     on-agreement-suspend-event="_setStatusSuspended"
                     on-agreement-terminate-event="_setStatusTerminated"
-                    on-agreement-unsuspend-event="_setStatusNotSuspended">
+                    on-agreement-unsuspend-event="_unsuspendAgreement">
     </etools-status>
   </template>
 
@@ -349,7 +349,7 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusNotSuspended: function() {
+        _unsuspendAgreement: function() {
           this._updateStatus('signed');
         },
 
