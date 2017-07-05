@@ -43,7 +43,8 @@
           color: var(--light-primary-text-color, #FFFFFF) !important;
           max-width: 200px;
           margin-left: 25px;
-          margin-top: 25px !important;
+          margin-top: 0px !important;
+          margin-bottom: 25px !important;
         };
 
         --etools-file-area-with-type: {
@@ -70,8 +71,8 @@
                       file-model="[[fileModel]]"
                       file-types=[[fileTypes]]
                       label="Attachments"
-                      multiple activate-file-types use-delete-events
-                      hide-delete-btn show-upload-date show-upload-btn-above
+                      multiple  use-delete-events
+                      hide-delete-btn show-upload-btn-above show-upload-date
                       on-delete-file="_deleteAttachment"
                       readonly$=[[!editMode]]
                       no-file-attached-msg="">
