@@ -54,6 +54,8 @@
 
       #no-attach-warning {
         display: block;
+        position: relative;
+        top: -10px;
         padding-left: 25px;
         padding-bottom: 25px;
       }
@@ -71,7 +73,7 @@
                       file-model="[[fileModel]]"
                       file-types=[[fileTypes]]
                       label="Attachments"
-                      multiple  use-delete-events
+                      multiple  use-delete-events activate-file-types
                       hide-delete-btn show-upload-btn-above show-upload-date
                       on-delete-file="_deleteAttachment"
                       readonly$=[[!editMode]]
