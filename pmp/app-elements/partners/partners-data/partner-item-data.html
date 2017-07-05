@@ -42,6 +42,9 @@
             notify: true,
             observer: '_partnerIdChanged'
           },
+          deletedPartnerId: {
+            type: Number,
+          },
           withUpload: Boolean,
           prepareMultipartData: Boolean,
 
@@ -126,6 +129,11 @@
               self.fire('reload-list');
             });
           }
+          if (this.$.ajax.get('method') === 'DELETE') {
+            etoolsAppConfig.db.table('partners').delete(this.deletedPartnerId).then(function() {
+              self.fire('reload-list');
+            });
+          }
         },
         _handleErrorResponse: function(response) {
           this.handleErrorResponse(response);
@@ -134,20 +142,7 @@
             this.handleErrResponseAdditionalCallback.bind(this, this.tryGetResponseErrorMsg(response))();
           }
           this.handleErrResponseAdditionalCallback = null;
-        },
-        hidePartner: function(partner) {
-          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
-            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
-            return;
-          }
-
-          this._prepareEndpoint(partner.id);
-          delete partner.id;
-          this.ajaxEl.set('method', 'PATCH');
-          this.ajaxEl.set('multiPart', false);
-          this.ajaxEl.set('prepareMultipartData', false);
-          this.ajaxEl.set('body', partner);
-          this.ajaxEl.set('url', this.endpoint.url);
+          this.handleSuccResponseAdditionalCallback = null;
         },
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
           if (!vendorNoObj && !vendorNoObj.vendor) {
@@ -167,6 +162,22 @@
           this.ajaxEl.set('url', this.endpoint.url);
           this.ajaxEl.set('body', {});
 
+        },
+        deletePartner: function(partner, succCallback, errCallback) {
+          if (!partner.id) {
+            return;
+          }
+          var endpoint = this.getEndpoint('deletePartner', {id: partner.id});
+          this.deletedPartnerId = partner.id;
+
+          this.handleSuccResponseAdditionalCallback = succCallback;
+          this.handleErrResponseAdditionalCallback = errCallback;
+
+          this.ajaxEl.set('method', 'DELETE');
+          this.ajaxEl.set('multiPart', false);
+          this.ajaxEl.set('prepareMultipartData', false);
+          this.ajaxEl.set('url', endpoint.url);
+          this.ajaxEl.set('body', {});
         },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {

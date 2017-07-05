@@ -16,6 +16,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
@@ -35,7 +36,7 @@
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles">
       :host {
         @apply(--layout-vertical);
         width: 100%;
@@ -96,7 +97,8 @@
                                         dynamic-align
                                         required auto-validate
                                         error-message="Document type is required"
-                                        readonly$="[[!editMode]]">
+                                        readonly$="[[!editMode]]"
+                                        starred>
           </etools-single-selection-menu>
 
         </div>
@@ -118,7 +120,7 @@
                      maxlength="256"
                      required auto-validate
                      error-message="Please add a title"
-                     readonly$="[[!editMode]]"></paper-input>
+                     readonly$="[[!editMode]]" starred></paper-input>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
@@ -135,7 +137,8 @@
                                                  dynamic-align
                                                  multi required auto-validate
                                                  error-message="Please select intervention's office(s)"
-                                                 readonly$="[[!editMode]]">
+                                                 readonly$="[[!editMode]]"
+                                                 starred>
           </etools-searchable-multiselection-menu>
         </div>
         <div class="col col-6">
@@ -255,7 +258,8 @@
                                  planned-budget="{{intervention.planned_budget}}"
                                  intervention-id="[[intervention.id]]"
                                  intervention="[[intervention]]"
-                                 edit-mode="[[editMode]]">
+                                 edit-mode="[[_getPlannedBudgetEditMode(editMode, intervention.status)]]"
+                                 unicef-cash-edit-mode="[[_getUnicefCashEditMode(editMode, intervention.status)]]">
     </intervention-planned-budget>
 
     <etools-content-panel class="content-section" panel-title="Planned Visits">
@@ -590,6 +594,16 @@
               return diff + ' days until expiry';
             }
           }
+        },
+
+        // General edit mode for planned budget. it should be editable for new and draft
+        _getPlannedBudgetEditMode: function(editMode, interventionStatus) {
+          return editMode && ['', 'draft'].indexOf(interventionStatus) > -1;
+        },
+
+        // Planned budget unicef cash should be editable in signed status
+        _getUnicefCashEditMode: function(editMode, interventionStatus) {
+          return editMode && ['', 'draft', 'signed'].indexOf(interventionStatus) > -1;
         }
 
       });

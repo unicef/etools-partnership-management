@@ -61,7 +61,7 @@
       <paper-icon-button slot="panel-btns"
                          icon="add"
                          on-tap="_openFrsUpdateDialog"
-                         hidden="[[!editMode]]"
+                         hidden$="[[!editMode]]"
                          disabled$="[[!editMode]]"></paper-icon-button>
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
         <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
@@ -121,7 +121,7 @@
         observers: ['_frsDetailsChanged(intervention.frs_details)'],
 
         ready: function() {
-          this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'))
+          this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
         },
 
         attached: function() {

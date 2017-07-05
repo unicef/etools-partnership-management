@@ -363,7 +363,7 @@
             this.set('intervention.frs', e.detail.frsDetails.frs.map(function(fr) {
               return fr.id;
             }));
-          } catch(err) {
+          } catch (err) {
             this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
           }
           this.fire('global-loading', {active: false});

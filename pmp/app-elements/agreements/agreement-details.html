@@ -229,7 +229,7 @@
         </div>
         <div class="row-h flex-c t-border">
           <div id="generate-pca" class="col col-3"
-               hidden="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
+               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -568,10 +568,10 @@
                 // start and end dates are sent to server only is agreement type is MOU and were modified
                 if (this.agreement.agreement_type === 'MOU') {
                   if (this.agreement.start !== this.originalAgreementData.start) {
-                    changes['start'] = this.agreement.start;
+                    changes.start = this.agreement.start;
                   }
                   if (this.agreement.end !== this.originalAgreementData.end) {
-                    changes['end'] = this.agreement.end;
+                    changes.end = this.agreement.end;
                   }
                 }
               } else {
