@@ -72,7 +72,7 @@
               <div class="col col-4">
                 <!-- Amendment Type -->
                 <template is="dom-if" if="[[_isReadonlyAmendment(item.id)]]">
-                  [[_getReadonlyAmendmentTypes(item.types)]]
+                  <paper-input label="Amendment Types" value="[[_getReadonlyAmendmentTypes(item.types)]]" readonly></paper-input>
                 </template>
                 <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
                   <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
@@ -120,7 +120,7 @@
               </div>
             </template>
               <div class="row-h">
-                <paper-input id="other" hidden$="[[!_showOtherInput(item.types, item.types.length)]]"
+                <paper-input id="other" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]"
                                 placeholder="&#8212;"
                                 label="Other"
                                 value="{{item.other_description}}"
@@ -184,7 +184,7 @@
           this.dataSetModel = {
             id: null,
             types: [],
-            other: null,
+            other_description: null,
             signed_date: null,
             signed_amendment: null,
             signed_amendment_file: '',
@@ -211,7 +211,7 @@
             return types.indexOf(t.value) > -1;
           });
           if (amdTypes.length) {
-            let amdTypesLabels = amTypes.map(function(t) {
+            let amdTypesLabels = amdTypes.map(function(t) {
               return t.label;
             });
             return amdTypesLabels.join(' | ');
@@ -233,18 +233,18 @@
             this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes))
           }
         },
-        _showOtherInput: function(selectedAmdTypes) {
+        _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength, index) {
           if (!selectedAmdTypes || !selectedAmdTypes.length) {
             return false;
           }
-          if (selectedAmdTypes.indexOf('other') > -1) { //TODO
+          if (selectedAmdTypes.indexOf('other') > -1) {
             return true;
           }
-          this._clearOtherInput();
+          this._clearOtherInput(index);
           return false;
         },
-        _clearOtherInput: function() {
-          var otherInput = this.$$('#other');
+        _clearOtherInput: function(index) {
+          var otherInput = this.$$('#other_' + index);
           if (otherInput) {
             otherInput.value = null;
           }
