@@ -631,12 +631,22 @@
         },
 
         _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsStartConsistencyWarning', null);
+            this.$.intStart.updateStyles();
+            return;
+          }
           this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-              frsEarliestStartDate, 'start date', true));
+              frsEarliestStartDate, 'start date', ''));
           this.$.intStart.updateStyles();
         },
 
         _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsEndConsistencyWarning', '');
+            this.$.intEnd.updateStyles();
+            return;
+          }
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();

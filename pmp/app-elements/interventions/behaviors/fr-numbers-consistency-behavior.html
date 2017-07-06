@@ -66,6 +66,10 @@
 
     getFrsInconsistentFieldClass(warn) {
       return !!warn ? 'frs-inconsistent' : '';
+    },
+
+    emptyFrsList: function(intervention) {
+      return !intervention || intervention.frs_details.frs.length === 0;
     }
 
   };

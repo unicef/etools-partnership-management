@@ -386,8 +386,14 @@
         },
 
         _checkFrsConsistency: function(frsTotalAmt, unicefCash) {
+          if (this.emptyFrsList(this.intervention)) {
+            this.set('_frsConsistencyWarning', '');
+            this.$.unicefCashUsd.updateStyles();
+            return;
+          }
           this.set('_frsConsistencyWarning',
               this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, true));
+          this.$.unicefCashUsd.updateStyles();
         }
 
       });
