@@ -85,7 +85,8 @@
                                                        hide-search
                                                        auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                                        error-message="Type is required"
-                                                       readonly="[[_isReadonlyAmendment(item.id)]]">
+                                                       readonly="[[_isReadonlyAmendment(item.id)]]"
+                                                       on-focused-changed="_onAmendmentTypesFocusChanged">
                   </etools-multi-selection-menu>
                 </template>
               </div>
@@ -97,7 +98,7 @@
                                    readonly$="[[_isReadonlyAmendment(item.id)]]"
                                    required
                                    error-message="Please select signed date"
-                                   auto-validate$="[[_autoValidateIsOn(item.types)]]"
+                                   auto-validate="[[_isReadonlyAmendment(item.id)]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -109,7 +110,8 @@
                                     file={{item.signed_amendment}}
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
-                                    readonly="[[_isReadonlyAmendment(item.id)]]"></etools-single-file>
+                                    readonly="[[_isReadonlyAmendment(item.id)]]"
+                                    auto-validate="[[_isReadonlyAmendment(item.id)]]"></etools-single-file>
               </div>
             </div>
             <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
@@ -176,7 +178,7 @@
         observers: [
           '_dataHasChanged(dataItems)',
           '_dataItemsLengthChanged(dataItems.length)',
-          '_dataItemsPropertyChange(dataItems.*)',
+          // '_dataItemsPropertyChange(dataItems.*)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
          ],
         ready: function() {
@@ -199,6 +201,19 @@
           this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.addAmendmentConfirmationDialog.updateStyles();
         },
+        // set autoValidate to true on first focus
+        _onAmendmentTypesFocusChanged: function(e) {
+          let dropdown = e.target;
+          this.debounce('dropdown-focus', function() {
+            if (e.detail && e.detail.value) {
+              if (dropdown.is && dropdown.is === 'etools-multi-selection-menu' &&
+                  !dropdown.autoValidate) {
+                dropdown.set('autoValidate', true);
+              }
+            }
+          }, 10);
+        },
+
         _permissionsChanged: function() {
           this.initialPermissions = JSON.parse(JSON.stringify(this.permissions));
         },
@@ -248,12 +263,12 @@
             otherInput.value = null;
           }
         },
-        _autoValidateIsOn: function(selectedAmdTypes) {
-          if (selectedAmdTypes && selectedAmdTypes.length) {
-            return true;
-          }
-          return false;
-        },
+        // _autoValidateIsOn: function(selectedAmdTypes) {
+        //   if (selectedAmdTypes && selectedAmdTypes.length) {
+        //     return true;
+        //   }
+        //   return false;
+        // },
         _showAddAmendmentConfirmationDialog: function() {
           if (this.addAmendmentConfirmationDialog) {
             this.addAmendmentConfirmationDialog.opened = true;
@@ -294,10 +309,10 @@
             this.set('permissions.read_only.'+ prop, this.initialPermissions.read_only[prop]);
           }
         },
-        // observe amendments property changes and validate
-        _dataItemsPropertyChange: function(data) {
-          this.validate();
-        },
+        // // observe amendments property changes and validate
+        // _dataItemsPropertyChange: function(data) {
+        //   this.validate();
+        // },
         _getIndex: function(data) {
           var path = data.path.replace('dataItems.#', '');
           var index = parseInt(path.substring(0, path.indexOf('.')), 10);
