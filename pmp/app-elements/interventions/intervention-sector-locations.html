@@ -55,33 +55,32 @@
             <div class="row-h">
               <div class="col col-3">
                  <etools-single-selection-menu id$="sector_[[index]]"
-                                                       class="sector"
-                                                       label="Section/Cluster"
-                                                       placeholder="&#8212;"
-                                                       selected="{{item.sector.id}}"
-                                                       options="[[sectors]]"
-                                                       option-label="name"
-                                                       option-value="id"
-                                                       on-iron-activate="_sectorSelected"
-                                                       required$="[[required]]"
-                                                       auto-validate
-                                                       error-message="Please select a sector"
-                                                       readonly$="[[!editMode]]">
+                                               class="sector"
+                                               label="Section/Cluster"
+                                               placeholder="&#8212;"
+                                               selected="{{item.sector.id}}"
+                                               options="[[sectors]]"
+                                               option-label="name"
+                                               option-value="id"
+                                               on-iron-activate="_sectorSelected"
+                                               required$="[[required]]"
+                                               auto-validate
+                                               error-message="Please select a sector"
+                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
               <div class="col col-9">
                 <etools-multi-selection-menu id$="locations_[[index]]"
-                                                       label="Locations"
-                                                       placeholder="&#8212;"
-                                                       selected-items="{{item.locations}}"
-                                                       options="[[locations]]"
-
-                                                       option-label="name"
-                                                       option-value="id"
-                                                       required$="[[required]]"
-                                                       auto-validate
-                                                       error-message="Please select sector locations"
-                                                       readonly$="[[!editMode]]">
+                                             label="Locations"
+                                             placeholder="&#8212;"
+                                             selected-items="{{item.locations}}"
+                                             options="[[locations]]"
+                                             option-label="name"
+                                             option-value="id"
+                                             required$="[[required]]"
+                                             auto-validate
+                                             error-message="Please select sector locations"
+                                             readonly$="[[!editMode]]">
                 </etools-multi-selection-menu>
               </div>
             </div>

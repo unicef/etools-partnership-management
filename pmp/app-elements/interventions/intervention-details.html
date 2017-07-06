@@ -140,36 +140,32 @@
         </div>
         <div class="col col-6">
           <etools-multi-selection-menu id="unicefFocalPts"
-                                                 label="UNICEF Focal Point(s)"
-                                                 placeholder="&#8212;"
-                                                 options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
-                                                 option-label="full_name"
-                                                 option-value="user_id"
-                                                 selected-values="{{intervention.unicef_focal_points}}"
-
-                                                 dynamic-align
-
-                                                 required$="[[interventionRequiredField]]"
-                                                 auto-validate
-                                                 error-message="Please select UNICEF focal points"
-                                                 readonly$="[[!editMode]]">
+                                       label="UNICEF Focal Point(s)"
+                                       placeholder="&#8212;"
+                                       options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
+                                       option-label="full_name"
+                                       option-value="user_id"
+                                       selected-values="{{intervention.unicef_focal_points}}"
+                                       required$="[[interventionRequiredField]]"
+                                       auto-validate dynamic-align
+                                       error-message="Please select UNICEF focal points"
+                                       readonly$="[[!editMode]]">
           </etools-multi-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
           <etools-multi-selection-menu id="partnerFocalPts"
-                                                 label="Partner Focal Point(s)"
-                                                 placeholder="&#8212;"
-                                                 options="[[partnerStaffMembers]]"
-                                                 option-value="id"
-                                                 option-label="name"
-                                                 selected-values="{{intervention.partner_focal_points}}"
-                                                 dynamic-align
-                                                 required$="[[interventionRequiredField]]"
-                                                 auto-validate
-                                                 error-message="Please select partner focal points"
-                                                 readonly$="[[!editMode]]">
+                                       label="Partner Focal Point(s)"
+                                       placeholder="&#8212;"
+                                       options="[[partnerStaffMembers]]"
+                                       option-value="id"
+                                       option-label="name"
+                                       selected-values="{{intervention.partner_focal_points}}"
+                                       required$="[[interventionRequiredField]]"
+                                       auto-validate dynamic-align
+                                       error-message="Please select partner focal points"
+                                       readonly$="[[!editMode]]">
           </etools-multi-selection-menu>
         </div>
       </div>
