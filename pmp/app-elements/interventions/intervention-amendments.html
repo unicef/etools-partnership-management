@@ -19,7 +19,9 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <dom-module id="intervention-amendments">
   <template strip-whitespace>
@@ -53,7 +55,7 @@
         width: 100%;
       }
     </style>
-
+    <required-and-not-future-date-validator></required-and-not-future-date-validator>
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
       <template is="dom-repeat" id="amendmentsRepeater" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -83,10 +85,9 @@
                                                        dynamic-align
                                                        required
                                                        hide-search
-                                                       auto-validate$="[[_autoValidateIsOn(item.types)]]"
                                                        error-message="Type is required"
                                                        readonly="[[_isReadonlyAmendment(item.id)]]"
-                                                       on-focused-changed="_onAmendmentTypesFocusChanged">
+                                                       on-focused-changed="_onFocusChangedUpdateAutovalidate">
                   </etools-multi-selection-menu>
                 </template>
               </div>
@@ -97,8 +98,10 @@
                                    value="{{item.signed_date}}"
                                    readonly$="[[_isReadonlyAmendment(item.id)]]"
                                    required
+                                   validator="required-and-not-future-date-validator"
                                    error-message="Please select signed date"
-                                   auto-validate="[[_isReadonlyAmendment(item.id)]]"
+                                   auto-validate="[[!_isReadonlyAmendment(item.id)]]"
+                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -111,7 +114,8 @@
                                     accept=".doc,.docx,.pdf,.jpg,.png"
                                     error-message="Attachment required"
                                     readonly="[[_isReadonlyAmendment(item.id)]]"
-                                    auto-validate="[[_isReadonlyAmendment(item.id)]]"></etools-single-file>
+                                    required
+                                    auto-validate></etools-single-file>
               </div>
             </div>
             <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
@@ -156,7 +160,8 @@
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.RepeatableDataSetsBehavior,
           etoolsBehaviors.DynamicDialogBehavior,
-          pmpBehaviors.DateBehavior
+          pmpBehaviors.DateBehavior,
+          pmpBehaviors.DropdownBehavior
         ],
 
         properties: {
@@ -191,7 +196,9 @@
             signed_amendment_file: '',
             amendment_number: null
           };
-
+          this._createAmendmentConfirmationDialog();
+        },
+        _createAmendmentConfirmationDialog: function() {
           var dialog = document.createElement('p');
           dialog.setAttribute('id', 'addAmendmendConfirmation');
           dialog.innerHTML = 'All fields in the details tab will now be open for editing. ' +
@@ -201,19 +208,11 @@
           this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.addAmendmentConfirmationDialog.updateStyles();
         },
-        // set autoValidate to true on first focus
-        _onAmendmentTypesFocusChanged: function(e) {
-          let dropdown = e.target;
-          this.debounce('dropdown-focus', function() {
-            if (e.detail && e.detail.value) {
-              if (dropdown.is && dropdown.is === 'etools-multi-selection-menu' &&
-                  !dropdown.autoValidate) {
-                dropdown.set('autoValidate', true);
-              }
-            }
-          }, 10);
+        _getSignedDateErrorMessage: function(signedDate) {
+          return this.isFutureDate(signedDate)
+              ? 'Signed Date can not be in the future'
+              : 'Please select Signed Date';
         },
-
         _permissionsChanged: function() {
           this.initialPermissions = JSON.parse(JSON.stringify(this.permissions));
         },
@@ -263,12 +262,6 @@
             otherInput.value = null;
           }
         },
-        // _autoValidateIsOn: function(selectedAmdTypes) {
-        //   if (selectedAmdTypes && selectedAmdTypes.length) {
-        //     return true;
-        //   }
-        //   return false;
-        // },
         _showAddAmendmentConfirmationDialog: function() {
           if (this.addAmendmentConfirmationDialog) {
             this.addAmendmentConfirmationDialog.opened = true;
@@ -309,25 +302,16 @@
             this.set('permissions.read_only.'+ prop, this.initialPermissions.read_only[prop]);
           }
         },
-        // // observe amendments property changes and validate
-        // _dataItemsPropertyChange: function(data) {
-        //   this.validate();
-        // },
-        _getIndex: function(data) {
-          var path = data.path.replace('dataItems.#', '');
-          var index = parseInt(path.substring(0, path.indexOf('.')), 10);
-          return index;
-        },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];
           if (!amendment || this._isReadonlyAmendment(amendment.id)) {//Avoid validation for existing readonly amendments
             return true;
           }
-          var valid1 = this._validateAmendmentTypes(index);
-          var valid2 = this._validateSignedDate(amendment, index);
-          var valid3 = this._validateFileUpload(amendment, index);
+          var isValid1 = this._validateAmendmentTypes(index);
+          var isValid2 = this._validateSignedDate(amendment, index);
+          var isValid3 = this._validateFileUpload(amendment, index);
 
-          return (valid1 && valid2 && valid3);
+          return (isValid1 && isValid2 && isValid3);
         },
         _validateAmendmentTypes: function(index) {
           var valid = true;
@@ -347,23 +331,17 @@
           return valid;
         },
         _validateSignedDate: function(amendment, index) {
-          var valid = true;
+          console.log('here');
+          var isValid = true;
 
-          var signedDateEl = this.$$('#signedDate_' + index);
-          if (!signedDateEl) {
-            return valid;
+          let signedDateEl = this.$$('#signedDate_' + index);
+          if (signedDateEl) {
+            signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendment.signed_date);
+            if (!signedDateEl.validate()) {
+              isValid = false;
+            }
           }
-          if (!signedDateEl.validate()) {
-            signedDateEl.errorMessage = 'Please select signed date';
-            valid = false;
-          } else if (this.isFutureDate(amendment.signed_date)) {
-            signedDateEl.errorMessage = 'Signed date can not be in the future';
-            valid = false;
-          }
-          signedDateEl.invalid = null;// *This is neccessary because sometimes it doesn't work without it
-          signedDateEl.invalid = !valid;
-
-          return valid;
+          return isValid;
         },
 
         /**
@@ -420,15 +398,32 @@
           var lastAmendmIndex = this.dataItems.length - 1;
 
           if (lastAmendmIndex > -1) {
-            lastAmendmIndex = this.dataItems[lastAmendmIndex];
-            if (!lastAmendmIndex.id && this._amendmentFieldsAreEmpty(lastAmendmIndex)) {
+            let lastAmendm = this.dataItems[lastAmendmIndex];
+            if (!lastAmendm.id && this._amendmentFieldsAreEmpty(lastAmendm)) {
               this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
               return;
             }
           }
-          this._showAddAmendmentConfirmationDialog();
-        },
+          if (this._thereAreUnsavedAmendments()) {
+            //* Avoid showing the dialog when adding amendments consecutively
+            this._addElement();
+          } else {
+            this._showAddAmendmentConfirmationDialog();
+          }
 
+        },
+        _thereAreUnsavedAmendments: function() {
+          if (!this.dataItems && ! this.dataItems.length) {
+            return false;
+          }
+          if (this.dataItems.find(this._unsavedAmendment)) {
+            return true;
+          }
+          return false;
+        },
+        _unsavedAmendment: function(amd) {
+          return !!!amd.id;
+        },
         // validate fields
         validate: function() {
           var valid = true;
