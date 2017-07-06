@@ -36,6 +36,7 @@
     "iron-meta": "^1.1.2",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0",
+    "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
     "etools-ajax": "1.2.2",
     "etools-app-selector": "1.0.5",
     "etools-behaviors": "1.0.1",
