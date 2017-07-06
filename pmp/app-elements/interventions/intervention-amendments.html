@@ -55,7 +55,7 @@
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
-      <template is="dom-repeat" items="{{dataItems}}">
+      <template is="dom-repeat" id="amendmentsRepeater" items="{{dataItems}}">
         <div class="row-h item-container">
           <div class$="item-actions-container [[_getLockedClass(item.id)]]"
                data-item-nr$="[[_getItemNr(index)]]">
@@ -179,7 +179,6 @@
           '_dataItemsPropertyChange(dataItems.*)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
          ],
-
         ready: function() {
           this.dataSetModel = {
             id: null,
@@ -297,21 +296,7 @@
         },
         // observe amendments property changes and validate
         _dataItemsPropertyChange: function(data) {
-          if (data.path.indexOf('dataItems.#') === -1) {
-            return;
-          }
-          var index = this._getIndex(data);
-          if (isNaN(index)) {
-            return;
-          }
-
-          var amendment = this.dataItems[index];
-          if (this._isReadonlyAmendment(amendment.id)) {
-            this._resetAmendmentValidations(index);
-            return;
-          }
-
-          this._validateAmendment(index);
+          this.validate();
         },
         _getIndex: function(data) {
           var path = data.path.replace('dataItems.#', '');
@@ -319,16 +304,15 @@
           return index;
         },
         _validateAmendment: function(index) {
-          var valid = true;
           var amendment = this.dataItems[index];
-          if (!amendment) {
-            return valid;
+          if (!amendment || this._isReadonlyAmendment(amendment.id)) {//Avoid validation for existing readonly amendments
+            return true;
           }
-          valid = this._validateAmendmentTypes(index);
-          valid = this._validateSignedDate(amendment, index);
-          valid = this._validateFileUpload(amendment, index);
+          var valid1 = this._validateAmendmentTypes(index);
+          var valid2 = this._validateSignedDate(amendment, index);
+          var valid3 = this._validateFileUpload(amendment, index);
 
-          return valid;
+          return (valid1 && valid2 && valid3);
         },
         _validateAmendmentTypes: function(index) {
           var valid = true;
@@ -339,9 +323,12 @@
           return valid;
         },
         _validateFileUpload: function(amendment, index) {
-          var valid = !!amendment.signed_amendment;
+          var valid = true;
           var fileUplodEl = this.$$('#fileUpload_' + index);
-          fileUplodEl.invalid = !valid;
+          if (fileUplodEl) {
+            valid = !!amendment.signed_amendment;
+            fileUplodEl.invalid = !valid;
+          }
           return valid;
         },
         _validateSignedDate: function(amendment, index) {
@@ -396,11 +383,19 @@
          * Check if amendment fields are empty
          */
         _amendmentFieldsAreEmpty: function(amendment) {
-          return (amendment.signed_date === null || amendment.signed_date === '') &&
-              (amendment.signed_amendment_file === null ||
-              (typeof amendment.signed_amendment_file === 'string' &&
-              amendment.signed_amendment_file === '')) &&
-              amendment.signed_amendment instanceof File === false && !amendment.type;
+          if (amendment.id)  {
+            return false;
+          }
+          return (this._amendmentTypeIsEmpty(amendment) || this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
+        },
+        _signedDateIsEmpty: function(amendment) {
+          return amendment.signed_date === null || amendment.signed_date === '';
+        },
+        _newAttachmentIsEmpty: function(amendment) {
+          return amendment.signed_amendment instanceof File === false;
+        },
+        _amendmentTypeIsEmpty: function(amendment) {
+          return !amendment.types;
         },
 
         /**
@@ -428,12 +423,6 @@
           this.dataItems.forEach(function(amendment, index) {
             if (!this._validateAmendment(index)) {
               valid = false;
-            }
-            if (this.dataItems.length - 1 === index) {
-              // last amendment
-              if (this._amendmentFieldsAreEmpty(amendment)) {
-                valid = false;
-              }
             }
           }.bind(this));
           return valid;
