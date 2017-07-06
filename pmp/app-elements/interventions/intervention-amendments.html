@@ -183,7 +183,6 @@
         observers: [
           '_dataHasChanged(dataItems)',
           '_dataItemsLengthChanged(dataItems.length)',
-          // '_dataItemsPropertyChange(dataItems.*)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
          ],
         ready: function() {
@@ -347,7 +346,7 @@
         /**
          * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
          */
-        _canBeRemoved: function(index) {
+        _canBeRemoved: function(index) { //TODO is this used anywhere?
           var amendment = this.dataItems[index];
           var amendmentId = parseInt(amendment.id, 10);
           if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {
