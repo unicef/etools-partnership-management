@@ -637,7 +637,7 @@
             return;
           }
           this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-              frsEarliestStartDate, 'start date', ''));
+              frsEarliestStartDate, 'start date', true));
           this.$.intStart.updateStyles();
         },
 
