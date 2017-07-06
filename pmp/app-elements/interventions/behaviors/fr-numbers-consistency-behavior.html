@@ -1,0 +1,72 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.FrNumbersConsistencyBehavior */
+  pmpBehaviors.FrNumbersConsistencyBehavior = {
+    properties: {
+      _frsConsistencyWarnings: {
+        type: Object,
+        value: {
+          amount: 'Total FR amount is not the same as planned UNICEF $ contribution.',
+          dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.'
+        }
+      }
+    },
+    /**
+     * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
+     */
+    checkFrsConsistency: function(frsDetails, intervention) {
+      let warnFrsFields = []; // FR fields
+      let warnIntervFields = []; // PD/SSFA fields
+      if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
+        warnFrsFields.push('FR start date');
+        warnIntervFields.push('start date');
+      }
+      if (this.checkFrsAndIntervDateConsistency(intervention.end, frsDetails.latest_end_date)) {
+        warnFrsFields.push('FR end date');
+        warnIntervFields.push('end date');
+      }
+      if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
+              frsDetails.total_frs_amt)) {
+        warnFrsFields.push('Total FR amount');
+        warnIntervFields.push('UNICEF $ contribution');
+      }
+      if (warnFrsFields.length > 0) {
+        return  warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
+            ' not the same as PD/SSFA ' + warnIntervFields.join(', ') + '.';
+      }
+      return false;
+    },
+
+    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, returnMsg) {
+      let totalUnicefContribution = parseFloat(unicefCash);
+      let totalFrsAmount = parseFloat(frsTotalAmt);
+      let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
+      if (unicefContibutionDiff > 10) {
+        return returnMsg ? this._frsConsistencyWarnings.amount : true;
+      }
+      return false;
+    },
+
+    checkFrsAndIntervDateConsistency: function(intervDateStr, frsDateStr, fieldName, returnMsg) {
+      if (intervDateStr !== frsDateStr) {
+        return returnMsg
+            ? this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
+            : true;
+      }
+      return false;
+    },
+
+    _buildFrsWarningMsg: function(msgTemplate, searchStr, replacementStr) {
+      return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
+    },
+
+    frsConsistencyWarningIsActive: function(warnMsg) {
+      return !!warnMsg;
+    },
+
+    getFrsInconsistentFieldClass(warn) {
+      return !!warn ? 'frs-inconsistent' : '';
+    }
+
+  };
+</script>

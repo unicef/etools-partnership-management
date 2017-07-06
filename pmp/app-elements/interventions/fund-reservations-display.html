@@ -1,8 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../app-behaviors/date-behavior.html">
-<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="../../../styles/table-styles.html">
 
@@ -57,7 +58,10 @@
         </tbody>
     </table>
     <div class="frs-warning" hidden$="[[_hideFrsWarning(intervention, frsDetails)]]">
-        [[_frsWarning]]
+      <etools-info-tooltip icon="report" important-warning>
+        <span slot="field">FR Numbers data is inconsistent</span>
+        <span slot="message">[[_frsWarning]]</span>
+      </etools-info-tooltip>
     </div>
     <div class="padding" hidden$="[[!_noFrs(frsDetails)]]">
       <p>There are no fund reservations added for this intervention.</p>
@@ -72,25 +76,27 @@
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
           pmpBehaviors.DateBehavior,
-          pmpBehaviors.FrNumbersValidationsBehavior
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
         properties: {
           intervention: {
-            type: Object
+            type: Object,
+            value: null
           },
           frsDetails: {
-            type: Object
+            type: Object,
+            value: null
           },
           _frsWarning: String
         },
-        _noFrs: function() {
-          return (!this.frsDetails || !this.frsDetails.frs || !this.frsDetails.frs.length);
+        _noFrs: function(frsDetails) {
+          return (!frsDetails || !frsDetails.frs || !frsDetails.frs.length);
         },
-        _hideFrsWarning: function() {
-          if (this._noFrs()) {
+        _hideFrsWarning: function(intervention, frsDetails) {
+          if (this._noFrs(frsDetails) || !intervention) {
             return true;
           }
-          let warn = this.compareFrsTotalAmountWithIntervData(this.frsDetails, this.intervention);
+          let warn = this.checkFrsConsistency(frsDetails, intervention);
           this.set('_frsWarning', warn);
           return !!!warn;
         }
