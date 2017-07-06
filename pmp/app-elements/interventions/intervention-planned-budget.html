@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
@@ -14,6 +15,8 @@
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
+
+<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
 
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
@@ -34,22 +37,18 @@
         text-align: left;
       }
 
-      #edit-btns {
-        position: absolute;
-        top: 4px;
-        right: 25px;
-      }
       #edit-btns paper-icon-button {
         color: var(--light-icon-color);
-        opacity: 0.8;
       }
 
       .currency {
         width: 200px;
       }
+
       etools-currency-amount-input {
         max-width: 175px;
       }
+
       .total {
         width: 200px;
       }
@@ -57,137 +56,151 @@
       #currency {
         width: auto;
       }
+
+      .frs-warning {
+        padding: 24px;
+        color: var(--error-color);
+        border-top: 1px solid var(--dark-divider-color);
+      }
     </style>
 
-    <div id="edit-btns" hidden$="[[!editMode]]">
-      <paper-icon-button icon="cancel"
-                         hidden="[[!_showCancelBtn(editMode, editablePlannedBudget)]]"
-                         title="Cancel"
-                         on-tap="_cancelEdit">
-      </paper-icon-button>
-      <paper-icon-button icon="create"
-                         hidden="[[!_showEditBtn(editMode, editablePlannedBudget)]]"
-                         title="Edit"
-                         on-tap="_editPlannedBudget">
-      </paper-icon-button>
-    </div>
+    <etools-content-panel panel-title="Planned Budget">
 
-    <table class="table r-align first-c-always-left">
-      <thead>
-        <tr>
-          <th class="currency">Currency</th>
-          <th>CSO Contribution</th>
-          <th>UNICEF Cash</th>
-          <th>UNICEF Supply</th>
-          <th class="total">TOTAL</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="currency">
-            <etools-form-element-wrapper no-label-float>
-              <span>USD</span>
-            </etools-form-element-wrapper>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="csoContUsd"
-                                            value="{{plannedBudget.partner_contribution}}"
-                                            type="number"
-                                            placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+      <div slot="panel-btns" id="edit-btns" hidden$="[[!_showEditBtn(editMode, unicefCashEditMode)]]">
+        <paper-icon-button icon="cancel"
+                           hidden$="[[!_showCancelBtn(editMode, unicefCashEditMode)]]"
+                           disabled$="[[!_showCancelBtn(editMode, unicefCashEditMode)]]"
+                           title="Cancel"
+                           on-tap="_cancelEdit">
+        </paper-icon-button>
+        <paper-icon-button icon="create"
+                           hidden$="[[!_showEditBtn(editMode, unicefCashEditMode)]]"
+                           disabled$="[[!_showEditBtn(editMode, unicefCashEditMode)]]"
+                           title="Edit"
+                           on-tap="_editPlannedBudget">
+        </paper-icon-button>
+      </div>
+
+      <table class="table r-align first-c-always-left">
+        <thead>
+          <tr>
+            <th class="currency">Currency</th>
+            <th>CSO Contribution</th>
+            <th>UNICEF Cash</th>
+            <th>UNICEF Supply</th>
+            <th class="total">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="currency">
+              <etools-form-element-wrapper no-label-float>
+                <span>USD</span>
+              </etools-form-element-wrapper>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="csoContUsd"
+                                              value="{{plannedBudget.partner_contribution}}"
+                                              type="number"
+                                              placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="CSO Cont. (USD) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="unicefCashUsd"
+                                              value="{{plannedBudget.unicef_cash}}" type="number"
+                                              placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="UNICEF Cash (USD) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="inKindAmountUsd"
+                                              value="{{plannedBudget.in_kind_amount}}"
+                                              type="number" placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="UNICEF Supply (USD) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td class="total">
+              <etools-form-element-wrapper no-label-float>
+                [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash,
+                plannedBudget.in_kind_amount)]]
+              </etools-form-element-wrapper>
+            </td>
+          </tr>
+          <tr>
+            <td class="currency">
+              <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
+                                            selected="{{plannedBudget.currency}}"
                                             required$="[[required]]" auto-validate
-                                            error-message="CSO Cont. (USD) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="unicefCashUsd"
-                                            value="{{plannedBudget.unicef_cash}}" type="number"
-                                            placeholder="&#8212;"
+                                            error-message="Please select the currency"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Cash (USD) required"
                                             no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="inKindAmountUsd"
-                                            value="{{plannedBudget.in_kind_amount}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Supply (USD) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td class="total">
-            <etools-form-element-wrapper no-label-float>
-              [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash,
-              plannedBudget.in_kind_amount)]]
-            </etools-form-element-wrapper>
-          </td>
-        </tr>
-        <tr>
-          <td class="currency">
-            <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
-                                          selected="{{plannedBudget.currency}}"
-                                          required$="[[required]]" auto-validate
-                                          error-message="Please select the currency"
-                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                          no-label-float>
-            </etools-single-selection-menu>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="csoContLocal"
-                                            value="{{plannedBudget.partner_contribution_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="CSO Cont. (Local) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="unicefCashLocal"
-                                            value="{{plannedBudget.unicef_cash_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Cash (Local) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td>
-            <div class="table-content-wrapper">
-              <etools-currency-amount-input id="inKindAmountLocal"
-                                            value="{{plannedBudget.in_kind_amount_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Supply (Local) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </div>
-          </td>
-          <td class="total">
-            <etools-form-element-wrapper no-label-float>
-              [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
-              plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]
-            </etools-form-element-wrapper>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              </etools-single-selection-menu>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="csoContLocal"
+                                              value="{{plannedBudget.partner_contribution_local}}"
+                                              type="number" placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="CSO Cont. (Local) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="unicefCashLocal"
+                                              value="{{plannedBudget.unicef_cash_local}}"
+                                              type="number" placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="UNICEF Cash (Local) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td>
+              <div class="table-content-wrapper">
+                <etools-currency-amount-input id="inKindAmountLocal"
+                                              value="{{plannedBudget.in_kind_amount_local}}"
+                                              type="number" placeholder="&#8212;"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              required$="[[required]]" auto-validate
+                                              error-message="UNICEF Supply (Local) required"
+                                              no-label-float>
+                </etools-currency-amount-input>
+              </div>
+            </td>
+            <td class="total">
+              <etools-form-element-wrapper no-label-float>
+                [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
+                plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]
+              </etools-form-element-wrapper>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="frs-warning" hidden$="[[_hideFrsWarning(intervention.frs_details, plannedBudget.unicef_cash)]]">
+        [[_frsWarning]]
+      </div>
+    </etools-content-panel>
 
   </template>
 
@@ -200,10 +213,12 @@
 
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsBehaviors.EtoolsCurrencyBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          pmpBehaviors.FrNumbersValidationsBehavior
         ],
 
         properties: {
+          intervention: Object,
           plannedBudget: {
             type: Object,
             notify: true
@@ -218,6 +233,12 @@
           },
           editMode: {
             type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
+          },
+          unicefCashEditMode: {
+            type: Boolean,
+            value: false,
             observer: '_editModeChanged'
           },
           editablePlannedBudget: {
@@ -232,7 +253,8 @@
             type: Number,
             value: 145 //TODO will be taken from user profile and set globally
           },
-          initialPlannedBudget: Object
+          initialPlannedBudget: Object,
+          _frsWarning: String
         },
 
         observers: [
@@ -241,43 +263,36 @@
 
         interventionWasSavedChanged: function(newValue) {
           if (newValue) {
-            this.editablePlannedBudget = false;
+            this.set('editablePlannedBudget', false);
             this.set('plannedBudget.interventionWasSaved', false);
           }
         },
         _cancelEdit: function() {
           this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
-          this.editablePlannedBudget = false;
-
+          this.set('editablePlannedBudget', false);
         },
-        _showCancelBtn: function() {
-          return !this._showEditBtn() && this.interventionId;
+        _showCancelBtn: function(editMode, unicefCashEditMode) {
+          return !this._showEditBtn(editMode, unicefCashEditMode) && this.interventionId;
         },
-        _showEditBtn: function() {
-          if (!this.editMode) {
-            return false;
-          }
-          if (this.editablePlannedBudget) {
-            return false;
-          }
-          return true;
+        _showEditBtn: function(editMode, unicefCashEditMode) {
+          return editMode || unicefCashEditMode;
         },
-        _isReadonly: function() {
-          if (!this.editMode) {
+        _isReadonly: function(editMode, editablePlannedBudget, interventionId) {
+          if (!editMode) {
             return true;
           }
-          if (!this.interventionId) {
+          if (!interventionId) {
             return false;
           }
-          return !this.editablePlannedBudget;
+          return !editablePlannedBudget;
         },
         _editPlannedBudget: function() {
-          this.editablePlannedBudget = true;
-          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
+          this.set('editablePlannedBudget', true);
+          this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
         },
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function() {
-          this.initialPlannedBudget = JSON.parse(JSON.stringify(this.plannedBudget));
+          this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
           this.editablePlannedBudget = !this.interventionId;
           this._defaultToWorkspaceCurrency();
         },
@@ -353,6 +368,15 @@
           if (newValue !== oldValue) {
             this.updateStyles();
           }
+        },
+
+        _hideFrsWarning: function(frsDetails) {
+          if (frsDetails.frs instanceof Array && frsDetails.frs.length) {
+            let warn = this.compareFrsTotalAmountWithIntervData(frsDetails, this.intervention);
+            this.set('_frsWarning', warn);
+            return !!!warn;
+          }
+          return true;
         }
 
       });

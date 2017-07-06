@@ -4,17 +4,24 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
+
 <dom-module id="generate-pca-dialog">
   <template>
     <style>
-  paper-dropdown-menu, paper-listbox {
-    width: 250px;
-  }
-</style>
+      :host {
+        --paper-dialog-scrollable: {
+          @apply(--pmp-paper-dialog-content);
+        }
+      }
+      paper-dropdown-menu, paper-listbox {
+        width: 250px;
+      }
+    </style>
     <etools-dialog id="etoolsDialog" size="lg" ok-btn-text="Download" dialog-title="Generate PCA"
-      on-close="_handleDialogClosed">
-      <paper-dropdown-menu label="Choose Template" value="{{selectedTemplate}}">
-        <paper-listbox class="dropdown-content">
+                   on-close="_handleDialogClosed">
+      <paper-dropdown-menu label="Choose Template">
+        <paper-listbox class="dropdown-content" selected="{{selectedTemplate}}">
           <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
             <paper-item>[[item]]</paper-item>
           </template>
@@ -34,22 +41,22 @@
           type: String
         },
         templateOptions: {
-          type: Object,
+          type: Array,
           value: function() {
-            return ['Arabic', 'English', 'French', 'Portuguese','Russian', 'Spanish', 'IFRC English', 'IFRC French'];
-         },
-         selectedTemplate: {
-           type: String
-         }
+            return ['Arabic', 'English', 'French', 'Portuguese', 'Russian', 'Spanish', 'IFRC English', 'IFRC French'];
+          }
+        },
+        selectedTemplate: {
+          type: String
         }
       },
       open: function() {
         this.$.etoolsDialog.opened = true;
       },
       _handleDialogClosed: function(closingReason) {
-         if (closingReason.detail.confirmed) {//TODO update url to include template type
+        if (closingReason.detail.confirmed) {//TODO update url to include template type
           window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
-           encodeURIComponent(this.selectedTemplate), '_blank');
+              encodeURIComponent(this.selectedTemplate), '_blank');
         }
       }
     });

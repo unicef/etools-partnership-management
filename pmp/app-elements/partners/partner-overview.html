@@ -193,17 +193,10 @@
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
               <div class="col col-4 block">
-                <!-- TODO: remove if="[[partnership.government_intervention]]" after backend is modified
-                           and is not sending back government_intervention -->
-                <template is="dom-if" if="[[partnership.government_intervention]]">
-                  <strong>[[partnership.number]]</strong> <br>
-                </template>
-                <template is="dom-if" if="[[!partnership.government_intervention]]">
-                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a> <br>
-                </template>
-                <div>
+                <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                <span>
                   [[partnership.title]]
-                </div>
+                </span>
               </div>
               <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
               </div>

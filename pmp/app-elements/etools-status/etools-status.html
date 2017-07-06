@@ -11,7 +11,7 @@
       :host {
         --ecp-content: {
           padding: 0px;
-        }
+        };
         display: block;
         position: relative;
         -webkit-box-sizing: border-box;
@@ -25,7 +25,7 @@
         padding:30px;
       }
       .bottom-container {
-        border-top: 2px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding: 25px;
       }
       .vertical-line {
@@ -41,6 +41,7 @@
       .status-container {
         @apply(--layout-horizontal);
         height: 40px;
+        @apply(--etools-status-container);
       }
       .status-icon, .status {
         @apply(--layout-vertical);
@@ -117,6 +118,7 @@
       .completed .status, .custom .status {
         font-weight: bold;
         color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
+        @apply(--etools-status-label-style);
       }
       .completed .icon-wrapper span {
         display: none;
@@ -135,10 +137,10 @@
 
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
-                <span class="icon-wrapper">
+                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
                   <span>[[_getTrueIndex(index)]]</span>
                   <iron-icon class="done-icon" icon="done"></iron-icon>
-                  <iron-icon class="custom-icon" icon="[[status.icon]]" style$="[[_getCustomIconColor(status.iconColor)]]"></iron-icon>
+                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
                 </span>
               </div>
 

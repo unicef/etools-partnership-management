@@ -16,10 +16,9 @@
                    actions="[[possibleActions]]"
                    on-intervention-draft-event="_setStatusDraft"
                    on-intervention-active-event="_setStatusActive"
-                   on-intervention-cancel-event="_setStatusCanceled"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
-                   on-intervention-unsuspend-event="_setStatusNotSuspended">
+                   on-intervention-unsuspend-event="_unsuspendIntervention">
         </etools-status>
   </template>
 
@@ -72,24 +71,19 @@
                 {
                   label: 'Suspended',
                   icon: 'av:pause-circle-filled',
-                  iconColor: this.getComputedStyleValue('--warning-color'),
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
                   hidden: false,
                   completed: false
                 },
                 {
                   label: 'Terminated',
                   icon: 'report-problem',
-                  iconColor: this.getComputedStyleValue('--error-color'),
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
                   hidden: false,
                   completed: false
                 },
                 {
                   label: 'Ended',
-                  hidden: false,
-                  completed: false
-                },
-                {
-                  label: 'Cancelled',
                   hidden: false,
                   completed: false
                 },
@@ -135,11 +129,6 @@
                 label: 'Terminate',
                 hidden: true,
                 event: 'intervention-terminate-event'
-              },
-              {
-                label: 'Cancel',
-                hidden: true,
-                event: 'intervention-cancel-event'
               },
             ]
           },
@@ -204,9 +193,6 @@
             let availableOptions = ['Save'];
 
             switch (status) {
-              case 'draft':
-                availableOptions.push('Cancel');
-                break;
               case 'active':
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
@@ -219,11 +205,6 @@
               case 'terminated':
                 // removes Save option
                 availableOptions.pop();
-                break;
-              case 'cancelled':
-                // removes Save option
-                availableOptions.pop();
-                availableOptions.push('Change to draft');
                 break;
               case 'closed':
                 // removes Save option
@@ -299,16 +280,6 @@
               activeStatus = 'Terminated';
               break;
 
-            case 'cancelled':
-              availableStatuses = [
-                'Draft',
-                'Signed',
-                'Cancelled',
-                'Closed',
-              ];
-              activeStatus = 'Cancelled';
-              break;
-
             case 'closed':
               availableStatuses = [
                 'Draft',
@@ -376,12 +347,10 @@
             return;
           }
 
-          if (newStatus === 'draft' || newStatus === 'cancelled') {
+          if (newStatus === 'draft' && this.status !== 'draft') {
             // if agreement was not saved (is new) or the status is already changed
-            // from draft/cancelled, stop status change
-            if (this.status !== 'draft' && this.status !== 'cancelled') {
-              return false;
-            }
+            // from draft, stop status change
+            return false;
           }
 
           if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
@@ -416,11 +385,8 @@
           this._updateStatus('suspended');
         },
 
-        _setStatusCanceled: function() {
-          this._updateStatus('cancelled');
-        },
-        _setStatusNotSuspended: function() {
-          this.fire('toast', {text: 'Unsuspend action not implemented yet', showCloseBtn: true});
+        _unsuspendIntervention: function() {
+          this._updateStatus('signed');
         },
 
       });
