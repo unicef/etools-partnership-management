@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
@@ -23,6 +24,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="intervention-form/agreement-selector.html">
 
@@ -74,6 +76,18 @@
         @apply(--layout-end-justified);
         padding-bottom: 12px;
         color: var(--error-color);
+      }
+
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          @apply(--pmp-form-field-frs-inconsistency-icon);
+        };
+      }
+
+      etools-date-input.frs-inconsistent {
+        --paper-input-container-input: {
+          color: var(--error-color);
+        }
       }
     </style>
 
@@ -188,27 +202,41 @@
         </div>
         <div class="col col-3">
           <!-- Start date -->
-          <etools-date-input id="intStart"
-                             label="Start date"
-                             value="{{intervention.start}}"
-                             readonly$="[[!editMode]]"
-                             error-message="Please select start date"
-                             required$="[[nterventionRequiredField]]"
-                             auto-validate
-                             no-init show-clear-btn>
-          </etools-date-input>
+          <etools-info-tooltip icon="report"
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
+                               important-warning="[[frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
+            <etools-date-input slot="field"
+                               id="intStart"
+                               class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
+                               label="Start date"
+                               value="{{intervention.start}}"
+                               readonly$="[[!editMode]]"
+                               error-message="Please select start date"
+                               required$="[[nterventionRequiredField]]"
+                               auto-validate
+                               no-init show-clear-btn>
+            </etools-date-input>
+            <span slot="message">[[_frsStartConsistencyWarning]]</span>
+          </etools-info-tooltip>
+
         </div>
         <div class="col col-3">
-          <!-- End date -->
-          <etools-date-input id="intEnd"
-                             label="End date"
-                             value="{{intervention.end}}"
-                             readonly$="[[!editMode]]"
-                             error-message="Please select end date"
-                             required$="[[nterventionRequiredField]]"
-                             auto-validate
-                             no-init show-clear-btn>
-          </etools-date-input>
+          <etools-info-tooltip icon="report"
+                               hide-tooltip="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
+                               important-warning="[[frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
+            <etools-date-input slot="field"
+                               id="intEnd"
+                               class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
+                               label="End date"
+                               value="{{intervention.end}}"
+                               readonly$="[[!editMode]]"
+                               error-message="Please select end date"
+                               required$="[[nterventionRequiredField]]"
+                               auto-validate
+                               no-init show-clear-btn>
+            </etools-date-input>
+            <span slot="message">[[_frsEndConsistencyWarning]]</span>
+          </etools-info-tooltip>
         </div>
         <div class="col col-3">
           <div class="expiry-warning">
@@ -270,7 +298,8 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          pmpBehaviors.MissingDropdownOptionsBehavior,
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
 
         properties: {
@@ -345,10 +374,20 @@
 //            value: false,
             observer: '_editModeChanged'
           },
+          _frsStartConsistencyWarning: {
+            type: String,
+            value: ''
+          },
+          _frsEndConsistencyWarning: {
+            type: String,
+            value: ''
+          }
         },
 
         observers: [
-          '_setYears(intervention.start, intervention.end)'
+          '_setYears(intervention.start, intervention.end)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
+          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)'
         ],
 
         ready: function() {
@@ -595,6 +634,28 @@
         // Planned budget unicef cash should be editable in signed status
         _getUnicefCashEditMode: function(editMode, interventionStatus) {
           return editMode && ['', 'draft', 'signed'].indexOf(interventionStatus) > -1;
+        },
+
+        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsStartConsistencyWarning', null);
+            this.$.intStart.updateStyles();
+            return;
+          }
+          this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
+              frsEarliestStartDate, 'start date', true));
+          this.$.intStart.updateStyles();
+        },
+
+        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsEndConsistencyWarning', '');
+            this.$.intEnd.updateStyles();
+            return;
+          }
+          this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
+              frsLatestEndDate, 'end date', true));
+          this.$.intEnd.updateStyles();
         },
 
         _changeSectorLocations: function(e) {
