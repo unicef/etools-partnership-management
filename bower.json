@@ -58,5 +58,8 @@
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
+  },
+  "resolutions": {
+    "neon-animation": "1 - 2"
   }
 }
