@@ -393,8 +393,23 @@
           this.set('cpStructureOptions', cpStructures);
           this._setDefaultSelectedCpStructure(cpStructures);
         },
+        _hasExpiredCpAssigned: function(cpId) {
+          if (cpId > 0 && this.cpStructureOptions instanceof Array) {
+            let cp = this.cpStructureOptions.find(function(cp) {
+              return parseInt(cp.id, 10) === parseInt(cpId, 10);
+            });
+            if (!cp) {
+              return true;
+            }
+          }
+          return false;
+        },
         _setDefaultSelectedCpStructure: function(cpStructures) {
           if (this.intervention && this.intervention.country_programme) {
+            let cpStructureIsOld = this._hasExpiredCpAssigned(this.agreement.country_programme);
+            if (cpStructureIsOld) {
+              this.fire('toast', {text: 'This agreement has an old/expired CP Structure!', showCloseBtn: true});
+            }
             return;
           }
           let currentCP;
