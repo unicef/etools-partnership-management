@@ -106,9 +106,6 @@
           this._agreementIdChanged(this.agreementId);
         },
         _agreementIdChanged: function(agreementId) {
-          var partnerSelector = this.$.partner;
-          var agreementSelector = this.$.agreements;
-
           if (!this.agreements) {
             return;
           }
@@ -130,7 +127,9 @@
             return partner.id === agreement.partner;
           });
           if (!partner) {
-            this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+            let partnerIsNotCSOMsg = 'Selected agreement(' + agreement.agreement_number +
+                ') partner (' + agreement.partner_name + ') partner_type is not CSO!';
+            this.fire('toast', {text: partnerIsNotCSOMsg,  showCloseBtn: true});
             return;
           }
           this.set('partnerId', partner.id);

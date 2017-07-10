@@ -8,7 +8,9 @@
 
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-amount-input.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/table-styles.html">
 <link rel="import" href="../../../styles/fields-inside-table-styles.html">
@@ -16,7 +18,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
-<link rel="import" href="behaviors/fr-numbers-validations-behavior.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
@@ -57,10 +59,15 @@
         width: auto;
       }
 
-      .frs-warning {
-        padding: 24px;
-        color: var(--error-color);
-        border-top: 1px solid var(--dark-divider-color);
+      etools-currency-amount-input.frs-inconsistent {
+        --etools-currency-container-input: {
+          color: var(--error-color);
+        }
+      }
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          @apply(--pmp-form-field-frs-inconsistency-icon);
+        };
       }
     </style>
 
@@ -113,14 +120,21 @@
             </td>
             <td>
               <div class="table-content-wrapper">
-                <etools-currency-amount-input id="unicefCashUsd"
-                                              value="{{plannedBudget.unicef_cash}}" type="number"
-                                              placeholder="&#8212;"
-                                              readonly$="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
-                                              required$="[[required]]" auto-validate
-                                              error-message="UNICEF Cash (USD) required"
-                                              no-label-float>
-                </etools-currency-amount-input>
+                <etools-info-tooltip icon="report"
+                                     hide-tooltip="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                                     important-warning="[[frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
+                  <etools-currency-amount-input slot="field"
+                                                id="unicefCashUsd"
+                                                class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]"
+                                                value="{{plannedBudget.unicef_cash}}" type="number"
+                                                placeholder="&#8212;"
+                                                readonly$="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                                                required$="[[required]]" auto-validate
+                                                error-message="UNICEF Cash (USD) required"
+                                                no-label-float>
+                  </etools-currency-amount-input>
+                  <span slot="message">[[_frsConsistencyWarning]]</span>
+                </etools-info-tooltip>
               </div>
             </td>
             <td>
@@ -197,9 +211,6 @@
           </tr>
         </tbody>
       </table>
-      <div class="frs-warning" hidden$="[[_hideFrsWarning(intervention.frs_details, plannedBudget.unicef_cash)]]">
-        [[_frsWarning]]
-      </div>
     </etools-content-panel>
 
   </template>
@@ -214,7 +225,7 @@
         behaviors: [
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          pmpBehaviors.FrNumbersValidationsBehavior
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
 
         properties: {
@@ -254,11 +265,15 @@
             value: 145 //TODO will be taken from user profile and set globally
           },
           initialPlannedBudget: Object,
-          _frsWarning: String
+          _frsConsistencyWarning: {
+            type: String,
+            value: ''
+          }
         },
 
         observers: [
-          'interventionWasSavedChanged(plannedBudget.interventionWasSaved)'
+          'interventionWasSavedChanged(plannedBudget.interventionWasSaved)',
+          '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)'
         ],
 
         interventionWasSavedChanged: function(newValue) {
@@ -370,13 +385,15 @@
           }
         },
 
-        _hideFrsWarning: function(frsDetails) {
-          if (frsDetails.frs instanceof Array && frsDetails.frs.length) {
-            let warn = this.compareFrsTotalAmountWithIntervData(frsDetails, this.intervention);
-            this.set('_frsWarning', warn);
-            return !!!warn;
+        _checkFrsConsistency: function(frsTotalAmt, unicefCash) {
+          if (this.emptyFrsList(this.intervention)) {
+            this.set('_frsConsistencyWarning', '');
+            this.$.unicefCashUsd.updateStyles();
+            return;
           }
-          return true;
+          this.set('_frsConsistencyWarning',
+              this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, true));
+          this.$.unicefCashUsd.updateStyles();
         }
 
       });
