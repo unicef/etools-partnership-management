@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import"
-      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
@@ -50,21 +50,18 @@
       </div>
 
       <div class="col col-8">
-        <etools-searchable-multiselection-menu id="indicators"
-                                               label="CP Indicators"
-                                               placeholder="&#8212;"
-                                               options="[[cpIndicators]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="name"
-                                               selected="{{selectedCpIndicatorsIds}}"
-                                               update-selected
-                                               required$="[[required]]"
-                                               auto-validate
-                                               error-message="Please select CP Indicators"
-                                               multi
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        <etools-multi-selection-menu id="indicators"
+                                     label="CP Indicators"
+                                     placeholder="&#8212;"
+                                     options="[[cpIndicators]]"
+                                     option-value="id"
+                                     option-label="name"
+                                     selected-values="{{selectedCpIndicatorsIds}}"
+                                     required$="[[required]]"
+                                     auto-validate
+                                     error-message="Please select CP Indicators"
+                                     readonly$="[[!editMode]]">
+        </etools-multi-selection-menu>
 
       </div>
     </div>
@@ -139,8 +136,8 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
-        _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
-          if (ids.length && this.firstLoadCpIndicatorsUse) {
+        _selectedCpIndicatorsIdsChanged: function(ids) {
+          if (ids instanceof Array && ids.length && this.firstLoadCpIndicatorsUse) {
             // prepare cp indicators id to be set as selected, used only once, at element init
             this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
             this.set('firstLoadCpIndicatorsUse', false);

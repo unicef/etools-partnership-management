@@ -51,9 +51,11 @@
       #amendments-wrapper {
         margin-top: 16px;
       }
+
       :host(:not([edit-mode])) #amendments-wrapper {
         margin-bottom: 24px;
       }
+
       paper-input#other {
         width: 100%;
       }
@@ -77,20 +79,21 @@
               <div class="col col-4">
                 <!-- Amendment Type -->
                 <template is="dom-if" if="[[_isReadonlyAmendment(item.id)]]">
-                  <paper-input label="Amendment Types" value="[[_getReadonlyAmendmentTypes(item.types)]]" readonly></paper-input>
+                  <paper-input label="Amendment Types" value="[[_getReadonlyAmendmentTypes(item.types)]]"
+                               readonly></paper-input>
                 </template>
                 <template is="dom-if" if="[[!_isReadonlyAmendment(item.id)]]">
                   <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
-                                                       label="Amendment Types"
-                                                       placeholder="&#8212;"
-                                                       options="[[filteredAmendmentTypes]]"
-                                                       selected-values="{{item.types}}"
-                                                       dynamic-align
-                                                       required
-                                                       hide-search
-                                                       error-message="Type is required"
-                                                       readonly="[[_isReadonlyAmendment(item.id)]]"
-                                                       on-focused-changed="_onFocusChangedUpdateAutovalidate">
+                                               label="Amendment Types"
+                                               placeholder="&#8212;"
+                                               options="[[filteredAmendmentTypes]]"
+                                               selected-values="{{item.types}}"
+                                               dynamic-align
+                                               required
+                                               hide-search
+                                               error-message="Type is required"
+                                               readonly="[[_isReadonlyAmendment(item.id)]]"
+                                               on-focused-changed="_onFocusChangedUpdateAutovalidate">
                   </etools-multi-selection-menu>
                 </template>
               </div>
@@ -128,14 +131,14 @@
                 </span>
               </div>
             </template>
-              <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]">
-                <paper-input id="other"
-                                placeholder="&#8212;"
-                                label="Other"
-                                value="{{item.other_description}}"
-                                readonly="[[_isReadonlyAmendment(item.id)]]">
-                  </paper-input>
-              </div>
+            <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]">
+              <paper-input id="other"
+                           placeholder="&#8212;"
+                           label="Other"
+                           value="{{item.other_description}}"
+                           readonly="[[_isReadonlyAmendment(item.id)]]">
+              </paper-input>
+            </div>
           </div>
 
         </div>
@@ -147,8 +150,8 @@
     </div>
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                  on-tap="_addNewAmendment"
-                  title="Add"></paper-fab>
+                 on-tap="_addNewAmendment"
+                 title="Add"></paper-fab>
     </div>
   </template>
 
@@ -187,7 +190,7 @@
           '_dataHasChanged(dataItems)',
           '_dataItemsLengthChanged(dataItems.length)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
-         ],
+        ],
         ready: function() {
           this.dataSetModel = {
             id: null,
@@ -204,10 +207,12 @@
           var dialog = document.createElement('p');
           dialog.setAttribute('id', 'addAmendmendConfirmation');
           dialog.innerHTML = 'All fields in the details tab will now be open for editing. ' +
-            'Please change all necessary fields before hitting save.';
+              'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
+          // jscs:disable maximumLineLength
           this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          // jscs:enable maximumLineLength
           this.addAmendmentConfirmationDialog.updateStyles();
         },
         _getSignedDateErrorMessage: function(signedDate) {
@@ -242,10 +247,10 @@
         _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
           if (interventionDocumentType === 'SSFA') {
             this.filteredAmendmentTypes = this.amendmentTypes.filter(function(item) {
-              return ['Dates','Other'].indexOf(item.label) > -1;
+              return ['Dates', 'Other'].indexOf(item.label) > -1;
             });
           } else {
-            this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes))
+            this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
           }
         },
         _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength, index) {
@@ -287,26 +292,26 @@
           }
         },
         _makeInterventionFieldsEditable: function() {
-          //TODO
-          return;
-          if (!this.permissions) {
-            return;
-          }
-          for (var prop in this.permissions.read_only) {
-            this.set('permissions.read_only.'+ prop, true);
-            //this.notifyPath('permissions.read_only..//if necessasry
-          }
+          // TODO
+//          if (!this.permissions) {
+//            return;
+//          }
+//          for (var prop in this.permissions.read_only) {
+//            this.set('permissions.read_only.' + prop, true);
+//            //this.notifyPath('permissions.read_only..//if necessasry
+//          }
         },
         _resetInterventionFieldsEditMode: function() {
           //TODO
-          return;
-          for (var prop in this.initialPermissions.read_only) {
-            this.set('permissions.read_only.'+ prop, this.initialPermissions.read_only[prop]);
-          }
+//          return;
+//          for (var prop in this.initialPermissions.read_only) {
+//            this.set('permissions.read_only.' + prop, this.initialPermissions.read_only[prop]);
+//          }
         },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];
-          if (!amendment || this._isReadonlyAmendment(amendment.id)) {//Avoid validation for existing readonly amendments
+          if (!amendment || this._isReadonlyAmendment(amendment.id)) {
+            //Avoid validation for existing readonly amendments
             return true;
           }
           var isValid1 = this._validateAmendmentTypes(index);
@@ -377,10 +382,11 @@
          * Check if amendment fields are empty
          */
         _amendmentFieldsAreEmpty: function(amendment) {
-          if (amendment.id)  {
+          if (amendment.id) {
             return false;
           }
-          return (this._amendmentTypeIsEmpty(amendment) || this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
+          return (this._amendmentTypeIsEmpty(amendment) ||
+          this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
         },
         _signedDateIsEmpty: function(amendment) {
           return amendment.signed_date === null || amendment.signed_date === '';
@@ -406,7 +412,7 @@
             }
           }
           if (this._thereAreUnsavedAmendments()) {
-            //* Avoid showing the dialog when adding amendments consecutively
+            // Avoid showing the dialog when adding amendments consecutively
             this._addElement();
           } else {
             this._showAddAmendmentConfirmationDialog();
@@ -414,7 +420,7 @@
 
         },
         _thereAreUnsavedAmendments: function() {
-          if (!this.dataItems && ! this.dataItems.length) {
+          if (!this.dataItems && !this.dataItems.length) {
             return false;
           }
           if (this.dataItems.find(this._unsavedAmendment)) {
@@ -472,23 +478,23 @@
           if (!types || !types.length) {
             return;
           }
-         var message = 'Please make sure you update ';
-         types.forEach(function(amdType) {
-           switch (amdType) {
-             case 'dates':
-               message += 'Dates, ';
-               break;
-             case 'results':
-               message += 'Programme Results, ';
-               break;
-             case 'budget':
-               message += 'Planned Budget, ';
-               break;
-             case 'other':
-               message += 'Other, ';
-               break;
-           }
-         });
+          var message = 'Please make sure you update ';
+          types.forEach(function(amdType) {
+            switch (amdType) {
+              case 'dates':
+                message += 'Dates, ';
+                break;
+              case 'results':
+                message += 'Programme Results, ';
+                break;
+              case 'budget':
+                message += 'Planned Budget, ';
+                break;
+              case 'other':
+                message += 'Other, ';
+                break;
+            }
+          });
           message = message.substring(0, message.length - 2);
           message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
           return message;
