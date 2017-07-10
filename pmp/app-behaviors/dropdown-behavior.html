@@ -13,7 +13,19 @@
           menu.set('selected', null);
         }
       }
-    }
+    },
+    // set autoValidate to true on first focus
+    _onFocusChangedUpdateAutovalidate: function(e) {
+      let dropdown = e.target;
+      this.debounce('dropdown-focus', function() {
+        if (e.detail && e.detail.value) {
+          if (dropdown.is && dropdown.is === 'etools-multi-selection-menu' &&
+              !dropdown.autoValidate) {
+            dropdown.set('autoValidate', true);
+          }
+        }
+      }, 10);
+    },
 
   };
 </script>
