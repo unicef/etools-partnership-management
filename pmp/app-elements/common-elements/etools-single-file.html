@@ -102,7 +102,7 @@
         },
 
         _fileReplaced: function(data) {
-          if (data.path === 'attachments.#0') {
+          if ((data.path.indexOf('attachments.#') > -1)) {
             // file changed
             this._attachmentChanged(this.attachments.length);
           }
