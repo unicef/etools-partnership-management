@@ -19,8 +19,7 @@
     </style>
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
-                   on-partner-hide="_triggerHidePartner"
-                   on-partner-delete="_triggerDeletePartner">
+                   on-partner-delete="_showDeleteConfirmationDialog">
     </etools-status>
   </template>
   <script>
@@ -42,7 +41,7 @@
             type: Boolean,
             value: false
           },
-          statusChangeWarningDialogContent: {
+          deleteWarningDialogContent: {
             type: Object
           },
           possibleStatuses: {
@@ -100,11 +99,6 @@
                 event: 'save-partner'
               },
               {
-                label: 'Hide',
-                hidden: true,
-                event: 'partner-hide'
-              },
-              {
                 label: 'Delete',
                 hidden: true,
                 event: 'partner-delete'
@@ -119,11 +113,10 @@
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
-          this.statusChangeWarningDialogContent = document.createElement('p');
-          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
-
+          this.deleteWarningDialogContent = document.createElement('p');
+          this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
+          this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
+            this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
         },
@@ -138,29 +131,28 @@
           }
           return hidden;
         },
-        _showStatusChangeConfirmationDialog: function() {
+        _showDeleteConfirmationDialog: function() {
           if (!this.warningDialog) {
             this.logWarn('warningDialog not created!', 'pmp partner status change');
             return;
           }
 
-          if (!this.statusChangeWarningDialogContent) {
-            this.logWarn('#statusChangeWarningContent element not found!', 'pmp partner status change');
+          if (!this.deleteWarningDialogContent) {
+            this.logWarn('#deleteWarningContent element not found!', 'pmp partner status change');
             return;
           }
-          var warningMessage = 'Are you sure you want to hide partner ' + this.partner.name + '?';
-          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          var warningMessage = 'Are you sure you want to delete partner ' + this.partner.name + '?';
+          this.deleteWarningDialogContent.innerHTML = warningMessage;
           this.warningDialog.opened = true;
         },
 
-        _statusChangeConfirmationCallback: function(event) {
+        _dialogConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             if (!this.editMode) {
               return;
             }
-            this.fire('hide-partner', {
+            this.fire('delete-partner', {
               id: this.partner.id,
-              hidden: true
             });
           }
         },
@@ -185,12 +177,9 @@
 
         _computeAvailableActions: function(hidden, editMode) {
           this._setAllActionsToHidden();
-          let availableOptions = ['Save'];
+          let availableOptions = ['Save', 'Delete'];
           if (!editMode) {
             return;
-          }
-          if (!hidden) {
-            availableOptions.push('Hide');
           }
 
           for (let key in this.possibleActions) {
@@ -260,16 +249,6 @@
           return this.partner.vision_synced === false;
         },
 
-        _triggerHidePartner: function() {
-          if (this.partner.hidden) {
-            return;
-          }
-          this._showStatusChangeConfirmationDialog();
-        },
-
-        _triggerDeletePartner: function() {
-          this.fire('toast', {text: 'Delete action not implemented yet', showCloseBtn: true});
-        }
       });
     })();
 

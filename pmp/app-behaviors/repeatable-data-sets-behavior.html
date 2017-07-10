@@ -23,6 +23,7 @@
       },
       editMode: {
         type: Boolean,
+        reflectToAttribute: true,
         value: false
       },
       deleteConfirmationTitle: {
@@ -136,11 +137,10 @@
     },
 
     _deleteElement: function() {
-      var index = this.elToDeleteIndex;
       if (!this.editMode) {
         return;
       }
-
+      var index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
         this.fire('delete-confirm', {index: this.elToDeleteIndex});
