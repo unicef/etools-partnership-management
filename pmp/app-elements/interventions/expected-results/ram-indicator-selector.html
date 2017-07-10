@@ -136,8 +136,8 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
-        _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
-          if (ids.length && this.firstLoadCpIndicatorsUse) {
+        _selectedCpIndicatorsIdsChanged: function(ids) {
+          if (ids instanceof Array && ids.length && this.firstLoadCpIndicatorsUse) {
             // prepare cp indicators id to be set as selected, used only once, at element init
             this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
             this.set('firstLoadCpIndicatorsUse', false);

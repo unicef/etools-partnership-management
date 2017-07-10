@@ -222,9 +222,10 @@
             <div class="title">Section/Cluster, Locations</div>
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
-                                         data-items="{{intervention.sector_locations}}"
+                                         data-items="[[prepareSectorLocations(intervention)]]"
                                          edit-mode$="[[editMode]]"
-                                         required$="[[interventionRequiredField]]">
+                                         required$="[[interventionRequiredField]]"
+                                         on-change-sector-locations="_changeSectorLocations">
           </intervention-sector-locations>
         </paper-material>
       </div>
@@ -538,9 +539,12 @@
           return status === 'active' || status === 'implemented';
         },
 
-        prepareSectorLocations: function() {
-          if (this.intervention.sector_locations.length > 0) {
-            return this.intervention.sector_locations.map(function(sectorLocation) {
+        prepareSectorLocations: function(intervention) {
+          if (!intervention) {
+            intervention = this.intervention;
+          }
+          if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
+            return intervention.sector_locations.map(function(sectorLocation) {
               return {
                 id: sectorLocation.id,
                 sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
@@ -591,6 +595,11 @@
         // Planned budget unicef cash should be editable in signed status
         _getUnicefCashEditMode: function(editMode, interventionStatus) {
           return editMode && ['', 'draft', 'signed'].indexOf(interventionStatus) > -1;
+        },
+
+        _changeSectorLocations: function(e) {
+          e.stopImmediatePropagation();
+          this.set('intervention.sector_locations', e.detail.sectorLocations);
         }
 
       });
