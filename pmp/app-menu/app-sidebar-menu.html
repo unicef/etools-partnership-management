@@ -44,9 +44,9 @@
           <div class="name">PD/SSFA ToR</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="governments" href$="[[baseUrl]]governments/list" on-tap="_firePageChangeLoading">
+        <a class="nav-menu-item" menu-name="government-partners" href$="[[baseUrl]]government-partners/list" on-tap="_firePageChangeLoading">
           <iron-icon icon="account-balance"></iron-icon>
-          <div class="name">Governments</div>
+          <div class="name">Government</div>
         </a>
 
         <!--</template>-->
@@ -88,15 +88,21 @@
         },
 
         _firePageChangeLoading: function(e) {
-          var menuOptionEl = e.currentTarget;
-          var newPageName = menuOptionEl.getAttribute('menu-name');
+          let menuOptionEl = e.currentTarget;
+          let partnersPages = ['partners', 'government-partners'];
+          let newPageName = menuOptionEl.getAttribute('menu-name');
+
+          if (partnersPages.indexOf(newPageName) > -1 && partnersPages.indexOf(this.page) > -1) {
+            return;
+          }
+
           if (newPageName !== this.page) {
             e.preventDefault();
             this.fire('global-loading', {
               message: 'Loading ' + newPageName + ' pages elements...',
               active: true,
               resetCounter: true,
-              newUrl: menuOptionEl.getAttribute('href')
+              newUrl: menuOptionEl.getAttribute('href').replace(this.baseUrl, '')
             });
           }
         }

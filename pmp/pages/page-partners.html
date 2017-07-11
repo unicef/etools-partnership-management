@@ -12,7 +12,6 @@
 <link rel="import" href="../app-elements/partners/partners-list.html">
 <link rel="import" href="../app-elements/partners/partner-overview.html">
 <link rel="import" href="../app-elements/partners/partner-details.html">
-<link rel="import" href="../app-elements/governments/government-details.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
@@ -32,13 +31,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="partners/list"
+        pattern="[[currentPage]]/list"
         query-params="{{queryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="partners/:id/:tab"
+        pattern="[[currentPage]]/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -53,7 +52,8 @@
         <div class="top-content-row title-row">
           <h1 main-title>
             <template is="dom-if" if="[[listActive]]">
-              <span>Partners</span>
+              <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+              <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
             </template>
             <template is="dom-if" if="[[tabsActive]]">
               <span>[[partner.name]]</span>
@@ -85,7 +85,7 @@
         </div>
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
-            <paper-tabs
+            <paper-tabs id="partnerTabs"
                 selected="{{routeData.tab}}"
                 attr-for-selected="name" noink bottom-item>
 
@@ -110,7 +110,11 @@
                 role="main">
 
       <div class="page" name="list">
-        <partners-list id="list" active="[[listActive]]" csv-download-url="{{csvDownloadUrl}}"
+        <partners-list id="list"
+                       show-only-government-type="[[showOnlyGovernmentType]]"
+                       current-page="[[currentPage]]"
+                       active="[[listActive]]"
+                       csv-download-url="{{csvDownloadUrl}}"
                        url-params="[[queryParams]]"></partners-list>
       </div>
       <div class="page" name="overview">
@@ -136,9 +140,6 @@
       behaviors: [EtoolsLogsBehavior],
 
       properties: {
-        user: {
-          type: Object
-        },
         tabsActive: {
           type: Boolean
         },
@@ -160,7 +161,12 @@
         },
         permissions: {
           type: Object
-        }
+        },
+        showOnlyGovernmentType: {
+          type: Boolean,
+          value: false
+        },
+        currentPage: String
       },
 
       observers: [
@@ -213,16 +219,14 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
+          var tabs = this.$$('#partnerTabs');
+          if (tabs) {
+            tabs.notifyResize();
+          }
           this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
 
-      _getPartnerPageTitle: function(listActive, partnerName) {
-        if (listActive) {
-          return 'Partners';
-        }
-        return partnerName;
-      },
       _getTopContentAdditionalClass: function(listActive) {
         if (!listActive) {
           return 'with-tabs';

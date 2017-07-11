@@ -12,7 +12,7 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
@@ -37,6 +37,10 @@
       :host {
         display: block;
         width: 100%;
+        padding: 0 25px 25px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
 
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: var(--medium-theme-background-color);
@@ -72,10 +76,6 @@
         position: relative;
       }
 
-      .action.delete[disabled] {
-        visibility: hidden;
-      }
-
       etools-single-file {
         width: 100%;
       }
@@ -100,19 +100,20 @@
         <div id="assessments-wrapper">
           <div hidden$="[[_emptyList(dataItems.length)]]">
             <template is="dom-repeat" items="{{dataItems}}">
-              <div class="row-h item-container">
-                <div class="row-h item-actions-container">
+              <div class="row-h item-container no-h-margin">
+                <div class="item-actions-container">
 
-                  <div class="row-v actions">
+                  <div class="actions">
                     <paper-icon-button class="action delete"
                                        on-tap="_openDeleteConfirmation"
                                        data-args$="[[index]]"
                                        disabled$="[[!editMode]]"
-                                       icon="cancel"></paper-icon-button>
+                                       icon="cancel">
+                    </paper-icon-button>
                   </div>
 
                 </div>
-                <div class="flex-c item-content">
+                <div class="item-content">
                   <div class="row-h">
                     <div class="col col-4">
                       <!-- Assessment type -->
@@ -123,15 +124,13 @@
                                      readonly></paper-input>
                       </template>
                       <template is="dom-if" if="[[editMode]]">
-                        <etools-searchable-multiselection-menu id$="assessmentType_[[index]]"
-                                                               label="Assessment Type"
-                                                               options="[[assessmentTypesOptions]]"
-                                                               selected="{{item.type}}"
-                                                               custom-object-options
-                                                               update-selected
-                                                               dynamic-align
-                                                               error-message="[[dateSubmitedErrorMessages.missing]]">
-                        </etools-searchable-multiselection-menu>
+                        <etools-single-selection-menu id$="assessmentType_[[index]]"
+                                                      label="Assessment Type"
+                                                      options="[[assessmentTypesOptions]]"
+                                                      selected="{{item.type}}"
+                                                      dynamic-align
+                                                      error-message="[[dateSubmitedErrorMessages.missing]]">
+                        </etools-single-selection-menu>
                       </template>
                     </div>
                     <div class="col col-4">
@@ -177,7 +176,7 @@
             <p>There are no assessments added.</p>
           </div>
 
-          <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+          <div id="bottom-actions" class="row-h no-h-margin" hidden$="[[!editMode]]">
             <paper-fab icon="add"
                        on-tap="_addNewAssessment"
                        title="Add"></paper-fab>

@@ -3,7 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -21,7 +21,9 @@
       :host {
         display: block;
         width: 100%;
-        padding: 7px 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
@@ -31,17 +33,13 @@
       paper-input {
         width: 100%;
       }
-
-      .action.delete[disabled] {
-        visibility: hidden;
-      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class="row-h item-actions-container">
-            <div class="row-v actions">
+          <div class="item-actions-container">
+            <div class="actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
@@ -50,18 +48,18 @@
               </paper-icon-button>
             </div>
           </div>
-          <div class="row-v flex-c item-content">
+          <div class="item-content">
             <div class="row-h">
               <div class="col col-2">
-                <etools-searchable-multiselection-menu id$="year_[[index]]"
-                                                       class="year"
-                                                       label="Year"
-                                                       placeholder="&#8212;"
-                                                       value="[[_getSelectedYear(item.year, years.length)]]"
-                                                       options="[[years]]"
-                                                       on-value-change="_yearChanged"
-                                                       readonly$="[[!editMode]]">
-                </etools-searchable-multiselection-menu>
+                <etools-single-selection-menu id$="year_[[index]]"
+                                              class="year"
+                                              label="Year"
+                                              placeholder="&#8212;"
+                                              selected="{{item.year}}"
+                                              options="[[years]]"
+                                              on-iron-activate="_yearChanged"
+                                              readonly$="[[!editMode]]">
+                </etools-single-selection-menu>
               </div>
               <div class="col col-3">
                 <!-- TODO: min="0" not enought, re-check and restrict to values >= 0 -->
@@ -187,16 +185,16 @@
         },
 
         _yearChanged: function(event) {
-          var yearSelected = (event.detail.selectedValues && event.detail.selectedValues.value)
-              ? event.detail.selectedValues.value : null;
+          var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
 
           if (this._yearAlreadySelected(yearSelected, event.model.index)) {
             this.fire('toast', {text: 'Year already selected on other planned visit item.', showCloseBtn: true});
             var yearDropdown = this.$$('#year_' + event.model.index);
             if (yearDropdown) {
-              yearDropdown.value = [];
-              yearDropdown.selectedValues = null;
+              yearDropdown.selected = null;
             }
+             this.set('dataItems.' + event.model.index + '.year', null);
+            event.preventDefault();
             return;
           }
 
@@ -205,19 +203,18 @@
 
         _yearAlreadySelected: function(year, dropdownIdx) {
           var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
-          var selected = false;
-          if (dropdowns && dropdowns.length) {
-            for (var i = 0; i < dropdowns.length; i++) {
-              if (dropdownIdx !== i && dropdowns[i].value && dropdowns[i].value.value) {
-                if (dropdowns[i].value.value === year) {
-                  // already selected sector
-                  selected = true;
-                  break;
-                }
+          if (!dropdowns || !dropdowns.length) {
+            return false;
+          }
+          for (var i = 0; i < dropdowns.length; i++) {
+            if (dropdowns[i].selected) {
+              if (dropdownIdx !== i && dropdowns[i].selected === year) {
+                // already selected sector
+              return true;
               }
             }
           }
-          return selected;
+          return false;
         },
 
         /**

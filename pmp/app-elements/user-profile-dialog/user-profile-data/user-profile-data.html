@@ -1,18 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
-
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-
 <dom-module id="user-profile-data">
 
   <template>
+
     <etools-ajax id="ajaxEl"
                  endpoint="[[endpoint]]"
                  on-success="_handleResponse"
-                 on-fail="handleErrorResponse">
-    </etools-ajax>
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -32,20 +30,17 @@
           type: Object,
           notify: true
         },
-        ajaxEl: {
-          type: Object
-        }
       },
-      ready: function() {
-        this.ajaxEl = this.$$('#ajaxEl');
+      ready: function () {
+        this.ajaxEl = this.$.ajaxEl;
       },
-      saveProfile: function(profile) {
+      saveProfile: function (profile) {
         var url = this.endpoint.url;
         if (_.isEmpty(profile)) {
-            return;
+          return;
         }
         if (!_.isEmpty(profile)) {
-          this.fire('my-profile-ajax-loading', {message: 'Saving profile data...'});
+          this.fire('global-loading', {message: 'Saving profile data...', active: true});
           this._prepareAndFireRequest('PATCH', profile, url);
         } else {
           this.fire('toast', {
@@ -55,7 +50,6 @@
         }
       },
       _prepareAndFireRequest: function(method, data, url) {
-
         this._resetAjax();
         if (!method) {
           method = 'GET';
@@ -67,16 +61,15 @@
           this.ajaxEl.set('url', url);
         }
       },
-      _resetAjax: function() {
+      _resetAjax: function(){
         this.ajaxEl.set('params', null);
         this.ajaxEl.set('body', null);
         this.ajaxEl.set('url', null);
       },
       _handleResponse: function(response) {
         this.set('userProfile', response.detail);
-        this.fire('my-profile-ajax-loading');
+        this.fire('global-loading');
       }
-
     });
 
   </script>

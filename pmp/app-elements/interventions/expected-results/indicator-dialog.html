@@ -27,6 +27,11 @@
         --etools-checkable-input-label: {
           font-size: 14px;
         };
+        --paper-dialog-scrollable: {
+          width: 100%;
+          overflow-x: hidden;
+          padding: 0;
+        };
       }
 
       etools-checkable-input:not(:last-of-type) {
@@ -58,8 +63,7 @@
       #indicator-content {
         max-height: 600px;
         overflow-y: auto;
-        margin: 0 -20px;
-        padding: 0 15px;
+        overflow-x: hidden;
       }
 
       .dissaggregation {
@@ -320,7 +324,7 @@
             }
           }
           // set disaggregations
-          if (data.disaggregation_logic) {
+          if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
             var disaggregationsKeys = Object.keys(data.disaggregation_logic);
             this.set('disaggregations', []);
             if (disaggregationsKeys.length) {

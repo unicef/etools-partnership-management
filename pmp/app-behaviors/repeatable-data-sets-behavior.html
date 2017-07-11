@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../styles/app-mixins.html">
 
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
@@ -151,6 +152,8 @@
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
           'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+      this.deleteDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+      this.deleteDialog.updateStyles();
     },
 
     /**

@@ -8,6 +8,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -70,7 +71,7 @@
       }
     </style>
 
-    <etools-content-panel class="content-section" title="Partnership Information">
+    <etools-content-panel class="content-section" panel-title="Partnership Information">
       <div class="row-h flex-c">
         <div class="col col-6">
           <agreement-selector id="agreementSelector"
@@ -81,20 +82,18 @@
             edit-mode$="[[editMode]]"></agreement-selector>
         </div>
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="documentType"
-                                                 label="Document Type"
-                                                 placeholder="&#8212;"
-                                                 options="[[currentDocTypes]]"
-                                                 custom-object-options
-                                                 selected="{{intervention.document_type}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 hide-search
-                                                 dynamic-align
-                                                 required auto-validate
-                                                 error-message="Document type is required"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+           <etools-single-selection-menu id="documentType"
+                                          label="Document Type"
+                                          placeholder="&#8212;"
+                                          options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
+                                          selected="{{intervention.document_type}}"
+                                          hide-search
+                                          dynamic-align
+                                          required auto-validate
+                                          error-message="Document type is required"
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
+
         </div>
         <div class="col col-3" title$="[[intervention.number]]">
           <!-- Reference Number -->
@@ -177,22 +176,19 @@
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" title="PD or SSFA Details">
+    <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c">
         <div class="col col-3">
-          <etools-searchable-multiselection-menu id="hrps"
-                                                 label="In response to an HRP, Select"
-                                                 placeholder="&#8212;"
-                                                 options="[[hrps]]"
-                                                 option-value="id"
-                                                 option-label="name"
-                                                 custom-object-options
-                                                 selected="{{intervention.hrp}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+            <etools-single-selection-menu id="hrps"
+                                          label="In response to an HRP, Select"
+                                          placeholder="&#8212;"
+                                          options="[[hrps]]"
+                                          option-value="id"
+                                          option-label="name"
+                                          selected="{{intervention.hrp}}"
+                                          dynamic-align
+                                          readonly$="[[!editMode]]">
+          </etools-single-selection-menu>
         </div>
         <div class="col col-3">
           <!-- Start date -->
@@ -238,7 +234,7 @@
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" title="PD Output or SSFA TOR Expected results">
+    <etools-content-panel class="content-section" panel-title="PD Output or SSFA TOR Expected results">
       <intervention-expected-results id="expectedResults"
           data-items="{{intervention.result_links}}"
           edit-mode$="[[editMode]]"
@@ -247,7 +243,7 @@
       </intervention-expected-results>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" title="Planned Budget">
+    <etools-content-panel class="content-section" panel-title="Planned Budget">
       <intervention-planned-budget id="plannedBudget"
                                    data-items="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
@@ -255,7 +251,7 @@
                                    years="[[years]]">
       </intervention-planned-budget>
     </etools-content-panel>
-    <etools-content-panel class="content-section" title="Planned Visits">
+    <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
                                    edit-mode$="[[editMode]]"
@@ -281,7 +277,8 @@
         properties: {
           intervention: {
             type: Object,
-            observer: '_interventionChanged'
+            observer: '_interventionChanged',
+            notify: true
           },
           permissions: {
             type: Object
@@ -297,17 +294,14 @@
           },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes'
+            statePath: 'interventionDocTypes',
+            observer: '_initDocTypes'
           },
           pcaDocTypes: {
             type: Array,
             value: []
           },
           ssfaDocTypes: {
-            type: Array,
-            value: []
-          },
-          currentDocTypes: {
             type: Array,
             value: []
           },
@@ -350,14 +344,20 @@
         },
 
         observers: [
-          '_agreementSelected(agreement)',
           '_setYears(intervention.start, intervention.end)'
         ],
 
         ready: function() {
+          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+
+        _initDocTypes: function(documentTypes) {
+          if (!(documentTypes instanceof Array && documentTypes.length)) {
+            return;
+          }
           var pcaTypes = [];
           var ssfaTypes = [];
-          this.documentTypes.forEach(function(type) {
+          documentTypes.forEach(function(type) {
             if (type.value !== 'SSFA') {
               pcaTypes.push(type);
             }
@@ -367,8 +367,6 @@
           });
           this.set('pcaDocTypes', pcaTypes);
           this.set('ssfaDocTypes', ssfaTypes);
-
-          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
 
         _editModeChanged: function() {
@@ -379,7 +377,6 @@
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (intervention.id > 0) {
               this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-              this._agreementSelected(this.agreement);
             } else {
               this.set('selectedPartnerId', null);
             }
@@ -396,6 +393,7 @@
           if (newValue) {
             this.set('interventionRequiredField', false);
           }
+
         },
 
         _resetValidations: function() {
@@ -417,32 +415,30 @@
 
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
-              && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            this.debounce('setInterventionYears', function() {
-              var start = parseInt(interventionStart.substr(0, 4), 10);
-              var end = parseInt(interventionEnd.substr(0, 4), 10);
-              var years = [];
-              while (start <= end) {
-                years.push({
-                  value: start,
-                  label: start
-                });
-                start++;
-              }
-              this.set('years', years);
-            }.bind(this), 50);
+            && typeof interventionEnd === 'string' && interventionEnd !== '') {
+            var start = parseInt(interventionStart.substr(0, 4), 10);
+            var end = parseInt(interventionEnd.substr(0, 4), 10);
+            var years = [];
+            while (start <= end) {
+              years.push({
+                value: start,
+                label: start
+              });
+              start++;
+            }
+            this.set('years', years);
           }
         },
 
         _selectedPartnerIdChanged: function(id, oldId) {
           if (typeof oldId === 'number'
               && id !== oldId
-              && !this.agreement) { //Prevent reset on changes caused by initialization of the fields
+              && !this.agreement) {
+                //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
         },
         _resetDropdowns: function() {
-          //**TODO - this has to be handled inside the new version of dropdown component
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
@@ -453,16 +449,12 @@
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
           }
-          var agrSel = this.$.agreementSelector;
-          if (agrSel) {
-            agrSel.resetDropdowns();
-          }
         },
         /**
          * When an agreement is selected then check it's type and update document types dropdown
          */
-        _agreementSelected: function(agreement) {
-          var options = this.documentTypes;
+        _getCurrentDocTypes: function(agreement, documentTypes) {
+          var options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
               case 'PCA':
@@ -476,7 +468,7 @@
                 break;
             }
           }
-          this.set('currentDocTypes', options);
+          return options;
         },
 
         /**

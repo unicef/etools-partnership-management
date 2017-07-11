@@ -27,10 +27,15 @@
         max-height: 600px;
         min-height: 160px;
         overflow-y: auto;
-        margin: 0 -20px;
-        padding: 0 15px;
         height: 100%;
       }
+      .row-indent {
+        padding-left: 40px;
+      }
+      .horizontal-padding {
+        padding: 0px 24px;
+      }
+
     </style>
     <etools-dialog
         id="dataRefreshDialog"
@@ -41,41 +46,29 @@
         disable-confirm-btn="[[!anySelected]]"
         on-close="_handleDialogClosed">
       <div id="content-box">
-        <iron-label> Select the data you want to refresh:</iron-label>
-
-        <div class="custom-field-wrapper flex-c">
-
-          <div class="row-h">
-            <div class="col-6">
+          <div class="horizontal-padding">Select the data you want to refresh:</div>
+          <div class="row-h row-indent">
+            <div class="col col-6">
               <etools-checkable-input checked="{{partnersSelected}}"
                                       label="Partners data"
                                       label-alignment="right">
               </etools-checkable-input>
             </div>
-            <div class="col-6">
+            <div class="col col-6">
               <etools-checkable-input checked="{{interventionsSelected}}"
                                       label="PD/SSFA ToR data"
                                       label-alignment="right">
               </etools-checkable-input>
             </div>
           </div>
-          <div class="row-h">
-            <div class="col-6">
+          <div class="row-h row-indent">
+            <div class="col col-6">
               <etools-checkable-input checked="{{agreementsSelected}}"
                                       label="Agreements data"
                                       label-alignment="right">
               </etools-checkable-input>
             </div>
-            <div class="col-6">
-              <etools-checkable-input checked="{{governmentsSelected}}"
-                                      label="Governments data"
-                                      label-alignment="right">
-              </etools-checkable-input>
-            </div>
-          </div>
-
-          <div class="row-h">
-            <div class="col-12">
+            <div class="col col-6">
               <etools-checkable-input checked="{{allSelected}}"
                                       label="All"
                                       label-alignment="right">
@@ -83,7 +76,6 @@
             </div>
           </div>
 
-        </div>
       </div>
     </etools-dialog>
 
@@ -101,11 +93,6 @@
           etoolsBehaviors.EtoolsRefreshBehavior
         ],
         properties: {
-          name: String,
-          governmentsSelected: {
-            type: Boolean,
-            value: false
-          },
           interventionsSelected: {
             type: Boolean,
             value: false
@@ -132,7 +119,7 @@
           }
         },
         observers: [
-          '_singleSectionChanged(governmentsSelected, interventionsSelected, partnersSelected, agreementsSelected)',
+          '_singleSectionChanged(interventionsSelected, partnersSelected, agreementsSelected)',
           '_allSelectedChanged(allSelected)'
         ],
 
@@ -148,7 +135,6 @@
               return;
             }
 
-            this.set('governmentsSelected', true);
             this.set('interventionsSelected', true);
             this.set('partnersSelected', true);
             this.set('agreementsSelected', true);
@@ -158,15 +144,9 @@
 
         _singleSectionChanged: function() {
           this.debounce('_selectedRefreshCheckbox', function() {
-            var allSelected = this.governmentsSelected &&
-                this.interventionsSelected &&
-                this.partnersSelected &&
-                this.agreementsSelected;
+            var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
 
-            var anySelected = this.governmentsSelected ||
-                this.interventionsSelected ||
-                this.partnersSelected ||
-                this.agreementsSelected;
+            var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
             this.set('allSelected', allSelected);
             this.set('anySelected', anySelected);
@@ -189,8 +169,7 @@
             var restampLandingPage = this.page === afterDataRefreshLandingPage;
 
             var self = this;
-            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements',
-                'governments', 'interventions', function() {
+            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions', function() {
               if (self.partnersSelected) {
                 self.db.partners.clear();
                 self.db.collectionsList.delete('partners');
@@ -202,10 +181,6 @@
               if (self.interventionsSelected) {
                 self.db.interventions.clear();
                 self.db.collectionsList.delete('interventions');
-              }
-              if (self.governmentsSelected) {
-                self.db.governments.clear();
-                self.db.collectionsList.delete('governments');
               }
             }).then(function(result) {
               // transaction succeeded
@@ -230,14 +205,13 @@
 
         _triggerMainRoutePathUpdate: function(afterDataRefreshLandingPage, restampLandingPage) {
           var routePath = afterDataRefreshLandingPage + '/list';
-          var appShell = Polymer.dom(document.querySelector('body')).querySelector('app-shell');
           if (restampLandingPage) {
             this.set('page', null);
-            this.fire('update-main-path', {path: routePath});
             setTimeout(function() {
               this.fire('global-loading', {active: false});
               this.set('page', afterDataRefreshLandingPage);
-            }.bind(this), 0);
+              this.fire('update-main-path', {path: routePath});
+            }.bind(this), 10);
           } else {
             this.fire('global-loading', {active: false});
             this.fire('update-main-path', {path: routePath});
@@ -255,16 +229,12 @@
           if (this.interventionsSelected) {
             return 'interventions';
           }
-          if (this.governmentsSelected) {
-            return 'governments';
-          }
         },
 
         _resetRefreshSelection: function() {
           this.set('partnersSelected', false);
           this.set('agreementsSelected', false);
           this.set('interventionsSelected', false);
-          this.set('governmentsSelected', false);
         }
 
       });

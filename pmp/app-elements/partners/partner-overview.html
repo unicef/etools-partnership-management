@@ -59,15 +59,7 @@
 
       .hact-heading {
         @apply(--layout-vertical);
-        margin-top: 20px;
         background-color: var(--medium-theme-background-color);
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-      }
-
-      .hact-heading .row-h {
-        padding: 8px;
       }
 
       .hact-heading .row-h .col {
@@ -76,11 +68,6 @@
 
       .hact-body {
         @apply(--layout-vertical);
-        margin-top: 20px;
-      }
-
-      .hact-body .row-h {
-        padding: 8px;
       }
 
       .center-text {
@@ -145,7 +132,7 @@
     <!-- partner overview content goes here... -->
     <div id="pageContent">
 
-      <etools-content-panel class="content-section" title="HACT Assurance & Partnerships">
+      <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
         <div class="hact-heading">
           <div class="row-h">
             <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
@@ -206,8 +193,10 @@
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
               <div class="col col-4 block">
+                <!-- TODO: remove if="[[partnership.government_intervention]]" after backend is modified
+                           and is not sending back government_intervention -->
                 <template is="dom-if" if="[[partnership.government_intervention]]">
-                  <strong><a href="governments/[[partnership.id]]/details">[[partnership.number]]</a></strong> <br>
+                  <strong>[[partnership.number]]</strong> <br>
                 </template>
                 <template is="dom-if" if="[[!partnership.government_intervention]]">
                   <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a> <br>

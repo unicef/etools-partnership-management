@@ -6,6 +6,7 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
@@ -59,7 +60,7 @@
 
     </style>
 
-    <etools-content-panel title="Partner status">
+    <etools-content-panel panel-title="Partner status">
 
       <div class="status-container" hidden$="[[!_showNotSyncedStatus(partner)]]">
         <div class="status-icon">
@@ -151,6 +152,8 @@
           statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Partner status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
         },
         detached: function() {
           if (this.warningDialog) {
