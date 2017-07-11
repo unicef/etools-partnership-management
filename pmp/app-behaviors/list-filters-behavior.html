@@ -151,7 +151,8 @@
     // change event for a etoold-datepicker filter
     _filterDateHasChanged: function(event) {
       var filterPath = Polymer.dom(event).localTarget.getAttribute('data-filter-path');
-      var parentField = Polymer.dom(event).localTarget.parentNode;
+      var parentId  = Polymer.dom(event).localTarget.getAttribute('parent-id');
+      var parentField = this.$$('#' + parentId);
       if (parentField) {
         parentField.value = event.detail.prettyDate;
       }
