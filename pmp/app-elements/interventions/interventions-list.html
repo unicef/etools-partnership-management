@@ -88,7 +88,8 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <paper-input label="[[filter.filterName]]"
+              <paper-input id$="datepicker_parent_[[filter.path]]"
+                           label="[[filter.filterName]]"
                            value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
@@ -96,6 +97,7 @@
                                           id$="datepicker_[[filter.path]]"
                                           date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
+                                          parent-id$="datepicker_parent_[[filter.path]]"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
                                           no-init show-clear-btn fire-date-has-changed>

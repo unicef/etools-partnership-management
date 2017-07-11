@@ -110,12 +110,14 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <paper-input label="[[filter.filterName]]"
+              <paper-input id$="datepicker_parent_[[filter.path]]"
+                           label="[[filter.filterName]]"
                            value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
                 <etools-datepicker-button prefix
                                           id$="datepicker_[[filter.path]]"
+                                          parent-id$="datepicker_parent_[[filter.path]]"
                                           date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
                                           data-filter-path$="[[filter.path]]"
