@@ -1,0 +1,124 @@
+<script>
+  var interventionNoEditPermissionsModel = {
+    id: false,
+    status: false,
+
+    // details - Partnership Information
+    partner: false,
+    agreement: false,
+    document_type: false,
+    number: false,
+    title: false,
+    offices: false,
+    unicef_focal_points: false,
+    partner_focal_points: false,
+
+    // details - PD or SSFA Details
+    country_programme: false,
+    start: false,
+    end: false,
+    sector_locations: false,
+
+    // details - PD Output or SSFA Expected results
+    result_links: false,
+
+    // details - Planned Budget
+    planned_budget: false,
+
+    // details - Planned Visits
+    planned_visits: false,
+
+    // review & sign - Signatures & Dates
+    submission_date: false,
+    submission_date_prc: false,
+    review_date_prc: false,
+    prc_review_document: false,
+    partner_authorized_officer_signatory: false,
+    signed_by_partner_date: false,
+    unicef_signatory: false,
+    signed_by_unicef_date: false,
+    signed_pd_document: false,
+
+    // review & sign - Amendments
+    amendments: false,
+
+    // review & sign - FR Numbers
+    frs: false,
+
+    // attachments
+    attachments: false,
+
+    // TODO: other fields, not used for now. remove from frontend?
+    distributions: false,
+    target_actions: false,
+    supplies: false,
+    action_object_actions: false,
+    actor_actions: false,
+    created: false,
+    modified: false,
+    population_focus: false,
+  };
+
+
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.InterventionPermissionsBehavior */
+  pmpBehaviors.InterventionPermissionsBehavior = {
+
+    properties: {
+      _intervNoEditPerm: {
+        type: Object,
+        value: {
+          edit: Object.assign({}, interventionNoEditPermissionsModel),
+          required: Object.assign({}, interventionNoEditPermissionsModel)
+        }
+      },
+      _newIntervPermFields: {
+        type: Object,
+        value: {
+          required: ['partner', 'agreement', 'document_type', 'title'],
+          notEditable: ['amendments', 'frs']
+        }
+      }
+    },
+
+    _getResetedPermissionsClone: function() {
+      return JSON.parse(JSON.stringify(this._intervNoEditPerm));
+    },
+
+    _getNewInterventionPermissions: function() {
+      // get a fresh reseted permissions list
+      let newIntervPerm = this._getResetedPermissionsClone();
+      let fieldName;
+      // set required fields
+      for(fieldName in newIntervPerm.required) {
+        if (this._newIntervPermFields.required.indexOf(fieldName) > -1) {
+          newIntervPerm.required[fieldName] = true;
+        }
+      }
+      // set editable fields
+      for(fieldName in newIntervPerm.edit) {
+        if (this._newIntervPermFields.notEditable.indexOf(fieldName) === -1) {
+          newIntervPerm.edit[fieldName] = true;
+        }
+      }
+      return newIntervPerm;
+    },
+
+    _setPermissions: function(perm) {
+      this.set('intervention.permissions', perm);
+    },
+
+    cancelEditPermissions: function() {
+      this._setPermissions(this._getResetedPermissionsClone());
+    },
+
+    setInterventionPermissions: function(status, newIntervention) {
+      let permissions = null;
+      if (newIntervention) {
+        permissions = this._getNewInterventionPermissions();
+      }
+      this._setPermissions(permissions);
+    }
+
+  };
+</script>

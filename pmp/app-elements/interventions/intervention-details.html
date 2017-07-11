@@ -363,15 +363,13 @@
             value: false
           },
           newIntervention: {
-            type: Boolean,
-            observer: 'newInterventionFlagChanged'
+            type: Boolean
           },
           fieldsResetted: {
             type: Boolean
           },
           editMode: {
             type: Boolean,
-//            value: false,
             observer: '_editModeChanged'
           },
           _frsStartConsistencyWarning: {
@@ -385,6 +383,7 @@
         },
 
         observers: [
+          '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)'
@@ -480,12 +479,12 @@
             }
 
             this.set('fieldsResetted', false);
-            this.newInterventionFlagChanged();
+            this._newInterventionFlagChanged();
           }
           this._setDefaultSelectedCpStructure(this.cpStructureOptions);
         },
 
-        newInterventionFlagChanged: function(newValue) {
+        _newInterventionFlagChanged: function(newValue) {
           if (this.intervention && !this.fieldsResetted) {
             this._resetValidations();
           }
