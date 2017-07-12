@@ -64,6 +64,7 @@
 
       .hact-heading .row-h .col {
         justify-content: center;
+        align-items: center;
       }
 
       .hact-body {
@@ -74,6 +75,16 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+      }
+      .right-align-text {
+        align-items: center;
+        justify-content: flex-end !important;
+        text-align: right;
+      }
+      .left-align-text {
+        align-items: center;
+        justify-content: flex-start !important;
+        text-align: left;
       }
 
       .row-h + .row-h {
@@ -126,7 +137,13 @@
       small {
         color: var(--dark-secondary-text-color);
       }
-
+      .word-break {
+        word-break: break-all;
+      }
+      .overflow-hidden {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     </style>
 
     <!-- partner overview content goes here... -->
@@ -183,26 +200,28 @@
 
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-4"> Partnership</div>
-            <div class="col col-2"> Total Planned Budget</div>
+            <div class="col col-3 word-break"> Partnership</div>
+            <div class="col col-2 right-align-text"> Total Planned Budget</div>
+            <div class="col col-2 right-align-text"> Actual </div>
             <div class="col col-2"> Status</div>
-            <div class="col col-4"> Timeline</div>
+            <div class="col col-3 left-align-text"> Timeline</div>
           </div>
         </div>
         <div class="hact-body">
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
-              <div class="col col-4 block">
+              <div class="col col-3 block word-break">
                 <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                 <span>
                   [[partnership.title]]
                 </span>
               </div>
-              <div class="col col-2 center-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
+              <div class="col col-2 right-align-text"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
               </div>
-              <div class="col col-2 center-text"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
+              <div class="col col-2 right-align-text"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]] </div>
+              <div class="col col-2 center-text overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
               </div>
-              <div class="col col-4 center-text"> [[getDateDisplayValue(partnership.start)]] -
+              <div class="col col-3 left-align-text"> [[getDateDisplayValue(partnership.start)]] -
                 [[getDateDisplayValue(partnership.end)]]
               </div>
             </div>
