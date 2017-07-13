@@ -326,7 +326,8 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'signed-doc-change-for-draft': '_signedDocChangedForDraft'
+        'signed-doc-change-for-draft': '_signedDocChangedForDraft',
+        'unlock-details-fields': '_unlockDetailsFields'
       },
 
       ready: function() {
@@ -874,6 +875,12 @@
           this.$.interventionDetails.validate();
           this.$.interventionReviewAndSign.validate();
         }
+      },
+
+      _unlockDetailsFields: function(e) {
+        e.stopImmediatePropagation();
+        this.setInterventionPermissions(false,
+            this.getAddingAmendmentsPermissions(this.intervention.permissions));
       }
 
     });

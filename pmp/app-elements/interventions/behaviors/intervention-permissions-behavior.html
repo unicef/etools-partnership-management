@@ -74,6 +74,11 @@
         'signed_by_unicef_date', 'signed_pd_document'];
     },
 
+    _getEditableFieldsForAddAmendmentAction: function() {
+      return ['offices', 'unicef_focal_points', 'partner_focal_points', 'country_programme', 'start', 'end',
+        'sector_locations', 'result_links', 'planned_budget', 'planned_budget_unicef_cash', 'planned_visits'];
+    },
+
     _getNoEditPermissionsClone: function() {
       return JSON.parse(JSON.stringify(this._intervNoEditPerm));
     },
@@ -123,6 +128,24 @@
       reqFieldsForSignedStatus.forEach(function(field) {
         perm.required[field] = true;
         perm.edit[field] = true;
+      });
+      return perm;
+    },
+
+    /**
+     * Alter current permission to allow details fields edit
+     */
+    getAddingAmendmentsPermissions: function(currentPerm) {
+      let perm = JSON.parse(JSON.stringify(currentPerm));
+      let editableFields = this._getEditableFieldsForAddAmendmentAction();
+      let defaultReqFields = this._getNewIntervRequiredFields();
+      let reqFieldsForSignedStatus = defaultReqFields.concat(this._getDraftToSignedRequiredFields());
+
+      editableFields.forEach(function(field) {
+        perm.edit[field] = true;
+        if (reqFieldsForSignedStatus.indexOf(field) > -1) {
+          perm.required[field] = true;
+        }
       });
       return perm;
     },

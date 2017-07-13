@@ -273,7 +273,7 @@
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this._addElement();
-            this._makeInterventionFieldsEditable();
+            this._unlockInterventionDetailsFields();
           }
         },
         _dataHasChanged: function(dataItems) {
@@ -287,12 +287,12 @@
             this._resetInterventionFieldsEditMode();
           }
         },
-        _makeInterventionFieldsEditable: function() {
-          // TODO - fire event and handle it in page-interventions where the intervention.permissions will be altered
+        _unlockInterventionDetailsFields: function() {
+          this.fire('unlock-details-fields');
         },
         _resetInterventionFieldsEditMode: function() {
-          // TODO - fire event and handle it in page-interventions where the intervention.permissions will be restored
-          // to originalIntervention.permissions
+          //unlock fields only for new amendments | lock fields when complete or canceled
+          this.fire('amend-action-complete');
         },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];
