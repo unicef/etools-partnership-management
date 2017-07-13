@@ -8,7 +8,7 @@
           background: url(../images/required.svg) no-repeat 99% 20%/8px;
           width: auto !important;
           max-width: 100%;
-          right: initial;
+          right: auto;
           padding-right: 15px;
         };
       }
@@ -16,8 +16,7 @@
       paper-input[starred],
       etools-date-input[starred],
       etools-single-selection-menu[starred],
-      etools-multi-selection-menu[starred],
-      etools-searchable-multiselection-menu[starred] {
+      etools-multi-selection-menu[starred] {
         --paper-input-container-label: {
           @apply(--required-star-style);
         };

@@ -343,7 +343,9 @@
         dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
         this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
             this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
+        // jscs:disable maximumLineLength
         this.finalizeAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+        // jscs:enable maximumLineLength
         this.finalizeAmendmentConfirmationDialog.updateStyles();
       },
       detached: function() {
@@ -500,11 +502,6 @@
       },
 
       _prepareDataForSave: function(interventionData, interventionDetailsEl) {
-         // on save sector_locations sector prop needs to be sector ID and not the sector obj
-        if (interventionData.sector_locations) {//if there were any modifications
-          interventionData.sector_locations = interventionDetailsEl.prepareSectorLocations();
-        }
-
         // prepare fr numbers
         if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
           interventionData.frs = this.intervention.frs;
@@ -669,9 +666,9 @@
         return modifiedObject;
       },
       _objectFieldIsModified: function(fieldName) {
-        // jscs:disable
+        // jscs:disable maximumLineLength
         var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
-        // jscs:enable
+        // jscs:enable maximumLineLength
         var dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
         if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
           // Covers dropdown arrays which can have same content but with changed order

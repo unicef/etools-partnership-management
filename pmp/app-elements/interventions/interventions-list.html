@@ -8,7 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
@@ -65,18 +65,19 @@
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
-              <etools-searchable-multiselection-menu
+              <etools-multi-selection-menu
                   label="[[filter.filterName]]"
                   placeholder="&#8212;"
                   disabled$="[[!filter.selectionOptions.length]"
                   options="[[filter.selectionOptions]]"
-                  value="[[filter.alreadySelected]]"
+                  selected-value="[[filter.alreadySelected]]"
                   multi="[[filter.multiple]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
-                  on-value-change="esmmValueChanged"
+                  trigger-value-change-event
+                  on-etools-selected-items-changed="esmmValueChanged"
                   data-filter-path$="[[filter.path]]"
-                  custom-object-options></etools-searchable-multiselection-menu>
+                  custom-object-options></etools-multi-selection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -87,7 +88,8 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <paper-input label="[[filter.filterName]]"
+              <paper-input id$="datepicker_parent_[[filter.path]]"
+                           label="[[filter.filterName]]"
                            value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
@@ -95,11 +97,11 @@
                                           id$="datepicker_[[filter.path]]"
                                           date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
+                                          parent-id$="datepicker_parent_[[filter.path]]"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
                                           no-init show-clear-btn fire-date-has-changed>
                 </etools-datepicker-button>
-                </paper-icon-button>
               </paper-input>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
@@ -356,7 +358,7 @@
           this.initListFiltersData([
             {
               filterName: 'PD/SSFA Type',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'value',
               optionLabel: 'label',
@@ -366,7 +368,7 @@
             },
             {
               filterName: 'Country Programme Output',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'id',
               optionLabel: 'name',
@@ -376,7 +378,7 @@
             },
             {
               filterName: 'Sectors',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'id',
               optionLabel: 'name',
@@ -386,7 +388,7 @@
             },
             {
               filterName: 'Status',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'value',
               optionLabel: 'label',
@@ -396,7 +398,7 @@
             },
             {
               filterName: 'UNICEF focal point',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'user_id',
               optionLabel: 'full_name',
@@ -406,7 +408,7 @@
             },
             {
               filterName: 'Offices',
-              type: 'esmm', // etools-searchable-multiselection-menu
+              type: 'esmm', // etools-multi-selection-menu
               multiple: true,
               optionValue: 'id',
               optionLabel: 'name',

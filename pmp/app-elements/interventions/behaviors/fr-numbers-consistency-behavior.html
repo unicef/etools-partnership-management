@@ -31,7 +31,7 @@
         warnIntervFields.push('UNICEF $ contribution');
       }
       if (warnFrsFields.length > 0) {
-        return  warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
+        return warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
             ' not the same as PD/SSFA ' + warnIntervFields.join(', ') + '.';
       }
       return false;
