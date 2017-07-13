@@ -75,14 +75,14 @@
 
       <div slot="panel-btns" id="edit-btns" hidden$="[[!_showEditBtn(editMode, unicefCashEditMode)]]">
         <paper-icon-button icon="cancel"
-                           hidden$="[[!_showCancelBtn(editMode, unicefCashEditMode)]]"
-                           disabled$="[[!_showCancelBtn(editMode, unicefCashEditMode)]]"
+                           hidden$="[[!_showCancelBtn(_showCancelButton)]]"
+                           disabled$="[[!_showCancelBtn(_showCancelButton)]]"
                            title="Cancel"
                            on-tap="_cancelEdit">
         </paper-icon-button>
         <paper-icon-button icon="create"
-                           hidden$="[[!_showEditBtn(editMode, unicefCashEditMode)]]"
-                           disabled$="[[!_showEditBtn(editMode, unicefCashEditMode)]]"
+                           hidden$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
+                           disabled$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
                            title="Edit"
                            on-tap="_editPlannedBudget">
         </paper-icon-button>
@@ -160,8 +160,6 @@
             <td class="currency">
               <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
                                             selected="{{plannedBudget.currency}}"
-                                            required$="[[required]]" auto-validate
-                                            error-message="Please select the currency"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
                                             no-label-float>
               </etools-single-selection-menu>
@@ -172,8 +170,6 @@
                                               value="{{plannedBudget.partner_contribution_local}}"
                                               type="number" placeholder="&#8212;"
                                               readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                              required$="[[required]]" auto-validate
-                                              error-message="CSO Cont. (Local) required"
                                               no-label-float>
                 </etools-currency-amount-input>
               </div>
@@ -184,8 +180,6 @@
                                               value="{{plannedBudget.unicef_cash_local}}"
                                               type="number" placeholder="&#8212;"
                                               readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                              required$="[[required]]" auto-validate
-                                              error-message="UNICEF Cash (Local) required"
                                               no-label-float>
                 </etools-currency-amount-input>
               </div>
@@ -196,8 +190,6 @@
                                               value="{{plannedBudget.in_kind_amount_local}}"
                                               type="number" placeholder="&#8212;"
                                               readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                              required$="[[required]]" auto-validate
-                                              error-message="UNICEF Supply (Local) required"
                                               no-label-float>
                 </etools-currency-amount-input>
               </div>
@@ -268,7 +260,8 @@
           _frsConsistencyWarning: {
             type: String,
             value: ''
-          }
+          },
+          _showCancelButton: Boolean
         },
 
         observers: [
@@ -279,18 +272,20 @@
         interventionWasSavedChanged: function(newValue) {
           if (newValue) {
             this.set('editablePlannedBudget', false);
+            this.set('_showCancelButton', false);
             this.set('plannedBudget.interventionWasSaved', false);
           }
         },
         _cancelEdit: function() {
           this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
           this.set('editablePlannedBudget', false);
+          this.set('_showCancelButton', false);
         },
-        _showCancelBtn: function(editMode, unicefCashEditMode) {
-          return !this._showEditBtn(editMode, unicefCashEditMode) && this.interventionId;
+        _showCancelBtn: function(showCancelButton) {
+          return showCancelButton && this.interventionId;
         },
-        _showEditBtn: function(editMode, unicefCashEditMode) {
-          return editMode || unicefCashEditMode;
+        _showEditBtn: function(editMode, unicefCashEditMode, showCancelButton) {
+          return (editMode || unicefCashEditMode) && !showCancelButton && this.interventionId;
         },
         _isReadonly: function(editMode, editablePlannedBudget, interventionId) {
           if (!editMode) {
@@ -303,6 +298,7 @@
         },
         _editPlannedBudget: function() {
           this.set('editablePlannedBudget', true);
+          this.set('_showCancelButton', true);
           this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
         },
         // make sure we have the right currency selected when intervention is changed
@@ -343,10 +339,6 @@
         validate: function() {
           var valid = true;
           var elementsSelectorsToValidate = [
-            '#currency',
-            '#csoContLocal',
-            '#unicefCashLocal',
-            '#inKindAmountLocal',
             '#csoContUsd',
             '#unicefCashUsd',
             '#inKindAmountUsd'
@@ -363,10 +355,6 @@
         // reset validation errors
         resetValidations: function() {
           var elementsSelectorsToValidate = [
-            '#currency',
-            '#csoContLocal',
-            '#unicefCashLocal',
-            '#inKindAmountLocal',
             '#csoContUsd',
             '#unicefCashUsd',
             '#inKindAmountUsd'

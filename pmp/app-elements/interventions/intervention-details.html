@@ -98,8 +98,7 @@
                               agreement-id="{{intervention.agreement}}"
                               partner-id="{{selectedPartnerId}}"
                               selected-agreement="{{agreement}}"
-                              intervention-id="[[intervention.id]]"
-                              edit-mode$="[[editMode]]"></agreement-selector>
+                              intervention="[[intervention]]"></agreement-selector>
         </div>
         <div class="col col-3">
           <etools-single-selection-menu id="documentType"
@@ -109,9 +108,10 @@
                                         selected="{{intervention.document_type}}"
                                         hide-search
                                         dynamic-align
-                                        required auto-validate
+                                        readonly$="[[!intervention.permissions.edit.document_type]]"
+                                        required$="[[intervention.permissions.required.document_type]]"
+                                        auto-validate
                                         error-message="Document type is required"
-                                        readonly$="[[!editMode]]"
                                         starred>
           </etools-single-selection-menu>
 
@@ -132,9 +132,11 @@
                      placeholder="&#8212;"
                      char-counter
                      maxlength="256"
-                     required auto-validate
+                     readonly$="[[!intervention.permissions.edit.title]]"
+                     required$="[[intervention.permissions.required.title]]"
+                     auto-validate
                      error-message="Please add a title"
-                     readonly$="[[!editMode]]" starred></paper-input>
+                     starred></paper-input>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
@@ -146,10 +148,10 @@
                                        option-value="id"
                                        selected-values="{{intervention.offices}}"
                                        dynamic-align
-                                       required auto-validate
-                                       error-message="Please select intervention's office(s)"
-                                       readonly$="[[!editMode]]"
-                                       starred>
+                                       readonly$="[[!intervention.permissions.edit.offices]]"
+                                       required$="[[intervention.permissions.required.offices]]"
+                                       auto-validate
+                                       error-message="Please select intervention's office(s)">
           </etools-multi-selection-menu>
         </div>
         <div class="col col-6">
@@ -160,10 +162,11 @@
                                        option-label="full_name"
                                        option-value="user_id"
                                        selected-values="{{intervention.unicef_focal_points}}"
-                                       required$="[[interventionRequiredField]]"
-                                       auto-validate dynamic-align
-                                       error-message="Please select UNICEF focal points"
-                                       readonly$="[[!editMode]]">
+                                       dynamic-align
+                                       readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
+                                       required$="[[intervention.permissions.required.unicef_focal_points]]"
+                                       auto-validate
+                                       error-message="Please select UNICEF focal points">
           </etools-multi-selection-menu>
         </div>
       </div>
@@ -176,10 +179,11 @@
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{intervention.partner_focal_points}}"
-                                       required$="[[interventionRequiredField]]"
-                                       auto-validate dynamic-align
-                                       error-message="Please select partner focal points"
-                                       readonly$="[[!editMode]]">
+                                       dynamic-align
+                                       readonly$="[[!intervention.permissions.edit.partner_focal_points]]"
+                                       required$="[[intervention.permissions.required.partner_focal_points]]"
+                                       auto-validate
+                                       error-message="Please select partner focal points">
           </etools-multi-selection-menu>
         </div>
       </div>
@@ -197,7 +201,10 @@
                                         selected="{{intervention.country_programme}}"
                                         dynamic-align
                                         hide-search
-                                        readonly$="[[!isCpStructureEditable(editMode, intervention.status)]]">
+                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                        required$="[[intervention.permissions.required.country_programme]]"
+                                        auto-validate
+                                        error-message="Please select CP Structure">
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
@@ -210,9 +217,9 @@
                                class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
                                label="Start date"
                                value="{{intervention.start}}"
-                               readonly$="[[!editMode]]"
+                               readonly$="[[!intervention.permissions.edit.start]]"
+                               required$="[[intervention.permissions.required.start]]"
                                error-message="Please select start date"
-                               required$="[[nterventionRequiredField]]"
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
@@ -229,9 +236,9 @@
                                class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
                                label="End date"
                                value="{{intervention.end}}"
-                               readonly$="[[!editMode]]"
+                               readonly$="[[!intervention.permissions.edit.end]]"
+                               required$="[[intervention.permissions.required.end]]"
                                error-message="Please select end date"
-                               required$="[[nterventionRequiredField]]"
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
@@ -251,8 +258,8 @@
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
                                          data-items="[[prepareSectorLocations(intervention)]]"
-                                         edit-mode$="[[editMode]]"
-                                         required$="[[interventionRequiredField]]"
+                                         edit-mode$="[[intervention.permissions.edit.sector_locations]]"
+                                         required$="[[intervention.permissions.required.sector_locations]]"
                                          on-change-sector-locations="_changeSectorLocations">
           </intervention-sector-locations>
         </paper-material>
@@ -263,9 +270,9 @@
       <intervention-expected-results id="expectedResults"
                                      data-items="{{intervention.result_links}}"
                                      selected-cp-structure="[[intervention.country_programme]]"
-                                     edit-mode$="[[editMode]]"
                                      intervention-id="[[intervention.id]]"
-                                     required$="[[interventionRequiredField]]">
+                                     required$="[[intervention.permissions.required.result_links]]"
+                                     edit-mode$="[[intervention.permissions.edit.result_links]]">
       </intervention-expected-results>
     </etools-content-panel>
 
@@ -274,14 +281,15 @@
                                  planned-budget="{{intervention.planned_budget}}"
                                  intervention-id="[[intervention.id]]"
                                  intervention="[[intervention]]"
-                                 edit-mode="[[_getPlannedBudgetEditMode(editMode, intervention.status)]]"
-                                 unicef-cash-edit-mode="[[_getUnicefCashEditMode(editMode, intervention.status)]]">
+                                 edit-mode="[[intervention.permissions.edit.planned_budget]]"
+                                 unicef-cash-edit-mode="[[intervention.permissions.edit.planned_budget_unicef_cash]]"
+                                 required="[[intervention.permissions.required.planned_budget]]">
     </intervention-planned-budget>
 
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
-                                   edit-mode$="[[editMode]]"
+                                   edit-mode$="[[intervention.permissions.edit.planned_visits]]"
                                    years="[[years]]">
       </intervention-planned-visits>
     </etools-content-panel>
@@ -368,10 +376,6 @@
           fieldsResetted: {
             type: Boolean
           },
-          editMode: {
-            type: Boolean,
-            observer: '_editModeChanged'
-          },
           _frsStartConsistencyWarning: {
             type: String,
             value: ''
@@ -383,23 +387,16 @@
         },
 
         observers: [
+          '_editModeChanged(intervention.permissions.edit.title)',
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
-          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)'
+          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
+
         ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
-        },
-        isCpStructureEditable: function(editMode, status) {
-          if (!editMode) {
-            return false;
-          }
-          if (status && status !== 'draft') {
-            return false;
-          }
-          return true;
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
@@ -472,9 +469,7 @@
 
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            if (intervention.id > 0) {
-              this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-            } else {
+            if (!intervention.id) {
               this.set('selectedPartnerId', null);
             }
 
@@ -484,14 +479,10 @@
           this._setDefaultSelectedCpStructure(this.cpStructureOptions);
         },
 
-        _newInterventionFlagChanged: function(newValue) {
+        _newInterventionFlagChanged: function() {
           if (this.intervention && !this.fieldsResetted) {
             this._resetValidations();
           }
-          if (newValue) {
-            this.set('interventionRequiredField', false);
-          }
-
         },
 
         _resetValidations: function() {
@@ -570,13 +561,6 @@
           return options;
         },
 
-        /**
-         * Some interventions fields are required only if status is active or implemented
-         */
-        _requiredInterventionField: function(status) {
-          return status === 'active' || status === 'implemented';
-        },
-
         prepareSectorLocations: function(intervention) {
           if (!intervention) {
             intervention = this.intervention;
@@ -623,16 +607,6 @@
               return diff + ' days until expiry';
             }
           }
-        },
-
-        // General edit mode for planned budget. it should be editable for new and draft
-        _getPlannedBudgetEditMode: function(editMode, interventionStatus) {
-          return editMode && ['', 'draft'].indexOf(interventionStatus) > -1;
-        },
-
-        // Planned budget unicef cash should be editable in signed status
-        _getUnicefCashEditMode: function(editMode, interventionStatus) {
-          return editMode && ['', 'draft', 'signed'].indexOf(interventionStatus) > -1;
         },
 
         _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {

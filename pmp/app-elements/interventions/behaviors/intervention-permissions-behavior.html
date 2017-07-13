@@ -4,7 +4,6 @@
     status: false,
 
     // details - Partnership Information
-    partner: false,
     agreement: false,
     document_type: false,
     number: false,
@@ -24,6 +23,7 @@
 
     // details - Planned Budget
     planned_budget: false,
+    planned_budget_unicef_cash: false, // TODO: this should be also received from backend
 
     // details - Planned Visits
     planned_visits: false,
@@ -47,16 +47,6 @@
 
     // attachments
     attachments: false,
-
-    // TODO: other fields, not used for now. remove from frontend?
-    distributions: false,
-    target_actions: false,
-    supplies: false,
-    action_object_actions: false,
-    actor_actions: false,
-    created: false,
-    modified: false,
-    population_focus: false,
   };
 
 
@@ -81,13 +71,13 @@
       }
     },
 
-    _getResetedPermissionsClone: function() {
+    _getNoEditPermissionsClone: function() {
       return JSON.parse(JSON.stringify(this._intervNoEditPerm));
     },
 
     _getNewInterventionPermissions: function() {
       // get a fresh reseted permissions list
-      let newIntervPerm = this._getResetedPermissionsClone();
+      let newIntervPerm = this._getNoEditPermissionsClone();
       let fieldName;
       // set required fields
       for(fieldName in newIntervPerm.required) {
@@ -109,15 +99,20 @@
     },
 
     cancelEditPermissions: function() {
-      this._setPermissions(this._getResetedPermissionsClone());
+      this._setPermissions(this._getNoEditPermissionsClone());
     },
 
-    setInterventionPermissions: function(status, newIntervention) {
-      let permissions = null;
+    setInterventionPermissions: function(newIntervention, perm) {
       if (newIntervention) {
-        permissions = this._getNewInterventionPermissions();
+        this._setPermissions(this._getNewInterventionPermissions());
+      } else {
+        if (perm) {
+          this._setPermissions(perm);
+        }
+        // TODO: remove this after planned_budget_unicef_cash is received from backend
+        this.set('intervention.permissions.edit.planned_budget_unicef_cash',
+            this.get('intervention.permissions.edit.planned_budget'));
       }
-      this._setPermissions(permissions);
     }
 
   };
