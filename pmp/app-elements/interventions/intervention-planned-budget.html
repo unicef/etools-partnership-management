@@ -232,7 +232,8 @@
           intervention: Object,
           plannedBudget: {
             type: Object,
-            notify: true
+            notify: true,
+            observer: '_plannedBudgetChanged'
           },
           currencies: {
             type: Array,
@@ -272,14 +273,14 @@
         },
 
         observers: [
-          'interventionWasSavedChanged(plannedBudget.interventionWasSaved)',
           '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)'
         ],
 
-        interventionWasSavedChanged: function(newValue) {
-          if (newValue) {
+
+        _plannedBudgetChanged: function() {
+          if (this.interventionId) {
+            //* reset flags after Save
             this.set('editablePlannedBudget', false);
-            this.set('plannedBudget.interventionWasSaved', false);
           }
         },
         _cancelEdit: function() {
