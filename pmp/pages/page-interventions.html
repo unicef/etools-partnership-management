@@ -853,7 +853,11 @@
         let isNewIntervention = this._redirectToNewIntervPageInProgress ||
             this._newIntervention(this.newInterventionActive);
         if (userHasEditPermissions) {
-          this.setInterventionPermissions(isNewIntervention);
+          if (isNewIntervention) {
+            this.setInterventionPermissions(true);
+          } else {
+            this.checkAndUpdatePlannedBudgetPermissions(intervention.status);
+          }
         } else {
           this.cancelEditPermissions();
         }

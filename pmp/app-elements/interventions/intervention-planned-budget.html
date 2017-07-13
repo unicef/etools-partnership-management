@@ -305,6 +305,7 @@
         _interventionIdChanged: function() {
           this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
           this.editablePlannedBudget = !this.interventionId;
+          this.set('_showCancelButton', false);
           this._defaultToWorkspaceCurrency();
         },
         _defaultToWorkspaceCurrency: function() {
