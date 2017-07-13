@@ -326,6 +326,7 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
+        'signed-doc-change-for-draft': '_signedDocChangedForDraft'
       },
 
       ready: function() {
@@ -734,15 +735,21 @@
         return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
       },
       _showErrorsWarning: function(validDetails, validReviewAndSign) {
-        var msg = 'Please review invalid fields data';
-        var tabs = [];
-        if (validDetails === false) {
-          tabs.push('DETAILS');
+        let msg = '';
+        if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
+          msg = 'Status of the PD will change to signed once all required fields are completed.';
+        } else {
+          msg = 'Please review invalid fields data';
+          let tabs = [];
+          if (validDetails === false) {
+            tabs.push('DETAILS');
+          }
+          if (validReviewAndSign === false) {
+            tabs.push('REVIEW & SIGN');
+          }
+          msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
         }
-        if (validReviewAndSign === false) {
-          tabs.push('REVIEW & SIGN');
-        }
-        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '!';
+
         this.fire('toast', {text: msg, showCloseBtn: true});
       },
 
@@ -845,11 +852,23 @@
         let userHasEditPermissions = this._hasEditPermissions(this.permissions);
         let isNewIntervention = this._redirectToNewIntervPageInProgress ||
             this._newIntervention(this.newInterventionActive);
-        console.log('user and intervention permissions: ', userHasEditPermissions, isNewIntervention);
         if (userHasEditPermissions) {
           this.setInterventionPermissions(isNewIntervention);
         } else {
           this.cancelEditPermissions();
+        }
+      },
+
+      _signedDocChangedForDraft: function(e) {
+        e.stopImmediatePropagation();
+        if (e.detail.docSelected) {
+          this.setInterventionPermissions(false,
+              this.getDraftToSignedTransitionPermissions(this.intervention.permissions));
+        } else {
+          this.setInterventionPermissions(false, this.originalIntervention.permissions);
+          // update validation errors
+          this.$.interventionDetails.validate();
+          this.$.interventionReviewAndSign.validate();
         }
       }
 

@@ -587,12 +587,13 @@
         },
 
         validate: function() {
-          var valid = true;
-          var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'intStart', 'intEnd', 'sectorLocations',
-            'plannedBudget', 'expectedResults'];
-          fields.forEach(function(field) {
-            if (!this.$$('#' + field).validate()) {
+          let valid = true;
+          let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
+            '#partnerFocalPts', '#cpStructure', '#intStart', '#intEnd', '#sectorLocations',
+            '#plannedBudget', '#expectedResults'];
+          fieldSelectors.forEach(function(selector) {
+            let field = this.$$(selector);
+            if (field && !field.validate()) {
               valid = false;
             }
           }.bind(this));

@@ -61,14 +61,17 @@
           edit: Object.assign({}, interventionNoEditPermissionsModel),
           required: Object.assign({}, interventionNoEditPermissionsModel)
         }
-      },
-      _newIntervPermFields: {
-        type: Object,
-        value: {
-          required: ['partner', 'agreement', 'document_type', 'title'],
-          notEditable: ['amendments', 'frs']
-        }
       }
+    },
+
+    _getNewIntervRequiredFields: function() {
+      return ['partner', 'agreement', 'document_type', 'title'];
+    },
+
+    _getDraftToSignedRequiredFields: function() {
+      return ['offices', 'unicef_focal_points', 'partner_focal_points', 'start', 'end', 'sector_locations',
+        'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
+        'signed_by_unicef_date', 'signed_pd_document'];
     },
 
     _getNoEditPermissionsClone: function() {
@@ -80,14 +83,16 @@
       let newIntervPerm = this._getNoEditPermissionsClone();
       let fieldName;
       // set required fields
+      let reqFields = this._getNewIntervRequiredFields();
       for(fieldName in newIntervPerm.required) {
-        if (this._newIntervPermFields.required.indexOf(fieldName) > -1) {
+        if (reqFields.indexOf(fieldName) > -1) {
           newIntervPerm.required[fieldName] = true;
         }
       }
+      let notEditableFieldsForDraft = ['amendments', 'frs'];
       // set editable fields
       for(fieldName in newIntervPerm.edit) {
-        if (this._newIntervPermFields.notEditable.indexOf(fieldName) === -1) {
+        if (notEditableFieldsForDraft.indexOf(fieldName) === -1) {
           newIntervPerm.edit[fieldName] = true;
         }
       }
@@ -113,6 +118,16 @@
         this.set('intervention.permissions.edit.planned_budget_unicef_cash',
             this.get('intervention.permissions.edit.planned_budget'));
       }
+    },
+
+    getDraftToSignedTransitionPermissions: function(currentPerm) {
+      let reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields();
+      let perm = JSON.parse(JSON.stringify(currentPerm));
+      reqFieldsForSignedStatus.forEach(function(field) {
+        perm.required[field] = true;
+        perm.edit[field] = true;
+      });
+      return perm;
     }
 
   };
