@@ -192,28 +192,18 @@
             this._setAllActionsToHidden();
             let availableOptions = ['Save'];
 
-            switch (status) {
-              case 'active':
+            if (status !== 'draft' && status !== '') {
+              if (['signed', 'active'].indexOf(status) > -1) {
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
-                break;
-              case 'suspended':
+              } else if (status === 'suspended') {
                 // removes Save option
                 availableOptions.pop();
                 availableOptions.push('Unsuspend');
-                break;
-              case 'terminated':
+              } else {
                 // removes Save option
                 availableOptions.pop();
-                break;
-              case 'closed':
-                // removes Save option
-                availableOptions.pop();
-                break;
-              case 'implemented':
-                // removes Save option
-                availableOptions.pop();
-                break;
+              }
             }
 
             for (let key in this.possibleActions) {
@@ -245,6 +235,17 @@
                 'Closed',
               ];
               activeStatus = 'Draft';
+              break;
+
+            case 'signed':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Signed';
               break;
 
             case 'active':

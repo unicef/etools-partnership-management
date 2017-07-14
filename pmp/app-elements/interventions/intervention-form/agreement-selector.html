@@ -25,9 +25,11 @@
                                       option-label="name"
                                       selected="{{partnerId}}"
                                       dynamic-align
-                                      required auto-validate
+                                      readonly$="[[!intervention.permissions.edit.agreement]]"
+                                      required$="[[intervention.permissions.required.agreement]]"
+                                      auto-validate
                                       error-message="Partner is required"
-                                      readonly$="[[!editMode]]" starred>
+                                      starred>
         </etools-single-selection-menu>
       </div>
 
@@ -40,9 +42,11 @@
                                         option-label="agreement_number"
                                         selected="{{agreementId}}"
                                         dynamic-align
-                                        required auto-validate
+                                        readonly$="[[!intervention.permissions.edit.agreement]]"
+                                        required$="[[intervention.permissions.required.agreement]]"
+                                        auto-validate
                                         error-message="Agreement required"
-                                        readonly$="[[!editMode]]" starred>
+                                        starred>
         </etools-single-selection-menu>
 
       </div>
@@ -88,11 +92,7 @@
             value: null,
             notify: true
           },
-          editMode: {
-            type: Boolean,
-            value: false
-          },
-          interventionId: Number
+          intervention: Object,
         },
 
         _partnersDropdownDataChanged: function() {
@@ -147,7 +147,7 @@
 
           // set filtered agreements based on this
           var agreements = _.filter(this.agreements, function(agreement) {
-            if (this.interventionId > 0) {
+            if (this.intervention && this.intervention.id > 0) {
               // existing intervention
               return agreement.partner === partnerId;
             } else {

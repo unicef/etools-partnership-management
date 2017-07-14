@@ -146,7 +146,7 @@
                                              label="Amendment Types"
                                              placeholder="&#8212;"
                                              options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
-                                             selected-values="{{item.amendment_types}}"
+                                             selected-values="{{item.types}}"
                                              hide-search
                                              error-message="Please select amendment type"
                                              required
@@ -158,9 +158,9 @@
               <template is="dom-if" if="[[_showReadonlyDetails(item.id)]]">
                 <!-- readonly amendment types -->
                 <etools-form-element-wrapper label="Amendment Types">
-                  <span class="placeholder" hidden$="[[item.amendment_types.length]]">&#8212;</span>
-                  <span hidden$="[[!item.amendment_types.length]]">
-                    [[_getReadonlyAmendmentTypes(item.amendment_types)]]
+                  <span class="placeholder" hidden$="[[item.types.length]]">&#8212;</span>
+                  <span hidden$="[[!item.types.length]]">
+                    [[_getReadonlyAmendmentTypes(item.types)]]
                   </span>
                 </etools-form-element-wrapper>
               </template>
@@ -224,7 +224,7 @@
             id: null,
             signed_date: null,
             signed_amendment: null,
-            amendment_types: []
+            types: []
           };
         },
         _getAmendmentTypes: function(agreementType, _amendmentTypes) {
@@ -319,8 +319,8 @@
         _amendmentFieldsAreEmpty: function(amendmentItem, index) {
           return (amendmentItem.signed_date === null || amendmentItem.signed_date === '')
               && !amendmentItem.signed_amendment &&
-              ((amendmentItem.amendment_types instanceof Array && amendmentItem.amendment_types.length === 0) ||
-              !amendmentItem.amendment_types);
+              ((amendmentItem.types instanceof Array && amendmentItem.types.length === 0) ||
+              !amendmentItem.types);
         },
 
         /**
@@ -349,7 +349,7 @@
            }, 10);
         },
 
-        // amendment_types array contains 'Change authorized officer'
+        // types array contains 'Change authorized officer'
         _changeAuthorizedOfficersTypeSelected: function(amendmentTypes) {
           if (!(amendmentTypes instanceof Array && amendmentTypes.length > 0)) {
             return false;
@@ -369,7 +369,7 @@
         _newAmendmentsHaveChangeAuthOfficersSelected: function() {
           let self = this;
           let changeAuthOfficersTypeSelected = this.dataItems.find(function(amendment) {
-            return !amendment.id && self._changeAuthorizedOfficersTypeSelected(amendment.amendment_types);
+            return !amendment.id && self._changeAuthorizedOfficersTypeSelected(amendment.types);
           });
 
           return !!changeAuthOfficersTypeSelected;
@@ -388,7 +388,7 @@
 
         _onAmendmentTypesSelected: function(e) {
           e.stopImmediatePropagation();
-          if (this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].amendment_types)) {
+          if (this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].types)) {
             // unlock authorized officers
             this._triggerAuthorizedOfficersUnlock();
           } else {

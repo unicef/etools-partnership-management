@@ -22,17 +22,18 @@
         width: 100%;
       }
       .top-container {
-        padding:30px;
+        padding: 24px 24px 35px;
+        @apply(--etools-status-top-container);
       }
       .bottom-container {
         border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
-        padding: 25px;
+        padding: 24px;
       }
       .vertical-line {
         @apply(--layout-flex);
-        margin: 7px 11px;
+        margin: 8px 11px;
         border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
-        padding-top: 45px;
+        padding-top: 40px;
       }
       .vertical-line:first-child {
         display: none;
@@ -40,7 +41,7 @@
 
       .status-container {
         @apply(--layout-horizontal);
-        height: 40px;
+        min-height: 24px;
         @apply(--etools-status-container);
       }
       .status-icon, .status {
@@ -152,10 +153,7 @@
         </template>
       </div>
       <div class="bottom-container" hidden$="[[hideActions]]">
-        <div class="card-actions">
-          <etools-action-button actions="[[actions]]">
-          </etools-action-button>
-        </div>
+          <etools-action-button actions="[[actions]]"></etools-action-button>
       </div>
     </etools-content-panel>
   </template>
