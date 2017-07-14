@@ -880,7 +880,7 @@
       _unlockDetailsFields: function(e) {
         e.stopImmediatePropagation();
         this.setInterventionPermissions(false,
-            this.getAddingAmendmentsPermissions(this.intervention.permissions));
+            this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
       }
 
     });

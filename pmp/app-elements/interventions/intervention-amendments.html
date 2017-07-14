@@ -187,7 +187,6 @@
 
         observers: [
           '_dataHasChanged(dataItems)',
-          '_dataItemsLengthChanged(dataItems.length)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
         ],
         ready: function() {
@@ -281,18 +280,8 @@
             this.set('dataItems', []);
           }
         },
-        _dataItemsLengthChanged: function() {
-          if (!this.dataItems.length) {
-            //cancel adding amendment
-            this._resetInterventionFieldsEditMode();
-          }
-        },
         _unlockInterventionDetailsFields: function() {
           this.fire('unlock-details-fields');
-        },
-        _resetInterventionFieldsEditMode: function() {
-          //unlock fields only for new amendments | lock fields when complete or canceled
-          this.fire('amend-action-complete');
         },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];
@@ -428,7 +417,6 @@
               this._resetAmendmentValidations(index);
             }
           }.bind(this));
-
         },
 
         _resetAmendmentValidations: function(index) {
