@@ -182,11 +182,13 @@
           filteredAmendmentTypes: Object,
           interventionDocumentType: {
             type: String
-          }
+          },
+          _amendActionInProgress: Boolean
         },
 
         observers: [
           '_dataHasChanged(dataItems)',
+          '_dataItemsLengthChanged(dataItems.length)',
           '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
         ],
         ready: function() {
@@ -271,6 +273,7 @@
         },
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
+            this.set('_amendActionInProgress', true);
             this._addElement();
             this._unlockInterventionDetailsFields();
           }
@@ -279,9 +282,20 @@
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
+          this.set('_amendActionInProgress', this._thereAreUnsavedAmendments());
+        },
+        _dataItemsLengthChanged: function() {
+          if (this._amendActionInProgress && !this._thereAreUnsavedAmendments()) {
+            // cancel adding amendment
+            this._restoreInterventionOriginalDataAndPermissions();
+          }
         },
         _unlockInterventionDetailsFields: function() {
           this.fire('unlock-details-fields');
+        },
+        _restoreInterventionOriginalDataAndPermissions: function() {
+          this.set('_amendActionInProgress', false);
+          this.fire('restore-original-permissions');
         },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];

@@ -209,7 +209,7 @@
         </div>
         <div class="col col-3">
           <!-- Start date -->
-          <etools-info-tooltip icon="report"
+          <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
                                important-warning="[[frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
             <etools-date-input slot="field"
@@ -228,7 +228,7 @@
 
         </div>
         <div class="col col-3">
-          <etools-info-tooltip icon="report"
+          <etools-info-tooltip icon="report" icon-first
                                hide-tooltip="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
                                important-warning="[[frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
             <etools-date-input slot="field"
@@ -257,7 +257,7 @@
             <div class="title">Section/Cluster, Locations</div>
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
-                                         data-items="[[prepareSectorLocations(intervention)]]"
+                                         data-items="[[_sectorLocationData]]"
                                          edit-mode$="[[intervention.permissions.edit.sector_locations]]"
                                          required$="[[intervention.permissions.required.sector_locations]]"
                                          on-change-sector-locations="_changeSectorLocations">
@@ -383,6 +383,14 @@
           _frsEndConsistencyWarning: {
             type: String,
             value: ''
+          },
+          _forceSectorLocationsRefresh: {
+            type: Boolean,
+            value: false
+          },
+          _sectorLocationData: {
+            type: Array,
+            value: []
           }
         },
 
@@ -392,7 +400,7 @@
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
-
+          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)'
         ],
 
         ready: function() {
@@ -561,20 +569,28 @@
           return options;
         },
 
-        prepareSectorLocations: function(intervention) {
+        prepareSectorLocations: function(intervention, forceSectorLocationsRefresh) {
+          if (forceSectorLocationsRefresh) {
+            this.set('_forceSectorLocationsRefresh', false);
+            return;
+          }
           if (!intervention) {
             intervention = this.intervention;
           }
+
+          let sectorLocationData = [];
           if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
-            return intervention.sector_locations.map(function(sectorLocation) {
+            sectorLocationData = intervention.sector_locations.map(function(sectorLocation) {
               return {
                 id: sectorLocation.id,
-                sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
+                sector: (sectorLocation.sector && typeof sectorLocation.sector === 'object')
+                    ? sectorLocation.sector.id
+                    : sectorLocation.sector,
                 locations: this._prepareLocationsForSave(sectorLocation.locations)
               };
             }.bind(this));
           }
-          return [];
+          this.set('_sectorLocationData', sectorLocationData);
         },
 
         _prepareLocationsForSave: function(locations) {
@@ -582,7 +598,7 @@
             return [];
           }
           return locations.map(function(location) {
-            return location.id;
+            return (location && typeof location === 'object') ?  location.id : location;
           });
         },
 
@@ -634,6 +650,9 @@
 
         _changeSectorLocations: function(e) {
           e.stopImmediatePropagation();
+          if (!this.intervention) {
+            return;
+          }
           this.set('intervention.sector_locations', e.detail.sectorLocations);
         }
 

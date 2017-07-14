@@ -327,7 +327,8 @@
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
         'signed-doc-change-for-draft': '_signedDocChangedForDraft',
-        'unlock-details-fields': '_unlockDetailsFields'
+        'unlock-details-fields': '_unlockDetailsFields',
+        'restore-original-permissions': '_restoreInterventionOriginalDataAndPermissions'
       },
 
       ready: function() {
@@ -364,7 +365,10 @@
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
-          this._setInterventionPermissions(intervention);
+          let isNewIntervention = this._redirectToNewIntervPageInProgress ||
+              this._newIntervention(this.newInterventionActive);
+          this.checkAndUpdateInterventionPermissions(intervention,
+              this._hasEditPermissions(this.permissions), isNewIntervention);
           this.async(function() {
             // ensure loading msg close
             this.fire('global-loading', {active: false});
@@ -847,40 +851,6 @@
         } catch (err) {
           this.logWarn('List refresh error occurred', '[interventions-page]', err);
         }
-      },
-
-      _setInterventionPermissions: function(intervention) {
-        let userHasEditPermissions = this._hasEditPermissions(this.permissions);
-        let isNewIntervention = this._redirectToNewIntervPageInProgress ||
-            this._newIntervention(this.newInterventionActive);
-        if (userHasEditPermissions) {
-          if (isNewIntervention) {
-            this.setInterventionPermissions(true);
-          } else {
-            this.checkAndUpdatePlannedBudgetPermissions(intervention.status);
-          }
-        } else {
-          this.cancelEditPermissions();
-        }
-      },
-
-      _signedDocChangedForDraft: function(e) {
-        e.stopImmediatePropagation();
-        if (e.detail.docSelected) {
-          this.setInterventionPermissions(false,
-              this.getDraftToSignedTransitionPermissions(this.intervention.permissions));
-        } else {
-          this.setInterventionPermissions(false, this.originalIntervention.permissions);
-          // update validation errors
-          this.$.interventionDetails.validate();
-          this.$.interventionReviewAndSign.validate();
-        }
-      },
-
-      _unlockDetailsFields: function(e) {
-        e.stopImmediatePropagation();
-        this.setInterventionPermissions(false,
-            this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
       }
 
     });
