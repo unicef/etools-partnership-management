@@ -80,6 +80,16 @@
       <div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>
         <p>There are no attachments added.</p>
       </div>
+      <etools-file id="attachments"
+                   files="{{attachments}}"
+                   file-model="[[fileModel]]"
+                   file-types=[[fileTypes]]
+                   label="Attachments"
+                   multiple activate-file-types use-delete-events
+                   hide-delete-btn
+                   on-delete-file="_deleteAttachment"
+                   readonly$=[[!intervention.permissions.edit.attachments]]
+                   no-file-attached-msg=""></etools-file>
     </etools-content-panel>
 
   </template>
@@ -120,22 +130,10 @@
           preparedAttachments: {
             type: Boolean,
             value: false
-          },
-          newIntervention: {
-            type: Boolean
-          },
-          editMode: {
-            type: Boolean,
-//            value: false,
-            observer: '_editModeChanged'
           }
         },
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
-
-        _editModeChanged: function() {
-          this.updateStyles();
-        },
 
         _attachmentsChanged: function(attachments) {
           if (Array.isArray(attachments) &&
