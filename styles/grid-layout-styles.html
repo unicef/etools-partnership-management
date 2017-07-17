@@ -16,17 +16,6 @@
         /* flex container */
         @apply(--layout-flex);
       }
-
-      .center-align {
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-      .right-align {
-        justify-content: flex-end;
-        align-items: center;
-        text-align: right;
-      }
       .row-h, .row-v {
         padding: 16px 24px;
       }
@@ -43,14 +32,29 @@
         border-bottom: 1px solid var(--dark-divider-color);
         font-weight: 600;
       }
+      .row-v.header-row > .col, .row-h.header-row > .col {
+        line-height: 24px;
+      }
       .table .row-h:not(.header-row) {
-         border-top: 1px solid var(--dark-divider-color);
-       }
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .table.form-fields .row-h:not(.header-row) {
+        padding: 8px 24px;
+      }
 
       .row-second-bg {
         background-color: var(--light-theme-background-color);
       }
-
+      .center-align {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .right-align {
+        justify-content: flex-end;
+        align-items: center;
+        text-align: right;
+      }
       .no-overflow {
         /* used to prevent flexbox to change it's size if content grows */
         overflow: hidden;
