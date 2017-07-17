@@ -59,6 +59,10 @@
       paper-input#other {
         width: 100%;
       }
+
+      #no-amend-warning {
+        padding: 24px;
+      }
     </style>
     <required-and-not-future-date-validator></required-and-not-future-date-validator>
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
@@ -145,8 +149,8 @@
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      <p>There are no amendments added.</p>
+    <div id="no-amend-warning" class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+      There are no amendments added.
     </div>
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
@@ -179,11 +183,7 @@
           interventionDocumentType: {
             type: String
           },
-          permissions: {
-            type: Object,
-            observer: '_permissionsChanged'
-          },
-          initialPermissions: Object
+          _amendActionInProgress: Boolean
         },
 
         observers: [
@@ -219,9 +219,6 @@
           return this.isFutureDate(signedDate)
               ? 'Signed Date can not be in the future'
               : 'Please select Signed Date';
-        },
-        _permissionsChanged: function() {
-          this.initialPermissions = JSON.parse(JSON.stringify(this.permissions));
         },
         _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
@@ -276,37 +273,29 @@
         },
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
+            this.set('_amendActionInProgress', true);
             this._addElement();
-            this._makeInterventionFieldsEditable();
+            this._unlockInterventionDetailsFields();
           }
         },
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
+          this.set('_amendActionInProgress', this._thereAreUnsavedAmendments());
         },
         _dataItemsLengthChanged: function() {
-          if (!this.dataItems.length) {
-            //cancel adding amendment
-            this._resetInterventionFieldsEditMode();
+          if (this._amendActionInProgress && !this._thereAreUnsavedAmendments()) {
+            // cancel adding amendment
+            this._restoreInterventionOriginalDataAndPermissions();
           }
         },
-        _makeInterventionFieldsEditable: function() {
-          // TODO
-//          if (!this.permissions) {
-//            return;
-//          }
-//          for (var prop in this.permissions.read_only) {
-//            this.set('permissions.read_only.' + prop, true);
-//            //this.notifyPath('permissions.read_only..//if necessasry
-//          }
+        _unlockInterventionDetailsFields: function() {
+          this.fire('unlock-details-fields');
         },
-        _resetInterventionFieldsEditMode: function() {
-          //TODO
-//          return;
-//          for (var prop in this.initialPermissions.read_only) {
-//            this.set('permissions.read_only.' + prop, this.initialPermissions.read_only[prop]);
-//          }
+        _restoreInterventionOriginalDataAndPermissions: function() {
+          this.set('_amendActionInProgress', false);
+          this.fire('restore-original-permissions');
         },
         _validateAmendment: function(index) {
           var amendment = this.dataItems[index];
@@ -348,19 +337,6 @@
             }
           }
           return isValid;
-        },
-
-        /**
-         * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        _canBeRemoved: function(index) { //TODO is this used anywhere?
-          var amendment = this.dataItems[index];
-          var amendmentId = parseInt(amendment.id, 10);
-          if (amendment && isNaN(amendmentId) === false && amendmentId > 0) {
-            // amendment already saved (has an id assigned)
-            return false;
-          }
-          return true;
         },
 
         /**
@@ -438,7 +414,8 @@
             return valid;
           }
           this.dataItems.forEach(function(amendment, index) {
-            if (!this._validateAmendment(index)) {
+            // validate only new(not saved yet) amendments
+            if (!this._isReadonlyAmendment(amendment.id) && !this._validateAmendment(index)) {
               valid = false;
             }
           }.bind(this));
@@ -450,9 +427,10 @@
             return;
           }
           this.dataItems.forEach(function(amendment, index) {
-            this._resetAmendmentValidations(index);
+            if (!this._isReadonlyAmendment(amendment.id)) {
+              this._resetAmendmentValidations(index);
+            }
           }.bind(this));
-
         },
 
         _resetAmendmentValidations: function(index) {

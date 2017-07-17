@@ -1,0 +1,245 @@
+<script>
+  var interventionNoEditPermissionsModel = {
+    id: false,
+    status: false,
+
+    // details - Partnership Information
+    agreement: false,
+    document_type: false,
+    number: false,
+    title: false,
+    offices: false,
+    unicef_focal_points: false,
+    partner_focal_points: false,
+
+    // details - PD or SSFA Details
+    country_programme: false,
+    start: false,
+    end: false,
+    sector_locations: false,
+
+    // details - PD Output or SSFA Expected results
+    result_links: false,
+
+    // details - Planned Budget
+    planned_budget: false,
+    planned_budget_unicef_cash: false, // TODO: this should be also received from backend
+
+    // details - Planned Visits
+    planned_visits: false,
+
+    // review & sign - Signatures & Dates
+    submission_date: false,
+    submission_date_prc: false,
+    review_date_prc: false,
+    prc_review_document: false,
+    partner_authorized_officer_signatory: false,
+    signed_by_partner_date: false,
+    unicef_signatory: false,
+    signed_by_unicef_date: false,
+    signed_pd_document: false,
+
+    // review & sign - Amendments
+    amendments: false,
+
+    // review & sign - FR Numbers
+    frs: false,
+
+    // attachments
+    attachments: false,
+  };
+
+
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.InterventionPermissionsBehavior */
+  pmpBehaviors.InterventionPermissionsBehavior = {
+
+    properties: {
+      _intervNoEditPerm: {
+        type: Object,
+        value: {
+          edit: Object.assign({}, interventionNoEditPermissionsModel),
+          required: Object.assign({}, interventionNoEditPermissionsModel)
+        }
+      }
+    },
+
+    listeners: {
+      'signed-doc-change-for-draft': '_signedDocChangedForDraft',
+      'unlock-details-fields': '_unlockDetailsFields',
+      'restore-original-permissions': '_restoreInterventionOriginalDataAndPermissions'
+    },
+
+    _getNewIntervRequiredFields: function() {
+      return ['partner', 'agreement', 'document_type', 'title'];
+    },
+
+    _getDraftToSignedRequiredFields: function() {
+      return ['offices', 'unicef_focal_points', 'partner_focal_points', 'start', 'end', 'sector_locations',
+        'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
+        'signed_by_unicef_date', 'signed_pd_document'];
+    },
+
+    _getEditableFieldsForAddAmendmentAction: function() {
+      return ['partner', 'agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
+        'partner_focal_points', 'country_programme', 'start', 'end', 'sector_locations',
+        'result_links', 'planned_budget', 'planned_budget_unicef_cash', 'planned_visits'];
+    },
+
+    _getNoEditPermissionsClone: function() {
+      return JSON.parse(JSON.stringify(this._intervNoEditPerm));
+    },
+
+    _getNewInterventionPermissions: function() {
+      // get a fresh reseted permissions list
+      let newIntervPerm = this._getNoEditPermissionsClone();
+      let fieldName;
+      // set required fields
+      let reqFields = this._getNewIntervRequiredFields();
+      for(fieldName in newIntervPerm.required) {
+        if (reqFields.indexOf(fieldName) > -1) {
+          newIntervPerm.required[fieldName] = true;
+        }
+      }
+      let notEditableFieldsForDraft = ['amendments', 'frs'];
+      // set editable fields
+      for(fieldName in newIntervPerm.edit) {
+        if (notEditableFieldsForDraft.indexOf(fieldName) === -1) {
+          newIntervPerm.edit[fieldName] = true;
+        }
+      }
+      return newIntervPerm;
+    },
+
+    _setPermissions: function(perm) {
+      this.set('intervention.permissions', perm);
+    },
+
+    cancelEditPermissions: function() {
+      this._setPermissions(this._getNoEditPermissionsClone());
+    },
+
+    setInterventionPermissions: function(newIntervention, perm) {
+      if (newIntervention) {
+        this._setPermissions(this._getNewInterventionPermissions());
+      } else {
+        if (perm) {
+          this._setPermissions(perm);
+        }
+      }
+    },
+
+    getDraftToSignedTransitionPermissions: function(currentPerm) {
+      let reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields();
+      let perm = JSON.parse(JSON.stringify(currentPerm));
+      reqFieldsForSignedStatus.forEach(function(field) {
+        perm.required[field] = true;
+        perm.edit[field] = true;
+      });
+      return perm;
+    },
+
+    /**
+     * Alter current permission to allow details fields edit
+     */
+    getDetailsEditPermissionsForAmendAction: function(currentPerm) {
+      let perm = JSON.parse(JSON.stringify(currentPerm));
+      let editableFields = this._getEditableFieldsForAddAmendmentAction();
+      editableFields.forEach(function(field) {
+        perm.edit[field] = true;
+        perm.required[field] = true;
+      });
+      return perm;
+    },
+
+    checkAndUpdatePlannedBudgetPermissions: function(status) {
+      switch (status) {
+        case 'signed':
+          if (this.get('intervention.permissions.edit.planned_budget')) {
+            // if planned_budget perm is true, user can edit this section,
+            // but in signed status he can only edit unicef_cash
+            this.set('intervention.permissions.edit.planned_budget', false);
+            this.set('intervention.permissions.edit.planned_budget_unicef_cash', true);
+          }
+          break;
+        default:
+          this.set('intervention.permissions.edit.planned_budget_unicef_cash',
+              this.get('intervention.permissions.edit.planned_budget'));
+          break;
+      }
+    },
+
+    /**
+     * All field that are unlocked when an amendment is added must be restored to the original value if the
+     * new/unsaved amendments are deleted
+     */
+    restoreDetailsTabOriginalValuesRelatedToAmendments: function() {
+      let status = this.get('intervention.status');
+
+      if (['signed', 'active'].indexOf(status) === -1) {
+        return;
+      }
+      let fieldsToRestore = ['agreement', 'document_type', 'title', 'country_programme', 'sector_locations',
+        'planned_budget', 'result_links', 'planned_visits'];
+      if (status === 'active') {
+        fieldsToRestore = fieldsToRestore.concat(['start', 'end']);
+      }
+
+      let unicefCashCopy = this.get('intervention.planned_budget.unicef_cash');
+
+      fieldsToRestore.forEach(function(field) {
+        let dataPath = 'intervention.' + field;
+        let originalDataPath = 'originalIntervention.' + field;
+        this.set(dataPath, JSON.parse(JSON.stringify(this.get(originalDataPath))));
+        if (field === 'planned_budget' && status === 'signed') {
+          // if planned_budget we need to make sure in signed status unicef_cash remains the same
+          this.set('intervention.planned_budget.unicef_cash', unicefCashCopy);
+        }
+      }.bind(this));
+      this.$.interventionDetails.set('_forceSectorLocationsRefresh', true);
+
+      this.fire('toast', {text: 'There are no new/unsaved amendments.\n' +
+        'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
+
+    },
+
+    checkAndUpdateInterventionPermissions: function(intervention, userHasEditPermissions, isNewIntervention) {
+      if (userHasEditPermissions) {
+        if (isNewIntervention) {
+          this.setInterventionPermissions(true);
+        } else {
+          this.checkAndUpdatePlannedBudgetPermissions(intervention.status);
+        }
+      } else {
+        this.cancelEditPermissions();
+      }
+    },
+
+    _signedDocChangedForDraft: function(e) {
+      e.stopImmediatePropagation();
+      if (e.detail.docSelected) {
+        this.setInterventionPermissions(false,
+            this.getDraftToSignedTransitionPermissions(this.intervention.permissions));
+      } else {
+        this.setInterventionPermissions(false, this.originalIntervention.permissions);
+        // update validation errors
+        this.$.interventionDetails.validate();
+        this.$.interventionReviewAndSign.validate();
+      }
+    },
+
+    _unlockDetailsFields: function(e) {
+      e.stopImmediatePropagation();
+      this.setInterventionPermissions(false,
+          this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
+    },
+
+    _restoreInterventionOriginalDataAndPermissions: function(e) {
+      e.stopImmediatePropagation();
+      this.setInterventionPermissions(false, this.originalIntervention.permissions);
+      this.checkAndUpdatePlannedBudgetPermissions();
+      this.restoreDetailsTabOriginalValuesRelatedToAmendments();
+    }
+
+  };
+</script>
