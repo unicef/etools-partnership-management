@@ -49,7 +49,6 @@
     attachments: false,
   };
 
-
   window.pmpBehaviors = window.pmpBehaviors || {};
   /** @polymerBehavior pmpBehaviors.InterventionPermissionsBehavior */
   pmpBehaviors.InterventionPermissionsBehavior = {
@@ -96,14 +95,14 @@
       let fieldName;
       // set required fields
       let reqFields = this._getNewIntervRequiredFields();
-      for(fieldName in newIntervPerm.required) {
+      for (fieldName in newIntervPerm.required) {
         if (reqFields.indexOf(fieldName) > -1) {
           newIntervPerm.required[fieldName] = true;
         }
       }
       let notEditableFieldsForDraft = ['amendments', 'frs'];
       // set editable fields
-      for(fieldName in newIntervPerm.edit) {
+      for (fieldName in newIntervPerm.edit) {
         if (notEditableFieldsForDraft.indexOf(fieldName) === -1) {
           newIntervPerm.edit[fieldName] = true;
         }
@@ -200,7 +199,6 @@
 
       this.fire('toast', {text: 'There are no new/unsaved amendments.\n' +
         'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
-
     },
 
     checkAndUpdateInterventionPermissions: function(intervention, userHasEditPermissions, isNewIntervention) {
