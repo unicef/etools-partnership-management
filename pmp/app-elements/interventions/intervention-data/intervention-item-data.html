@@ -65,9 +65,6 @@
 
           this._setIntervention(response.detail);
 
-          if (this.intervention && this.intervention.planned_budget) {
-            this.set('intervention.planned_budget.interventionWasSaved', true);
-          }
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
