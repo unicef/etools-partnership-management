@@ -54,7 +54,7 @@
 
     // When the list data rows are changing check and close any details opened
     _listDataChanged: function(event) {
-      var rows = this.$.list.querySelectorAll('data-table-row');
+      var rows = this.$.list.querySelectorAll('etools-data-table-row');
       if (rows && rows.length) {
         for (var i = 0; i < rows.length; i++) {
           if (rows[i].detailsOpened) {

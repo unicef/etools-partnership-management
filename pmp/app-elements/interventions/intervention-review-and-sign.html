@@ -37,16 +37,19 @@
       paper-input {
         width: 100%;
       }
+      etools-checkable-input[readonly] {
+        cursor: not-allowed;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Signatures & Dates">
       <div class="row-h flex-c">
         <div class="col col-3">
-          <!-- Document Start Date -->
+          <!-- Document Submission Date -->
           <etools-date-input id="submissionDateField"
                              label="Document Submission Date"
                              value="{{intervention.submission_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly$="[[!intervention.permissions.edit.submission_date]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -57,7 +60,7 @@
                                     label="Submitted to PRC?"
                                     type="checkbox"
                                     label-alignment="right"
-                                    readonly$="[[_isSubmittedToPrcCheckReadonly(editMode, _lockSubmitToPrc)]]"
+                                    readonly$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                                     unchanged-readonly-style
                                     hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
             </etools-checkable-input>
@@ -71,7 +74,7 @@
             <etools-date-input id="submissionDatePrcField"
                                label="Submission Date to PRC"
                                value="{{intervention.submission_date_prc}}"
-                               readonly$="[[!editMode]]"
+                               readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -80,7 +83,7 @@
             <etools-date-input id="reviewDatePrcField"
                                label="Review Date by PRC"
                                value="{{intervention.review_date_prc}}"
-                               readonly$="[[!editMode]]"
+                               readonly$="[[!intervention.permissions.edit.review_date_prc]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -90,8 +93,8 @@
                                 internal-file=[[intervention.prc_review_document_file]]
                                 file={{intervention.prc_review_document}}
                                 accept=".doc,.docx,.pdf,.jpg,.png"
-                                hide-delete-btn="[[_hideDeleteBtn(editMode, intervention.status, intervention.prc_review_document_file)]]"
-                                readonly$="[[_isUploadFileReadonly(editMode, intervention.status, intervention.prc_review_document_file)]]">
+                                hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
+                                readonly$="[[!intervention.permissions.edit.prc_review_document]]">
             </etools-single-file>
           </div>
         </div>
@@ -105,7 +108,10 @@
                                         options="[[agreementAuthorizedOfficers]]"
                                         selected="{{intervention.partner_authorized_officer_signatory}}"
                                         dynamic-align
-                                        readonly$="[[!editMode]]">
+                                        readonly$="[[!intervention.permissions.edit.partner_authorized_officer_signatory]]"
+                                        required$="[[intervention.permissions.required.partner_authorized_officer_signatory]]"
+                                        auto-validate
+                                        error-message="Please select Partner Authorized Officer">
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
@@ -113,7 +119,10 @@
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
                              value="{{intervention.signed_by_partner_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
+                             required$="[[intervention.permissions.required.signed_by_partner_date]]"
+                             auto-validate
+                             error-message="Please select Signed by Partner Date"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -129,7 +138,10 @@
                                       option-label="full_name"
                                       selected="{{intervention.unicef_signatory}}"
                                       dynamic-align
-                                      readonly$="[[!editMode]]">
+                                      readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
+                                      required$="[[intervention.permissions.required.unicef_signatory]]"
+                                      auto-validate
+                                      error-message="Please select UNICEF user">
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
@@ -137,7 +149,10 @@
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
                              value="{{intervention.signed_by_unicef_date}}"
-                             readonly$="[[!editMode]]"
+                             readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
+                             required$="[[intervention.permissions.required.signed_by_unicef_date]]"
+                             auto-validate
+                             error-message="Please select Signed by UNICEF Date"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -145,12 +160,16 @@
       <div class="row-h flex-c">
         <div class="col col-6 file-container space-left">
           <!-- Signed PD/SSFA -->
-          <etools-single-file label="Signed PD/SSFA"
+          <etools-single-file id="signedIntervFile"
+                              label="Signed PD/SSFA"
                               internal-file=[[intervention.signed_pd_document_file]]
                               file={{intervention.signed_pd_document}}
                               accept=".doc,.docx,.pdf,.jpg,.png"
-                              hide-delete-btn="[[_hideDeleteBtn(editMode, intervention.status, intervention.signed_pd_document_file)]]"
-                              readonly$="[[_isUploadFileReadonly(editMode, intervention.status, intervention.signed_pd_document_file)]]">
+                              hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.signed_pd_document_file)]]"
+                              readonly$="[[!intervention.permissions.edit.signed_pd_document]]"
+                              required$="[[intervention.permissions.required.signed_pd_document]]"
+                              auto-validate
+                              error-message="Please select Signed PD/SSFA document">
           </etools-single-file>
         </div>
         <div class="col col-3">
@@ -176,15 +195,14 @@
       <etools-content-panel class="content-section" panel-title="Amendments">
         <intervention-amendments id="intervAmendments"
                                  intervention-document-type="[[intervention.document_type]]"
-                                 permissions="[[permissions]]"
                                  data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[_getAmendmentsEditMode(editMode, intervention.id, intervention.status)]]"></intervention-amendments>
+                                 edit-mode$="[[intervention.permissions.edit.amendments]]"></intervention-amendments>
       </etools-content-panel>
     </template>
 
     <intervention-fund-reservations class="content-section"
                                     intervention="[[intervention]]"
-                                    edit-mode="[[_getFrNumbersEditMode(editMode, intervention.id, intervention.status)]]"
+                                    edit-mode="[[intervention.permissions.edit.frs]]"
                                     on-frs-update="_handleFrsUpdate">
     </intervention-fund-reservations>
 
@@ -223,21 +241,15 @@
             type: Array,
             value: []
           },
-          newIntervention: {
-            type: Boolean
-          },
-          editMode: {
-            type: Boolean,
-//            value: false,
-            observer: '_editModeChanged'
-          },
           _lockSubmitToPrc: {
             type: Boolean,
             value: false
-          },
-          permissions: Object
+          }
         },
-        observers: ['_interventionDocTypeChanged(intervention.document_type)'],
+        observers: [
+          '_interventionDocTypeChanged(intervention.document_type)',
+          '_signedPdDocHasChanged(intervention.signed_pd_document)'
+        ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
@@ -263,30 +275,11 @@
             this.set('intervention.prc_review_document', file);
           }
         },
-
-        _isUploadFileReadonly: function(editMode, status, fileUrl) {
-          if (!editMode) {
-            return true;
-          }
-          if (!this.intervention || !this.intervention.id) {
-            return false;
-          }
-          if (!fileUrl) {
-            return false;
-          }
-          if (!this._isDraft(status)) {
-            return true;
-          }
-          return false;
-        },
-        _hideDeleteBtn: function(editMode, status, fileUrl) {
+        _hideDeleteBtn: function(status, fileUrl) {
           if (this._isDraft(status) && fileUrl) {
             return true;
           }
           return false;
-        },
-        _editModeChanged: function() {
-          this.updateStyles();
         },
 
         _agreementChanged: function(agreement) {
@@ -314,11 +307,16 @@
           return null;
         },
         validate: function() {
-          var amendments = this.$$('#intervAmendments');
-          if (amendments) {
-            return amendments.validate();
-          }
-          return true;
+          let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField', '#signedByUnicef',
+            '#signedByUnicefDateField', '#signedIntervFile', '#intervAmendments'];
+          let valid = true;
+          fieldsToValidateSelectors.forEach(function(selector) {
+            let field = this.$$(selector);
+            if (field && !field.validate()) {
+              valid = false;
+            }
+          }.bind(this));
+          return valid;
         },
 
         _showSubmittedToPrcFields: function(submittedToPrc) {
@@ -331,8 +329,8 @@
           return !this._isDraft(status);
         },
 
-        _isSubmittedToPrcCheckReadonly: function(editMode, _lockSubmitToPrc) {
-          return !editMode || _lockSubmitToPrc;
+        _isSubmittedToPrcCheckReadonly: function(isPrcDocEditable, lockSubmitToPrc) {
+          return !isPrcDocEditable || lockSubmitToPrc;
         },
 
         _interventionDocTypeChanged: function(interventionDocumentType) {
@@ -364,18 +362,19 @@
           this.fire('global-loading', {active: false});
         },
 
-        _getFrNumbersEditMode: function(editMode, interventionId, interventionStatus) {
-          if (!editMode || !interventionId || (interventionStatus !== 'draft' && interventionStatus !== 'signed')) {
-            return false;
+        /**
+         * If a signed document is selected then all fields required
+         * for the intervention to move in signed status are required; only for draft status.
+         */
+        _signedPdDocHasChanged: function(signedDocument) {
+          if (this.intervention && this.intervention.status === 'draft') {
+            if (signedDocument instanceof File) {
+              // new document selected
+              this.fire('signed-doc-change-for-draft', {docSelected: true});
+            } else {
+              this.fire('signed-doc-change-for-draft', {docSelected: false});
+            }
           }
-          return true;
-        },
-
-        _getAmendmentsEditMode: function(editMode, interventionId, interventionStatus) {
-          if (!editMode || !interventionId || ['active', 'signed'].indexOf(interventionStatus) === -1) {
-            return false;
-          }
-          return true;
         }
 
       });

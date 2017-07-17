@@ -5,64 +5,49 @@
 <link rel="import" href="../../../app-behaviors/date-behavior.html">
 <link rel="import" href="../behaviors/fr-numbers-consistency-behavior.html">
 
-<link rel="import" href="../../../../styles/table-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
-    <style include="table-styles">
-      .padding {
-        padding: 16px 20px;
-      }
-
-      .totals-row {
-        font-weight: bold;
-      }
-
-      .table > tbody > tr > td {
-        padding: 16px 15px;
-        line-height: 1.4;
-        vertical-align: top;
-        border-top: 1px solid var(--dark-divider-color);
+    <style include="grid-layout-styles">
+      [hidden] {
+        display: none !important;
       }
     </style>
-    <table class="table r-align first-c-always-left" hidden$="[[_noFrs(frsDetails)]]">
-      <thead>
-      <tr>
-        <th>FR#</th>
-        <th>FR Posting Date</th>
-        <th>FR Amount $</th>
-        <th>Actual $</th>
-        <th>Outstanding $</th>
-      </tr>
-      </thead>
-      <tbody>
-      <template id="repeater" is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
-        <tr>
-          <td>[[fr.fr_number]]</td>
-          <td>[[prettyDate(fr.start_date)]]</td>
-          <td>[[displayCurrencyAmount(fr.total_amt, '0.00')]]</td>
-          <td>[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</td>
-          <td>[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</td>
-        </tr>
+    <div class="table" hidden$="[[_noFrs(frsDetails)]]">
+      <div class="row-h header-row">
+        <div class="col col-3"> FR#</div>
+        <div class="col col-3 right-align"> FR Posting Date</div>
+        <div class="col col-2 right-align"> FR Amount $</div>
+        <div class="col col-2 right-align"> Actual $</div>
+        <div class="col col-2 right-align"> Outstanding $</div>
+      </div>
+      <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
+        <div class="row-h">
+          <div class="col col-3">[[fr.fr_number]]</div>
+          <div class="col col-3 right-align">[[prettyDate(fr.start_date)]]</div>
+          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.total_amt, '0.00')]] </div>
+          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</div>
+          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</div>
+        </div>
       </template>
-      <tr class="darkRow totals-row">
-        <td></td>
-        <td>TOTAL</td>
-        <td>
+      <div class="row-h row-second-bg">
+        <div class="col col-3"></div>
+        <div class="col col-3 right-align"><strong>TOTAL</strong></div>
+        <div class="col col-2 right-align">
           <etools-info-tooltip icon="report"
-                               hide-tooltip="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
-                               important-warning="[[frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
-                               icon-first right-aligned>
+                            hide-tooltip="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                            important-warning="[[frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                            icon-first right-aligned>
             <span slot="field">[[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]]</span>
             <span slot="message">[[_frsTotalAmountWarning]]</span>
           </etools-info-tooltip>
-        </td>
-        <td>[[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</td>
-        <td>[[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="padding" hidden$="[[!_noFrs(frsDetails)]]">
+        </div>
+        <div class="col col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</div>
+        <div class="col col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</div>
+      </div>
+    </div>
+    <div class="row-h" hidden$="[[!_noFrs(frsDetails)]]">
       <p>There are no fund reservations added for this intervention.</p>
     </div>
   </template>

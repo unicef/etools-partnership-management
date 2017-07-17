@@ -412,8 +412,7 @@
         },
 
         _canAddAmendments: function(editMode, agreementStatus) {
-          // TODO: remove active, keep only signed once API is ready
-          return editMode && (agreementStatus === 'signed' || agreementStatus === 'active');
+          return editMode && agreementStatus === 'signed';
         },
 
         /**
