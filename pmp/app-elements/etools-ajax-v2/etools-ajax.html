@@ -1,0 +1,63 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dexiejs/dexie.html">
+
+<link rel="import" href="etools-ajax-request-behavior.html">
+
+<dom-module id="etools-ajax-2">
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'etools-ajax-2',
+
+        behaviors: [EtoolsAjaxRequestBehavior],
+
+        properties: {
+          options: Object,
+        },
+        observers: [
+          '_optionsChanged(options.*)'
+        ],
+        send: function(options) {
+          var opt = options || this.options;
+
+          return this.sendRequest(opt)
+          .then(function(data){
+            this.fire('success', data);
+            return data;
+          }.bind(this))
+          .catch(function (error) {
+            this.handleError(error);
+          }.bind(this));
+        },
+
+        _optionsChanged: function(options) {
+          this.debounce('etools-ajax-options-changed', function() {
+            this.send();
+          }.bind(this), 300)
+        },
+
+        handleError: function (error) {
+          if (error.status === 401) {
+            this.fire('unauthorized', {error: error});
+            return;
+          }
+
+          if (error.status === 403) {
+            this.fire('forbidden', {error: error});
+            return;
+          }
+          this._log('error', error.error);
+
+          this.fire('fail', {
+            error: error.error
+          });
+        },
+
+      });
+
+    })();
+  </script>
+</dom-module>
