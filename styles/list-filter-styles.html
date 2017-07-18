@@ -7,8 +7,8 @@
     <style>
         #listControls {
         @apply(--layout-horizontal);
-        padding: 6px 30px;
-        margin-bottom: 20px;
+        padding: 8px 24px;
+        margin-bottom: 24px;
         background: var(--list-bg-color);
       }
 
@@ -20,11 +20,12 @@
 
       .wrap-controls {
         @apply(--layout-wrap);
-        padding-bottom: 8px;
+        margin-right: auto;
+        max-width: calc(100% - 176px);
       }
 
       .wrap-controls > *:not(:last-child) {
-        margin-right: 15px;
+        margin-right: 16px;
       }
 
       .wrap-controls paper-input {
@@ -42,14 +43,13 @@
 
       .fixed-controls {
         @apply(--layout-end-justified);
-
-        margin-left: auto;
         white-space: nowrap;
+        max-width: 176px;
       }
 
       .filters-divider {
         height: calc(100% - 16px);
-        margin: 0 20px;
+        margin: 0 8px 0 24px;
         border-left: 2px solid var(--list-divider-color, #9D9D9D);
       }
 
