@@ -20,8 +20,10 @@
 
       .wrap-controls {
         @apply(--layout-wrap);
+        @apply(--layout-flex);
         margin-right: auto;
-        max-width: calc(100% - 176px);
+        min-height: 62px;
+        height: auto;
       }
 
       .wrap-controls > *:not(:last-child) {
@@ -42,23 +44,35 @@
       }
 
       .fixed-controls {
-        @apply(--layout-end-justified);
-        white-space: nowrap;
-        max-width: 176px;
+        @apply(--layout-wrap);
+        padding: 8px 0;
       }
 
-      .filters-divider {
-        height: calc(100% - 16px);
-        margin: 0 8px 0 24px;
+      .filter-bar-action-wrapper {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
+        @apply(--layout-self-stretch);
+        padding: 0 0 0 24px;
         border-left: 2px solid var(--list-divider-color, #9D9D9D);
+        margin-left: 24px;
+      }
+      .filter-bar-action-wrapper.menu-btn-wrapper {
+        padding: 0 0 0 8px;
       }
 
       #filterMenu {
-        max-width: 126px;
+        max-width: 200px;
+        min-width: 130px;
+        padding: 0;
+        --paper-menu-button-content: {
+          overflow-x: auto;
+          overflow-y: hidden !important;
+        }
       }
 
       #filterMenu .button {
         color: var(--list-primary-color, #40c4ff);
+        margin: 0;
       }
 
       #filterMenu .button iron-icon {

@@ -100,25 +100,25 @@
 
       <div class="fixed-controls">
 
-        <div class="filters-divider"></div>
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu">
+            <paper-button class="button dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              add filter
+            </paper-button>
+            <paper-menu class="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-menu>
+          </paper-menu-button>
+        </div>
 
-        <paper-menu-button id="filterMenu">
-          <paper-button class="button dropdown-trigger">
-            <iron-icon icon="filter-list"></iron-icon>
-            add filter
-          </paper-button>
-          <paper-menu class="dropdown-content">
-            <template is="dom-repeat" items="[[availableListFilterOptions]]">
-              <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-            </template>
-          </paper-menu>
-        </paper-menu-button>
-
-        <div class="filters-divider"></div>
-
-        <div id="hiddenToggle" on-tap="_toggleHidden">
-          Show hidden
-          <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
+        <div class="filter-bar-action-wrapper">
+          <div id="hiddenToggle" on-tap="_toggleHidden">
+            Show hidden
+            <paper-toggle-button checked="[[showHidden]]"></paper-toggle-button>
+          </div>
         </div>
 
       </div>
