@@ -352,11 +352,15 @@
 
           fields.forEach(function(fieldSelector) {
             var fieldEl = this.$$(fieldSelector);
+            var reportFileLength = 0;
+            if(typeof this.dataItems[index].report_file === 'string') {
+              reportFileLength = this.dataItems[index].report_file.length;
+            }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
               var validField = this._isValid(fieldName, this.dataItems[index].type,
                   this.dataItems[index].completed_date, this.dataItems[index].report,
-                  this.dataItems[index].report_file.length, fieldEl);
+                  reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
                 valid = false;
