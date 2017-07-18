@@ -345,14 +345,14 @@
               {
                 filterName: 'Agreement Type',
                 type: 'dropdown',
-                selectionOptions: this.agreementTypes,
+                selectionOptions: agreementTypes,
                 alreadySelected: null,
                 path: 'agreementType'
               },
               {
                 filterName: 'Agreement Status',
                 type: 'dropdown',
-                selectionOptions: this.agreementStatuses,
+                selectionOptions: agreementStatuses,
                 alreadySelected: null,
                 path: 'agreementStatus'
               },
@@ -360,7 +360,7 @@
                 filterName: 'Partner',
                 type: 'esmm', // etools-multi-selection-menu
                 multiple: true,
-                selectionOptions: this.partnersDropdownData,
+                selectionOptions: partnersDropdownData,
                 alreadySelected: [],
                 path: 'selectedPartners'
               },
@@ -377,6 +377,7 @@
                 path: 'endDate'
               }
             ]);
+            this._updateSelectedFiltersValues();
           }, 100);
         },
 

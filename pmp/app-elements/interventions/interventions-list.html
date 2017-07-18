@@ -371,7 +371,7 @@
                 optionValue: 'value',
                 optionLabel: 'label',
                 selectionOptions: this.documentTypes,
-                alreadySelected: _.map(this.selectedDocumentTypes, 'value'),
+                alreadySelected: [],
                 path: 'selectedDocumentTypes'
               },
               {
@@ -380,7 +380,7 @@
                 optionValue: 'id',
                 optionLabel: 'name',
                 selectionOptions: this.cpOutputs,
-                alreadySelected: _.map(this.selectedCpOutputs, 'id'),
+                alreadySelected: [],
                 path: 'selectedCpOutputs'
               },
               {
@@ -389,7 +389,7 @@
                 optionValue: 'id',
                 optionLabel: 'name',
                 selectionOptions: this.sectors,
-                alreadySelected: _.map(this.selectedSectors, 'id'),
+                alreadySelected: [],
                 path: 'selectedSectors'
               },
               {
@@ -398,7 +398,7 @@
                 optionValue: 'value',
                 optionLabel: 'label',
                 selectionOptions: this.interventionStatuses,
-                alreadySelected: _.map(this.selectedStatuses, 'value'),
+                alreadySelected: [],
                 path: 'selectedStatuses'
               },
               {
@@ -407,7 +407,7 @@
                 optionValue: 'user_id',
                 optionLabel: 'full_name',
                 selectionOptions: this.unicefUsersData,
-                alreadySelected: _.map(this.selectedUnicefFocalPoints, 'user_id'),
+                alreadySelected: [],
                 path: 'selectedUnicefFocalPoints'
               },
               {
@@ -416,7 +416,7 @@
                 optionValue: 'id',
                 optionLabel: 'name',
                 selectionOptions: this.offices,
-                alreadySelected: _.map(this.selectedOffices, 'id'),
+                alreadySelected: [],
                 path: 'selectedOffices'
               },
               {
@@ -432,6 +432,7 @@
                 dateSelected: ''
               }
             ]);
+            this._updateSelectedFiltersValues();
           }.bind(this), 100);
         },
 
@@ -506,7 +507,7 @@
               }
             ];
             this.updateShownFilters(filtersValues);
-          }.bind(this), 100);
+          }.bind(this), 200);
         },
 
         // Updates URL state with new query string, and launches query
