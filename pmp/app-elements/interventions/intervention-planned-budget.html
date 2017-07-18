@@ -133,7 +133,7 @@
                   <etools-form-element-wrapper no-label-float
                                                id="unicef-cash"
                                                class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]">
-                    [[plannedBudget.unicef_cash]]
+                    [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
                   </etools-form-element-wrapper>
                 </template>
                 <template is="dom-if"

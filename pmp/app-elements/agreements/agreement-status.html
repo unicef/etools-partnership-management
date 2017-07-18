@@ -183,12 +183,6 @@
                 availableOptions.push('Terminate');
               }
               break;
-            case 'active':
-              if (this.agreementType !== 'SSFA') {
-                availableOptions.push('Suspend');
-                availableOptions.push('Terminate');
-              }
-              break;
             case 'suspended':
               // removes Save option
               availableOptions.pop();
@@ -231,15 +225,6 @@
                 'Ended',
               ];
               activeStatus = 'Draft';
-              break;
-
-            case 'active':
-              availableStatuses = [
-                'Draft',
-                'Signed',
-                'Ended',
-              ];
-              activeStatus = 'Signed';
               break;
 
             case 'signed':

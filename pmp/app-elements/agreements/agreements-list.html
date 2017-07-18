@@ -96,7 +96,7 @@
                   placeholder="&#8212;"
                   disabled$="[[!filter.selectionOptions.length]"
                   options="[[filter.selectionOptions]]"
-                  selected-value="[[filter.alreadySelected]]"
+                  selected-values="[[filter.alreadySelected]]"
                   data-filter-path$="[[filter.path]]"
                   on-etools-selected-items-changed="esmmValueChanged"
                   trigger-value-change-event></etools-multi-selection-menu>
@@ -328,7 +328,7 @@
         },
 
         observers: [
-
+          '_initListFilters(agreementTypes, agreementStatuses, partnersDropdownData)',
           '_updateURL(q, agreementType, agreementStatus, selectedPartners, ' +
             'startDate, endDate, pageNumber, pageSize, sortOrder, requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -336,44 +336,49 @@
 
         ready: function() {
           this.$.list.classList.add('hidden');
+        },
 
+        _initListFilters: function(agreementTypes, agreementStatuses, partnersDropdownData) {
           // init list filter options
-          this.initListFiltersData([
-            {
-              filterName: 'Agreement Type',
-              type: 'dropdown',
-              selectionOptions: this.agreementTypes,
-              alreadySelected: null,
-              path: 'agreementType'
-            },
-            {
-              filterName: 'Agreement Status',
-              type: 'dropdown',
-              selectionOptions: this.agreementStatuses,
-              alreadySelected: null,
-              path: 'agreementStatus'
-            },
-             {
-              filterName: 'Partner',
-              type: 'esmm', // etools-multi-selection-menu
-              multiple: true,
-              selectionOptions: this.partnersDropdownData,
-              alreadySelected: [],
-              path: 'selectedPartners'
-            },
-            {
-              filterName: 'Starts After',
-              type: 'datepicker', // etools-datepicker
-              dateSelected: '',
-              path: 'startDate'
-            },
-            {
-              filterName: 'Ends Before',
-              type: 'datepicker', // etools-datepicker
-              dateSelected: '',
-              path: 'endDate'
-            }
-          ]);
+          this.debounce('init-ag-filters', function() {
+            this.initListFiltersData([
+              {
+                filterName: 'Agreement Type',
+                type: 'dropdown',
+                selectionOptions: agreementTypes,
+                alreadySelected: null,
+                path: 'agreementType'
+              },
+              {
+                filterName: 'Agreement Status',
+                type: 'dropdown',
+                selectionOptions: agreementStatuses,
+                alreadySelected: null,
+                path: 'agreementStatus'
+              },
+              {
+                filterName: 'Partner',
+                type: 'esmm', // etools-multi-selection-menu
+                multiple: true,
+                selectionOptions: partnersDropdownData,
+                alreadySelected: [],
+                path: 'selectedPartners'
+              },
+              {
+                filterName: 'Starts After',
+                type: 'datepicker', // etools-datepicker
+                dateSelected: '',
+                path: 'startDate'
+              },
+              {
+                filterName: 'Ends Before',
+                type: 'datepicker', // etools-datepicker
+                dateSelected: '',
+                path: 'endDate'
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          }, 100);
         },
 
         attached: function() {
@@ -422,7 +427,7 @@
               },
               {
                 filterName: 'Partner',
-                selectedValue: this.selectedPartners
+                selectedValue: _.map(this.selectedPartners, 'value')
               },
               {
                 filterName: 'Starts After',
@@ -562,10 +567,7 @@
         _getPartners: function(urlIds) {
           var urlIdsArr = urlIds.split('|');
           if (urlIdsArr.length) {
-            var partnerIds = urlIdsArr.map(function(id) {
-              return parseInt(id, 10);
-            });
-            return this._getPartnersByIds(partnerIds);
+            return this._getPartnersByIds(urlIdsArr);
           }
           return [];
         },
@@ -574,7 +576,7 @@
         _getPartnersByIds: function(partnerIds) {
           if (partnerIds instanceof Array && partnerIds.length) {
             var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
-              return partnerIds.indexOf(partner.value) > -1;
+              return partnerIds.indexOf(partner.value + '') > -1;
             });
             return _selectedPartners;
           }
