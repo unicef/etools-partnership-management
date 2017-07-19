@@ -36,8 +36,28 @@
       line-height: 34px;
       height: 100%;
     }
-    .dropdown-content, .dropdown-content paper-item {
-      background-color: var(--etools-action-button-text-color, #fff);
+    .list-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      overflow-y: auto;
+      background: var(--etools-action-button-text-color, #fff);
+      font-size: 0;
+    }
+    .list-wrapper::after {
+      display: none;
+    }
+    .list-wrapper paper-item {
+      padding: 0 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+      display: inline-block;
+      line-height: 47px;
+      background: var(--etools-action-button-text-color, #fff);
+      width: 100%;
     }
   </style>
 
@@ -53,9 +73,11 @@
 
             <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
             <paper-menu class="dropdown-content">
-              <template is="dom-repeat" items="[[secondaryActions]]" as="item">
-                <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
-              </template>
+              <div class="list-wrapper">
+                <template is="dom-repeat" items="[[secondaryActions]]" as="item">
+                  <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
+                </template>
+              </div>
             </paper-menu>
 
           </paper-menu-button>
