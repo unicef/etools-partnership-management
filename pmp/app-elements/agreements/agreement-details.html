@@ -370,7 +370,6 @@
           Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
         },
         attached: function() {
-          console.log('attached');
           this.async(function() {
               this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
             }
