@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../bower_components/etools-loading/etools-loading.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -25,10 +26,13 @@
       }
 
     </style>
-    <monitoring-visits-data monitoring-visits="{{monitoringVisits}}"
-                            intervention-id="[[interventionId]]">
-    </monitoring-visits-data>
 
+    <monitoring-visits-data monitoring-visits="{{monitoringVisits}}"
+                            intervention-id="[[interventionId]]"
+                            on-monitoring-visits-loading="_handleLoading">
+    </monitoring-visits-data>
+    <etools-loading loading-text="Loading Monitoring visits"
+                    active$="[[showLoading]]"></etools-loading>
     <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
       <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
         <etools-data-table-column class="col-2" field="reference_number">
@@ -102,6 +106,10 @@
             type: Boolean,
             value: false
           },
+          showLoading: {
+            type: Boolean,
+            value: true
+          },
           monitoringVisits: {
             type: Array
           },
@@ -109,9 +117,15 @@
             type: Number,
           }
         },
-
         _hideMonitoringVisits: function(length) {
           return length === 0;
+        },
+        _handleLoading: function(event) {
+          if (event.detail.active === true) {
+            this.set('showLoading', true);
+          } else {
+            this.set('showLoading', false);
+          }
         },
       });
 
