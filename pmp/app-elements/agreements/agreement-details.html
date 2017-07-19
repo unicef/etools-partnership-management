@@ -370,7 +370,11 @@
           Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
         },
         attached: function() {
-           this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
+          console.log('attached');
+          this.async(function() {
+              this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
+            }
+          );
         },
         detached: function() {
           if (this.generatePCADialog) {
