@@ -573,7 +573,7 @@
         },
         _authorizedOfficersChanged: function() {
           var initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
-          return  JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
+          return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
         },
         _primitiveFieldIsModified: function(fieldName) {
           return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
@@ -582,8 +582,7 @@
           if (!this.originalAgreementData.authorized_officers) {
             return null;
           }
-          return this.originalAgreementData.authorized_officers.map(function(off)
-            {
+          return this.originalAgreementData.authorized_officers.map(function(off) {
               return off.id.toString();
             }
           );
