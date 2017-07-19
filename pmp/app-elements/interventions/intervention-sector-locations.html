@@ -213,10 +213,10 @@
             this.dataItems.forEach(function(item, index) {
               var sectorEl = this.$$('#sector_' + index);
               var locationsEl = this.$$('#locations_' + index);
-              if (!sectorEl.validate()) {
+              if (sectorEl && !sectorEl.validate()) {
                 valid = false;
               }
-              if (!locationsEl.validate()) {
+              if (locationsEl && !locationsEl.validate()) {
                 valid = false;
               }
             }.bind(this));
