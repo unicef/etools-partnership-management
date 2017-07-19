@@ -10,14 +10,14 @@
       :host {
         --paper-dialog-scrollable: {
           @apply(--pmp-paper-dialog-content);
-          overflow: hidden;/* IE11 fix */
+          overflow: hidden; /*IE11 fix*/
         }
       }
       #vendorNo {
         margin-bottom: 30px;
       }
     </style>
-    <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
+    <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
                    dialog-title="New Partner" on-close="_handleDialogClosed">
 
       <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
