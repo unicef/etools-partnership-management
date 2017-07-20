@@ -339,6 +339,7 @@
               interventionId: this.interventionId,
               status: this.newStatus + ''
             });
+            this.fire('reload-list');
           }
           this.set('newStatus', '');
         },
