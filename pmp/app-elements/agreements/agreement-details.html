@@ -423,6 +423,7 @@
             this.generatePCADialog.agreementId = agreement.id;
           }
 
+          this.set('amendments', agreement.amendments.slice());
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
@@ -571,14 +572,31 @@
             availableChangingFields.forEach(function(fieldName) {
               if (fieldName === 'authorized_officers') {
                 // TODO: verify authorizedOfficers against agreement.authorized_officers and check the difference
-                changes[fieldName] = this.authorizedOfficers;
+                var oldOfficers = _.map(this.agreement[fieldName], function(element){
+                  return element.id
+                });
+                if (oldOfficers.length === this.authorizedOfficers.length) {
+                  for(let key in oldOfficers) {
+                    let oldOfficerId = parseInt(oldOfficers[key]);
+                    let newOfficerId = parseInt(this.authorizedOfficers[key]);
+                    if(oldOfficerId !== newOfficerId) {
+                      changes[fieldName] = changes[fieldName] || [];
+                      changes[fieldName].push(newOfficerId);
+                    }
+                  }
+                } else {
+                  changes[fieldName] = this.authorizedOfficers;
+                }
+
               } else if (fieldName === 'attached_agreement') {
                 if ((this.agreement.hasOwnProperty('attached_agreement')) &&
                     (this.agreement.attached_agreement instanceof File)) {
                   changes.attached_agreement = this.agreement.attached_agreement;
                 }
               } else if (fieldName === 'amendments') {
-                changes[fieldName] = this.agreement[fieldName];
+                if(this.agreement.amendments.length !== this.amendments.length){
+                  changes.amendments = this.agreement.amendments;
+                }
               } else if (fieldName === 'start' || fieldName === 'end') {
                 // start and end dates are sent to server only is agreement type is MOU and were modified
                 if (this.agreement.agreement_type === 'MOU') {
