@@ -397,7 +397,9 @@
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
           'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
-          '_countryProgrammesChanged(countryProgrammes, intervention)'
+          /*Making sure country_programme is set to default before originalIntervention is set,
+           otherwise on save, country_programme is not seen as modified*/
+          '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)'
         ],
 
         ready: function() {
@@ -422,7 +424,7 @@
           this._setDefaultSelectedCpStructure(cpStructures);
         },
         _hasExpiredCpAssigned: function(cpId) {
-          if (cpId > 0 && this.cpStructureOptions instanceof Array) {
+          if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
             let cp = this.cpStructureOptions.find(function(cp) {
               return parseInt(cp.id, 10) === parseInt(cpId, 10);
             });
@@ -477,7 +479,6 @@
             this.set('fieldsResetted', false);
             this._newInterventionFlagChanged();
           }
-          this._setDefaultSelectedCpStructure(this.cpStructureOptions);
         },
 
         _newInterventionFlagChanged: function() {

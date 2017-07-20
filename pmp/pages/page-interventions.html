@@ -173,7 +173,8 @@
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  on-update-intervention-status="_updateInterventionStatus">
+                                  on-update-intervention-status="_updateInterventionStatus"
+                                  original-intervention="[[originalIntervention]]">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
@@ -235,8 +236,7 @@
           observer: '_interventionChanged'
         },
         originalIntervention: {
-          type: Object,
-          value: {}
+          type: Object
         },
         partnerStaffMembers: Array,
         partnerId: {
