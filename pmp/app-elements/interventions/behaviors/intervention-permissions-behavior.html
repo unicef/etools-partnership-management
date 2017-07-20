@@ -1,3 +1,4 @@
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 <script>
   var interventionNoEditPermissionsModel = {
     id: false,
@@ -112,6 +113,23 @@
 
     _setPermissions: function(perm) {
       this.set('intervention.permissions', perm);
+      this._updateRelatedPermStyles();
+    },
+
+    _updateRelatedPermStyles: function(onlyDetails) {
+      this.async(function() {
+        let details = this.$.interventionDetails;
+        let reviewAndSign = this.$.interventionReviewAndSign;
+        if (details) {
+          details.updateStyles();
+        }
+        if (onlyDetails) {
+          return;
+        }
+        if (reviewAndSign) {
+          reviewAndSign.updateStyles();
+        }
+      }.bind(this), 50);
     },
 
     cancelEditPermissions: function() {
@@ -126,6 +144,7 @@
           this._setPermissions(perm);
         }
       }
+      this._updateRelatedPermStyles();
     },
 
     getDraftToSignedTransitionPermissions: function(currentPerm) {
@@ -166,6 +185,7 @@
               this.get('intervention.permissions.edit.planned_budget'));
           break;
       }
+      this._updateRelatedPermStyles(true);
     },
 
     /**
@@ -213,12 +233,23 @@
       }
     },
 
+    _canRestoreOriginalPermissions: function() {
+      if (!_.isEmpty(this.originalIntervention) && !_.isEmpty(this.intervention)) {
+        // avoid restoring previous intervention permissions
+        return this.originalIntervention.id === this.intervention.id;
+      }
+      return false;
+    },
+
     _signedDocChangedForDraft: function(e) {
       e.stopImmediatePropagation();
       if (e.detail.docSelected) {
         this.setInterventionPermissions(false,
             this.getDraftToSignedTransitionPermissions(this.intervention.permissions));
       } else {
+        if (!this._canRestoreOriginalPermissions()) {
+          return;
+        }
         this.setInterventionPermissions(false, this.originalIntervention.permissions);
         // update validation errors
         this.$.interventionDetails.validate();
@@ -234,6 +265,9 @@
 
     _restoreInterventionOriginalDataAndPermissions: function(e) {
       e.stopImmediatePropagation();
+      if (!this._canRestoreOriginalPermissions()) {
+        return;
+      }
       this.setInterventionPermissions(false, this.originalIntervention.permissions);
       this.checkAndUpdatePlannedBudgetPermissions();
       this.restoreDetailsTabOriginalValuesRelatedToAmendments();
