@@ -11,6 +11,7 @@
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -198,11 +199,11 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
-              <span>$ [[getDisplayValue(intervention.unicef_cash)]]</span>
+              <span>$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Total Budget</span>
-              <span>$ [[getDisplayValue(intervention.total_budget)]]</span>
+              <span>$ [[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
             </div>
 
           </div>
@@ -231,7 +232,8 @@
       Polymer({
         is: 'interventions-list',
 
-        behaviors: [
+       behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior,
           etoolsAppConfig.globals,
           pmpBehaviors.AppNavigationHelperBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
