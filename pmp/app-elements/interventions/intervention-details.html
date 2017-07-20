@@ -435,9 +435,9 @@
         },
         _setDefaultSelectedCpStructure: function(cpStructures) {
           if (this.intervention && this.intervention.country_programme) {
-            let cpStructureIsOld = this._hasExpiredCpAssigned(this.agreement.country_programme);
+            let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
             if (cpStructureIsOld) {
-              this.fire('toast', {text: 'This agreement has an old/expired CP Structure!', showCloseBtn: true});
+              this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
             }
             return;
           }
