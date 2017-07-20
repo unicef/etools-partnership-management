@@ -300,6 +300,7 @@
               agreementId: this.agreementId,
               status: this.newStatus + ''
             });
+            this.fire('reload-list');
           }
           this.set('newStatus', '');
         },
