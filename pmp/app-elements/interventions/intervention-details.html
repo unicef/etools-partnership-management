@@ -392,7 +392,6 @@
         },
 
         observers: [
-          '_editModeChanged(intervention.permissions.edit.title)',
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
@@ -470,10 +469,6 @@
           });
           this.set('pcaDocTypes', pcaTypes);
           this.set('ssfaDocTypes', ssfaTypes);
-        },
-
-        _editModeChanged: function() {
-          this.updateStyles();
         },
 
         _interventionChanged: function(intervention) {

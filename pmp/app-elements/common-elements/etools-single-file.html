@@ -109,8 +109,8 @@
         },
 
         validate: function() {
-          if (this.required && !this.readonly &&
-              (!this.file || this.file instanceof File === false)) {
+          if (this.required && !this.readonly && this.file instanceof File === false &&
+              (typeof this.file === 'string' ? !!!this.file.length : true)) {
             this.set('invalid', true);
             return false;
           }

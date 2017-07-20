@@ -369,13 +369,13 @@
          */
         _signedPdDocHasChanged: function(signedDocument) {
           if (this.intervention && this.intervention.status === 'draft') {
-            if (signedDocument instanceof File) {
+            if (signedDocument instanceof File ||
+                (_.isString(signedDocument) && !_.isEmpty(signedDocument))) {
               // new document selected
               this.fire('signed-doc-change-for-draft', {docSelected: true});
             } else {
               this.fire('signed-doc-change-for-draft', {docSelected: false});
             }
-            this.updateStyles();
           }
         }
 

@@ -86,7 +86,8 @@
           required: {
             type: Boolean,
             value: false,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            observer: '_requiredChange'
           },
           autoValidate: {
             type: Boolean,
@@ -110,7 +111,13 @@
         },
 
         _readonlyStateChange: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+          this._refreshStyles(newValue, oldValue);
+        },
+        _requiredChange: function(newValue, oldValue) {
+          this._refreshStyles(newValue, oldValue);
+        },
+        _refreshStyles: function(newVal, oldVal) {
+          if (newVal !== oldVal) {
             this.updateStyles();
           }
         },
