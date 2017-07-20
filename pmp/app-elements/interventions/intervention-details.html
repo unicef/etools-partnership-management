@@ -349,8 +349,7 @@
           },
           countryProgrammes: {
             type: Array,
-            statePath: 'countryProgrammes',
-            observer: '_countryProgrammesChanged'
+            statePath: 'countryProgrammes'
           },
           cpStructureOptions: {
             type: Object,
@@ -397,7 +396,8 @@
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
-          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)'
+          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
+          '_countryProgrammesChanged(countryProgrammes, intervention)'
         ],
 
         ready: function() {
