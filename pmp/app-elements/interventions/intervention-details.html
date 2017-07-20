@@ -349,7 +349,8 @@
           },
           countryProgrammes: {
             type: Array,
-            statePath: 'countryProgrammes'
+            statePath: 'countryProgrammes',
+            observer: '_countryProgrammesChanged'
           },
           cpStructureOptions: {
             type: Object,
@@ -396,8 +397,7 @@
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
-          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
-          '_countryProgrammesChanged(countryProgrammes, agreement)'
+          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)'
         ],
 
         ready: function() {
@@ -416,7 +416,7 @@
           }
           return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
         },
-        _countryProgrammesChanged: function(cp, agreement) {
+        _countryProgrammesChanged: function(cp) {
           let cpStructures = this._filterCountryProgrammes(cp);
           this.set('cpStructureOptions', cpStructures);
           this._setDefaultSelectedCpStructure(cpStructures);
@@ -434,12 +434,9 @@
         },
         _setDefaultSelectedCpStructure: function(cpStructures) {
           if (this.intervention && this.intervention.country_programme) {
-            if (!this.agreement) {
-              return;
-            }
-            let cpStructureIsOld = this._hasExpiredCpAssigned(this.agreement.country_programme);
+            let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
             if (cpStructureIsOld) {
-              this.fire('toast', {text: 'This agreement has an old/expired CP Structure!', showCloseBtn: true});
+              this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
             }
             return;
           }
