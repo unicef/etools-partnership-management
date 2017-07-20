@@ -397,7 +397,7 @@
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
           'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
-          /*Making sure country_programme is set to default before originalIntervention is set,
+          /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)'
         ],
