@@ -434,7 +434,6 @@
             this.generatePCADialog.agreementId = agreement.id;
           }
 
-          this.set('amendments', agreement.amendments.slice());
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
             if (agreement.id > 0) {
