@@ -233,11 +233,10 @@
               withUpload = true;
               prepareMultipartData = true;
             }
-            intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
-              return elem.sector && Array.isArray(elem.locations) && elem.locations.length;
-            });
-            if(!Array.isArray(intervention.sector_locations) || intervention.sector_locations.length < 1) {
-              delete intervention.sector_locations;
+            if (Array.isArray(intervention.sector_locations)) {
+              intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
+                return elem.sector && Array.isArray(elem.locations) && elem.locations.length;
+              });
             }
             this.fire('global-loading', {message: 'Saving intervention data...', active: true});
             // fire in the hole
