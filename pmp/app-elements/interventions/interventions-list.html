@@ -21,6 +21,7 @@
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -181,10 +182,20 @@
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.start)]]
+              <etools-info-tooltip icon="report" icon-first
+                               hide-tooltip$="[[validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]"
+                               important-warning="[[!validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]">
+              <span slot="field"> [[getDateDisplayValue(intervention.start)]]</span>
+              <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+              </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.end)]]
+               <etools-info-tooltip icon="report" icon-first
+                               hide-tooltip$="[[validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]"
+                               important-warning="[[!validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]">
+                <span slot="field"> [[getDateDisplayValue(intervention.end)]] </span>
+                <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+              </etools-info-tooltip>
             </span>
           </div>
           <div slot="row-data-details">
@@ -240,7 +251,8 @@
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.DropdownBehavior,
           pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.ListsCommonBehavior
+          pmpBehaviors.ListsCommonBehavior,
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
 
         properties: {
@@ -359,7 +371,6 @@
         attached: function() {
           this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...');
         },
-
         _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {
             // init list filter options
@@ -735,11 +746,6 @@
 
         _dateChanged: function(date) {
           this.set('pageNumber', 1);
-        },
-
-        // verify date and prettify or not
-        _checkAndShowInterventionDate: function(dateString) {
-          return this.getDisplayValue(dateString, true);
         },
 
         _filtersChanged: function() {
