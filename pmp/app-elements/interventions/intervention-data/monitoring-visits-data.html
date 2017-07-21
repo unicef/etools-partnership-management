@@ -57,7 +57,7 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading monitoring visits data...', active: true});
+            this.fire('monitoring-visits-loading', {active: true});
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('monitoringVisits', {id: newId}));
           }
@@ -68,7 +68,7 @@
          */
         _handleResponse: function(response) {
           this.set('monitoringVisits', response.detail);
-          this.fire('global-loading', {active: false});
+          this.fire('monitoring-visits-loading', {active: false});
         },
 
         /**
