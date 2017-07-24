@@ -98,13 +98,13 @@
           </div>
           <div class="item-content">
             <div class="row-h">
-              <paper-input label="PD or SSFA Output"
+              <paper-input label="PD output or SSFA expected result"
                            value="{{item.name}}"
                            readonly$="[[!editMode]]"
                            required
                            auto-validate
                            invalid
-                           error-message="Lower Output needs to be specified!"></paper-input>
+                           error-message="PD output or SSFA expected result must be specified"></paper-input>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
@@ -165,7 +165,7 @@
                     title="Add PD or SSFA OUTPUT"
                     disabled$="[[!editMode]]"
                     hidden$="[[!editMode]]">
-        Add PD or SSFA OUTPUT
+        Add PD output or SSFA expected result
       </paper-button>
     </div>
 

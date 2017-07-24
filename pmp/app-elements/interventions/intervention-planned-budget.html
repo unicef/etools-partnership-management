@@ -176,7 +176,8 @@
         <div class="row-h">
 
           <div class="col col-3 currency">
-            <etools-single-selection-menu id="currency" placeholder="&#8212;" options="[[currencies]]"
+            <etools-single-selection-menu id="currency" placeholder="&#8212;"
+                                          options="[[currencies]]"
                                           selected="{{plannedBudget.currency}}"
                                           readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
                                           no-label-float>
@@ -278,12 +279,24 @@
             type: String,
             value: ''
           },
-          _showCancelButton: Boolean
+          _showCancelButton: Boolean,
+          countryData: {
+            type: Object,
+            statePath: 'countryData'
+          }
         },
 
         observers: [
-          '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)'
+          '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)',
+          '_initLocalCurrency(plannedBudget, countryData)'
         ],
+
+        _initLocalCurrency: function(plannedBudget, countryData) {
+          if (!plannedBudget.currency && countryData && countryData.local_currency_id) {
+            this.set('plannedBudget.currency', countryData.local_currency_id);
+          }
+        },
+
         _plannedBudgetChanged: function() {
           if (this.interventionId) {
             //* reset flags after Save
