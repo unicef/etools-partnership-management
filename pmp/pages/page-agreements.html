@@ -124,9 +124,9 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
-              is-new-agreement="[[_isNewAgreement(agreement)]]"
+              is-new-agreement="[[newAgreementActive]]"
               on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement">
+              on-save-agreement="_saveAgreement"              >
           </agreement-details>
         </div>
       </iron-pages>
@@ -170,7 +170,29 @@
             partner: null,
             country_programme: undefined,
             signed_by: undefined,
-            partner_manager: undefined
+            partner_manager: undefined,
+            permissions: {
+              edit: {
+                agreement_type: true,
+                amendments:false,
+                attached_agreement:true,
+                authorized_officers:true,
+                country_programme:true,
+                end:true,
+                partner:true,
+                partner_manager:true,
+                signed_by:true,
+                signed_by_id:true,
+                signed_by_partner_date:true,
+                signed_by_unicef_date:true,
+                start:true,
+              },
+              required: {
+                agreement_type: true,
+                partner: true,
+                country_programme: true
+              }
+            }
           }
         },
         csvDownloadUrl: {
@@ -196,11 +218,9 @@
         'agreement-save-error': '_agreementSaveErrors',
         'reload-list': '_reloadAgreementsList'
       },
-
       ready: function() {
-        // TODO: remove this
-        if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
-          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        if (this.newAgreementActive) { //*Useful when refreshing the page
+            this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
       // TODO: do not remove this, we might needed back
@@ -227,15 +247,6 @@
       _pageChanged: function(listActive, newAgreementActive, detailsActive) {
         var activePage = this._getActivePage(listActive, newAgreementActive, detailsActive);
         this.set('agreementPage', activePage);
-      },
-
-      // check if the agreement is a new one
-      _isNewAgreement: function(agreement) {
-        if (agreement !== null && typeof agreement === 'object' && agreement.id > 0) {
-          // existing agreement, already saved
-          return false;
-        }
-        return true;
       },
 
       // compute agreement details page title including partner name and agreement number
