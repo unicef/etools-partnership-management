@@ -299,7 +299,7 @@
         _getSelectedOfficesNames: function(responseDetail) {
           var selectedOffices = this.offices.filter(function(office) {
              return responseDetail.offices.indexOf(office.id.toString()) > -1;
-          })
+          });
           if (!selectedOffices) {
             return [];
           }
@@ -315,7 +315,7 @@
           dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
         },
         _getSelectedSectorsNames: function(responseDetail) {
-           var selectedSectorIds = responseDetail.sector_locations.map(function(sl){
+           var selectedSectorIds = responseDetail.sector_locations.map(function(sl) {
             return (sl.sector && typeof sl.sector === 'object')
                     ? sl.sector.id.toString()
                     : sl.sector.toString();

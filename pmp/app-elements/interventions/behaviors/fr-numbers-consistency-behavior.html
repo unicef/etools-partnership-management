@@ -48,18 +48,33 @@
     },
 
     checkFrsAndIntervDateConsistency: function(intervDateStr, frsDateStr, fieldName, returnMsg) {
-      if (intervDateStr !== frsDateStr) {
+      if (!this.validateFrsAndInterventionDate(intervDateStr, frsDateStr)) {
         return returnMsg
             ? this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
             : true;
       }
       return false;
     },
-
+    validateFrsAndInterventionDate: function(intervDateStr, frsDateStr) {
+      if (!frsDateStr) {// *No Fr added
+        return true;
+      }
+      if (intervDateStr !== frsDateStr) {
+        return false;
+      }
+      return true;
+    },
     _buildFrsWarningMsg: function(msgTemplate, searchStr, replacementStr) {
       return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
     },
-
+    getFrsStartDateValidationMsg: function() {
+      return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
+       '<<field_name>>', 'start date');
+    },
+    getFrsEndDateValidationMsg: function() {
+      return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
+       '<<field_name>>', 'end date');
+    },
     frsConsistencyWarningIsActive: function(warnMsg) {
       return !!warnMsg;
     },
