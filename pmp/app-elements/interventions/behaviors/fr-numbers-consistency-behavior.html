@@ -42,7 +42,7 @@
       let totalFrsAmount = parseFloat(frsTotalAmt);
       let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
       if (unicefContibutionDiff > 10) {
-        return returnMsg ? this._frsConsistencyWarnings.amount : true;
+        return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
       return false;
     },
@@ -66,6 +66,9 @@
     },
     _buildFrsWarningMsg: function(msgTemplate, searchStr, replacementStr) {
       return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
+    },
+    getFrsTotalAmountInconsistencyMsg: function() {
+      return this._frsConsistencyWarnings.amount;
     },
     getFrsStartDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
