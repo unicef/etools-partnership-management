@@ -41,7 +41,7 @@
                                       option-value="id"
                                       option-label="name"
                                       selected="{{cpOutputId}}"
-                                      required$="[[required]]"
+                                      required$="[[_getFieldRequired(required, selectedCpIndicatorsIds.length)]]"
                                       auto-validate
                                       error-message="Please select CP Output"
                                       on-iron-activate="_resetSelectedIndicators"
@@ -57,8 +57,7 @@
                                      option-value="id"
                                      option-label="name"
                                      selected-values="{{selectedCpIndicatorsIds}}"
-                                     required$="[[required]]"
-                                     auto-validate
+                                     required$="[[_getFieldRequired(required, cpOutputId)]]"
                                      error-message="Please select CP Indicators"
                                      readonly$="[[!editMode]]">
         </etools-multi-selection-menu>
@@ -118,6 +117,10 @@
             value: []
           },
           editMode: {
+            type: Boolean,
+            value: false
+          },
+          required: {
             type: Boolean,
             value: false
           },
@@ -218,7 +221,11 @@
         resetValidations: function() {
           this.$.cpOutput.invalid = false;
           this.$.indicators.invalid = false;
-        }
+        },
+
+        _getFieldRequired: function(required, data) {
+          return required || !!data;
+        },
 
       });
     })();
