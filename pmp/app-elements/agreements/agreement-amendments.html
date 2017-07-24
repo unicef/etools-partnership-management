@@ -7,6 +7,8 @@
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
 <link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
@@ -388,7 +390,8 @@
 
         _onAmendmentTypesSelected: function(e) {
           e.stopImmediatePropagation();
-          if (this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].types)) {
+          if (!_.isEmpty(this.dataItems) && this.dataItems[e.model.index] &&
+              this._changeAuthorizedOfficersTypeSelected(this.dataItems[e.model.index].types)) {
             // unlock authorized officers
             this._triggerAuthorizedOfficersUnlock();
           } else {

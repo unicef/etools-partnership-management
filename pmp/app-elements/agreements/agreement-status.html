@@ -36,7 +36,7 @@
         ],
         properties: {
           agreementId: {
-            type: Number
+            value: null
           },
           agreementType: {
             type: String,
@@ -121,7 +121,7 @@
           statusChangeWarningDialogContent: Object,
         },
         observers: [
-          '_handleStatusChange(status)'
+          '_computeStatusesAndActions(status, agreementId)'
         ],
 
         ready: function() {
@@ -276,7 +276,7 @@
 
           for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
             let workingStatus = this.possibleStatuses[key];
-            if (workingStatus.label === activeStatus) {
+            if (workingStatus.label === activeStatus && !this.newAgreement) {
               completedFlag = true;
             }
             if (availableStatuses.indexOf(workingStatus.label) > -1) {
@@ -288,8 +288,8 @@
           }
         },
 
-        _handleStatusChange: function(status) {
-          this.debounce('reset-status-actions', function() {
+        _computeStatusesAndActions: function(status) {
+          this.debounce('compute-statuses-and-actions', function() {
             this._computeAvailableStatuses(status);
             this._computeAvailableActions(status);
           }.bind(this), 50);
