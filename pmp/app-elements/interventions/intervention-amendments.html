@@ -26,7 +26,7 @@
 <dom-module id="intervention-amendments">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles">
+        include="grid-layout-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles shared-styles">
       [hidden] {
         display: none !important;
       }
@@ -140,7 +140,7 @@
                            placeholder="&#8212;"
                            label="Other"
                            value="{{item.other_description}}"
-                           readonly="[[_isReadonlyAmendment(item.id)]]">
+                           readonly$="[[_isReadonlyAmendment(item.id)]]">
               </paper-input>
             </div>
           </div>
