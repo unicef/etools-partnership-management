@@ -29,7 +29,8 @@
     currencies: [],
     agreementTypes: [],
     agreementStatuses: [],
-    csoPartners: []
+    csoPartners: [],
+    countryData: {}
   };
   /** @polymerBehavior pmpBehaviors.EtoolsStaticCommonDataReduxBehavior */
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -137,6 +138,9 @@
       case 'SET_INTERVENTION_AMENDMENT_TYPES':
         // console.log('set interventionAmendmentTypes...', action.interventionAmendmentTypes);
         return Object.assign({}, state, {interventionAmendmentTypes: action.interventionAmendmentTypes});
+
+      case 'SET_USER_COUNTRY_DATA':
+        return Object.assign({}, state, {countryData: action.countryData});
     }
   });
 
