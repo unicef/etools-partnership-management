@@ -3,9 +3,12 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
+
+<link rel="import" href="../interventions/behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
@@ -66,10 +69,12 @@
         justify-content: center;
         align-items: center;
       }
+
       .hact-heading .row-h .right-align {
         justify-content: flex-end;
         align-items: center;
       }
+
       .hact-heading .row-h .left-align {
         justify-content: flex-start;
         align-items: center;
@@ -129,16 +134,23 @@
       small {
         color: var(--dark-secondary-text-color);
       }
+
       .word-break {
         word-break: break-all;
       }
+
       .overflow-hidden {
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .timeline-col {
+        @apply(--layout-start-justified);
+      }
+      .timeline-col .date-delimiter {
+        margin: 0 8px;
+      }
     </style>
 
-    <!-- partner overview content goes here... -->
     <div id="pageContent">
 
       <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
@@ -194,7 +206,7 @@
           <div class="row-h">
             <div class="col col-3 word-break left-align"> Partnership</div>
             <div class="col col-2 right-align"> Total Planned Budget</div>
-            <div class="col col-2 right-align"> Actual </div>
+            <div class="col col-2 right-align"> Actual</div>
             <div class="col col-2"> Status</div>
             <div class="col col-3 left-align"> Timeline</div>
           </div>
@@ -210,11 +222,23 @@
               </div>
               <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]] </div>
+              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
               <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
               </div>
-              <div class="col col-3"> [[getDateDisplayValue(partnership.start)]] -
-                [[getDateDisplayValue(partnership.end)]]
+              <div class="col col-3 center-align timeline-col">
+                <etools-info-tooltip icon="report" icon-first
+                                     hide-tooltip$="[[validateFrsAndInterventionDate(partnership.start, partnership.frs_earliest_start_date)]]"
+                                     important-warning="[[!validateFrsAndInterventionDate(partnership.start, partnership.frs_earliest_start_date)]]">
+                  <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
+                  <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                </etools-info-tooltip>
+                <span class="date-delimiter"> - </span>
+                <etools-info-tooltip icon="report" icon-first
+                                     hide-tooltip$="[[validateFrsAndInterventionDate(partnership.end, partnership.frs_latest_end_date)]]"
+                                     important-warning="[[!validateFrsAndInterventionDate(partnership.end, partnership.frs_latest_end_date)]]">
+                  <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
+                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                </etools-info-tooltip>
               </div>
             </div>
           </template>
@@ -240,7 +264,8 @@
         behaviors: [
           pmpBehaviors.CommonGeneralBehavior,
           pmpBehaviors.RiskRatingBehavior,
-          etoolsBehaviors.EtoolsCurrencyBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
         properties: {
           user: Object,

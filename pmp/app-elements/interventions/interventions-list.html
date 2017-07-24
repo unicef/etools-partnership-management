@@ -8,7 +8,8 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
@@ -43,11 +44,11 @@
 
     <template is="dom-if" if="[[stampListData]]">
       <interventions-list-data id="interventions"
-                           filtered-interventions="{{filteredInterventions}}"
-                           total-results="{{totalResults}}"
-                           on-interventions-loaded="_requiredDataHasBeenLoaded"
-                           list-data-path="filteredInterventions"
-                           fire-data-loaded>
+                               filtered-interventions="{{filteredInterventions}}"
+                               total-results="{{totalResults}}"
+                               on-interventions-loaded="_requiredDataHasBeenLoaded"
+                               list-data-path="filteredInterventions"
+                               fire-data-loaded>
       </interventions-list-data>
     </template>
 
@@ -120,7 +121,9 @@
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu" dynamic-align>
             <paper-button class="button dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
+              <iron-icon icon="filter-list"></iron-icon>
+              add filter
+            </paper-button>
             <paper-menu class="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
@@ -134,7 +137,8 @@
 
     <paper-material id="list" elevation="1">
 
-      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header id="listHeader"
+                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
         </etools-data-table-column>
@@ -164,8 +168,8 @@
           <div slot="row-data">
             <span class="col-data col-2">
               <a class="truncate"
-                href="interventions/[[intervention.id]]/details"
-                title="[[getDisplayValue(intervention.number)]]">
+                 href="interventions/[[intervention.id]]/details"
+                 title="[[getDisplayValue(intervention.number)]]">
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
@@ -183,18 +187,18 @@
             </span>
             <span class="col-data flex-c">
               <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]"
-                               important-warning="[[!validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]">
-              <span slot="field"> [[getDateDisplayValue(intervention.start)]]</span>
-              <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                                   hide-tooltip$="[[validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]"
+                                   important-warning="[[!validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]">
+                <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
+                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
                <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]"
-                               important-warning="[[!validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]">
-                <span slot="field"> [[getDateDisplayValue(intervention.end)]] </span>
-                <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                                    hide-tooltip$="[[validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]"
+                                    important-warning="[[!validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]">
+                 <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
+                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
           </div>
@@ -210,7 +214,15 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
-              <span>$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
+              <etools-info-tooltip icon="report" icon-first
+                                   hide-tooltip="[[!checkFrsAndUnicefCashAmountsConsistency(intervention.unicef_cash, intervention.frs_total_frs_amt)]]"
+                                   important-warning="[[checkFrsAndUnicefCashAmountsConsistency(intervention.unicef_cash, intervention.frs_total_frs_amt)]]">
+                <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
+                <span slot="message">
+                  [[getFrsTotalAmountInconsistencyMsg()]]
+                </span>
+              </etools-info-tooltip>
+
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Total Budget</span>
@@ -243,7 +255,7 @@
       Polymer({
         is: 'interventions-list',
 
-       behaviors: [
+        behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
           etoolsAppConfig.globals,
           pmpBehaviors.AppNavigationHelperBehavior,
@@ -359,8 +371,8 @@
         observers: [
           '_initListFilters(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData)',
           '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
-            'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
-            'requiredDataLoaded, initComplete)',
+          'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
+          'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
@@ -568,20 +580,20 @@
               return;
             }
             interventions.query(
-              this.sortOrder.field,
-              this.sortOrder.direction,
-              this.q.toLowerCase(),
-              _.map(this.selectedDocumentTypes, 'value'),
-              this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
-              _.map(this.selectedStatuses, 'value'),
-              _.map(this.selectedSectors, 'name'),
-              this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
-              this._prepareQueryStrVal(this.selectedOffices, 'id'),
-              this.startDate,
-              this.endDate,
-              this.pageNumber,
-              this.pageSize,
-              forceNoLoading ? false : this.showQueryLoading
+                this.sortOrder.field,
+                this.sortOrder.direction,
+                this.q.toLowerCase(),
+                _.map(this.selectedDocumentTypes, 'value'),
+                this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
+                _.map(this.selectedStatuses, 'value'),
+                _.map(this.selectedSectors, 'name'),
+                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
+                this._prepareQueryStrVal(this.selectedOffices, 'id'),
+                this.startDate,
+                this.endDate,
+                this.pageNumber,
+                this.pageSize,
+                forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },
