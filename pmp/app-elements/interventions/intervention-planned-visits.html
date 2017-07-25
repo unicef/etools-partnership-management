@@ -58,6 +58,7 @@
                                               selected="{{item.year}}"
                                               options="[[years]]"
                                               required$="[[item.programmatic]]"
+                                              error-message="Required if visits are specified"
                                               on-iron-activate="_yearChanged"
                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
@@ -72,6 +73,7 @@
                              allowed-pattern="[0-9\.]"
                              placeholder="&#8212;"
                              required$="[[item.year]]"
+                             error-message="Required if a year has been specified"
                              readonly$="[[!editMode]]">
                 </paper-input>
               </div>
