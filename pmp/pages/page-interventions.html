@@ -452,8 +452,6 @@
             id = null;
           }
           this.set('selectedInterventionId', id);
-          // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
-          this.$.intervAttachments.set('preparedAttachments', false);
         }.bind(this));
       },
       _finalizeAmendmentConfirmationCallback: function() {
