@@ -209,7 +209,7 @@
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
-                               important-warning="[[frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
+                               important-warning>
             <etools-date-input slot="field"
                                id="intStart"
                                class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
@@ -228,7 +228,7 @@
         <div class="col col-3">
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
-                               important-warning="[[frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
+                               important-warning>
             <etools-date-input slot="field"
                                id="intEnd"
                                class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"

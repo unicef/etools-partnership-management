@@ -68,7 +68,7 @@
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
         <etools-info-tooltip icon="report" icon-first
                              hide-tooltip="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
-                             important-warning$="[[frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
+                             important-warning>
           <div slot="field">
             <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
               <span class="fr-number">[[item.fr_number]]</span>
