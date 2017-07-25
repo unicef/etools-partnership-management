@@ -15,7 +15,6 @@
 
   <template>
     <style include="shared-styles">
-
       app-toolbar {
         padding: 0 16px 0 0;
         background-color: var(--header-bg-color, #233944);
@@ -34,12 +33,20 @@
 
       div[main-title],
       .titlebar {
-        color: var(--light-primary-text-color);
+        color: var(--header-primary-text-color);
       }
-
+      countries-dropdown {
+        --countries-dropdown-color: var(--header-secondary-text-color);
+      }
       #profile,
       #refresh {
-        color: var(--title-toolbar-secondary-text-color);
+        color: var(--header-secondary-text-color);
+      }
+
+      #refresh {
+        width: 60px;
+        height: 60px;
+        padding: 18px;
       }
 
       #menuButton {
