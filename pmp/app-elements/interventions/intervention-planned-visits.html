@@ -57,18 +57,25 @@
                                               placeholder="&#8212;"
                                               selected="{{item.year}}"
                                               options="[[years]]"
+                                              required$="[[item.programmatic]]"
+                                              auto-validate
+                                              error-message="Required if visits are specified"
                                               on-iron-activate="_yearChanged"
                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
               <div class="col col-3">
                 <!-- TODO: min="0" not enought, re-check and restrict to values >= 0 -->
-                <paper-input label="Programmatic Visits"
+                <paper-input id$="visit_[[index]]"
+                             label="Programmatic Visits"
                              value="{{item.programmatic}}"
                              type="number"
                              min="0"
                              allowed-pattern="[0-9\.]"
                              placeholder="&#8212;"
+                             required$="[[item.year]]"
+                             error-message="Required if a year has been specified"
+                             auto-validate
                              readonly$="[[!editMode]]">
                 </paper-input>
               </div>
@@ -145,6 +152,22 @@
 //            spot_checks: null,
 //            audit: null
           };
+        },
+
+        validate: function() {
+          var valid = true;
+          this.dataItems.forEach(function(item, index) {
+            var yearEl = this.$$('#year_' + index);
+            var visitsEl = this.$$('#visit_' + index);
+            if (yearEl && !yearEl.validate()) {
+              valid = false;
+            }
+            if (visitsEl && !visitsEl.validate()) {
+              valid = false;
+            }
+          }.bind(this));
+
+          return valid;
         },
 
         _editModeChanged: function(newValue, oldValue) {
