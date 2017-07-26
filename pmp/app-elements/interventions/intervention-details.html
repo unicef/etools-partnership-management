@@ -209,7 +209,7 @@
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
-                               important-warning="[[frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
+                               important-warning>
             <etools-date-input slot="field"
                                id="intStart"
                                class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
@@ -228,7 +228,7 @@
         <div class="col col-3">
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
-                               important-warning="[[frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
+                               important-warning>
             <etools-date-input slot="field"
                                id="intEnd"
                                class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
@@ -600,7 +600,7 @@
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#intStart', '#intEnd', '#sectorLocations',
-            '#plannedBudget', '#expectedResults'];
+            '#plannedBudget', '#expectedResults', '#plannedVisits'];
           fieldSelectors.forEach(function(selector) {
             let field = this.$$(selector);
             if (field && !field.validate()) {
