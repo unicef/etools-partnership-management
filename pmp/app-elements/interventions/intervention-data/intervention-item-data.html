@@ -243,7 +243,21 @@
               withUpload = true;
               prepareMultipartData = true;
             }
-
+            if (Array.isArray(intervention.sector_locations)) {
+              intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
+                return elem.sector || (Array.isArray(elem.locations) && elem.locations.length);
+              });
+            }
+            if (Array.isArray(intervention.result_links)) {
+              intervention.result_links = intervention.result_links.filter(function(elem) {
+                return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
+              });
+            }
+            if (Array.isArray(intervention.planned_visits)) {
+              intervention.planned_visits = intervention.planned_visits.filter(function(elem) {
+                return elem.year || elem.programmatic;
+              });
+            }
             this.fire('global-loading', {message: 'Saving intervention data...', active: true});
             // fire in the hole
             this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
