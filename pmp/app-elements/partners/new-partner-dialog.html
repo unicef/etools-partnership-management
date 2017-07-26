@@ -16,7 +16,7 @@
         margin-bottom: 30px;
       }
     </style>
-    <etools-dialog id="newPartnerDialog" size="lg" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
+    <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
                    dialog-title="New Partner" on-close="_handleDialogClosed">
 
       <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
@@ -44,7 +44,7 @@
           computed: '_vendorNumberIsEmpty(vendor_number)'
         }
       },
-      _openNewPartnerDialog: function() {
+      openNewPartnerDialog: function() {
         this.$.vendorNo.invalid = false;
         this.$.newPartnerDialog.opened = true;
       },

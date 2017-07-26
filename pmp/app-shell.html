@@ -24,6 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
+<link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
+<link rel="import" href="app-menu/styles/app-drawer-styles.html">
 
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
@@ -43,6 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/static-common-data/offices-data.html">
 <link rel="import" href="app-elements/static-common-data/locations-data.html">
 <link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
+<link rel="import" href="app-elements/static-common-data/user-country-data.html">
 
 
 <!--
@@ -59,18 +62,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles shared-styles">
+    <style include="page-layout-styles app-drawer-styles shared-styles">
 
       :host {
         display: block;
-      }
-
-      app-drawer {
-        z-index: 100;
-        --app-drawer-width: 220px;
-        --app-drawer-content-container: {
-          background-color: var(--light-theme-content-color);
-        };
       }
 
       app-header-layout {
@@ -121,6 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <partners-list-data></partners-list-data>
     <agreement-list-data></agreement-list-data>
     <country-programmes-data></country-programmes-data>
+    <user-country-data></user-country-data>
 
     <app-location route="{{route}}"></app-location>
 
@@ -132,9 +128,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer id="drawer" transition-duration="350">
+      <app-drawer id="drawer" transition-duration="350" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
-        <app-sidebar-menu base-url="[[baseUrl]]" page="[[page]]" permissions="[[permissions]]"></app-sidebar-menu>
+        <app-sidebar-menu base-url="[[baseUrl]]"
+                          page="[[page]]"
+                          small-menu$="[[smallMenu]]"></app-sidebar-menu>
 
       </app-drawer>
 
@@ -193,6 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       behaviors: [
         etoolsAppConfig.globals,
         EtoolsLogsBehavior,
+        pmpBehaviors.appMenuBehavior,
         pmpBehaviors.NotificationToastsBehavior,
         pmpBehaviors.globalLoadingBehavior
       ],

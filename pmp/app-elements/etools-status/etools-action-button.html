@@ -1,0 +1,145 @@
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="etools-action-button">
+
+  <style>
+    :host {
+      display: block;
+    }
+    paper-button {
+      @apply(--layout-horizontal);
+      padding: 0;
+      margin: 0;
+      height: 36px;
+      background-color: var(--etools-action-button-main-color, #0099FF);
+      color: var(--etools-action-button-text-color, #fff);
+    }
+    paper-button.grey {
+      background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0,0,0,.54));
+    }
+    paper-menu-button {
+      padding: 0 4px;
+    }
+    paper-icon-button {
+      border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
+    }
+    .main-btn-part {
+      @apply(--layout-flex);
+      text-align: center;
+      font-weight: 500;
+      line-height: 34px;
+      height: 100%;
+    }
+    .list-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      overflow-y: auto;
+      background: var(--etools-action-button-text-color, #fff);
+      font-size: 0;
+    }
+    .list-wrapper::after {
+      display: none;
+    }
+    .list-wrapper paper-item {
+      padding: 0 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+      display: inline-block;
+      line-height: 47px;
+      background: var(--etools-action-button-text-color, #fff);
+      width: 100%;
+    }
+  </style>
+
+  <template>
+
+    <template is="dom-if" if="[[primaryAction]]">
+      <paper-button raised>
+
+        <div on-tap="_handlePrimaryClick" class="main-btn-part"> [[primaryAction.label]] </div>
+
+        <template is="dom-if" if="[[secondaryActions.length]]">
+          <paper-menu-button horizontal-align="right">
+
+            <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
+            <paper-menu class="dropdown-content">
+              <div class="list-wrapper">
+                <template is="dom-repeat" items="[[secondaryActions]]" as="item">
+                  <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
+                </template>
+              </div>
+            </paper-menu>
+
+          </paper-menu-button>
+        </template>
+      </paper-button>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'etools-action-button',
+      properties: {
+        actions: {
+          type: Array,
+          value: [],
+        },
+        primaryAction: {
+          type: Object
+        },
+        secondaryActions: {
+          type: Array,
+          value: []
+        }
+      },
+      observers: ['_actionsChanged(actions, actions.*)'],
+      _actionsChanged: function() {
+        this.debounce('etools-button-actions-changed-handler', function() {
+          this._handleActionsChanged();
+        }.bind(this), 10);
+      },
+      _handleActionsChanged: function() {
+        let actions = this.actions;
+        if (!actions.length) {
+          return;
+        }
+
+        this.set('primaryAction', null);
+        this.set('secondaryActions', []);
+
+        var primaryAction = actions.find(function(elem) {
+          return elem.primary && !elem.hidden;
+        });
+
+        var secondaryActions = actions.filter(function(elem) {
+          return !elem.primary && !elem.hidden;
+        });
+
+        if (!primaryAction && secondaryActions && secondaryActions.length) {
+          primaryAction = secondaryActions.pop();
+        }
+
+        this.set('primaryAction', primaryAction);
+        this.set('secondaryActions', secondaryActions);
+      },
+      _handleSecondaryClick: function(event) {
+        var action = event.model.item;
+        this.fire(action.event);
+      },
+      _handlePrimaryClick: function() {
+        this.fire(this.primaryAction.event);
+      }
+    });
+  </script>
+
+</dom-module>

@@ -259,9 +259,13 @@
         _assessmentPropertyChanged: function(dataPath) {
           if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
               dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
-            var path = dataPath.path.split('.');
-            var index = path[path.length - 2].replace('#', '');
-            this._validateAssessment(index);
+            var dataPathPieces = dataPath.path.split('.');
+            var path = dataPathPieces[0] + '.' + dataPathPieces[1];
+            if (path.indexOf('#') > -1) {
+              var item = this.get(path);
+              var index = this.dataItems.indexOf(item);
+              this._validateAssessment(index);
+            }
           }
         },
 

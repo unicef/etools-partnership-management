@@ -1,0 +1,20 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="app-drawer-styles">
+  <template>
+    <style>
+      app-drawer {
+        z-index: 100;
+        --app-drawer-width: 220px;
+        --app-drawer-content-container: {
+          background-color: var(--light-theme-content-color);
+        };
+      }
+
+      app-drawer[small-menu] {
+        --app-drawer-width: 73px;
+      }
+    </style>
+  </template>
+</dom-module>

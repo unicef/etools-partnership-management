@@ -1,10 +1,13 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
 
 <dom-module id="nav-menu-styles">
   <template>
     <style>
-
+      *[hidden] {
+        display: none !important;
+      }
       :host {
         @apply(--layout-vertical);
         height: 100%;
@@ -13,17 +16,39 @@
         border-right: 1px solid var(--dark-divider-color);
       }
 
+      :host([small-menu]) {
+        overflow-x: visible;
+      }
+
+      @media (max-height: 600px) {
+        paper-tooltip {
+          display: none;
+        }
+        :host([small-menu]) {
+          overflow-x: hidden;
+        }
+      }
+
       .menu-header {
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        background-color: var(--secondary-color);
+        @apply(--layout-justified);
+        background-color: var(--primary-color);
         color: white;
         border-bottom: 1px solid var(--dark-divider-color);
-        min-height: 59px;
+        min-height: 60px;
         padding: 0 16px;
-        font-size: 16px;
+        font-size: 14px;
+        line-height: 18px;
         text-transform: uppercase;
-        pointer-events: none;
+      }
+
+      :host([small-menu]) .menu-header {
+        @apply(--layout-center-justified);
+      }
+
+      #menu-header-top-icon {
+        cursor: pointer;
       }
 
       .divider {
@@ -42,11 +67,10 @@
 
       .secondary-header {
         color: var(--primary-text-color);
-        height: 60px;
         line-height: 60px;
         text-align: center;
-        font-size: 12px;
-        border-top: 1px solid var(--gray-lighter);
+        font-weight: 500;
+        border-top: 1px solid var(--dark-divider-color);
       }
 
       .nav-menu-item {
@@ -60,6 +84,10 @@
         cursor: pointer;
         text-decoration: none;
         text-transform: capitalize;
+      }
+
+      :host([small-menu]) .nav-menu-item {
+        @apply(--layout-center-justified);
       }
 
       .nav-menu-item.iron-selected {
@@ -80,6 +108,10 @@
         color: var(--sidebar-icon-color, --dark-icon-color);
       }
 
+      :host([small-menu]) .nav-menu-item iron-icon {
+        margin: 0;
+      }
+
       .nav-menu-item.iron-selected .name,
       .nav-menu-item.iron-selected iron-icon {
         color: var(--sidebar-selected-item-color, --primary-color);
@@ -88,6 +120,10 @@
       .nav-menu-item.lighter-item .name,
       .nav-menu-item.lighter-item iron-icon {
         color: var(--sidebar-secondary-text-color);
+      }
+
+      .last-one {
+        margin-bottom: 10px;
       }
 
     </style>

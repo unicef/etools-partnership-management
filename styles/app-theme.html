@@ -11,7 +11,7 @@
 
     --gray-light: rgba(0, 0, 0, 0.38);
     --primary-background-color: #FFFFFF;
-    --primary-color: var(--paper-indigo-500);
+    --primary-color: #0099ff;
     --secondary-color: #0099FF;
     --ternary-color: #F7EE76;
     --accent-color: var(--paper-light-blue-a200);
@@ -48,9 +48,10 @@
     --medium-theme-background-color: #eeeeee;
     --dark-theme-background-color: #d9d9d9;
 
-    --title-toolbar-secondary-text-color: #C7CED2;
     --nonprod-header-color: #a94442;
     --header-bg-color: #233944;
+    --header-primary-text-color: var(--light-primary-text-color);
+    --header-secondary-text-color: rgba(255, 255, 255, 0.7);
 
     --error-color: #E54F2E;
     --warning-color: #F7A14B;
@@ -61,7 +62,7 @@
     --error-box-border-color: #ebccd1;
     --error-box-text-color: #a94442;
 
-    --add-button-color : var(--success-color);
+    --add-button-color: var(--success-color);
     --icon-delete-color: var(--error-color);
 
     --risk-rating-not-assesed-color: #dcd8d8;
@@ -80,9 +81,24 @@
     --status-completed-color: var(--success-color);
     --status-active-color: var(--secondary-color);
 
+    /* etools-action-button styles*/
+    --etools-action-button-main-color: var(--secondary-color);
+    --etools-action-button-text-color: var(--light-primary-text-color);
+    --etools-action-button-dropdown-higlight-bg: var(--list-second-bg-color);
+    --etools-action-button-divider-color: var(--light-divider-color);
+
+    /* etools-status styles */
+    --etools-status-divider-color: var(--dark-divider-color);
+    --etools-status-icon-inactive-color: var(--medium-icon-color);
+    --etools-status-icon-pending-color: var(--secondary-color);
+    --etools-status-icon-completed-color: var(--success-color);
+    --etools-status-icon-text-color: var(--light-primary-text-color);
+    --etools-status-text-color: var(--medium-primary-text-color);
+    --etools-status-inactive-text-color: var(--primary-text-color);
+
     /* sidebar item styles */
     --sidebar-bg-color: var(--primary-background-color);
-    --sidebar-text-color:var(--primary-text-color);
+    --sidebar-text-color: var(--primary-text-color);
     --sidebar-icon-color: var(--dark-icon-color);
     --sidebar-secondary-text-color: var(--gray-light);
     --sidebar-selected-bg-color: var(--medium-theme-background-color);
@@ -93,9 +109,9 @@
     --list-secondary-color: var(--primary-background-color);
     --list-divider-color: var(--dark-divider-color);
     --list-bg-color: var(--primary-background-color);
-    --list-second-bg-color:  var(--medium-theme-background-color);
-    --list-text-color:  var(--primary-text-color);
-    --list-secondary-text-color:  var(--secondary-text-color);
+    --list-second-bg-color: var(--medium-theme-background-color);
+    --list-text-color: var(--primary-text-color);
+    --list-secondary-text-color: var(--secondary-text-color);
     --list-icon-hover-color: rgba(0, 0, 0, 0.87);
     --list-icon-color: var(--dark-icon-color);
     --list-disabled-icon-color: var(--light-disabled-icon-color);
@@ -141,7 +157,7 @@
     };
 
     --paper-item: {
-        cursor: pointer;
+      cursor: pointer;
     };
   }
 
@@ -151,6 +167,6 @@
       /* Fixes a vertical alignment issue in ie */
       height: 48px;
     };
-  };
+  }
 
 </style>

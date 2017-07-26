@@ -125,7 +125,7 @@
                          partner="[[partner]]"
                          edit-mode="[[_hasEditPermissions(permissions)]]"
                          on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"></partner-details>
+                         on-delete-partner="_deletePartner"></partner-details>
       </div>
     </iron-pages>
 
@@ -237,9 +237,18 @@
         event.stopImmediatePropagation();
         this.$.partnerData.savePartner(event.detail);
       },
-      _hidePartner: function(event) {
+      _deletePartner: function(event) {
         event.stopImmediatePropagation();
-        this.$.partnerData.hidePartner(event.detail);
+        this.fire('global-loading', {active: true});
+        this.$.partnerData.deletePartner(this.partner, this._handlePartnerDeleted, this._handlePartnerNotDeleted);
+      },
+      _handlePartnerDeleted: function() {
+        this.fire('global-loading', {active: false});
+        this.fire('toast', {text: 'Partner successfully deleted', showCloseBtn: true});
+        this.fire('update-main-path', {path: 'partners/list'});
+      },
+      _handlePartnerNotDeleted: function() {
+        this.fire('global-loading', {active: false});
       },
       _observeRouteDataId: function(id) {
         this.set('selectedPartnerId', id);
@@ -257,7 +266,7 @@
         return listActive && this._hasEditPermissions(permissions);
       },
       _openNewPartnerDialog: function() {
-        this.newPartnerDialog._openNewPartnerDialog();
+        this.newPartnerDialog.openNewPartnerDialog();
       },
       _createPartner: function(event) {
         this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
