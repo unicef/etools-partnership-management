@@ -38,7 +38,10 @@
       paper-input {
         width: 250px;
       }
-
+      .dialog-wrapper {
+        margin-left: -24px;
+        margin-right: -24px;
+      }
     </style>
 
     <etools-dialog id="frsDialog"
@@ -47,47 +50,47 @@
                    ok-btn-text="Add/Update"
                    on-close="_checkFrNumbers"
                    disable-confirm-btn="[[disableConfirmBtn]]">
-      <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
-          <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel">
-              </paper-icon-button>
+      <div class="dialog-wrapper">
+        <template is="dom-repeat" items="{{dataItems}}">
+          <div class="row-h item-container">
+            <div class="item-actions-container">
+              <div class="actions">
+                <paper-icon-button class="action delete"
+                                  on-tap="_openDeleteConfirmation"
+                                  data-args$="[[index]]"
+                                  icon="cancel">
+                </paper-icon-button>
+              </div>
+            </div>
+            <div class="item-content">
+              <div class="row-h">
+                <!-- FR Number -->
+                <paper-input id$="fr-nr-[[index]]"
+                            label="FR Number"
+                            value="{{item.fr_number}}"
+                            placeholder="&#8212;"
+                            allowed-pattern="[0-9]"
+                            required
+                            auto-validate
+                            error-message="Please fill FR Number or remove the field"
+                            on-value-changed="_rfNrValueChanged">
+                </paper-input>
+              </div>
             </div>
           </div>
-          <div class="item-content">
-            <div class="row-h">
-              <!-- FR Number -->
-              <paper-input id$="fr-nr-[[index]]"
-                           label="FR Number"
-                           value="{{item.fr_number}}"
-                           placeholder="&#8212;"
-                           allowed-pattern="[0-9]"
-                           required
-                           auto-validate
-                           error-message="Please fill FR Number or remove the field"
-                           on-value-changed="_rfNrValueChanged">
-              </paper-input>
-            </div>
-          </div>
+        </template>
+
+        <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+          There are no fund reservations numbers added.
         </div>
-      </template>
 
-      <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-        There are no fund reservations numbers added.
+        <div class="row-h">
+          <paper-button class="secondary-btn" on-tap="_addNewFundReservation">
+            <iron-icon icon="add"></iron-icon>
+            Add FR Number
+          </paper-button>
+        </div>
       </div>
-
-      <div class="row-h">
-        <paper-button class="secondary-btn" on-tap="_addNewFundReservation">
-          <iron-icon icon="add"></iron-icon>
-          Add FR Number
-        </paper-button>
-      </div>
-
-
     </etools-dialog>
 
   </template>
