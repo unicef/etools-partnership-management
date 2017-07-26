@@ -187,7 +187,7 @@
             </span>
             <span class="col-data flex-c">
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[validateFrsAndInterventionDate(intervention.start, intervention.frs_earliest_start_date)]]"
+                                   hide-tooltip$="[[validateFrsVsInterventionDates(intervention.start, intervention.frs_earliest_start_date)]]"
                                    important-warning>
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -195,7 +195,7 @@
             </span>
             <span class="col-data flex-c">
                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip$="[[validateFrsAndInterventionDate(intervention.end, intervention.frs_latest_end_date)]]"
+                                    hide-tooltip$="[[validateFrsVsInterventionDates(intervention.end, intervention.frs_latest_end_date)]]"
                                     important-warning>
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
@@ -215,7 +215,7 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[!checkFrsAndUnicefCashAmountsConsistency(intervention.unicef_cash, intervention.frs_total_frs_amt)]]"
+                                   hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
                                    important-warning>
                 <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
                 <span slot="message">

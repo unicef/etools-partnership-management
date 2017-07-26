@@ -227,14 +227,14 @@
               </div>
               <div class="col col-3 center-align timeline-col">
                 <etools-info-tooltip icon="report" icon-first
-                                     hide-tooltip$="[[validateFrsAndInterventionDate(partnership.start, partnership.frs_earliest_start_date)]]"
+                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]"
                                      important-warning>
                   <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
                   <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                 </etools-info-tooltip>
                 <span class="date-delimiter"> - </span>
                 <etools-info-tooltip icon="report" icon-first
-                                     hide-tooltip$="[[validateFrsAndInterventionDate(partnership.end, partnership.frs_latest_end_date)]]"
+                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
                                      important-warning>
                   <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
                   <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
