@@ -58,6 +58,7 @@
                                               selected="{{item.year}}"
                                               options="[[years]]"
                                               required$="[[item.programmatic]]"
+                                              auto-validate
                                               error-message="Required if visits are specified"
                                               on-iron-activate="_yearChanged"
                                               readonly$="[[!editMode]]">
@@ -74,6 +75,7 @@
                              placeholder="&#8212;"
                              required$="[[item.year]]"
                              error-message="Required if a year has been specified"
+                             auto-validate
                              readonly$="[[!editMode]]">
                 </paper-input>
               </div>
