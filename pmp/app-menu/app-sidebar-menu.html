@@ -5,21 +5,33 @@
 <link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../../styles/nav-menu-styles.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="styles/nav-menu-styles.html">
 
 <dom-module id="app-sidebar-menu">
 
   <template>
 
-    <style include="nav-menu-styles">
-      .last-one {
-        margin-bottom: 10px;
-      }
-    </style>
+    <style include="nav-menu-styles"></style>
 
     <div class="menu-header">
-      Partnership <br>
-      Management
+      <span hidden$="[[smallMenu]]">
+        Partnership <br>
+        Management
+      </span>
+
+      <iron-icon id="menu-header-top-icon"
+                 icon="supervisor-account"
+                 hidden$="[[!smallMenu]]"
+                 on-tap="_toggleSmallMenu"></iron-icon>
+      <paper-tooltip for="menu-header-top-icon" position="right">
+        Partnership Management
+      </paper-tooltip>
+
+      <!-- TODO: _getMenuSizeChangeBtnIcon (replace with chevron-left) has to be deleted
+      in case expand btn is #menu-header-top-icon -->
+      <paper-icon-button icon="[[_getMenuSizeChangeBtnIcon(smallMenu)]]"
+                         on-tap="_toggleSmallMenu" hidden$="[[smallMenu]]"></paper-icon-button>
     </div>
 
     <div class="nav-menu">
@@ -27,46 +39,67 @@
                      attr-for-selected="menu-name"
                      selectable="a"
                      role="navigation">
-        <!--<template is="dom-if" if="[[permissions.loggedInDefault]]">-->
 
         <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list" on-tap="_firePageChangeLoading">
-          <iron-icon icon="social:people"></iron-icon>
-          <div class="name">Partners</div>
+          <iron-icon id="partners-icon" icon="social:people"></iron-icon>
+          <paper-tooltip for="partners-icon" position="right" hidden$="[[!smallMenu]]">
+            Partners
+          </paper-tooltip>
+          <div class="name" hidden$="[[smallMenu]]">Partners</div>
         </a>
 
         <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list" on-tap="_firePageChangeLoading">
-          <iron-icon icon="av:playlist-add-check"></iron-icon>
-          <div class="name">Agreements</div>
+          <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
+          <paper-tooltip for="agreements-icon" position="right" hidden$="[[!smallMenu]]">
+            Agreements
+          </paper-tooltip>
+          <div class="name" hidden$="[[smallMenu]]">Agreements</div>
         </a>
 
         <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list" on-tap="_firePageChangeLoading">
-          <iron-icon icon="verified-user"></iron-icon>
-          <div class="name">PD/SSFA</div>
+          <iron-icon id="pd-ssfa-icon" icon="verified-user"></iron-icon>
+          <paper-tooltip for="pd-ssfa-icon" position="right" hidden$="[[!smallMenu]]">
+            PD/SSFA
+          </paper-tooltip>
+          <div class="name" hidden$="[[smallMenu]]">PD/SSFA</div>
         </a>
 
         <a class="nav-menu-item" menu-name="government-partners" href$="[[baseUrl]]government-partners/list" on-tap="_firePageChangeLoading">
-          <iron-icon icon="account-balance"></iron-icon>
-          <div class="name">Government</div>
+          <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
+          <paper-tooltip for="gov-icon" position="right" hidden$="[[!smallMenu]]">
+            Government
+          </paper-tooltip>
+          <div class="name" hidden$="[[smallMenu]]">Government</div>
         </a>
 
-        <!--</template>-->
       </iron-selector>
 
-      <div class="secondary-header">eTools Community Channels</div>
+      <div class="secondary-header">
+        <span hidden$="[[smallMenu]]">eTools Community Channels</span>
+      </div>
 
       <a class="nav-menu-item lighter-item" href="https://etools.uservoice.com">
-        <iron-icon icon="maps:local-library"></iron-icon>
-        <div class="name">Knowledge base</div>
+        <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
+        <paper-tooltip for="knoledge-icon" position="right" hidden$="[[!smallMenu]]">
+          Knowledge base
+        </paper-tooltip>
+        <div class="name" hidden$="[[smallMenu]]">Knowledge base</div>
       </a>
 
       <a class="nav-menu-item lighter-item" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560">
-        <iron-icon icon="icons:question-answer"></iron-icon>
-        <div class="name">Discussion</div>
+        <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
+        <paper-tooltip for="discussion-icon" position="right" hidden$="[[!smallMenu]]">
+          Discussion
+        </paper-tooltip>
+        <div class="name" hidden$="[[smallMenu]]">Discussion</div>
       </a>
 
       <a class="nav-menu-item lighter-item last-one" href="http://etools.unicefresults.org">
-        <iron-icon icon="icons:info"></iron-icon>
-        <div class="name">Information</div>
+        <iron-icon id="information-icon" icon="icons:info"></iron-icon>
+        <paper-tooltip for="information-icon" position="right" hidden$="[[!smallMenu]]">
+          Information
+        </paper-tooltip>
+        <div class="name" hidden$="[[smallMenu]]">Information</div>
       </a>
 
     </div>
@@ -84,7 +117,20 @@
         properties: {
           page: String,
           baseUrl: String,
-          // permissions: String // TODO: might not be needed
+          smallMenu: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_menuSizeChange'
+          }
+        },
+
+        _menuSizeChange: function(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            this.async(function() {
+              this.fire('resize-main-layout');
+            });
+          }
         },
 
         _firePageChangeLoading: function(e) {
@@ -105,6 +151,15 @@
               newUrl: menuOptionEl.getAttribute('href').replace(this.baseUrl, '')
             });
           }
+        },
+
+        _getMenuSizeChangeBtnIcon: function(smallMenu) {
+          return smallMenu ? 'chevron-right' : 'chevron-left';
+        },
+
+        _toggleSmallMenu: function(e) {
+          e.stopImmediatePropagation();
+          this.fire('toggle-small-menu');
         }
 
       });
