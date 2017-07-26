@@ -282,11 +282,11 @@
         },
 
         _updatePlannedBudgetInfo: function(dexieObject, responseDetail) {
-          dexieObject.unicef_budget = parseInt(responseDetail.planned_budget.unicef_cash) +
-            parseInt(responseDetail.planned_budget.in_kind_amount);
-          dexieObject.cso_contribution = parseInt(responseDetail.planned_budget.partner_contribution);
-          dexieObject.total_budget = parseInt(responseDetail.planned_budget.total);
-          dexieObject.unicef_cash = parseInt(responseDetail.planned_budget.unicef_cash);
+          dexieObject.unicef_budget = parseFloat(responseDetail.planned_budget.unicef_cash) +
+            parseFloat(responseDetail.planned_budget.in_kind_amount);
+          dexieObject.cso_contribution = parseFloat(responseDetail.planned_budget.partner_contribution);
+          dexieObject.total_budget = parseFloat(responseDetail.planned_budget.total);
+          dexieObject.unicef_cash = parseFloat(responseDetail.planned_budget.unicef_cash);
         },
         _updateOffices: function(dexieObject, responseDetail) {
           if (!responseDetail.offices || !responseDetail.offices.length) {
