@@ -28,10 +28,9 @@
         Partnership Management
       </paper-tooltip>
 
-      <!-- TODO: _getMenuSizeChangeBtnIcon (replace with chevron-left) has to be deleted
-      in case expand btn is #menu-header-top-icon -->
-      <paper-icon-button icon="[[_getMenuSizeChangeBtnIcon(smallMenu)]]"
-                         on-tap="_toggleSmallMenu" hidden$="[[smallMenu]]"></paper-icon-button>
+      <paper-icon-button icon="chevron-left"
+                         on-tap="_toggleSmallMenu"
+                         hidden$="[[smallMenu]]"></paper-icon-button>
     </div>
 
     <div class="nav-menu">
@@ -151,10 +150,6 @@
               newUrl: menuOptionEl.getAttribute('href').replace(this.baseUrl, '')
             });
           }
-        },
-
-        _getMenuSizeChangeBtnIcon: function(smallMenu) {
-          return smallMenu ? 'chevron-right' : 'chevron-left';
         },
 
         _toggleSmallMenu: function(e) {
