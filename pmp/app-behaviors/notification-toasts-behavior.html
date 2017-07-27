@@ -23,16 +23,25 @@
       e.stopPropagation();
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
-        this._toast.setAttribute('class', 'global-warn-msg-toast');
+        if (this._isMultiLine(detail.text)) {
+          this._toast.setAttribute('class', 'global-warn-msg-toast-multi-line');
+        } else {
+          this._toast.setAttribute('class', 'global-warn-msg-toast');
+        }
         var messageWrapper = this._toast.$.label;
         if (messageWrapper) {
-          messageWrapper.style.whiteSpace = 'pre';
+          messageWrapper.style.whiteSpace = 'pre-wrap';
 //          messageWrapper.style.display = 'inline-block';
         }
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
         var closeToastBtn = document.createElement('paper-button');
         closeToastBtn.innerHTML = 'Ok';
-        closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+         if (this._isMultiLine(detail.text)) {
+          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn-multi-line');
+        } else {
+          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+        }
+
         closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
         Polymer.dom(this._toast).appendChild(closeToastBtn);
         // this.$.layout is app-drawer-layout element from app-shell.html
@@ -58,7 +67,12 @@
         } // else already in the queue
       }
     },
-
+    _isMultiLine: function(message) {
+      if (!message) {
+        return false;
+      }
+      return message.toString().length > 80;
+    },
     dequeueToast: function() {
       this.shift('_toastQueue');
       if (this._toastQueue.length) {
