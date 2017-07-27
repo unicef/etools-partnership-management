@@ -142,7 +142,7 @@
         _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
-              + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
+              + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
 
             if (this.statusChangeWarningDialogContent) {
               this.statusChangeWarningDialogContent.innerHTML = warningMessage;
@@ -306,25 +306,32 @@
         },
 
         _updateStatus: function(newStatus) {
-           if (this.newAgreement) {
+          if (!this._statusChangeIsValid(newStatus)) {
             return;
           }
 
-          if (newStatus === 'draft') {
-            // if agreement was not saved (is new) or the status is already changed
-            // from draft, stop status change
-            if (this.newAgreement || this.status !== 'draft') {
-              return false;
-            }
-          }
-          if (newStatus === 'suspended' || newStatus === 'terminated') {
-            if (this.newAgreement || (this.status !== 'suspended'
-              && this.status !== 'terminated' && this.status !== 'signed')) {
-              return false;
-            }
-          }
           this.set('newStatus', newStatus);
           this._showStatusChangeConfirmationDialog();
+        },
+        _statusChangeIsValid: function(newStatus) {
+          if (this.newAgreement) {
+            return false;
+          }
+
+          if (newStatus === 'draft') { //TODO Is this check necessary?
+            // if agreement was not saved (is new) or the status is already changed
+            // from draft, stop status change
+            if (this.status !== 'draft') {
+              return false;
+            }
+          }
+          if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
+            if (this.status !== 'signed') {
+              //prevent suspending or terminating anything other than signed agreement
+              return false;
+            }
+          }
+          return true;
         },
 
         _setStatusTerminated: function() {
