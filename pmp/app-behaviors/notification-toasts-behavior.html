@@ -12,7 +12,8 @@
       _toastQueue: {
         type: Array,
         value: function() { return []; }
-      }
+      },
+      _toastCloseBtn: Object
     },
 
     listeners: {
@@ -23,11 +24,6 @@
       e.stopPropagation();
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
-        if (this._isMultiLine(detail.text)) {
-          this._toast.setAttribute('class', 'toast-general-style toast-multi-line');
-        } else {
-          this._toast.setAttribute('class', 'toast-general-style toast');
-        }
         var messageWrapper = this._toast.$.label;
         if (messageWrapper) {
           messageWrapper.style.whiteSpace = 'pre-wrap';
@@ -35,11 +31,6 @@
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
         var closeToastBtn = document.createElement('paper-button');
         closeToastBtn.innerHTML = 'Ok';
-         if (this._isMultiLine(detail.text)) {
-          closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn-multi-line');
-        } else {
-          closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn');
-        }
 
         closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
         Polymer.dom(this._toast).appendChild(closeToastBtn);
@@ -50,7 +41,6 @@
         } else {
           console.warn('app-drawer-layout element from app-shell must have id="layout"');
         }
-
       }
 
       if (!this._toastQueue.length) {
@@ -82,6 +72,16 @@
 
     _prepareToastAndGetShowProperties: function(detail) {
       var closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
+
+      if (this._isMultiLine(detail.text)) {
+        this._toast.setAttribute('class', 'toast-general-style toast-multi-line');
+        closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn-multi-line');
+      } else {
+        this._toast.setAttribute('class', 'toast-general-style toast');
+        closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn');
+      }
+      closeToastBtn.updateStyles();
+
       // clone detail obj
       var toastProperties = JSON.parse(JSON.stringify(detail));
 
