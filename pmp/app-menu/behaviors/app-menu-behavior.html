@@ -15,7 +15,9 @@
     },
 
     attached: function() {
-      this._initMenuSize();
+      if (!this.classList.contains('ie')) {
+        this._initMenuSize();
+      }
     },
 
     _initMenuSize: function() {
@@ -45,9 +47,12 @@
     },
 
     _smallMenuValueChanged: function(newVal) {
-      let localStorageVal = newVal ? 1 : 0;
-      localStorage.setItem('etoolsAppSmallMenu', localStorageVal);
+      if (!this.classList.contains('ie')) {
+        let localStorageVal = newVal ? 1 : 0;
+        localStorage.setItem('etoolsAppSmallMenu', localStorageVal);
+      }
       this._updateDrawerStyles();
+      this._notifyLayoutResize();
     },
 
     _updateDrawerStyles: function() {
@@ -61,6 +66,10 @@
       let layout = this.$.layout;
       if (layout) {
         layout.notifyResize();
+      }
+      let headerLayout = this.$.appHeadLayout;
+      if (headerLayout) {
+        headerLayout.notifyResize();
       }
     }
 

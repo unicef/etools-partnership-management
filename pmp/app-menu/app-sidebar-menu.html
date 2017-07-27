@@ -1,11 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../../styles/custom-iconsets/pmp-icons.html">
 <link rel="import" href="styles/nav-menu-styles.html">
 
 <dom-module id="app-sidebar-menu">
@@ -15,22 +16,28 @@
     <style include="nav-menu-styles"></style>
 
     <div class="menu-header">
-      <span hidden$="[[smallMenu]]">
+      <span id="app-name">
         Partnership <br>
         Management
       </span>
 
-      <iron-icon id="menu-header-top-icon"
-                 icon="supervisor-account"
-                 hidden$="[[!smallMenu]]"
-                 on-tap="_toggleSmallMenu"></iron-icon>
+      <span class="ripple-wrapper main">
+        <iron-icon id="menu-header-top-icon"
+                   icon="pmp-main-icons:partnership-management"
+                   on-tap="_toggleSmallMenu"></iron-icon>
+        <paper-ripple class="circle" center></paper-ripple>
+      </span>
+
       <paper-tooltip for="menu-header-top-icon" position="right">
         Partnership Management
       </paper-tooltip>
 
-      <paper-icon-button icon="chevron-left"
-                         on-tap="_toggleSmallMenu"
-                         hidden$="[[smallMenu]]"></paper-icon-button>
+      <span class="ripple-wrapper">
+        <iron-icon id="minimize-menu"
+                   icon="chevron-left"
+                   on-tap="_toggleSmallMenu"></iron-icon>
+        <paper-ripple class="circle" center></paper-ripple>
+      </span>
     </div>
 
     <div class="nav-menu">
@@ -41,64 +48,64 @@
 
         <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list" on-tap="_firePageChangeLoading">
           <iron-icon id="partners-icon" icon="social:people"></iron-icon>
-          <paper-tooltip for="partners-icon" position="right" hidden$="[[!smallMenu]]">
+          <paper-tooltip for="partners-icon" position="right">
             Partners
           </paper-tooltip>
-          <div class="name" hidden$="[[smallMenu]]">Partners</div>
+          <div class="name">Partners</div>
         </a>
 
         <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list" on-tap="_firePageChangeLoading">
-          <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
-          <paper-tooltip for="agreements-icon" position="right" hidden$="[[!smallMenu]]">
+          <iron-icon id="agreements-icon" icon="pmp-icons:agreements"></iron-icon>
+          <paper-tooltip for="agreements-icon" position="right">
             Agreements
           </paper-tooltip>
-          <div class="name" hidden$="[[smallMenu]]">Agreements</div>
+          <div class="name">Agreements</div>
         </a>
 
         <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list" on-tap="_firePageChangeLoading">
-          <iron-icon id="pd-ssfa-icon" icon="verified-user"></iron-icon>
-          <paper-tooltip for="pd-ssfa-icon" position="right" hidden$="[[!smallMenu]]">
+          <iron-icon id="pd-ssfa-icon" icon="description"></iron-icon>
+          <paper-tooltip for="pd-ssfa-icon" position="right">
             PD/SSFA
           </paper-tooltip>
-          <div class="name" hidden$="[[smallMenu]]">PD/SSFA</div>
+          <div class="name">PD/SSFA</div>
         </a>
 
         <a class="nav-menu-item" menu-name="government-partners" href$="[[baseUrl]]government-partners/list" on-tap="_firePageChangeLoading">
           <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
-          <paper-tooltip for="gov-icon" position="right" hidden$="[[!smallMenu]]">
+          <paper-tooltip for="gov-icon" position="right">
             Government
           </paper-tooltip>
-          <div class="name" hidden$="[[smallMenu]]">Government</div>
+          <div class="name">Government</div>
         </a>
 
       </iron-selector>
 
-      <div class="secondary-header">
-        <span hidden$="[[smallMenu]]">eTools Community Channels</span>
+      <div class="nav-menu-item section-title">
+        <span>eTools Community Channels</span>
       </div>
 
       <a class="nav-menu-item lighter-item" href="https://etools.uservoice.com">
         <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
-        <paper-tooltip for="knoledge-icon" position="right" hidden$="[[!smallMenu]]">
+        <paper-tooltip for="knoledge-icon" position="right">
           Knowledge base
         </paper-tooltip>
-        <div class="name" hidden$="[[smallMenu]]">Knowledge base</div>
+        <div class="name">Knowledge base</div>
       </a>
 
       <a class="nav-menu-item lighter-item" href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560">
         <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
-        <paper-tooltip for="discussion-icon" position="right" hidden$="[[!smallMenu]]">
+        <paper-tooltip for="discussion-icon" position="right">
           Discussion
         </paper-tooltip>
-        <div class="name" hidden$="[[smallMenu]]">Discussion</div>
+        <div class="name">Discussion</div>
       </a>
 
       <a class="nav-menu-item lighter-item last-one" href="http://etools.unicefresults.org">
         <iron-icon id="information-icon" icon="icons:info"></iron-icon>
-        <paper-tooltip for="information-icon" position="right" hidden$="[[!smallMenu]]">
+        <paper-tooltip for="information-icon" position="right">
           Information
         </paper-tooltip>
-        <div class="name" hidden$="[[smallMenu]]">Information</div>
+        <div class="name">Information</div>
       </a>
 
     </div>
