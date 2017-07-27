@@ -32,7 +32,6 @@
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="intervention-sector-locations.html">
-<link rel="import" href="intervention-status.html">
 
 <dom-module id="intervention-details">
 
@@ -600,7 +599,7 @@
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#intStart', '#intEnd', '#sectorLocations',
-            '#plannedBudget', '#expectedResults'];
+            '#plannedBudget', '#expectedResults', '#plannedVisits'];
           fieldSelectors.forEach(function(selector) {
             let field = this.$$(selector);
             if (field && !field.validate()) {
