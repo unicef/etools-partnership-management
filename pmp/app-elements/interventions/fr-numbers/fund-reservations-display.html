@@ -36,7 +36,7 @@
         <div class="col col-3 right-align"><strong>TOTAL</strong></div>
         <div class="col col-2 right-align">
           <etools-info-tooltip icon="report"
-                            hide-tooltip="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                            hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
                             important-warning
                             icon-first right-aligned>
             <span slot="field">[[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]]</span>
@@ -85,7 +85,7 @@
             return;
           }
           let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
-              frsDetails.total_frs_amt, true);
+              frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
           this.set('_frsTotalAmountWarning', warn);
         }
       });
