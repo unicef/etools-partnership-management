@@ -26,7 +26,7 @@
         warnIntervFields.push('end date');
       }
       if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
-              frsDetails.total_frs_amt)) {
+              frsDetails.total_frs_amt, intervention, 'interventionDetails')) {
         warnFrsFields.push('Total FR amount');
         warnIntervFields.push('UNICEF $ contribution');
       }
@@ -37,25 +37,32 @@
       return false;
     },
 
-    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, returnMsg) {
-      let totalUnicefContribution = parseFloat(unicefCash);
-      let totalFrsAmount = parseFloat(frsTotalAmt);
-      let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
-      if (unicefContibutionDiff > 10) {
+    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,  returnMsg) {
+      if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
       return false;
     },
+    validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere) {
+      if (this.emptyFrsList(intervention, interventionIsFromWhere)) {
+        return true;
+      }
+      let totalUnicefContribution = parseFloat(unicefCash);
+      let totalFrsAmount = parseFloat(frsTotalAmt);
+      let unicefContibutionDiff = Math.abs(totalUnicefContribution - totalFrsAmount);
+
+      return unicefContibutionDiff < 10;
+    },
 
     checkFrsAndIntervDateConsistency: function(intervDateStr, frsDateStr, fieldName, returnMsg) {
-      if (!this.validateFrsAndInterventionDate(intervDateStr, frsDateStr)) {
+      if (!this.validateFrsVsInterventionDates(intervDateStr, frsDateStr)) {
         return returnMsg
             ? this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
             : true;
       }
       return false;
     },
-    validateFrsAndInterventionDate: function(intervDateStr, frsDateStr) {
+    validateFrsVsInterventionDates: function(intervDateStr, frsDateStr) {
       if (!frsDateStr) {// *No Fr added
         return true;
       }
@@ -86,8 +93,14 @@
       return !!warn ? 'frs-inconsistent' : '';
     },
 
-    emptyFrsList: function(intervention) {
-      return !intervention || intervention.frs_details.frs.length === 0;
+    emptyFrsList: function(intervention, interventionIsFromWhere) {
+      // * The intervention object from interventions-list
+      // has different properties than the one on intervention-details
+      if (interventionIsFromWhere === 'interventionDetails') {
+        return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
+      } else if (interventionIsFromWhere === 'interventionsList') {
+         return !intervention.frs_earliest_start_date || ! intervention.frs_latest_end_date;
+      }
     }
 
   };

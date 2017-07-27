@@ -125,7 +125,7 @@
 
           <div class="col col-2 right-align">
             <etools-info-tooltip icon="report" icon-first
-                                 hide-tooltip="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                                 hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
                                  important-warning>
               <div slot="field">
                 <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
@@ -404,7 +404,7 @@
 
         _checkFrsConsistency: function(frsTotalAmt, unicefCash) {
           let unicefCashField = this.$$('#unicefCashUsd');
-          if (this.emptyFrsList(this.intervention)) {
+          if (this.emptyFrsList(this.intervention, 'interventionDetails')) {
             this.set('_frsConsistencyWarning', '');
             if (unicefCashField) {
               unicefCashField.updateStyles();
@@ -412,7 +412,7 @@
             return;
           }
           this.set('_frsConsistencyWarning',
-              this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, true));
+              this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention, 'interventionDetails', true));
           if (unicefCashField) {
             unicefCashField.updateStyles();
           }
