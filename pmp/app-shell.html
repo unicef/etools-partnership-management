@@ -82,12 +82,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--header-bg-color);
       }
 
-      .warning-toast-dismiss-btn {
-        text-transform: uppercase;
-        color: var(--secondary-color);
+      .toast-dismiss-btn {
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
-        max-width: 50px;
         text-align: right;
         --paper-button: {
           padding-right: 0px !important;
@@ -95,12 +92,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           min-width: 45px !important;
         }
       }
-      .warning-toast-dismiss-btn-multi-line {
+      .toast-dismiss-btn-general-style {
         text-transform: uppercase;
         color: var(--secondary-color);
+        text-align: right;
+      }
+      .toast-dismiss-btn-multi-line {
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
-        text-align: right;
         --paper-button: {
           padding-right: 0px !important;
           padding-bottom: 0px !important;
@@ -108,17 +107,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           min-width: 45px !important;
         }
       }
-      .global-warn-msg-toast {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        max-width: 568px;
+      .toast-general-style {
+         max-width: 568px;
         min-height: 40px;
       }
-      .global-warn-msg-toast-multi-line {
+      .toast {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+
+      }
+      .toast-multi-line {
         @apply(--layout-vertical);
         text-align: justify;
-        max-width: 568px;
-        min-height: 40px;
       }
 
       .main-page {

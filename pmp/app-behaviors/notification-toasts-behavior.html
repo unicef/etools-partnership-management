@@ -24,22 +24,21 @@
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
         if (this._isMultiLine(detail.text)) {
-          this._toast.setAttribute('class', 'global-warn-msg-toast-multi-line');
+          this._toast.setAttribute('class', 'toast-general-style toast-multi-line');
         } else {
-          this._toast.setAttribute('class', 'global-warn-msg-toast');
+          this._toast.setAttribute('class', 'toast-general-style toast');
         }
         var messageWrapper = this._toast.$.label;
         if (messageWrapper) {
           messageWrapper.style.whiteSpace = 'pre-wrap';
-//          messageWrapper.style.display = 'inline-block';
         }
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
         var closeToastBtn = document.createElement('paper-button');
         closeToastBtn.innerHTML = 'Ok';
          if (this._isMultiLine(detail.text)) {
-          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn-multi-line');
+          closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn-multi-line');
         } else {
-          closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+          closeToastBtn.setAttribute('class', 'toast-dismiss-btn-general-style toast-dismiss-btn');
         }
 
         closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
