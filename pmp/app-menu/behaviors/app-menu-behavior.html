@@ -1,0 +1,77 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.appMenuBehavior */
+  pmpBehaviors.appMenuBehavior = {
+
+    properties: {
+      smallMenu: {
+        type: Boolean,
+        value: false
+      }
+    },
+    listeners: {
+      'toggle-small-menu': '_toggleSmallMenu',
+      'resize-main-layout': '_resizeMainLayout'
+    },
+
+    attached: function() {
+      if (!this.classList.contains('ie')) {
+        this._initMenuSize();
+      }
+    },
+
+    _initMenuSize: function() {
+      this.set('smallMenu', this._isSmallMenuActive());
+    },
+
+    _isSmallMenuActive: function() {
+      /**
+       * etoolsPmpSmallMenu localStorage value must be 0 or 1
+       */
+      let menuTypeStoredVal = localStorage.getItem('etoolsAppSmallMenuIsActive');
+      if (!menuTypeStoredVal) {
+        return false;
+      }
+      return !!parseInt(menuTypeStoredVal, 10);
+    },
+
+    _toggleSmallMenu: function(e) {
+      e.stopImmediatePropagation()
+      this.set('smallMenu', !this.smallMenu);
+      this._smallMenuValueChanged(this.smallMenu);
+    },
+
+    _resizeMainLayout: function(e) {
+      e.stopImmediatePropagation();
+      this._notifyLayoutResize();
+    },
+
+    _smallMenuValueChanged: function(newVal) {
+      if (!this.classList.contains('ie')) {
+        let localStorageVal = newVal ? 1 : 0;
+        localStorage.setItem('etoolsAppSmallMenuIsActive', localStorageVal);
+      }
+      this._updateDrawerStyles();
+      this._notifyLayoutResize();
+    },
+
+    _updateDrawerStyles: function() {
+      let drawer = this.$.drawer;
+      if (drawer) {
+        drawer.updateStyles();
+      }
+    },
+
+    _notifyLayoutResize: function() {
+      let layout = this.$.layout;
+      if (layout) {
+        layout.notifyResize();
+      }
+      let headerLayout = this.$.appHeadLayout;
+      if (headerLayout) {
+        headerLayout.notifyResize();
+      }
+    }
+
+  };
+</script>

@@ -15,7 +15,6 @@
 
   <template>
     <style include="shared-styles">
-
       app-toolbar {
         padding: 0 16px 0 0;
         background-color: var(--header-bg-color, #233944);
@@ -34,12 +33,21 @@
 
       div[main-title],
       .titlebar {
-        color: var(--light-primary-text-color);
+        color: var(--header-primary-text-color);
+      }
+      countries-dropdown {
+        --countries-dropdown-color: var(--header-secondary-text-color);
+      }
+      etools-profile-dropdown,
+      #refresh {
+        color: var(--header-secondary-text-color);
+      }
+      etools-profile-dropdown {
+        margin-left: 24px;
       }
 
-      #profile,
       #refresh {
-        color: var(--title-toolbar-secondary-text-color);
+        margin-left: 16px;
       }
 
       #menuButton {
