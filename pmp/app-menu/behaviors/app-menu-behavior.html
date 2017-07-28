@@ -21,14 +21,14 @@
     },
 
     _initMenuSize: function() {
-      this.set('smallMenu', this._getSmallMenuValue());
+      this.set('smallMenu', this._isSmallMenuActive());
     },
 
-    _getSmallMenuValue: function() {
+    _isSmallMenuActive: function() {
       /**
        * etoolsPmpSmallMenu localStorage value must be 0 or 1
        */
-      let menuTypeStoredVal = localStorage.getItem('etoolsAppSmallMenu');
+      let menuTypeStoredVal = localStorage.getItem('etoolsAppSmallMenuIsActive');
       if (!menuTypeStoredVal) {
         return false;
       }
@@ -49,7 +49,7 @@
     _smallMenuValueChanged: function(newVal) {
       if (!this.classList.contains('ie')) {
         let localStorageVal = newVal ? 1 : 0;
-        localStorage.setItem('etoolsAppSmallMenu', localStorageVal);
+        localStorage.setItem('etoolsAppSmallMenuIsActive', localStorageVal);
       }
       this._updateDrawerStyles();
       this._notifyLayoutResize();
