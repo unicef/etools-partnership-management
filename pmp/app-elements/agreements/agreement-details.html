@@ -178,7 +178,8 @@
                   option-value="id"
                   option-label="name"
                   selected="{{agreement.partner_manager}}"
-                  dynamic-align
+                  dynamic-align auto-validate
+                  error-message="Please select Signed By Partner"
                   readonly$="[[!agreement.permissions.edit.partner_manager]]"
                   required$="[[agreement.permissions.required.partner_manager]]">
               </etools-single-selection-menu>
@@ -189,7 +190,8 @@
                                 label="Signed By Partner Date"
                                 value="{{agreement.signed_by_partner_date}}"
                                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                no-init show-clear-btn
+                                no-init show-clear-btn auto-validate
+                                error-message="Please select Signed By Partner Date"
                                 required$="[[agreement.permissions.required.signed_by_partner_date]]">
               </etools-date-input>
             </div>
@@ -205,7 +207,8 @@
                   option-value="user_id"
                   option-label="full_name"
                   selected="{{agreement.signed_by}}"
-                  dynamic-align
+                  dynamic-align auto-validate
+                  error-message="Please select Signed By UNICEF"
                   readonly$="[[!agreement.permissions.edit.signed_by]]"
                   required$="[[agreement.permissions.required.signed_by]]">
               </etools-single-selection-menu>
@@ -216,7 +219,8 @@
                                 label="Signed By UNICEF Date"
                                 value="{{agreement.signed_by_unicef_date}}"
                                 readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                                no-init show-clear-btn
+                                no-init show-clear-btn auto-validate
+                                error-message="Please select Signed By UNICEF Date"
                                 required$="[[agreement.permissions.required.signed_by_unicef_date]]">
               </etools-date-input>
             </div>
@@ -400,6 +404,7 @@
           return (this.agreement && this.agreement.id);
         },
 
+
         /**
          * Refer to unicef/etools-issues#232:
          * For Draft Status, only Change option is available. No delete option is available in Draft.
@@ -444,10 +449,9 @@
 
           this.set('serverErrors', []);
           if (typeof agreement === 'object' && agreement !== null && agreement.id) {
-            if (agreement.id > 0) {
-              // prevent wrong new agreement value
-              this.set('isNewAgreement', false);
-            }
+
+            // prevent wrong new agreement value
+            this.set('isNewAgreement', false);
 
             this.set('oldSelectedPartnerId', agreement.partner);
 
@@ -457,13 +461,8 @@
             this.fieldValidationReset('#cpStructure');
             this.set('enableEditForAuthorizedOfficers', false);
 
-            // forces etools-single-file to redraw the element
-            if (!agreement.attached_agreement) {
-              this.set('agreement.attached_agreement', {});
-            }
-            if (!agreement.attached_agreement_file) {
-              this.set('agreement.attached_agreement_file', '');
-            }
+            this.resetAttachedAgreementElem(agreement);
+
             this._initAuthorizedOfficers(agreement.authorized_officers);
 
           } else {
@@ -476,6 +475,15 @@
           }
           this.fire('global-loading', {active: false});
 
+        },
+        resetAttachedAgreementElem: function(agreement) {
+          // forces etools-single-file to redraw the element
+            if (!agreement.attached_agreement) {
+              this.set('agreement.attached_agreement', {});
+            }
+            if (!agreement.attached_agreement_file) {
+              this.set('agreement.attached_agreement_file', '');
+            }
         },
 
         _resetDropdown: function(selector) {
