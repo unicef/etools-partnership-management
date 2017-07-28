@@ -395,9 +395,7 @@
         },
         _getPcaAndAttachmentStyleClasses: function(agreementType) {
           var cssClasses = 'row-h flex-c';
-          if (agreementType === "SSFA") {
-            cssClasses = cssClasses.replace(' t-border','');
-          } else {
+          if (agreementType !== 'SSFA') {
             cssClasses += ' t-border';
           }
           return cssClasses;
@@ -562,7 +560,7 @@
         _validateAgreement: function() {
           var valid = true;
           var requiredFieldsSelectors;
-          if(this.agreement.agreement_type === 'SSFA') {
+          if (this.agreement.agreement_type === 'SSFA') {
             requiredFieldsSelectors = ['#agreementType', '#partner'];
           } else {
             requiredFieldsSelectors = ['#partner', '#agreementType', '#officers'];
@@ -589,9 +587,6 @@
           return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
         },
         _primitiveFieldIsModified: function(fieldName) {
-          if (fieldName ==='end') {
-            console.log(this.originalAgreementData[fieldName], this.agreement[fieldName]);
-          }
           return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
         },
         _getInitialAuthorizedOfficersIds: function() {
@@ -650,7 +645,6 @@
               changes.amendments = this.agreement.amendments;
             }
           }
-          console.log(changes);
           return changes;
         },
         /**
@@ -705,7 +699,6 @@
           if (agreement.agreement_type === 'PCA') {
             newAgreement.country_programme = agreement.country_programme;
           }
-          console.log(newAgreement);
           return newAgreement;
         },
 
