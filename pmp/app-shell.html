@@ -82,14 +82,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--header-bg-color);
       }
 
-      .warning-toast-dismiss-btn {
-        text-transform: none;
-        color: var(--ternary-color);
+      .toast-dismiss-btn {
+        --paper-button: {
+          padding: 8px;
+          min-width: 16px;
+          margin: 0 -8px 0 24px;
+        };
       }
-
-      .global-warn-msg-toast {
+      .toast-dismiss-btn-general-style {
+        text-transform: uppercase;
+        color: var(--primary-color);
+      }
+      .toast-dismiss-btn-multi-line {
+        --paper-button: {
+          padding: 8px;
+          min-width: 16px;
+          margin: 16px -8px -8px 0;
+          @apply(--layout-self-end);
+        };
+      }
+      .toast-general-style {
+        max-width: 568px;
+        min-height: 40px;
+      }
+      .toast {
         @apply(--layout-horizontal);
         @apply(--layout-center);
+      }
+      .toast-multi-line {
+        @apply(--layout-vertical);
+        text-align: justify;
       }
 
       .main-page {
