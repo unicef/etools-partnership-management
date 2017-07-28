@@ -67,7 +67,7 @@
                          disabled$="[[!editMode]]"></paper-icon-button>
       <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
         <etools-info-tooltip icon="report" icon-first
-                             hide-tooltip="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                             hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
                              important-warning>
           <div slot="field">
             <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
