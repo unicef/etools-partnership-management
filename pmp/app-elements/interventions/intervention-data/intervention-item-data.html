@@ -243,7 +243,21 @@
               withUpload = true;
               prepareMultipartData = true;
             }
-
+            if (Array.isArray(intervention.sector_locations)) {
+              intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
+                return elem.sector || (Array.isArray(elem.locations) && elem.locations.length);
+              });
+            }
+            if (Array.isArray(intervention.result_links)) {
+              intervention.result_links = intervention.result_links.filter(function(elem) {
+                return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
+              });
+            }
+            if (Array.isArray(intervention.planned_visits)) {
+              intervention.planned_visits = intervention.planned_visits.filter(function(elem) {
+                return elem.year || elem.programmatic;
+              });
+            }
             this.fire('global-loading', {message: 'Saving intervention data...', active: true});
             // fire in the hole
             this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
@@ -273,6 +287,7 @@
           this._updatePlannedBudgetInfo(dexieObject, responseDetail);
           this._updateOffices(dexieObject, responseDetail);
           this._updateSectors(dexieObject, responseDetail);
+          this._updateFrInfo(dexieObject, responseDetail.frs_details);
 
           responseDetail.result_links.forEach(function(elem) {
             dexieObject.cp_outputs.push(elem.cp_output);
@@ -281,12 +296,23 @@
           return dexieObject;
         },
 
-        _updatePlannedBudgetInfo: function(dexieObject, responseDetail) {
-          dexieObject.unicef_budget = parseInt(responseDetail.planned_budget.unicef_cash) +
-            parseInt(responseDetail.planned_budget.in_kind_amount);
-          dexieObject.cso_contribution = parseInt(responseDetail.planned_budget.partner_contribution);
-          dexieObject.total_budget = parseInt(responseDetail.planned_budget.total);
-          dexieObject.unicef_cash = parseInt(responseDetail.planned_budget.unicef_cash);
+        _updatePlannedBudgetInfo: function(dexieObject, intervention) {
+          dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
+            parseFloat(intervention.planned_budget.in_kind_amount);
+          dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution);
+          dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
+          dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash);
+        },
+        _updateFrInfo: function(dexieObject, intervFrDetails) {
+          if (this._noFrOnIntervention(intervFrDetails)) {
+            return;
+          }
+          dexieObject.frs_total_frs_amt = intervFrDetails.total_frs_amt;
+          dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
+          dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
+        },
+        _noFrOnIntervention: function(intervFrDetails) {
+          return (!intervFrDetails || !intervFrDetails.earliest_start_date);
         },
         _updateOffices: function(dexieObject, responseDetail) {
           if (!responseDetail.offices || !responseDetail.offices.length) {

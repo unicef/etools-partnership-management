@@ -158,7 +158,7 @@
         _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
             var warningMessage = 'Are you sure you want to change status from: <strong>\''
-                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
+                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
 
             if (this.statusChangeWarningDialogContent) {
               this.statusChangeWarningDialogContent.innerHTML = warningMessage;
@@ -345,8 +345,17 @@
         },
 
         _updateStatus: function(newStatus) {
-          if (this.newAgreement) {
+          if (!this._statusChangeIsValid(newStatus)) {
             return;
+          }
+
+          this.set('newStatus', newStatus);
+          this._showStatusChangeConfirmationDialog();
+        },
+
+        _statusChangeIsValid: function(newStatus) {
+           if (this.newIntervention) {
+            return false;
           }
 
           if (newStatus === 'draft' && this.status !== 'draft') {
@@ -360,15 +369,13 @@
             return false;
           }
 
-          if (newStatus === 'active' || newStatus === 'suspended' || newStatus === 'terminated') {
-
-            if (this.status !== 'active' && this.status !== 'suspended' && this.status !== 'terminated') {
+          if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
+            if (['active', 'signed'].indexOf(this.status) < 0) {
+              //prevent suspending or terminating anything other than signed or active intervention
               return false;
             }
-
           }
-          this.set('newStatus', newStatus);
-          this._showStatusChangeConfirmationDialog();
+          return true;
         },
 
         _setStatusTerminated: function() {
