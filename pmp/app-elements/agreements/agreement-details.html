@@ -179,10 +179,10 @@
                   option-label="name"
                   selected="{{agreement.partner_manager}}"
                   dynamic-align
-                  auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.partner_manager, agreement.signed_by_partner_date)]]"
+                  auto-validate
                   error-message="Please select Signed By Partner"
                   readonly$="[[!agreement.permissions.edit.partner_manager]]"
-                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date)]]">
+                  required$="[[agreement.permissions.required.partner_manager]]">
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
@@ -190,11 +190,11 @@
               <etools-date-input id="signedByPartnerDateField"
                                 label="Signed By Partner Date"
                                 value="{{agreement.signed_by_partner_date}}"
-                                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
                                 no-init show-clear-btn
-                                auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.signed_by_partner_date, agreement.partner_manager)]]"
+                                auto-validate
+                                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
                                 error-message="Please select Signed By Partner Date"
-                                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager)]]">
+                                required$="[[agreement.permissions.required.signed_by_partner_date]]">
               </etools-date-input>
             </div>
           </div>
@@ -212,8 +212,8 @@
                   dynamic-align
                   error-message="Please select Signed By UNICEF"
                   readonly$="[[!agreement.permissions.edit.signed_by]]"
-                  auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.signed_by, agreement.signed_by_unicef_date)]]"
-                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date)]]">>
+                  auto-validate
+                  required$="[[agreement.permissions.required.signed_by]]">>
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
@@ -238,8 +238,8 @@
                                         option-label="name"
                                         selected-values="{{authorizedOfficers}}"
                                         readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
-                                        error-message="Please enter the Partner Authorized Officer(s)"
-                                        required$="[[enableEditForAuthorizedOfficers]]"
+                                        error-message="Please enter Partner Authorized Officer(s)"
+                                        required$="[[agreement.permissions.required.authorized_officers]]"
                                         auto-validate$="[[enableEditForAuthorizedOfficers]]">
             </etools-multi-selection-menu>
           </div>
@@ -406,16 +406,7 @@
         _isAgreementTypeReadonly: function() {
           return (this.agreement && this.agreement.id);
         },
-        _isSignedByFieldRequired: function(permission, relatedSigneByFieldValue) {
-          return (permission || !!relatedSigneByFieldValue);
-        },
-        _isAutoValidateOn: function(editable, relatedFieldValue) {
-          console.log('autovalidate', editable, relatedFieldValue);
-          if (!editable || !relatedFieldValue) {
-            return false;
-          }
-          return true;
-        },
+
         /**
          * Refer to unicef/etools-issues#232:
          * For Draft Status, only Change option is available. No delete option is available in Draft.
@@ -453,7 +444,6 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          console.log('agreement', agreement);
           if (this.generatePCADialog) {
             this.generatePCADialog.agreementId = agreement.id;
           }
@@ -571,17 +561,22 @@
          */
         _validateAgreement: function() {
           var valid = true;
-          var self = this;
-          var requiredFieldsSelectors = ['#partner', '#agreementType','#officers', '#agreementAmendments'];
+          var requiredFieldsSelectors;
+          if(this.agreement.agreement_type === 'SSFA') {
+            requiredFieldsSelectors = ['#agreementType', '#partner'];
+          } else {
+            requiredFieldsSelectors = ['#partner', '#agreementType', '#officers'];
+          }
           if (this.agreement.agreement_type === 'PCA') {
             requiredFieldsSelectors.push('#cpStructure');
+            requiredFieldsSelectors.push('#agreementAmendments');
           }
           requiredFieldsSelectors.forEach(function(fSelector) {
-            let field = self.$$(fSelector);
+            let field = this.$$(fSelector);
             if (field && !field.validate()) {
               valid = false;
             }
-          });
+          }.bind(this));
           return valid;
         },
         _objectFieldIsModified: function(fieldName) {
@@ -594,6 +589,9 @@
           return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
         },
         _primitiveFieldIsModified: function(fieldName) {
+          if (fieldName ==='end') {
+            console.log(this.originalAgreementData[fieldName], this.agreement[fieldName]);
+          }
           return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
         },
         _getInitialAuthorizedOfficersIds: function() {
@@ -652,7 +650,7 @@
               changes.amendments = this.agreement.amendments;
             }
           }
-
+          console.log(changes);
           return changes;
         },
         /**
@@ -686,20 +684,28 @@
             id: null,
             status: '',
             agreement_type: agreement.agreement_type,
-            partner: agreement.partner,
-            authorized_officers: this.authorizedOfficers,
-            start: agreement.agreement_type === 'MOU' ? agreement.start : null,
-            end: agreement.agreement_type === 'MOU' ? agreement.end : null,
-            country_programme:  agreement.agreement_type === 'PCA' ? agreement.country_programme : null,
-            attached_agreement: agreement.attached_agreement,
+            partner: agreement.partner
           };
-
-          if (newAgreement.agreement_type !== 'SSFA') {
-            newAgreement.signed_by_unicef_date = agreement.signed_by_unicef_date;
-            newAgreement.signed_by_partner_date = agreement.signed_by_partner_date;
-            newAgreement.signed_by = agreement.signed_by;
-            newAgreement.partner_manager = agreement.partner_manager;
+          if (agreement.agreement_type === 'SSFA') {
+            return newAgreement;
           }
+
+          newAgreement = Object.assign(newAgreement, {
+              authorized_officers: this.authorizedOfficers,
+              signed_by_unicef_date: agreement.signed_by_unicef_date,
+              signed_by_partner_date: agreement.signed_by_partner_date,
+              signed_by: agreement.signed_by,
+              partner_manager: agreement.partner_manager,
+              attached_agreement: agreement.attached_agreement,
+          });
+          if (agreement.agreement_type === 'MOU') {
+            newAgreement.start = agreement.start;
+            newAgreement.end = agreement.end;
+          }
+          if (agreement.agreement_type === 'PCA') {
+            newAgreement.country_programme = agreement.country_programme;
+          }
+          console.log(newAgreement);
           return newAgreement;
         },
 
