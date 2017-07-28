@@ -165,8 +165,6 @@
 
           this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
               this._frsUpdatesWarningConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
-          this.frsConfirmationsDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.frsConfirmationsDialog.updateStyles();
         },
 
         _frsUpdateWarningMessage: function(warning) {
