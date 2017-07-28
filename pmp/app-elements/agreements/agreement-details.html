@@ -178,10 +178,11 @@
                   option-value="id"
                   option-label="name"
                   selected="{{agreement.partner_manager}}"
-                  dynamic-align auto-validate
+                  dynamic-align
+                  auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.partner_manager, agreement.signed_by_partner_date)]]"
                   error-message="Please select Signed By Partner"
                   readonly$="[[!agreement.permissions.edit.partner_manager]]"
-                  required$="[[agreement.permissions.required.partner_manager]]">
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date)]]">
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
@@ -190,9 +191,10 @@
                                 label="Signed By Partner Date"
                                 value="{{agreement.signed_by_partner_date}}"
                                 readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                                no-init show-clear-btn auto-validate
+                                no-init show-clear-btn
+                                auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.signed_by_partner_date, agreement.partner_manager)]]"
                                 error-message="Please select Signed By Partner Date"
-                                required$="[[agreement.permissions.required.signed_by_partner_date]]">
+                                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager)]]">
               </etools-date-input>
             </div>
           </div>
@@ -207,10 +209,11 @@
                   option-value="user_id"
                   option-label="full_name"
                   selected="{{agreement.signed_by}}"
-                  dynamic-align auto-validate
+                  dynamic-align
                   error-message="Please select Signed By UNICEF"
                   readonly$="[[!agreement.permissions.edit.signed_by]]"
-                  required$="[[agreement.permissions.required.signed_by]]">
+                  auto-validate$="[[_isAutoValidateOn(agreement.permissions.edit.signed_by, agreement.signed_by_unicef_date)]]"
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date)]]">>
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
@@ -403,8 +406,16 @@
         _isAgreementTypeReadonly: function() {
           return (this.agreement && this.agreement.id);
         },
-
-
+        _isSignedByFieldRequired: function(permission, relatedSigneByFieldValue) {
+          return (permission || !!relatedSigneByFieldValue);
+        },
+        _isAutoValidateOn: function(editable, relatedFieldValue) {
+          console.log('autovalidate', editable, relatedFieldValue);
+          if (!editable || !relatedFieldValue) {
+            return false;
+          }
+          return true;
+        },
         /**
          * Refer to unicef/etools-issues#232:
          * For Draft Status, only Change option is available. No delete option is available in Draft.
