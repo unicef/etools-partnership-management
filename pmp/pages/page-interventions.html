@@ -201,7 +201,8 @@
                            new-intervention="[[newInterventionActive]]"
                            intervention-agreement-status="[[agreement.status]]"
                            on-save-intervention="_validateAndSaveIntervention"
-                           on-update-intervention-status="_updateInterventionStatus">
+                           on-update-intervention-status="_updateInterventionStatus"
+                           edit-mode="[[intervention.permissions.edit.status]]">
       </intervention-status>
 
       </div>
