@@ -373,7 +373,7 @@
       // },
       _interventionChanged: function(intervention) {
         this._displayAnyMigrationErrors(intervention);
-        this._makeSureMetadataMsgIsNotShownAgainAfterSave(intervention);
+        this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
@@ -397,7 +397,7 @@
         }
       },
       /* Show metadata error message on intervention detail 'page load'*/
-      _makeSureMetadataMsgIsNotShownAgainAfterSave: function(intervention) {
+      _makeSureMigrationErrorIsNotShownAgainAfterSave: function(intervention) {
         if (this.saved.interventionId !== intervention.id) {
           this.saved.justSaved = false;
         }
