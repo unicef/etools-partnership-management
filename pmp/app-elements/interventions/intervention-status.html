@@ -407,11 +407,11 @@
         },
 
         _handleStickyScroll: function() {
-          // if(window.isIE) {
+          if(window.isIE) {
             this.customStyle['--status-position'] = 'fixed';
             this.customStyle['--status-top'] = 'auto';
             this.updateStyles();
-          // }
+          }
         },
 
       });
