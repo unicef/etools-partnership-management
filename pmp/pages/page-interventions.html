@@ -390,7 +390,8 @@
         }
       },
       _displayAnyMigrationErrors: function(intervention) {
-        if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
+        var errors = _.get(intervention, 'metadata.error_msg',[])
+        if (errors.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {//Avoid showing msg again after save
             this.set('errorMsgBox_Title','eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.set('serverErrors', intervention.metadata.error_msg);
