@@ -46,8 +46,8 @@
             value: false
           },
           possibleStatuses: {
-          type: Array,
-          value: function() {
+            type: Array,
+            value: function() {
               return [
                 {
                   label: 'Draft',
@@ -138,6 +138,9 @@
 
         _computeAvailableActions: function(status) {
             this._setAllActionsToHidden();
+            if(!this.editMode) {
+              return;
+            }
             let availableOptions = ['Save'];
 
             if (status !== 'draft' && status !== '') {

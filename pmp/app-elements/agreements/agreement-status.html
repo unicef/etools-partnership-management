@@ -120,6 +120,9 @@
 
         _computeAvailableActions: function(status) {
           this._setAllActionsToHidden();
+          if(!this.editMode) {
+            return;
+          }
           let availableOptions = ['Save'];
 
           switch (status) {

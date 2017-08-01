@@ -38,9 +38,8 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         width: 100%;
-
         --esmm-list-wrapper: {
           max-height: 400px;
         }
@@ -291,7 +290,8 @@
                         new-agreement$="[[isNewAgreement]]"
                         agreement-id$="[[agreement.id]]"
                         agreement-type="[[agreement.agreement_type]]"
-                        on-save-agreement="_validateAndTriggerAgreementSave">
+                        on-save-agreement="_validateAndTriggerAgreementSave"
+                        edit-mode="[[editMode]]">
       </agreement-status>
     </div>
     <!-- sidebar content end -->
