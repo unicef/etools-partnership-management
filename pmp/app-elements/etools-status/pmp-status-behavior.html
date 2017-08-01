@@ -1,0 +1,123 @@
+
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.statusBehaviorImpl = { // eslint-disable-line no-undef
+    properties: {
+      status: {
+        type: String,
+        value: ''
+      },
+      newStatus: {
+        type: String,
+        value: ''
+      },
+      sectionName: String, // PD/SSFA, Partners, Agreements
+      possibleStatuses: Array,
+      possibleActions: Array,
+      warningDialog: Object,
+      statusChangeWarningDialogContent: Object,
+    },
+
+    observers: [
+        '_handleStatusChange(status)'
+    ],
+
+    detached: function() {
+      if (this.warningDialog) {
+        this.removeDialog(this.warningDialog);
+      }
+    },
+
+    _handleStickyScroll: function() {
+      if(window.isIE) {
+        this.customStyle['--status-position'] = 'fixed';
+        this.customStyle['--status-top'] = 'auto';
+        this.updateStyles();
+      }
+    },
+
+    _createStatusChangeWarningDialog: function() {
+      this.statusChangeWarningDialogContent = document.createElement('p');
+      this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+      this.warningDialog = this.createDialog(this.sectionName + ' status change', 'md', 'Yes', 'No',
+          this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+    },
+
+    _showStatusChangeConfirmationDialog: function() {
+      if (this.warningDialog) {
+        var warningMessage = 'Are you sure you want to change status from: <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
+
+        if (this.statusChangeWarningDialogContent) {
+          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
+        } else {
+          this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
+        }
+      } else {
+        this.logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
+      }
+    },
+
+    _setAllActionsToHidden: function() {
+      var possibleActions = this.possibleActions;
+      possibleActions.forEach(function(elem) {
+        elem.hidden = true;
+      });
+
+      this.set('possibleActions', possibleActions);
+    },
+
+    _setAllStatusesToHidden: function() {
+      var possibleStatuses = this.possibleStatuses;
+      possibleStatuses.forEach(function(elem) {
+        elem.hidden = true;
+        elem.completed = false;
+      });
+
+      this.set('possibleStatuses', possibleStatuses);
+    },
+
+    _updateStatus: function(newStatus) {
+      if (!this._statusChangeIsValid(newStatus)) {
+        return;
+      }
+
+      this.set('newStatus', newStatus);
+      this._showStatusChangeConfirmationDialog();
+    },
+
+    _handleStatusChange: function(status) {
+      this.debounce('reset-status-actions', function() {
+        this._computeAvailableStatuses(status);
+        this._computeAvailableActions(status);
+      }.bind(this), 50);
+    },
+
+    _statusChangeConfirmationCallback: function(event) {
+      // children should overwrite this
+    },
+
+    _statusChangeIsValid: function(newStatus) {
+      // children should overwrite this
+      return false;
+    },
+
+    _computeAvailableActions: function(status) {
+      // children should overwrite this
+    },
+    _computeAvailableStatuses: function(status) {
+      // children should overwrite this
+    },
+  };
+
+  /** @polymerBehavior pmpBehaviors.statusBehavior */
+
+  pmpBehaviors.statusBehavior = [
+    etoolsBehaviors.DynamicDialogBehavior,
+    pmpBehaviors.statusBehaviorImpl,
+    EtoolsLogsBehavior,
+  ];
+</script>

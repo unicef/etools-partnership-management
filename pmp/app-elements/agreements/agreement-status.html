@@ -1,9 +1,8 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
+<link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
+
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/buttons-styles.html">
 
 <dom-module id="agreement-status">
   <template strip-whitespace>
@@ -31,29 +30,16 @@
     (function() {
       'use strict';
 
-      // TODO: Very important! this is 99% the same as agreement status.
-      // Check if the statuses are the same and refactor this 2 elements
-
       Polymer({
         is: 'agreement-status',
-
         behaviors: [
-          etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsLogsBehavior,
+          pmpBehaviors.statusBehavior
         ],
         properties: {
           agreementId: {
             value: null
           },
           agreementType: {
-            type: String,
-            value: ''
-          },
-          status: {
-            type: String,
-            value: ''
-          },
-          newStatus: {
             type: String,
             value: ''
           },
@@ -123,61 +109,13 @@
                 event: 'agreement-terminate-event'
               },
             ]
-          },
-          warningDialog: Object,
-          statusChangeWarningDialogContent: Object,
+          }
         },
-        observers: [
-          '_computeStatusesAndActions(status, agreementId)'
-        ],
 
         ready: function() {
-          this.statusChangeWarningDialogContent = document.createElement('p');
-          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('Agreement status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
-          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.warningDialog.updateStyles();
+          this.set('sectionName', 'Agreement');
+          this._createStatusChangeWarningDialog();
           this._handleStickyScroll();
-        },
-
-        detached: function() {
-          if (this.warningDialog) {
-            this.removeDialog(this.warningDialog);
-          }
-        },
-
-        _showStatusChangeConfirmationDialog: function() {
-          if (this.warningDialog) {
-            var warningMessage = 'Are you sure you want to change status from: <strong>\''
-              + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
-
-            if (this.statusChangeWarningDialogContent) {
-              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
-              this.warningDialog.opened = true;
-            } else {
-              this.logWarn('#statusChangeWarningContent element not found!', 'pmp agreement status change');
-            }
-          } else {
-            this.logWarn('warningDialog not created!', 'pmp agreement status change');
-          }
-        },
-
-        _setAllActionsToHidden: function() {
-          var possibleActions = this.possibleActions;
-          possibleActions.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleActions', possibleActions);
-        },
-        _setAllStatusesToHidden: function() {
-          var possibleStatuses = this.possibleStatuses;
-          possibleStatuses.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleStatuses', possibleStatuses);
         },
 
         _computeAvailableActions: function(status) {
@@ -296,12 +234,6 @@
           }
         },
 
-        _computeStatusesAndActions: function(status) {
-          this.debounce('compute-statuses-and-actions', function() {
-            this._computeAvailableStatuses(status);
-            this._computeAvailableActions(status);
-          }.bind(this), 50);
-        },
         _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this.fire('update-agreement-status', {
@@ -313,14 +245,6 @@
           this.set('newStatus', '');
         },
 
-        _updateStatus: function(newStatus) {
-          if (!this._statusChangeIsValid(newStatus)) {
-            return;
-          }
-
-          this.set('newStatus', newStatus);
-          this._showStatusChangeConfirmationDialog();
-        },
         _statusChangeIsValid: function(newStatus) {
           if (this.newAgreement) {
             return false;
@@ -354,14 +278,8 @@
           this._updateStatus('signed');
         },
 
-        _handleStickyScroll: function() {
-          if(window.isIE) {
-            this.customStyle['--status-position'] = 'fixed';
-            this.customStyle['--status-top'] = 'auto';
-            this.updateStyles();
-          }
-        },
       });
     })();
+
   </script>
 </dom-module>

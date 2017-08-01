@@ -1,5 +1,5 @@
-<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
+<link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
@@ -35,10 +35,8 @@
       Polymer({
         is: 'partner-status',
         behaviors: [
-          etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsLogsBehavior,
+          pmpBehaviors.statusBehavior
         ],
-
         properties: {
           partner: {
             type: Object,
@@ -129,11 +127,7 @@
 
           this._handleStickyScroll();
         },
-        detached: function() {
-          if (this.warningDialog) {
-            this.removeDialog(this.warningDialog);
-          }
-        },
+
         _isHidden: function(hidden) {
           if (typeof hidden === 'undefined' || hidden === null) {
             return true;
@@ -164,24 +158,6 @@
               id: this.partner.id,
             });
           }
-        },
-
-        _setAllActionsToHidden: function() {
-          var possibleActions = this.possibleActions;
-          possibleActions.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleActions', possibleActions);
-        },
-        _setAllStatusesToHidden: function() {
-          var possibleStatuses = this.possibleStatuses;
-          possibleStatuses.forEach(function(elem) {
-            elem.hidden = true;
-            elem.completed = false;
-          });
-
-          this.set('possibleStatuses', possibleStatuses);
         },
 
         _computeAvailableActions: function(hidden, editMode) {
@@ -256,14 +232,6 @@
 
         _showNotSyncedStatus: function() {
           return this.partner.vision_synced === false;
-        },
-
-        _handleStickyScroll: function() {
-          if(window.isIE) {
-            this.customStyle['--status-position'] = 'fixed';
-            this.customStyle['--status-top'] = 'auto';
-            this.updateStyles();
-          }
         },
 
       });
