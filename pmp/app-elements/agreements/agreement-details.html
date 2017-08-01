@@ -118,11 +118,14 @@
                 options="[[partnersDropdownData]]"
                 selected="{{agreement.partner}}"
                 dynamic-align
-                readonly$="[[!agreement.permissions.edit.partner]]"
+                hidden$="[[!agreement.permissions.edit.partner]]"
                 auto-validate
                 error-message="Please select a partner"
                 required>
             </etools-single-selection-menu>
+            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
+                <span>[[agreement.partner_name]]</span>
+            </etools-form-element-wrapper>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
@@ -442,7 +445,6 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          console.log(agreement);
           if (this.generatePCADialog) {
             this.generatePCADialog.agreementId = agreement.id;
           }
