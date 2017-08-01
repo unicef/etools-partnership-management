@@ -147,12 +147,12 @@
                 <etools-multi-selection-menu id$="amendmentTypes_[[index]]"
                                              label="Amendment Types"
                                              placeholder="&#8212;"
+                                             trigger-value-change-event$="[[!_showReadonlyDetails(item.id)]]"
                                              options="[[_getAmendmentTypes(agreementType, _amendmentTypes)]]"
                                              selected-values="{{item.types}}"
                                              hide-search
                                              error-message="Please select amendment type"
                                              required
-                                             trigger-value-change-event
                                              on-etools-selected-items-changed="_onAmendmentTypesSelected"
                                              on-focused-changed="_onAmendmentTypesFocusChanged">
                 </etools-multi-selection-menu>
