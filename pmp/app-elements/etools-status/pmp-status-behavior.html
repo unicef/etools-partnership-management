@@ -17,6 +17,15 @@
         type: Boolean,
         value: true
       },
+      stickyScrollOffsetStart: {
+        type: Number,
+        value: 76
+      },
+      oldScroll: {
+        type: Function,
+        value: null
+      },
+      contentContainer: Object,
       sectionName: String, // PD/SSFA, Partners, Agreements
       possibleStatuses: Array,
       possibleActions: Array,
@@ -32,14 +41,32 @@
       if (this.warningDialog) {
         this.removeDialog(this.warningDialog);
       }
+      if(this.contentContainer) {
+        this.contentContainer.onscroll = this.oldScroll;
+      }
+    },
+
+    _getContentContainer: function() {
+      if(window.isIE) {
+        return window;
+      }
+      return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
     },
 
     _handleStickyScroll: function() {
-      if(window.isIE) {
-        this.customStyle['--status-position'] = 'fixed';
+      this.contentContainer = this._getContentContainer();
+      this.oldScroll = this.contentContainer.onscroll;
+      this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+    },
+
+    _scrollChangedHandler: function() {
+      let topOffset = this.getBoundingClientRect().top;
+      if (topOffset < this.stickyScrollOffsetStart) {
+        this.customStyle['--status-top'] = ((topOffset - this.stickyScrollOffsetStart) * -1) + 'px';
+      } else {
         this.customStyle['--status-top'] = 'auto';
-        this.updateStyles();
       }
+      this.updateStyles();
     },
 
     _createStatusChangeWarningDialog: function() {
