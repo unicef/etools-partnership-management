@@ -118,11 +118,14 @@
                 options="[[partnersDropdownData]]"
                 selected="{{agreement.partner}}"
                 dynamic-align
-                readonly$="[[!agreement.permissions.edit.partner]]"
+                hidden$="[[!agreement.permissions.edit.partner]]"
                 auto-validate
                 error-message="Please select a partner"
                 required>
             </etools-single-selection-menu>
+            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
+                <span>[[agreement.partner_name]]</span>
+            </etools-form-element-wrapper>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
@@ -243,7 +246,7 @@
             </etools-multi-selection-menu>
           </div>
         </div>
-        <div class$="[[_getPcaAndAttachmentStyleClasses(agreement.agreement_type)]]">
+        <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div id="generate-pca" class="col col-3"
                hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
             <paper-input-container
@@ -264,7 +267,8 @@
                 label="Signed Agreement"
                 accept=".doc,.docx,.pdf,.jpg,.png"
                 hide-delete-btn="[[_hideDeleteBtn(agreement.status, agreement.attached_agreement)]]"
-                readonly$="[[!agreement.permissions.edit.attached_agreement]]"></etools-single-file>
+                readonly$="[[!agreement.permissions.edit.attached_agreement]]"
+                required$="[[agreement.permissions.required.attached_agreement]]"></etools-single-file>
           </div>
         </div>
       </etools-content-panel>
@@ -393,12 +397,11 @@
             Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
           }
         },
-        _getPcaAndAttachmentStyleClasses: function(agreementType) {
-          var cssClasses = 'row-h flex-c';
+        _getTBorderClassIfApplicable: function(agreementType) {
           if (agreementType !== 'SSFA') {
-            cssClasses += ' t-border';
+            return ' t-border';
           }
-          return cssClasses;
+          return '';
         },
         // Editing Agreement Type is allowed only if Agreement is new/unsaved
         _isAgreementTypeReadonly: function() {
