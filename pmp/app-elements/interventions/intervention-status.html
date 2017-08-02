@@ -9,12 +9,10 @@
     <style>
       :host {
         width: 100%;
-        --status-position: sticky;
-        --status-top: 16px;
+        --status-top: auto;
       }
       etools-status {
         width: 200px;
-        position: var(--status-position);
         top: var(--status-top);
       }
     </style>
@@ -128,6 +126,28 @@
               },
             ]
           }
+        },
+
+        _getContentContainer: function() {
+          if(window.isIE) {
+            return window;
+          }
+          return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
+        },
+
+        _handleStickyScroll: function() {
+          let contentContainer = this._getContentContainer();
+          contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+        },
+
+        _scrollChangedHandler: function() {
+          let topOffset = this.getBoundingClientRect().top;
+          if (topOffset < 76) {
+            this.customStyle['--status-top'] = ((topOffset - 76) * -1) + 'px';
+          } else {
+            this.customStyle['--status-top'] = 'auto';
+          }
+          this.updateStyles();
         },
 
         ready: function() {
