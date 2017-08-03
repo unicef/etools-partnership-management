@@ -357,6 +357,7 @@
           fields.forEach(function(fieldSelector) {
             var fieldEl = this.$$(fieldSelector);
             var reportFileLength = 0;
+
             if (typeof this.dataItems[index].report_file === 'string') {
                reportFileLength = this.dataItems[index].report_file.length;
             }
