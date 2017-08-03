@@ -393,7 +393,7 @@
       _displayAnyMigrationErrors: function(intervention) {
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {//Avoid showing msg again after save
-            this.set('errorMsgBox_Title','eTools validation code has been upgraded and this record is now considered invalid due to:');
+            this.set('errorMsgBox_Title', 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.set('serverErrors', intervention.metadata.error_msg);
           }
         }
@@ -720,7 +720,7 @@
       },
       _arraysAreEqual: function(array1, array2) {
         var differencesArray = [];
-        if((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
+        if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
           return false;
         }
         if (array1.length > array2.length) {

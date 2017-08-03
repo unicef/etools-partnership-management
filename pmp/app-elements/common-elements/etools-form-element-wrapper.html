@@ -2,11 +2,12 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 
 <dom-module id="etools-form-element-wrapper">
 
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles required-field-starred-styles">
       :host {
         width: 100%;
         --paper-input-container-underline: {
@@ -24,7 +25,7 @@
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
       }
     </style>
-    <paper-input-container always-float-label="[[alwaysFloatLabel]]" no-label-float="[[noLabelFloat]]">
+    <paper-input-container always-float-label="[[alwaysFloatLabel]]" no-label-float="[[noLabelFloat]]" required$="[[required]]">
       <label hidden$=[[!label]] slot="label">[[label]]</label>
       <div class="paper-input-input">
         <slot></slot>
@@ -44,7 +45,15 @@
             type: Boolean,
             value: true
           },
-          noLabelFloat: Boolean
+          noLabelFloat: Boolean,
+          required: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_requiredChanged'
+          }
+        },
+        _requiredChanged: function() {
+          this.updateStyles();
         }
       });
     })();
