@@ -1,0 +1,73 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+
+<dom-module id="generate-pca-dialog">
+  <template>
+    <style>
+      :host {
+        --paper-dialog-scrollable: {
+          @apply(--pmp-paper-dialog-content);
+        }
+      }
+      paper-dropdown-menu, paper-listbox {
+        width: 250px;
+      }
+    </style>
+    <etools-dialog id="etoolsDialog" size="lg" ok-btn-text="Download" dialog-title="Generate PCA"
+                   on-close="_handleDialogClosed">
+      <paper-dropdown-menu label="Choose Template">
+        <paper-listbox attr-for-selected="item-value" class="dropdown-content" selected="{{selectedTemplate}}">
+          <template id="repeat" is="dom-repeat" items="[[templateOptions]]">
+            <paper-item item-value="[[item.value]]">[[item.label]]</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </etools-dialog>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'generate-pca-dialog',
+      properties: {
+        agreementId: {
+          type: String
+        },
+        templateOptions: {
+          type: Array,
+          value: function() {
+            return [{value: 'arabic', label: 'Arabic'}, {value: 'english', label: 'English'},
+             {value: 'french', label: 'French'}, {value: 'portuguese', label: 'Portuguese'},
+             {value: 'russian', label: 'Russian'}, {value: 'spanish', label: 'Spanish'},
+             {value: 'ifrc_english', label: 'IFRC English'}, {value: 'ifrc_french', label: 'IFRC French'}];
+          }
+        },
+        selectedTemplate: {
+          type: String
+        }
+      },
+      open: function() {
+        this.$.etoolsDialog.opened = true;
+      },
+      _handleDialogClosed: function(closingReason) {
+        if (closingReason.detail.confirmed === undefined) {
+          // filter out the on-close event fired by the containing dropdown
+          return;
+        }
+        if (closingReason.detail.confirmed) {
+          window.open('/api/v2/agreements/' + this.agreementId + '/generate_doc/?lang=' +
+              encodeURIComponent(this.selectedTemplate), '_blank');
+        }
+        this.selectedTemplate = null;
+      }
+    });
+  })();
+
+</script>

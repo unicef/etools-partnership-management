@@ -2,11 +2,12 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 <dom-module id="etools-single-file">
 
   <template>
-    <style include="file-styles">
+    <style include="file-styles required-field-starred-styles">
       :host {
         @apply(--layout-horizontal);
         width: 100%;
@@ -46,12 +47,22 @@
               return [];
             }
           },
-          readonly: Boolean,
+          readonly: {
+            type: Boolean,
+            value: false
+          },
+          required: {
+            type: Boolean,
+            value: false,
+            observer: '_requiredChanged'
+          },
+          autoValidate: Boolean,
           accept: String,
           label: String,
           file: {
             type: Object,
             notify: true,
+            observer: '_autoValidateFile'
           },
           internalFile: {
             type: Object,
@@ -72,7 +83,8 @@
         },
         observers: [
           '_attachmentChanged(attachments.length)',
-          '_fileReplaced(attachments.*)'
+          '_fileReplaced(attachments.*)',
+          '_refreshStyles(readonly, required)'
         ],
 
         _fileChanged: function(intr) {
@@ -86,6 +98,8 @@
           if (filesLength > 0) {
             if (this.attachments[0].raw instanceof File) {
               this.set('file', this.attachments[0].raw);
+            } else if (typeof this.internalFile === 'string' && !!this.internalFile.length) {
+              this.set('file', this.internalFile);
             } else {
               this.set('file', null);
             }
@@ -95,11 +109,38 @@
         },
 
         _fileReplaced: function(data) {
-          if (data.path === 'attachments.#0') {
+          if ((data.path.indexOf('attachments.#') > -1)) {
             // file changed
             this._attachmentChanged(this.attachments.length);
           }
+        },
+
+        validate: function() {
+          if (this.required && !this.readonly && this.file instanceof File === false &&
+              (typeof this.file === 'string' ? !!!this.file.length : true)) {
+            this.set('invalid', true);
+            return false;
+          }
+          this.set('invalid', false);
+          return true;
+        },
+
+        _autoValidateFile: function() {
+          if (this.autoValidate) {
+            this.validate();
+          }
+        },
+
+        _refreshStyles: function() {
+          this.updateStyles();
+        },
+
+        _requiredChanged: function(req) {
+          if (req === false) {
+            this.validate();
+          }
         }
+
       });
     })();
   </script>

@@ -9,7 +9,7 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-general-behavior.html">
@@ -24,6 +24,7 @@
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
+<link rel="import" href="partner-status.html">
 <link rel="import" href="partner-status.html">
 
 <dom-module id="partner-details">
@@ -51,7 +52,12 @@
       #core-values-assessment {
         width: 100%;
       }
-
+      etools-single-file {
+        --etools-file-upload-button: {
+          /* IE fix */
+          min-width: 150px !important;
+        }
+      }
     </style>
     <!-- main page content start -->
     <div id="pageContent">
@@ -102,15 +108,13 @@
           </div>
           <div class="col col-4">
             <!-- Shared partner -->
-            <etools-searchable-multiselection-menu label="Shared Partner"
-                                                   options="[[sharedPartenerValues]]"
-                                                   selected="{{partner.shared_with}}"
-                                                   custom-object-options
-                                                   update-selected
-                                                   dynamic-align
-                                                   readonly$="[[!editMode]]"
-                                                   multi>
-            </etools-searchable-multiselection-menu>
+            <etools-multi-selection-menu label="Shared Partner"
+                                         options="[[sharedPartenerValues]]"
+                                         selected-values="{{partner.shared_with}}"
+                                         dynamic-align
+                                         readonly$="[[!editMode]]"
+                                         multi>
+            </etools-multi-selection-menu>
           </div>
         </div>
 

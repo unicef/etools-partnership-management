@@ -1,16 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-selector">
   <template>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       #agreement-selector-content {
         padding: 0;
       }
@@ -25,9 +25,10 @@
                                       option-label="name"
                                       selected="{{partnerId}}"
                                       dynamic-align
-                                      required auto-validate
-                                      error-message="Partner is required"
-                                      readonly$="[[!editMode]]">
+                                      readonly$="[[!intervention.permissions.edit.agreement]]"
+                                      required$="[[intervention.permissions.required.agreement]]"
+                                      auto-validate
+                                      error-message="Partner is required">
         </etools-single-selection-menu>
       </div>
 
@@ -40,9 +41,10 @@
                                         option-label="agreement_number"
                                         selected="{{agreementId}}"
                                         dynamic-align
-                                        required auto-validate
-                                        error-message="Agreement required"
-                                        readonly$="[[!editMode]]">
+                                        readonly$="[[!intervention.permissions.edit.agreement]]"
+                                        required$="[[intervention.permissions.required.agreement]]"
+                                        auto-validate
+                                        error-message="Agreement required">
         </etools-single-selection-menu>
 
       </div>
@@ -88,11 +90,7 @@
             value: null,
             notify: true
           },
-          editMode: {
-            type: Boolean,
-            value: false
-          },
-          interventionId: Number
+          intervention: Object,
         },
 
         _partnersDropdownDataChanged: function() {
@@ -105,9 +103,6 @@
           this._agreementIdChanged(this.agreementId);
         },
         _agreementIdChanged: function(agreementId) {
-          var partnerSelector = this.$.partner;
-          var agreementSelector = this.$.agreements;
-
           if (!this.agreements) {
             return;
           }
@@ -129,7 +124,9 @@
             return partner.id === agreement.partner;
           });
           if (!partner) {
-            this.fire('toast', {text: 'Selected agreement partner partner_type is not CSO!',  showCloseBtn: true});
+            let partnerIsNotCSOMsg = 'Selected agreement(' + agreement.agreement_number +
+                ') partner (' + agreement.partner_name + ') partner_type is not CSO!';
+            this.fire('toast', {text: partnerIsNotCSOMsg,  showCloseBtn: true});
             return;
           }
           this.set('partnerId', partner.id);
@@ -148,7 +145,7 @@
 
           // set filtered agreements based on this
           var agreements = _.filter(this.agreements, function(agreement) {
-            if (this.interventionId > 0) {
+            if (this.intervention && this.intervention.id > 0) {
               // existing intervention
               return agreement.partner === partnerId;
             } else {
