@@ -142,7 +142,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving PD/SSFA"
+                                   title="[[errorMsgBox_Title]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"
@@ -188,7 +188,8 @@
                                       active="[[_isAttachementsTabActive(activeTab)]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
-                                      attachments="{{intervention.attachments}}">
+                                      attachments="{{intervention.attachments}}"
+                                      edit-mode="[[_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
@@ -201,7 +202,8 @@
                            new-intervention="[[newInterventionActive]]"
                            intervention-agreement-status="[[agreement.status]]"
                            on-save-intervention="_validateAndSaveIntervention"
-                           on-update-intervention-status="_updateInterventionStatus">
+                           on-update-intervention-status="_updateInterventionStatus"
+                           edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
       </intervention-status>
 
       </div>
@@ -310,9 +312,21 @@
         editMode: {
           type: Boolean
         },
-        _redirectToNewIntervPageInProgress: Boolean
+        _redirectToNewIntervPageInProgress: Boolean,
+        errorMsgBox_Title: {
+          type: String,
+          value: 'Errors Saving PD/SSFA'
+        },
+        saved: {
+          type: Object,
+          value: function() {
+            return {
+              interventionId: null,
+              justSaved: false
+            };
+          }
+        },
       },
-
       observers: [
         /**
          * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
@@ -356,6 +370,9 @@
       //   return !intervDetailsActive && !newInterventionActive;
       // },
       _interventionChanged: function(intervention) {
+        this._displayAnyMigrationErrors(intervention);
+        this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
+
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
@@ -368,6 +385,30 @@
             this.fire('global-loading', {active: false});
           }.bind(this), 1000);
         }
+      },
+      _displayAnyMigrationErrors: function(intervention) {
+        if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
+          if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {//Avoid showing msg again after save
+            this.set('errorMsgBox_Title', 'eTools validation code has been upgraded and this record is now considered invalid due to:');
+            this.set('serverErrors', intervention.metadata.error_msg);
+          }
+        }
+      },
+      /* Show metadata error message on intervention detail 'page load'*/
+      _makeSureMigrationErrorIsNotShownAgainAfterSave: function(intervention) {
+        if (this.saved.interventionId !== intervention.id) {
+          this.saved.justSaved = false;
+        }
+        this.saved.interventionId = intervention.id;
+      },
+      _isAttachmentsTabReadonly: function(permissions, intervention) {
+        if (!this._hasEditPermissions(permissions, intervention)) {
+          return false;
+        }
+        if (['suspended', 'terminated', 'ended', 'closed'].indexOf(intervention.status) > -1) {
+          return false;
+        }
+        return true;
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -460,8 +501,9 @@
         if (event) {
           event.stopImmediatePropagation();
         }
-
+        this.saved.justSaved = true;
         this.set('serverErrors', []);
+        this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
         if (!this._hasEditPermissions(this.permissions, this.intervention)) {
           return;
         }
@@ -674,6 +716,9 @@
       },
       _arraysAreEqual: function(array1, array2) {
         var differencesArray = [];
+        if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
+          return false;
+        }
         if (array1.length > array2.length) {
           differencesArray = _.difference(array1, array2);
         } else {
