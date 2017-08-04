@@ -49,6 +49,10 @@
             type: String,
             value: ''
           },
+          editMode: {
+            type: Boolean,
+            value: true
+          },
           newStatus: {
             type: String,
             value: ''
@@ -140,7 +144,7 @@
           statusChangeWarningDialogContent: Object,
         },
         observers: [
-            '_handleStatusChange(status)'
+            '_handleStatusChange(status, editMode)'
         ],
 
         _getContentContainer: function() {
@@ -205,6 +209,7 @@
             elem.hidden = true;
           });
 
+          this.set('possibleActions', null);
           this.set('possibleActions', possibleActions);
         },
         _setAllStatusesToHidden: function() {
@@ -218,6 +223,9 @@
 
         _computeAvailableActions: function(status) {
             this._setAllActionsToHidden();
+            if (!this.editMode) {
+              return;
+            }
             let availableOptions = ['Save'];
 
             if (status !== 'draft' && status !== '') {

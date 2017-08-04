@@ -37,7 +37,8 @@
       return false;
     },
 
-    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere, returnMsg) {
+    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention,
+      interventionIsFromWhere, returnMsg) {
       if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }

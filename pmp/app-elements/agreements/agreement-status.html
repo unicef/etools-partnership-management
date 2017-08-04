@@ -49,6 +49,10 @@
             type: String,
             value: ''
           },
+          editMode: {
+            type: Boolean,
+            value: true
+          },
           status: {
             type: String,
             value: ''
@@ -128,7 +132,7 @@
           statusChangeWarningDialogContent: Object,
         },
         observers: [
-          '_computeStatusesAndActions(status, agreementId)'
+          '_computeStatusesAndActions(status, agreementId, editMode)'
         ],
 
         ready: function() {
@@ -169,6 +173,7 @@
             elem.hidden = true;
           });
 
+          this.set('possibleActions', null);
           this.set('possibleActions', possibleActions);
         },
         _setAllStatusesToHidden: function() {
@@ -182,6 +187,9 @@
 
         _computeAvailableActions: function(status) {
           this._setAllActionsToHidden();
+          if (!this.editMode) {
+            return;
+          }
           let availableOptions = ['Save'];
 
           switch (status) {
