@@ -41,14 +41,20 @@
       if (this.warningDialog) {
         this.removeDialog(this.warningDialog);
       }
-      if(this.contentContainer) {
+      if (this.contentContainer) {
         this.contentContainer.onscroll = this.oldScroll;
       }
     },
 
     _getContentContainer: function() {
-      if(window.isIE) {
+      if (window.isIE) {
         return window;
+      }
+      if (!document.querySelector('app-shell')) {
+        return null;
+      }
+      if (!document.querySelector('app-shell').$$('#appHeadLayout')) {
+        return null;
       }
       return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
     },
