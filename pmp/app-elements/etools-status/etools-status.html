@@ -23,35 +23,53 @@
       }
       .top-container {
         padding: 24px 24px 35px;
-        @apply(--etools-status-top-container);
+        @apply --etools-status-top-container;
+      }
+      .horizontal .top-container {
+        display: inline-flex;
+        width: calc(100% - 48px);
       }
       .bottom-container {
         border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding: 24px;
       }
-      .vertical-line {
-        @apply(--layout-flex);
+      .horizontal .bottom-container {
+        flex-direction: row-reverse;
+        display: flex;
+      }
+      .horizontal etools-action-button {
+        min-width: 160px;
+      }
+      .divier-line {
+        @apply --layout-flex;
         margin: 8px 11px;
         border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding-top: 40px;
       }
-      .vertical-line:first-child {
+      .horizontal .divier-line {
+        border-left: none;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+      }
+
+      .divier-line:first-child {
         display: none;
       }
 
       .status-container {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         min-height: 24px;
-        @apply(--etools-status-container);
+        @apply --etools-status-container;
       }
       .status-icon, .status {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        @apply(--layout-warp);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-warp;
       }
       .icon-wrapper {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
         background-color: var(--etools-status-icon-inactive-color, #9D9D9D);
         width: 24px;
         height: 24px;
@@ -70,7 +88,7 @@
       }
       .icon-wrapper iron-icon,
       .icon-wrapper span {
-        @apply(--layout-self-center);
+        @apply --layout-self-center;
       }
       .icon-wrapper span {
         height: 14px;
@@ -119,7 +137,7 @@
       .completed .status, .custom .status {
         font-weight: bold;
         color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
-        @apply(--etools-status-label-style);
+        @apply --etools-status-label-style;
       }
       .completed .icon-wrapper span {
         display: none;
@@ -131,11 +149,10 @@
 
     </style>
 
-    <etools-content-panel panel-title="Status">
+    <etools-content-panel panel-title="Status" class="horizontal">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="vertical-line"></div>
-
+            <div class="divier-line"></div>
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
                 <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
