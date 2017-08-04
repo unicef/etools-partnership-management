@@ -4,7 +4,6 @@
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -259,9 +258,13 @@
         _assessmentPropertyChanged: function(dataPath) {
           if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
               dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
-            var path = dataPath.path.split('.');
-            var index = path[path.length - 2].replace('#', '');
-            this._validateAssessment(index);
+            var dataPathPieces = dataPath.path.split('.');
+            var path = dataPathPieces[0] + '.' + dataPathPieces[1];
+            if (path.indexOf('#') > -1) {
+              var item = this.get(path);
+              var index = this.dataItems.indexOf(item);
+              this._validateAssessment(index);
+            }
           }
         },
 
@@ -353,11 +356,16 @@
 
           fields.forEach(function(fieldSelector) {
             var fieldEl = this.$$(fieldSelector);
+            var reportFileLength = 0;
+
+            if (typeof this.dataItems[index].report_file === 'string') {
+               reportFileLength = this.dataItems[index].report_file.length;
+            }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
               var validField = this._isValid(fieldName, this.dataItems[index].type,
                   this.dataItems[index].completed_date, this.dataItems[index].report,
-                  this.dataItems[index].report_file.length, fieldEl);
+                  reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
                 valid = false;

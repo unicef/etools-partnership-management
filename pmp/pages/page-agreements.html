@@ -124,10 +124,9 @@
               id="agreementDetails"
               agreement="[[agreement]]"
               edit-mode="[[_hasEditPermissions(permissions)]]"
-              allow-edit-regardless-status="[[_allowPmToEditRegardlessStatus(permissions)]]"
-              is-new-agreement="[[_isNewAgreement(agreement)]]"
+              is-new-agreement="[[newAgreementActive]]"
               on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement">
+              on-save-agreement="_saveAgreement"              >
           </agreement-details>
         </div>
       </iron-pages>
@@ -160,18 +159,44 @@
             id: undefined,
             authorized_officers: [],
             amendments: [],
-            agreement_type: '',
+            agreement_type: null,
             agreement_number: undefined,
             attached_agreement: undefined,
             start: undefined,
             end: undefined,
-            signed_by_unicef_date: undefined,
-            signed_by_partner_date: undefined,
+            signed_by_unicef_date: null,
+            signed_by_partner_date: null,
             status: undefined,
-            partner: undefined,
+            partner: null,
             country_programme: undefined,
-            signed_by: undefined,
-            partner_manager: undefined
+            signed_by: null,
+            partner_manager: null,
+            permissions: {
+              edit: {
+                agreement_type: true,
+                amendments: false,
+                attached_agreement: true,
+                authorized_officers: true,
+                country_programme: true,
+                end: true,
+                partner: true,
+                partner_manager: true,
+                signed_by: true,
+                signed_by_id: true,
+                signed_by_partner_date: true,
+                signed_by_unicef_date: true,
+                start: true,
+              },
+              required: {
+                agreement_type: true,
+                partner: true,
+                country_programme: true,
+                partner_manager: false,
+                signed_by: false,
+                signed_by_partner_date: false,
+                signed_by_unicef_date: false,
+              }
+            }
           }
         },
         csvDownloadUrl: {
@@ -197,11 +222,9 @@
         'agreement-save-error': '_agreementSaveErrors',
         'reload-list': '_reloadAgreementsList'
       },
-
       ready: function() {
-        // TODO: remove this
-        if (this.agreementPage === 'details' && this._isNewAgreement(this.agreement)) {
-          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        if (this.newAgreementActive) { //*Useful when refreshing the page
+            this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
       // TODO: do not remove this, we might needed back
@@ -228,15 +251,6 @@
       _pageChanged: function(listActive, newAgreementActive, detailsActive) {
         var activePage = this._getActivePage(listActive, newAgreementActive, detailsActive);
         this.set('agreementPage', activePage);
-      },
-
-      // check if the agreement is a new one
-      _isNewAgreement: function(agreement) {
-        if (agreement !== null && typeof agreement === 'object' && agreement.id > 0) {
-          // existing agreement, already saved
-          return false;
-        }
-        return true;
       },
 
       // compute agreement details page title including partner name and agreement number
@@ -269,16 +283,13 @@
         return false;
       },
 
-      /**
-       * Temporary permission for PM
-       */
-      _allowPmToEditRegardlessStatus: function(permissions) {
-        return permissions && permissions.partnershipManager === true;
-      },
-
       _saveAgreement: function(event) {
         event.stopImmediatePropagation();
-        this.$.agreementData.saveAgreement(event.detail, this._newAgreementSaved);
+        var agreementData = event.detail;
+        if (!agreementData.id) {
+          agreementData.status = 'draft';
+        }
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
       },
 
       _updateAgreementStatus: function(event) {

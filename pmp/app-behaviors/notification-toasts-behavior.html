@@ -12,7 +12,7 @@
       _toastQueue: {
         type: Array,
         value: function() { return []; }
-      }
+      }     
     },
 
     listeners: {
@@ -23,16 +23,15 @@
       e.stopPropagation();
       if (!this._toast) {
         this._toast = document.createElement('paper-toast');
-        this._toast.setAttribute('class', 'global-warn-msg-toast');
+        this._toast.classList.add('toast-general-style');
         var messageWrapper = this._toast.$.label;
         if (messageWrapper) {
-          messageWrapper.style.whiteSpace = 'pre';
-//          messageWrapper.style.display = 'inline-block';
+          messageWrapper.style.whiteSpace = 'pre-wrap';
         }
         this.listen(this._toast, 'iron-overlay-closed', 'dequeueToast');
         var closeToastBtn = document.createElement('paper-button');
         closeToastBtn.innerHTML = 'Ok';
-        closeToastBtn.setAttribute('class', 'warning-toast-dismiss-btn');
+        closeToastBtn.classList.add('toast-dismiss-btn-general-style');
         closeToastBtn.addEventListener('tap', this._toggleToast.bind(this, this._toast));
         Polymer.dom(this._toast).appendChild(closeToastBtn);
         // this.$.layout is app-drawer-layout element from app-shell.html
@@ -42,7 +41,6 @@
         } else {
           console.warn('app-drawer-layout element from app-shell must have id="layout"');
         }
-
       }
 
       if (!this._toastQueue.length) {
@@ -58,7 +56,12 @@
         } // else already in the queue
       }
     },
-
+    _isMultiLine: function(message) {
+      if (!message) {
+        return false;
+      }
+      return message.toString().length > 80;
+    },
     dequeueToast: function() {
       this.shift('_toastQueue');
       if (this._toastQueue.length) {
@@ -69,6 +72,22 @@
 
     _prepareToastAndGetShowProperties: function(detail) {
       var closeToastBtn = Polymer.dom(this._toast).querySelector('paper-button');
+
+      if (this._isMultiLine(detail.text)) {
+        this._toast.classList.remove('toast');
+        this._toast.classList.add('toast-multi-line');
+
+        closeToastBtn.classList.remove('toast-dismiss-btn');
+        closeToastBtn.classList.add('toast-dismiss-btn-multi-line');
+      } else {
+        this._toast.classList.remove('toast-multi-line');
+        this._toast.classList.add('toast');
+
+        closeToastBtn.classList.remove('toast-dismiss-btn-multi-line');
+        closeToastBtn.classList.add('toast-dismiss-btn');
+      }
+      closeToastBtn.updateStyles();
+
       // clone detail obj
       var toastProperties = JSON.parse(JSON.stringify(detail));
 

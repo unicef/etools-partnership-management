@@ -1,259 +1,25 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/buttons-styles.html">
 
 <dom-module id="intervention-status">
   <template strip-whitespace>
-    <style include="buttons-styles">
-      [hidden] {
-        display: none !important;
-      }
-
+    <style>
       :host {
         width: 100%;
       }
-
-      etools-content-panel {
-        width: 100%;
-        --ecp-content: {
-          padding: 25px;
-        };
-      }
-
-      .status-container {
-        @apply(--layout-horizontal);
-      }
-
-      .status-container,
-      .divider {
-        height: 40px;
-      }
-
-      .divider {
-        @apply(--layout-vertical);
-        width: 100%;
-      }
-
-      .divider .status-divider {
-        height: 100%;
-        width: 11px;
-        border-right: 1px solid var(--darker-divider-color);
-      }
-
-      .status-icon, .status {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        @apply(--layout-warp);
-      }
-
-      .status {
-        margin-left: 10px;
-      }
-
-      .icon-wrapper {
-        background-color: var(--medium-icon-color);
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        width: 24px;
-        height: 24px;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        border-radius: 50%;
-        color: var(--light-primary-text-color, #FFFFFF);
-      }
-
-      .icon-wrapper iron-icon {
-        --iron-icon-height: 16px;
-        --iron-icon-width: 16px;
-      }
-
-      .icon-wrapper iron-icon,
-      .icon-wrapper span {
-        @apply(--layout-self-center);
-      }
-
-      .icon-wrapper span {
-        height: 14px;
-        line-height: 14px;
-      }
-
-      .status {
-        margin-top: 15px;
-        margin-bottom: 15px;
-        text-transform: capitalize;
-        color: var(--medium-primary-text-color);
-      }
-
-      .status-container.active .icon-wrapper {
-        background-color: var(--status-active-color);
-      }
-
-      .status-container.active.suspended .icon-wrapper {
-        background-color: var(--status-suspended-color);
-      }
-
-      .status-container.active.suspended .icon-wrapper {
-        width: 30px;
-        height: 30px;
-      }
-
-      .status-container.active.suspended .icon-wrapper,
-      .status-container.active.terminated .icon-wrapper {
-        background-color: transparent;
-      }
-
-      .status-container.active.suspended .icon-wrapper iron-icon,
-      .status-container.active.terminated .icon-wrapper iron-icon,
-      .status-container.completed .icon-wrapper iron-icon {
-        --iron-icon-height: 100%;
-        --iron-icon-width: 100%;
-      }
-
-      .status-container.active.suspended .icon-wrapper iron-icon {
-        background-color: var(--primary-background-color, #FFFFFF);
-        color: var(--status-suspended-color);
-        margin-left: -6px;
-        width: 100%;
-        height: 100%;
-      }
-
-      .status-container.active.terminated .icon-wrapper iron-icon {
-        color: var(--status-terminated-color);
-      }
-
-      .status-container.active .status,
-      .status-container.completed .status {
-        color: inherit;
-        font-weight: bold;
-      }
-
-      .buttons-section {
-        margin: 25px -25px -25px;
-      }
-      .status-container.completed .icon-wrapper {
-        background: var(--status-completed-color);
-      }
-      .status-container.completed .icon-wrapper .status-nr,
-      .status-container:not(.completed) iron-icon[icon="check"] {
-        display: none;
-      }
-
-      iron-icon[icon="check"] {
-        color: var(--light-primary-text-color, #FFFFFF);
-      }
-      iron-icon[icon="report-problem"] {
-        --iron-icon-height: 24px;
-        --iron-icon-width: 24px;
-      }
-
-      #secondary-btns-wrapper .primary-btn {
-        margin-top: 0;
-        margin-bottom: 15px;
-      }
-
     </style>
-
-    <etools-content-panel panel-title="Status">
-
-      <div class$="status-container [[_getFirstStatusWrapperClass(status)]]">
-        <div class="status-icon">
-            <span class="icon-wrapper">
-              <span class="status-nr">1</span>
-              <iron-icon icon="check"></iron-icon>
-            </span>
-        </div>
-        <div class="status">
-          <span hidden$="[[!_showDraft(status)]]">Draft</span>
-          <span hidden$="[[!_statusIs(status, 'cancelled')]]">Cancelled</span>
-        </div>
-      </div>
-      <div class="divider">
-        <div class="status-divider"></div>
-      </div>
-      <div class$="status-container [[_getSecondStatusWrapperClass(status)]]">
-        <div class="status-icon">
-            <span class="icon-wrapper">
-              <span class="status-nr" hidden$="[[!_showActive(status)]]">2</span>
-              <iron-icon icon="check"></iron-icon>
-              <iron-icon icon="av:pause-circle-filled" hidden$="[[!_statusIs(status, 'suspended')]]"></iron-icon>
-              <iron-icon icon="report-problem" hidden$="[[!_statusIs(status, 'terminated')]]"></iron-icon>
-            </span>
-        </div>
-        <div class="status">
-          <span hidden$="[[!_showActive(status)]]">Active</span>
-          <span hidden$="[[!_statusIs(status, 'suspended')]]">Suspended</span>
-          <span hidden$="[[!_statusIs(status, 'terminated')]]">Terminated</span>
-        </div>
-      </div>
-      <div class="divider">
-        <div class="status-divider"></div>
-      </div>
-      <div class$="status-container [[_getThirdStatusWrapperClass(status)]]">
-        <div class="status-icon">
-            <span class="icon-wrapper">
-              <span>3</span>
-            </span>
-        </div>
-        <div class="status">
-          <span>Implemented</span>
-        </div>
-      </div>
-
-      <template is="dom-if" if="[[showSaveBtn]]">
-        <div class="buttons-section vertical">
-          <div id="secondary-btns-wrapper" hidden$="[[_hideSecondaryButtons]]">
-            <paper-button class="primary-btn success-btn w100"
-                          on-tap="_updateStatus"
-                          data-status="draft"
-                          hidden$="[[!_statusIs(status, 'cancelled')]]">
-              Change to draft
-            </paper-button>
-
-            <paper-button class="primary-btn danger-btn w100"
-                          on-tap="_updateStatus"
-                          data-status="cancelled"
-                          hidden$="[[_hideCancelBtn(status, newAgreement)]]">
-              Cancel
-            </paper-button>
-
-            <paper-button class="primary-btn success-btn w100"
-                          on-tap="_updateStatus"
-                          data-status="active"
-                          hidden$="[[_hideActivateBtn(status, interventionAgreementStatus)]]">
-              Activate
-            </paper-button>
-
-            <paper-button class="primary-btn warning-btn w100"
-                          on-tap="_updateStatus"
-                          data-status="suspended"
-                          hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-              Suspend
-            </paper-button>
-
-            <paper-button class="primary-btn danger-btn w100"
-                          on-tap="_updateStatus"
-                          data-status="terminated"
-                          hidden$="[[_hideSuspendAndTerminateBtns(status)]]">
-              Terminate
-            </paper-button>
-          </div>
-
-          <paper-button class="primary-btn w100"
-                        on-tap="_triggerInterventionSave">
-            Save
-          </paper-button>
-        </div>
-      </template>
-
-    </etools-content-panel>
-
+    <etools-status statuses="[[possibleStatuses]]"
+                   actions="[[possibleActions]]"
+                   on-intervention-draft-event="_setStatusDraft"
+                   on-intervention-active-event="_setStatusActive"
+                   on-intervention-suspend-event="_setStatusSuspended"
+                   on-intervention-terminate-event="_setStatusTerminated"
+                   on-intervention-unsuspend-event="_unsuspendIntervention">
+        </etools-status>
   </template>
 
   <script>
@@ -266,44 +32,125 @@
       Polymer({
         is: 'intervention-status',
 
-        behaviors: [etoolsBehaviors.DynamicDialogBehavior],
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsLogsBehavior,
+        ],
 
         properties: {
           interventionId: {
             type: Number
           },
-          interventionAgreementStatus: {
-            type: String,
-            observer: '_agreementStatusChanged'
-          },
-          newAgreement: {
-            type: Boolean,
-            value: false
-          },
           status: {
             type: String,
-            value: 'draft'
+            value: ''
           },
-          showSaveBtn: {
-            type: Boolean,
-            value: false
-          },
-          warningDialog: Object,
-          newStatus: String,
-          _hideSecondaryButtons: {
+          editMode: {
             type: Boolean,
             value: true
-          }
+          },
+          newStatus: {
+            type: String,
+            value: ''
+          },
+          possibleStatuses: {
+          type: Array,
+          value: function() {
+              return [
+                {
+                  label: 'Draft',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Signed',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Active',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Suspended',
+                  icon: 'av:pause-circle-filled',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--warning-color'),
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Terminated',
+                  icon: 'report-problem',
+                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Ended',
+                  hidden: false,
+                  completed: false
+                },
+                {
+                  label: 'Closed',
+                  hidden: false,
+                  completed: false
+                },
+              ];
+            }
+          },
+          possibleActions: {
+            type: Array,
+            value: [
+              {
+                label: 'Save',
+                hidden: true,
+                primary: true,
+                event: 'save-intervention'
+                // save-intervention event is handeled by the parnent
+              },
+              {
+                label: 'Change to draft',
+                hidden: true,
+                event: 'intervention-draft-event'
+              },
+              {
+                label: 'Activate',
+                hidden: true,
+                event: 'intervention-active-event'
+              },
+              {
+                label: 'Suspend',
+                hidden: true,
+                event: 'intervention-suspend-event'
+              },
+              {
+                label: 'Unsuspend',
+                hidden: true,
+                event: 'intervention-unsuspend-event'
+              },
+              {
+                label: 'Terminate',
+                hidden: true,
+                event: 'intervention-terminate-event'
+              },
+            ]
+          },
+          warningDialog: Object,
+          statusChangeWarningDialogContent: Object,
         },
+        observers: [
+            '_handleStatusChange(status, editMode)'
+        ],
 
         ready: function() {
-          var statusChangeWarningDialogContent = document.createElement('p');
-          statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('PD/SSFA ToR status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), statusChangeWarningDialogContent);
+          this.statusChangeWarningDialogContent = document.createElement('p');
+          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+          this.warningDialog = this.createDialog('PD/SSFA status change', 'md', 'Yes', 'No',
+              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
-
         },
 
         detached: function() {
@@ -312,142 +159,252 @@
           }
         },
 
-        _statusIs: function(status, expectedStatus) {
-          return status === expectedStatus;
-        },
-
-        _getFirstStatusWrapperClass: function(status) {
-          if (this._statusIs(status, 'draft') || this._statusIs(status, 'cancelled')) {
-            return 'active';
-          }
-          return 'completed';
-        },
-
-        _getSecondStatusWrapperClass: function(status) {
-          if (this._statusIs(status, 'active')
-              || this._statusIs(status, 'suspended')
-              || this._statusIs(status, 'terminated')) {
-            return 'active' + (!this._statusIs(status, 'active') ? (' ' + status) : '');
-          } else {
-            if (!this._statusIs(status, 'draft') && !this._statusIs(status, 'cancelled')) {
-              return 'completed';
-            }
-          }
-          return '';
-        },
-
-        _getThirdStatusWrapperClass: function(status) {
-          if (this._statusIs(status, 'implemented')) {
-            return 'active';
-          }
-          return '';
-        },
-
-        _showDraft: function(status) {
-          if (this._statusIs('draft') || !this._statusIs(status, 'cancelled')) {
-            return true;
-          }
-          return false;
-        },
-
-        _showActive: function(status) {
-          if (this._statusIs(status, 'active')) {
-            return true;
-          }
-          if (!this._statusIs(status, 'suspended') && !this._statusIs(status, 'terminated')) {
-            return true;
-          }
-          return false;
-        },
-
-        _hideCancelBtn: function(status, newAgreement) {
-          if (this._statusIs(status, 'draft') && newAgreement) {
-            return false;
-          }
-          return true;
-        },
-
-        _hideActivateBtn: function(status, interventionAgreementStatus) {
-          if (interventionAgreementStatus === 'suspended') {
-            return true;
-          }
-          if (this._statusIs(status, 'suspended')) {
-            return false;
-          }
-          return true;
-        },
-
-        _hideSuspendAndTerminateBtns: function(status) {
-          if (this._statusIs(status, 'active')) {
-            return false;
-          }
-          return true;
-        },
-
         _showStatusChangeConfirmationDialog: function() {
           if (this.warningDialog) {
-            var warningMessage = 'Are you sure you want to change agreement status from: <strong>\''
-                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>';
-            var msgEl = Polymer.dom(this.warningDialog.root).querySelector('#statusChangeWarningContent');
-            if (msgEl) {
-              msgEl.innerHTML = warningMessage;
+            var warningMessage = 'Are you sure you want to change status from: <strong>\''
+                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
+
+            if (this.statusChangeWarningDialogContent) {
+              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
               this.warningDialog.opened = true;
             } else {
-              console.warn('[pmp agreement status change] #statusChangeWarningContent element not found!');
+              this.logWarn('#statusChangeWarningContent element not found!', 'pmp intervetnion status change');
             }
           } else {
-            console.warn('[pmp agreement status change] warningDialog not created!');
+            this.logWarn('warningDialog not created!', 'pmp intervetnion status change');
           }
         },
 
+        _setAllActionsToHidden: function() {
+          var possibleActions = this.possibleActions;
+          possibleActions.forEach(function(elem) {
+            elem.hidden = true;
+          });
+
+          this.set('possibleActions', null);
+          this.set('possibleActions', possibleActions);
+        },
+        _setAllStatusesToHidden: function() {
+          var possibleStatuses = this.possibleStatuses;
+          possibleStatuses.forEach(function(elem) {
+            elem.hidden = true;
+          });
+
+          this.set('possibleStatuses', possibleStatuses);
+        },
+
+        _computeAvailableActions: function(status) {
+            this._setAllActionsToHidden();
+            if (!this.editMode) {
+              return;
+            }
+            let availableOptions = ['Save'];
+
+            if (status !== 'draft' && status !== '') {
+              if (['signed', 'active'].indexOf(status) > -1) {
+                availableOptions.push('Suspend');
+                availableOptions.push('Terminate');
+              } else if (status === 'suspended') {
+                // removes Save option
+                availableOptions.pop();
+                availableOptions.push('Unsuspend');
+              } else {
+                // removes Save option
+                availableOptions.pop();
+              }
+            }
+
+            for (let key in this.possibleActions) {
+              let actionName = this.possibleActions[key].label;
+              let config = this.possibleActions[key];
+
+              if (availableOptions.indexOf(actionName) > -1) {
+                config.hidden = false;
+              }
+
+              this.set(['possibleActions', key], null);
+              this.set(['possibleActions', key], config);
+            }
+        },
+
+        _computeAvailableStatuses: function(status) {
+          this._setAllStatusesToHidden();
+          let availableStatuses = [];
+          let completedFlag = false;
+          let activeStatus;
+
+          switch (status) {
+            case 'draft':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Draft';
+              break;
+
+            case 'signed':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Signed';
+              break;
+
+            case 'active':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Active';
+              break;
+
+            case 'suspended':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Suspended',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Suspended';
+              break;
+
+            case 'terminated':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Terminated',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Terminated';
+              break;
+
+            case 'closed':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Closed';
+              break;
+
+            case 'implemented':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+              ];
+              activeStatus = 'Ended';
+              break;
+            default:
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = '';
+              break;
+          }
+
+          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+            let workingStatus = this.possibleStatuses[key];
+            if (workingStatus.label === activeStatus) {
+              completedFlag = true;
+            }
+            if (availableStatuses.indexOf(workingStatus.label) > -1) {
+              workingStatus.hidden = false;
+            }
+            workingStatus.completed = completedFlag;
+            this.set(['possibleStatuses', key], null);
+            this.set(['possibleStatuses', key], workingStatus);
+          }
+        },
+
+        _handleStatusChange: function(status) {
+          this.debounce('reset-status-actions', function() {
+            this._computeAvailableStatuses(status);
+            this._computeAvailableActions(status);
+          }.bind(this), 50);
+        },
         _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this.fire('update-intervention-status', {
               interventionId: this.interventionId,
               status: this.newStatus + ''
             });
+            this.fire('reload-list');
           }
           this.set('newStatus', '');
         },
 
-        _updateStatus: function(event) {
-          if (this.newAgreement) {
+        _updateStatus: function(newStatus) {
+          if (!this._statusChangeIsValid(newStatus)) {
             return;
           }
-          var newStatus = Polymer.dom(event).localTarget.getAttribute('data-status');
-          if (newStatus === 'draft' || newStatus === 'canceled') {
-            // if agreement was not saved (is new) or the status is already changed
-            // from draft/canceled, stop status change
-            if (this.newAgreement || (this.status !== 'draft' && this.status !== 'cancelled')) {
-              return false;
-            }
-          }
-          if (newStatus === 'active' || newStatus === 'suspended' || newStatus === 'terminated') {
-            if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
-              // prevent changing status from suspended to active is the agreement status is suspended
-              return false;
-            }
-            if (this.newAgreement || (this.status !== 'active' && this.status !== 'suspended'
-                && this.status !== 'terminated')) {
-              return false;
-            }
-          }
+
           this.set('newStatus', newStatus);
           this._showStatusChangeConfirmationDialog();
         },
 
-        /**
-         * Fire custom event to notify parent element to execute intervention save
-         */
-        _triggerInterventionSave: function() {
-          this.fire('save-intervention', {});
+        _statusChangeIsValid: function(newStatus) {
+           if (this.newIntervention) {
+            return false;
+          }
+
+          if (newStatus === 'draft' && this.status !== 'draft') {
+            // if agreement was not saved (is new) or the status is already changed
+            // from draft, stop status change
+            return false;
+          }
+
+          if (newStatus === 'active' && this.interventionAgreementStatus === 'suspended') {
+            // prevent changing status from suspended to active is the agreement status is suspended
+            return false;
+          }
+
+          if (['suspended', 'terminated'].indexOf(newStatus) > -1) {
+            if (['active', 'signed'].indexOf(this.status) < 0) {
+              //prevent suspending or terminating anything other than signed or active intervention
+              return false;
+            }
+          }
+          return true;
         },
 
-        _agreementStatusChanged: function(status, oldStatus) {
-          if ((typeof oldStatus === 'undefined' || oldStatus === null) && status) {
-            this.set('_hideSecondaryButtons', false);
-          }
-        }
+        _setStatusTerminated: function() {
+          this._updateStatus('terminated');
+        },
+
+        _setStatusDraft: function() {
+          this._updateStatus('draft');
+        },
+
+        _setStatusActive: function() {
+          this._updateStatus('active');
+        },
+
+        _setStatusSuspended: function() {
+          this._updateStatus('suspended');
+        },
+
+        _unsuspendIntervention: function() {
+          this._updateStatus('signed');
+        },
 
       });
     })();
