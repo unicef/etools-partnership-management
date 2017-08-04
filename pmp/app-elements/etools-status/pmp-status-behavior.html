@@ -60,7 +60,10 @@
     },
 
     _handleStickyScroll: function() {
-      this.contentContainer = this._getContentContainer();
+      this.set('contentContainer', this._getContentContainer());
+      if (!this.contentContainer) {
+        return;
+      }
       this.oldScroll = this.contentContainer.onscroll;
       this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
     },
