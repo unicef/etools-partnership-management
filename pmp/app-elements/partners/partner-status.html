@@ -160,6 +160,10 @@
         _computeAvailableActions: function(hidden, editMode) {
           this._setAllActionsToHidden();
           let availableOptions = ['Save', 'Delete'];
+
+          if (!this.partner) {
+            return;
+          }
           if (!editMode) {
             return;
           }
@@ -179,6 +183,9 @@
         _computeAvailableStatuses: function() {
           var activeStatus;
           this._setAllStatusesToHidden();
+          if (!this.partner) {
+            return;
+          }
           switch (true) {
             case this._showNotSyncedStatus():
               activeStatus = 'Not Synced';
