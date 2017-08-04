@@ -188,7 +188,8 @@
                                       active="[[_isAttachementsTabActive(activeTab)]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
-                                      attachments="{{intervention.attachments}}">
+                                      attachments="{{intervention.attachments}}"
+                                      edit-mode="[[_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
@@ -405,6 +406,15 @@
           this.saved.justSaved = false;
         }
         this.saved.interventionId = intervention.id;
+      },
+      _isAttachmentsTabReadonly: function(permissions, intervention) {
+        if (!this._hasEditPermissions(permissions, intervention)) {
+          return false;
+        }
+        if (['suspended', 'terminated', 'ended', 'closed'].indexOf(intervention.status) > -1) {
+          return false;
+        }
+        return true;
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
