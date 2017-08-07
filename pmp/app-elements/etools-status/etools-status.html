@@ -23,34 +23,22 @@
       }
       .top-container {
         padding: 24px 24px 35px;
-        @apply --etools-status-top-container;
-      }
-      .horizontal .top-container {
-        display: inline-flex;
-        width: calc(100% - 48px);
+        @apply --etools-status-top-container-styles;
       }
       .bottom-container {
         border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding: 24px;
+        @apply --etools-status-bottom-container;
       }
-      .horizontal .bottom-container {
-        flex-direction: row-reverse;
-        display: flex;
-      }
-      .horizontal etools-action-button {
-        min-width: 160px;
+      etools-action-button {
+        @apply --etools-status-button-styles;
       }
       .divier-line {
         @apply --layout-flex;
         margin: 8px 11px;
         border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding-top: 40px;
-      }
-      .horizontal .divier-line {
-        border-left: none;
-        margin-top: 32px;
-        padding-top: 24px;
-        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        @apply --etools-status-divider-styles;
       }
 
       .divier-line:first-child {
@@ -149,7 +137,7 @@
 
     </style>
 
-    <etools-content-panel panel-title="Status" class="horizontal">
+    <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
             <div class="divier-line"></div>
