@@ -402,7 +402,6 @@
         ],
 
         ready: function() {
-          console.log('intervention-details READY');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
         _filterCountryProgrammes: function(countryProgrammes) {
@@ -471,7 +470,6 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log('intervention changed');
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
               this.set('selectedPartnerId', null);
