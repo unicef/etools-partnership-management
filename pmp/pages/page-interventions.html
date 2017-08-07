@@ -379,6 +379,7 @@
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          console.log('here1');
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
               this._newIntervention(this.newInterventionActive);
@@ -801,6 +802,7 @@
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
       _hasEditPermissions: function(permissions, intervention) {
+        console.log('_hasEditPermissions', permissions, intervention);
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&
