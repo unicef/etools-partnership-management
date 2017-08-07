@@ -344,6 +344,7 @@
       },
 
       ready: function() {
+        console.log('page-intervention- READY');
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
@@ -802,7 +803,6 @@
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
       _hasEditPermissions: function(permissions, intervention) {
-        console.log('_hasEditPermissions', permissions, intervention);
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&
