@@ -21,10 +21,6 @@
         type: Number,
         value: 76
       },
-      oldScroll: {
-        type: Function,
-        value: null
-      },
       contentContainer: Object,
       sectionName: String, // PD/SSFA, Partners, Agreements
       possibleStatuses: Array,
@@ -63,8 +59,7 @@
       if (!this.contentContainer) {
         return;
       }
-      // keep the old scrolling handler around just in case
-      this.oldScroll = this.contentContainer.onscroll;
+
       this._setScrollHandler();
 
       window.onresize = function() {
@@ -86,7 +81,7 @@
     },
     _resetScrollHandler: function() {
       if (this.contentContainer) {
-          this.contentContainer.onscroll = this.oldScroll;
+          this.contentContainer.onscroll = null;
         }
     },
     _scrollChangedHandler: function() {
