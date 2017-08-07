@@ -344,6 +344,7 @@
       },
 
       ready: function() {
+        console.log('page-intervention- READY');
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
@@ -379,6 +380,7 @@
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          console.log('here1');
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
               this._newIntervention(this.newInterventionActive);
