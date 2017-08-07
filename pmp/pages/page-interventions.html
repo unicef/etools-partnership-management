@@ -235,8 +235,7 @@
         },
         intervention: {
           type: Object,
-          notify: true,
-          observer: '_interventionChanged'
+          notify: true
         },
         originalIntervention: {
           type: Object
@@ -335,7 +334,8 @@
         '_updateUrlTab(routeData.intTab)',
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
-        '_observeRouteDataId(routeData.intId)'
+        '_observeRouteDataId(routeData.intId)',
+        '_interventionChanged(intervention, permissions)'
       ],
 
       listeners: {
@@ -374,7 +374,7 @@
       // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
       //   return !intervDetailsActive && !newInterventionActive;
       // },
-      _interventionChanged: function(intervention) {
+      _interventionChanged: function(intervention, permissions) {
         this._displayAnyMigrationErrors(intervention);
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
@@ -385,7 +385,7 @@
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
               this._newIntervention(this.newInterventionActive);
           this.checkAndUpdateInterventionPermissions(intervention,
-              this._hasEditPermissions(this.permissions), isNewIntervention);
+              this._hasEditPermissions(permissions), isNewIntervention);
           this.async(function() {
             // ensure loading msg close
             this.fire('global-loading', {active: false});
