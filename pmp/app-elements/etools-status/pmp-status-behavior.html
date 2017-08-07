@@ -41,9 +41,8 @@
       if (this.warningDialog) {
         this.removeDialog(this.warningDialog);
       }
-      if (this.contentContainer) {
-        this.contentContainer.onscroll = this.oldScroll;
-      }
+      this._resetScrollHandler();
+      window.onresize = null;
     },
 
     _getContentContainer: function() {
@@ -60,19 +59,36 @@
     },
 
     _handleStickyScroll: function() {
-      if(window.innerWidth <= 1366) {
-        // at this resolution etools-status is horizontal, no need to make it sticky
-        // the styling to make it horizontal is in page-layout-styles
-        return;
-      }
       this.set('contentContainer', this._getContentContainer());
       if (!this.contentContainer) {
         return;
       }
+      // keep the old scrolling handler around just in case
       this.oldScroll = this.contentContainer.onscroll;
+      this._setScrollHandler();
+
+      window.onresize = function() {
+        Polymer.updateStyles();
+        this._resetScrollHandler();
+        this._setScrollHandler();
+      }.bind(this);
+    },
+    _setScrollHandler: function() {
+      if(window.innerWidth <= 1366) {
+        // at this resolution etools-status is horizontal, no need to make it sticky
+        // the styling to make it horizontal is in page-layout-styles
+        this.customStyle['--status-top'] = 'auto';
+        this.updateStyles();
+        return;
+      }
+
       this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
     },
-
+    _resetScrollHandler: function() {
+      if (this.contentContainer) {
+          this.contentContainer.onscroll = this.oldScroll;
+        }
+    },
     _scrollChangedHandler: function() {
       let topOffset = this.getBoundingClientRect().top;
       if (topOffset < this.stickyScrollOffsetStart) {
