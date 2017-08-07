@@ -471,6 +471,7 @@
         },
 
         _interventionChanged: function(intervention) {
+          console.log('intervention changed');
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
               this.set('selectedPartnerId', null);
