@@ -235,8 +235,7 @@
         },
         intervention: {
           type: Object,
-          notify: true,
-          observer: '_interventionChanged'
+          notify: true
         },
         originalIntervention: {
           type: Object
@@ -335,7 +334,8 @@
         '_updateUrlTab(routeData.intTab)',
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
-        '_observeRouteDataId(routeData.intId)'
+        '_observeRouteDataId(routeData.intId)',
+        '_interventionChanged(intervention, permissions)'
       ],
 
       listeners: {
@@ -344,6 +344,7 @@
       },
 
       ready: function() {
+        console.log('page-intervention- READY');
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
@@ -373,18 +374,20 @@
       // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
       //   return !intervDetailsActive && !newInterventionActive;
       // },
-      _interventionChanged: function(intervention) {
-        console.log(intervention);
+
+      _interventionChanged: function(intervention, permissions) {
+
         this._displayAnyMigrationErrors(intervention);
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          console.log('here1');
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
               this._newIntervention(this.newInterventionActive);
           this.checkAndUpdateInterventionPermissions(intervention,
-              this._hasEditPermissions(this.permissions), isNewIntervention);
+              this._hasEditPermissions(permissions), isNewIntervention);
           this.async(function() {
             // ensure loading msg close
             this.fire('global-loading', {active: false});
