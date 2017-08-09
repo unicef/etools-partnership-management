@@ -120,7 +120,7 @@
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
-          this.deleteWarningDialogContent = document.createElement('p');
+          this.deleteWarningDialogContent = document.createElement('div');
           this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
           this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
             this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
