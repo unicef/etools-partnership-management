@@ -148,12 +148,10 @@
     },
 
     _createDeleteConfirmationDialog: function() {
-      var deleteConfirmationContent = document.createElement('p');
+      var deleteConfirmationContent = document.createElement('div');
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
           'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
-      this.deleteDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-      this.deleteDialog.updateStyles();
     },
 
     /**

@@ -113,12 +113,10 @@
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
-          this.deleteWarningDialogContent = document.createElement('p');
+          this.deleteWarningDialogContent = document.createElement('div');
           this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
           this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
             this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
-          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.warningDialog.updateStyles();
         },
         detached: function() {
           if (this.warningDialog) {

@@ -347,15 +347,11 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
-        var dialog = document.createElement('p');
+        var dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
         dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
         this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
             this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
-        // jscs:disable maximumLineLength
-        this.finalizeAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-        // jscs:enable maximumLineLength
-        this.finalizeAmendmentConfirmationDialog.updateStyles();
       },
       detached: function() {
         if (this.finalizeAmendmentConfirmationDialog) {

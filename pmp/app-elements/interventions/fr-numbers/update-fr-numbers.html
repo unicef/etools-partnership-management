@@ -46,7 +46,8 @@
                    dialog-title="Add/Update FR Numbers"
                    ok-btn-text="Add/Update"
                    on-close="_checkFrNumbers"
-                   disable-confirm-btn="[[disableConfirmBtn]]">
+                   disable-confirm-btn="[[disableConfirmBtn]]"
+                   no-padding>
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <div class="item-actions-container">
@@ -86,8 +87,6 @@
           Add FR Number
         </paper-button>
       </div>
-
-
     </etools-dialog>
 
   </template>
@@ -220,4 +219,3 @@
     })();
   </script>
 </dom-module>
-
