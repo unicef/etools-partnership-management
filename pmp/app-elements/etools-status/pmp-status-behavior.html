@@ -17,13 +17,9 @@
         type: Boolean,
         value: true
       },
-      stickyScrollOffsetStart: {
+      minimumDistanceFromWindowTop: {
         type: Number,
         value: 76
-      },
-      oldScroll: {
-        type: Function,
-        value: null
       },
       contentContainer: Object,
       sectionName: String, // PD/SSFA, Partners, Agreements
@@ -41,9 +37,8 @@
       if (this.warningDialog) {
         this.removeDialog(this.warningDialog);
       }
-      if (this.contentContainer) {
-        this.contentContainer.onscroll = this.oldScroll;
-      }
+      this._resetScrollHandler();
+      this._resetResizeHandler();
     },
 
     _getContentContainer: function() {
@@ -64,14 +59,46 @@
       if (!this.contentContainer) {
         return;
       }
-      this.oldScroll = this.contentContainer.onscroll;
-      this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+
+      this._setScrollHandler();
+      this._setResizeHandler();
     },
 
+    _setResizeHandler: function() {
+      window.onresize = function() {
+        Polymer.updateStyles();
+        this._resetScrollHandler();
+        this._setScrollHandler();
+      }.bind(this);
+    },
+
+    _resetResizeHandler: function() {
+      window.onresize = null;
+    },
+
+    _setScrollHandler: function() {
+      if(window.innerWidth <= 1366) {
+        // at this resolution etools-status is horizontal, no need to make it sticky
+        // the styling to make it horizontal is in page-layout-styles
+        this.customStyle['--status-top'] = 'auto';
+        this.updateStyles();
+        return;
+      }
+
+      this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+    },
+    _resetScrollHandler: function() {
+      if (this.contentContainer) {
+          this.contentContainer.onscroll = null;
+        }
+    },
     _scrollChangedHandler: function() {
-      let topOffset = this.getBoundingClientRect().top;
-      if (topOffset < this.stickyScrollOffsetStart) {
-        this.customStyle['--status-top'] = ((topOffset - this.stickyScrollOffsetStart) * -1) + 'px';
+      let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
+
+      if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+        // if the status element is about to go under the title bar, start moving in down
+        let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
+        this.customStyle['--status-top'] = newOffset  + 'px'
       } else {
         this.customStyle['--status-top'] = 'auto';
       }

@@ -25,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply --layout-vertical;
         width: 100%;
 
         --etools-checkable-input-label: {
@@ -150,54 +150,92 @@
         margin: 0 8px;
       }
     </style>
-
-    <div id="pageContent">
-
-      <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
-        <div class="hact-heading">
-          <div class="row-h">
-            <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
-            <div class="col col-2"><strong> PROG.VISIT </strong></div>
-            <div class="col col-2"><strong> SPOT CHECK </strong></div>
-            <div class="col col-2"><strong> AUDIT </strong></div>
+    <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
+      <div class="hact-heading">
+        <div class="row-h">
+          <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
+          <div class="col col-2"><strong> PROG.VISIT </strong></div>
+          <div class="col col-2"><strong> SPOT CHECK </strong></div>
+          <div class="col col-2"><strong> AUDIT </strong></div>
+        </div>
+        <div class="row-h">
+          <div class="col col-2"> Risk Rating</div>
+          <div class="col col-2"> Current CP Cycle</div>
+          <div class="col col-2"> Current Year</div>
+          <div class="col col-2"> Planned / M.R. / Done</div>
+          <div class="col col-2"> Done / M.R.</div>
+          <div class="col col-2"> Done / M.R.</div>
+        </div>
+      </div>
+      <div class="hact-body">
+        <div class="row-h">
+          <div class="col col-2 center-align">
+            <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
           </div>
-          <div class="row-h">
-            <div class="col col-2"> Risk Rating</div>
-            <div class="col col-2"> Current CP Cycle</div>
-            <div class="col col-2"> Current Year</div>
-            <div class="col col-2"> Planned / M.R. / Done</div>
-            <div class="col col-2"> Done / M.R.</div>
-            <div class="col col-2"> Done / M.R.</div>
+          <div class="col col-2 center-align"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
+          <div class="col col-2 center-align block"> $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br>
+            <small>
+              out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned
+            </small>
+          </div>
+          <div class="col col-2 center-align">
+            <strong>
+              [[partner.hact_values.planned_visits]] / [[partner.hact_min_requirements.programme_visits]] /
+              <span class="green"> [[partner.hact_values.programmatic_visits]]</span>
+            </strong>
+          </div>
+          <div class="col col-2 center-align">
+            <strong>
+              <span class="green">[[partner.hact_values.spot_checks]] </span>
+              / [[partner.hact_min_requirements.spot_checks]]
+            </strong>
+          </div>
+          <div class="col col-2 center-align">
+            <strong>
+              <span class="green">[[partner.hact_values.audits_done]] </span>
+              / [[partner.hact_values.audits_mr]]
+            </strong>
           </div>
         </div>
-        <div class="hact-body">
+      </div>
+
+      <div class="hact-heading">
+        <div class="row-h">
+          <div class="col col-3 word-break left-align"> Partnership</div>
+          <div class="col col-2 right-align"> Total Planned Budget</div>
+          <div class="col col-2 right-align"> Actual</div>
+          <div class="col col-2"> Status</div>
+          <div class="col col-3 left-align"> Timeline</div>
+        </div>
+      </div>
+      <div class="hact-body">
+        <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
           <div class="row-h">
-            <div class="col col-2 center-align">
-              <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
+            <div class="col col-3 block word-break">
+              <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+              <span>
+                [[partnership.title]]
+              </span>
             </div>
-            <div class="col col-2 center-align"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
-            <div class="col col-2 center-align block"> $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br>
-              <small>
-                out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned
-              </small>
+            <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
             </div>
-            <div class="col col-2 center-align">
-              <strong>
-                [[partner.hact_values.planned_visits]] / [[partner.hact_min_requirements.programme_visits]] /
-                <span class="green"> [[partner.hact_values.programmatic_visits]]</span>
-              </strong>
+            <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
+            <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
             </div>
-            <div class="col col-2 center-align">
-              <strong>
-                <span class="green">[[partner.hact_values.spot_checks]] </span>
-                / [[partner.hact_min_requirements.spot_checks]]
-              </strong>
-            </div>
-            <div class="col col-2 center-align">
-              <strong>
-                <span class="green">[[partner.hact_values.audits_done]] </span>
-                / [[partner.hact_values.audits_mr]]
-              </strong>
+            <div class="col col-3 center-align timeline-col">
+              <etools-info-tooltip icon="report" icon-first
+                                    hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]"
+                                    important-warning>
+                <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
+                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+              </etools-info-tooltip>
+              <span class="date-delimiter"> - </span>
+              <etools-info-tooltip icon="report" icon-first
+                                    hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
+                                    important-warning>
+                <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
+                <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+              </etools-info-tooltip>
             </div>
           </div>
         </div>
@@ -244,14 +282,6 @@
           </template>
         </div>
       </etools-content-panel>
-
-    </div> <!-- main page content end -->
-
-    <!-- sidebar content start -->
-    <div id="sidebar">
-      <partner-status on-save-partner="_validateAndTriggerPartnerSave" partner="[[partner]]"></partner-status>
-    </div>
-
   </template>
 
   <script>

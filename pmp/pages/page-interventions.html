@@ -194,20 +194,17 @@
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
-
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[intervListActive]]">
-      <intervention-status status="[[intervention.status]]"
-                           intervention-id$="[[intervention.id]]"
-                           new-intervention="[[newInterventionActive]]"
-                           intervention-agreement-status="[[agreement.status]]"
-                           on-save-intervention="_validateAndSaveIntervention"
-                           on-update-intervention-status="_updateInterventionStatus"
-                           edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
-      </intervention-status>
-
-      </div>
-      <!-- sidebar content end -->
+        <intervention-status status="[[intervention.status]]"
+                            intervention-id$="[[intervention.id]]"
+                            new-intervention="[[newInterventionActive]]"
+                            intervention-agreement-status="[[agreement.status]]"
+                            on-save-intervention="_validateAndSaveIntervention"
+                            on-update-intervention-status="_updateInterventionStatus"
+                            edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
+        </intervention-status>
+      </div> <!-- sidebar content end -->
     </div>
 
   </template>
