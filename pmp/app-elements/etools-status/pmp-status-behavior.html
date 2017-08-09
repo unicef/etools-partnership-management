@@ -17,7 +17,7 @@
         type: Boolean,
         value: true
       },
-      stickyScrollOffsetStart: {
+      minimumDistanceFromWindowTop: {
         type: Number,
         value: 76
       },
@@ -38,7 +38,7 @@
         this.removeDialog(this.warningDialog);
       }
       this._resetScrollHandler();
-      window.onresize = null;
+      this._resetResizeHandler();
     },
 
     _getContentContainer: function() {
@@ -61,13 +61,21 @@
       }
 
       this._setScrollHandler();
+      this._setResizeHandler();
+    },
 
+    _setResizeHandler: function() {
       window.onresize = function() {
         Polymer.updateStyles();
         this._resetScrollHandler();
         this._setScrollHandler();
       }.bind(this);
     },
+
+    _resetResizeHandler: function() {
+      window.onresize = null;
+    },
+
     _setScrollHandler: function() {
       if(window.innerWidth <= 1366) {
         // at this resolution etools-status is horizontal, no need to make it sticky
@@ -85,9 +93,12 @@
         }
     },
     _scrollChangedHandler: function() {
-      let topOffset = this.getBoundingClientRect().top;
-      if (topOffset < this.stickyScrollOffsetStart) {
-        this.customStyle['--status-top'] = ((topOffset - this.stickyScrollOffsetStart) * -1) + 'px';
+      let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
+
+      if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+        // if the status element is about to go under the title bar, start moving in down
+        let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
+        this.customStyle['--status-top'] = newOffset  + 'px'
       } else {
         this.customStyle['--status-top'] = 'auto';
       }
