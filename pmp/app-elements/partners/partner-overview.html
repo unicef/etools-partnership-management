@@ -97,9 +97,9 @@
         color: var(--paper-green-500);
       }
 
-      .cancelled {
+      .signed {
         text-transform: uppercase;
-        color: var(--paper-red-500);
+        /* color: var(--paper-red-500); TBD*/
       }
 
       .suspended {
@@ -220,7 +220,7 @@
                   [[partnership.title]]
                 </span>
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.planned_budget, '0', 0)]]
+              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
               </div>
               <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
               <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
