@@ -35,7 +35,7 @@
       etools-action-button {
         @apply --etools-status-button-styles;
       }
-      .divier-line {
+      .divider-line {
         @apply --layout-flex;
         margin: 8px 11px;
         border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
@@ -43,7 +43,7 @@
         @apply --etools-status-divider-styles;
       }
 
-      .divier-line:first-child {
+      .divider-line:first-child {
         display: none;
       }
 
@@ -142,7 +142,7 @@
     <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="divier-line"></div>
+            <div class="divider-line"></div>
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
                 <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
