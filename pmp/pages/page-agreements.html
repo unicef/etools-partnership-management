@@ -262,7 +262,7 @@
       // },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
-        if (!agreementListActive || !permissions.partnershipManager) {
+        if (!agreementListActive || !permissions || !permissions.partnershipManager) {
           return false;
         }
         return true;
