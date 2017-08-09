@@ -10,6 +10,13 @@
     <style>
        :host {
         width: 100%;
+        --status-position: sticky;
+        --status-top: 16px;
+      }
+      etools-status {
+        width: 200px;
+        position: var(--status-position);
+        top: var(--status-top);
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
@@ -133,6 +140,9 @@
           this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
           this.warningDialog = this.createDialog('Agreement status change', 'md', 'Yes', 'No',
               this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
+          this.warningDialog.updateStyles();
+          this._handleStickyScroll();
         },
 
         detached: function() {
@@ -352,6 +362,13 @@
           this._updateStatus('signed');
         },
 
+        _handleStickyScroll: function() {
+          if(window.isIE) {
+            this.customStyle['--status-position'] = 'fixed';
+            this.customStyle['--status-top'] = 'auto';
+            this.updateStyles();
+          }
+        },
       });
     })();
   </script>
