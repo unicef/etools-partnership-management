@@ -262,7 +262,7 @@
       // },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
-        if (!agreementListActive || !permissions.partnershipManager) {
+        if (!agreementListActive || !permissions || !permissions.partnershipManager) {
           return false;
         }
         return true;
@@ -385,7 +385,7 @@
         }
 
         if (this.isNewAgreement) {
-          this._saveAgreement( this._prepareNewAgreementDataForSave(this.agreement));
+          this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
         } else {
           // check/get only changed content to be used as a body to the save request
           var changedAgreementProperties = this._getCurrentChanges();
@@ -425,7 +425,8 @@
       },
       _validateSignedByFields: function() {
         var valid = true;
-        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField', '#signedByUnicef', '#signedByUnicefDateField'];
+        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
+         '#signedByUnicef', '#signedByUnicefDateField'];
         signedByFields.forEach(function(selector) {
           let field = this.$$(selector);
           if (field && !field.validate()) {
