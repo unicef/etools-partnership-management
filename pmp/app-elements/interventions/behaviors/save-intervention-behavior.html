@@ -70,7 +70,8 @@
 
         // if prc_review_document is null we need to delete the property otherwise the
         // file gets deleted from the backend
-        if (this.intervention.hasOwnProperty('prc_review_document') &&  _.isEmpty(this.intervention.prc_review_document)) {
+        if (this.intervention.hasOwnProperty('prc_review_document') &&
+         _.isEmpty(this.intervention.prc_review_document)) {
           delete interventionData.prc_review_document;
         }
 
@@ -99,8 +100,6 @@
         let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
         return diff.length > 0;
       },
-
-
   };
 
   /** @polymerBehavior pmpBehaviors.SaveInterventionBehavior */
