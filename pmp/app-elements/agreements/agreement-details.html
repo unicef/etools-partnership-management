@@ -114,7 +114,8 @@
                 hidden$="[[!agreement.permissions.edit.partner]]"
                 auto-validate
                 error-message="Please select a partner"
-                required>
+                required
+                avoid-header-overlapping-dropdown>
             </etools-single-selection-menu>
             <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
                 <span>[[agreement.partner_name]]</span>
@@ -177,7 +178,8 @@
                   auto-validate
                   error-message="Please select Signed By Partner"
                   readonly$="[[!agreement.permissions.edit.partner_manager]]"
-                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]">
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]"
+                  avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
@@ -208,7 +210,8 @@
                   error-message="Please select Signed By UNICEF"
                   readonly$="[[!agreement.permissions.edit.signed_by]]"
                   auto-validate
-                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]">>
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
+                  avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
             </div>
             <div class="col col-3">
