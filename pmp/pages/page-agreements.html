@@ -384,6 +384,7 @@
           return;
         }
 
+
         if (this.newAgreementActive) {
           this._saveAgreement( this._prepareNewAgreementDataForSave(this.agreement));
         } else {
@@ -425,7 +426,8 @@
       },
       _validateSignedByFields: function() {
         var valid = true;
-        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField', '#signedByUnicef', '#signedByUnicefDateField'];
+        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
+         '#signedByUnicef', '#signedByUnicefDateField'];
         signedByFields.forEach(function(selector) {
           let field = this.$$(selector);
           if (field && !field.validate()) {
