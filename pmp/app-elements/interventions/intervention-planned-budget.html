@@ -270,10 +270,6 @@
             type: Number,
             observer: '_interventionIdChanged'
           },
-          localCurrency: {
-            type: Number,
-            value: 145 //TODO will be taken from user profile and set globally
-          },
           initialPlannedBudget: Object,
           _frsConsistencyWarning: {
             type: String,
@@ -334,12 +330,6 @@
           this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
           this.editablePlannedBudget = !this.interventionId;
           this.set('_showCancelButton', false);
-          this._defaultToWorkspaceCurrency();
-        },
-        _defaultToWorkspaceCurrency: function() {
-          if (this.plannedBudget && !this.interventionId) {
-            this.set('plannedBudget.currency', this.localCurrency);
-          }
         },
         _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
