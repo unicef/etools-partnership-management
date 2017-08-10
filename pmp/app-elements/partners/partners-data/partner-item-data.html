@@ -185,22 +185,21 @@
           } else {
             var url = null;
             var isNew = false;
-
-            if (partner.id) {
-              // prepare PATCH endpoint
-              this._prepareEndpoint(partner.id);
-              url = this.endpoint.url;
-            } else {
-              // new partner, use POST method for the same endpoint
-              var partnersEndpoint = this.getEndpoint('partners');
-              url = partnersEndpoint.url;
-              isNew = true;
-            }
-            // remove id from data
-            if (partner.id) {
-              delete partner.id;
-            }
-            if (Object.keys(partner).length > 0) {
+            if (Object.keys(partner).length > 1) {
+              if (partner.id) {
+                // prepare PATCH endpoint
+                this._prepareEndpoint(partner.id);
+                url = this.endpoint.url;
+              } else {
+                // new partner, use POST method for the same endpoint
+                var partnersEndpoint = this.getEndpoint('partners');
+                url = partnersEndpoint.url;
+                isNew = true;
+              }
+              // remove id from data
+              if (partner.id) {
+                delete partner.id;
+              }
               // set additional callback if any
               if (callback) {
                 this.set('handleSuccResponseAdditionalCallback', callback);
