@@ -22,11 +22,9 @@
   <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
-
       :host {
         display: block;
       }
-
     </style>
 
     <app-route
@@ -279,9 +277,8 @@
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
           (typeof event.detail === 'string' && event.detail !== '')) {
-          this.$.partnerDetails.set('serverErrors', event.detail);
+          this.set('serverErrors', event.detail);
         }
-
       },
       _showNewPartnerBtn: function(listActive, permissions) {
         return listActive && this._hasEditPermissions(permissions);
