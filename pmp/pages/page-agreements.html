@@ -273,7 +273,6 @@
         if (detailsActive || newAgreementActive) {
           page = 'details';
         }
-
         return page;
       },
 
@@ -384,9 +383,8 @@
           return;
         }
 
-
         if (this.newAgreementActive) {
-          this._saveAgreement( this._prepareNewAgreementDataForSave(this.agreement));
+          this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
         } else {
           // check/get only changed content to be used as a body to the save request
           var changedAgreementProperties = this._getCurrentChanges();
