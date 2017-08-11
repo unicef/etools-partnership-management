@@ -27,11 +27,6 @@
         --etools-checkable-input-label: {
           font-size: 14px;
         };
-        --paper-dialog-scrollable: {
-          width: 100%;
-          overflow-x: hidden;
-          padding: 0;
-        };
       }
 
       etools-checkable-input:not(:last-of-type) {
@@ -72,7 +67,7 @@
 
     </style>
 
-    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog">
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog" no-padding>
       <div id="indicator-content">
         <div class="row-h flex-c">
           <etools-checkable-input type="radio" label="#" label-alignment="right"

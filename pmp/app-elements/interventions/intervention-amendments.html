@@ -204,16 +204,12 @@
           this._createAmendmentConfirmationDialog();
         },
         _createAmendmentConfirmationDialog: function() {
-          var dialog = document.createElement('p');
+          var dialog = document.createElement('div');
           dialog.setAttribute('id', 'addAmendmendConfirmation');
           dialog.innerHTML = 'All fields in the details tab will now be open for editing. ' +
               'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
-          // jscs:disable maximumLineLength
-          this.addAmendmentConfirmationDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          // jscs:enable maximumLineLength
-          this.addAmendmentConfirmationDialog.updateStyles();
         },
         _getSignedDateErrorMessage: function(signedDate) {
           return this.isFutureDate(signedDate)

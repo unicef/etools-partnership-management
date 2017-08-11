@@ -1,0 +1,189 @@
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  pmpBehaviors.statusBehaviorImpl = { // eslint-disable-line no-undef
+    properties: {
+      status: {
+        type: String,
+        value: ''
+      },
+      newStatus: {
+        type: String,
+        value: ''
+      },
+      editMode: {
+        type: Boolean,
+        value: true
+      },
+      minimumDistanceFromWindowTop: {
+        type: Number,
+        value: 76
+      },
+      contentContainer: Object,
+      sectionName: String, // PD/SSFA, Partners, Agreements
+      possibleStatuses: Array,
+      possibleActions: Array,
+      warningDialog: Object,
+      statusChangeWarningDialogContent: Object,
+    },
+
+    observers: [
+        '_handleStatusChange(status)'
+    ],
+
+    detached: function() {
+      if (this.warningDialog) {
+        this.removeDialog(this.warningDialog);
+      }
+      this._resetScrollHandler();
+      this._resetResizeHandler();
+    },
+
+    _getContentContainer: function() {
+      if (window.isIE) {
+        return window;
+      }
+      if (!document.querySelector('app-shell')) {
+        return null;
+      }
+      if (!document.querySelector('app-shell').$$('#appHeadLayout')) {
+        return null;
+      }
+      return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
+    },
+
+    _handleStickyScroll: function() {
+      this.set('contentContainer', this._getContentContainer());
+      if (!this.contentContainer) {
+        return;
+      }
+
+      this._setScrollHandler();
+      this._setResizeHandler();
+    },
+
+    _setResizeHandler: function() {
+      window.onresize = function() {
+        Polymer.updateStyles();
+        this._resetScrollHandler();
+        this._setScrollHandler();
+      }.bind(this);
+    },
+
+    _resetResizeHandler: function() {
+      window.onresize = null;
+    },
+
+    _setScrollHandler: function() {
+      if (window.innerWidth <= 1366) {
+        // at this resolution etools-status is horizontal, no need to make it sticky
+        // the styling to make it horizontal is in page-layout-styles
+        this.customStyle['--status-top'] = 'auto';
+        this.updateStyles();
+        return;
+      }
+
+      this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+    },
+    _resetScrollHandler: function() {
+      if (this.contentContainer) {
+          this.contentContainer.onscroll = null;
+        }
+    },
+    _scrollChangedHandler: function() {
+      let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
+
+      if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+        // if the status element is about to go under the title bar, start moving in down
+        let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
+        this.customStyle['--status-top'] = newOffset  + 'px';
+      } else {
+        this.customStyle['--status-top'] = 'auto';
+      }
+      this.updateStyles();
+    },
+
+    _createStatusChangeWarningDialog: function() {
+      this.statusChangeWarningDialogContent = document.createElement('p');
+      this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+      this.warningDialog = this.createDialog(this.sectionName + ' status change', 'md', 'Yes', 'No',
+          this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+    },
+
+    _showStatusChangeConfirmationDialog: function() {
+      if (this.warningDialog) {
+        var warningMessage = 'Are you sure you want to change status from: <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
+
+        if (this.statusChangeWarningDialogContent) {
+          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          this.warningDialog.opened = true;
+        } else {
+          this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
+        }
+      } else {
+        this.logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
+      }
+    },
+
+    _setAllActionsToHidden: function() {
+      var possibleActions = this.possibleActions;
+      possibleActions.forEach(function(elem) {
+        elem.hidden = true;
+      });
+
+      this.set('possibleActions', possibleActions);
+    },
+
+    _setAllStatusesToHidden: function() {
+      var possibleStatuses = this.possibleStatuses;
+      possibleStatuses.forEach(function(elem) {
+        elem.hidden = true;
+        elem.completed = false;
+      });
+
+      this.set('possibleStatuses', possibleStatuses);
+    },
+
+    _updateStatus: function(newStatus) {
+      if (!this._statusChangeIsValid(newStatus)) {
+        return;
+      }
+
+      this.set('newStatus', newStatus);
+      this._showStatusChangeConfirmationDialog();
+    },
+
+    _handleStatusChange: function(status) {
+      this.debounce('reset-status-actions', function() {
+        this._computeAvailableStatuses(status);
+        this._computeAvailableActions(status);
+      }.bind(this), 50);
+    },
+
+    _statusChangeConfirmationCallback: function(event) {
+      // children should overwrite this
+    },
+
+    _statusChangeIsValid: function(newStatus) {
+      // children should overwrite this
+      return false;
+    },
+
+    _computeAvailableActions: function(status) {
+      // children should overwrite this
+    },
+    _computeAvailableStatuses: function(status) {
+      // children should overwrite this
+    },
+  };
+
+  /** @polymerBehavior pmpBehaviors.statusBehavior */
+
+  pmpBehaviors.statusBehavior = [
+    etoolsBehaviors.DynamicDialogBehavior,
+    pmpBehaviors.statusBehaviorImpl,
+    EtoolsLogsBehavior,
+  ];
+</script>
