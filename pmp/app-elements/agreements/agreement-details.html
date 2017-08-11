@@ -226,21 +226,21 @@
               </etools-date-input>
             </div>
           </div>
-          <div class="row-h flex-c">
-            <!-- Partner Authorized Officers (partner staff members) -->
-            <etools-multi-selection-menu id="officers"
-                                        label="Authorized Officers"
-                                        placeholder="&#8212;"
-                                        options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                                        option-value="id"
-                                        option-label="name"
-                                        selected-values="{{authorizedOfficers}}"
-                                        readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
-                                        error-message="Please enter Partner Authorized Officer(s)"
-                                        required$="[[agreement.permissions.required.authorized_officers]]"
-                                        auto-validate$="[[enableEditForAuthorizedOfficers]]">
-            </etools-multi-selection-menu>
-          </div>
+        </div>
+        <div class="row-h flex-c">
+          <!-- Partner Authorized Officers (partner staff members) -->
+          <etools-multi-selection-menu id="officers"
+                                       label="Authorized Officers"
+                                       placeholder="&#8212;"
+                                       options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                                       option-value="id"
+                                       option-label="name"
+                                       selected-values="{{authorizedOfficers}}"
+                                       readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                                       error-message="Please enter Partner Authorized Officer(s)"
+                                       required$="[[agreement.permissions.required.authorized_officers]]"
+                                       auto-validate$="[[enableEditForAuthorizedOfficers]]">
+          </etools-multi-selection-menu>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div id="generate-pca" class="col col-3"
