@@ -74,7 +74,8 @@
                       hide-delete-btn show-upload-btn-above show-upload-date
                       on-delete-file="_deleteAttachment"
                       readonly$=[[!editMode]]
-                      no-file-attached-msg="">
+                      no-file-attached-msg=""
+                      toast-fit-into="[[toastFitInto]]">
       </etools-file>
       <div id="no-attach-warning" hidden$=[[_hideNoAttachmentsWarning(attachments.length)]]>
         <p>There are no attachments added.</p>
@@ -113,11 +114,15 @@
           fileModel: {
             type: Object,
             value: null
-          }
+          },
+          toastFitInto: Object
         },
 
         observers: ['_checkEmptyFileTypesData(fileTypes, active)'],
 
+        attached: function() {
+          this.toastFitInto = document.querySelector('app-shell').$$('app-header-layout');
+        },
         _attachmentsChanged: function(attachments) {
           if (Array.isArray(attachments) &&
               attachments.length > 0 && !this._hasPath(attachments[0])) {
