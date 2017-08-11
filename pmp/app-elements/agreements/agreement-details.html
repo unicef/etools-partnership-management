@@ -6,10 +6,8 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
-<link rel="import"
-      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
@@ -56,7 +54,6 @@
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
       }
-
       #generate-pca[hidden] + .col {
         padding-left: 0;
       }
@@ -126,9 +123,8 @@
                 error-message="Please select a partner"
                 required>
             </etools-single-selection-menu>
-            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]"
-                                         hidden$="[[agreement.permissions.edit.partner]]">
-              <span>[[agreement.partner_name]]</span>
+            <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
+                <span>[[agreement.partner_name]]</span>
             </etools-form-element-wrapper>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
@@ -139,7 +135,7 @@
                                  value="{{agreement.start}}"
                                  readonly$="[[!agreement.permissions.edit.start]]"
                                  no-init show-clear-btn
-                                 required$="[[agreement.permissions.required.start]]">
+                                  required$="[[agreement.permissions.required.start]]">
               </etools-date-input>
             </div>
             <div class="col col-3">
@@ -172,66 +168,67 @@
           </template>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <!-- Signed By Partner -->
-            <etools-single-selection-menu
-                id="signedByPartner"
-                label="Signed By Partner"
-                placeholder="&#8212;"
-                options="[[staffMembers]]"
-                option-value="id"
-                option-label="name"
-                selected="{{agreement.partner_manager}}"
-                dynamic-align
-                auto-validate
-                error-message="Please select Signed By Partner"
-                readonly$="[[!agreement.permissions.edit.partner_manager]]"
-                required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]">
-            </etools-single-selection-menu>
+        <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+          <div class="row-h flex-c">
+            <div class="col col-6">
+              <!-- Signed By Partner -->
+              <etools-single-selection-menu
+                  id="signedByPartner"
+                  label="Signed By Partner"
+                  placeholder="&#8212;"
+                  options="[[staffMembers]]"
+                  option-value="id"
+                  option-label="name"
+                  selected="{{agreement.partner_manager}}"
+                  dynamic-align
+                  auto-validate
+                  error-message="Please select Signed By Partner"
+                  readonly$="[[!agreement.permissions.edit.partner_manager]]"
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]">
+              </etools-single-selection-menu>
+            </div>
+            <div class="col col-3">
+              <!-- Signed By Partner Date -->
+              <etools-date-input id="signedByPartnerDateField"
+                                label="Signed By Partner Date"
+                                value="{{agreement.signed_by_partner_date}}"
+                                no-init show-clear-btn
+                                auto-validate
+                                readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
+                                error-message="Please select Signed By Partner Date"
+                                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager, agreement)]]">
+              </etools-date-input>
+            </div>
           </div>
-          <div class="col col-3">
-            <!-- Signed By Partner Date -->
-            <etools-date-input id="signedByPartnerDateField"
-                               label="Signed By Partner Date"
-                               value="{{agreement.signed_by_partner_date}}"
-                               no-init show-clear-btn
-                               auto-validate
-                               readonly$="[[!agreement.permissions.edit.signed_by_partner_date]]"
-                               error-message="Please select Signed By Partner Date"
-                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_partner_date, agreement.partner_manager, agreement)]]">
-            </etools-date-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <!-- Signed By UNICEF -->
-            <etools-single-selection-menu
-                id="signedByUnicef"
-                label="Signed By UNICEF"
-                placeholder="&#8212;"
-                options="[[unicefSeniorStaff]]"
-                option-value="user_id"
-                option-label="full_name"
-                selected="{{agreement.signed_by}}"
-                dynamic-align
-                error-message="Please select Signed By UNICEF"
-                readonly$="[[!agreement.permissions.edit.signed_by]]"
-                auto-validate
-                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]">
-              >
-            </etools-single-selection-menu>
-          </div>
-          <div class="col col-3">
-            <!-- Signed By UNICEF Date -->
-            <etools-date-input id="signedByUnicefDateField"
-                               label="Signed By UNICEF Date"
-                               value="{{agreement.signed_by_unicef_date}}"
-                               readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
-                               no-init show-clear-btn auto-validate
-                               error-message="Please select Signed By UNICEF Date"
-                               required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_unicef_date, agreement.signed_by, agreement)]]">
-            </etools-date-input>
+          <div class="row-h flex-c">
+            <div class="col col-6">
+              <!-- Signed By UNICEF -->
+              <etools-single-selection-menu
+                  id="signedByUnicef"
+                  label="Signed By UNICEF"
+                  placeholder="&#8212;"
+                  options="[[unicefSeniorStaff]]"
+                  option-value="user_id"
+                  option-label="full_name"
+                  selected="{{agreement.signed_by}}"
+                  dynamic-align
+                  error-message="Please select Signed By UNICEF"
+                  readonly$="[[!agreement.permissions.edit.signed_by]]"
+                  auto-validate
+                  required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]">>
+              </etools-single-selection-menu>
+            </div>
+            <div class="col col-3">
+              <!-- Signed By UNICEF Date -->
+              <etools-date-input id="signedByUnicefDateField"
+                                label="Signed By UNICEF Date"
+                                value="{{agreement.signed_by_unicef_date}}"
+                                readonly$="[[!agreement.permissions.edit.signed_by_unicef_date]]"
+                                no-init show-clear-btn auto-validate
+                                error-message="Please select Signed By UNICEF Date"
+                                required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by_unicef_date, agreement.signed_by, agreement)]]">
+              </etools-date-input>
+            </div>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -391,8 +388,8 @@
         },
         attached: function() {
           this.async(function() {
-                this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
-              }
+              this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
+            }
           );
         },
         detached: function() {
@@ -489,12 +486,12 @@
         },
         resetAttachedAgreementElem: function(agreement) {
           // forces etools-single-file to redraw the element
-          if (!agreement.attached_agreement) {
-            this.set('agreement.attached_agreement', {});
-          }
-          if (!agreement.attached_agreement_file) {
-            this.set('agreement.attached_agreement_file', '');
-          }
+            if (!agreement.attached_agreement) {
+              this.set('agreement.attached_agreement', {});
+            }
+            if (!agreement.attached_agreement_file) {
+              this.set('agreement.attached_agreement_file', '');
+            }
         },
         resetSignedByFields: function(agreement) {
           if (agreement.agreement_type === 'SSFA') {
@@ -635,8 +632,8 @@
             return null;
           }
           return this.originalAgreementData.authorized_officers.map(function(off) {
-                return off.id.toString();
-              }
+              return off.id.toString();
+            }
           );
         },
         /**
@@ -646,7 +643,7 @@
           var changes = {};
           if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
             // prevent the possibility of checking 2 different agreements
-            return {};
+             return {};
           }
 
           if (this._primitiveFieldIsModified('partner')) {
@@ -658,11 +655,11 @@
             }
 
             if ((this.agreement.hasOwnProperty('attached_agreement')) &&
-                (this.agreement.attached_agreement instanceof File)) {
+                    (this.agreement.attached_agreement instanceof File)) {
               changes.attached_agreement = this.agreement.attached_agreement;
             }
 
-            var signedByFields = ['partner_manager', 'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+            var signedByFields = ['partner_manager',  'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
             signedByFields.forEach(function(fieldName) {
               if (this._primitiveFieldIsModified(fieldName)) {
                 changes[fieldName] = this.agreement[fieldName];
@@ -671,7 +668,7 @@
           }
 
           if (this.agreement.agreement_type === 'MOU') {
-            ['start', 'end'].forEach(function(fieldName) {
+            ['start','end'].forEach(function(fieldName) {
               if (this._primitiveFieldIsModified(fieldName)) {
                 changes[fieldName] = this.agreement[fieldName];
               }
@@ -726,12 +723,12 @@
           }
 
           newAgreement = Object.assign(newAgreement, {
-            authorized_officers: this.authorizedOfficers,
-            signed_by_unicef_date: agreement.signed_by_unicef_date,
-            signed_by_partner_date: agreement.signed_by_partner_date,
-            signed_by: agreement.signed_by,
-            partner_manager: agreement.partner_manager,
-            attached_agreement: agreement.attached_agreement,
+              authorized_officers: this.authorizedOfficers,
+              signed_by_unicef_date: agreement.signed_by_unicef_date,
+              signed_by_partner_date: agreement.signed_by_partner_date,
+              signed_by: agreement.signed_by,
+              partner_manager: agreement.partner_manager,
+              attached_agreement: agreement.attached_agreement,
           });
           if (agreement.agreement_type === 'MOU') {
             newAgreement.start = agreement.start;
