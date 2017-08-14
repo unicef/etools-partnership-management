@@ -236,7 +236,7 @@
                                        options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                        option-value="id"
                                        option-label="name"
-                                       selected-values="{{agreement.authorized_officers}}"
+                                       selected-values="{{authorizedOfficers}}"
                                        readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
                                        error-message="Please enter Partner Authorized Officer(s)"
                                        required$="[[agreement.permissions.required.authorized_officers]]"
@@ -446,7 +446,6 @@
             this.set('enableEditForAuthorizedOfficers', false);
 
             this.resetAttachedAgreementElem(agreement);
-
             this._initAuthorizedOfficers(agreement.authorized_officers);
 
           } else {

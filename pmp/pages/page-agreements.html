@@ -365,7 +365,6 @@
       },
 
       _agreementChanged: function(agreement) {
-        console.log('the changed agreement',agreement.authorized_officers);
         // keep a copy of the agreement before changes are made and use it later to save only the changes
         this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
         this.set('serverErrors', []);
@@ -437,13 +436,14 @@
       },
 
       _prepareNewAgreementDataForSave: function(agreement) {
+        var self = this;
         // we do not need all the agreement object data for the first save
         var newAgreement = {
           id: null,
           status: '',
           agreement_type: agreement.agreement_type,
           partner: agreement.partner,
-          authorized_officers: agreement.authorized_officers
+          authorized_officers: self.$.agreementDetails.authorizedOfficers
         };
         if (agreement.agreement_type === 'SSFA') {
           return newAgreement;
