@@ -213,7 +213,8 @@
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
-            </div>
+            </div>im
+
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <etools-date-input id="signedByUnicefDateField"
@@ -235,7 +236,7 @@
                                        options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                        option-value="id"
                                        option-label="name"
-                                       selected-values="{{authorizedOfficers}}"
+                                       selected-values="{{agreement.authorized_officers}}"
                                        readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
                                        error-message="Please enter Partner Authorized Officer(s)"
                                        required$="[[agreement.permissions.required.authorized_officers]]"
