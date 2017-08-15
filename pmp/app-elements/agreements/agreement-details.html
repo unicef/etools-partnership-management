@@ -213,7 +213,8 @@
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
-            </div>
+            </div>im
+
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <etools-date-input id="signedByUnicefDateField"
@@ -326,7 +327,10 @@
             type: Array,
             value: []
           },
-          authorizedOfficers: Array,
+          authorizedOfficers: {
+            type: Array,
+            notify: true
+          },
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
@@ -445,7 +449,6 @@
             this.set('enableEditForAuthorizedOfficers', false);
 
             this.resetAttachedAgreementElem(agreement);
-
             this._initAuthorizedOfficers(agreement.authorized_officers);
 
           } else {
