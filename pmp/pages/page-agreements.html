@@ -129,6 +129,7 @@
             <agreement-details
                 id="agreementDetails"
                 agreement="[[agreement]]"
+                authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 is-new-agreement="[[newAgreementActive]]"
                 on-update-agreement-status="_updateAgreementStatus">
@@ -443,14 +444,14 @@
           status: '',
           agreement_type: agreement.agreement_type,
           partner: agreement.partner,
-          authorized_officers: self.$.agreementDetails.authorizedOfficers
+          authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === 'SSFA') {
           return newAgreement;
         }
 
         newAgreement = Object.assign(newAgreement, {
-            authorized_officers: self.$.agreementDetails.authorizedOfficers,
+            authorized_officers: this.authorizedOfficers,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
             signed_by_partner_date: agreement.signed_by_partner_date,
             signed_by: agreement.signed_by,

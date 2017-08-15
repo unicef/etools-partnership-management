@@ -327,7 +327,10 @@
             type: Array,
             value: []
           },
-          authorizedOfficers: Array,
+          authorizedOfficers: {
+            type: Array,
+            notify: true
+          },
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
