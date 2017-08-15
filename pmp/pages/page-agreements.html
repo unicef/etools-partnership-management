@@ -450,7 +450,7 @@
         }
 
         newAgreement = Object.assign(newAgreement, {
-            authorized_officers: this.authorizedOfficers,
+            authorized_officers: self.$.agreementDetails.authorizedOfficers,
             signed_by_unicef_date: agreement.signed_by_unicef_date,
             signed_by_partner_date: agreement.signed_by_partner_date,
             signed_by: agreement.signed_by,
