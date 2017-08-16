@@ -15,12 +15,12 @@
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 <link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
 
-<link rel="import" href="../app-elements/interventions/interventions-list.html">
-<link rel="import" href="../app-elements/interventions/intervention-details.html">
-<link rel="import" href="../app-elements/interventions/intervention-overview.html">
-<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
-<link rel="import" href="../app-elements/interventions/intervention-attachments.html">
-<link rel="import" href="../app-elements/interventions/intervention-status.html">
+<!--<link rel="import" href="../app-elements/interventions/interventions-list.html">-->
+<!--<link rel="import" href="../app-elements/interventions/intervention-details.html">-->
+<!--<link rel="import" href="../app-elements/interventions/intervention-overview.html">-->
+<!--<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">-->
+<!--<link rel="import" href="../app-elements/interventions/intervention-attachments.html">-->
+<!--<link rel="import" href="../app-elements/interventions/intervention-status.html">-->
 
 <link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -59,18 +59,18 @@
         active="{{newInterventionActive}}"
         data="{{routeDataNewInterv}}"></app-route>
 
-    <intervention-item-data id="interventionData"
-                            intervention="{{intervention}}"
-                            intervention-id="[[selectedInterventionId]]"
-                            error-event-name="intervention-save-error"></intervention-item-data>
+    <!--<intervention-item-data id="interventionData"-->
+                            <!--intervention="{{intervention}}"-->
+                            <!--intervention-id="[[selectedInterventionId]]"-->
+                            <!--error-event-name="intervention-save-error"></intervention-item-data>-->
 
-    <partner-staff-members-data partner-id="[[partnerId]]"
-                                prepared-staff-members-data="{{partnerStaffMembers}}">
-    </partner-staff-members-data>
+    <!--<partner-staff-members-data partner-id="[[partnerId]]"-->
+                                <!--prepared-staff-members-data="{{partnerStaffMembers}}">-->
+    <!--</partner-staff-members-data>-->
 
-    <agreement-item-data id="agreement"
-                         agreement-id="[[intervention.agreement]]"
-                         agreement="{{agreement}}"></agreement-item-data>
+    <!--<agreement-item-data id="agreement"-->
+                         <!--agreement-id="[[intervention.agreement]]"-->
+                         <!--agreement="{{agreement}}"></agreement-item-data>-->
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
       <div class="top-content">
@@ -152,57 +152,57 @@
                     role="main">
 
           <div class="page" name="list">
-            <interventions-list id="intList"
-                active="[[intervListActive]]"
-                csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[interventionsQueryParams]]">
-            </interventions-list>
+            <!--<interventions-list id="intList"-->
+                <!--active="[[intervListActive]]"-->
+                <!--csv-download-url="{{csvDownloadUrl}}"-->
+                <!--url-params="[[interventionsQueryParams]]">-->
+            <!--</interventions-list>-->
           </div>
 
           <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
-            <div class="page" name="overview">
-              <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]">
-              </intervention-overview>
-            </div>
+            <!--<div class="page" name="overview">-->
+              <!--<intervention-overview intervention="[[intervention]]"-->
+                                     <!--intervention-agreement="[[agreement]]">-->
+              <!--</intervention-overview>-->
+            <!--</div>-->
           </template>
 
           <div class="page" name="details">
-            <intervention-details id="interventionDetails"
-                                  intervention="{{intervention}}"
-                                  partner-staff-members="[[partnerStaffMembers]]"
-                                  selected-partner-id="{{partnerId}}"
-                                  new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  on-update-intervention-status="_updateInterventionStatus"
-                                  original-intervention="[[originalIntervention]]">
-            </intervention-details>
+            <!--<intervention-details id="interventionDetails"-->
+                                  <!--intervention="{{intervention}}"-->
+                                  <!--partner-staff-members="[[partnerStaffMembers]]"-->
+                                  <!--selected-partner-id="{{partnerId}}"-->
+                                  <!--new-intervention="[[_newIntervention(newInterventionActive)]]"-->
+                                  <!--on-update-intervention-status="_updateInterventionStatus"-->
+                                  <!--original-intervention="[[originalIntervention]]">-->
+            <!--</intervention-details>-->
           </div>
           <div class="page" name="review-and-sign">
-            <intervention-review-and-sign id="interventionReviewAndSign"
-                                          intervention="{{intervention}}"
-                                          agreement="[[agreement]]">
-            </intervention-review-and-sign>
+            <!--<intervention-review-and-sign id="interventionReviewAndSign"-->
+                                          <!--intervention="{{intervention}}"-->
+                                          <!--agreement="[[agreement]]">-->
+            <!--</intervention-review-and-sign>-->
           </div>
           <div class="page" name="attachments">
-            <intervention-attachments id="intervAttachments"
-                                      active="[[_isAttachementsTabActive(activeTab)]]"
-                                      intervention="[[intervention]]"
-                                      file-model="[[_getAttachmentModel(intervention.id)]]"
-                                      attachments="{{intervention.attachments}}">
-            </intervention-attachments>
+            <!--<intervention-attachments id="intervAttachments"-->
+                                      <!--active="[[_isAttachementsTabActive(activeTab)]]"-->
+                                      <!--intervention="[[intervention]]"-->
+                                      <!--file-model="[[_getAttachmentModel(intervention.id)]]"-->
+                                      <!--attachments="{{intervention.attachments}}">-->
+            <!--</intervention-attachments>-->
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[intervListActive]]">
-      <intervention-status status="[[intervention.status]]"
-                           intervention-id$="[[intervention.id]]"
-                           new-intervention="[[newInterventionActive]]"
-                           intervention-agreement-status="[[agreement.status]]"
-                           on-save-intervention="_validateAndSaveIntervention"
-                           on-update-intervention-status="_updateInterventionStatus">
-      </intervention-status>
+      <!--<intervention-status status="[[intervention.status]]"-->
+                           <!--intervention-id$="[[intervention.id]]"-->
+                           <!--new-intervention="[[newInterventionActive]]"-->
+                           <!--intervention-agreement-status="[[agreement.status]]"-->
+                           <!--on-save-intervention="_validateAndSaveIntervention"-->
+                           <!--on-update-intervention-status="_updateInterventionStatus">-->
+      <!--</intervention-status>-->
 
       </div>
       <!-- sidebar content end -->
@@ -837,6 +837,7 @@
 
       _reloadInterventionsList: function(e) {
         e.stopImmediatePropagation();
+        return;
         try {
           var interventions = this.$.intList;
           if (!interventions.$.list.classList.contains('hidden')) {

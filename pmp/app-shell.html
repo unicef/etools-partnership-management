@@ -367,7 +367,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _firstPageRenderCallback: function(currentLoadedPage) {
         this.fire('global-loading', {active: false}); // deactivate first page loading msg
         this._redirectToProperListPage();
-        this._lazyLoadPages(currentLoadedPage);
+        // this._lazyLoadPages(currentLoadedPage);
       },
       // load all the other main pages except the one just rendered
       _lazyLoadPages: function(currentLoadedPage) {

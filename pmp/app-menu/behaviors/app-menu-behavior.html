@@ -43,6 +43,7 @@
 
     _resizeMainLayout: function(e) {
       e.stopImmediatePropagation();
+      this._updateDrawerStyles();
       this._notifyLayoutResize();
     },
 
@@ -51,8 +52,8 @@
         let localStorageVal = newVal ? 1 : 0;
         localStorage.setItem('etoolsAppSmallMenuIsActive', localStorageVal);
       }
-      this._updateDrawerStyles();
-      this._notifyLayoutResize();
+//      this._updateDrawerStyles();
+//      this._notifyLayoutResize();
     },
 
     _updateDrawerStyles: function() {
