@@ -129,6 +129,7 @@
             <agreement-details
                 id="agreementDetails"
                 agreement="[[agreement]]"
+                authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 is-new-agreement="[[newAgreementActive]]"
                 on-update-agreement-status="_updateAgreementStatus">
@@ -436,12 +437,14 @@
       },
 
       _prepareNewAgreementDataForSave: function(agreement) {
+        var self = this;
         // we do not need all the agreement object data for the first save
         var newAgreement = {
           id: null,
           status: '',
           agreement_type: agreement.agreement_type,
-          partner: agreement.partner
+          partner: agreement.partner,
+          authorized_officers: this.authorizedOfficers
         };
         if (agreement.agreement_type === 'SSFA') {
           return newAgreement;
