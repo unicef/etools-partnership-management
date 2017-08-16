@@ -213,7 +213,8 @@
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
-            </div>
+            </div>im
+
             <div class="col col-3">
               <!-- Signed By UNICEF Date -->
               <etools-date-input id="signedByUnicefDateField"
@@ -226,21 +227,21 @@
               </etools-date-input>
             </div>
           </div>
-          <div class="row-h flex-c">
-            <!-- Partner Authorized Officers (partner staff members) -->
-            <etools-multi-selection-menu id="officers"
-                                        label="Authorized Officers"
-                                        placeholder="&#8212;"
-                                        options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
-                                        option-value="id"
-                                        option-label="name"
-                                        selected-values="{{authorizedOfficers}}"
-                                        readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
-                                        error-message="Please enter Partner Authorized Officer(s)"
-                                        required$="[[agreement.permissions.required.authorized_officers]]"
-                                        auto-validate$="[[enableEditForAuthorizedOfficers]]">
-            </etools-multi-selection-menu>
-          </div>
+        </div>
+        <div class="row-h flex-c">
+          <!-- Partner Authorized Officers (partner staff members) -->
+          <etools-multi-selection-menu id="officers"
+                                       label="Authorized Officers"
+                                       placeholder="&#8212;"
+                                       options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
+                                       option-value="id"
+                                       option-label="name"
+                                       selected-values="{{authorizedOfficers}}"
+                                       readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                                       error-message="Please enter Partner Authorized Officer(s)"
+                                       required$="[[agreement.permissions.required.authorized_officers]]"
+                                       auto-validate$="[[enableEditForAuthorizedOfficers]]">
+          </etools-multi-selection-menu>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div id="generate-pca" class="col col-3"
@@ -326,7 +327,10 @@
             type: Array,
             value: []
           },
-          authorizedOfficers: Array,
+          authorizedOfficers: {
+            type: Array,
+            notify: true
+          },
           unicefSeniorStaff: {
             type: Array,
             statePath: 'signedByUnicefUsers'
@@ -445,7 +449,6 @@
             this.set('enableEditForAuthorizedOfficers', false);
 
             this.resetAttachedAgreementElem(agreement);
-
             this._initAuthorizedOfficers(agreement.authorized_officers);
 
           } else {
