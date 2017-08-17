@@ -177,11 +177,13 @@
                   dynamic-align
                   auto-validate
                   error-message="Please select Signed By Partner"
-                  readonly$="[[!agreement.permissions.edit.partner_manager]]"
+                  hidden$="[[!agreement.permissions.edit.partner_manager]]"
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
               </etools-single-selection-menu>
-
+              <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner_manager]]" hidden$="[[agreement.permissions.edit.partner_manager]]">
+                <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
+              </etools-form-element-wrapper>
             </div>
             <div class="col col-3">
               <!-- Signed By Partner Date -->
@@ -238,11 +240,15 @@
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{authorizedOfficers}}"
-                                       readonly$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
+                                       hidden$="[[!_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]"
                                        error-message="Please enter Partner Authorized Officer(s)"
                                        required$="[[agreement.permissions.required.authorized_officers]]"
                                        auto-validate$="[[enableEditForAuthorizedOfficers]]">
           </etools-multi-selection-menu>
+          <etools-form-element-wrapper label="Authorized Officers" required$="[[agreement.permissions.required.authorized_officers]]"
+           hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
+                <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
+          </etools-form-element-wrapper>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
           <div id="generate-pca" class="col col-3"
@@ -438,7 +444,6 @@
          * display amendments if needed
          */
         _agreementChanged: function(agreement) {
-          console.log(agreement);
           if (this.generatePCADialog) {
             this.generatePCADialog.agreementId = agreement.id;
           }
@@ -572,7 +577,6 @@
           this.set('activeStaffMembers', activeStaffMembers);
         },
         _getAvailableAuthOfficers: function(activeStaffMembers, agreementAuthorizedOfficers) {
-          console.log(activeStaffMembers, agreementAuthorizedOfficers);
           if (activeStaffMembers instanceof Array && activeStaffMembers.length) {
             return activeStaffMembers;
           }
@@ -586,7 +590,28 @@
           }
           return [];
         },
-
+        _getReadonlySignedByPartner: function(staffMembers, selectedId) {
+          if (this.agreement.partner_signatory) {
+            return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
+          } else if (this.staffMembers && this.staffMembers.length) {
+             var selectedPartner = this.staffMembers.filter(function(s){
+               return parseInt(s.id) === parseInt(selectedId);
+             });
+             if(selectedPartner && selectedPartner.length) {
+               return selectedPartner[0];
+             }
+          }
+          return '';
+        },
+        _getReadonlyAuthorizedOfficers: function(agreement) {
+          if (!agreement.authorized_officers || !agreement.authorized_officers.length) {
+            return '';
+          }
+          var names = agreement.authorized_officers.map(function(officer) {
+            return officer.first_name + ' ' + officer.last_name;
+          });
+          return names.join(' | ');
+        },
         /**
          * Check if agreement type is expected type
          */
