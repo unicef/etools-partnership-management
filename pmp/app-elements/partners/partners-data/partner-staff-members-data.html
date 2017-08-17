@@ -67,7 +67,8 @@
             var preparedStaffMembers = res.detail.map(function(staffMember) {
               return {
                 id: staffMember.id,
-                name: staffMember.first_name + ' ' + staffMember.last_name
+                name: staffMember.first_name + ' ' + staffMember.last_name,
+                active: staffMember.active
               };
             });
             this.set('preparedStaffMembersData', preparedStaffMembers);
