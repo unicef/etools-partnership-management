@@ -21,7 +21,7 @@
 
   <template strip-whitespace>
 
-  <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -141,13 +141,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
       .timeline-col {
         @apply(--layout-start-justified);
       }
+
       .timeline-col .date-delimiter {
         margin: 0 8px;
       }
-  </style>
+    </style>
     <div id="pageContent">
       <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
         <div class="hact-heading">
@@ -197,48 +199,49 @@
             </div>
           </div>
         </div>
-
-        <div class="hact-heading">
-          <div class="row-h">
-            <div class="col col-3 word-break left-align"> Partnership</div>
-            <div class="col col-2 right-align"> Total Planned Budget</div>
-            <div class="col col-2 right-align"> Actual</div>
-            <div class="col col-2"> Status</div>
-            <div class="col col-3 left-align"> Timeline</div>
-          </div>
-        </div>
-        <div class="hact-body">
-          <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
+        <template is="dom-if" if="[[partner.interventions.length]]">
+          <div class="hact-heading">
             <div class="row-h">
-              <div class="col col-3 block word-break">
-                <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
-                <span>
+              <div class="col col-3 word-break left-align"> Partnership</div>
+              <div class="col col-2 right-align"> Total Planned Budget</div>
+              <div class="col col-2 right-align"> Actual</div>
+              <div class="col col-2"> Status</div>
+              <div class="col col-3 left-align"> Timeline</div>
+            </div>
+          </div>
+          <div class="hact-body">
+            <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
+              <div class="row-h">
+                <div class="col col-3 block word-break">
+                  <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
+                  <span>
                   [[partnership.title]]
                 </span>
+                </div>
+                <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
+                </div>
+                <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
+                <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
+                </div>
+                <div class="col col-3 center-align timeline-col">
+                  <etools-info-tooltip icon="report" icon-first
+                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]"
+                                       important-warning>
+                    <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
+                    <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                  </etools-info-tooltip>
+                  <span class="date-delimiter"> - </span>
+                  <etools-info-tooltip icon="report" icon-first
+                                       hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
+                                       important-warning>
+                    <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
+                    <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                  </etools-info-tooltip>
+                </div>
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
-              </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
-              <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
-              </div>
-              <div class="col col-3 center-align timeline-col">
-                <etools-info-tooltip icon="report" icon-first
-                                      hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]"
-                                      important-warning>
-                  <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
-                  <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
-                </etools-info-tooltip>
-                <span class="date-delimiter"> - </span>
-                <etools-info-tooltip icon="report" icon-first
-                                      hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
-                                      important-warning>
-                  <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
-                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
-                </etools-info-tooltip>
-              </div>
-            </div>
-          </template>
-        </div>
+            </template>
+          </div>
+        </template>
       </etools-content-panel>
     </div>
   </template>
