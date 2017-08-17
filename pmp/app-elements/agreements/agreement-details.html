@@ -594,10 +594,10 @@
           if (this.agreement.partner_signatory) {
             return this.agreement.partner_signatory.first_name + ' ' + this.agreement.partner_signatory.last_name;
           } else if (this.staffMembers && this.staffMembers.length) {
-             var selectedPartner = this.staffMembers.filter(function(s){
+             var selectedPartner = this.staffMembers.filter(function(s) {
                return parseInt(s.id) === parseInt(selectedId);
              });
-             if(selectedPartner && selectedPartner.length) {
+             if (selectedPartner && selectedPartner.length) {
                return selectedPartner[0];
              }
           }
