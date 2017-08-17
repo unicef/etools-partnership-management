@@ -696,8 +696,43 @@
             }
           }
           return false;
-        }
+        },
 
+        /**
+        * Validate agreement fields
+        */
+        _validateAgreement: function() {
+          var valid = true;
+          var reqFieldsSelectors = ['#partner', '#agreementType', '#officers'];
+          if (this.agreement.agreement_type === 'PCA') {
+            reqFieldsSelectors.push('#cpStructure');
+            reqFieldsSelectors.push('#agreementAmendments');
+          }
+          if (this.agreement.agreement_type !== 'SSFA') {
+            if (!this._validateSignedByFields()) {
+              valid = false;
+            }
+          }
+          reqFieldsSelectors.forEach(function(fSelector) {
+            let field = this.$$(fSelector);
+            if (field && !field.validate()) {
+              valid = false;
+            }
+          }.bind(this));
+          return valid;
+        },
+        _validateSignedByFields: function() {
+          var valid = true;
+          var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
+            '#signedByUnicef', '#signedByUnicefDateField'];
+          signedByFields.forEach(function(selector) {
+            let field = this.$$(selector);
+            if (field && !field.validate()) {
+              valid = false;
+            }
+          }.bind(this));
+          return valid;
+        }
       });
     })();
   </script>

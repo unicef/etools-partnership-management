@@ -376,7 +376,7 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        if (!this._validateAgreement()) {
+        if (!this.$.agreementDetails._validateAgreement()) {
           this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           return;
         }
@@ -391,46 +391,6 @@
           // fire update agreement
           this._saveAgreement(changedAgreementProperties);
         }
-      },
-      /**
-        * Validate agreement fields
-        */
-      _validateAgreement: function() {
-        var valid = true;
-        var reqFieldsSelectors = ['#partner', '#agreementType'];
-        if (this.agreement.agreement_type !== 'SSFA') {
-          reqFieldsSelectors.push('#officers');
-        }
-        if (this.agreement.agreement_type === 'PCA') {
-          reqFieldsSelectors.push('#cpStructure');
-          reqFieldsSelectors.push('#agreementAmendments');
-        }
-
-        if (this.agreement.agreement_type !== 'SSFA') {
-          if (!this._validateSignedByFields()) {
-            valid = false;
-          }
-        }
-
-        reqFieldsSelectors.forEach(function(fSelector) {
-          let field = this.$$(fSelector);
-          if (field && !field.validate()) {
-            valid = false;
-          }
-        }.bind(this));
-        return valid;
-      },
-      _validateSignedByFields: function() {
-        var valid = true;
-        var signedByFields = ['#signedByPartner', '#signedByPartnerDateField',
-         '#signedByUnicef', '#signedByUnicefDateField'];
-        signedByFields.forEach(function(selector) {
-          let field = this.$$(selector);
-          if (field && !field.validate()) {
-            valid = false;
-          }
-        }.bind(this));
-        return valid;
       },
 
       _prepareNewAgreementDataForSave: function(agreement) {
