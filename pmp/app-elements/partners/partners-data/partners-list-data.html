@@ -164,7 +164,7 @@
               if (searchString && searchString.length) {
                 var vnMatch = true;
                 if (partner.vendor_number) {
-                  vnMatch = partner.vendor_number.indexOf(searchString) < 0;
+                  vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
                 }
                 if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
                     partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
