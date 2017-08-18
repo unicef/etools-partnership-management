@@ -44,6 +44,10 @@
           color: var(--countries-dropdown-color);
           cursor: pointer;
           min-height: 24px;
+          text-align: right;
+        };
+        --paper-menu-button-dropdown: {
+          max-height: 380px;
         }
       }
 
@@ -63,7 +67,6 @@
       paper-item iron-icon {
         margin-right: 16px;
       }
-
     </style>
     <etools-ajax id="ajax"
                  method="POST"

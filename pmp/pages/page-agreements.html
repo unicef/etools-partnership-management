@@ -48,88 +48,110 @@
                          agreement-id="[[selectedAgreementId]]"
                          error-event-name="agreement-save-error"></agreement-item-data>
 
-      <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
-        <div class="top-content">
-          <div class="top-content-row title-row">
-            <h1 main-title>
+    <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
+      <div class="top-content">
+        <div class="top-content-row title-row">
+          <h1 main-title>
 
-              <template is="dom-if" if="[[agreementListActive]]">
-                <span>Agreements</span>
-              </template>
+            <template is="dom-if" if="[[agreementListActive]]">
+              <span>Agreements</span>
+            </template>
 
-              <template is="dom-if" if="[[newAgreementActive]]">
-                <span>Add Agreement</span>
-              </template>
+            <template is="dom-if" if="[[newAgreementActive]]">
+              <span>Add Agreement</span>
+            </template>
 
-              <template is="dom-if" if="[[agreementDetailsActive]]">
-                <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
-              </template>
+            <template is="dom-if" if="[[agreementDetailsActive]]">
+              <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
+            </template>
 
-              </span>
-            </h1>
-            <div class="top-content-actions-wrapper">
-              <div class="top-content-action" hidden$="[[!agreementListActive]]">
-                <a target="_blank" href$="[[csvDownloadUrl]]">
-                  <paper-button>
-                    <iron-icon icon="file-download"></iron-icon>
-                    Export
-                  </paper-button>
-                </a>
-              </div>
-             <!-- Print functionality pending implementation -->
-              <!--<div class="top-content-action">
+            </span>
+          </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!agreementListActive]]">
+              <a target="_blank" href$="[[csvDownloadUrl]]">
                 <paper-button>
-                  <iron-icon icon="print"></iron-icon>
-                  Print
+                  <iron-icon icon="file-download"></iron-icon>
+                  Export
                 </paper-button>
-              </div>-->
-              <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
-                <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
-                  <iron-icon icon="add"></iron-icon>
-                  Add New Agreement
-                </paper-button>
-              </div>
+              </a>
+            </div>
+            <!-- Print functionality pending implementation -->
+            <!--<div class="top-content-action">
+              <paper-button>
+                <iron-icon icon="print"></iron-icon>
+                Print
+              </paper-button>
+            </div>-->
+            <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
+              <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
+                <iron-icon icon="add"></iron-icon>
+                Add New Agreement
+              </paper-button>
             </div>
           </div>
-          <div class="top-content-row" hidden$="[[!_showPageTabs(agreementPage)]]">
-            <paper-tabs
-                selected="details"
-                attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+        </div>
+        <div class="top-content-row" hidden$="[[!_showPageTabs(agreementPage)]]">
+          <paper-tabs
+              selected="details"
+              attr-for-selected="name"
+              fallback-selection="details" noink bottom-item>
 
-              <paper-tab name="details" link>
-                <span class="tab-content">Agreement Details</span>
-              </paper-tab>
+            <paper-tab name="details" link>
+              <span class="tab-content">Agreement Details</span>
+            </paper-tab>
 
-            </paper-tabs>
-          </div>
+          </paper-tabs>
         </div>
       </div>
+    </div>
 
-      <iron-pages id="agreementsPages"
-                  selected="{{agreementPage}}"
-                  attr-for-selected="name"
-                  fallback-selection="list"
-                  role="main">
+    <div id="main">
+      <div id="pageContent">
+        <etools-error-messages-box id="errorsBox"
+                          title="Errors Saving Agreement"
+                          errors="{{serverErrors}}"></etools-error-messages-box>
+        <iron-pages id="agreementsPages"
+                    selected="{{agreementPage}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    role="main">
 
-        <div class="page" name="list">
-          <agreements-list id="list"
-                           active="[[agreementListActive]]"
-                           csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[agreementQueryParams]]">
-          </agreements-list>
+          <div class="page" name="list">
+            <agreements-list id="list"
+                active="[[agreementListActive]]"
+                csv-download-url="{{csvDownloadUrl}}"
+                url-params="[[agreementQueryParams]]">
+            </agreements-list>
+          </div>
+
+          <div class="page" name="details">
+            <agreement-details
+                id="agreementDetails"
+                agreement="[[agreement]]"
+                authorized-officers="{{authorizedOfficers}}"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                is-new-agreement="[[newAgreementActive]]"
+                on-update-agreement-status="_updateAgreementStatus">
+            </agreement-details>
+          </div>
+        </iron-pages>
+      </div>
+      <!-- sidebar content start -->
+      <div id="sidebar" hidden$="[[agreementListActive]]">
+        <agreement-status status$="[[agreement.status]]"
+                          new-agreement$="[[newAgreementActive]]"
+                          agreement-id$="[[agreement.id]]"
+                          agreement-type="[[agreement.agreement_type]]"
+                          on-save-agreement="_validateAndTriggerAgreementSave"
+                          edit-mode="[[_hasEditPermissions(permissions)]]">
+        </agreement-status>
+      </div>
+    </div> <!-- main page content end -->
+
+          <!-- sidebar content end -->
         </div>
-        <div class="page" name="details">
-          <agreement-details
-              id="agreementDetails"
-              agreement="[[agreement]]"
-              edit-mode="[[_hasEditPermissions(permissions)]]"
-              is-new-agreement="[[newAgreementActive]]"
-              on-update-agreement-status="_updateAgreementStatus"
-              on-save-agreement="_saveAgreement"              >
-          </agreement-details>
-        </div>
-      </iron-pages>
+
 
   </template>
 
@@ -140,7 +162,6 @@
       is: 'page-agreements',
 
       properties: {
-
         agreementPage: {
           type: String,
           notify: true
@@ -148,11 +169,9 @@
         permissions: {
           type: Object
         },
-
         selectedAgreementId: {
           type: Number
         },
-
         newAgreementModel: {
           type: Object,
           value: {
@@ -210,7 +229,15 @@
         },
         routeData: {
           type: Object
-        }
+        },
+        agreement: {
+          type: Object,
+          observer: '_agreementChanged'
+        },
+        serverErrors: {
+          type: Array,
+          value: []
+        },
       },
 
       observers: [
@@ -233,7 +260,7 @@
       // },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
-        if (!agreementListActive || !permissions.partnershipManager) {
+        if (!agreementListActive || !permissions || !permissions.partnershipManager) {
           return false;
         }
         return true;
@@ -244,7 +271,6 @@
         if (detailsActive || newAgreementActive) {
           page = 'details';
         }
-
         return page;
       },
 
@@ -283,9 +309,8 @@
         return false;
       },
 
-      _saveAgreement: function(event) {
-        event.stopImmediatePropagation();
-        var agreementData = event.detail;
+      _saveAgreement: function(agreementData) {
+        // var agreementData = event.detail;
         if (!agreementData.id) {
           agreementData.status = 'draft';
         }
@@ -307,7 +332,7 @@
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
-          this.$.agreementDetails.set('serverErrors', event.detail);
+          this.set('serverErrors', event.detail);
         }
       },
 
@@ -335,7 +360,144 @@
         } catch (err) {
           this.logWarn('List refresh error occurred', '[agreements-page]', err);
         }
-      }
+      },
+
+      _agreementChanged: function(agreement) {
+        // keep a copy of the agreement before changes are made and use it later to save only the changes
+        this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+        this.set('serverErrors', []);
+      },
+
+      /**
+        * Save agreement if all fields are validated
+        */
+      _validateAndTriggerAgreementSave: function(event) {
+        event.stopImmediatePropagation();
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        if (!this.$.agreementDetails._validateAgreement()) {
+          this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          return;
+        }
+
+        if (this.newAgreementActive) {
+          this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
+        } else {
+          // check/get only changed content to be used as a body to the save request
+          var changedAgreementProperties = this._getCurrentChanges();
+          // we also need the id
+          changedAgreementProperties.id = this.agreement.id;
+          // fire update agreement
+          this._saveAgreement(changedAgreementProperties);
+        }
+      },
+
+      _prepareNewAgreementDataForSave: function(agreement) {
+        var self = this;
+        // we do not need all the agreement object data for the first save
+        var newAgreement = {
+          id: null,
+          status: '',
+          agreement_type: agreement.agreement_type,
+          partner: agreement.partner,
+          authorized_officers: this.authorizedOfficers
+        };
+        if (agreement.agreement_type === 'SSFA') {
+          return newAgreement;
+        }
+
+        newAgreement = Object.assign(newAgreement, {
+            signed_by_unicef_date: agreement.signed_by_unicef_date,
+            signed_by_partner_date: agreement.signed_by_partner_date,
+            signed_by: agreement.signed_by,
+            partner_manager: agreement.partner_manager,
+            attached_agreement: agreement.attached_agreement,
+        });
+        if (agreement.agreement_type === 'MOU') {
+          newAgreement.start = agreement.start;
+          newAgreement.end = agreement.end;
+        }
+        if (agreement.agreement_type === 'PCA') {
+          newAgreement.country_programme = agreement.country_programme;
+        }
+        return newAgreement;
+      },
+
+      /**
+        * Get agreement changed properties
+        */
+      _getCurrentChanges: function() {
+        var changes = {};
+        if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
+          // prevent the possibility of checking 2 different agreements
+            return {};
+        }
+
+        if (this._primitiveFieldIsModified('partner')) {
+          changes.partner = this.agreement.partner;
+        }
+        if (this.agreement.agreement_type !== 'SSFA') {
+          if (this._authorizedOfficersChanged()) {
+            changes.authorized_officers = this.authorizedOfficers;
+          }
+
+          if ((this.agreement.hasOwnProperty('attached_agreement')) &&
+                  (this.agreement.attached_agreement instanceof File)) {
+            changes.attached_agreement = this.agreement.attached_agreement;
+          }
+
+          var signedByFields = ['partner_manager',  'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          signedByFields.forEach(function(fieldName) {
+            if (this._primitiveFieldIsModified(fieldName)) {
+              changes[fieldName] = this.agreement[fieldName];
+            }
+          }.bind(this));
+        }
+
+        if (this.agreement.agreement_type === 'MOU') {
+          ['start','end'].forEach(function(fieldName) {
+            if (this._primitiveFieldIsModified(fieldName)) {
+              changes[fieldName] = this.agreement[fieldName];
+            }
+          }.bind(this));
+        }
+
+        if (this.agreement.agreement_type === 'PCA') {
+          if (this._primitiveFieldIsModified('country_programme')) {
+            changes.country_programme = this.agreement.country_programme;
+          }
+          if (this._objectFieldIsModified('amendments')) {
+            changes.amendments = this.agreement.amendments;
+          }
+        }
+        return changes;
+      },
+
+      _primitiveFieldIsModified: function(fieldName) {
+        return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
+      },
+
+      _authorizedOfficersChanged: function() {
+        var initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
+        return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
+      },
+
+      _objectFieldIsModified: function(fieldName) {
+        // jscs:disable maximumLineLength
+        return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(this.agreement[fieldName]);
+        // jscs:enable maximumLineLength
+      },
+
+      _getInitialAuthorizedOfficersIds: function() {
+        if (!this.originalAgreementData.authorized_officers) {
+          return null;
+        }
+        return this.originalAgreementData.authorized_officers.map(function(off) {
+            return off.id.toString();
+          }
+        );
+      },
 
     });
 
