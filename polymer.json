@@ -4,7 +4,14 @@
   "fragments": [
     "pmp/pages/page-partners.html",
     "pmp/pages/page-agreements.html",
+
     "pmp/pages/page-interventions.html",
+    "pmp/app-elements/interventions/interventions-list.html",
+    "pmp/app-elements/interventions/intervention-overview.html",
+    "pmp/app-elements/interventions/intervention-details.html",
+    "pmp/app-elements/interventions/intervention-review-and-sign.html",
+    "pmp/app-elements/interventions/intervention-attachments.html",
+
     "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [

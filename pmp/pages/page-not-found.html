@@ -1,12 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
-
-<link rel="import" href="../../styles/shared-styles.html">
-
+<link rel="import" href="../../styles/app-mixins.html">
 <dom-module id="page-not-found">
 
   <template>
@@ -15,45 +10,40 @@
 
       :host {
         display: block;
+        width: 100%;
+        padding: 24px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      paper-material {
+        @apply --layout-vertical;
+        @apply --layout-flex;
       }
 
       a {
-        color: var(--accent-color);
+        color: var(--primary-color);
+      }
+
+      h1 {
+        @apply --page-title;
+        margin-bottom: 24px;
       }
 
     </style>
 
-    <app-header-layout has-scrolling-region>
-
-      <app-header fixed shadow>
-
-        <app-toolbar>
-          <paper-icon-button class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
-          <div main-title>404</div>
-        </app-toolbar>
-
-      </app-header>
-
-      <div id="pageContent">
-        <paper-material elevation="1">
-          <a href="/pmp/partners/list">Head back home.</a>
-        </paper-material>
-      </div>
-
-    </app-header-layout>
+    <paper-material elevation="1">
+      <h1>404 - Page not found!</h1>
+      <a href="/pmp/partners/list">Head back home.</a>
+    </paper-material>
 
   </template>
 
   <script>
 
     Polymer({
-
       is: 'page-not-found',
-
-      openDrawer: function() {
-        this.fire('drawer');
-      },
-
     });
 
   </script>

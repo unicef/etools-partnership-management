@@ -246,7 +246,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {
             partners: false,
             agreements: false,
-            interventions: false
+            interventions: false,
+            'not-found': false
           }
         },
         isIE: Boolean
@@ -348,8 +349,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.page = 'not-found';
-        this.fire('toast', {text: 'Oops you hit a 404!'});
+        this.set('route.path', this.baseUrl + 'not-found');
+        this.set('route.__queryParams', null);
+        // this.page = 'not-found';
+        this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
       _getPageElement: function(pageId) {

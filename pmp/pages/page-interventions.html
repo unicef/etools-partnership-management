@@ -153,7 +153,6 @@
           <iron-pages id="interventionsPages"
                       selected="{{interventionPage}}"
                       attr-for-selected="name"
-                      fallback-selection="list"
                       role="main">
 
             <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
@@ -488,25 +487,28 @@
           }
           pagePrefix = 'intervention-';
         }
-        let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pagePrefix + page + '.html');
-        console.log(resolvedPageUrl);
-        this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+        if (page) {
+          let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pagePrefix + page + '.html');
+          console.log(resolvedPageUrl);
+          this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+        }
         return page;
       },
 
       _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
-        // TODO: cleanup needed
-        // this.debounce('pageChange', function() {
-        let activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
-        if (activePage === 'list') {
-          this.set('serverErrors', []);
-          this.set('activeTab', 'details');
-        }
-        this.set('interventionPage', activePage);
-        if (this._redirectToNewIntervPageInProgress) {
-          this.set('_redirectToNewIntervPageInProgress', false);
-        }
-        // }.bind(this), 50);
+        this.debounce('pageChange', function() {
+          let activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
+          console.log(activePage);
+          if (activePage === 'list') {
+            this.set('serverErrors', []);
+            this.set('activeTab', 'details');
+          }
+          this.set('interventionPage', activePage);
+          console.log(activePage, this.interventionPage);
+          if (this._redirectToNewIntervPageInProgress) {
+            this.set('_redirectToNewIntervPageInProgress', false);
+          }
+        }.bind(this), 10);
       },
 
       _showPageTabs: function(interventionPage) {
@@ -630,12 +632,11 @@
         e.stopImmediatePropagation();
 
         // TODO: cleanup needed
-        return;
-
+        // return;
 
         try {
-          var interventions = this.$.intList;
-          if (!interventions.$.list.classList.contains('hidden')) {
+          let interventions = this.$$('#intList');
+          if (interventions && !interventions.$.list.classList.contains('hidden')) {
             interventions._filterInterventionsData(true);
           }
         } catch (err) {
