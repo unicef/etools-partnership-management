@@ -7,7 +7,6 @@
 <dom-module id="etools-status">
   <template>
     <style>
-
       :host {
         --ecp-content: {
           padding: 0px;
@@ -18,40 +17,49 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
+      [hidden] {
+        display: none !important;
+      }
       etools-content-panel {
         width: 100%;
       }
       .top-container {
         padding: 24px 24px 35px;
-        @apply(--etools-status-top-container);
+        @apply --etools-status-top-container-styles;
       }
       .bottom-container {
         border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding: 24px;
+        @apply --etools-status-bottom-container;
       }
-      .vertical-line {
-        @apply(--layout-flex);
+      etools-action-button {
+        @apply --etools-status-button-styles;
+      }
+      .divider-line {
+        @apply --layout-flex;
         margin: 8px 11px;
         border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
         padding-top: 40px;
+        @apply --etools-status-divider-styles;
       }
-      .vertical-line:first-child {
+
+      .divider-line:first-child {
         display: none;
       }
 
       .status-container {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         min-height: 24px;
-        @apply(--etools-status-container);
+        @apply --etools-status-container;
       }
       .status-icon, .status {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        @apply(--layout-warp);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-warp;
       }
       .icon-wrapper {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
         background-color: var(--etools-status-icon-inactive-color, #9D9D9D);
         width: 24px;
         height: 24px;
@@ -70,7 +78,7 @@
       }
       .icon-wrapper iron-icon,
       .icon-wrapper span {
-        @apply(--layout-self-center);
+        @apply --layout-self-center;
       }
       .icon-wrapper span {
         height: 14px;
@@ -119,7 +127,7 @@
       .completed .status, .custom .status {
         font-weight: bold;
         color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
-        @apply(--etools-status-label-style);
+        @apply --etools-status-label-style;
       }
       .completed .icon-wrapper span {
         display: none;
@@ -134,8 +142,7 @@
     <etools-content-panel panel-title="Status">
       <div class="top-container">
         <template is="dom-repeat" items="[[availableStatuses]]" as="status">
-            <div class="vertical-line"></div>
-
+            <div class="divider-line"></div>
             <div class$="status-container [[_getStatusCssClass(status, index)]]">
               <div class="status-icon">
                 <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">

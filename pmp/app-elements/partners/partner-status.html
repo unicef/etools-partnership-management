@@ -1,5 +1,5 @@
-<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
+<link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
 
@@ -8,6 +8,7 @@
     <style>
       :host {
         width: 100%;
+        --status-top: auto;
         --etools-status-label-style: {
           font-weight: normal;
         };
@@ -15,6 +16,9 @@
           height: auto;
           min-height: 40px;
         };
+      }
+      etools-status {
+        top: var(--status-top);
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
@@ -28,10 +32,8 @@
       Polymer({
         is: 'partner-status',
         behaviors: [
-          etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsLogsBehavior,
+          pmpBehaviors.statusBehavior
         ],
-
         properties: {
           partner: {
             type: Object,
@@ -113,18 +115,16 @@
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
-          this.deleteWarningDialogContent = document.createElement('p');
+          this.deleteWarningDialogContent = document.createElement('div');
           this.deleteWarningDialogContent.setAttribute('id', 'deleteWarningContent');
           this.warningDialog = this.createDialog('Delete Confirmation', 'md', 'Yes', 'No',
             this._dialogConfirmationCallback.bind(this), this.deleteWarningDialogContent);
           this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
           this.warningDialog.updateStyles();
+
+          this._handleStickyScroll();
         },
-        detached: function() {
-          if (this.warningDialog) {
-            this.removeDialog(this.warningDialog);
-          }
-        },
+
         _isHidden: function(hidden) {
           if (typeof hidden === 'undefined' || hidden === null) {
             return true;
@@ -157,27 +157,13 @@
           }
         },
 
-        _setAllActionsToHidden: function() {
-          var possibleActions = this.possibleActions;
-          possibleActions.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleActions', possibleActions);
-        },
-        _setAllStatusesToHidden: function() {
-          var possibleStatuses = this.possibleStatuses;
-          possibleStatuses.forEach(function(elem) {
-            elem.hidden = true;
-            elem.completed = false;
-          });
-
-          this.set('possibleStatuses', possibleStatuses);
-        },
-
         _computeAvailableActions: function(hidden, editMode) {
           this._setAllActionsToHidden();
           let availableOptions = ['Save', 'Delete'];
+
+          if (!this.partner) {
+            return;
+          }
           if (!editMode) {
             return;
           }
@@ -197,6 +183,9 @@
         _computeAvailableStatuses: function() {
           var activeStatus;
           this._setAllStatusesToHidden();
+          if (!this.partner) {
+            return;
+          }
           switch (true) {
             case this._showNotSyncedStatus():
               activeStatus = 'Not Synced';

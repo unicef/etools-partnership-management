@@ -39,7 +39,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -148,7 +148,8 @@
                                        readonly$="[[!intervention.permissions.edit.offices]]"
                                        required$="[[intervention.permissions.required.offices]]"
                                        auto-validate
-                                       error-message="Please select intervention's office(s)">
+                                       error-message="Please select intervention's office(s)"
+                                       avoid-header-overlapping-dropdown>
           </etools-multi-selection-menu>
         </div>
         <div class="col col-6">
@@ -163,7 +164,8 @@
                                        readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
                                        required$="[[intervention.permissions.required.unicef_focal_points]]"
                                        auto-validate
-                                       error-message="Please select UNICEF focal points">
+                                       error-message="Please select UNICEF focal points"
+                                       avoid-header-overlapping-dropdown>
           </etools-multi-selection-menu>
         </div>
       </div>
@@ -180,7 +182,8 @@
                                        readonly$="[[!intervention.permissions.edit.partner_focal_points]]"
                                        required$="[[intervention.permissions.required.partner_focal_points]]"
                                        auto-validate
-                                       error-message="Please select partner focal points">
+                                       error-message="Please select partner focal points"
+                                       avoid-header-overlapping-dropdown>
           </etools-multi-selection-menu>
         </div>
       </div>

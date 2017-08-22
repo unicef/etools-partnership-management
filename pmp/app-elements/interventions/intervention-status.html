@@ -1,7 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-elements/etools-status/etools-status.html">
+<link rel="import" href="../../app-elements/etools-status/pmp-status-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
 
@@ -10,6 +9,10 @@
     <style>
       :host {
         width: 100%;
+        --status-top: auto;
+      }
+      etools-status {
+        top: var(--status-top);
       }
     </style>
     <etools-status statuses="[[possibleStatuses]]"
@@ -26,32 +29,22 @@
     (function() {
       'use strict';
 
-      // TODO: Very important! this is 99% the same as agreement status.
-      // Check if the statuses are the same and refactor this 2 elements
-
       Polymer({
         is: 'intervention-status',
-
         behaviors: [
-          etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsLogsBehavior,
+          pmpBehaviors.statusBehavior
         ],
-
         properties: {
           interventionId: {
             type: Number
           },
-          status: {
-            type: String,
-            value: ''
-          },
-          newStatus: {
-            type: String,
-            value: ''
+          newIntervention: {
+            type: Boolean,
+            value: false
           },
           possibleStatuses: {
-          type: Array,
-          value: function() {
+            type: Array,
+            value: function() {
               return [
                 {
                   label: 'Draft',
@@ -131,65 +124,20 @@
                 event: 'intervention-terminate-event'
               },
             ]
-          },
-          warningDialog: Object,
-          statusChangeWarningDialogContent: Object,
+          }
         },
-        observers: [
-            '_handleStatusChange(status)'
-        ],
 
         ready: function() {
-          this.statusChangeWarningDialogContent = document.createElement('p');
-          this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
-          this.warningDialog = this.createDialog('PD/SSFA status change', 'md', 'Yes', 'No',
-              this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
-
-          this.warningDialog.customStyle['--paper-dialog-scrollable'] = 'var(--pmp-paper-dialog-content)';
-          this.warningDialog.updateStyles();
-        },
-
-        detached: function() {
-          if (this.warningDialog) {
-            this.removeDialog(this.warningDialog);
-          }
-        },
-
-        _showStatusChangeConfirmationDialog: function() {
-          if (this.warningDialog) {
-            var warningMessage = 'Are you sure you want to change status from: <strong>\''
-                + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
-
-            if (this.statusChangeWarningDialogContent) {
-              this.statusChangeWarningDialogContent.innerHTML = warningMessage;
-              this.warningDialog.opened = true;
-            } else {
-              this.logWarn('#statusChangeWarningContent element not found!', 'pmp intervetnion status change');
-            }
-          } else {
-            this.logWarn('warningDialog not created!', 'pmp intervetnion status change');
-          }
-        },
-
-        _setAllActionsToHidden: function() {
-          var possibleActions = this.possibleActions;
-          possibleActions.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleActions', possibleActions);
-        },
-        _setAllStatusesToHidden: function() {
-          var possibleStatuses = this.possibleStatuses;
-          possibleStatuses.forEach(function(elem) {
-            elem.hidden = true;
-          });
-
-          this.set('possibleStatuses', possibleStatuses);
+          this.set('sectionName', 'PD/SSFA');
+          this._createStatusChangeWarningDialog();
+          this._handleStickyScroll();
         },
 
         _computeAvailableActions: function(status) {
             this._setAllActionsToHidden();
+            if (!this.editMode) {
+              return;
+            }
             let availableOptions = ['Save'];
 
             if (status !== 'draft' && status !== '') {
@@ -313,7 +261,7 @@
               break;
           }
 
-          for (let key = this.possibleStatuses.length - 1; key >= 0 ; key--) {
+          for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
             let workingStatus = this.possibleStatuses[key];
             if (workingStatus.label === activeStatus) {
               completedFlag = true;
@@ -327,12 +275,6 @@
           }
         },
 
-        _handleStatusChange: function(status) {
-          this.debounce('reset-status-actions', function() {
-            this._computeAvailableStatuses(status);
-            this._computeAvailableActions(status);
-          }.bind(this), 50);
-        },
         _statusChangeConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
             this.fire('update-intervention-status', {
@@ -342,15 +284,6 @@
             this.fire('reload-list');
           }
           this.set('newStatus', '');
-        },
-
-        _updateStatus: function(newStatus) {
-          if (!this._statusChangeIsValid(newStatus)) {
-            return;
-          }
-
-          this.set('newStatus', newStatus);
-          this._showStatusChangeConfirmationDialog();
         },
 
         _statusChangeIsValid: function(newStatus) {

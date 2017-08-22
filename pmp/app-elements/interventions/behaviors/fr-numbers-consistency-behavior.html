@@ -37,7 +37,8 @@
       return false;
     },
 
-    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,  returnMsg) {
+    checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention,
+      interventionIsFromWhere, returnMsg) {
       if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
@@ -99,7 +100,7 @@
       if (interventionIsFromWhere === 'interventionDetails') {
         return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
       } else if (interventionIsFromWhere === 'interventionsList') {
-         return !intervention.frs_earliest_start_date || ! intervention.frs_latest_end_date;
+         return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
       }
     }
 

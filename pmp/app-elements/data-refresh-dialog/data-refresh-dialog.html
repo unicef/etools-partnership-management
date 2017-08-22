@@ -32,9 +32,6 @@
       .row-indent {
         padding-left: 40px;
       }
-      .horizontal-padding {
-        padding: 0px 24px;
-      }
 
     </style>
     <etools-dialog
@@ -46,7 +43,7 @@
         disable-confirm-btn="[[!anySelected]]"
         on-close="_handleDialogClosed">
       <div id="content-box">
-          <div class="horizontal-padding">Select the data you want to refresh:</div>
+          <div>Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
               <etools-checkable-input checked="{{partnersSelected}}"
