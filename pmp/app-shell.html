@@ -155,7 +155,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-sidebar-menu base-url="[[baseUrl]]"
                           page="[[page]]"
                           small-menu$="[[smallMenu]]"></app-sidebar-menu>
-
       </app-drawer>
 
       <!-- Main content -->
@@ -368,7 +367,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _firstPageRenderCallback: function(currentLoadedPage) {
         this.fire('global-loading', {active: false}); // deactivate first page loading msg
         this._redirectToProperListPage();
+
+        // TODO: cleanup needed
         // this._lazyLoadPages(currentLoadedPage);
+
       },
       // load all the other main pages except the one just rendered
       _lazyLoadPages: function(currentLoadedPage) {

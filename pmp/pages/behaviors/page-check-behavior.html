@@ -1,0 +1,26 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.pageCheckBehavior */
+  pmpBehaviors.pageCheckBehavior = {
+
+    properties: {
+      _canStampSubpagesElem: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    _pageEquals: function(activePage, expectedPage) {
+      return activePage === expectedPage;
+    },
+
+    _triggerPageNotFound: function() {
+      this.fire('404');
+    },
+
+    _triggerSubpagesElementsStamp: function() {
+      this.set('_canStampSubpagesElem', true);
+    }
+
+  };
+</script>
