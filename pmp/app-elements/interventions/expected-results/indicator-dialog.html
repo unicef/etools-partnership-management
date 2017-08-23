@@ -48,17 +48,16 @@
         padding: 0;
       }
 
-      #indicator-content {
-        max-height: 600px;
-        overflow-y: auto;
-        padding-top: 16px;
-        padding-bottom: 16px;
-      }
-      .container {
+      .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
         border : solid 1px #dcdcdc;
         overflow-x: auto;
+      }
+      etools-dialog {
+        --paper-dialog: {
+          overflow-y: auto;
+        }
       }
     </style>
 
@@ -85,7 +84,7 @@
                     attr-for-selected="name"
                     fallback-selection="details">
 
-        <div name="details" id="indicator-content" class="container">
+        <div name="details" class="indicator-content">
           <div class="row-v flex-c">
             <label class="paper-label">Type </label>
             <div class="layout-horizontal">
