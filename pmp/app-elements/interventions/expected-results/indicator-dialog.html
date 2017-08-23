@@ -84,108 +84,108 @@
                     attr-for-selected="name"
                     fallback-selection="details">
 
-      <div name="details" id="indicator-content" class="container">
-        <div class="row-v flex-c">
-          <label class="paper-label">Type </label>
-          <div class="layout-horizontal">
-            <etools-checkable-input type="radio" label="#" label-alignment="right"
-                                    checked="{{unit.numeric}}"
-                                    on-tap="_unitChanged"
-                                    data-unit-to-reset="yesno,percentage"></etools-checkable-input>
-            <etools-checkable-input type="radio" label="%" label-alignment="right"
-                                    checked="{{unit.percentage}}"
-                                    on-tap="_unitChanged"
-                                    data-unit-to-reset="numeric,yesno"></etools-checkable-input>
-            <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
-                                    checked="{{unit.yesno}}"
-                                    on-tap="_unitChanged"
-                                    data-unit-to-reset="numeric,percentage"></etools-checkable-input>
+        <div name="details" id="indicator-content" class="container">
+          <div class="row-v flex-c">
+            <label class="paper-label">Type </label>
+            <div class="layout-horizontal">
+              <etools-checkable-input type="radio" label="#" label-alignment="right"
+                                      checked="{{unit.numeric}}"
+                                      on-tap="_unitChanged"
+                                      data-unit-to-reset="yesno,percentage"></etools-checkable-input>
+              <etools-checkable-input type="radio" label="%" label-alignment="right"
+                                      checked="{{unit.percentage}}"
+                                      on-tap="_unitChanged"
+                                      data-unit-to-reset="numeric,yesno"></etools-checkable-input>
+              <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
+                                      checked="{{unit.yesno}}"
+                                      on-tap="_unitChanged"
+                                      data-unit-to-reset="numeric,percentage"></etools-checkable-input>
+            </div>
           </div>
-        </div>
-        <div class="row-h flex-c">
-          <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
-        </div>
+          <div class="row-h flex-c">
+            <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
+          </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <template is="dom-if" if="[[unit.numeric]]">
-              <paper-input label="Baseline"
-                           value="{{indicator.baseline}}"
-                           type="number"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.percentage]]">
-              <paper-input label="Baseline"
-                           value="{{indicator.baseline}}"
-                           type="number"
-                           min="0"
-                           max="100"
-                           allowed-pattern="[0-9\.]"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.yesno]]">
-              <paper-dropdown-menu label="Baseline" noink always-float-label>
-                <paper-menu class="dropdown-content"
-                            attr-for-selected="name"
-                            selected="{{indicator.baseline}}">
-                  <paper-item name="yes">Yes</paper-item>
-                  <paper-item name="no">No</paper-item>
-                </paper-menu>
-              </paper-dropdown-menu>
-            </template>
-          </div>
-          <div class="col col-3">
-            <template is="dom-if" if="[[unit.numeric]]">
-              <paper-input label="Target"
-                           value="{{indicator.target}}"
-                           type="number"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.percentage]]">
-              <paper-input label="Target"
-                           value="{{indicator.target}}"
-                           type="number"
-                           min="0"
-                           max="100"
-                           allowed-pattern="[0-9\.]"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.yesno]]">
-              <paper-dropdown-menu label="Target" noink always-float-label>
-                <paper-menu class="dropdown-content"
-                            attr-for-selected="name"
-                            selected="{{indicator.target}}">
-                  <paper-item name="yes">Yes</paper-item>
-                  <paper-item name="no">No</paper-item>
-                </paper-menu>
-              </paper-dropdown-menu>
-            </template>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-            <paper-textarea label="Means of Verification"
-                            value="{{indicator.means_of_verification}}"
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <template is="dom-if" if="[[unit.numeric]]">
+                <paper-input label="Baseline"
+                            value="{{indicator.baseline}}"
+                            type="number"
                             placeholder="&#8212;">
-            </paper-textarea>
+                </paper-input>
+              </template>
+              <template is="dom-if" if="[[unit.percentage]]">
+                <paper-input label="Baseline"
+                            value="{{indicator.baseline}}"
+                            type="number"
+                            min="0"
+                            max="100"
+                            allowed-pattern="[0-9\.]"
+                            placeholder="&#8212;">
+                </paper-input>
+              </template>
+              <template is="dom-if" if="[[unit.yesno]]">
+                <paper-dropdown-menu label="Baseline" noink always-float-label>
+                  <paper-menu class="dropdown-content"
+                              attr-for-selected="name"
+                              selected="{{indicator.baseline}}">
+                    <paper-item name="yes">Yes</paper-item>
+                    <paper-item name="no">No</paper-item>
+                  </paper-menu>
+                </paper-dropdown-menu>
+              </template>
+            </div>
+            <div class="col col-3">
+              <template is="dom-if" if="[[unit.numeric]]">
+                <paper-input label="Target"
+                            value="{{indicator.target}}"
+                            type="number"
+                            placeholder="&#8212;">
+                </paper-input>
+              </template>
+              <template is="dom-if" if="[[unit.percentage]]">
+                <paper-input label="Target"
+                            value="{{indicator.target}}"
+                            type="number"
+                            min="0"
+                            max="100"
+                            allowed-pattern="[0-9\.]"
+                            placeholder="&#8212;">
+                </paper-input>
+              </template>
+              <template is="dom-if" if="[[unit.yesno]]">
+                <paper-dropdown-menu label="Target" noink always-float-label>
+                  <paper-menu class="dropdown-content"
+                              attr-for-selected="name"
+                              selected="{{indicator.target}}">
+                    <paper-item name="yes">Yes</paper-item>
+                    <paper-item name="no">No</paper-item>
+                  </paper-menu>
+                </paper-dropdown-menu>
+              </template>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+              <paper-textarea label="Means of Verification"
+                              value="{{indicator.means_of_verification}}"
+                              placeholder="&#8212;">
+              </paper-textarea>
+          </div>
+
         </div>
 
-      </div>
+        <div class="row-h flex-c" name="disaggregations">
+          <paper-material elevation="0">
 
-      <div class="row-h flex-c" name="disaggregations">
-        <paper-material elevation="0">
+            <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
 
-          <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
-
-          <indicator-dissaggregations data-items="{{disaggregations}}"
-                                      on-disaggregation-change="_centerDialog">
-          </indicator-dissaggregations>
-        </paper-material>
-      </div>
-
+            <indicator-dissaggregations data-items="{{disaggregations}}"
+                                        on-disaggregation-change="_centerDialog">
+            </indicator-dissaggregations>
+          </paper-material>
+        </div>
+      </iron-pages>
     </etools-dialog>
 
   </template>
