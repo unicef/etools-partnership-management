@@ -75,10 +75,15 @@
       return ['partner', 'agreement', 'document_type', 'title'];
     },
 
-    _getDraftToSignedRequiredFields: function() {
-      return ['offices', 'unicef_focal_points', 'partner_focal_points', 'start', 'end', 'sector_locations',
+    _getDraftToSignedRequiredFields: function(intervention) {
+
+      let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sector_locations',
         'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
         'signed_by_unicef_date', 'signed_pd_document'];
+      if (!intervention.contingency_pd) {
+        fields.push('start', 'end');
+      }
+      return fields;
     },
 
     _getEditableFieldsForAddAmendmentAction: function() {
@@ -148,8 +153,9 @@
       this._updateRelatedPermStyles();
     },
 
-    getDraftToSignedTransitionPermissions: function(currentPerm) {
-      let reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields();
+    getDraftToSignedTransitionPermissions: function(intervention) {
+      let currentPerm = intervention.permissions;
+      let reqFieldsForSignedStatus = this._getDraftToSignedRequiredFields(intervention);
       let perm = JSON.parse(JSON.stringify(currentPerm));
       reqFieldsForSignedStatus.forEach(function(field) {
         perm.required[field] = true;
@@ -246,7 +252,7 @@
       e.stopImmediatePropagation();
       if (e.detail.docSelected) {
         this.setInterventionPermissions(false,
-            this.getDraftToSignedTransitionPermissions(this.intervention.permissions));
+            this.getDraftToSignedTransitionPermissions(this.intervention));
       } else {
         if (!this._canRestoreOriginalPermissions()) {
           return;
