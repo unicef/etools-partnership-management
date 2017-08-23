@@ -100,16 +100,16 @@
                                               placeholder="&#8212;"
                                               options="[[sectors]]"
                                               option-label="name"
-                                              option-value="id"
-                                              readonly$="[[!editMode]]">
+                                              option-value="id">
                 </etools-single-selection-menu>
               </div>
             </div>
             <div class="row-h">
-              <paper-toggle-button checked="{{indicator.isCluster}}" disabled="[[!editMode]]"></paper-toggle-button> Cluster Indicator
+              <paper-toggle-button checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
             </div>
             <div class="indicator-content">
-              <!-- <div class="row-v flex-c">
+              <div hidden>
+               <div class="row-v flex-c">
                 <label class="paper-label">Type </label>
                 <div class="layout-horizontal">
                   <etools-checkable-input type="radio" label="#" label-alignment="right"
@@ -195,7 +195,8 @@
                                   value="{{indicator.means_of_verification}}"
                                   placeholder="&#8212;">
                   </paper-textarea>
-              </div> -->
+              </div>
+             </div>
 
               <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
 
