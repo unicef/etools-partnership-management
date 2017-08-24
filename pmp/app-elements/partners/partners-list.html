@@ -300,7 +300,9 @@
         ready: function() {
           this.$.list.classList.add('hidden');
         },
-
+        reloadListData: function() {
+          this.$$('#partners').reloadData();
+        },
         _mapDropdownOptions: function() {
           if (!this.partnerTypes || !this.partnerTypes.length) {
             return;

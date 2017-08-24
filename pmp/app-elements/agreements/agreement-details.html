@@ -60,10 +60,6 @@
 
     </style>
 
-    <partner-staff-members-data partner-id="[[agreement.partner]]"
-                                prepared-staff-members-data="{{staffMembers}}">
-    </partner-staff-members-data>
-
       <etools-content-panel class="content-section" panel-title="Agreement Details">
 
         <div class="row-h flex-c b-border row-second-bg">
@@ -289,6 +285,11 @@
           </agreement-amendments>
         </etools-content-panel>
       </template>
+
+
+      <partner-staff-members-data partner-id="[[agreement.partner]]"
+                                  prepared-staff-members-data="{{staffMembers}}">
+      </partner-staff-members-data>
 
   </template>
 
