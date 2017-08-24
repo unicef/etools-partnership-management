@@ -10,18 +10,12 @@
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
-<link rel="import" href="behaviors/page-check-behavior.html">
+<link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 <link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
 
-<!-- TODO: add each tab content to polymer -->
-<!--<link rel="import" href="../app-elements/interventions/interventions-list.html">-->
-<!--<link rel="import" href="../app-elements/interventions/intervention-details.html">-->
-<!--<link rel="import" href="../app-elements/interventions/intervention-overview.html">-->
-<!--<link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">-->
-<!--<link rel="import" href="../app-elements/interventions/intervention-attachments.html">-->
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
 
 <link rel="import" href="../../styles/app-mixins.html">
@@ -100,31 +94,34 @@
             </div>
           </div>
         </div>
-        <div class="top-content-row" hidden$="[[!_showPageTabs(interventionPage)]]">
-          <paper-tabs id="intTabs"
-                      selected="{{activeTab}}"
-                      attr-for-selected="name"
-                      noink bottom-item>
-            <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
+        <template is="dom-if" if="[[_showPageTabs(interventionPage)]]">
+          <div class="top-content-row">
+            <paper-tabs id="intTabs"
+                        selected="{{activeTab}}"
+                        attr-for-selected="name"
+                        noink bottom-item
+                        on-iron-select="_handleTabSelectAction">
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="overview" link>
+                  <span class="tab-content">Overview</span>
+                </paper-tab>
+              </template>
+
+              <paper-tab name="details" link>
+                <span class="tab-content">Details</span>
               </paper-tab>
-            </template>
 
-            <paper-tab name="details" link>
-              <span class="tab-content">Details</span>
-            </paper-tab>
+              <paper-tab name="review-and-sign" link>
+                <span class="tab-content">Review & Sign</span>
+              </paper-tab>
 
-            <paper-tab name="review-and-sign" link>
-              <span class="tab-content">Review & Sign</span>
-            </paper-tab>
+              <paper-tab name="attachments" link>
+                <span class="tab-content">Attachments</span>
+              </paper-tab>
 
-            <paper-tab name="attachments" link>
-              <span class="tab-content">Attachments</span>
-            </paper-tab>
-
-          </paper-tabs>
-        </div>
+            </paper-tabs>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -135,80 +132,77 @@
                                    title="[[errorMsgBox_Title]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
-        <template is="dom-if" if="[[_canStampSubpagesElem]]">
+        <iron-pages id="interventionsPages"
+                    selected="{{interventionPage}}"
+                    attr-for-selected="name"
+                    role="main">
 
-          <intervention-item-data id="interventionData"
-                                  intervention="{{intervention}}"
-                                  intervention-id="[[selectedInterventionId]]"
-                                  error-event-name="intervention-save-error"></intervention-item-data>
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
+            <div class="page" name="list">
+              <interventions-list id="intList"
+                                  active="[[intervListActive]]"
+                                  csv-download-url="{{csvDownloadUrl}}"
+                                  url-params="[[interventionsQueryParams]]">
+              </interventions-list>
+            </div>
+          </template>
 
-          <partner-staff-members-data partner-id="[[partnerId]]"
-                                      prepared-staff-members-data="{{partnerStaffMembers}}">
-          </partner-staff-members-data>
+          <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
+            <div class="page" name="overview">
+              <intervention-overview intervention="[[intervention]]"
+                                     intervention-agreement="[[agreement]]">
+              </intervention-overview>
+            </div>
+          </template>
 
-          <agreement-item-data id="agreement"
-                               agreement-id="[[intervention.agreement]]"
-                               agreement="{{agreement}}"></agreement-item-data>
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'details')]]">
+            <div class="page" name="details">
+              <intervention-details id="interventionDetails"
+                                    intervention="{{intervention}}"
+                                    partner-staff-members="[[partnerStaffMembers]]"
+                                    selected-partner-id="{{partnerId}}"
+                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                    on-update-intervention-status="_updateInterventionStatus"
+                                    original-intervention="[[originalIntervention]]">
+              </intervention-details>
+            </div>
+          </template>
 
-          <iron-pages id="interventionsPages"
-                      selected="{{interventionPage}}"
-                      attr-for-selected="name"
-                      role="main">
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'review-and-sign')]]">
+            <div class="page" name="review-and-sign">
+              <intervention-review-and-sign id="interventionReviewAndSign"
+                                            intervention="{{intervention}}"
+                                            agreement="[[agreement]]">
+              </intervention-review-and-sign>
+            </div>
+          </template>
 
-            <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
-              <div class="page" name="list">
-                <interventions-list id="intList"
-                                    active="[[intervListActive]]"
-                                    csv-download-url="{{csvDownloadUrl}}"
-                                    url-params="[[interventionsQueryParams]]">
-                </interventions-list>
-              </div>
-            </template>
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
+            <div class="page" name="attachments">
+              <intervention-attachments id="intervAttachments"
+                                        active="[[_isAttachementsTabActive(activeTab)]]"
+                                        intervention="[[intervention]]"
+                                        file-model="[[_getAttachmentModel(intervention.id)]]"
+                                        attachments="{{intervention.attachments}}"
+                                        edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
+              </intervention-attachments>
+            </div>
+          </template>
 
-            <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
-              <div class="page" name="overview">
-                <intervention-overview intervention="[[intervention]]"
-                                       intervention-agreement="[[agreement]]">
-                </intervention-overview>
-              </div>
-            </template>
+        </iron-pages>
 
-            <template is="dom-if" if="[[_pageEquals(interventionPage, 'details')]]">
-              <div class="page" name="details">
-                <intervention-details id="interventionDetails"
-                                      intervention="{{intervention}}"
-                                      partner-staff-members="[[partnerStaffMembers]]"
-                                      selected-partner-id="{{partnerId}}"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                      on-update-intervention-status="_updateInterventionStatus"
-                                      original-intervention="[[originalIntervention]]">
-                </intervention-details>
-              </div>
-            </template>
+        <intervention-item-data id="interventionData"
+                                intervention="{{intervention}}"
+                                intervention-id="[[selectedInterventionId]]"
+                                error-event-name="intervention-save-error"></intervention-item-data>
 
-            <template is="dom-if" if="[[_pageEquals(interventionPage, 'review-and-sign')]]">
-              <div class="page" name="review-and-sign">
-                <intervention-review-and-sign id="interventionReviewAndSign"
-                                              intervention="{{intervention}}"
-                                              agreement="[[agreement]]">
-                </intervention-review-and-sign>
-              </div>
-            </template>
+        <partner-staff-members-data partner-id="[[partnerId]]"
+                                    prepared-staff-members-data="{{partnerStaffMembers}}">
+        </partner-staff-members-data>
 
-            <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
-              <div class="page" name="attachments">
-                <intervention-attachments id="intervAttachments"
-                                          active="[[_isAttachementsTabActive(activeTab)]]"
-                                          intervention="[[intervention]]"
-                                          file-model="[[_getAttachmentModel(intervention.id)]]"
-                                          attachments="{{intervention.attachments}}"
-                                          edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
-                </intervention-attachments>
-              </div>
-            </template>
-
-          </iron-pages>
-        </template>
+        <agreement-item-data id="agreement"
+                             agreement-id="[[intervention.agreement]]"
+                             agreement="{{agreement}}"></agreement-item-data>
 
       </div> <!-- main page content end -->
 
@@ -236,7 +230,7 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior,
-        pmpBehaviors.pageCheckBehavior,
+        pmpBehaviors.PageUtilsBehavior,
         pmpBehaviors.InterventionPermissionsBehavior,
         pmpBehaviors.SaveInterventionBehavior
       ],
@@ -311,7 +305,7 @@
         },
         activeTab: {
           type: String,
-          value: 'details',
+          value: '',
           observer: '_activeTabChanged'
         },
         serverErrors: {
@@ -343,7 +337,9 @@
               justSaved: false
             };
           }
-        }
+        },
+        _forceDetUiValidationOnAttach: Boolean,
+        _forceReviewUiValidationOnAttach: Boolean
       },
       observers: [
         /**
@@ -359,7 +355,8 @@
 
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
-        'reload-list': '_reloadInterventionsList'
+        'reload-list': '_reloadInterventionsList',
+        'intervention-page-attached': '_interventionPageAttached'
       },
 
       ready: function() {
@@ -374,8 +371,20 @@
       },
 
       attached: function() {
-        console.log('attached....');
-        this._triggerSubpagesElementsStamp();
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        /**
+         * Start stamping tabs elements.
+         * Loading msg used here (disabled in each tab main element attached callback)
+         */
+        this.set('_ignoreFirstTabSelectEvent', true);
+        this.fire('global-loading', {
+          message: 'Loading ' + (this.intervListActive ? 'PD/SSFA list' :
+              (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
+          active: true,
+          loadingSource: 'interv-page'
+        });
+        console.log('interv attached');
       },
 
       detached: function() {
@@ -390,11 +399,6 @@
         }
       },
 
-      // TODO: do not remove this, we might needed back
-      // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
-      //   return !intervDetailsActive && !newInterventionActive;
-      // },
-
       _interventionChanged: function(intervention, permissions) {
 
         this._displayAnyMigrationErrors(intervention);
@@ -408,8 +412,8 @@
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
           this.async(function() {
-            // ensure loading msg close
-            this.fire('global-loading', {active: false});
+            // ensure intervention get/save/change status loading msgs close
+            this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
           }.bind(this), 1000);
         }
       },
@@ -468,7 +472,10 @@
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
         this.debounce('debounce-url-tab-update', function() {
-          this.$.intTabs.notifyResize();
+          let tabs = this.$$('#intTabs');
+          if (tabs) {
+            tabs.notifyResize();
+          }
           this.fire('update-main-path', {path: this.route.path});
         }.bind(this), 50);
       },
@@ -488,9 +495,11 @@
           pagePrefix = 'intervention-';
         }
         if (page) {
-          let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pagePrefix + page + '.html');
-          console.log(resolvedPageUrl);
-          this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+          let pageName = pagePrefix + page;
+          if (!Polymer.isInstance(this.$$(pageName))) {
+            let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pageName + '.html');
+            this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+          }
         }
         return page;
       },
@@ -498,13 +507,11 @@
       _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
           let activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
-          console.log(activePage);
           if (activePage === 'list') {
             this.set('serverErrors', []);
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
-          console.log(activePage, this.interventionPage);
           if (this._redirectToNewIntervPageInProgress) {
             this.set('_redirectToNewIntervPageInProgress', false);
           }
@@ -641,6 +648,23 @@
           }
         } catch (err) {
           this.logWarn('List refresh error occurred', '[interventions-page]', err);
+        }
+      },
+
+      _handleTabSelectAction: function(e) {
+        this._showTabChangeLoadingMsg(e, 'interv-page');
+      },
+
+      _interventionPageAttached: function(e) {
+        e.stopImmediatePropagation();
+        // force styles updates according with intervention permissions
+        this._updateRelatedPermStyles();
+        if (this._forceDetUiValidationOnAttach) {
+
+        }
+
+        if (this._forceReviewUiValidationOnAttach) {
+
         }
       }
 

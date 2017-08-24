@@ -151,12 +151,10 @@
           }
 
           if (newPageName !== this.page) {
-            e.preventDefault();
             this.fire('global-loading', {
               message: 'Loading ' + newPageName + ' pages elements...',
               active: true,
-              resetCounter: true,
-              newUrl: menuOptionEl.getAttribute('href').replace(this.baseUrl, '')
+              loadingSource: 'main-page'
             });
           }
         },

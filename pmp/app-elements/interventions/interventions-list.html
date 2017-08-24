@@ -382,7 +382,13 @@
         },
 
         attached: function() {
-          this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...');
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+
+          this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
         },
         _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {

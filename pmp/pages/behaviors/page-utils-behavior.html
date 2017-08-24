@@ -1,0 +1,40 @@
+<script>
+  window.pmpBehaviors = window.pmpBehaviors || {};
+  /** @polymerBehavior pmpBehaviors.PageUtilsBehavior */
+  pmpBehaviors.PageUtilsBehavior = {
+
+    properties: {
+      _ignoreFirstTabSelectEvent: Boolean
+    },
+
+    _pageEquals: function(activePage, expectedPage) {
+      return activePage === expectedPage;
+    },
+
+    _triggerPageNotFound: function() {
+      this.fire('404');
+    },
+
+    _removeStrDash: function(str) {
+      return str.replace(new RegExp('-', 'g'), ' ');
+    },
+
+    _showTabChangeLoadingMsg: function(e, loadingSource) {
+      if (!this._ignoreFirstTabSelectEvent) {
+        let clickedTabName = e.detail.item.getAttribute('name');
+        if (Polymer.isInstance(this.$$('intervention-' + clickedTabName))) {
+          // tab element already loaded, no need for loading messages
+          return;
+        }
+        this.fire('global-loading', {
+          message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
+          active: true,
+          loadingSource: loadingSource
+        });
+      } else {
+        this.set('_ignoreFirstTabSelectEvent', false);
+      }
+    }
+
+  };
+</script>

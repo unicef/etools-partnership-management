@@ -62,7 +62,11 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading intervention data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading PD/SSFA data...',
+              active: true,
+              loadingSource: 'pd-ssfa-data'
+            });
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
           }
@@ -177,7 +181,11 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               this._prepareEndpoint(data.interventionId);
-              this.fire('global-loading', {message: 'Changing intervention status...', active: true});
+              this.fire('global-loading', {
+                message: 'Changing intervention status...',
+                active: true,
+                loadingSource: 'pd-ssfa-data'
+              });
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
             } else {
@@ -258,7 +266,11 @@
                 return elem.year || elem.programmatic;
               });
             }
-            this.fire('global-loading', {message: 'Saving intervention data...', active: true});
+            this.fire('global-loading', {
+              message: 'Saving intervention data...',
+              active: true,
+              loadingSource: 'pd-ssfa-data'
+            });
             // fire in the hole
             this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
                 intervention, url, withUpload, prepareMultipartData);

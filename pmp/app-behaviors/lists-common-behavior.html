@@ -118,10 +118,10 @@
       this._init(this.active);
     },
 
-    listAttachedCallback: function(active, loadingMsg) {
+    listAttachedCallback: function(active, loadingMsg, loadingSource) {
       this.set('stampListData', true);
       if (active) {
-        this.fire('global-loading', {message: loadingMsg, active: true});
+        this.fire('global-loading', {message: loadingMsg, active: true, loadingSource: loadingSource});
       } else {
         this.set('showQueryLoading', true);
       }

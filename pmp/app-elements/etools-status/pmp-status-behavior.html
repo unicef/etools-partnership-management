@@ -65,7 +65,8 @@
 
     _setResizeHandler: function() {
       window.onresize = function() {
-        Polymer.updateStyles();
+        console.log('on resize');
+//        Polymer.updateStyles();
         this._resetScrollHandler();
         this._setScrollHandler();
       }.bind(this);

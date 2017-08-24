@@ -254,10 +254,12 @@
             this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
-      // TODO: do not remove this, we might needed back
-      // _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
-      //   return !agreementDetailsActive && !newAgreementActive;
-      // },
+
+      attached: function() {
+        console.log('page agreements attached...disable main-page loading');
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+      },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
         if (!agreementListActive || !permissions || !permissions.partnershipManager) {

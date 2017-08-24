@@ -17,11 +17,27 @@
           return;
         }
 
-        var interventionDetailsEl = this.$.interventionDetails;
-        var interventionDetailsAreValid = interventionDetailsEl.validate();
+       var interventionDetailsEl = this.$$('#interventionDetails');
+       var interventionDetailsAreValid = false;
+       if (interventionDetailsEl && typeof interventionDetailsEl.validate === 'function') {
+         interventionDetailsAreValid = interventionDetailsEl.validate();
+       } else {
+         // details element not stamped...
+         // validate current data that belongs to details tab against permissions
+         interventionDetailsAreValid = this._validateDetailsData();
+         this.set('_forceDetUiValidationOnAttach', true);
+       }
 
-        var reviewAndSignEl = this.$.interventionReviewAndSign;
-        var reviewAndSignIsValid = reviewAndSignEl.validate();
+       var reviewAndSignEl = this.$$('#interventionReviewAndSign');
+       var reviewAndSignIsValid = false;
+       if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
+         reviewAndSignIsValid = reviewAndSignEl.validate();
+       } else {
+         // review and signed element not stamped...
+         // validate current data that belongs to this tab tab against permissions
+         reviewAndSignIsValid = this._validateReviewAndSignedData();
+         this.set('_forceReviewUiValidationOnAttach', true);
+       }
 
         if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
           this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
@@ -47,6 +63,30 @@
         this._prepareDataForSave(interventionData, interventionDetailsEl);
 
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+      },
+
+      _validateDetailsData: function() {
+        let valid = true;
+        let interventionFields = ['agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
+          'partner_focal_points', 'country_programme', 'start', 'end', 'sector_locations'];
+        let i;
+        let fieldRequired;
+        let fieldVal;
+        for (i = 0; i < interventionFields.length; i++) {
+          fieldRequired = this.intervention.permissions.required[interventionFields[i]];
+          fieldVal = this.intervention[interventionFields[i]];
+          if (fieldRequired && _.isEmpty(fieldVal)) {
+            valid = false;
+            break;
+          }
+        }
+        return valid;
+      },
+
+      _validateReviewAndSignedData: function() {
+        let valid = true;
+        // TODO: ...
+        return valid;
       },
 
       _prepareDataForSave: function(interventionData, interventionDetailsEl) {

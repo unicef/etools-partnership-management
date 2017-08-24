@@ -19,7 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
-<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="app-config/etools-app-config.html">
@@ -32,7 +32,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
 <link rel="import" href="app-behaviors/notification-toasts-behavior.html">
-<link rel="import" href="app-behaviors/global-loading-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -127,19 +126,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
-    <!-- get static data -->
-    <dropdowns-pmp-data></dropdowns-pmp-data>
-    <dropdowns-static-data></dropdowns-static-data>
-    <sectors-data></sectors-data>
-    <sections-data></sections-data>
-    <unicef-users-data></unicef-users-data>
-    <offices-data></offices-data>
-    <locations-data></locations-data>
-    <partners-list-data></partners-list-data>
-    <agreement-list-data></agreement-list-data>
-    <country-programmes-data></country-programmes-data>
-    <user-country-data></user-country-data>
-
     <app-location route="{{route}}"></app-location>
 
     <app-route
@@ -190,16 +176,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
-        <etools-loading id="pageLoading"
-                        loading-text="Loading data..."
-                        active$="[[showLoading]]"
-                        absolute></etools-loading>
-
         <page-footer></page-footer>
 
       </app-header-layout>
     </app-drawer-layout>
     <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
+
+    <!-- get static data -->
+    <dropdowns-pmp-data></dropdowns-pmp-data>
+    <dropdowns-static-data></dropdowns-static-data>
+    <sectors-data></sectors-data>
+    <sections-data></sections-data>
+    <unicef-users-data></unicef-users-data>
+    <offices-data></offices-data>
+    <locations-data></locations-data>
+    <partners-list-data></partners-list-data>
+    <agreement-list-data></agreement-list-data>
+    <country-programmes-data></country-programmes-data>
+    <user-country-data></user-country-data>
 
   </template>
 
@@ -214,7 +208,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         EtoolsLogsBehavior,
         pmpBehaviors.appMenuBehavior,
         pmpBehaviors.NotificationToastsBehavior,
-        pmpBehaviors.globalLoadingBehavior
+        etoolsBehaviors.LoadingBehavior
       ],
 
       properties: {
@@ -240,15 +234,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         routeData: {
           type: Object
-        },
-        lazyLoadPages: {
-          type: Object,
-          value: {
-            partners: false,
-            agreements: false,
-            interventions: false,
-            'not-found': false
-          }
         },
         isIE: Boolean
       },
@@ -281,6 +266,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.isIE) {
           this._addIEBrowserStylesAdjustments();
         }
+        if (this.page !== 'not-found') {
+          console.log('app-shell ready');
+          /*
+           * Activate the global loading with a proper message.
+           * This will be triggered once at page load or, after page load, on menu option tap event.
+           * The loading message is disabled by page-* elements ready callback (in both cases)
+           */
+          this.fire('global-loading', {
+            message: 'Loading ' + this.page + ' pages elements...',
+            active: true,
+            loadingSource: 'main-page'
+          });
+        }
       },
 
       _openDataRefreshDialog: function() {
@@ -302,11 +300,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _setDefaultPage: function() {
         if (!!!this.page) {
-          this.fire('global-loading', {message: 'Loading page...', active: true});
           this.async(function() {
             this.set('page', 'partners');
-            this.set('loadingCounterDecrementAdjustment', 1);
-            this.set('skipDecrementAdjustment', true);
           }, 10);
         }
       },
@@ -335,11 +330,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var resolvedPageUrl = this.resolveUrl('pages/page-' + displayedPageCat + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
         var pageEl = this._getPageElement(displayedPageCat);
-        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[displayedPageCat] === false) {
-          // activate the global loading with a propper message
-          this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
+        if (!Polymer.isInstance(pageEl)) {
           // make the import
-          this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, displayedPageCat, pageEl),
+          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, displayedPageCat, pageEl),
               this._pageNotFound, false);
         }
       },
@@ -351,7 +344,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageNotFound: function() {
         this.set('route.path', this.baseUrl + 'not-found');
         this.set('route.__queryParams', null);
-        // this.page = 'not-found';
         this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
@@ -360,39 +352,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       // load all the other main pages after first page is loaded
-      _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
+      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
         currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
-        // load the rest of the pages after current page render is complete
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl,
-                                             this._firstPageRenderCallback.bind(this, currentLoadingPage));
+        // make sure to redirect to list page if necessary
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
       },
-      _firstPageRenderCallback: function(currentLoadedPage) {
-        this.fire('global-loading', {active: false}); // deactivate first page loading msg
-        this._redirectToProperListPage();
 
-        // TODO: cleanup needed
-        // this._lazyLoadPages(currentLoadedPage);
-
-      },
-      // load all the other main pages except the one just rendered
-      _lazyLoadPages: function(currentLoadedPage) {
-        try {
-          for (let page in this.lazyLoadPages) {
-            if (page !== currentLoadedPage && this.lazyLoadPages[page] === false) {
-              // make the import
-              let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
-              // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              this.importHref(pageUrl, this._setPageLoaded.bind(this, page) , null, false);
-            }
-          }
-        } catch (err) {
-          this.logError('An error occurred during pages lazy load', null, err);
-        }
-      },
-      _setPageLoaded: function(page) {
-        this.lazyLoadPages[page] = true;
-      },
       _activePageIs: function(activePage, expectedPages) {
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
@@ -438,9 +403,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
         if (currentPath === this.baseUrl + this.routeData.page) {
-          this.fire('global-loading', {message: 'Loading ' + this.routeData.page + ' pages elements...', active: true});
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-          this.set('loadingCounterDecrementAdjustment', 1);
           return;
         }
       },

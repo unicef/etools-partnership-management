@@ -209,6 +209,11 @@
           this.fire('create-partner', event.detail);
         }.bind(this), false);
       },
+      attached: function() {
+        console.log('page partners attached...disable main-page loading');
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+      },
       detached: function() {
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
