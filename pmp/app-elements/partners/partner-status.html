@@ -111,7 +111,7 @@
         },
 
         observers: [
-          '_computeAvailableStatuses(partner.vision_synced, partner.deleted_flag, partner.blocked)',
+          '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked)',
           '_computeAvailableActions(partner.hidden, editMode)'
         ],
         ready: function() {
@@ -123,6 +123,10 @@
           this.warningDialog.updateStyles();
 
           this._handleStickyScroll();
+        },
+        _partnerStatusChanged: function() {
+          this._computeAvailableStatuses();
+          this._forceScollPositionRecalculation();
         },
 
         _isHidden: function(hidden) {
