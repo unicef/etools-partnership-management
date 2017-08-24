@@ -165,12 +165,12 @@ App global configuration
       },
       // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
       unicefUsers: {
-        url: '/api/v2/users/?verbosity=minimal',//&group=Senior%20Management%20Team',
+        url: '/api/v3/users/?verbosity=minimal',//&group=Senior%20Management%20Team',
         exp: 60 * 60 * 1000, // 1h
         cachingKey: 'unicefUsers'
       },
       user: {
-        url: '/api/v2/users/profile/',
+        url: '/api/v3/users/profile/',
         exp: 30 * 60 * 1000, // 30min
         cachingKey: 'user'
       },
@@ -198,7 +198,7 @@ App global configuration
         template: '/api/v2/reports/lower_results/<%=id%>/',
       },
       myProfile:  {
-        template: '/api/v2/users/profile/',
+        template: '/api/v3/users/profile/',
       },
       countries: {
         url: '/api/countries/', // API request receives a 404 for now
