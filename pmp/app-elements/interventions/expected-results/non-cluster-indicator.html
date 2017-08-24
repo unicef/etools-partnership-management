@@ -69,7 +69,7 @@
           <paper-input label="Baseline"
                       value="{{indicator.baseline}}"
                       type="number"
-                      placeholder="&#8212;" disabled="{{baselineIsReadonly}}">
+                      placeholder="&#8212;" disabled="[[indicator.baselineIsUnknown]]">
           </paper-input>
         </template>
         <template is="dom-if" if="[[!_unitIsNumeric(indicator.unit)]]">
@@ -79,7 +79,7 @@
                       min="0"
                       max="100"
                       allowed-pattern="[0-9\.]"
-                      placeholder="&#8212;" disabled="{{baselineIsReadonly}}">
+                      placeholder="&#8212;" disabled="[[indicator.baselineIsUnknown]]">
           </paper-input>
         </template>
       </div>
@@ -147,23 +147,18 @@
             type: Array,
             statePath: 'locations'
           },
-          baselineIsReadonly: {
-            type: Boolean,
-            value: false
-          }
+
         },
         observers: [
-          '_baselineUnknownChanged(indicator.baselineIsUnknown)'
+           '_baselineUnknownChanged(indicator.baselineIsUnknown)'
         ],
         _unitIsNumeric: function(unit) {
           return unit === 'numeric';
         },
+
         _baselineUnknownChanged: function(isUnknown) {
           if (isUnknown) {
             this.set('indicator.baseline', null);
-            this.set('baselineIsReadonly', true);
-          } else {
-            this.set('baselineIsReadonly', false);
           }
         }
 
