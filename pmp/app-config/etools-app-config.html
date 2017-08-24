@@ -219,12 +219,15 @@ App global configuration
       createPartner: {
         template: '/api/v2/partners/add/?vendor=<%=vendor%>',
       },
+      deletePartner: {
+        template: '/api/v2/partners/delete/<%=id%>/',
+      },
       partnerStaffMembers: {
         template: '/api/v2/partners/<%=id%>/staff-members/',
       },
       interventions: {
         url: '/api/v2/interventions/',
-        exp: 5 * 60 * 1000, // 5min
+        exp: 10 * 60 * 1000, // 5min
         cachingKey: 'interventions'
       },
       interventionDetails: {
@@ -270,7 +273,7 @@ App global configuration
         template: '/api/v2/reports/results/<%=id%>/indicators/',
       },
       monitoringVisits: {
-        template: '/api/t2f/travels/activities/<%=id%>/',
+        template: '/api/t2f/travels/activities/partnership/<%=id%>/',
       },
       sectorLocationsDelete: {
         template: '/api/v2/interventions/sector-locations/<%=id%>/'
@@ -278,7 +281,14 @@ App global configuration
       cpOutputsByIdsAsValues: {
         // it's gonna be used for getting old cp outputs for esmm dropdown
         url: '/api/v2/reports/results'
+      },
+      frNumbersDetails: {
+        url: '/api/v2/funds/frs'
+      },
+      userCountryDetails: {
+        url: '/api/v2/users/country'
       }
+
     };
     /* jshint ignore:start */
     etoolsAppConfig.endpoints = etoolsAppConfig.globals.serverBackend ? serverEps : localEps;

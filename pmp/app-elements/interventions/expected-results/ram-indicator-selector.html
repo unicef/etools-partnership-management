@@ -1,6 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -20,6 +22,7 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
+
       .row-h {
         padding: 15px 0;
       }
@@ -38,7 +41,7 @@
                                       option-value="id"
                                       option-label="name"
                                       selected="{{cpOutputId}}"
-                                      required$="[[required]]"
+                                      required$="[[_getFieldRequired(required, selectedCpIndicatorsIds.length)]]"
                                       auto-validate
                                       error-message="Please select CP Output"
                                       on-iron-activate="_resetSelectedIndicators"
@@ -47,21 +50,17 @@
       </div>
 
       <div class="col col-8">
-        <etools-searchable-multiselection-menu id="indicators"
-                                               label="CP Indicators"
-                                               placeholder="&#8212;"
-                                               options="[[cpIndicators]]"
-                                               custom-object-options
-                                               option-value="id"
-                                               option-label="name"
-                                               selected="{{selectedCpIndicatorsIds}}"
-                                               update-selected
-                                               required$="[[required]]"
-                                               auto-validate
-                                               error-message="Please select CP Indicators"
-                                               multi
-                                               readonly$="[[!editMode]]">
-        </etools-searchable-multiselection-menu>
+        <etools-multi-selection-menu id="indicators"
+                                     label="CP Indicators"
+                                     placeholder="&#8212;"
+                                     options="[[cpIndicators]]"
+                                     option-value="id"
+                                     option-label="name"
+                                     selected-values="{{selectedCpIndicatorsIds}}"
+                                     required$="[[_getFieldRequired(required, cpOutputId)]]"
+                                     error-message="Please select CP Indicators"
+                                     readonly$="[[!editMode]]">
+        </etools-multi-selection-menu>
 
       </div>
     </div>
@@ -85,6 +84,10 @@
           cpOutputsOptions: {
             type: Array,
             value: []
+          },
+          selectedCpStructure: {
+            type: String,
+            value: null
           },
           cpOutputId: {
             type: Number,
@@ -117,6 +120,10 @@
             type: Boolean,
             value: false
           },
+          required: {
+            type: Boolean,
+            value: false
+          },
           oldCpOutputsUrlAjaxParams: {
             type: Object,
             value: {
@@ -126,24 +133,24 @@
         },
 
         observers: [
-          '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length)'
+          '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length, selectedCpStructure)'
         ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
-        _selectedCpIndicatorsIdsChanged: function(ids, oldids) {
-            if (ids.length && this.firstLoadCpIndicatorsUse) {
-              // prepare cp indicators id to be set as selected, used only once, at element init
-              this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
-              this.set('firstLoadCpIndicatorsUse', false);
-            }
+        _selectedCpIndicatorsIdsChanged: function(ids) {
+          if (ids instanceof Array && ids.length && this.firstLoadCpIndicatorsUse) {
+            // prepare cp indicators id to be set as selected, used only once, at element init
+            this.set('firstLoadCpIndicators', JSON.parse(JSON.stringify(ids)));
+            this.set('firstLoadCpIndicatorsUse', false);
+          }
         },
 
         _resetSelectedIndicators: function() {
-           this.set('selectedCpIndicatorsIds', []);
-            this.$.indicators.value = [];
-            this.$.indicators.selectedValues = null;
+          this.set('selectedCpIndicatorsIds', []);
+          this.$.indicators.value = [];
+          this.$.indicators.selectedValues = null;
         },
         _cpIndicatorsChanged: function(cpIndicators) {
           if (Array.isArray(this.firstLoadCpIndicators) && this.firstLoadCpIndicators.length &&
@@ -157,16 +164,16 @@
           }
         },
 
-         // prevent having cpoutputs already selected in the current cpOutput selector
-        _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength) {
+        // prevent having cpoutputs already selected in the current cpOutput selector
+        _computeCpOutputsOptions: function(alreadySelectedCpo, cpOutputsLength, selectedCpStructure) {
           if (cpOutputsLength === 0) {
             return;
           }
           this.debounce('computeCpOutputsOptions', function() {
-            var cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(alreadySelectedCpo);
-            var cpoDropdown = this.$.cpOutput;
+            var cpOutputsOptions = this._filterByCpStructure(this.cpOutputs);
+            cpOutputsOptions = this._excludeAlreadySelectedInOtherDropdowns(cpOutputsOptions, alreadySelectedCpo);
             // keep old cpOutputs requested from server
-            var oldCpOutput = this._getExistingOldCpO(cpoDropdown);
+            var oldCpOutput = this._getExistingOldCpO();
             if (oldCpOutput) {
               cpOutputsOptions.push(oldCpOutput);
             }
@@ -175,12 +182,21 @@
         },
 
         // filter cp outputs and exclude the ones already selected in other dropdowns from expected results section
-        _excludeAlreadySelectedInOtherDropdowns: function(alreadySelectedCpo) {
-          return this.cpOutputs.filter(function(cpO) {
-              return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
-            }.bind(this));
+        _excludeAlreadySelectedInOtherDropdowns: function(cpOutputsOptions, alreadySelectedCpo) {
+          return cpOutputsOptions.filter(function(cpO) {
+            return alreadySelectedCpo.indexOf(cpO.id) === -1 || cpO.id === this.cpOutputId;
+          }.bind(this));
         },
-        _getExistingOldCpO: function(cpoDropdown) {
+        _filterByCpStructure: function(cpOutputsOptions) {
+          if (!this.selectedCpStructure) {
+            return cpOutputsOptions;
+          }
+          return cpOutputsOptions.filter(function(option) {
+            return parseInt(option.country_programme, 10) === parseInt(this.selectedCpStructure, 10);
+          }.bind(this));
+        },
+        _getExistingOldCpO: function() {
+          var cpoDropdown = this.$.cpOutput;
           var oldCpO;
           if (cpoDropdown.ajaxParams && cpoDropdown.ajaxParams.values) {
             // keep ghost data (old cp output previously requested from server)
@@ -205,7 +221,11 @@
         resetValidations: function() {
           this.$.cpOutput.invalid = false;
           this.$.indicators.invalid = false;
-        }
+        },
+
+        _getFieldRequired: function(required, data) {
+          return required || !!data;
+        },
 
       });
     })();

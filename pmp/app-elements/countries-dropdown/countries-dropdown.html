@@ -20,8 +20,8 @@
 
       paper-dropdown-menu {
         width: 160px;
-        --paper-input-container-color: var(--light-secondary-text-color);
-        --paper-input-container-focus-color: var(--light-secondary-text-color);
+        --paper-input-container-color: var(--countries-dropdown-color);
+        --paper-input-container-focus-color: var(--countries-dropdown-color);
         --paper-input-container-underline: {
           display: none;
         };
@@ -32,21 +32,22 @@
           display: none;
         };
 
-        --paper-input-container-input: {
-          color: var(--light-primary-text-color);
-        };
-
         --paper-dropdown-menu-icon: {
-          color: var(--light-icon-color);
+          color: var(--countries-dropdown-color);
+          align-self: flex-end;
         };
 
         --paper-input-container-label: {
           top: 4px;
         };
         --paper-input-container-input: {
-          margin-bottom: 2px;
-          color: var(--light-primary-text-color);
+          color: var(--countries-dropdown-color);
           cursor: pointer;
+          min-height: 24px;
+          text-align: right;
+        };
+        --paper-menu-button-dropdown: {
+          max-height: 380px;
         }
       }
 
@@ -66,7 +67,6 @@
       paper-item iron-icon {
         margin-right: 16px;
       }
-
     </style>
     <etools-ajax id="ajax"
                  method="POST"

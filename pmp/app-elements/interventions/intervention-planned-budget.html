@@ -1,24 +1,26 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-amount-input.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
+
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="shared-styles grid-layout-styles">
       [hidden] {
         display: none !important;
       }
@@ -29,283 +31,195 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply(--paper-fab-btn-green);
-        };
       }
+
+      .align-left {
+        text-align: left;
+      }
+
+      #edit-btns paper-icon-button {
+        color: var(--light-icon-color);
+      }
+
+      .currency {
+        width: 200px;
+      }
+
       etools-currency-amount-input {
-        width: 100%;
+        max-width: 175px;
       }
 
-      etools-currency-amount-input.total-input {
-        --etools-currency-container-input: {
-          font-weight: bold;
-        };
-      }
-
-      .left-col {
-        padding: 15px 0;
-      }
-
-      .darkbg {
-        padding: 15px;
-        background-color: var(--medium-theme-background-color);
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-      }
-
-      #totals {
-        padding: 15px 15px 15px 86px;
-        font-weight: bold;
-      }
-      #totals-content-wrapper .darkbg {
-        padding: 15px;
-        @apply(--layout-horizontal);
-      }
-       .darkbg + .darkbg {
-        margin-top: 15px;
-      }
-
-      #totals-content-wrapper {
-        margin-left: auto;
-        padding-left: 25px;
-        @apply(--layout-vertical);
-      }
-
-      .total-unicef-label {
-        @apply(--layout-end-justified);
-      }
-      .total-unicef-label span {
-        display: flex;
-        align-self: center;
-      }
-
-      .total-unicef {
-        @apply(--layout-vertical);
-        max-width: 100%;
-        word-wrap: break-word;
-      }
-      .total-unicef span {
-        display: inline-block;
-        width: 100%;
-        background-color: var(--ternary-color);
-        padding: 15px;
-        box-sizing: border-box;
-        border-bottom: 1px solid var(--dark-divider-color, rgba(0, 0, 0, 0.12));
-        text-align: center;
+      .total {
+        width: 200px;
       }
 
       #currency {
         width: auto;
       }
+
+      #unicef-cash.frs-inconsistent {
+        --paper-input-container-input: {
+          color: var(--error-color);
+        }
+      }
+
+      etools-currency-amount-input.frs-inconsistent {
+        --etools-currency-container-input: {
+          color: var(--error-color);
+        }
+      }
+
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          @apply(--pmp-form-field-frs-inconsistency-icon);
+        };
+      }
     </style>
 
-    <div hidden$="[[_emptyList(dataItems.length)]]">
-      <div class="row-h flex-c">
-         <etools-single-selection-menu id="currency"
-                                        label="Local Currency"
-                                        placeholder="&#8212;"
-                                        options="[[currencies]]"
-                                        on-iron-select="_currencyChanged"
-                                        required$="[[required]]"
-                                        auto-validate
-                                        error-message="Please select the currency"
-                                        readonly$="[[!editMode]]">
-        </etools-single-selection-menu>
+    <etools-content-panel panel-title="Planned Budget">
+
+      <div slot="panel-btns" id="edit-btns" hidden$="[[!_showEditBtn(editMode, unicefCashEditMode)]]">
+        <paper-icon-button icon="cancel"
+                           hidden$="[[!_showCancelBtn(_showCancelButton)]]"
+                           disabled$="[[!_showCancelBtn(_showCancelButton)]]"
+                           title="Cancel"
+                           on-tap="_cancelEdit">
+        </paper-icon-button>
+        <paper-icon-button icon="create"
+                           hidden$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
+                           disabled$="[[!_showEditBtn(editMode, unicefCashEditMode, _showCancelButton)]]"
+                           title="Edit"
+                           on-tap="_editPlannedBudget">
+        </paper-icon-button>
       </div>
-      <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
-          <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode)]]"
-                                 icon="cancel">
-              </paper-icon-button>
-            </div>
+
+      <div class="table form-fields">
+
+        <div class="row-h header-row">
+          <div class="col col-3 currency"> Currency</div>
+          <div class="col col-3 right-align"> CSO Contribution</div>
+          <div class="col col-2 right-align"> UNICEF Cash</div>
+          <div class="col col-2 right-align"> UNICEF Supply</div>
+          <div class="col col-2 right-align"> TOTAL</div>
+        </div>
+
+        <div class="row-h">
+          <div class="col col-3 currency">
+            <etools-form-element-wrapper no-label-float>
+              <span>USD</span>
+            </etools-form-element-wrapper>
           </div>
-          <div class="item-content">
-            <div class="row-h">
-              <div class="col col-4">
-                <div class="row-h flex-c left-col">
-                  <div class="col col-4">
-                     <etools-single-selection-menu id="year_[[index]]"
-                       class="year"
-                       label="Year"
-                       placeholder="&#8212;"
-                       selected="{{item.year}}"
-                       options="[[years]]"
-                       on-iron-activate="_yearChanged"
-                       required$="[[required]]"
-                       auto-validate
-                       dynamic-align
-                       error-message="Year required"
-                       readonly$="[[!editMode]]">
-                    </etools-single-selection-menu>
-                  </div>
-                  <div class="col col-8">
-                    <etools-currency-amount-input id$="csoContLocal_[[index]]"
-                      label="CSO Cont. (Local)"
-                      value="{{item.partner_contribution_local}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="CSO Cont. (Local) required">
-                    </etools-currency-amount-input>
-                  </div>
-                </div>
-              </div>
-              <div class="col col-8">
-                <div class="row-h flex-c darkbg">
-                  <div class="col col-4">
-                    <etools-currency-amount-input id$="unicefCashLocal_[[index]]"
-                      label="UNICEF Cash (Local)"
-                      value="{{item.unicef_cash_local}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="UNICEF Cash (Local) required">
-                    </etools-currency-amount-input>
-                  </div>
-                  <div class="col col-4">
-                    <etools-currency-amount-input id$="inKindAmountLocal_[[index]]"
-                      label="UNICEF Supply (Local)"
-                      value="{{item.in_kind_amount_local}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="UNICEF Supply (Local) required">
-                    </etools-currency-amount-input>
-                  </div>
-                  <div class="col col-4">
-                    <etools-form-element-wrapper label="UNICEF Total (Local)">
-                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash_local, item.in_kind_amount_local)]] [[localCurrency]]
-                    </etools-form-element-wrapper>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="row-h">
-              <div class="col col-4">
-                <div class="row-h flex-c left-col">
-                  <div class="col col-4"></div>
-                  <div class="col col-8">
-                    <etools-currency-amount-input id$="csoContUsd_[[index]]"
-                      label="CSO Cont. (USD)"
-                      value="{{item.partner_contribution}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="CSO Cont. (USD) required">
-                    </etools-currency-amount-input>
-                  </div>
-                </div>
-              </div>
-              <div class="col col-8">
-                <div class="row-h flex-c darkbg">
-                  <div class="col col-4">
-                    <etools-currency-amount-input id$="unicefCashUsd_[[index]]"
-                      label="UNICEF Cash (USD)"
-                      value="{{item.unicef_cash}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="UNICEF Cash (USD) required">
-                    </etools-currency-amount-input>
-                  </div>
-                  <div class="col col-4">
-                    <etools-currency-amount-input id$="inKindAmountUsd_[[index]]"
-                      label="UNICEF Supply (USD)"
-                      value="{{item.in_kind_amount}}"
-                      type="number"
-                      placeholder="&#8212;"
-                      readonly$="[[!editMode]]"
-                      required$="[[required]]"
-                      auto-validate
-                      error-message="UNICEF Supply (USD) required">
-                    </etools-currency-amount-input>
-                  </div>
-                  <div class="col col-4">
-                    <etools-form-element-wrapper label="UNICEF Total (USD)">
-                      [[_getPlannedBudgetTotalFormatted(item.unicef_cash, item.in_kind_amount)]] USD
-                    </etools-form-element-wrapper>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="col col-3 right-align">
+            <etools-currency-amount-input id="csoContUsd"
+                                          value="{{plannedBudget.partner_contribution}}"
+                                          type="number"
+                                          placeholder="&#8212;"
+                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                          required$="[[required]]" auto-validate
+                                          error-message="CSO Cont. (USD) required"
+                                          no-label-float>
+            </etools-currency-amount-input>
+          </div>
 
+          <div class="col col-2 right-align">
+            <etools-info-tooltip icon="report" icon-first
+                                 hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                                 important-warning>
+              <div slot="field">
+                <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                  <!-- readonly unicef cash -->
+                  <etools-form-element-wrapper no-label-float
+                                               id="unicef-cash"
+                                               class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]">
+                    [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
+                  </etools-form-element-wrapper>
+                </template>
+                <template is="dom-if"
+                          if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
+                  <!-- editable unicef cash -->
+                  <etools-currency-amount-input id="unicefCashUsd"
+                                                class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]"
+                                                value="{{plannedBudget.unicef_cash}}" type="number"
+                                                placeholder="&#8212;"
+                                                required$="[[required]]" auto-validate
+                                                error-message="UNICEF Cash (USD) required"
+                                                no-label-float>
+                  </etools-currency-amount-input>
+                </template>
+              </div>
+              <span slot="message">[[_frsConsistencyWarning]]</span>
+            </etools-info-tooltip>
+          </div>
+
+          <div class="col col-2 right-align">
+              <etools-currency-amount-input id="inKindAmountUsd"
+                                            value="{{plannedBudget.in_kind_amount}}"
+                                            type="number" placeholder="&#8212;"
+                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                            required$="[[required]]" auto-validate
+                                            error-message="UNICEF Supply (USD) required"
+                                            no-label-float>
+              </etools-currency-amount-input>
+          </div>
+
+          <div class="col col-2 right-align">
+            <etools-form-element-wrapper no-label-float>
+              [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash,
+              plannedBudget.in_kind_amount)]]
+            </etools-form-element-wrapper>
           </div>
 
         </div>
-      </template>
 
-      <!-- TODO: remove totals, table will be used here -->
+        <div class="row-h">
 
-      <div id="totals" class="row-h">
-        <div id="totals-content-wrapper" class="col col-8">
-          <div class="darkbg">
-            <div class="col flex-c total-unicef-label">
-              <span>Total UNICEF Budget</span>
-            </div>
-            <div class="col col-4">
-              <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localUnicefTotal, '0', 0)]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdUnicefTotal, '0', 0)]] USD</span>
-              </div>
-            </div>
+          <div class="col col-3 currency">
+            <etools-single-selection-menu id="currency" placeholder="&#8212;"
+                                          options="[[currencies]]"
+                                          selected="{{plannedBudget.currency}}"
+                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                          no-label-float>
+            </etools-single-selection-menu>
           </div>
 
-          <div class="darkbg">
-            <div class="col flex-c total-unicef-label">
-              <span>Total CSO Budget</span>
-            </div>
-            <div class="col col-4">
-              <div class="flex-c total-unicef">
-                <span>[[displayCurrencyAmount(_localCsoTotal, '0', 0)]] [[localCurrency]]</span>
-                <span>[[displayCurrencyAmount(_usdCsoTotal, '0', 0)]] USD</span>
-              </div>
-            </div>
+          <div class="col col-3 right-align">
+            <etools-currency-amount-input id="csoContLocal"
+                                          value="{{plannedBudget.partner_contribution_local}}"
+                                          type="number" placeholder="&#8212;"
+                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                          no-label-float>
+            </etools-currency-amount-input>
           </div>
 
-          <div class="darkbg">
-            <div class="col flex-c total-unicef-label">
-              <span>Total Budget (CSO + UNICEF)</span>
-            </div>
-            <div class="col col-4">
-              <div class="flex-c total-unicef">
-                <span>[[_getPlannedBudgetTotalFormatted(_localCsoTotal, _localUnicefTotal)]] [[localCurrency]]</span>
-                <span>[[_getPlannedBudgetTotalFormatted(_usdCsoTotal, _usdUnicefTotal)]] USD</span>
-              </div>
-            </div>
+          <div class="col col-2 right-align">
+            <etools-currency-amount-input id="unicefCashLocal"
+                                          value="{{plannedBudget.unicef_cash_local}}"
+                                          type="number" placeholder="&#8212;"
+                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                          no-label-float>
+            </etools-currency-amount-input>
           </div>
+
+          <div class="col col-2 right-align">
+            <etools-currency-amount-input id="inKindAmountLocal"
+                                          value="{{plannedBudget.in_kind_amount_local}}"
+                                          type="number" placeholder="&#8212;"
+                                          readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                          no-label-float>
+            </etools-currency-amount-input>
+          </div>
+
+          <div class="col col-2 right-align">
+            <etools-form-element-wrapper no-label-float>
+              [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution_local,
+              plannedBudget.unicef_cash_local, plannedBudget.in_kind_amount_local)]]
+            </etools-form-element-wrapper>
+          </div>
+
         </div>
       </div>
-    </div>
-
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      <p>There are no planned budgets added.</p>
-    </div>
-
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewPlannedBudget"
-                 title="Add"></paper-fab>
-    </div>
+    </etools-content-panel>
 
   </template>
 
@@ -317,43 +231,21 @@
         is: 'intervention-planned-budget',
 
         behaviors: [
-          pmpBehaviors.RepeatableDataSetsBehavior,
           pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsBehaviors.EtoolsCurrencyBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          pmpBehaviors.FrNumbersConsistencyBehavior
         ],
 
         properties: {
-          years: {
-            type: Array,
-            value: []
-          },
-          _localUnicefTotal: {
-            type: Number,
-            value: 0
-          },
-          _usdUnicefTotal: {
-            type: Number,
-            value: 0
-          },
-          _localCsoTotal: {
-            type: Number,
-            value: 0
-          },
-          _usdCsoTotal: {
-            type: Number,
-            value: 0
+          intervention: Object,
+          plannedBudget: {
+            type: Object,
+            notify: true,
+            observer: '_plannedBudgetChanged'
           },
           currencies: {
             type: Array,
             statePath: 'currencies'
-          },
-          localCurrency: {
-            type: String,
-            value: ''
-          },
-          localCurrencyId: {
-            type: Number,
-            observer: '_localCurrencyIdChanged'
           },
           required: {
             type: Boolean,
@@ -361,170 +253,84 @@
           },
           editMode: {
             type: Boolean,
+            value: false,
             observer: '_editModeChanged'
+          },
+          unicefCashEditMode: {
+            type: Boolean,
+            value: false,
+            observer: '_editModeChanged'
+          },
+          editablePlannedBudget: {
+            type: Boolean,
+            value: false
           },
           interventionId: {
             type: Number,
             observer: '_interventionIdChanged'
+          },
+          initialPlannedBudget: Object,
+          _frsConsistencyWarning: {
+            type: String,
+            value: ''
+          },
+          _showCancelButton: Boolean,
+          countryData: {
+            type: Object,
+            statePath: 'countryData'
           }
         },
+
         observers: [
-            '_dataItemsChanged(dataItems)',
-            '_dataItemChange(dataItems.*)',
-            '_initSelectedCurrency(dataItems, currencies)'
+          '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)',
+          '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
-        ready: function() {
-          this.dataSetModel = {
-            id: null,
-            partner_contribution: 0,
-            unicef_cash: 0,
-            in_kind_amount: 0,
-            partner_contribution_local: 0,
-            unicef_cash_local: 0,
-            in_kind_amount_local: 0,
-            year: null,
-            total: 0,
-            currency: null
-          };
-        },
-
-        _dataItemsChanged: function(dataItems) {
-          if (!Array.isArray(dataItems)) {
-            this.set('dataItems', []);
+        _initLocalCurrency: function(plannedBudget, countryData) {
+          if (!plannedBudget.currency && countryData && countryData.local_currency_id) {
+            this.set('plannedBudget.currency', countryData.local_currency_id);
           }
         },
 
+        _plannedBudgetChanged: function() {
+          if (this.interventionId) {
+            //* reset flags after Save
+            this.set('editablePlannedBudget', false);
+            this.set('_showCancelButton', false);
+          }
+        },
+        _cancelEdit: function() {
+          this.plannedBudget = JSON.parse(JSON.stringify(this.initialPlannedBudget));
+          this.set('editablePlannedBudget', false);
+          this.set('_showCancelButton', false);
+        },
+        _showCancelBtn: function(showCancelButton) {
+          return showCancelButton && this.interventionId;
+        },
+        _showEditBtn: function(editMode, unicefCashEditMode, showCancelButton) {
+          return (editMode || unicefCashEditMode) && !showCancelButton && this.interventionId;
+        },
+        _isReadonly: function(editMode, editablePlannedBudget, interventionId) {
+          if (!editMode) {
+            return true;
+          }
+          if (!interventionId) {
+            return false;
+          }
+          return !editablePlannedBudget;
+        },
+        _editPlannedBudget: function() {
+          this.set('editablePlannedBudget', true);
+          this.set('_showCancelButton', true);
+          this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
+        },
         // make sure we have the right currency selected when intervention is changed
         _interventionIdChanged: function() {
-          this._initSelectedCurrency(this.dataItems, this.currencies);
+          this.initialPlannedBudget = Object.assign({}, this.plannedBudget);
+          this.editablePlannedBudget = !this.interventionId;
+          this.set('_showCancelButton', false);
         },
-
-        _initSelectedCurrency: function(dataItems, currencies) {
-          this.debounce('initSelectedCurrency', function() {
-            if (Array.isArray(dataItems) && dataItems.length > 0 &&
-                Array.isArray(currencies) && currencies.length > 0) {
-              // check and set the currency
-              if (dataItems[0].currency) {
-                // dataItems[0].currency should be the currency ID
-                var currency = currencies.filter(function(c) {
-                  return parseInt(c.value, 10) === parseInt(dataItems[0].currency, 10);
-                })[0];
-                if (currency) {
-                  this.set('localCurrencyId', currency.value);
-                  this.set('localCurrency', currency.label);
-                  this._setCurrencyDropdownValue(currency);
-                  return;
-                }
-              }
-            }
-            // reset local currency
-            this.set('localCurrencyId', null);
-            this.set('localCurrency', null);
-            this._setCurrencyDropdownValue(null);
-          }.bind(this), 50);
-        },
-
-         _setCurrencyDropdownValue: function(currency) {
-          var currencyValue = currency ? currency.value : null;
-          var currencyDropdown = this.$.currency;
-          if (currencyDropdown) {
-            currencyDropdown.set('selected', currencyValue);
-          }
-        },
-
-        _dataItemChange: function(dataItem) {
-          if (dataItem.path !== 'dataItems.splices') {
-            this._computeTotals(this.dataItems);
-          }
-        },
-
-        _computeTotals: function(data) {
-          var localUnicefTotal = 0;
-          var usdUnicefTotal = 0;
-          var localCsoTotal = 0;
-          var usdCsoTotal = 0;
-          data.forEach(function(plannedBudget) {
-            usdUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash, plannedBudget.in_kind_amount);
-            localUnicefTotal += this._getPlannedBudgetTotal(plannedBudget.unicef_cash_local,
-                plannedBudget.in_kind_amount_local);
-
-            var contLocal = parseFloat(plannedBudget.partner_contribution_local);
-            if (!isNaN(contLocal)) {
-              localCsoTotal += contLocal;
-            }
-
-            var contUsd = parseFloat(plannedBudget.partner_contribution);
-            if (!isNaN(contUsd)) {
-              usdCsoTotal += contUsd;
-            }
-          }.bind(this));
-          this.set('_localUnicefTotal', localUnicefTotal);
-          this.set('_usdUnicefTotal', usdUnicefTotal);
-          this.set('_localCsoTotal', localCsoTotal);
-          this.set('_usdCsoTotal', usdCsoTotal);
-        },
-
-        /**
-         * The planned budget row data can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
-            return false;
-          }
-          var plannedBudget = this.dataItems[index];
-          plannedBudget = parseInt(plannedBudget.id, 10);
-
-          if (plannedBudget && isNaN(plannedBudget) === false && plannedBudget > 0) {
-            // planned budget already saved (has an id assigned)
-            return false;
-          }
-          return true;
-        },
-
-        _yearChanged: function(event) {
-          var yearSelected = event.detail.item.item ? event.detail.item.item.value : null;
-
-          if (this._yearAlreadySelected(yearSelected, event.model.index)) {
-           this.fire('toast', {text: 'Year already selected on other planned budget item.', showCloseBtn: true});
-
-            var yearDropdown = this.$$('#year_' + event.model.index);
-            if (yearDropdown) {
-              yearDropdown.selected = null;
-            }
-            this.set('dataItems.' + event.model.index + '.year', null);
-            event.preventDefault();
-            return;
-          }
-
-          this.set('dataItems.' + event.model.index + '.year', yearSelected);
-        },
-        _localCurrencyIdChanged: function(currencyId) {
-          if (!currencyId) {
-            currencyId = null;
-          }
-          if (this.dataItems instanceof Array && this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item) {
-              item.currency = currencyId;
-            });
-          }
-          this.set('dataSetModel.currency', currencyId);
-        },
-
-        _currencyChanged: function(event) {
-          var selCurrencyName = null;
-          var selCurrencyId = null;
-
-          var selectedItem = event.detail.item.item;
-          if (selectedItem && selectedItem.label) {
-            selCurrencyName = selectedItem.label;
-            selCurrencyId = selectedItem.value;
-          }
-          this.set('localCurrency', selCurrencyName);
-          this.set('localCurrencyId', selCurrencyId);
-        },
-
-        _getPlannedBudgetTotal: function(val1, val2, currency) {
+        _getPlannedBudgetTotal: function(val1, val2, val3, currency) {
           var t = 0;
           val1 = parseFloat(val1);
           if (!isNaN(val1)) {
@@ -534,97 +340,71 @@
           if (!isNaN(val2)) {
             t += val2;
           }
+          val3 = parseFloat(val3);
+          if (!isNaN(val3)) {
+            t += val3;
+          }
           if (typeof currency === 'string' && currency !== '') {
             return t + ' ' + currency;
           }
           return t;
         },
-
-        _getPlannedBudgetTotalFormatted: function(val1, val2) {
-          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2), '0', 0);
-        },
-
-        _yearAlreadySelected: function(year, dropdownIdx) {
-          var dropdowns = Polymer.dom(this.root).querySelectorAll('.year');
-          if (!dropdowns || !dropdowns.length) {
-            return false;
-          }
-          for (var i = 0; i < dropdowns.length; i++) {
-            if (dropdowns[i].selected) {
-              /* jshint ignore:start */
-              if (dropdownIdx !== i && dropdowns[i].selected == year) {
-                // already selected sector
-                return true;
-              }
-              /* jshint ignore:end */
-            }
-          }
-          return false;
-        },
-
-        /**
-         * Validate last added planned budget and if is not empty add a new one
-         */
-        _addNewPlannedBudget: function() {
-          this._addElement();
+        _getPlannedBudgetTotalFormatted: function(val1, val2, val3) {
+          return this.displayCurrencyAmount(this._getPlannedBudgetTotal(val1, val2, val3), '0', 0);
         },
 
         // validate fields
         validate: function() {
           var valid = true;
-          if (this.dataItems.length > 0) {
-            var currency = this.$.currency;
-            if (!currency.validate()) {
+          var elementsSelectorsToValidate = [
+            '#csoContUsd',
+            '#unicefCashUsd',
+            '#inKindAmountUsd'
+          ];
+          elementsSelectorsToValidate.forEach(function(selector) {
+            var el = this.$$(selector);
+            if (el && !el.validate()) {
               valid = false;
             }
-            this.dataItems.forEach(function(item, index) {
-              var elementsSelectorsToValidate = [
-                '#year_' + index,
-                '#csoContLocal_' + index,
-                '#unicefCashLocal_' + index,
-                '#inKindAmountLocal_' + index,
-                '#csoContUsd_' + index,
-                '#unicefCashUsd_' + index,
-                '#inKindAmountUsd_' + index
-              ];
-              elementsSelectorsToValidate.forEach(function(selector) {
-                var el = this.$$(selector);
-                if (el && !el.validate()) {
-                  valid = false;
-                }
-              }.bind(this));
-            }.bind(this));
-          }
+          }.bind(this));
           return valid;
         },
 
         // reset validation errors
         resetValidations: function() {
-          this.$.currency.invalid = false;
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              var elementsSelectorsToValidate = [
-                '#year_' + index,
-                '#csoContLocal_' + index,
-                '#unicefCashLocal_' + index,
-                '#inKindAmountLocal_' + index,
-                '#csoContUsd_' + index,
-                '#unicefCashUsd_' + index,
-                '#inKindAmountUsd_' + index
-              ];
-              elementsSelectorsToValidate.forEach(function(selector) {
-                var el = this.$$(selector);
-                if (el) {
-                  el.set('invalid', false);
-                }
-              }.bind(this));
-            }.bind(this));
-          }
+          var elementsSelectorsToValidate = [
+            '#csoContUsd',
+            '#unicefCashUsd',
+            '#inKindAmountUsd'
+          ];
+          elementsSelectorsToValidate.forEach(function(selector) {
+            var el = this.$$(selector);
+            if (el) {
+              el.set('invalid', false);
+            }
+          }.bind(this));
         },
 
         _editModeChanged: function(newValue, oldValue) {
           if (newValue !== oldValue) {
             this.updateStyles();
+          }
+        },
+
+        _checkFrsConsistency: function(frsTotalAmt, unicefCash) {
+          let unicefCashField = this.$$('#unicefCashUsd');
+          if (this.emptyFrsList(this.intervention, 'interventionDetails')) {
+            this.set('_frsConsistencyWarning', '');
+            if (unicefCashField) {
+              unicefCashField.updateStyles();
+            }
+            return;
+          }
+          this.set('_frsConsistencyWarning',
+              this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
+              'interventionDetails', true));
+          if (unicefCashField) {
+            unicefCashField.updateStyles();
           }
         }
 

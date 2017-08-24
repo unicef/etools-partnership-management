@@ -5,8 +5,11 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
+<link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
+<link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -19,6 +22,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
 
+<link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
@@ -31,6 +35,9 @@
     <style include="page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
+      }
+      .no-capitalization {
+        text-transform: none;
       }
     </style>
 
@@ -70,10 +77,10 @@
         <div class="top-content-row title-row">
           <h1 main-title>
             <template is="dom-if" if="[[intervListActive]]">
-              PD/SSFA ToRs
+              PD/SSFAs
             </template>
             <template is="dom-if" if="[[newInterventionActive]]">
-              Add Programme Document or PD/SSFA ToRs
+              <span class="no-capitalization">Add Programme Document or SSFA</span>
             </template>
             <template is="dom-if" if="[[intervDetailsActive]]">
               [[_getInterventionDetailsTitle(intervention)]]
@@ -98,7 +105,7 @@
             <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
-                Add new PD/SSFA ToR
+                Add new PD/SSFA
               </paper-button>
             </div>
           </div>
@@ -135,7 +142,7 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving PD/SSFA ToR"
+                                   title="[[errorMsgBox_Title]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"
@@ -162,49 +169,42 @@
 
           <div class="page" name="details">
             <intervention-details id="interventionDetails"
-                                  permissions="[[permissions]]"
                                   intervention="{{intervention}}"
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                  edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
-                                  on-update-intervention-status="_updateInterventionStatus">
+                                  on-update-intervention-status="_updateInterventionStatus"
+                                  original-intervention="[[originalIntervention]]">
             </intervention-details>
           </div>
           <div class="page" name="review-and-sign">
             <intervention-review-and-sign id="interventionReviewAndSign"
                                           intervention="{{intervention}}"
-                                          permissions="[[permissions]]"
-                                          agreement="[[agreement]]"
-                                          new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                          edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
+                                          agreement="[[agreement]]">
             </intervention-review-and-sign>
           </div>
           <div class="page" name="attachments">
             <intervention-attachments id="intervAttachments"
                                       active="[[_isAttachementsTabActive(activeTab)]]"
-                                      edit-mode="[[_hasEditPermissions(permissions, intervention)]]"
-                                      permissions="[[permissions]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
-                                      new-intervention="[[_newIntervention(newInterventionActive)]]">
+                                      edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
             </intervention-attachments>
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
-
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[intervListActive]]">
         <intervention-status status="[[intervention.status]]"
-                             intervention-id$="[[intervention.id]]"
-                             intervention-agreement-status="[[agreement.status]]"
-                             on-save-intervention="_validateAndSaveIntervention"
-                             on-update-intervention-status="_updateInterventionStatus"
-                             show-save-btn$="[[_hasEditPermissions(permissions, intervention)]]"></intervention-status>
-
-      </div>
-      <!-- sidebar content end -->
+                            intervention-id$="[[intervention.id]]"
+                            new-intervention="[[newInterventionActive]]"
+                            intervention-agreement-status="[[agreement.status]]"
+                            on-save-intervention="_validateAndSaveIntervention"
+                            on-update-intervention-status="_updateInterventionStatus"
+                            edit-mode="[[_hasEditPermissions(permissions, intervention)]]">
+        </intervention-status>
+      </div> <!-- sidebar content end -->
     </div>
 
   </template>
@@ -214,7 +214,11 @@
     Polymer({
 
       is: 'page-interventions',
-
+      behaviors: [
+        etoolsBehaviors.DynamicDialogBehavior,
+        pmpBehaviors.InterventionPermissionsBehavior,
+        pmpBehaviors.SaveInterventionBehavior
+      ],
       properties: {
         interventionPage: {
           type: String,
@@ -228,12 +232,10 @@
         },
         intervention: {
           type: Object,
-          notify: true,
-          observer: '_interventionChanged'
+          notify: true
         },
         originalIntervention: {
-          type: Object,
-          value: {}
+          type: Object
         },
         partnerStaffMembers: Array,
         partnerId: {
@@ -248,16 +250,16 @@
         newInterventionModel: {
           type: Object,
           value: {
-            id: undefined,
+            id: null, // Required null, not undefined in order to trigger the observer
             agreement: undefined,
             document_type: undefined,
-            hrp: undefined,
+            country_programme: undefined,
             number: undefined,
             prc_review_document_file: undefined,
             title: undefined,
-            status: 'draft',
-            start: undefined,
-            end: undefined,
+            status: '',
+            start: null,
+            end: null,
             submitted_to_prc: false,
             submission_date_prc: undefined,
             review_date_prc: undefined,
@@ -270,10 +272,16 @@
             partner_focal_points: [],
             partner_authorized_officer_signatory: undefined,
             offices: [],
-            fr_numbers: undefined,
+            frs: [],
+            frs_details: {
+              frs: [],
+              total_frs_amt: 0,
+              earliest_start_date: null,
+              latest_end_date: null
+            },
             planned_visits: [],
             sector_locations: [],
-            planned_budget: [],
+            planned_budget: {},
             result_links: [],
             amendments: [],
             attachments: [],
@@ -300,8 +308,21 @@
         editMode: {
           type: Boolean
         },
+        _redirectToNewIntervPageInProgress: Boolean,
+        errorMsgBox_Title: {
+          type: String,
+          value: 'Errors Saving PD/SSFA'
+        },
+        saved: {
+          type: Object,
+          value: function() {
+            return {
+              interventionId: null,
+              justSaved: false
+            };
+          }
+        },
       },
-
       observers: [
         /**
          * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
@@ -310,7 +331,8 @@
         '_updateUrlTab(routeData.intTab)',
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
-        '_observeRouteDataId(routeData.intId)'
+        '_observeRouteDataId(routeData.intId)',
+        '_interventionChanged(intervention, permissions)'
       ],
 
       listeners: {
@@ -322,19 +344,72 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
+        var dialog = document.createElement('div');
+        dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
+        dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
+        this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
+            this._finalizeAmendmentConfirmationCallback.bind(this), dialog);
       },
+      detached: function() {
+        if (this.finalizeAmendmentConfirmationDialog) {
+          this.removeDialog(this.finalizeAmendmentConfirmationDialog);
+        }
+      },
+
+      _showFinalizeAmendmentDialog: function() {
+        if (this.finalizeAmendmentConfirmationDialog) {
+          this.finalizeAmendmentConfirmationDialog.opened = true;
+        }
+      },
+
       // TODO: do not remove this, we might needed back
       // _detailsPageDisableUpgrade: function(intervDetailsActive, newInterventionActive) {
       //   return !intervDetailsActive && !newInterventionActive;
       // },
-      _interventionChanged: function(intervention) {
+
+      _interventionChanged: function(intervention, permissions) {
+
+        this._displayAnyMigrationErrors(intervention);
+        this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
+
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
+          // set edit permissions
+          let isNewIntervention = this._redirectToNewIntervPageInProgress ||
+              this._newIntervention(this.newInterventionActive);
+          this.checkAndUpdateInterventionPermissions(intervention,
+              this._hasEditPermissions(permissions), isNewIntervention);
           this.async(function() {
             // ensure loading msg close
             this.fire('global-loading', {active: false});
           }.bind(this), 1000);
         }
+      },
+      _displayAnyMigrationErrors: function(intervention) {
+        if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
+          if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
+            //Avoid showing msg again after save
+            this.set('errorMsgBox_Title',
+                    'eTools validation code has been upgraded and this record is now considered invalid due to:');
+            this.set('serverErrors', intervention.metadata.error_msg);
+          }
+        }
+      },
+      /* Show metadata error message on intervention detail 'page load'*/
+      _makeSureMigrationErrorIsNotShownAgainAfterSave: function(intervention) {
+        if (this.saved.interventionId !== intervention.id) {
+          this.saved.justSaved = false;
+        }
+        this.saved.interventionId = intervention.id;
+      },
+      _isAttachmentsTabReadonly: function(permissions, intervention) {
+        if (!this._hasEditPermissions(permissions, intervention)) {
+          return true;
+        }
+        if (['suspended', 'terminated', 'ended', 'closed'].indexOf(intervention.status) > -1) {
+          return true;
+        }
+        return false;
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -388,9 +463,13 @@
         this.debounce('pageChange', function() {
           var activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
           if (activePage === 'list') {
+            this.set('serverErrors', []);
             this.set('activeTab', 'details');
           }
           this.set('interventionPage', activePage);
+          if (this._redirectToNewIntervPageInProgress) {
+            this.set('_redirectToNewIntervPageInProgress', false);
+          }
         }.bind(this), 50);
       },
 
@@ -412,292 +491,22 @@
             id = null;
           }
           this.set('selectedInterventionId', id);
-          // reset attachment prepare flag to ensure new intervention attachments will  be prepared after load
-          this.$.intervAttachments.set('preparedAttachments', false);
         }.bind(this));
       },
-
-      _validateAndSaveIntervention: function(event) {
-        event.stopImmediatePropagation();
-        this.set('serverErrors', []);
-        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-          return;
+      _finalizeAmendmentConfirmationCallback: function() {
+        if (event.detail.confirmed) {
+          this._validateAndSaveIntervention(null);
         }
-
-        var interventionDetails = this.$.interventionDetails;
-        var interventionDetailsAreValid = interventionDetails.validate();
-
-        var reviewAndSign = this.$.interventionReviewAndSign;
-        var reviewAndSignIsValid = reviewAndSign.validate();
-
-        if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
-          this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-          return;
-        }
-
-        var interventionData;
-        if (this._isNewIntervention()) {
-          interventionData = Object.assign({}, this.intervention);
-        } else {
-          var modifiedDetails = this._getModifiedInterventionDetails();
-          var modifiedReviewAndSign = this._getModifiedReviewAndSign();
-          interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
-        }
-
-        // on save sector_locations sector prop needs to be sector ID and not the sector obj
-        if (interventionData.sector_locations) {//if there were any modifications
-          interventionData.sector_locations = interventionDetails.prepareSectorLocations();
-        }
-
-        // prepare fr numbers
-        if (Array.isArray(this.intervention.fr_numbers) && this.intervention.fr_numbers.length > 0
-          && this._objectFieldIsModified('fr_numbers')) {
-          interventionData.fr_numbers = this.intervention.fr_numbers.map(function(frNumber) {
-            return frNumber.value;
-          });
-        }
-        // fr_numbers_details are readonly, we do not have to send them to backend
-        delete interventionData.fr_numbers_details;
-
-        // prepare attachments
-        interventionData.attachments = this._prepareAttachments();
-        if (_.isEmpty(interventionData.attachments)) {
-          delete interventionData.attachments;
-        }
-
-        // if prc_review_document is null we need to delete the property otherwise the
-        // file gets deleted from the backend
-        if (this.intervention.hasOwnProperty('prc_review_document') && !this.intervention.prc_review_document) {
-          delete interventionData.prc_review_document;
-        }
-
-        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-      },
-      _getModifiedReviewAndSign: function() {
-        var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
-          'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
-          'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
-          'signed_pd_document_file'];
-        var updatableObjectFields = ['amendments'];
-
-        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
-      },
-      _getModifiedInterventionDetails: function() {
-        var updatableFields = ['agreement', 'document_type', 'title', 'hrp',
-          'start', 'end'];
-        var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-          'sector_locations', 'planned_budget', 'planned_visits'];
-        var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
-        var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
-
-        return Object.assign({}, modifiedDetails, modifiedExpectedResults);
-      },
-      _buildModifiedExpectedResultsObject: function() {
-        var modifExpectedResultsArray = this._getNewOrModifiedExpectedResults();
-
-        if (!_.isEmpty(modifExpectedResultsArray)) {
-          return {result_links: modifExpectedResultsArray};
-        }
-        return {};
-      },
-      _getNewOrModifiedExpectedResults: function() {
-        if (_.isEmpty(this.intervention.result_links)) {
-          return [];
-        }
-        var modifExpResults = this.intervention.result_links
-          .filter(this._expectedResultIsNewOrModified.bind(this))
-          .map(function(resultLink) {
-            if (_.isEmpty(resultLink.ll_results)) {
-              return resultLink;
-            }
-
-            resultLink.ll_results = this._getNewOrModifiedPSorSSFATOROutput(resultLink.ll_results,
-              this._getOriginalResultLink(resultLink.id));
-            return resultLink;
-          }.bind(this));
-
-        return modifExpResults;
-      },
-      _getOriginalResultLink: function(id) {
-        return this.originalIntervention.result_links.find(function(r) {
-          return r.id === id;
-        });
-      },
-      _getOriginalLlResult: function(id, originalResultLink) {
-        return originalResultLink.ll_results.find(function(r) {
-          return r.id === id;
-        });
-      },
-      _getNewOrModifiedPSorSSFATOROutput: function(llResults, originalResultLink) {
-        if (!originalResultLink || _.isEmpty(originalResultLink.ll_results)) {
-          return llResults;
-        }
-        var modifLlResults = llResults.filter(function(llResult) {
-          if (!llResult.id) {
-            return true;
-          }
-          var originalLlResult = originalResultLink.ll_results.find(function(r) {
-            return r.id === llResult.id;
-          });
-
-          if (!originalLlResult) {
-            return true;
-          }
-          return (JSON.stringify(originalLlResult) !== JSON.stringify(llResult));
-        }).map(function(llResult) {
-          if (_.isEmpty(llResult.applied_indicators)) {
-            return llResult;
-          }
-          llResult.applied_indicators = this._getNewOrModifiedIndicators(llResult.applied_indicators,
-            this._getOriginalLlResult(llResult.id, originalResultLink));
-          return llResult;
-        }.bind(this));
-        return modifLlResults;
-      },
-      _getNewOrModifiedIndicators: function(indicators, originalLlResult) {
-        if (!originalLlResult || _.isEmpty(originalLlResult.applied_indicators)) {
-          return indicators;
-        }
-        var modifIndicators = indicators.filter(function(indicator) {
-          if (!indicator.id) {
-            return true;
-          }
-          var originalIndicator = originalLlResult.applied_indicators.find(function(r) {
-            return r.id === indicator.id;
-          });
-          if (!originalIndicator) {
-            return true;
-          }
-          return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator));
-        });
-
-        return modifIndicators;
-      },
-      _expectedResultIsNewOrModified: function(resultLink) {
-        if (_.isEmpty(this.originalIntervention.result_links)) {
-          return true;
-        }
-        if (!resultLink.id) {
-          return true;
-        }
-        var originalResultLink = this._getOriginalResultLink(resultLink.id);
-        if (!originalResultLink) {
-          return true;
-        }
-
-        return (JSON.stringify(originalResultLink) !== JSON.stringify(resultLink));
-      },
-      _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
-        var modifiedObject = {};
-
-        updatableFields.forEach(function(fieldName) {
-          if (this._primitiveFieldIsModified(fieldName)) {
-            modifiedObject[fieldName] = this.intervention[fieldName];
-          }
-        }.bind(this));
-
-        updatableObjectFields.forEach(function(fieldName) {
-          if (this._objectFieldIsModified(fieldName)) {
-            modifiedObject[fieldName] = this.intervention[fieldName];
-          }
-        }.bind(this));
-
-        return modifiedObject;
-      },
-      _objectFieldIsModified: function(fieldName) {
-        // jscs:disable
-        var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
-        // jscs:enable
-        var dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
-        if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
-          // Covers dropdown arrays which can have same content but with changed order
-          if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
-            isModified = false;
-          }
-        }
-        return isModified;
-      },
-      _arraysAreEqual: function(array1, array2) {
-        var differencesArray = [];
-        if (array1.length > array2.length) {
-          differencesArray = _.difference(array1, array2);
-        } else {
-          differencesArray = _.difference(array2, array1);
-        }
-        return _.isEmpty(differencesArray);
-
-      },
-      _primitiveFieldIsModified: function(fieldName) {
-        return this.originalIntervention[fieldName] !== this.intervention[fieldName];
       },
       _isNewIntervention: function() {
         return !!!this.intervention.id;
-      },
-      _prepareAttachments: function() {
-        if (_.isEmpty(this.intervention.attachments)) {
-          return [];
-        }
-        var modifAttachments = this.intervention.attachments
-          .filter(this._attachmentIsNewOrModified.bind(this))
-          .map(function(attachment) {
-            var _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
-            if (!_sendAttachmentFile && attachment.id) {
-              return {
-                id: attachment.id,
-                type: attachment.type
-              };
-            } else {
-              return {
-                id: attachment.id,
-                intervention: attachment.intervention,
-                type: attachment.type,
-                attachment: attachment.raw
-              };
-            }
-          });
-        return modifAttachments;
-      },
-
-      _attachmentIsNewOrModified: function(attachment) {
-        if (_.isEmpty(this.originalIntervention.attachments)) {
-          return true;
-        }
-        if (!attachment.id) {
-          return true;
-        }
-        var originalAttachment = this.originalIntervention.attachments.find(function(att) {
-          return att.id === attachment.id;
-        });
-        if (!originalAttachment) {
-          return true;
-        }
-        return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
-      },
-      _showErrorsWarning: function(validDetails, validReviewAndSign) {
-        var msg = 'Please review invalid fields data';
-        var tabs = [];
-        if (validDetails === false) {
-          tabs.push('DETAILS');
-        }
-        if (validReviewAndSign === false) {
-          tabs.push('REVIEW & SIGN');
-        }
-        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '!';
-        this.fire('toast', {text: msg, showCloseBtn: true});
       },
 
       _updateInterventionStatus: function(event) {
         event.stopImmediatePropagation();
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
-
       _hasEditPermissions: function(permissions, intervention) {
-        if (permissions && permissions.partnershipManager) {
-          // TODO: revise this temporary permission, might not be needed
-          // temporary edit permission for PM regardless status or other checks
-          return true;
-        }
-
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
             if (!(permissions.partnershipManager || permissions.PME) &&
@@ -714,6 +523,7 @@
       _getAttachmentModel: function(interventionId) {
         return {
           id: null,
+          created: null,
           intervention: interventionId ? interventionId : null,
           type: null
         };
@@ -724,6 +534,7 @@
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
+        this.set('_redirectToNewIntervPageInProgress', true);
         this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         this.set('selectedInterventionId', null);
         this.fire('update-main-path', {path: 'interventions/new/details'});

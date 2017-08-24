@@ -22,11 +22,9 @@
   <template strip-whitespace>
 
     <style include="page-layout-styles shared-styles buttons-styles">
-
       :host {
         display: block;
       }
-
     </style>
 
     <app-route
@@ -103,31 +101,48 @@
       </div>
     </div>
 
-    <iron-pages id="partnersPages"
-                selected="{{partnerPage}}"
-                attr-for-selected="name"
-                fallback-selection="list"
-                role="main">
+    <div id="main">
+      <div id="pageContent">
 
-      <div class="page" name="list">
-        <partners-list id="list"
-                       show-only-government-type="[[showOnlyGovernmentType]]"
-                       current-page="[[currentPage]]"
-                       active="[[listActive]]"
-                       csv-download-url="{{csvDownloadUrl}}"
-                       url-params="[[queryParams]]"></partners-list>
-      </div>
-      <div class="page" name="overview">
-        <partner-overview partner="[[partner]]"></partner-overview>
-      </div>
-      <div class="page" name="details">
-        <partner-details id="partnerDetails"
-                         partner="[[partner]]"
-                         edit-mode="[[_hasEditPermissions(permissions)]]"
-                         on-save-partner="_savePartner"
-                         on-hide-partner="_hidePartner"></partner-details>
-      </div>
-    </iron-pages>
+        <etools-error-messages-box id="errorsBox"
+                                  title="Errors Saving Partner"
+                                  errors="{{serverErrors}}"></etools-error-messages-box>
+        <iron-pages id="partnersPages"
+                    selected="{{partnerPage}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    role="main">
+
+          <div class="page" name="list">
+            <partners-list id="list"
+                          show-only-government-type="[[showOnlyGovernmentType]]"
+                          current-page="[[currentPage]]"
+                          active="[[listActive]]"
+                          csv-download-url="{{csvDownloadUrl}}"
+                          url-params="[[queryParams]]"></partners-list>
+          </div>
+          <div class="page" name="overview">
+            <partner-overview partner="[[partner]]"></partner-overview>
+          </div>
+          <div class="page" name="details">
+            <partner-details id="partnerDetails"
+                            partner="[[partner]]"
+                            edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          </div>
+        </iron-pages>
+
+      </div> <!-- page content end -->
+
+      <!-- sidebar content start -->
+      <div id="sidebar" hidden$="[[listActive]]">
+        <partner-status
+            on-save-partner="_validateAndTriggerPartnerSave"
+            on-delete-partner="_deletePartner"
+            partner="[[partner]]"
+            edit-mode$="[[_hasEditPermissions(permissions)]]">
+        </partner-status>
+      </div> <!-- sidebar content end -->
+    </div> <!-- main container end -->
 
   </template>
 
@@ -166,7 +181,12 @@
           type: Boolean,
           value: false
         },
-        currentPage: String
+        serverErrors: {
+          type: Array,
+          value: []
+        },
+        currentPage: String,
+        originalPartnerData: Object,
       },
 
       observers: [
@@ -233,13 +253,21 @@
         }
         return '';
       },
-      _savePartner: function(event) {
-        event.stopImmediatePropagation();
-        this.$.partnerData.savePartner(event.detail);
+      _savePartner: function(newPartnerData) {
+        this.$.partnerData.savePartner(newPartnerData);
       },
-      _hidePartner: function(event) {
+      _deletePartner: function(event) {
         event.stopImmediatePropagation();
-        this.$.partnerData.hidePartner(event.detail);
+        this.fire('global-loading', {active: true});
+        this.$.partnerData.deletePartner(this.partner, this._handlePartnerDeleted, this._handlePartnerNotDeleted);
+      },
+      _handlePartnerDeleted: function() {
+        this.fire('global-loading', {active: false});
+        this.fire('toast', {text: 'Partner successfully deleted', showCloseBtn: true});
+        this.fire('update-main-path', {path: 'partners/list'});
+      },
+      _handlePartnerNotDeleted: function() {
+        this.fire('global-loading', {active: false});
       },
       _observeRouteDataId: function(id) {
         this.set('selectedPartnerId', id);
@@ -249,15 +277,14 @@
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
           (typeof event.detail === 'string' && event.detail !== '')) {
-          this.$.partnerDetails.set('serverErrors', event.detail);
+          this.set('serverErrors', event.detail);
         }
-
       },
       _showNewPartnerBtn: function(listActive, permissions) {
         return listActive && this._hasEditPermissions(permissions);
       },
       _openNewPartnerDialog: function() {
-        this.newPartnerDialog._openNewPartnerDialog();
+        this.newPartnerDialog.openNewPartnerDialog();
       },
       _createPartner: function(event) {
         this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
@@ -270,11 +297,15 @@
         var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
         this.fire('toast', {text: toastMsg, showCloseBtn: true});
       },
-
       _partnerChanged: function(partner) {
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
           this.fire('global-loading', {active: false});
+        }
+        this.set('serverErrors', []);
+        if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          // keep a copy of loaded partner to be able to check changed data
+          this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
       },
 
@@ -288,7 +319,51 @@
         } catch (err) {
           this.logWarn('List refresh error occurred', '[partners-page]', err);
         }
-      }
+      },
+
+      _validateAndTriggerPartnerSave: function(event) {
+          event.stopImmediatePropagation();
+          if (!this._hasEditPermissions(this.permissions)) {
+            return;
+          }
+          if (this.$.partnerDetails._validatePartner()) {
+            var partnerChanges = this._cleanUpdateData(this.partner);
+            partnerChanges.id = this.partner.id;
+            this._savePartner(partnerChanges);
+          } else {
+            this.fire('toast', {text: 'Please check assessments and partner contacts for ' +
+              'invalid fields or empty data rows!', showCloseBtn: true});
+          }
+        },
+
+        _cleanUpdateData: function(partner) {
+          var updateableFields = [
+              'alternate_name',
+              'shared_with',
+              'staff_members',
+              'assessments',
+              'core_values_assessment'
+            ];
+          var changes = {};
+          updateableFields.forEach(function(fieldName) {
+            // TODO: improve this
+            if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
+              if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
+                changes[fieldName] = partner[fieldName];
+              }
+            } else if (fieldName === 'core_values_assessment') {
+              if ((partner.hasOwnProperty('core_values_assessment')) &&
+                (partner.core_values_assessment instanceof File)) {
+                  changes.core_values_assessment = partner.core_values_assessment;
+              }
+            } else {
+              if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
+                changes[fieldName] = partner[fieldName];
+              }
+            }
+          }.bind(this));
+          return changes;
+        },
 
     });
 
