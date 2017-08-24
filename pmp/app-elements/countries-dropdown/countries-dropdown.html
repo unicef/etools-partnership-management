@@ -81,7 +81,7 @@
         <paper-listbox class="dropdown-content"
                        id="countriesListbox"
                        attr-for-selected="countryId"
-                       selected="[[current]]"
+                       selected="[[currentCountry.id]]"
                        on-iron-select="_countrySelected">
           <template id="repeat" is="dom-repeat" items="[[countries]]">
             <paper-item country-id="[[item.id]]">
@@ -107,7 +107,9 @@
       ],
 
       properties: {
-        current: Number,
+        currentCountry: {
+          type: Object
+        },
         country: {
           type: Object
         },
@@ -119,7 +121,7 @@
       },
 
       _countrySelected: function(e) {
-        if (e.detail.item.countryId !== this.current) {
+        if (e.detail.item.countryId !== this.currentCountry.id) {
           //send post request to change_coutry endpoint
           console.log('change_country_request');
           this.$.ajax.body = {country: e.detail.item.countryId};
@@ -141,7 +143,7 @@
         console.log(rsp);
         console.log(err);
         console.log('TODO: this should be a larger alert.');
-        this.$.countriesListbox.selected = this.current;
+        this.$.countriesListbox.selected = this.currentCountry.id;
         this.fire('toast', {text: 'Something went wrong changing your workspace. Please try again'});
       }
 
