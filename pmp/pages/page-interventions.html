@@ -138,55 +138,46 @@
                     role="main">
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
-            <div class="page" name="list">
-              <interventions-list id="intList"
-                                  active="[[intervListActive]]"
-                                  csv-download-url="{{csvDownloadUrl}}"
-                                  url-params="[[interventionsQueryParams]]">
-              </interventions-list>
-            </div>
+            <interventions-list id="intList" name="list"
+                                active="[[intervListActive]]"
+                                csv-download-url="{{csvDownloadUrl}}"
+                                url-params="[[interventionsQueryParams]]">
+            </interventions-list>
           </template>
 
           <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
-            <div class="page" name="overview">
-              <intervention-overview intervention="[[intervention]]"
-                                     intervention-agreement="[[agreement]]">
-              </intervention-overview>
-            </div>
+            <intervention-overview name="overview"
+                                   intervention="[[intervention]]"
+                                   intervention-agreement="[[agreement]]">
+            </intervention-overview>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'details')]]">
-            <div class="page" name="details">
-              <intervention-details id="interventionDetails"
-                                    intervention="{{intervention}}"
-                                    partner-staff-members="[[partnerStaffMembers]]"
-                                    selected-partner-id="{{partnerId}}"
-                                    new-intervention="[[_newIntervention(newInterventionActive)]]"
-                                    on-update-intervention-status="_updateInterventionStatus"
-                                    original-intervention="[[originalIntervention]]">
-              </intervention-details>
-            </div>
+            <intervention-details id="interventionDetails" name="details"
+                                  intervention="{{intervention}}"
+                                  partner-staff-members="[[partnerStaffMembers]]"
+                                  selected-partner-id="{{partnerId}}"
+                                  new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                  on-update-intervention-status="_updateInterventionStatus"
+                                  original-intervention="[[originalIntervention]]">
+            </intervention-details>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'review-and-sign')]]">
-            <div class="page" name="review-and-sign">
-              <intervention-review-and-sign id="interventionReviewAndSign"
-                                            intervention="{{intervention}}"
-                                            agreement="[[agreement]]">
-              </intervention-review-and-sign>
-            </div>
+            <intervention-review-and-sign id="interventionReviewAndSign" name="review-and-sign"
+                                          intervention="{{intervention}}"
+                                          agreement="[[agreement]]">
+            </intervention-review-and-sign>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
-            <div class="page" name="attachments">
-              <intervention-attachments id="intervAttachments"
-                                        active="[[_isAttachementsTabActive(activeTab)]]"
-                                        intervention="[[intervention]]"
-                                        file-model="[[_getAttachmentModel(intervention.id)]]"
-                                        attachments="{{intervention.attachments}}"
-                                        edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
-              </intervention-attachments>
-            </div>
+            <intervention-attachments id="intervAttachments" name="attachments"
+                                      active="[[_isAttachementsTabActive(activeTab)]]"
+                                      intervention="[[intervention]]"
+                                      file-model="[[_getAttachmentModel(intervention.id)]]"
+                                      attachments="{{intervention.attachments}}"
+                                      edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
+            </intervention-attachments>
           </template>
 
         </iron-pages>
@@ -207,7 +198,7 @@
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[!intervListActive]]">
+      <template is="dom-if" if="[[_showSidebarStatus(intervListActive, _subPageOrTabAttached)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                intervention-id$="[[intervention.id]]"
@@ -637,10 +628,6 @@
 
       _reloadInterventionsList: function(e) {
         e.stopImmediatePropagation();
-
-        // TODO: cleanup needed
-        // return;
-
         try {
           let interventions = this.$$('#intList');
           if (interventions && !interventions.$.list.classList.contains('hidden')) {
@@ -658,14 +645,8 @@
       _interventionPageAttached: function(e) {
         e.stopImmediatePropagation();
         // force styles updates according with intervention permissions
-        this._updateRelatedPermStyles();
-        if (this._forceDetUiValidationOnAttach) {
-
-        }
-
-        if (this._forceReviewUiValidationOnAttach) {
-
-        }
+        this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
+        this.set('_subPageOrTabAttached', true);
       }
 
     });

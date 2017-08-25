@@ -54,6 +54,13 @@
             type: Array,
             statePath: 'sectors'
           },
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'pd-ssfa-data'
+          }
         },
 
         attached: function() {
@@ -65,7 +72,7 @@
             this.fire('global-loading', {
               message: 'Loading PD/SSFA data...',
               active: true,
-              loadingSource: 'pd-ssfa-data'
+              loadingSource: this.ajaxLoadingMsgSource
             });
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
@@ -184,7 +191,7 @@
               this.fire('global-loading', {
                 message: 'Changing intervention status...',
                 active: true,
-                loadingSource: 'pd-ssfa-data'
+                loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
@@ -269,7 +276,7 @@
             this.fire('global-loading', {
               message: 'Saving intervention data...',
               active: true,
-              loadingSource: 'pd-ssfa-data'
+              loadingSource: this.ajaxLoadingMsgSource
             });
             // fire in the hole
             this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',

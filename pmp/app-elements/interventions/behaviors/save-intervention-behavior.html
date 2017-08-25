@@ -24,7 +24,9 @@
        } else {
          // details element not stamped...
          // validate current data that belongs to details tab against permissions
-         interventionDetailsAreValid = this._validateDetailsData();
+         let interventionDetFields = ['agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
+           'partner_focal_points', 'country_programme', 'start', 'end', 'sector_locations'];
+         interventionDetailsAreValid = this._validateInterventionFields(interventionDetFields);
          this.set('_forceDetUiValidationOnAttach', true);
        }
 
@@ -35,7 +37,9 @@
        } else {
          // review and signed element not stamped...
          // validate current data that belongs to this tab tab against permissions
-         reviewAndSignIsValid = this._validateReviewAndSignedData();
+         let interventionReviewAndSignFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
+           'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document'];
+         reviewAndSignIsValid = this._validateInterventionFields(interventionReviewAndSignFields);
          this.set('_forceReviewUiValidationOnAttach', true);
        }
 
@@ -65,10 +69,8 @@
         this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
       },
 
-      _validateDetailsData: function() {
+      _validateInterventionFields: function(interventionFields) {
         let valid = true;
-        let interventionFields = ['agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-          'partner_focal_points', 'country_programme', 'start', 'end', 'sector_locations'];
         let i;
         let fieldRequired;
         let fieldVal;
@@ -80,12 +82,6 @@
             break;
           }
         }
-        return valid;
-      },
-
-      _validateReviewAndSignedData: function() {
-        let valid = true;
-        // TODO: ...
         return valid;
       },
 
@@ -120,7 +116,8 @@
       _showErrorsWarning: function(validDetails, validReviewAndSign) {
         let msg = '';
         if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
-          msg = 'Status of the PD will change to signed once all required fields are completed.';
+          msg = 'Status of the PD will change to signed once all required fields are completed ' +
+              '(check details and review&sign tabs).';
         } else {
           msg = 'Please review invalid fields data';
           let tabs = [];

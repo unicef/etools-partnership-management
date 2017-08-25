@@ -4,7 +4,8 @@
   pmpBehaviors.PageUtilsBehavior = {
 
     properties: {
-      _ignoreFirstTabSelectEvent: Boolean
+      _ignoreFirstTabSelectEvent: Boolean,
+      _subPageOrTabAttached: Boolean
     },
 
     _pageEquals: function(activePage, expectedPage) {
@@ -34,6 +35,10 @@
       } else {
         this.set('_ignoreFirstTabSelectEvent', false);
       }
+    },
+
+    _showSidebarStatus: function(listPageActive, subPageOrTabAttached) {
+      return !listPageActive && !!subPageOrTabAttached;
     }
 
   };

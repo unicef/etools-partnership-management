@@ -117,18 +117,31 @@
     },
 
     // TODO: this method should be moved elsewhere
-    _updateRelatedPermStyles: function(onlyDetails) {
+    _updateRelatedPermStyles: function(onlyDetails, forceDetUiValidationOnAttach, forceReviewUiValidationOnAttach) {
       this.async(function() {
         let details = this.$$('#interventionDetails');
         let reviewAndSign = this.$$('#interventionReviewAndSign');
         if (details && typeof details.updateStyles === 'function') {
           details.updateStyles();
+
+          if (forceDetUiValidationOnAttach) {
+            // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
+            details.validate();
+            this.set('_forceDetUiValidationOnAttach', false);
+          }
         }
+
         if (onlyDetails) {
           return;
         }
         if (reviewAndSign && typeof reviewAndSign.updateStyles === 'function') {
           reviewAndSign.updateStyles();
+
+          if (forceReviewUiValidationOnAttach) {
+            // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
+            reviewAndSign.validate();
+            this.set('_forceReviewUiValidationOnAttach', false);
+          }
         }
       }.bind(this), 50);
     },
