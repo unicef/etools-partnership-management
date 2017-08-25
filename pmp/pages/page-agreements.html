@@ -131,8 +131,7 @@
                 agreement="[[agreement]]"
                 authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
-                is-new-agreement="[[newAgreementActive]]"
-                on-update-agreement-status="_updateAgreementStatus">
+                is-new-agreement="[[newAgreementActive]]">
             </agreement-details>
           </div>
         </iron-pages>
@@ -144,7 +143,8 @@
                           agreement-id$="[[agreement.id]]"
                           agreement-type="[[agreement.agreement_type]]"
                           on-save-agreement="_validateAndTriggerAgreementSave"
-                          edit-mode="[[_hasEditPermissions(permissions)]]">
+                          edit-mode="[[_hasEditPermissions(permissions)]]"
+                          on-update-agreement-status="_updateAgreementStatus">
         </agreement-status>
       </div>
     </div> <!-- main page content end -->

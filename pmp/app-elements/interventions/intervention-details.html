@@ -76,6 +76,12 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
+      .contingencyPD {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        align-items: center;
+        font-size: 16px;
+      }
 
       etools-info-tooltip {
         --etools-tooltip-trigger-icon: {
@@ -87,6 +93,9 @@
         --paper-input-container-input: {
           color: var(--error-color);
         }
+      }
+      div[no-left-padding] {
+        padding-left: 0px !important;
       }
     </style>
 
@@ -190,24 +199,11 @@
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c">
-        <div class="col col-3">
-          <etools-single-selection-menu id="cpStructure"
-                                        label="CP Structure"
-                                        placeholder="&#8212;"
-                                        options="[[cpStructureOptions]]"
-                                        option-value="id"
-                                        option-label="name"
-                                        selected="{{intervention.country_programme}}"
-                                        dynamic-align
-                                        hide-search
-                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
-                                        required$="[[intervention.permissions.required.country_programme]]"
-                                        auto-validate
-                                        error-message="Please select CP Structure">
-          </etools-single-selection-menu>
+      <div class="row-h flex-c row-second-bg">
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3 contingencyPD">
+          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[intervention.permissions.required.contingency_pd]]"></paper-toggle-button> Contingency PD
         </div>
-        <div class="col col-3">
+        <div class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
@@ -250,6 +246,22 @@
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
         </div>
+      </div>
+      <div class="row-h flex-c">
+        <etools-single-selection-menu id="cpStructure"
+                                        label="CP Structure"
+                                        placeholder="&#8212;"
+                                        options="[[cpStructureOptions]]"
+                                        option-value="id"
+                                        option-label="name"
+                                        selected="{{intervention.country_programme}}"
+                                        dynamic-align
+                                        hide-search
+                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                        required$="[[intervention.permissions.required.country_programme]]"
+                                        auto-validate
+                                        error-message="Please select CP Structure">
+          </etools-single-selection-menu>
       </div>
       <div class="row-h flex-c">
         <paper-material elevation="0">
@@ -401,7 +413,8 @@
           'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
-          '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)'
+          '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
+          '_contingencyPDChanged(intervention.contingency_pd)'
         ],
 
         ready: function() {
@@ -462,6 +475,30 @@
             }
             this.set('intervention.country_programme', currentCP ? currentCP.id : null);
           }
+        },
+        _contingencyPDChanged: function(newValue) {
+          if (newValue && this.intervention.status === 'signed') {
+           this._updateDatesRequiredState(false);
+          } else {
+            if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
+              this._updateDatesRequiredState(true);
+            }
+          }
+          this.$.intStart.updateStyles();
+          this.$.intEnd.updateStyles();
+        },
+        _updateDatesRequiredState: function(isRequired) {
+           this.set('intervention.permissions.required.start', isRequired);
+           this.set('intervention.permissions.required.end', isRequired);
+        },
+        _showContingencyPd: function(agreement) {
+          if (!agreement) {
+            return false;
+          }
+          if ('PCA' === agreement.agreement_type) {
+            return true;
+          }
+          return false;
         },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
@@ -610,8 +647,13 @@
         validate: function() {
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-            '#partnerFocalPts', '#cpStructure', '#intStart', '#intEnd', '#sectorLocations',
+            '#partnerFocalPts', '#cpStructure', '#sectorLocations',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
+          if (!this.intervention.contingency_pd) {
+            fieldSelectors.push('#intStart', '#intEnd');
+          } else if (this.intervention.status === 'active') {
+            fieldSelectors.push('#intStart', '#intEnd');
+          }
           fieldSelectors.forEach(function(selector) {
             let field = this.$$(selector);
             if (field && !field.validate()) {
