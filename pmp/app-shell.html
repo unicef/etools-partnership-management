@@ -215,8 +215,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         page: {
           type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
+          reflectToAttribute: true
         },
         route: {
           type: Object
@@ -299,46 +298,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         event.stopImmediatePropagation();
       },
 
-      _setDefaultPage: function() {
-        if (!!!this.page) {
-          this.async(function() {
-            this.set('page', 'partners');
-          }, 10);
-        }
-      },
-
       _routePageChanged: function(routePage) {
-        if (!!!routePage) {
-          var self = this;
-          this.debounce('routePageChange', function() {
-            self._setDefaultPage();
-          }, 10);
-          return;
-        }
-        if (this.route && this.baseUrl) {
-          let subroute = JSON.parse(JSON.stringify(this.route));
-          subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-          this.set('subroute', subroute);
-        }
-        this.set('page', routePage);
+        this.debounce('routePageChanges', function() {
+          console.log('routePage: ', routePage);
+          if (!!!routePage) {
+            this.fire('update-main-path', {path: 'partners/list'});
+            return;
+          }
+
+          this._importMainPage(routePage);
+
+          if (this.route && this.baseUrl) {
+            let subroute = JSON.parse(JSON.stringify(this.route));
+            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
+            this.set('subroute', subroute);
+          }
+          this.set('page', routePage);
+        }.bind(this), 10);
       },
 
-      _pageChanged: function(page) {
+      _importMainPage: function(page) {
         if (!page) {
           return;
         }
-        var displayedPageCat = this._getDisplayedPageCategory(page);
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + displayedPageCat + '.html');
+        var mainPageName = this._getMainPageName(page);
+        var resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(displayedPageCat);
+        var pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
           // make the import
-          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, displayedPageCat, pageEl),
+          console.log(page, resolvedPageUrl);
+          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
               this._pageNotFound, false);
         }
       },
 
-      _getDisplayedPageCategory: function(page) {
+      _getMainPageName: function(page) {
         return page === 'government-partners' ? 'partners' : page;
       },
 

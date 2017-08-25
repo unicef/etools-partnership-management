@@ -255,8 +255,19 @@
           showCoreValuesAssessmentAttachment: {
             type: Boolean,
             value: false
-          },
+          }
         },
+
+        attached: function() {
+          console.log('partner details attached');
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+          this.fire('partners-page-attached');
+        },
+
         _hideDeleteBtn: function() {
           if (!this.partner.core_values_assessment_file) {
             return false;

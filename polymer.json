@@ -3,6 +3,10 @@
   "shell": "pmp/app-shell.html",
   "fragments": [
     "pmp/pages/page-partners.html",
+    "pmp/app-elements/partners/partners-list.html",
+    "pmp/app-elements/partners/partner-overview.html",
+    "pmp/app-elements/partners/partner-details.html",
+
     "pmp/pages/page-agreements.html",
 
     "pmp/pages/page-interventions.html",

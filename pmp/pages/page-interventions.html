@@ -79,13 +79,6 @@
                 </paper-button>
               </a>
             </div>
-            <!-- Print functionality pending implementation -->
-            <!--<div class="top-content-action"  hidden$="[[!intervListActive]]">
-              <paper-button>
-                <iron-icon icon="print"></iron-icon>
-                Print
-              </paper-button>
-            </div>-->
             <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
                 <iron-icon icon="add"></iron-icon>
@@ -138,7 +131,8 @@
                     role="main">
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
-            <interventions-list id="intList" name="list"
+            <interventions-list id="intList"
+                                name="list"
                                 active="[[intervListActive]]"
                                 csv-download-url="{{csvDownloadUrl}}"
                                 url-params="[[interventionsQueryParams]]">
@@ -153,7 +147,8 @@
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'details')]]">
-            <intervention-details id="interventionDetails" name="details"
+            <intervention-details id="interventionDetails"
+                                  name="details"
                                   intervention="{{intervention}}"
                                   partner-staff-members="[[partnerStaffMembers]]"
                                   selected-partner-id="{{partnerId}}"
@@ -164,14 +159,16 @@
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'review-and-sign')]]">
-            <intervention-review-and-sign id="interventionReviewAndSign" name="review-and-sign"
+            <intervention-review-and-sign id="interventionReviewAndSign"
+                                          name="review-and-sign"
                                           intervention="{{intervention}}"
                                           agreement="[[agreement]]">
             </intervention-review-and-sign>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
-            <intervention-attachments id="intervAttachments" name="attachments"
+            <intervention-attachments id="intervAttachments"
+                                      name="attachments"
                                       active="[[_isAttachementsTabActive(activeTab)]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
@@ -210,6 +207,7 @@
           </intervention-status>
         </div> <!-- sidebar content end -->
       </template>
+
     </div>
 
   </template>
@@ -366,8 +364,7 @@
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
         /**
-         * Start stamping tabs elements.
-         * Loading msg used here (disabled in each tab main element attached callback)
+         * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
          */
         this.set('_ignoreFirstTabSelectEvent', true);
         this.fire('global-loading', {
@@ -486,13 +483,7 @@
           }
           pagePrefix = 'intervention-';
         }
-        if (page) {
-          let pageName = pagePrefix + page;
-          if (!Polymer.isInstance(this.$$(pageName))) {
-            let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pageName + '.html');
-            this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
-          }
-        }
+        this._importPageElement(page, pagePrefix, pageBaseUrl);
         return page;
       },
 
@@ -508,17 +499,6 @@
             this.set('_redirectToNewIntervPageInProgress', false);
           }
         }.bind(this), 10);
-      },
-
-      _showPageTabs: function(interventionPage) {
-        return interventionPage !== 'list';
-      },
-
-      _getTopContentAdditionalClass: function(interventionPage) {
-        if (this._showPageTabs(interventionPage)) {
-          return 'with-tabs';
-        }
-        return '';
       },
 
       _observeRouteDataId: function(id) {
@@ -640,12 +620,13 @@
       },
 
       _handleTabSelectAction: function(e) {
-        this._showTabChangeLoadingMsg(e, 'interv-page');
+        this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
       },
 
       _interventionPageAttached: function(e) {
         e.stopImmediatePropagation();
         // force styles updates according with intervention permissions
+        // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
         this.set('_subPageOrTabAttached', true);
       }

@@ -20,10 +20,31 @@
       return str.replace(new RegExp('-', 'g'), ' ');
     },
 
-    _showTabChangeLoadingMsg: function(e, loadingSource) {
+    _showPageTabs: function(page) {
+      return page !== 'list';
+    },
+
+    _getTopContentAdditionalClass: function(page) {
+      if (this._showPageTabs(page)) {
+        return 'with-tabs';
+      }
+      return '';
+    },
+
+    _importPageElement: function(page, pagePrefix, pageBaseUrl) {
+      if (page) {
+        let pageName = pagePrefix + page;
+        if (!Polymer.isInstance(this.$$(pageName))) {
+          let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pageName + '.html');
+          this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+        }
+      }
+    },
+
+    _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix) {
       if (!this._ignoreFirstTabSelectEvent) {
         let clickedTabName = e.detail.item.getAttribute('name');
-        if (Polymer.isInstance(this.$$('intervention-' + clickedTabName))) {
+        if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
           // tab element already loaded, no need for loading messages
           return;
         }
