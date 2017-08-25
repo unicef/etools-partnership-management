@@ -316,7 +316,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         if (this.route && this.baseUrl) {
-          var subroute = JSON.parse(JSON.stringify(this.route));
+          let subroute = JSON.parse(JSON.stringify(this.route));
           subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
           this.set('subroute', subroute);
         }

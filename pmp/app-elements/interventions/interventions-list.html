@@ -735,6 +735,9 @@
 
         _setSelectedStatuses: function(statuses) {
           var statusesStrArr = statuses.split('|');
+          if (!this.interventionStatuses || !this.interventionStatuses.length) {
+            return [];
+          }
           return this.interventionStatuses.filter(function(status) {
             return statusesStrArr.indexOf(status.value) > -1;
           });

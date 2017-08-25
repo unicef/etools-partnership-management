@@ -152,11 +152,17 @@
           }
 
           if (newPageName !== this.page) {
+            e.preventDefault();
             this.fire('global-loading', {
               message: 'Loading ' + newPageName + ' pages elements...',
               active: true,
               loadingSource: 'main-page'
             });
+            /**
+             * update-main-path is used here to prevent going from a list page to another with the same queryString
+             */
+            let newPageUrl = menuOptionEl.getAttribute('href').replace(this.baseUrl, '');
+            this.fire('update-main-path', {path: newPageUrl});
           }
         },
 

@@ -649,9 +649,7 @@
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
-          if (!this.intervention.contingency_pd) {
-            fieldSelectors.push('#intStart', '#intEnd');
-          } else if (this.intervention.status === 'active') {
+          if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
           fieldSelectors.forEach(function(selector) {
