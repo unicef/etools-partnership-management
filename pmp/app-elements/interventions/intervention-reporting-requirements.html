@@ -1,0 +1,164 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+
+<dom-module id="intervention-reporting-requirements">
+
+  <template strip-whitespace>
+
+    <style include="shared-styles data-table-styles grid-layout-styles">
+      :host {
+        @apply --layout-flex;
+      }
+      etools-data-table-header {
+        --header-title: {
+          display: none;
+        };
+        --data-table-header: {
+          height: 56px;
+        };
+      }
+      /*.monitoring-visits-warning {
+        padding: 0 20px;
+      }*/
+      .list-container {
+        position: relative;
+      }
+
+    </style>
+
+
+    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
+      <div slot="panel-btns" id="edit-btns">
+        <paper-icon-button icon="add-box"
+                           title="Add Reporting Requirement">
+        </paper-icon-button>
+      </div>
+
+      <div class="list-container">
+        <etools-data-table-header id="listHeader" no-collapse>
+          <etools-data-table-column class="col-3">
+            Reporting Period Start Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3">
+            Reporting Period End Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-6">
+            Report Due Date
+          </etools-data-table-column>
+        </etools-data-table-header>
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>fiber-manual-record
+
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>
+
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">
+              25 Jun 2017
+            </span>
+            <span class="col-data col-3">
+              24 Jul 2017
+            </span>
+            <span class="col-data col-6">
+              27 Aug 2017
+            </span>
+          </div>
+        </etools-data-table-row>
+
+        <etools-data-table-footer
+            page-size="10"
+            page-number="1"
+            total-results="10">
+        </etools-data-table-footer>
+      </div>
+    </etools-content-panel>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var _interventionsLastNavigated = null;
+
+      Polymer({
+        is: 'intervention-reporting-requirements',
+      });
+
+    })();
+  </script>
+
+</dom-module>

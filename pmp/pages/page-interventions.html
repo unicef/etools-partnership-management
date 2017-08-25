@@ -21,6 +21,7 @@
 <link rel="import" href="../app-elements/interventions/intervention-review-and-sign.html">
 <link rel="import" href="../app-elements/interventions/intervention-attachments.html">
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
+<link rel="import" href="../app-elements/interventions/intervention-reports.html">
 
 <link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -133,6 +134,10 @@
               <span class="tab-content">Attachments</span>
             </paper-tab>
 
+            <paper-tab name="reports" link>
+              <span class="tab-content">Reports</span>
+            </paper-tab>
+
           </paper-tabs>
         </div>
       </div>
@@ -191,6 +196,10 @@
                                       attachments="{{intervention.attachments}}"
                                       edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
             </intervention-attachments>
+          </div>
+          <div class="page" name="reports">
+            <intervention-reports id="interventionReports">
+            </intervention-reports>
           </div>
         </iron-pages>
       </div> <!-- main page content end -->
