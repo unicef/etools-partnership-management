@@ -33,7 +33,7 @@
       }
 
     </style>
-    <!-- <div hidden$="[[_emptyList(dataItems.length)]]">
+     <!-- <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}" as="disaggregate_byId">
         <div class="row-h item-container no-h-margin">
           <div class="item-actions-container">
@@ -63,7 +63,7 @@
         </div>
       </template>
     </div> -->
-     <div hidden$="[[_emptyList(dataItems.length)]]">
+      <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container no-h-margin">
           <div class="item-actions-container">
@@ -133,11 +133,10 @@
           this.fire('disaggregation-change');
         },
         _displayDisaggregationGroups: function(event) {
-          console.log(event.target.id);
           if (!event.detail.item.item) {
             return;
           }
-          var nameArr = event.target.id.split('_');
+          var nameArr =  Polymer.dom(event).localTarget.id.split('_');
           var index = nameArr[nameArr.length -1];
           this.$$('#disaggregationGroups_' + index).value = event.detail.item.item.disaggregationGroups;
 
