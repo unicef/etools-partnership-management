@@ -58,8 +58,13 @@
       }
     },
 
-    _showSidebarStatus: function(listPageActive, subPageOrTabAttached) {
-      return !listPageActive && !!subPageOrTabAttached;
+    /**
+     * "other" can be any property that must be defined before the method is executed
+     */
+    _showSidebarStatus: function(listPageActive, subPageOrTabAttached, other) {
+      let showStatus = !listPageActive && !!subPageOrTabAttached;
+      return showStatus;
+      return !other ? showStatus : (showStatus && other);
     }
 
   };

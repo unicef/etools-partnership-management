@@ -200,7 +200,7 @@
           this.actions.forEach(function(elem) {
             hidden = elem.hidden && hidden;
           }.bind(this));
-
+          console.log(this.hideActions, hidden, this.actions);
           this.set('hideActions', hidden);
         }.bind(this), 10);
       },

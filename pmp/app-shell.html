@@ -268,12 +268,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.page !== 'not-found') {
           console.log('app-shell ready');
           /*
-           * Activate the global loading with a proper message.
+           * Activate the global loading with default message.
            * This will be triggered once at page load or, after page load, on menu option tap event.
            * The loading message is disabled by page-* elements ready callback (in both cases)
            */
           this.fire('global-loading', {
-            message: 'Loading ' + this.page + ' pages elements...',
             active: true,
             loadingSource: 'main-page'
           });
@@ -308,6 +307,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this._importMainPage(routePage);
 
           if (this.route && this.baseUrl) {
+            console.log('set subroute');
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
