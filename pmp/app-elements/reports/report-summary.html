@@ -1,0 +1,108 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../common-elements/etools-error-messages-box.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+
+<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+
+<link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="report-summary">
+
+  <template>
+
+    <style include="page-layout-styles grid-layout-styles shared-styles">
+      :host {
+        @apply --layout-vertical;
+        width: 100%;
+
+        --etools-checkable-input-label: {
+          padding-bottom: 2px;
+        }
+      }
+
+      paper-input {
+        width: 100%;
+      }
+    </style>
+
+      <paper-material class="content-section">
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <paper-input label="Submitted by"
+                         value="Jane Doe"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+          <div class="col col-6">
+            <!-- Short name -->
+            <paper-input label="Submission date"
+                         value="15 Sept 2017"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-input label="Partner contribution to date"
+                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-input label="Funds received to date"
+                         value="10000$ (84%)"
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-input label="Challneges/bottlenecks in the reporting period (latest)"
+                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-input label="Proposed way forward (latest)"
+                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
+                         placeholder="&#8212;"
+                         readonly></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <etools-single-file label="Attachments"
+                                readonly>
+              </etools-single-file>
+          </div>
+        </div>
+      </paper-material>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'report-summary',
+      });
+
+    })();
+  </script>
+
+</dom-module>
