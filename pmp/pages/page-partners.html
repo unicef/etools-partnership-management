@@ -217,7 +217,7 @@
         }
       },
 
-      _reloadPartnersListData: function () {
+      _reloadPartnersListData: function() {
         this.$$('#list').reloadListData();
       },
 
@@ -283,7 +283,9 @@
       },
 
       _observeRouteDataId: function(id) {
-        this.set('selectedPartnerId', id);
+        if (this.route && this.route.path.indexOf('partners') > -1) {
+          this.set('selectedPartnerId', id);
+        }
       },
 
       _partnerSaveError: function(event) {
