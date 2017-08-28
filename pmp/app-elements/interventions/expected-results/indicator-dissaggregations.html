@@ -3,6 +3,8 @@
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -31,8 +33,37 @@
       }
 
     </style>
-
-    <div hidden$="[[_emptyList(dataItems.length)]]">
+    <!-- <div hidden$="[[_emptyList(dataItems.length)]]">
+      <template is="dom-repeat" items="{{dataItems}}" as="disaggregate_byId">
+        <div class="row-h item-container no-h-margin">
+          <div class="item-actions-container">
+            <div class="actions">
+              <paper-icon-button class="action delete"
+                                 on-tap="_openDeleteConfirmation"
+                                 data-args$="[[index]]"
+                                 icon="cancel"></paper-icon-button>
+            </div>
+          </div>
+          <div class="item-content">
+            <div class="row-h">
+              <div class="col col-4">
+                <etools-single-selection-menu id="disaggregate_by_[[index]]" label="Disaggregate By"
+                                              options="{{preDefinedDisaggregtions}}"
+                                              selected="{{disaggregate_byId}}"
+                                              option-value="id"
+                                              option-label="name"
+                                              on-iron-select="_displayDisaggregationGroups">
+                </etools-single-selection-menu>
+              </div>
+              <div class="col col-8">
+                <paper-input id="disaggregationGroups_[[index]]" readonly label="Disaggregation Groups" value="{{item.disaggregation_groups}}"  placeholder="&#8212;"></paper-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div> -->
+     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container no-h-margin">
           <div class="item-actions-container">
@@ -80,7 +111,10 @@
         ],
 
         properties: {
-
+          preDefinedDisaggregtions: {
+            type: Array,
+            value: [{'id': 1, 'name':'Age', 'disaggregationGroups': '1-10;11-20'}]
+          }
         },
 
         ready: function() {
@@ -97,6 +131,16 @@
         _addNewDisaggregation: function() {
           this._addElement();
           this.fire('disaggregation-change');
+        },
+        _displayDisaggregationGroups: function(event) {
+          console.log(event.target.id);
+          if (!event.detail.item.item) {
+            return;
+          }
+          var nameArr = event.target.id.split('_');
+          var index = nameArr[nameArr.length -1];
+          this.$$('#disaggregationGroups_' + index).value = event.detail.item.item.disaggregationGroups;
+
         }
 
       });
