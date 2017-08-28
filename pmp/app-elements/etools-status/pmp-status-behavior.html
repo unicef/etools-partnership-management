@@ -75,17 +75,35 @@
       window.onresize = null;
     },
 
+    _forceScollPositionRecalculation: function() {
+      if (this._isStatusHorizontal()) {
+        // if the status is horizontal, no need to make it sticky
+        this._setNotStickyStyles();
+        return;
+      }
+      this._scrollChangedHandler();
+    },
+
     _setScrollHandler: function() {
-      if (window.innerWidth <= 1366) {
-        // at this resolution etools-status is horizontal, no need to make it sticky
-        // the styling to make it horizontal is in page-layout-styles
-        this.customStyle['--status-top'] = 'auto';
-        this.updateStyles();
+      if (this._isStatusHorizontal()) {
+        // if the status is horizontal, no need to make it sticky
+        this._setNotStickyStyles();
         return;
       }
 
       this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
     },
+
+    _isStatusHorizontal: function() {
+      // the styling to make it horizontal at this resolution is in page-layout-styles
+      return window.innerWidth <= 1366;
+    },
+
+    _setNotStickyStyles: function() {
+      this.customStyle['--status-top'] = 'auto';
+      this.updateStyles();
+    },
+
     _resetScrollHandler: function() {
       if (this.contentContainer) {
           this.contentContainer.onscroll = null;
@@ -159,6 +177,7 @@
       this.debounce('reset-status-actions', function() {
         this._computeAvailableStatuses(status);
         this._computeAvailableActions(status);
+        this._forceScollPositionRecalculation();
       }.bind(this), 50);
     },
 
