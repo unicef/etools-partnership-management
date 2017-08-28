@@ -337,7 +337,9 @@
         ready: function() {
           this.$.list.classList.add('hidden');
         },
-
+        reloadListData: function() {
+          this.$$('#agreements').reloadData();
+        },
         _initListFilters: function(agreementTypes, agreementStatuses, partnersDropdownData) {
           // init list filter options
           this.debounce('init-ag-filters', function() {

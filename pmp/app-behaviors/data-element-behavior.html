@@ -51,6 +51,11 @@
       }
     },
 
+    reloadData: function() {
+      this.$.ajax.set('url', null);
+      this.$.ajax.set('url', this.endpoint.url);
+    },
+
   };
 
   pmpBehaviors.DataElementBehavior = [

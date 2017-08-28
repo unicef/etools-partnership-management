@@ -69,6 +69,7 @@
          * Handle received data from request
          */
         _handleResponse: function(response) {
+          var method = this.$.ajax.get('method');
           this._setAgreement(response.detail);
 
           // call additional callback, if any
@@ -77,7 +78,7 @@
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
-          if (this.$.ajax.get('method') !== 'GET') {
+          if (method !== 'GET') {
             var self = this;
             // update the agreement list in dexieDB
             etoolsAppConfig.db.table('agreements').put(response.detail).then(function() {

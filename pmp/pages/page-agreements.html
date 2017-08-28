@@ -314,7 +314,7 @@
         if (!agreementData.id) {
           agreementData.status = 'draft';
         }
-        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved.bind(this));
       },
 
       _updateAgreementStatus: function(event) {
@@ -324,8 +324,10 @@
 
       /**
        * Go to details page once the new agreement has been saved
+       * Also reload the list to refresh the redux agreements data
        */
       _newAgreementSaved: function(agreement) {
+        this.$.list.reloadListData();
         this.fire('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
       },
       _agreementSaveErrors: function(event) {
