@@ -4,7 +4,6 @@
   pmpBehaviors.PageUtilsBehavior = {
 
     properties: {
-      _ignoreFirstTabSelectEvent: Boolean,
       _subPageOrTabAttached: {
         type: Boolean,
         value: false
@@ -45,20 +44,16 @@
     },
 
     _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix) {
-      if (!this._ignoreFirstTabSelectEvent) {
-        let clickedTabName = e.detail.item.getAttribute('name');
-        if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
-          // tab element already loaded, no need for loading messages
-          return;
-        }
-        this.fire('global-loading', {
-          message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
-          active: true,
-          loadingSource: loadingSource
-        });
-      } else {
-        this.set('_ignoreFirstTabSelectEvent', false);
+      let clickedTabName = e.detail.item.getAttribute('name');
+      if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
+        // tab element already loaded, no need for loading messages
+        return;
       }
+      this.fire('global-loading', {
+        message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
+        active: true,
+        loadingSource: loadingSource
+      });
     },
 
     /**

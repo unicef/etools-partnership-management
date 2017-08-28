@@ -366,7 +366,6 @@
         /**
          * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
          */
-        this.set('_ignoreFirstTabSelectEvent', true);
         this.fire('global-loading', {
           message: 'Loading ' + (this.intervListActive ? 'PD/SSFA list' :
               (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',

@@ -84,7 +84,9 @@
             <paper-tabs
                 selected="details"
                 attr-for-selected="name"
-                fallback-selection="details" noink bottom-item>
+                fallback-selection="details"
+                noink bottom-item
+                on-iron-select="_handleTabSelectAction">
 
               <paper-tab name="details" link>
                 <span class="tab-content">Agreement Details</span>
@@ -502,6 +504,10 @@
               return off.id.toString();
             }
         );
+      },
+
+      _handleTabSelectAction: function(e) {
+        this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
       },
 
     });

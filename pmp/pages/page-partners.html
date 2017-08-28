@@ -227,7 +227,6 @@
         /**
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
-        this.set('_ignoreFirstTabSelectEvent', true);
         this.fire('global-loading', {
           message: 'Loading ' + (this.listActive ? 'partners list' :
               (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
