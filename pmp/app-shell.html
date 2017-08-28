@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
+<link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-config/etools-app-config.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 <link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
@@ -207,6 +208,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       behaviors: [
         etoolsAppConfig.globals,
         EtoolsLogsBehavior,
+        pmpBehaviors.IE11Behavior,
         pmpBehaviors.appMenuBehavior,
         pmpBehaviors.NotificationToastsBehavior,
         etoolsBehaviors.LoadingBehavior
@@ -234,8 +236,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         routeData: {
           type: Object
-        },
-        isIE: Boolean
+        }
       },
 
       observers: [
@@ -255,17 +256,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       created: function() {
-        this.isIE = this.isIEBrowser();
-        window.isIE = this.isIE;
+        this.checkIE11Browser();
       },
 
       ready: function() {
         // for some reason the "$=" will make basePath undefined, we need to use a local property
         this.baseUrl = this.basePath;
 
-        if (this.isIE) {
-          this._addIEBrowserStylesAdjustments();
-        }
+        this.addIE11StyleTweaks();
+
         if (this.page !== 'not-found') {
           console.log('app-shell ready');
           /*
@@ -333,6 +332,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      // load all the other main pages after first page is loaded
+      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
+        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+        // make sure to redirect to list page if necessary
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
+      },
+
       _getMainPageName: function(page) {
         return page === 'government-partners' ? 'partners' : page;
       },
@@ -347,43 +353,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
-      // load all the other main pages after first page is loaded
-      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
-        // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
-      },
-
       _activePageIs: function(activePage, expectedPages) {
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
-      },
-
-      isIEBrowser: function() {
-        var userAgent = window.navigator.userAgent;
-        var ieBrowser = false;
-        if (userAgent.indexOf('Trident/') > -1) {
-          // IE 11
-          ieBrowser = true;
-        }
-        return ieBrowser;
-      },
-
-      /**
-       * In IE11 we must NOT use fullbleed and hasScrollingRegion and we have to make some
-       */
-      _addIEBrowserStylesAdjustments: function() {
-        this.classList.add('ie');
-        var appHeaderLayout = this.$.appHeadLayout;
-        appHeaderLayout.removeAttribute('fullbleed');
-        appHeaderLayout.set('hasScrollingRegion', false);
-        appHeaderLayout.style.minHeight = '100%';
-        var contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
-        if (contentContainer) {
-          contentContainer.style.minHeight = '100vh';
-          contentContainer.style.boxSizing = 'border-box';
-          contentContainer.style.paddingBottom = '90px';
-        }
       },
 
       _redirectToProperListPage: function() {
