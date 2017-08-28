@@ -66,8 +66,11 @@
     <div class="row-h flex-c">
       <div class="col col-2">
         <div class="layout-vertical">
-          <label class="paper-label">Baseline</label>
-          <label class="input-label" empty$="[[!indicator.baseline]]">[[indicator.baseline]]</label>
+          <paper-input label="Baseline"
+                      value="{{indicator.baseline}}"
+                      type="number"
+                      placeholder="&#8212;">
+          </paper-input>
         </div>
       </div>
       <div class="col col-3">
@@ -89,7 +92,7 @@
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locationIds}}"
-                                   options="[[clusterIndicatorLocations]]"
+                                   options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
                                    error-message="Please select sector locations">
@@ -121,9 +124,6 @@
             type: Array,
             //statePath: 'clusterIndicators'
           },
-          clusterIndicatorLocations: {
-            type: Array
-          },
           hrps: {
             type: Array,
             //statePath: "hrps"
@@ -139,17 +139,10 @@
           this._fillInFields(clusterIndDetails);
         },
         _fillInFields: function(clusterIndDetails) {
-          this.indicator.baseline = clusterIndDetails.baseline;
           this.indicator.means_of_verification = clusterIndDetails.means_of_verification;
-          this._populateClusterIndicatorLocations(clusterIndDetails.locationIds);
           this.indicator.lodationIds = clusterIndDetails.locationIds;
         },
 
-        _populateClusterIndicatorLocations: function(locationIds) {
-          this.clusterIndicatorLocations = this.locations.filter(function(location) {
-            return locationIds.indexOf(location.id) > -1;
-          });
-        }
     });
   })();
   </script>
