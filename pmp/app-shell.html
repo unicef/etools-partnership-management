@@ -188,6 +188,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </page-interventions>
         </template>
 
+        <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+          <page-reports id="reports" class="main-page"
+                              route="[[subroute]]"
+                              permissions="[[permissions]]">
+          </page-reports>
+        </template>
+
         <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
           <page-not-found class="main-page"></page-not-found>
         </template>
@@ -246,9 +253,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         lazyLoadPages: {
           type: Object,
           value: {
+            reports: false,
             partners: false,
             agreements: false,
-            interventions: false
+            interventions: false,
           }
         },
         isIE: Boolean

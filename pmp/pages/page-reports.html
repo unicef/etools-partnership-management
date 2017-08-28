@@ -1,0 +1,186 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../app-elements/reports/reports-list.html">
+
+<dom-module id="page-reports">
+
+  <template strip-whitespace>
+
+    <style include="page-layout-styles shared-styles buttons-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-route
+        route="{{route}}"
+        pattern="reports/list"
+        query-params="{{queryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="reports/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+
+    <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
+      <div class="top-content">
+        <div class="top-content-row title-row">
+          <h1 main-title>
+            <template is="dom-if" if="[[listActive]]">
+              Partner Reports
+            </template>
+            <template is="dom-if" if="[[tabsActive]]">
+              <span>Report name</span>
+            </template>
+          </h1>
+        </div>
+        <template is="dom-if" if="[[tabsActive]]">
+          <div class="top-content-row">
+            <paper-tabs id="reportTabs"
+                selected="{{routeData.tab}}"
+                attr-for-selected="name" noink bottom-item>
+
+              <paper-tab name="summary" link>
+                <span class="tab-content">Report Summary</span>
+              </paper-tab>
+
+              <paper-tab name="progress" link>
+                <span class="tab-content">Progress</span>
+              </paper-tab>
+
+            </paper-tabs>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="pageContent">
+
+        <etools-error-messages-box id="errorsBox"
+                                  title="Errors Saving Report"
+                                  errors="{{serverErrors}}"></etools-error-messages-box>
+        <iron-pages id="reportsPages"
+                    selected="{{reportPage}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    role="main">
+
+          <div class="page" name="list">
+            <reports-list id="list"
+                          current-page="reports"
+                          active="[[listActive]]"
+                          url-params="[[queryParams]]"></reports-list>
+          </div>
+          <div class="page" name="summary">
+            <report-summary report="[[report]]"></report-summary>
+          </div>
+          <div class="page" name="progress">
+            <report-progress id="reportDetails"
+                            report="[[report]]"></report-progress>
+          </div>
+        </iron-pages>
+
+      </div> <!-- page content end -->
+
+      <!-- sidebar content start -->
+      <div id="sidebar" hidden$="[[listActive]]">
+        <report-status
+            report="[[report]]">
+        </report-status>
+      </div> <!-- sidebar content end -->
+    </div> <!-- main container end -->
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'page-reports',
+
+      behaviors: [EtoolsLogsBehavior],
+
+      properties: {
+        tabsActive: {
+          type: Boolean
+        },
+        reportPage: {
+          type: String,
+        },
+        routeData: {
+          type: Object,
+        },
+        report: {
+          type: Object,
+        },
+        serverErrors: {
+          type: Array,
+          value: []
+        },
+        currentPage: String,
+      },
+
+      observers: [
+        '_updateUrlTab(routeData.tab)',
+        '_pageChanged(listActive, routeData.tab)'
+      ],
+
+      ready: function() {
+        this.debounce('mockup-list-loaded', function() {
+          this.fire('global-loading', {active: false});
+        }.bind(this), 500)
+      },
+
+      _getActivePage: function(listActive, tab) {
+        if (listActive) {
+          return 'list';
+        } else {
+          return tab;
+        }
+      },
+
+      _pageChanged: function(listActive, tab) {
+        var activePage = this._getActivePage(listActive, tab);
+        this.set('reportPage', activePage);
+      },
+
+      _updateUrlTab: function(tab) {
+        if (!tab) {
+          return;
+        }
+        this.debounce('debounce-url-tab-update', function() {
+          var tabs = this.$$('#reportTabs');
+          if (tabs) {
+            tabs.notifyResize();
+          }
+          this.fire('update-main-path', {path: this.route.path});
+        }.bind(this), 50);
+      },
+
+      _getTopContentAdditionalClass: function(listActive) {
+        if (!listActive) {
+          return 'with-tabs';
+        }
+        return '';
+      },
+
+    });
+
+  </script>
+
+</dom-module>
