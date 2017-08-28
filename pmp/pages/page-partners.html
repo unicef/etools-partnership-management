@@ -200,6 +200,7 @@
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList'
       },
+
       ready: function() {
         this.newPartnerDialog = document.createElement('new-partner-dialog');
         this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
@@ -209,10 +210,15 @@
           this.fire('create-partner', event.detail);
         }.bind(this), false);
       },
+
       detached: function() {
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
         }
+      },
+
+      _reloadPartnersListData: function() {
+        this.$$('#list').reloadListData();
       },
 
       _getActivePage: function(listActive, tab) {
@@ -234,6 +240,7 @@
         }
         return false;
       },
+
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
@@ -256,21 +263,29 @@
       _savePartner: function(newPartnerData) {
         this.$.partnerData.savePartner(newPartnerData);
       },
+
       _deletePartner: function(event) {
         event.stopImmediatePropagation();
         this.fire('global-loading', {active: true});
-        this.$.partnerData.deletePartner(this.partner, this._handlePartnerDeleted, this._handlePartnerNotDeleted);
+        this.$.partnerData.deletePartner(this.partner,
+            this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
       },
+
       _handlePartnerDeleted: function() {
+        this._reloadPartnersListData();
         this.fire('global-loading', {active: false});
         this.fire('toast', {text: 'Partner successfully deleted', showCloseBtn: true});
         this.fire('update-main-path', {path: 'partners/list'});
       },
+
       _handlePartnerNotDeleted: function() {
         this.fire('global-loading', {active: false});
       },
+
       _observeRouteDataId: function(id) {
-        this.set('selectedPartnerId', id);
+        if (this.route && this.route.path.indexOf('partners') > -1) {
+          this.set('selectedPartnerId', id);
+        }
       },
 
       _partnerSaveError: function(event) {
@@ -280,23 +295,29 @@
           this.set('serverErrors', event.detail);
         }
       },
+
       _showNewPartnerBtn: function(listActive, permissions) {
         return listActive && this._hasEditPermissions(permissions);
       },
+
       _openNewPartnerDialog: function() {
         this.newPartnerDialog.openNewPartnerDialog();
       },
+
       _createPartner: function(event) {
         this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
           this._handleCreatePartnerError);
       },
+
       _newPartnerCreated: function(partner) {
         this.fire('update-main-path', {path: 'partners/' + partner.id + '/details'});
       },
+
       _handleCreatePartnerError: function(errorDetails) {
         var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
         this.fire('toast', {text: toastMsg, showCloseBtn: true});
       },
+
       _partnerChanged: function(partner) {
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
