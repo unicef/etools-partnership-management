@@ -2,6 +2,8 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -29,6 +31,15 @@
           padding-bottom: 2px;
         }
       }
+      .rejected {
+        color: var(--rejected-color) !important;
+      }
+      .submitted {
+        color: var(--success-color) !important;
+      }
+      .accepted {
+        color: var(--primary-color) !important;
+      }
 
       paper-input {
         width: 100%;
@@ -37,57 +48,22 @@
 
       <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input label="Submitted by"
-                         value="Jane Doe"
+          <div class="col col-5">
+            <paper-textarea label="Result Statement"
+                         value="Increased country capacity for evidence based policy dialogue and advanced something"
                          placeholder="&#8212;"
-                         readonly></paper-input>
+                         readonly></paper-textarea>
           </div>
-          <div class="col col-6">
-            <!-- Short name -->
-            <paper-input label="Submission date"
-                         value="15 Sept 2017"
+          <div class="col col-2">
+            <paper-input value="On track" always-float-label label="Overall Status" readonly>
+                <iron-icon icon="av:fiber-manual-record" class="submitted" prefix></iron-icon>
+            </paper-input>
+          </div>
+          <div class="col col-5">
+            <paper-textarea label="Narative Assessment"
+                         value="ILorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alterum necessitatibus mel. Possit probatus expetenda, te alterum necessitatibus mel."
                          placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-input label="Partner contribution to date"
-                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-input label="Funds received to date"
-                         value="10000$ (84%)"
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-input label="Challneges/bottlenecks in the reporting period (latest)"
-                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-input label="Proposed way forward (latest)"
-                         value="Lorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alertum necessitatibus mel."
-                         placeholder="&#8212;"
-                         readonly></paper-input>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <etools-single-file label="Attachments"
-                                readonly>
-              </etools-single-file>
+                         readonly></paper-textarea>
           </div>
         </div>
       </etools-content-panel>
