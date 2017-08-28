@@ -382,7 +382,12 @@
         },
 
         attached: function() {
-          this.listAttachedCallback(this.active, 'Loading agreements list data...');
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+          this.listAttachedCallback(this.active, 'Loading agreements list data...', 'ag-list');
         },
 
         // Input: URL query params

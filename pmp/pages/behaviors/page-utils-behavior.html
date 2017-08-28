@@ -5,7 +5,10 @@
 
     properties: {
       _ignoreFirstTabSelectEvent: Boolean,
-      _subPageOrTabAttached: Boolean
+      _subPageOrTabAttached: {
+        type: Boolean,
+        value: false
+      }
     },
 
     _pageEquals: function(activePage, expectedPage) {
@@ -63,8 +66,13 @@
      */
     _showSidebarStatus: function(listPageActive, subPageOrTabAttached, other) {
       let showStatus = !listPageActive && !!subPageOrTabAttached;
-      return showStatus;
       return !other ? showStatus : (showStatus && other);
+    },
+
+    _handlePageTabAttached: function(e) {
+      e.stopImmediatePropagation();
+      // just a flag to know when to show sidebar status element
+      this.set('_subPageOrTabAttached', true);
     }
 
   };

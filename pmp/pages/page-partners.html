@@ -209,7 +209,7 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_partnersPageAttached'
+        'partners-page-attached': '_handlePageTabAttached'
       },
 
       ready: function() {
@@ -225,7 +225,7 @@
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
         /**
-         * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
+         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
         this.set('_ignoreFirstTabSelectEvent', true);
         this.fire('global-loading', {
@@ -436,13 +436,6 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-      },
-
-      _partnersPageAttached: function(e) {
-        e.stopImmediatePropagation();
-        // just a flag to know when to show sidebar status element
-        console.log('p attach event');
-        this.set('_subPageOrTabAttached', true);
       }
 
     });

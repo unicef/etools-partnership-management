@@ -8,6 +8,8 @@
     "pmp/app-elements/partners/partner-details.html",
 
     "pmp/pages/page-agreements.html",
+    "pmp/app-elements/agreements/agreements-list.html",
+    "pmp/app-elements/agreements/agreement-details.html",
 
     "pmp/pages/page-interventions.html",
     "pmp/app-elements/interventions/interventions-list.html",

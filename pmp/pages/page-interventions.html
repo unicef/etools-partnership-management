@@ -624,11 +624,10 @@
       },
 
       _interventionPageAttached: function(e) {
-        e.stopImmediatePropagation();
+        this._handlePageTabAttached(e);
         // force styles updates according with intervention permissions
         // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
-        this.set('_subPageOrTabAttached', true);
       }
 
     });
