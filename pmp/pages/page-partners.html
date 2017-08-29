@@ -136,6 +136,7 @@
       <!-- sidebar content start -->
       <div id="sidebar" hidden$="[[listActive]]">
         <partner-status
+            active="[[!listActive]]"
             on-save-partner="_validateAndTriggerPartnerSave"
             on-delete-partner="_deletePartner"
             partner="[[partner]]"
