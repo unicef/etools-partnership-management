@@ -29,25 +29,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="partners/list"
+        pattern="[[currentPage]]/list"
         query-params="{{queryParams}}"
-        active="{{partnersListActive}}"></app-route>
+        active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="government-partners/list"
-        query-params="{{queryParams}}"
-        active="{{govPartnersListActive}}"></app-route>
-
-    <app-route
-        route="{{route}}"
-        pattern="partners/:id/:tab"
-        active="{{tabsActive}}"
-        data="{{routeData}}"></app-route>
-
-    <app-route
-        route="{{route}}"
-        pattern="government-partners/:id/:tab"
+        pattern="[[currentPage]]/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -209,13 +197,10 @@
         },
         currentPage: String,
         originalPartnerData: Object,
-        listActive: Boolean,
-        partnersListActive: Boolean,
-        govPartnersListActive: Boolean
+        listActive: Boolean
       },
 
       observers: [
-        '_observeActiveList(partnersListActive, govPartnersListActive)',
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, activeTab)',
         '_observeRouteDataId(routeData.id)'
@@ -249,16 +234,11 @@
           active: true,
           loadingSource: 'partners-page'
         });
-        console.log('partners attached');
       },
       detached: function() {
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
         }
-      },
-
-      _observeActiveList: function(partnersListActive, govPartnersListActive) {
-        this.set('listActive', partnersListActive || govPartnersListActive);
       },
 
       _activeTabChanged: function(activeTab) {
@@ -274,7 +254,7 @@
         }
       },
 
-      _getActivePage: function(listActive, tab) {
+      _setActivePage: function(listActive, tab) {
         let page = 'list';
         let pagePrefix = 'partners-';
         let pageBaseUrl = '../app-elements/partners/';
@@ -283,15 +263,22 @@
           pagePrefix = 'partner-';
         } else {
           this.set('serverErrors', []);
-          this.set('activeTab', 'details');
         }
-        this._importPageElement(page, pagePrefix, pageBaseUrl);
-        return page;
+        if (page) {
+          let self = this;
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            self.set('partnerPage', page);
+          })
+          .catch(function(err) {
+            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+            self._triggerPageNotFound();
+          });
+        }
       },
 
       _pageChanged: function(listActive, tab) {
-        let activePage = this._getActivePage(listActive, tab);
-        this.set('partnerPage', activePage);
+        this._setActivePage(listActive, tab);
       },
 
       _hasEditPermissions: function(permissions) {

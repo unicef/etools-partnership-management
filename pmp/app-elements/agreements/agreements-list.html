@@ -457,11 +457,9 @@
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
-          console.log('qs: ', qs, _lastNavigated);
           if (qs !== _lastNavigated) {
             _lastNavigated = qs;
             // update URL
-            console.log('update URL: ', qs);
             this.updateAppState('agreements/list', qs, true);
             // filter agreements
             if (this.requiredDataLoaded) {
@@ -470,7 +468,6 @@
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
-              console.log('update URL2: ', qs);
               this.updateAppState('agreements/list', qs, false);
             }
             if (this.forceDataRefresh && this.requiredDataLoaded) {

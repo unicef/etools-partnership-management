@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -160,6 +161,7 @@
       is: 'page-agreements',
 
       behaviors: [
+        EtoolsLogsBehavior,
         pmpBehaviors.PageUtilsBehavior
       ],
 
@@ -260,7 +262,6 @@
       },
 
       attached: function() {
-        console.log('page agreements attached...disable main-page loading');
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
         /**
@@ -272,7 +273,6 @@
           active: true,
           loadingSource: 'ag-page'
         });
-        console.log('agreements attached');
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
@@ -282,7 +282,7 @@
         return true;
       },
       // get active page name
-      _getActivePage: function(listActive, newAgreementActive, detailsActive) {
+      _setActivePage: function(listActive, newAgreementActive, detailsActive) {
         let page = 'list'; // default
         let pagePrefix = 'agreements-';
         let pageBaseUrl = '../app-elements/agreements/';
@@ -291,14 +291,21 @@
           page = 'details';
           pagePrefix = 'agreement-';
         }
-        console.log('import subpage: ', page, pagePrefix, pageBaseUrl);
-        this._importPageElement(page, pagePrefix, pageBaseUrl);
-        return page;
+        if (page) {
+          let self = this;
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            self.set('agreementPage', page);
+          })
+          .catch(function(err) {
+            self.logError('Agreement page import error occurred', '[agreement(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+            self._triggerPageNotFound();
+          });
+        }
       },
 
       _pageChanged: function(listActive, newAgreementActive, detailsActive) {
-        let activePage = this._getActivePage(listActive, newAgreementActive, detailsActive);
-        this.set('agreementPage', activePage);
+        this._setActivePage(listActive, newAgreementActive, detailsActive);
       },
 
       // compute agreement details page title including partner name and agreement number

@@ -207,7 +207,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       behaviors: [
         etoolsAppConfig.globals,
-        EtoolsLogsBehavior,
         pmpBehaviors.IE11Behavior,
         pmpBehaviors.appMenuBehavior,
         pmpBehaviors.NotificationToastsBehavior,
@@ -266,7 +265,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.addIE11StyleTweaks();
 
         if (this.page !== 'not-found') {
-          console.log('app-shell ready');
           /*
            * Activate the global loading with default message.
            * This will be triggered once at page load or, after page load, on menu option tap event.
@@ -298,7 +296,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
-          console.log('routePage: ', routePage);
           if (!!!routePage) {
             this.fire('update-main-path', {path: 'partners/list'});
             return;
@@ -306,8 +303,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           this._importMainPage(routePage);
 
-          if (this.route && this.baseUrl) {
-            console.log('set subroute', JSON.stringify(this.route));
+          if (this.route && this.baseUrl && this.page !== 'not-found') {
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
@@ -326,7 +322,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
           // make the import
-          console.log(page, resolvedPageUrl);
           this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
               this._pageNotFound, false);
         }
@@ -359,6 +354,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _redirectToProperListPage: function() {
+        if (this.route.path.indexOf('not-found') > -1) {
+          return;
+        }
         if (this.route.path === this.baseUrl || this.route.path === '/') {
           // setting the default path when user enters the app
           // redirect from /pmp/ to /pmp/partners/list

@@ -34,13 +34,20 @@
     },
 
     _importPageElement: function(page, pagePrefix, pageBaseUrl) {
-      if (page) {
+      let self = this;
+      return new Promise(function(resolve, reject) {
         let pageName = pagePrefix + page;
-        if (!Polymer.isInstance(this.$$(pageName))) {
-          let resolvedPageUrl = this.resolveUrl(pageBaseUrl + pageName + '.html');
-          this.importHref(resolvedPageUrl, null, this._triggerPageNotFound, true);
+        if (!Polymer.isInstance(self.$$(pageName))) {
+          let resolvedPageUrl = self.resolveUrl(pageBaseUrl + pageName + '.html');
+          self.importHref(resolvedPageUrl, function() {
+            resolve();
+          }, function(err) {
+            reject(err);
+          }, true);
+        } else {
+          resolve();
         }
-      }
+      });
     },
 
     _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix) {

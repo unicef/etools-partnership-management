@@ -350,8 +350,6 @@
       },
 
       ready: function() {
-        console.log('aaa', this.interventionsQueryParams);
-
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
@@ -374,7 +372,6 @@
           active: true,
           loadingSource: 'interv-page'
         });
-        console.log('interv attached');
       },
 
       detached: function() {
@@ -470,7 +467,7 @@
         }.bind(this), 50);
       },
 
-      _getActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
+      _setActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
         let page = 'list';
         let pagePrefix = 'interventions-';
         let pageBaseUrl = '../app-elements/interventions/';
@@ -484,21 +481,29 @@
           }
           pagePrefix = 'intervention-';
         }
-        this._importPageElement(page, pagePrefix, pageBaseUrl);
-        return page;
+        if (page) {
+          let self = this;
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            if (page === 'list') {
+              self.set('serverErrors', []);
+              self.set('activeTab', 'details');
+            }
+            self.set('interventionPage', page);
+            if (self._redirectToNewIntervPageInProgress) {
+              self.set('_redirectToNewIntervPageInProgress', false);
+            }
+          })
+          .catch(function(err) {
+            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+            self._triggerPageNotFound();
+          });
+        }
       },
 
       _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
-          let activePage = this._getActivePage(intervListActive, intervDetailsActive, newInterventionActive);
-          if (activePage === 'list') {
-            this.set('serverErrors', []);
-            this.set('activeTab', 'details');
-          }
-          this.set('interventionPage', activePage);
-          if (this._redirectToNewIntervPageInProgress) {
-            this.set('_redirectToNewIntervPageInProgress', false);
-          }
+          this._setActivePage(intervListActive, intervDetailsActive, newInterventionActive);
         }.bind(this), 10);
       },
 
