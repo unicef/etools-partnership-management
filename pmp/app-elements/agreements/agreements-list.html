@@ -156,7 +156,7 @@
 
     </paper-material>
 
-    <paper-material id="list" elevation="1">
+    <paper-material id="list" elevation="1" class="hidden">
 
       <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <etools-data-table-column class="col-2" field="agreement_number" sortable>
@@ -320,6 +320,10 @@
           csvDownloadUrl: {
             type: String,
             notify: true
+          },
+          _sortableFieldNames: {
+            type: Array,
+            value: ['agreement_number', 'partner_name', 'start', 'end']
           }
         },
 
@@ -335,7 +339,7 @@
         ],
 
         ready: function() {
-          this.$.list.classList.add('hidden');
+//          this.$.list.classList.add('hidden');
         },
 
         _initListFilters: function(agreementTypes, agreementStatuses, partnersDropdownData) {
@@ -394,25 +398,21 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          var parms = this.urlParams;
-          if (!active || !parms) {
+          let urlQueryParams = this.urlParams;
+          if (!active || !urlQueryParams) {
             return;
           }
           this.set('initComplete', false);
-          this.set('q', parms.q ? parms.q : '');
-          this.set('agreementType', parms.type ? parms.type : '');
-          this.set('agreementStatus', parms.status ? parms.status : '');
-          this.set('selectedPartners', parms.partners ? this._getPartners(parms.partners) : []);
-          this.set('startDate', parms.start ? parms.start : '');
-          this.set('endDate', parms.end ? parms.end : '');
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
+          this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+          this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
+          this.set('agreementStatus', urlQueryParams.status ? urlQueryParams.status : '');
+          this.set('selectedPartners', urlQueryParams.partners ? this._getPartners(urlQueryParams.partners) : []);
+          this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
+          this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
           // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'partner_name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
+          let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
           this._updateSelectedFiltersValues();
@@ -457,9 +457,11 @@
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
+          console.log('qs: ', qs, _lastNavigated);
           if (qs !== _lastNavigated) {
             _lastNavigated = qs;
             // update URL
+            console.log('update URL: ', qs);
             this.updateAppState('agreements/list', qs, true);
             // filter agreements
             if (this.requiredDataLoaded) {
@@ -468,6 +470,7 @@
           } else {
             if (location.search === '') {
               // only update URL query string, without location change event being fired(no page refresh)
+              console.log('update URL2: ', qs);
               this.updateAppState('agreements/list', qs, false);
             }
             if (this.forceDataRefresh && this.requiredDataLoaded) {

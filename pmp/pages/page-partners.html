@@ -29,13 +29,25 @@
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/list"
+        pattern="partners/list"
         query-params="{{queryParams}}"
-        active="{{listActive}}"></app-route>
+        active="{{partnersListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/:id/:tab"
+        pattern="government-partners/list"
+        query-params="{{queryParams}}"
+        active="{{govPartnersListActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="partners/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="government-partners/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -196,10 +208,14 @@
           value: []
         },
         currentPage: String,
-        originalPartnerData: Object
+        originalPartnerData: Object,
+        listActive: Boolean,
+        partnersListActive: Boolean,
+        govPartnersListActive: Boolean
       },
 
       observers: [
+        '_observeActiveList(partnersListActive, govPartnersListActive)',
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, activeTab)',
         '_observeRouteDataId(routeData.id)'
@@ -239,6 +255,10 @@
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
         }
+      },
+
+      _observeActiveList: function(partnersListActive, govPartnersListActive) {
+        this.set('listActive', partnersListActive || govPartnersListActive);
       },
 
       _activeTabChanged: function(activeTab) {

@@ -350,6 +350,8 @@
       },
 
       ready: function() {
+        console.log('aaa', this.interventionsQueryParams);
+
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }

@@ -283,7 +283,11 @@
             value: false,
             observer: '_showOnlyGovernmentTypeFlagChanged'
           },
-          currentPage: String
+          currentPage: String,
+          _sortableFieldNames: {
+            type: Array,
+            value: ['vendor_number', 'name']
+          }
         },
 
         observers: [
@@ -351,24 +355,19 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          var parms = this.urlParams;
-          if (!active || !parms) {
+          let urlQueryParams = this.urlParams;
+          if (!active || !urlQueryParams) {
             return;
           }
           this.set('initComplete', false);
-          this.set('q', parms.q ? parms.q : '');
-          this.set('partnerType', this._getPartnerType(parms.partner_type));
-          this.set('csoType', parms.cso_type ? parms.cso_type : '');
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
-          this.set('showHidden', parms.hidden ? true : false);
+          this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+          this.set('partnerType', this._getPartnerType(urlQueryParams.partner_type));
+          this.set('csoType', urlQueryParams.cso_type ? urlQueryParams.cso_type : '');
+          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+          this.set('showHidden', urlQueryParams.hidden ? true : false);
           // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
-
+          let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
 
