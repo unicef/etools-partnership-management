@@ -1,0 +1,127 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/etools-loading/etools-loading.html">
+
+<link rel="import" href="../confirm-box.html">
+
+<dom-module id="disaggregation-modal">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-reverse">
+      :host {
+        display: block;
+
+        --paper-dialog: {
+          width: 700px;
+
+          & > * {
+            margin: 0;
+          }
+        };
+      }
+      paper-button[raised].btn-primary {
+        color: white;
+        background: var(--theme-primary-color);
+      }
+
+      paper-button:not([raised]).btn-primary {
+        color: var(--theme-primary-color);
+      }
+
+      paper-button[disabled].btn-primary {
+        opacity: .5;
+      }
+
+      .header {
+        height: 48px;
+        padding: 0 24px;
+        margin: 0;
+        color: white;
+        background: var(--theme-primary-color);
+      }
+
+      .header h2 {
+        @apply(--paper-font-title);
+
+        margin: 0;
+        line-height: 48px;
+      }
+
+      .header paper-icon-button {
+        margin: 0 -13px 0 20px;
+        color: white;
+      }
+
+      .buttons {
+        padding: 24px;
+      }
+      ::content disaggregation-table {
+        margin-bottom: 1em;
+      }
+    </style>
+
+    <paper-dialog
+        id="dialog"
+        with-backdrop
+        opened="{{opened}}">
+      <div class="header layout horizontal justified">
+        <h2>Enter data</h2>
+
+        <div class="layout horizontal">
+          <p>Reporting period: [[reportingPeriod]]</p>
+
+          <paper-icon-button
+              class="self-center"
+              on-tap="close"
+              icon="icons:close">
+          </paper-icon-button>
+        </div>
+      </div>
+
+      <paper-dialog-scrollable>
+        <content select=".meta"></content>
+        <content
+            select="disaggregation-table"
+            class="table">
+        </content>
+      </paper-dialog-scrollable>
+
+      <div class="buttons layout horizontal-reverse">
+        <paper-button
+            class="btn-primary"
+            on-tap="_save"
+            raised>
+          Save
+        </paper-button>
+
+        <paper-button
+            on-tap="close">
+          Cancel
+        </paper-button>
+      </div>
+
+      <confirm-box id="confirm"></confirm-box>
+
+    </paper-dialog>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'disaggregation-modal',
+
+      properties: {
+        reportingPeriod: String,
+
+        updatePending: {
+          type: Boolean,
+          value: false,
+        },
+      },
+
+    });
+  </script>
+</dom-module>

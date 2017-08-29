@@ -1,0 +1,83 @@
+<template>
+    <div class="indicator">
+      <div class="layout horizontal">
+        <div
+            class="indicator-toggle flex-none layout horizontal center-center"
+            on-tap="_toggle"
+            toggles="[[index]]"
+            role="button"
+            aria-expanded$="[[indicator.opened]]"
+            aria-controls$="collapse-[[index]]"
+            tabindex="-1">
+          <iron-icon
+              icon="icons:expand-[[_computeIcon(indicator.opened)]]">
+          </iron-icon>
+        </div>
+
+        <div class="indicator-header flex layout horizontal">
+          <div class="indicator-header__title flex-3 layout vertical center-justified">
+            <div class="layout horizontal">
+              <div class="status-badge layout vertical center-justified">
+                <report-status
+                    status="[[indicator.report_status]]"
+                    no-label>
+                </report-status>
+              </div>
+              <h3>[[indicator.indicator_name]]</h3>
+            </div>
+          </div>
+          <div class="indicator-header__target flex-none layout vertical center-justified">
+            <dl class="layout horizontal justified">
+              <dt class="flex-3">Target:</dt>
+              <dd class="flex">[[_withDefault(indicator.target)]]</dd>
+            </dl>
+            <dl class="layout horizontal justified">
+              <dt class="flex-3">Total cumulative progress:</dt>
+              <template
+                  is="dom-if"
+                  if="[[_equals(indicatorType, 'number')]]"
+                  restamp="true">
+                <dd class="flex">[[_withDefault(indicator.total.v)]]</dd>
+              </template>
+              <template
+                  is="dom-if"
+                  if="[[_equals(indicatorType, 'percentage')]]"
+                  restamp="true">
+                <dd class="flex">[[_toPercentage(indicator.total.c)]]</dd>
+              </template>
+            </dl>
+            <dl class="layout horizontal justified">
+              <dt class="flex-3">Achievement in reporting period:</dt>
+              <template
+                  is="dom-if"
+                  if="[[_equals(indicatorType, 'number')]]"
+                  restamp="true">
+                <dd class="flex">[[_withDefault(indicator.achieved.v)]]</dd>
+              </template>
+              <template
+                  is="dom-if"
+                  if="[[_equals(indicatorType, 'percentage')]]"
+                  restamp="true">
+                <dd class="flex">[[_toPercentage(indicator.achieved.c)]]</dd>
+              </template>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <iron-collapse
+          id="collapse-[[index]]"
+          opened="{{indicator.opened}}"
+          on-opened-changed="_handleOpenedChanged"
+          no-animation>
+        <indicator-details
+            reportable-id="[[data.id]]"
+            indicator-name="[[indicator.indicator_name]]"
+            indicator-id="[[indicator.id]]"
+            reporting-period="[[currentReport.reporting_period]]"
+            override-mode="[[computedMode]]">
+        </indicator-details>
+      </iron-collapse>
+    </div>
+
+</template>
