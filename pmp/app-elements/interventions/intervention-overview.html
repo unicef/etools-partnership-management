@@ -226,13 +226,13 @@
         },
 
         _parseLocationsAndSectors: function() {
-          var sectorLocations = [];
+          var locationNames = [];
           var sectorIds = [];
           var sectors = [];
 
           this.intervention.sector_locations.forEach(function(locLvl1) {
             locLvl1.locations.forEach(function(locLvl2) {
-              sectorLocations.push(locLvl2.name);
+              locationNames.push(locLvl2.name);
             });
             sectorIds.push(parseInt(locLvl1.sector.id));
           });
@@ -245,7 +245,7 @@
           }
 
           this.set('sectors', sectors);
-          this.set('locations', sectorLocations);
+          this.set('locations', locationNames);
         },
 
         _getBackgroundStyleFromColor: function(color) {

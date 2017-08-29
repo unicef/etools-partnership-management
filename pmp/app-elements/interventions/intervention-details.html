@@ -4,8 +4,8 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
@@ -55,20 +55,6 @@
         background-color: var(--ecp-content-bg-color, #FFFFFF);
       }
 
-      paper-material paper-toolbar {
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
-          margin-left: 0;
-        };
-      }
-
       .expiry-warning {
         @apply(--layout-vertical);
         @apply(--layout-flex);
@@ -76,10 +62,7 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
-      .contingencyPD {
-        @apply(--layout-flex);
-        @apply(--layout-horizontal);
-        align-items: center;
+      paper-toggle-button {
         font-size: 16px;
       }
 
@@ -201,7 +184,7 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3 contingencyPD">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[intervention.permissions.required.contingency_pd]]"></paper-toggle-button> Contingency PD
+          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
         </div>
         <div class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
@@ -263,19 +246,11 @@
                                         error-message="Please select CP Structure">
           </etools-single-selection-menu>
       </div>
-      <div class="row-h flex-c">
-        <paper-material elevation="0">
-          <paper-toolbar>
-            <div class="title">Section/Cluster, Locations</div>
-          </paper-toolbar>
-          <intervention-sector-locations id="sectorLocations"
-                                         data-items="[[_sectorLocationData]]"
-                                         edit-mode$="[[intervention.permissions.edit.sector_locations]]"
-                                         required$="[[intervention.permissions.required.sector_locations]]"
-                                         on-change-sector-locations="_changeSectorLocations">
-          </intervention-sector-locations>
-        </paper-material>
-      </div>
+        <intervention-sector-locations id="sectorLocations"
+                                        data-items="[[_sectorLocationData]]"
+                                        edit-mode$="[[intervention.permissions.edit.sector_locations]]"
+                                        required$="[[intervention.permissions.required.sector_locations]]">
+        </intervention-sector-locations>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
@@ -510,6 +485,7 @@
         },
 
         _interventionChanged: function(intervention) {
+          console.log('intervention.edit.contingency_pd',intervention.permissions.edit.contingency_pd);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
               this.set('selectedPartnerId', null);
@@ -537,7 +513,7 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
+          var elements = ['expectedResults', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
           }.bind(this));
@@ -685,14 +661,6 @@
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
         },
-
-        _changeSectorLocations: function(e) {
-          e.stopImmediatePropagation();
-          if (!this.intervention) {
-            return;
-          }
-          this.set('intervention.sector_locations', e.detail.sectorLocations);
-        }
 
       });
 
