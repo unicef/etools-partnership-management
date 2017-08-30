@@ -132,6 +132,7 @@
           <partner-status
               on-save-partner="_validateAndTriggerPartnerSave"
               on-delete-partner="_deletePartner"
+              active="[[!listActive]]"
               partner="[[partner]]"
               edit-mode$="[[_hasEditPermissions(permissions)]]">
           </partner-status>
