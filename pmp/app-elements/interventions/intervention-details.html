@@ -163,8 +163,8 @@
                                        label="UNICEF Focal Point(s)"
                                        placeholder="&#8212;"
                                        options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
-                                       option-label="full_name"
-                                       option-value="user_id"
+                                       option-label="name"
+                                       option-value="id"
                                        selected-values="{{intervention.unicef_focal_points}}"
                                        dynamic-align
                                        readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
@@ -173,6 +173,7 @@
                                        error-message="Please select UNICEF focal points"
                                        avoid-header-overlapping-dropdown>
           </etools-multi-selection-menu>
+
         </div>
       </div>
       <div class="row-h flex-c">
