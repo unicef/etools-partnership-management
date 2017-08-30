@@ -5,7 +5,6 @@
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
@@ -50,14 +49,10 @@
         width: 100%;
       }
 
-      paper-material {
-        padding: 0;
-      }
-
       .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
-        border : solid 1px #dcdcdc;
+        border : solid 1px var(--dark-divider-color);
         overflow-x: auto;
       }
       etools-dialog {
@@ -208,17 +203,15 @@
             </div>
           </div>
           <div class="row-h flex-c" name="disaggregations">
-            <paper-material elevation="0">
-
               <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
 
               <indicator-dissaggregations data-items="{{disaggregations}}"
                                           on-disaggregation-change="_centerDialog">
               </indicator-dissaggregations>
-            </paper-material>
           </div>
         </iron-pages>
       </div>
+
     </etools-dialog>
 
   </template>
