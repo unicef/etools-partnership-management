@@ -484,10 +484,12 @@
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
           this.set('selectedDocumentTypes', urlQueryParams.type ? this._setSelectedDocTypes(urlQueryParams.type) : []);
           this.set('selectedStatuses', urlQueryParams.status ? this._setSelectedStatuses(urlQueryParams.status) : []);
-          this.set('selectedCpOutputs', urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
+          this.set('selectedCpOutputs',
+              urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
           this.set('selectedSectors', urlQueryParams.sector ? this._setSelectedSectors(urlQueryParams.sector) : []);
           this.set('selectedUnicefFocalPoints',
-              urlQueryParams.unicef_focal_points ? this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
+              urlQueryParams.unicef_focal_points ?
+                  this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
           this.set('selectedOffices', urlQueryParams.offices ? this._setSelectedOffices(urlQueryParams.offices) : []);
           this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
           this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
