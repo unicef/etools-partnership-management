@@ -125,7 +125,6 @@
               this.dispatch('setAgreementTypes', response.detail.agreement_types);
             }
             // set agreement statuses data
-            console.log('agr statuses: ', response.detail.agreement_status);
             if (Array.isArray(response.detail.agreement_status) && response.detail.agreement_status.length > 0) {
               this.dispatch('setAgreementStatuses', response.detail.agreement_status);
             }
@@ -139,7 +138,6 @@
               this.dispatch('setAgreementAmendmentTypes', agreementAmmendmentTypes);
             }
             // set cso types data
-            console.log(response.detail.cso_types);
             if (Array.isArray(response.detail.cso_types) && response.detail.cso_types.length > 0) {
               this.dispatch('setCsoTypes', response.detail.cso_types);
             }

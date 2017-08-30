@@ -153,8 +153,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
           <page-partners id="partners" class="main-page"
-                         show-only-government-type="[[_showOnlyGovernmentPartners(page)]]"
-                         current-page="[[_getCurrentPartnersPage(page)]]"
+                         show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
+                         current-page="[[_lastActivePartnerPage]]"
                          route="[[subroute]]"
                          permissions="[[permissions]]">
           </page-partners>
@@ -216,7 +216,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         page: {
           type: String,
-          reflectToAttribute: true
+          reflectToAttribute: true,
+          observer: '_pageChanged'
         },
         route: {
           type: Object
@@ -235,7 +236,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         routeData: {
           type: Object
-        }
+        },
+        _lastActivePartnerPage: String
       },
 
       observers: [
@@ -292,6 +294,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('route.path', this.baseUrl + event.detail.path);
         }
         event.stopImmediatePropagation();
+      },
+
+      _pageChanged: function(page) {
+        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
+          this.set('_lastActivePartnerPage', page);
+        }
       },
 
       _routePageChanged: function(routePage) {
@@ -376,10 +384,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
-      },
-
-      _getCurrentPartnersPage: function(page) {
-        return (['partners', 'government-partners'].indexOf(page) > -1) ? page : null;
       }
 
     });

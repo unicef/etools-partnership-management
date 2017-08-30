@@ -303,12 +303,11 @@
 
         reloadListData: function() {
           let pListData = this.$$('#partners');
-          if(pListData) {
+          if (pListData) {
             pListData.reloadData();
           }
         },
         _initListFilters: function(partnerTypes, csoTypes) {
-          console.log(partnerTypes, csoTypes);
           this.debounce('init-p-filters', function() {
             // init list filter options
             this.initListFiltersData([
