@@ -431,8 +431,6 @@
             return true;
           }
           if (contingencyPd && intervention.status !== 'active') {
-            this.set('intervention.start', null);
-            this.set('intervention.end', null);
             return false;
           }
           return true;
