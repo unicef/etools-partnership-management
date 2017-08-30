@@ -54,7 +54,7 @@
     "etools-page-refresh": "1.1.2",
     "etools-searchable-multiselection-menu": "2.2.2",
     "etools-profile-dropdown": "1.0.7",
-    "etools-info-tooltip": "^1.0.1"
+    "etools-info-tooltip": "^1.0.1",
     "paper-checkbox": "1.4.2",
     "paper-radio-button": "1.4.0",
     "paper-radio-group": "^2.0.0"
