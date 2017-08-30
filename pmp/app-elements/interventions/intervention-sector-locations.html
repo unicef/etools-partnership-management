@@ -1,7 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import"
@@ -29,10 +28,6 @@
       #bottom-actions {
         padding-bottom: 10px;
       }
-
-      paper-toggle-button {
-        font-size: 16px;
-      }
     </style>
     <div class="row-h flex-c">
       <etools-multi-selection-menu id="sections"
@@ -49,55 +44,14 @@
       </etools-mlti-selection-menu>
     </div>
     <div class="row-h flex-c">
-      <div class="col col-3">
-        <paper-toggle-button checked="{{intervention.contributesToClusters}}" disabled="[[!editMode]]">Contributes to Clusters</paper-toggle-button>
-      </div>
-      <div class="col col-9">
-        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-          TODO
-        </etools-form-element-wrapper>
-      </div>
+      <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+        TODO [[intervention.clusterNames]]
+      </etools-form-element-wrapper>
     </div>
     <div class="row-h flex-c">
-      <div class="col col-3">
-        <etools-single-selection-menu label="Locations - Admin Level"
-                                      placeholder="&#8212;"
-                                      selected-values="{{intervention.adminLevelLocations}}"
-                                      options="[[adminLevelLocations]]"
-                                      option-label="name"
-                                      option-value="id"
-                                      required$="[[required]]"
-                                      auto-validate
-                                      error-message="Please select an Admin Level Location"
-                                      readonly$="[[!editMode]]">
-      </etools-single-selection-menu>
-      </div>
-      <div class="col col-9">
-        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          TODO
-        </etools-form-element-wrapper>
-      </div>
-    </div>
-    <div class="row-h flex-c">
-      <div class="col col-3">
-        <etools-single-selection-menu
-                                    label="Reporting frequency"
-                                    placeholder="&#8212;"
-                                    selected-values="{{intervention.rportingFrequency}}"
-                                    options="[[rportingFrequencies]]"
-                                    option-label="name"
-                                    option-value="id"
-                                    required$="[[required]]"
-                                    auto-validate
-                                    error-message="Please select Reporting Frequency"
-                                    readonly$="[[!editMode]]">
-        </etools-single-selection-menu>
-      </div>
-      <div class="col col-9">
-         <etools-form-element-wrapper label="Reporting Periods">
-          TODO  See more >
-         </etools-form-element-wrapper>
-      </div>
+      <etools-form-element-wrapper label="Locations PD/SSFA Covers">
+        TODO [[intervention.locationNames]]
+      </etools-form-element-wrapper>
     </div>
   </template>
 
@@ -117,10 +71,6 @@
           sectors: {
             type: Array,
             statePath: 'sectors'
-          },
-          adminLevelLocations: {
-            type: Array,
-            //statePath: 'adminLevelLocations'
           },
           required: {
             type: Boolean,
