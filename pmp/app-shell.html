@@ -154,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
           <page-partners id="partners" class="main-page"
                          show-only-government-type="[[_showOnlyGovernmentPartners(page)]]"
-                         current-page="[[page]]"
+                         current-page="[[_getCurrentPartnersPage(page)]]"
                          route="[[subroute]]"
                          permissions="[[permissions]]">
           </page-partners>
@@ -376,6 +376,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
+      },
+
+      _getCurrentPartnersPage: function(page) {
+        return (['partners', 'government-partners'].indexOf(page) > -1) ? page : null;
       }
 
     });
