@@ -382,10 +382,16 @@
           Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
         },
         attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+          this.fire('agreements-page-attached');
+
           this.async(function() {
-              this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
-            }
-          );
+            this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
+          });
         },
         detached: function() {
           if (this.generatePCADialog) {
@@ -473,8 +479,7 @@
             this._resetDropdown('#agreementType');
             this.resetSignedByFields(agreement);
           }
-          this.fire('global-loading', {active: false});
-
+          this.fire('global-loading', {active: false, loadingSource: 'ag-data'});
         },
         resetAttachedAgreementElem: function(agreement) {
           // forces etools-single-file to redraw the element

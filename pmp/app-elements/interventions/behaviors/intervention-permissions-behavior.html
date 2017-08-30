@@ -122,18 +122,32 @@
       this._updateRelatedPermStyles();
     },
 
-    _updateRelatedPermStyles: function(onlyDetails) {
+    // TODO: this method should be moved elsewhere
+    _updateRelatedPermStyles: function(onlyDetails, forceDetUiValidationOnAttach, forceReviewUiValidationOnAttach) {
       this.async(function() {
-        let details = this.$.interventionDetails;
-        let reviewAndSign = this.$.interventionReviewAndSign;
-        if (details) {
+        let details = this.$$('#interventionDetails');
+        let reviewAndSign = this.$$('#interventionReviewAndSign');
+        if (details && typeof details.updateStyles === 'function') {
           details.updateStyles();
+
+          if (forceDetUiValidationOnAttach) {
+            // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
+            details.validate();
+            this.set('_forceDetUiValidationOnAttach', false);
+          }
         }
+
         if (onlyDetails) {
           return;
         }
-        if (reviewAndSign) {
+        if (reviewAndSign && typeof reviewAndSign.updateStyles === 'function') {
           reviewAndSign.updateStyles();
+
+          if (forceReviewUiValidationOnAttach) {
+            // trigger validations (in case a save attempt failed and the tab fields validation messages should show)
+            reviewAndSign.validate();
+            this.set('_forceReviewUiValidationOnAttach', false);
+          }
         }
       }.bind(this), 50);
     },
@@ -222,8 +236,10 @@
           this.set('intervention.planned_budget.unicef_cash', unicefCashCopy);
         }
       }.bind(this));
-      this.$.interventionDetails.set('_forceSectorLocationsRefresh', true);
-
+      let details = this.$$('#interventionDetails');
+      if (details) {
+        details.set('_forceSectorLocationsRefresh', true);
+      }
       this.fire('toast', {text: 'There are no new/unsaved amendments.\n' +
         'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
     },
@@ -259,8 +275,14 @@
         }
         this.setInterventionPermissions(false, this.originalIntervention.permissions);
         // update validation errors
-        this.$.interventionDetails.validate();
-        this.$.interventionReviewAndSign.validate();
+        let details = this.$$('#interventionDetails');
+        if (details && typeof details.validate === 'function') {
+          details.validate();
+        }
+        let reviewAndSign = this.$$('#interventionReviewAndSign');
+        if (reviewAndSign && typeof reviewAndSign.validate === 'function') {
+          reviewAndSign.validate();
+        }
       }
     },
 
