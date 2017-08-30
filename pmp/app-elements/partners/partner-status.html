@@ -162,15 +162,11 @@
         },
 
         _computeAvailableActions: function(hidden, editMode) {
+          if (!editMode || !this.partner) {
+            return;
+          }
           this._setAllActionsToHidden();
           let availableOptions = ['Save', 'Delete'];
-
-          if (!this.partner) {
-            return;
-          }
-          if (!editMode) {
-            return;
-          }
 
           for (let key in this.possibleActions) {
             let actionName = this.possibleActions[key].label;
