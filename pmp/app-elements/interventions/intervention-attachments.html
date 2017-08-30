@@ -122,6 +122,12 @@
 
         attached: function() {
           this.toastFitInto = document.querySelector('app-shell').$$('app-header-layout');
+          /**
+           * Disable loading message for attachments tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
         },
         _attachmentsChanged: function(attachments) {
           if (Array.isArray(attachments) &&

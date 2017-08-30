@@ -50,7 +50,14 @@
           prepareMultipartData: Boolean,
 
           handleSuccResponseAdditionalCallback: Object,
-          ajaxEl: Object
+          ajaxEl: Object,
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'ag-data'
+          }
         },
 
         attached: function() {
@@ -59,7 +66,11 @@
 
         _agreementIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading agreement data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading agreement data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
           }
@@ -84,7 +95,7 @@
               self.fire('reload-list');
             });
           }
-          this.fire('global-loading', {active: false});
+          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
         /**
@@ -114,16 +125,8 @@
           this.ajaxEl.set('method', method);
           if (typeof data === 'object' && Object.keys(data).length > 0
               && ['PATCH', 'POST'].indexOf(method) > -1) {
-            if (multipart) {
-              this.ajaxEl.set('multiPart', true);
-            } else {
-              this.ajaxEl.set('multiPart', false);
-            }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
-            } else {
-              this.ajaxEl.set('prepareMultipartData', false);
-            }
+            this.ajaxEl.set('multiPart', multipart);
+            this.ajaxEl.set('prepareMultipartData', prepareMultipartData);
             this.ajaxEl.set('body', data);
             this.ajaxEl.set('url', url);
           }
@@ -153,7 +156,11 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               this._prepareEndpoint(data.agreementId);
-              this.fire('global-loading', {message: 'Changing agreement status...', active: true});
+              this.fire('global-loading', {
+                message: 'Changing agreement status...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
             } else {
@@ -221,7 +228,11 @@
                 this.withUpload = true;
                 this.prepareMultipartData = true;
               }
-              this.fire('global-loading', {message: 'Saving agreement data...', active: true});
+              this.fire('global-loading', {
+                message: 'Saving agreement data...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
               this._prepareAndFireRequest(action, agreement, url, this.withUpload, this.prepareMultipartData);

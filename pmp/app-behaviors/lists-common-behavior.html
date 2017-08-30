@@ -118,13 +118,35 @@
       this._init(this.active);
     },
 
-    listAttachedCallback: function(active, loadingMsg) {
+    listAttachedCallback: function(active, loadingMsg, loadingSource) {
       this.set('stampListData', true);
       if (active) {
-        this.fire('global-loading', {message: loadingMsg, active: true});
+        this.fire('global-loading', {message: loadingMsg, active: true, loadingSource: loadingSource});
       } else {
         this.set('showQueryLoading', true);
       }
+    },
+
+    /**
+     * Make sure you define _sortableFieldNames on *-list element properties level.
+     * Ex for partners:
+     * _sortableFieldNames: {
+     *    type: Array,
+     *    value: ['vendor_number', 'name']
+     *  }
+     */
+    _isValidSortField: function(fieldName) {
+      return this._sortableFieldNames instanceof Array && this._sortableFieldNames.indexOf(fieldName) > -1;
+    },
+
+    initSortFieldsValues: function(defaultSortData, urlQueryParamsSortData) {
+      if (urlQueryParamsSortData) {
+        let p = urlQueryParamsSortData.split('.');
+        if (this._isValidSortField(p[0])) {
+          return {field: p[0], direction: p[1]};
+        }
+      }
+      return defaultSortData;
     }
   };
 </script>
