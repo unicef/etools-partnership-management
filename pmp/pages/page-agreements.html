@@ -6,8 +6,9 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
-<link rel="import" href="../app-elements/agreements/agreements-list.html">
-<link rel="import" href="../app-elements/agreements/agreement-details.html">
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="behaviors/page-utils-behavior.html">
+
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -43,11 +44,6 @@
         pattern="agreements/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <agreement-item-data id="agreementData"
-                         agreement="{{agreement}}"
-                         agreement-id="[[selectedAgreementId]]"
-                         error-event-name="agreement-save-error"></agreement-item-data>
-
     <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
       <div class="top-content">
         <div class="top-content-row title-row">
@@ -76,13 +72,6 @@
                 </paper-button>
               </a>
             </div>
-            <!-- Print functionality pending implementation -->
-            <!--<div class="top-content-action">
-              <paper-button>
-                <iron-icon icon="print"></iron-icon>
-                Print
-              </paper-button>
-            </div>-->
             <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                 <iron-icon icon="add"></iron-icon>
@@ -91,67 +80,77 @@
             </div>
           </div>
         </div>
-        <div class="top-content-row" hidden$="[[!_showPageTabs(agreementPage)]]">
-          <paper-tabs
-              selected="details"
-              attr-for-selected="name"
-              fallback-selection="details" noink bottom-item>
+        <template is="dom-if" if="[[_showPageTabs(agreementPage)]]">
+          <div class="top-content-row">
+            <paper-tabs
+                selected="details"
+                attr-for-selected="name"
+                fallback-selection="details"
+                noink bottom-item
+                on-iron-select="_handleTabSelectAction">
 
-            <paper-tab name="details" link>
-              <span class="tab-content">Agreement Details</span>
-            </paper-tab>
+              <paper-tab name="details" link>
+                <span class="tab-content">Agreement Details</span>
+              </paper-tab>
 
-          </paper-tabs>
-        </div>
+            </paper-tabs>
+          </div>
+        </template>
       </div>
     </div>
 
     <div id="main">
       <div id="pageContent">
         <etools-error-messages-box id="errorsBox"
-                          title="Errors Saving Agreement"
-                          errors="{{serverErrors}}"></etools-error-messages-box>
+                                   title="Errors Saving Agreement"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
         <iron-pages id="agreementsPages"
                     selected="{{agreementPage}}"
                     attr-for-selected="name"
-                    fallback-selection="list"
                     role="main">
 
-          <div class="page" name="list">
+          <template is="dom-if" if="[[_pageEquals(agreementPage, 'list')]]">
             <agreements-list id="list"
-                active="[[agreementListActive]]"
-                csv-download-url="{{csvDownloadUrl}}"
-                url-params="[[agreementQueryParams]]">
+                             name="list"
+                             active="[[agreementListActive]]"
+                             csv-download-url="{{csvDownloadUrl}}"
+                             url-params="[[agreementQueryParams]]">
             </agreements-list>
-          </div>
+          </template>
 
-          <div class="page" name="details">
+          <template is="dom-if" if="[[_pageEquals(agreementPage, 'details')]]">
             <agreement-details
                 id="agreementDetails"
+                name="details"
                 agreement="[[agreement]]"
                 authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 is-new-agreement="[[newAgreementActive]]">
             </agreement-details>
-          </div>
+          </template>
         </iron-pages>
-      </div>
-      <!-- sidebar content start -->
-      <div id="sidebar" hidden$="[[agreementListActive]]">
-        <agreement-status status$="[[agreement.status]]"
-                          new-agreement$="[[newAgreementActive]]"
-                          agreement-id$="[[agreement.id]]"
-                          agreement-type="[[agreement.agreement_type]]"
-                          on-save-agreement="_validateAndTriggerAgreementSave"
-                          edit-mode="[[_hasEditPermissions(permissions)]]"
-                          on-update-agreement-status="_updateAgreementStatus">
-        </agreement-status>
-      </div>
+      </div> <!-- page content end -->
+
+      <template is="dom-if" if="[[_showSidebarStatus(agreementListActive, _subPageOrTabAttached, agreement)]]">
+        <!-- sidebar content start -->
+        <div id="sidebar">
+          <agreement-status status$="[[agreement.status]]"
+                            new-agreement$="[[newAgreementActive]]"
+                            agreement-id$="[[agreement.id]]"
+                            agreement-type="[[agreement.agreement_type]]"
+                            on-save-agreement="_validateAndTriggerAgreementSave"
+                            edit-mode="[[_hasEditPermissions(permissions)]]"
+                            on-update-agreement-status="_updateAgreementStatus">
+          </agreement-status>
+        </div><!-- sidebar content end -->
+      </template>
+
     </div> <!-- main page content end -->
 
-          <!-- sidebar content end -->
-        </div>
-
+    <agreement-item-data id="agreementData"
+                         agreement="{{agreement}}"
+                         agreement-id="[[selectedAgreementId]]"
+                         error-event-name="agreement-save-error"></agreement-item-data>
 
   </template>
 
@@ -160,6 +159,11 @@
     Polymer({
 
       is: 'page-agreements',
+
+      behaviors: [
+        EtoolsLogsBehavior,
+        pmpBehaviors.PageUtilsBehavior
+      ],
 
       properties: {
         agreementPage: {
@@ -247,17 +251,29 @@
 
       listeners: {
         'agreement-save-error': '_agreementSaveErrors',
-        'reload-list': '_reloadAgreementsList'
+        'reload-list': '_reloadAgreementsList',
+        'agreements-page-attached': '_handlePageTabAttached'
       },
       ready: function() {
-        if (this.newAgreementActive) { //*Useful when refreshing the page
-            this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        if (this.newAgreementActive) {
+          // Useful when refreshing the page
+          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         }
       },
-      // TODO: do not remove this, we might needed back
-      // _detailsPageDisableUpgrade: function(agreementDetailsActive, newAgreementActive) {
-      //   return !agreementDetailsActive && !newAgreementActive;
-      // },
+
+      attached: function() {
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        /**
+         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+         */
+        this.fire('global-loading', {
+          message: 'Loading ' + (this.agreementListActive ? 'agreements list' : 'agreement details page') +
+            ' elements...',
+          active: true,
+          loadingSource: 'ag-page'
+        });
+      },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
         if (!agreementListActive || !permissions || !permissions.partnershipManager) {
@@ -266,40 +282,35 @@
         return true;
       },
       // get active page name
-      _getActivePage: function(listActive, newAgreementActive, detailsActive) {
-        var page = 'list'; // default
+      _setActivePage: function(listActive, newAgreementActive, detailsActive) {
+        let page = 'list'; // default
+        let pagePrefix = 'agreements-';
+        let pageBaseUrl = '../app-elements/agreements/';
+
         if (detailsActive || newAgreementActive) {
           page = 'details';
+          pagePrefix = 'agreement-';
         }
-        return page;
+        if (page) {
+          let self = this;
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            self.set('agreementPage', page);
+          })
+          .catch(function(err) {
+            self.logError('Agreement page import error occurred', '[agreement(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+            self._triggerPageNotFound();
+          });
+        }
       },
 
       _pageChanged: function(listActive, newAgreementActive, detailsActive) {
-        var activePage = this._getActivePage(listActive, newAgreementActive, detailsActive);
-        this.set('agreementPage', activePage);
+        this._setActivePage(listActive, newAgreementActive, detailsActive);
       },
 
       // compute agreement details page title including partner name and agreement number
       _getAgreementDetailsTitle: function(agreement) {
         return agreement.partner_name + ': ' + agreement.agreement_number;
-      },
-
-       // Except agreements list, the other pages have agreement details tab active
-      _showPageTabs: function(activePage) {
-        if (activePage !== 'list') {
-          return true;
-        }
-        return false;
-      },
-
-      /**
-       *
-       */
-      _getTopContentAdditionalClass: function(activePage) {
-        if (this._showPageTabs(activePage)) {
-          return 'with-tabs';
-        }
-        return '';
       },
 
       _hasEditPermissions: function(permissions) {
@@ -352,12 +363,13 @@
         this.set('selectedAgreementId', id);
       },
 
+      // TODO: this method could be common in all page categories, refactor!
       _reloadAgreementsList: function(e) {
         e.stopImmediatePropagation();
         try {
-          var agreements = this.$.list;
-          if (!agreements.$.list.classList.contains('hidden')) {
-            agreements._filterAgreementsData(true);
+          var agreementsList = this.$$('#list');
+          if (agreementsList && !agreementsList.classList.contains('hidden')) {
+            agreementsList._filterAgreementsData(true);
           }
         } catch (err) {
           this.logWarn('List refresh error occurred', '[agreements-page]', err);
@@ -371,18 +383,21 @@
       },
 
       /**
-        * Save agreement if all fields are validated
-        */
+       * Save agreement if all fields are validated
+       */
       _validateAndTriggerAgreementSave: function(event) {
         event.stopImmediatePropagation();
         if (!this._hasEditPermissions(this.permissions)) {
           return;
         }
-        if (!this.$.agreementDetails._validateAgreement()) {
+        let agreementDetailsEl = this.$$('#agreementDetails');
+        if (!agreementDetailsEl) {
+          return;
+        }
+        if (!agreementDetailsEl._validateAgreement()) {
           this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           return;
         }
-
         if (this.newAgreementActive) {
           this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
         } else {
@@ -410,11 +425,11 @@
         }
 
         newAgreement = Object.assign(newAgreement, {
-            signed_by_unicef_date: agreement.signed_by_unicef_date,
-            signed_by_partner_date: agreement.signed_by_partner_date,
-            signed_by: agreement.signed_by,
-            partner_manager: agreement.partner_manager,
-            attached_agreement: agreement.attached_agreement,
+          signed_by_unicef_date: agreement.signed_by_unicef_date,
+          signed_by_partner_date: agreement.signed_by_partner_date,
+          signed_by: agreement.signed_by,
+          partner_manager: agreement.partner_manager,
+          attached_agreement: agreement.attached_agreement,
         });
         if (agreement.agreement_type === 'MOU') {
           newAgreement.start = agreement.start;
@@ -427,29 +442,28 @@
       },
 
       /**
-        * Get agreement changed properties
-        */
+       * Get agreement changed properties
+       */
       _getCurrentChanges: function() {
         var changes = {};
         if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
           // prevent the possibility of checking 2 different agreements
-            return {};
+          return {};
         }
 
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
         }
+        if (this._authorizedOfficersChanged()) {
+          changes.authorized_officers = this.authorizedOfficers;
+        }
         if (this.agreement.agreement_type !== 'SSFA') {
-          if (this._authorizedOfficersChanged()) {
-            changes.authorized_officers = this.authorizedOfficers;
-          }
-
           if ((this.agreement.hasOwnProperty('attached_agreement')) &&
-                  (this.agreement.attached_agreement instanceof File)) {
+              (this.agreement.attached_agreement instanceof File)) {
             changes.attached_agreement = this.agreement.attached_agreement;
           }
 
-          var signedByFields = ['partner_manager',  'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          var signedByFields = ['partner_manager', 'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
           signedByFields.forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
@@ -458,7 +472,7 @@
         }
 
         if (this.agreement.agreement_type === 'MOU') {
-          ['start','end'].forEach(function(fieldName) {
+          ['start', 'end'].forEach(function(fieldName) {
             if (this._primitiveFieldIsModified(fieldName)) {
               changes[fieldName] = this.agreement[fieldName];
             }
@@ -496,9 +510,13 @@
           return null;
         }
         return this.originalAgreementData.authorized_officers.map(function(off) {
-            return off.id.toString();
-          }
+              return off.id.toString();
+            }
         );
+      },
+
+      _handleTabSelectAction: function(e) {
+        this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
       },
 
     });

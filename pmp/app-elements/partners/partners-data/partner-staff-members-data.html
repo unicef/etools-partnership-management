@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 
 <dom-module id="partner-staff-members-data">
 
@@ -22,7 +23,8 @@
         is: 'partner-staff-members-data',
 
         behaviors: [
-          etoolsAppConfig.globals
+          etoolsAppConfig.globals,
+          pmpBehaviors.AjaxServerErrorsBehavior
         ],
 
         properties: {
@@ -46,6 +48,13 @@
           endpoint: {
             type: Object
           },
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'staff-m'
+          }
         },
 
         _partnerIdChanged: function(newId) {
@@ -54,7 +63,11 @@
             this.set('data', []);
             this.set('preparedStaffMembersData', []);
             // set the endpoint
-            this.fire('global-loading', {message: 'Loading partner staff members data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partner staff members data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this.$.ajax.set('endpoint', this.getEndpoint(this.endpointName, {id: newId}));
           } else {
             this.$.ajax.set('url', null);
@@ -73,7 +86,7 @@
             });
             this.set('preparedStaffMembersData', preparedStaffMembers);
           }
-          this.fire('global-loading', {active: false});
+          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         }
 
       });

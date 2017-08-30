@@ -132,7 +132,11 @@
           var _this = this;
 
           if (showQueryLoading) {
-            this.fire('global-loading', {message: 'Loading partners list data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partners list data...',
+              active: true,
+              loadingSource: 'partners-list'
+            });
           }
 
           this.db.transaction('r', this.db.partners, function() {
@@ -191,10 +195,10 @@
 
           }).then(function(result) {
             _this._setFilteredPartners(result);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           }).catch(function(error) {
             console.error('Error querying partners: ' + error);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           });
         }
 

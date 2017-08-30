@@ -20,6 +20,10 @@
       errorEventName: {
         value: null,
         observer: '_errorEventNameChange'
+      },
+      ajaxLoadingMsgSource: {
+        type: String,
+        value: ''
       }
     },
 
@@ -40,7 +44,10 @@
     },
 
     handleErrorResponse: function(response) {
-      this.fire('global-loading', {active: false});
+      this.fire('global-loading', {
+        active: false,
+        loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
+      });
       var errors = response.detail.request.detail.request.response;
       errors = errors || response.detail.request.detail.request.xhr.response;
       var errorMessage = this.globalMessage;
