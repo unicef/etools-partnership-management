@@ -183,10 +183,10 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3 contingencyPD">
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
           <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
         </div>
-        <div class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
@@ -206,7 +206,7 @@
           </etools-info-tooltip>
 
         </div>
-        <div class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
                                important-warning>
@@ -394,6 +394,17 @@
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+        _showStartEndDateFields: function(agreement, intervention, contingency_pd) {
+          if (!this._showContingencyPd(agreement)) {
+            return true;
+          }
+          if (contingency_pd && intervention.status !== 'active') {
+            this.set('intervention.start', null);
+            this.set('intervention.end', null);
+            return false;
+          }
+          return true;
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {

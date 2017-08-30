@@ -437,11 +437,10 @@
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
         }
+        if (this._authorizedOfficersChanged()) {
+          changes.authorized_officers = this.authorizedOfficers;
+        }
         if (this.agreement.agreement_type !== 'SSFA') {
-          if (this._authorizedOfficersChanged()) {
-            changes.authorized_officers = this.authorizedOfficers;
-          }
-
           if ((this.agreement.hasOwnProperty('attached_agreement')) &&
                   (this.agreement.attached_agreement instanceof File)) {
             changes.attached_agreement = this.agreement.attached_agreement;
