@@ -30,6 +30,7 @@
           type: Object,
           notify: true
         },
+        _saveActionInProgress: Boolean
       },
       ready: function() {
         this.ajaxEl = this.$.ajaxEl;
@@ -41,6 +42,7 @@
         }
         if (!_.isEmpty(profile)) {
           this.fire('global-loading', {message: 'Saving profile data...', active: true});
+          this.set('_saveActionInProgress', true);
           this._prepareAndFireRequest('PATCH', profile, url);
         } else {
           this.fire('toast', {
@@ -68,7 +70,10 @@
       },
       _handleResponse: function(response) {
         this.set('userProfile', response.detail);
-        this.fire('global-loading');
+        if (this._saveActionInProgress) {
+          this.fire('global-loading');
+          this.set('_saveActionInProgress', false);
+        }
       }
     });
 

@@ -7,15 +7,15 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
-<link rel="import" href="../app-elements/partners/partners-list.html">
-<link rel="import" href="../app-elements/partners/partner-overview.html">
-<link rel="import" href="../app-elements/partners/partner-details.html">
+
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
+<link rel="import" href="../app-elements/partners/partner-status.html">
 
 <dom-module id="page-partners">
 
@@ -39,13 +39,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <partner-item-data id="partnerData"
-                       partner-id="[[selectedPartnerId]]"
-                       partner="{{partner}}"
-                       error-event-name="partner-save-error">
-    </partner-item-data>
-
-    <div class$="page-top-content [[_getTopContentAdditionalClass(listActive)]]">
+    <div class$="page-top-content [[_getTopContentAdditionalClass(partnerPage)]]">
       <div class="top-content">
         <div class="top-content-row title-row">
           <h1 main-title>
@@ -66,13 +60,6 @@
                 </paper-button>
               </a>
             </div>
-            <!-- Print functionality pending implementation -->
-            <!--<div class="top-content-action">
-              <paper-button>
-                <iron-icon icon="print"></iron-icon>
-                Print
-              </paper-button>
-            </div>-->
             <div class="top-content-action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
               <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
                 <iron-icon icon="add"></iron-icon>
@@ -81,11 +68,13 @@
             </div>
           </div>
         </div>
-        <template is="dom-if" if="[[tabsActive]]">
+        <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
           <div class="top-content-row">
             <paper-tabs id="partnerTabs"
-                selected="{{routeData.tab}}"
-                attr-for-selected="name" noink bottom-item>
+                        selected="{{activeTab}}"
+                        attr-for-selected="name"
+                        noink bottom-item
+                        on-iron-select="_handleTabSelectAction">
 
               <paper-tab name="overview" link>
                 <span class="tab-content">Overview</span>
@@ -105,44 +94,57 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                  title="Errors Saving Partner"
-                                  errors="{{serverErrors}}"></etools-error-messages-box>
+                                   title="Errors Saving Partner"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
         <iron-pages id="partnersPages"
                     selected="{{partnerPage}}"
                     attr-for-selected="name"
-                    fallback-selection="list"
                     role="main">
 
-          <div class="page" name="list">
+          <template is="dom-if" if="[[_pageEquals(partnerPage, 'list')]]">
             <partners-list id="list"
-                          show-only-government-type="[[showOnlyGovernmentType]]"
-                          current-page="[[currentPage]]"
-                          active="[[listActive]]"
-                          csv-download-url="{{csvDownloadUrl}}"
-                          url-params="[[queryParams]]"></partners-list>
-          </div>
-          <div class="page" name="overview">
-            <partner-overview partner="[[partner]]"></partner-overview>
-          </div>
-          <div class="page" name="details">
+                           name="list"
+                           show-only-government-type="[[showOnlyGovernmentType]]"
+                           current-page="[[currentPage]]"
+                           active="[[listActive]]"
+                           csv-download-url="{{csvDownloadUrl}}"
+                           url-params="[[queryParams]]"></partners-list>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(partnerPage, 'overview')]]">
+            <partner-overview name="overview" partner="[[partner]]"></partner-overview>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(partnerPage, 'details')]]">
             <partner-details id="partnerDetails"
-                            partner="[[partner]]"
-                            edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
-          </div>
+                             name="details"
+                             partner="[[partner]]"
+                             edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          </template>
+
         </iron-pages>
 
       </div> <!-- page content end -->
 
       <!-- sidebar content start -->
-      <div id="sidebar" hidden$="[[listActive]]">
-        <partner-status
-            on-save-partner="_validateAndTriggerPartnerSave"
-            on-delete-partner="_deletePartner"
-            partner="[[partner]]"
-            edit-mode$="[[_hasEditPermissions(permissions)]]">
-        </partner-status>
-      </div> <!-- sidebar content end -->
+      <template is="dom-if" if="[[_showSidebarStatus(listActive, _subPageOrTabAttached, partner)]]">
+        <div id="sidebar">
+          <partner-status
+              on-save-partner="_validateAndTriggerPartnerSave"
+              on-delete-partner="_deletePartner"
+              partner="[[partner]]"
+              edit-mode$="[[_hasEditPermissions(permissions)]]">
+          </partner-status>
+        </div> <!-- sidebar content end -->
+      </template>
+
     </div> <!-- main container end -->
+
+    <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error">
+    </partner-item-data>
 
   </template>
 
@@ -152,7 +154,10 @@
 
       is: 'page-partners',
 
-      behaviors: [EtoolsLogsBehavior],
+      behaviors: [
+        EtoolsLogsBehavior,
+        pmpBehaviors.PageUtilsBehavior,
+      ],
 
       properties: {
         tabsActive: {
@@ -163,6 +168,11 @@
         },
         routeData: {
           type: Object,
+        },
+        activeTab: {
+          type: String,
+          value: '',
+          observer: '_activeTabChanged'
         },
         csvDownloadUrl: {
           type: String
@@ -187,18 +197,20 @@
         },
         currentPage: String,
         originalPartnerData: Object,
+        listActive: Boolean
       },
 
       observers: [
         '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, routeData.tab)',
+        '_pageChanged(listActive, activeTab)',
         '_observeRouteDataId(routeData.id)'
       ],
 
       listeners: {
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
-        'reload-list': '_reloadPartnersList'
+        'reload-list': '_reloadPartnersList',
+        'partners-page-attached': '_handlePageTabAttached'
       },
 
       ready: function() {
@@ -210,28 +222,63 @@
           this.fire('create-partner', event.detail);
         }.bind(this), false);
       },
-
+      attached: function() {
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        /**
+         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+         */
+        this.fire('global-loading', {
+          message: 'Loading ' + (this.listActive ? 'partners list' :
+              (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
+          active: true,
+          loadingSource: 'partners-page'
+        });
+      },
       detached: function() {
         if (this.newPartnerDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
         }
       },
 
-      _reloadPartnersListData: function() {
-        this.$$('#list').reloadListData();
+      _activeTabChanged: function(activeTab) {
+        if (activeTab) {
+          this.set('routeData.tab', activeTab);
+        }
       },
 
-      _getActivePage: function(listActive, tab) {
-        if (listActive) {
-          return 'list';
+      _reloadPartnersListData: function() {
+        let list = this.$$('#list');
+        if (list) {
+          list.reloadListData();
+        }
+      },
+
+      _setActivePage: function(listActive, tab) {
+        let page = 'list';
+        let pagePrefix = 'partners-';
+        let pageBaseUrl = '../app-elements/partners/';
+        if (!listActive) {
+          page = tab;
+          pagePrefix = 'partner-';
         } else {
-          return tab;
+          this.set('serverErrors', []);
+        }
+        if (page) {
+          let self = this;
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            self.set('partnerPage', page);
+          })
+          .catch(function(err) {
+            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+            self._triggerPageNotFound();
+          });
         }
       },
 
       _pageChanged: function(listActive, tab) {
-        var activePage = this._getActivePage(listActive, tab);
-        this.set('partnerPage', activePage);
+        this._setActivePage(listActive, tab);
       },
 
       _hasEditPermissions: function(permissions) {
@@ -251,35 +298,41 @@
             tabs.notifyResize();
           }
           this.fire('update-main-path', {path: this.route.path});
+          this.set('activeTab', tab);
         }.bind(this), 50);
       },
 
-      _getTopContentAdditionalClass: function(listActive) {
-        if (!listActive) {
-          return 'with-tabs';
-        }
-        return '';
-      },
       _savePartner: function(newPartnerData) {
-        this.$.partnerData.savePartner(newPartnerData);
+        let partnerData = this.$$('#partnerData');
+        if (partnerData) {
+          partnerData.savePartner(newPartnerData);
+        }
       },
 
       _deletePartner: function(event) {
         event.stopImmediatePropagation();
-        this.fire('global-loading', {active: true});
-        this.$.partnerData.deletePartner(this.partner,
-            this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
+        this.fire('global-loading', {
+          active: true,
+          message: 'Deleting partner...',
+          loadingSource: 'partner-data'
+        });
+
+        let partnerData = this.$$('#partnerData');
+        if (partnerData) {
+          partnerData.deletePartner(this.partner,
+              this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
+        }
       },
 
       _handlePartnerDeleted: function() {
         this._reloadPartnersListData();
-        this.fire('global-loading', {active: false});
+        this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
         this.fire('toast', {text: 'Partner successfully deleted', showCloseBtn: true});
         this.fire('update-main-path', {path: 'partners/list'});
       },
 
       _handlePartnerNotDeleted: function() {
-        this.fire('global-loading', {active: false});
+        this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
       },
 
       _observeRouteDataId: function(id) {
@@ -291,7 +344,7 @@
       _partnerSaveError: function(event) {
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
-          (typeof event.detail === 'string' && event.detail !== '')) {
+            (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
         }
       },
@@ -305,8 +358,11 @@
       },
 
       _createPartner: function(event) {
-        this.$.partnerData.createPartner(event.detail, this._newPartnerCreated,
-          this._handleCreatePartnerError);
+        let partnerData = this.$$('#partnerData');
+        if (partnerData) {
+          partnerData.createPartner(event.detail, this._newPartnerCreated,
+              this._handleCreatePartnerError);
+        }
       },
 
       _newPartnerCreated: function(partner) {
@@ -321,7 +377,7 @@
       _partnerChanged: function(partner) {
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
-          this.fire('global-loading', {active: false});
+          this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
         }
         this.set('serverErrors', []);
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
@@ -333,8 +389,8 @@
       _reloadPartnersList: function(e) {
         e.stopImmediatePropagation();
         try {
-          var partners = this.$.list;
-          if (!partners.$.list.classList.contains('hidden')) {
+          var partners = this.$$('#list');
+          if (partners && !partners.$.list.classList.contains('hidden')) {
             partners._filterPartnersData(true);
           }
         } catch (err) {
@@ -343,48 +399,55 @@
       },
 
       _validateAndTriggerPartnerSave: function(event) {
-          event.stopImmediatePropagation();
-          if (!this._hasEditPermissions(this.permissions)) {
-            return;
-          }
-          if (this.$.partnerDetails._validatePartner()) {
-            var partnerChanges = this._cleanUpdateData(this.partner);
-            partnerChanges.id = this.partner.id;
-            this._savePartner(partnerChanges);
-          } else {
-            this.fire('toast', {text: 'Please check assessments and partner contacts for ' +
-              'invalid fields or empty data rows!', showCloseBtn: true});
-          }
-        },
+        event.stopImmediatePropagation();
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        let partnerDetails = this.$$('#partnerDetails');
+        if (partnerDetails && partnerDetails._validatePartner()) {
+          var partnerChanges = this._cleanUpdateData(this.partner);
+          partnerChanges.id = this.partner.id;
+          this._savePartner(partnerChanges);
+        } else {
+          this.fire('toast', {
+            text: 'Please check assessments and partner contacts for ' +
+            'invalid fields or empty data rows!', showCloseBtn: true
+          });
+        }
+      },
 
-        _cleanUpdateData: function(partner) {
-          var updateableFields = [
-              'alternate_name',
-              'shared_with',
-              'staff_members',
-              'assessments',
-              'core_values_assessment'
-            ];
-          var changes = {};
-          updateableFields.forEach(function(fieldName) {
-            // TODO: improve this
-            if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
-              if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
-                changes[fieldName] = partner[fieldName];
-              }
-            } else if (fieldName === 'core_values_assessment') {
-              if ((partner.hasOwnProperty('core_values_assessment')) &&
-                (partner.core_values_assessment instanceof File)) {
-                  changes.core_values_assessment = partner.core_values_assessment;
-              }
-            } else {
-              if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
-                changes[fieldName] = partner[fieldName];
-              }
+      _cleanUpdateData: function(partner) {
+        var updateableFields = [
+          'alternate_name',
+          'shared_with',
+          'staff_members',
+          'assessments',
+          'core_values_assessment'
+        ];
+        var changes = {};
+        updateableFields.forEach(function(fieldName) {
+          // TODO: improve this
+          if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
+            if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
+              changes[fieldName] = partner[fieldName];
             }
-          }.bind(this));
-          return changes;
-        },
+          } else if (fieldName === 'core_values_assessment') {
+            if ((partner.hasOwnProperty('core_values_assessment')) &&
+                (partner.core_values_assessment instanceof File)) {
+              changes.core_values_assessment = partner.core_values_assessment;
+            }
+          } else {
+            if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
+              changes[fieldName] = partner[fieldName];
+            }
+          }
+        }.bind(this));
+        return changes;
+      },
+
+      _handleTabSelectAction: function(e) {
+        this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+      }
 
     });
 

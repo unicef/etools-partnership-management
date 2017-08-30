@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
@@ -395,11 +396,19 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-        _showStartEndDateFields: function(agreement, intervention, contingency_pd) {
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
+         },
+         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
             return true;
           }
-          if (contingency_pd && intervention.status !== 'active') {
+          if (contingencyPd && intervention.status !== 'active') {
             this.set('intervention.start', null);
             this.set('intervention.end', null);
             return false;
@@ -627,9 +636,7 @@
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
-          if (!this.intervention.contingency_pd) {
-            fieldSelectors.push('#intStart', '#intEnd');
-          } else if (this.intervention.status === 'active') {
+          if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
           fieldSelectors.forEach(function(selector) {
