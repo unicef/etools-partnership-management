@@ -89,7 +89,11 @@
           var _this = this;
 
           if (showQueryLoading) {
-            this.fire('global-loading', {message: 'Loading agreements list data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading agreements list data...',
+              active: true,
+              loadingSource: 'ag-list'
+            });
           }
 
           this.db.transaction('r', this.db.agreements, function() {
@@ -155,10 +159,10 @@
 
           }).then(function(result) {
             _this._setFilteredAgreements(result);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'ag-list'});
           }).catch(function(error) {
             console.error('Error querying agreements: ' + error);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'ag-list'});
           });
         }
 

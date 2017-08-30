@@ -280,6 +280,15 @@
           },
         },
 
+        attached: function() {
+          /**
+           * Disable loading message for overview tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+          this.fire('partners-page-attached');
+        },
+
         _partnerChanged: function(partner) {
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             this.contentVisible = true;

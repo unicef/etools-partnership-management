@@ -50,7 +50,14 @@
 
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
-          ajaxEl: Object
+          ajaxEl: Object,
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'partner-data'
+          }
         },
         attached: function() {
           this.ajaxEl = this.$.ajax;
@@ -66,7 +73,11 @@
             // set an empty partner
             this._setPartner({});
             // set the new endpoint
-            this.fire('global-loading', {message: 'Loading partner data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partner data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           } else {
@@ -150,7 +161,11 @@
             return;
           }
 
-          this.fire('global-loading', {message: 'Creating new partner...', active: true});
+          this.fire('global-loading', {
+            message: 'Creating new partner...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
 
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
@@ -230,7 +245,11 @@
                   }, this);
                 }
               }
-              this.fire('global-loading', {message: 'Saving partner data...', active: true});
+              this.fire('global-loading', {
+                message: 'Saving partner data...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
               this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
