@@ -158,41 +158,6 @@
                     mapping="[[disaggregations.disagg_lookup_map]]">
                 </disaggregation-table>
 
-                <template
-                    is="dom-if"
-                    if="[[!_equals(computedMode, 'view')]]">
-                  <!--<disaggregation-modal
-                      id="modal-[[index]]"
-                      reporting-period="[[reportingPeriod]]"
-                      on-opened-changed="_updateModals">
-                    <div class="meta">
-                      <h3>[[indicatorName]]</h3>
-                      <p class="location">
-                        <iron-icon icon="maps:place"></iron-icon>
-                        [[location.location.title]]
-                      </p>
-                      <template
-                          is="dom-if"
-                          if="[[hasPD]]"
-                          restamp="true">
-                        <p class="current-pd">
-                          [[currentPD.agreement]] | [[currentPD.title]]
-                        </p>
-                      </template>
-                    </div>
-                    <template
-                        is="dom-if"
-                        if="[[_computeTableVisibility(opened, index)]]"
-                        restamp="true">
-                      <disaggregation-table
-                          data="[[location]]"
-                          mapping="[[disaggregations.disagg_lookup_map]]"
-                          indicator-id="[[indicatorId]]"
-                          editable="1">
-                      </disaggregation-table>
-                    </template>
-                  </disaggregation-modal>-->
-                </template>
               </div>
             </div>
           </div>
