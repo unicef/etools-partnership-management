@@ -71,17 +71,24 @@
         margin-bottom: 25px;
       }
 
-      .indicator:not(:last-child) {
+      .indicator {
+        margin-bottom: 1px;
+      }
+      .indicator:last-child {
         margin-bottom: 25px;
       }
-
       .indicator-toggle {
         width: 25px;
         position: relative;
         z-index: 1;
         color: white;
-        background: red;
         cursor: pointer;
+      }
+      .indicator-toggle.odd {
+        background-color: green;
+      }
+      .indicator-toggle.even {
+        background-color: var(--primary-color);
       }
 
       .indicator-header {
@@ -143,68 +150,68 @@
                          readonly></paper-textarea>
           </div>
         </div>
-        <div class="indicator">
-          <div class="layout horizontal">
-            <div
-                class="indicator-toggle flex-none layout horizontal center-center"
-                on-tap="_toggle"
-                toggles$="0"
-                role="button"
-                aria-expanded$="[[expanded]]"
-                aria-controls$="collapse-0"
-                tabindex="-1">
-              <iron-icon
-                  icon$="[[_computeIcon(expanded)]]">
-              </iron-icon>
-            </div>
-                <!--on-tap="_toggle"-->
+        <template is="dom-repeat" items="[[dummyArr]]" as="item">
+          <div class="indicator">
+            <div class="layout horizontal">
+              <div class$="indicator-toggle flex-none layout horizontal center-center [[_getIndicatorClass(index)]]"
+                  on-tap="_toggle"
+                  toggles$="[[index]]"
+                  role="button"
+                  aria-expanded$="[[item.expanded]]"
+                  aria-controls$="collapse-[[index]]"
+                  tabindex="-1">
+                <iron-icon
+                    icon$="[[_computeIcon(item.expanded)]]">
+                </iron-icon>
+              </div>
 
-            <div class="indicator-header flex layout horizontal">
-              <div class="indicator-header__title flex-3 layout vertical center-justified">
-                <div class="layout horizontal">
-                  <div class="status-badge layout vertical center-justified">
-                    <report-status
-                        status="1"
-                        no-label>
-                    </report-status>
+              <div class="indicator-header flex layout horizontal">
+                <div class="indicator-header__title flex-3 layout vertical center-justified">
+                  <div class="layout horizontal">
+                    <div class="status-badge layout vertical center-justified">
+                      <report-status
+                          status="1"
+                          no-label>
+                      </report-status>
+                    </div>
+                    <h3>Indicator Name</h3>
                   </div>
-                  <h3>Indicator Name</h3>
+                </div>
+                <div class="indicator-header__target flex-none layout vertical center-justified">
+                  <dl class="layout horizontal justified">
+                    <dt class="flex-3">Target:</dt>
+                    <dd class="flex">..target</dd>
+                  </dl>
+                  <dl class="layout horizontal justified">
+                    <dt class="flex-3">Total cumulative progress:</dt>
+                      <dd class="flex"> 0.tcp</dd>
+
+                  </dl>
+                  <dl class="layout horizontal justified">
+                    <dt class="flex-3">Achievement in reporting period:</dt>
+                    <dd class="flex">0.arp</dd>
+                  </dl>
                 </div>
               </div>
-              <div class="indicator-header__target flex-none layout vertical center-justified">
-                <dl class="layout horizontal justified">
-                  <dt class="flex-3">Target:</dt>
-                  <dd class="flex">..target</dd>
-                </dl>
-                <dl class="layout horizontal justified">
-                  <dt class="flex-3">Total cumulative progress:</dt>
-                    <dd class="flex"> 0.tcp</dd>
-
-                </dl>
-                <dl class="layout horizontal justified">
-                  <dt class="flex-3">Achievement in reporting period:</dt>
-                  <dd class="flex">0.arp</dd>
-                </dl>
-              </div>
             </div>
-          </div>
 
-          <iron-collapse
-              id="collapse-0"
-              opened="[[expanded]]"
-              no-animation>
-              <!--on-opened-changed="_handleOpenedChanged"-->
-            <indicator-details
-                id="indicatorDetails"
-                reportable-id="0"
-                indicator-name="Indicator-name"
-                indicator-id="1"
-                reporting-period="yesterday - the day after tomorrow"
-                override-mode="view"
-                disaggregations="[[disaggregations]]">
-            </indicator-details>
-          </iron-collapse>
-        </div>
+            <iron-collapse
+                id="collapse-[[index]]"
+                opened="{{item.expanded}}"
+                no-animation>
+                <!--on-opened-changed="_handleOpenedChanged"-->
+              <indicator-details
+                  id="indicatorDetails"
+                  reportable-id="[[index]]"
+                  indicator-name="Indicator-name"
+                  indicator-id="1"
+                  reporting-period="yesterday - the day after tomorrow"
+                  override-mode="view"
+                  disaggregations="[[disaggregations]]">
+              </indicator-details>
+            </iron-collapse>
+          </div>
+        </template>
       </etools-content-panel>
 
   </template>
@@ -219,6 +226,15 @@
           expanded: {
             type: Boolean,
             value: false
+          },
+          dummyArr: {
+            type: Array,
+            value: [
+              {expanded: false},
+              {expanded: false},
+              {expanded: false},
+              {expanded: false},
+            ]
           },
           disaggregations: {
             type: Object,
@@ -343,19 +359,15 @@
             }
           },
         },
-
-        ready: function() {
-          // console.log(this.$.indicatorDetails)
-          // console.log(this.$.indicatorDetails.init)
-          // .init();
-        },
-        _computeIcon: function (opened) {
+        _computeIcon: function(opened) {
           return opened ? 'icons:expand-less' : 'icons:expand-more';
         },
-        _toggle: function (e) {
-          this.$$('#collapse-0').toggle();
-          this.set('expanded', !this.expanded);
+        _toggle: function(e) {
+          this.$$('#collapse-' + e.model.index).toggle();
         },
+        _getIndicatorClass: function(index) {
+          return (index % 2)? 'odd' : 'even';
+        }
       });
 
     })();
