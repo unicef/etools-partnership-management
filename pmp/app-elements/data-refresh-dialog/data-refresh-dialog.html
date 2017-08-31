@@ -163,7 +163,8 @@
 
             // clear only data sets
             var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-            var restampLandingPage = this.page === afterDataRefreshLandingPage;
+            var restampLandingPage = this.page === afterDataRefreshLandingPage
+                                     || (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
             var self = this;
             this.db.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions', function() {
