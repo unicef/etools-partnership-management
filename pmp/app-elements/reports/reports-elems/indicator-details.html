@@ -1,19 +1,16 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/etools-loading/etools-loading.html">
-<link rel="import" href="../../../bower_components/paper-tabs/paper-tab.html">
-<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
-<link rel="import" href="../../../bower_components/app-layout/app-grid/app-grid-style.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-
+<link rel="import" href="../../../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../../../bower_components/app-layout/app-grid/app-grid-style.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="status-badge.html">
 <link rel="import" href="disaggregations/disaggregation-table.html">
-<link rel="import" href="disaggregations/disaggregation-modal.html">
-
+<link rel="import" href="../styles/buttons.html">
+<link rel="import" href="behaviors/utils.html">
 
 <dom-module id="indicator-details">
   <template>
@@ -31,19 +28,6 @@
           padding-left: 13px;
           border-bottom: 1px solid var(--paper-grey-300);
         };
-      }
-
-      paper-button[raised].btn-primary {
-        color: white;
-        background: var(--theme-primary-color);
-      }
-
-      paper-button:not([raised]).btn-primary {
-        color: var(--theme-primary-color);
-      }
-
-      paper-button[disabled].btn-primary {
-        opacity: .5;
       }
 
       .tab-header {
@@ -100,7 +84,7 @@
         color: var(--theme-primary-text-color-medium);
       }
 
-      disaggregation-modal disaggregation-table {
+      disaggregation-table {
         margin-top: 1em;
       }
     </style>
@@ -177,7 +161,7 @@
                 <template
                     is="dom-if"
                     if="[[!_equals(computedMode, 'view')]]">
-                  <disaggregation-modal
+                  <!--<disaggregation-modal
                       id="modal-[[index]]"
                       reporting-period="[[reportingPeriod]]"
                       on-opened-changed="_updateModals">
@@ -207,7 +191,7 @@
                           editable="1">
                       </disaggregation-table>
                     </template>
-                  </disaggregation-modal>
+                  </disaggregation-modal>-->
                 </template>
               </div>
             </div>
@@ -215,12 +199,157 @@
         </template>
       </iron-pages>
     </template>
+
   </template>
 
   <script>
     Polymer({
       id: 'indicator-details',
 
+      behaviors: [
+        window.App.Behaviors.UtilsBehavior
+      ],
+
+      properties: {
+        indicatorId: Number,
+
+        indicatorName: String,
+
+        reportableId: Number,
+
+        reportingPeriod: String,
+
+        opened: Object,
+
+        selected: {
+          type: Number,
+          value: 0,
+        },
+
+        initialized: {
+          type: Boolean,
+          value: true,
+        },
+
+        loading: {
+          type: Boolean,
+          value: false,
+        },
+
+        hasPD: {
+          type: Boolean,
+          computed: '_computeHasPD(currentPD)',
+        },
+
+        params: {
+          type: Object,
+          computed: '_computeParams(indicatorId)',
+        },
+
+        data: {
+          type: Object,
+          statePath: 'disaggregations.byIndicator',
+        },
+
+        disaggregations: {
+          type: Object,
+        },
+
+        mode: {
+          type: String,
+          value: '',
+          statePath: 'programmeDocumentReports.current.mode',
+        },
+
+        overrideMode: {
+          type: String,
+          value: '',
+        },
+
+        computedMode: {
+          type: String,
+          computed: '_computeMode(mode, overrideMode)',
+        },
+      },
+
+      listeners: {
+        'location-updated': '_onLocationUpdated',
+      },
+      ready: function() {
+        console.log(
+          'indicator-details',
+          this.reportableId,
+          this.indicatorName,
+          this.indicatorId,
+          this.reportingPeriod,
+          this.overrideMode,
+          this.disaggregations
+        );
+      },
+
+      _computeParams: function (indicatorId) {
+        return {
+          pks: indicatorId,
+          limit: 1,
+        };
+      },
+
+      _computeMode: function (mode, overrideMode) {
+        return overrideMode || mode;
+      },
+
+      _openModal: function (e) {
+        this.$$('#modal-' + e.target.modalIndex).open();
+      },
+
+      _updateModals: function (e, data) {
+        var id = e.target.id;
+        var change;
+
+        if (!id) {
+          return;
+        }
+
+        change = {};
+
+        change[id] = data.value;
+
+        this.set('opened', Object.assign({}, this.opened, change));
+      },
+
+      _computeTableVisibility: function (opened, index) {
+        return !!opened['modal-' + index];
+      },
+
+      _computeLocationStatus: function (location) {
+        return location.is_complete ? 'success' : 'error';
+      },
+
+      _computeHasPD: function (currentPD) {
+        return !!Object.keys(currentPD).length;
+      },
+
+      _onLocationUpdated: function (e) {
+        e.stopPropagation();
+
+        var allComplete = this.disaggregations.indicator_location_data
+            .every(function (location) {
+              return location.is_complete;
+            });
+
+        if (!allComplete) {
+          return;
+        }
+
+        this.fire('report-complete', {
+          indicatorId: this.indicatorId,
+          reportableId: this.reportableId,
+        });
+      },
+
+      attached: function () {
+        this.set('opened', {});
+      },
     });
   </script>
 </dom-module>

@@ -1,11 +1,13 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/promise-polyfill/promise-polyfill-lite.html">
+<link rel="import" href="../../../../../bower_components/promise-polyfill/promise-polyfill-lite.html">
 
 <link rel="import" href="table-content/three-disaggregations.html">
 <link rel="import" href="table-content/two-disaggregations.html">
 <link rel="import" href="table-content/one-disaggregation.html">
 <link rel="import" href="table-content/zero-disaggregations.html">
 <link rel="import" href="disaggregation-switches.html">
+<link rel="import" href="../behaviors/utils.html">
+
+<link rel="import" href="../../styles/disaggregation-table-styles.html">
 
 <dom-module id="disaggregation-table">
   <template>
@@ -23,97 +25,8 @@
       .location-progress dt {
         font-weight: bold;
       }
-      :host {
-          display: block;
-        }
-
-        .container {
-          width: 100%;
-          display: flex;
-          flex-wrap: wrap;
-        }
-        .item {
-          padding: 10px;
-        }
-
-        table {
-          text-align: center;
-          font-size: 13px;
-        }
-
-        /*  Text above the table  */
-        h4 {
-          font-weight: 400;
-          color: var(--paper-grey-600);
-          margin: 0 0 15px 0;
-        }
-        h4 strong {
-          color: var(--paper-grey-800);
-        }
-        span.total {
-          float: right;
-          padding-left: 15px;
-        }
-
-        /*   Table header    */
-        .headerRow, th {
-          font-weight: 400;
-          padding: 5px 0;
-          background-color: #f0f0f0;
-        }
-
-        /*   Rows   */
-        tr {
-          @apply(--layout-horizontal);
-          @apply(--layout-center);
-          border-bottom: 1px solid white;
-        }
-
-        .totalsRow, .totalsRow td {
-          background-color: #f0f0f0;
-        }
-
-        .outerRow, .outerRow td {
-          background-color: var(--theme-table-bg-secondary, #c4e3f7);
-        }
-
-        .middleRow {
-          background-color: var(--theme-table-bg-primary, #edf8ff);
-        }
-        /*   Totals table (three disaggregations only)   */
-        .bottomRow td:not(:first-child){
-          background-color: #f0f0f0;
-        }
-
-        /*   Cells   */
-        td, th {
-          min-width: 40px;
-          min-height: 25px;
-          word-wrap: break-word;
-          hyphens: auto;
-          @apply(--layout-flex);
-          @apply(--layout-self-stretch);
-          @apply(--layout-center);
-        }
-
-        .cellValue {
-          display: inline-block;
-          line-height: 25px;
-        }
-
-        td:first-child {
-          border-left: 1px solid white;
-        }
-
-        td:not(:last-child)  {
-          border-right: 1px solid white;
-        }
-
-        .cellTitle,
-        .cellTotal {
-          background-color: var(--paper-grey-100);
-        }
     </style>
+
     <div>
       <disaggregation-switches
           data="[[data]]"
@@ -198,8 +111,7 @@
       is: 'disaggregation-table',
 
       behaviors: [
-        App.Behaviors.UtilsBehavior,
-        App.Behaviors.ReduxBehavior,
+        window.App.Behaviors.UtilsBehavior
       ],
 
       properties: {
@@ -218,11 +130,6 @@
         formattedMapping: {
           type: Array,
           computed: '_computeMapping(editableBool, formattedData, mapping)',
-        },
-
-        updateUrl: {
-          type: String,
-          value: App.Endpoints.indicatorLocationDataEntries(),
         },
 
         editableBool: {
@@ -250,7 +157,16 @@
       observers: [
         '_resetFields(formattedData.disaggregation_reported_on)',
       ],
+      ready: function() {
+        var data = {"id":16844,"indicator_report":2560,"location":{"id":1,"title":"location_0","latitude":null,"longitude":null,"p_code":null},"display_type":"percentage","disaggregation":{"()":{"c":0.11339062933185473,"d":3607,"v":409}},"num_disaggregation":1,"level_reported":0,"disaggregation_reported_on":[],"location_progress":{"c":0.11339062933185473,"d":3607,"v":409},"previous_location_progress":{"c":0,"d":0,"v":0},"is_complete":true};
+        var mapping = [{"id":3834,"name":"gender","active":true,"choices":[{"id":16614,"value":"other","active":true},{"id":16613,"value":"female","active":true},{"id":16612,"value":"male","active":true}]}];
 
+
+        this.set('data', data);
+        this.set('mapping', mapping);
+        this.set('editable', "0");
+        ;
+      },
       _registerField: function (e, field) {
         e.stopPropagation();
 
@@ -280,6 +196,46 @@
         );
       },
 
+      _cloneData: function (formattedData) {
+        if (!this.editableBool) {
+          return;
+        }
+
+        this.set('localData', JSON.parse(JSON.stringify(formattedData)));
+      },
+
+      _resetFields: function () {
+        this.set('fields', []);
+      },
+
+      _computeEditableBool: function (editable) {
+        return editable === 1;
+      },
+
+
+      _triggerModalRefit: function (e) {
+        e.stopPropagation();
+
+        if (!this.editableBool) {
+          return;
+        }
+
+        this.fire('disaggregation-modal-refit');
+      },
+      _equals: function() {
+        return arguments[0] === arguments[1];
+      },
+      _computeMapping: function (editableBool, formattedData, mapping) {
+        var reportedOn = formattedData.disaggregation_reported_on;
+
+        return editableBool ? mapping.filter(function (disagg) {
+          return reportedOn.indexOf(disagg.id) !== -1;
+        }) : mapping;
+      },
+
+      _computeIndicatorType: function (data) {
+        return data.display_type;
+      },
     });
   </script>
 </dom-module>

@@ -1,11 +1,5 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../../bower_components/promise-polyfill/promise-polyfill-lite.html">
-
-<link rel="import" href="../../polyfills/es6-shim.html">
-<link rel="import" href="../../behaviors/utils.html">
-<link rel="import" href="../../behaviors/disaggregations.html">
-<link rel="import" href="../message-box.html">
+<link rel="import" href="../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../behaviors/utils.html">
 
 <dom-module id="disaggregation-switches">
   <template>
@@ -30,9 +24,6 @@
         margin-left: 24px;
       }
 
-      message-box {
-        margin-top: 10px;
-      }
     </style>
 
     <template
@@ -58,10 +49,6 @@
             is="dom-if"
             if="[[warning]]"
             restamp="true">
-          <message-box
-              type="warning">
-            Data is expected for each disaggregation. When you have acquired additional data, re-check the selected box(es) above to complete your report.
-          </message-box>
         </template>
       </div>
     </template>
@@ -72,8 +59,7 @@
       is: 'disaggregation-switches',
 
       behaviors: [
-        App.Behaviors.UtilsBehavior,
-        App.Behaviors.DisaggregationBehavior,
+         window.App.Behaviors.UtilsBehavior
       ],
 
       properties: {
@@ -116,7 +102,7 @@
       },
 
       _cloneData: function (data) {
-        this.set('formattedData', this._clone(data));
+        this.set('formattedData', JSON.parse(JSON.stringify(data)));
       },
 
       _computeChecked: function (id) {

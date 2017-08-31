@@ -1,9 +1,7 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
-
-<link rel="import" href="../../../behaviors/disaggregations.html">
-<link rel="import" href="../../../behaviors/utils.html">
+<link rel="import" href="../../behaviors/disaggregations.html">
 <link rel="import" href="../../../styles/disaggregation-table-styles.html">
 <link rel="import" href="../disaggregation-table-row.html">
+<link rel="import" href="../../behaviors/utils.html">
 
 <dom-module id="two-disaggregations">
   <template>
@@ -49,7 +47,6 @@
       is: 'two-disaggregations',
 
       behaviors: [
-        App.Behaviors.UtilsBehavior,
         App.Behaviors.DisaggregationBehavior,
       ],
 
