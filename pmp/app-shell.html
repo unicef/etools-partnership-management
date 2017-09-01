@@ -178,6 +178,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
+        <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
+          <page-settings id="settings" class="main-page"></page-settings>
+        </template>
+
         <page-footer></page-footer>
 
       </app-header-layout>
@@ -304,7 +308,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
-          if (!!!routePage) {
+          if (!routePage) {
             this.fire('update-main-path', {path: 'partners/list'});
             return;
           }
@@ -373,6 +377,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
         var currentPath = this.route.path;
+        if (currentPath.indexOf('settings') > -1) {
+          return;
+        }
         if (currentPath.substr(-1) === '/') {
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
