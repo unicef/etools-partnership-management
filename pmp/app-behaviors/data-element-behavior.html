@@ -1,7 +1,8 @@
-<link rel="import" href="../app-config/etools-app-config.html"/>
+<link rel="import" href="../app-config/app-dexie-db-config.html"/>
+<link rel="import" href="../app-config/app-endpoints-behavior.html"/>
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.DataElementBehavior */
+  /** @polymerBehavior pmpBehaviors.DataElementBehaviorImpl */
   pmpBehaviors.DataElementBehaviorImpl = {
 
     properties: {
@@ -17,7 +18,7 @@
       db: {
         type: Object,
         value: function() {
-          return etoolsAppConfig.db;
+          return EtoolsPmpApp.DexieDb; // TODO: check if this is really needed
         }
       },
 
@@ -53,8 +54,9 @@
 
   };
 
+  /** @polymerBehavior pmpBehaviors.DataElementBehavior */
   pmpBehaviors.DataElementBehavior = [
-    etoolsAppConfig.globals,
+    EtoolsPmpApp.Behaviors.Endpoints,
     pmpBehaviors.DataElementBehaviorImpl
   ];
 

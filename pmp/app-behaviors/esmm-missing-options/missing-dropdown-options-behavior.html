@@ -1,4 +1,4 @@
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
   /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehaviorImpl */
@@ -36,7 +36,7 @@
 
   /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehavior */
   pmpBehaviors.MissingDropdownOptionsBehavior = [
-    etoolsAppConfig.globals,
+    EtoolsPmpApp.Behaviors.Endpoints,
     pmpBehaviors.MissingDropdownOptionsBehaviorImpl
   ];
 </script>

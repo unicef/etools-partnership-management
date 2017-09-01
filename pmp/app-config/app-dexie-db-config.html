@@ -1,0 +1,23 @@
+
+<link rel="import" href="../../bower_components/etools-dexiejs/dexie.html">
+
+<script>
+  /**
+   * PMP app Dexie DB configuration.
+   * For db versioning check: http://dexie.org/docs/Tutorial/Design
+   */
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+
+  EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
+  EtoolsPmpApp.DexieDb.version(1).stores({
+    collectionsList: 'name, expire',
+    countries: 'id',
+    partners: 'id, name, rating, vendor_number',
+    agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
+    interventions: 'id, number, partner_name, document_type, ' +
+    'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
+    user: 'id'
+  });
+
+</script>

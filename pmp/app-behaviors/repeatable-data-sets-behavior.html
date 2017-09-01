@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../styles/app-mixins.html">
+<link rel="import" href="../app-config/app-endpoints-behavior.html">
 
 <script>
   window.pmpBehaviors = window.pmpBehaviors || {};
@@ -179,6 +180,7 @@
 
   /** @polymerBehavior pmpBehaviors.RepeatableDataSetsBehavior */
   pmpBehaviors.RepeatableDataSetsBehavior = [
+    EtoolsPmpApp.Behaviors.Endpoints,
     etoolsBehaviors.DynamicDialogBehavior,
     pmpBehaviors.RepeatableDataSetsBehaviorImpl
   ];
