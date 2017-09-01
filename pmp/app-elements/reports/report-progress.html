@@ -222,6 +222,8 @@
 
       Polymer({
         is: 'report-progress',
+        behaviors: [
+        ],
         properties: {
           expanded: {
             type: Boolean,
@@ -236,9 +238,27 @@
               {expanded: false},
             ]
           },
+          data: {
+            type: Object,
+          },
           disaggregations: {
             type: Object,
-            value: {
+          },
+        },
+        ready: function() {
+          this._setMockData();
+        },
+        _computeIcon: function(opened) {
+          return opened ? 'icons:expand-less' : 'icons:expand-more';
+        },
+        _toggle: function(e) {
+          this.$$('#collapse-' + e.model.index).toggle();
+        },
+        _getIndicatorClass: function(index) {
+          return (index % 2)? 'odd' : 'even';
+        },
+        _setMockData: function() {
+          this.disaggregations = {
               "id": 2560,
               "title": "ratio_indicator_report_19",
               "indicator_location_data": [{
@@ -356,18 +376,44 @@
                   [16614, "other"]
                 ]
               ]
-            }
-          },
-        },
-        _computeIcon: function(opened) {
-          return opened ? 'icons:expand-less' : 'icons:expand-more';
-        },
-        _toggle: function(e) {
-          this.$$('#collapse-' + e.model.index).toggle();
-        },
-        _getIndicatorClass: function(index) {
-          return (index % 2)? 'odd' : 'even';
+            };
+
+
+            this.data = {
+                    "id": 2560,
+                    "name": "ratio_indicator_19",
+                    "llo_id": 40,
+                    "status": {
+                        "remarks": null,
+                        "report_status": "Sub"
+                    },
+                    "overall_status": "Con",
+                    "narrative_assessment": "",
+                    "indicator_reports": [{
+                        "id": 2560,
+                        "indicator_name": "ratio_indicator_19",
+                        "target": "5000",
+                        "achieved": {
+                            "c": 0.09371356828983948,
+                            "d": 11151,
+                            "v": 1045
+                        },
+                        "total": {
+                            "c": 0.09371356828983948,
+                            "d": 11151,
+                            "v": 1045
+                        },
+                        "report_status": "Sub"
+                    }],
+                    "display_type": "percentage",
+                    "total": {
+                        "c": 0.09371356828983948,
+                        "d": 11151,
+                        "v": 1045
+                    }
+                };
         }
+
       });
 
     })();
