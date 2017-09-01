@@ -1,0 +1,24 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../app-elements/settings/disaggregation-list.html">
+
+<dom-module id="page-settings">
+  <template strip-whitespace>
+    <style>
+    </style>
+    <disaggregation-list></disaggregation-list>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'page-settings',
+
+      attached: function () {
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', { active: false, loadingSource: 'main-page' });
+      }
+    });
+  </script>
+
+</dom-module>

@@ -1,0 +1,29 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+
+<dom-module id="add-disaggregation-dialog">
+  <template>
+    <style>
+    </style>
+
+    <etools-dialog id="etoolsDialog" size="md" ok-btn-text="Save" dialog-title="Add/Edit Disaggregation"
+                   on-close="_handleDialogClosed">
+    </etools-dialog>
+
+ </template>
+</dom-module>
+
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'add-disaggregation-dialog',
+      properties: {
+
+      },
+      open: function() {
+        this.$.etoolsDialog.opened = true;
+      }
+    });
+  })();
+</script>

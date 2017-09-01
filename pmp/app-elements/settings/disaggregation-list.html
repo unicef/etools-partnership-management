@@ -1,0 +1,94 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+
+<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<link rel="import" href="add-disaggregation-dialog.html">
+
+<dom-module id="disaggregation-list">
+  <template>
+    <style include="page-layout-styles grid-layout-styles">
+      #action-btns paper-icon-button {
+        color: var(--secondary-text-color) !important;
+      }
+      div.col {
+        align-items: center;
+      }
+    </style>
+
+     <div class="page-top-content">
+      <div class="top-content">
+        <div class="top-content-row title-row">
+          <h1 main-title> Settings </h1>
+        </div>
+      </div>
+    </div>
+    <div id="main">
+      <div id="pageContent">
+        <etools-content-panel panel-title="Disaggregations">
+          <paper-icon-button slot="panel-btns"
+                          icon="add"
+                          on-tap="_openModal">
+          </paper-icon-button>
+          <div class="table">
+            <div class="row-h header-row">
+              <div class="col col-4"> Name</div>
+              <div class="col col-5"> Disaggregation Groups</div>
+              <div class="col col-3"> Actions</div>
+            </div>
+
+            <div class="row-h">
+              <div class="col col-4">
+                Age
+              </div>
+              <div class="col col-5">
+                1-10;11-20;21-30;
+              </div>
+              <div class="col col-3" id="action-btns">
+                <paper-icon-button icon="create"
+                            title="Edit">
+                </paper-icon-button>
+                <paper-icon-button icon="delete"
+                            title="Delete">
+                </paper-icon-button>
+              </div>
+            </div>
+          </div>
+        </etools-content-panel>
+      </div>
+    </div>
+
+ </template>
+</dom-module>
+
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'disaggregation-list',
+
+      behaviors: [
+        pmpBehaviors.RepeatableDataSetsBehavior
+      ],
+
+      properties: {
+        disaggregationModal: {
+          type: Object
+        }
+      },
+       ready: function() {
+          this.disaggregationModal = document.createElement('add-disaggregation-dialog');
+          this.disaggregationModal.setAttribute('id', 'disaggregationModal');
+          Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
+        },
+      _openModal: function() {
+        this.disaggregationModal.open();
+      }
+
+    });
+  })();
+</script>
+
