@@ -79,22 +79,25 @@
         <iron-pages id="reportsPages"
                     selected="{{reportPage}}"
                     attr-for-selected="name"
-                    fallback-selection="list"
                     role="main">
 
-          <div class="page" name="list">
+          <template is="dom-if" if="[[_pageEquals(reportPage, 'list')]]">
             <reports-list id="list"
+                          name="list"
                           current-page="reports"
                           active="[[listActive]]"
                           url-params="[[queryParams]]"></reports-list>
-          </div>
-          <div class="page" name="summary">
-            <report-summary report="[[report]]"></report-summary>
-          </div>
-          <div class="page" name="progress">
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(reportPage, 'summary')]]">
+            <report-summary name="summary" report="[[report]]"></report-summary>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(reportPage, 'progress')]]">
             <report-progress id="reportDetails"
+                             name="progress"
                              report="[[report]]"></report-progress>
-          </div>
+          </template>
         </iron-pages>
 
       </div> <!-- page content end -->
