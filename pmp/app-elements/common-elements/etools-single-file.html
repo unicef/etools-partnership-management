@@ -1,7 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 <dom-module id="etools-single-file">
@@ -38,7 +38,7 @@
 
         is: 'etools-single-file',
         behaviors: [
-          pmpBehaviors.CommonGeneralBehavior
+          EtoolsPmpApp.Behaviors.Common
         ],
         properties: {
           attachments: {

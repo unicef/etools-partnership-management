@@ -1,7 +1,8 @@
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.ModifiedInterventionFieldsBehavior */
-   pmpBehaviors.ModifiedInterventionFieldsBehavior = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ModifiedInterventionFields */
+  EtoolsPmpApp.Behaviors.ModifiedInterventionFields = {
      _objectFieldIsModified: function(fieldName) {
         // jscs:disable maximumLineLength
         var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);

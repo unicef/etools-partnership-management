@@ -1,8 +1,9 @@
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehaviorImpl */
-  pmpBehaviors.MissingDropdownOptionsBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl */
+  EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl = {
 
     setDropdownMissingOptionsAjaxDetails: function(dropdownEl, endpointName, params) {
       try {
@@ -34,9 +35,9 @@
 
   };
 
-  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehavior */
-  pmpBehaviors.MissingDropdownOptionsBehavior = [
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.MissingDropdownOptions */
+  EtoolsPmpApp.Behaviors.MissingDropdownOptions = [
     EtoolsPmpApp.Behaviors.Endpoints,
-    pmpBehaviors.MissingDropdownOptionsBehaviorImpl
+    EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl
   ];
 </script>

@@ -24,8 +24,8 @@
         is: 'intervention-item-data',
         behaviors: [
           EtoolsPmpApp.Behaviors.Endpoints,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
 

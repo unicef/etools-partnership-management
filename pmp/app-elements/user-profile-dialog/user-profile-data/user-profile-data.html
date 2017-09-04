@@ -16,8 +16,8 @@
     Polymer({
       is: 'user-profile-data',
       behaviors: [
-        pmpBehaviors.DataElementBehavior,
-        pmpBehaviors.AjaxServerErrorsBehavior
+        EtoolsPmpApp.Behaviors.DataElement,
+        EtoolsPmpApp.Behaviors.AjaxServerErrors
       ],
       properties: {
         endpointName: {
