@@ -1,0 +1,82 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.PageUtils */
+  EtoolsPmpApp.Behaviors.PageUtils = {
+
+    properties: {
+      _subPageOrTabAttached: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    _pageEquals: function(activePage, expectedPage) {
+      return activePage === expectedPage;
+    },
+
+    _triggerPageNotFound: function() {
+      this.fire('404');
+    },
+
+    _removeStrDash: function(str) {
+      return str.replace(new RegExp('-', 'g'), ' ');
+    },
+
+    _showPageTabs: function(page) {
+      return page !== 'list';
+    },
+
+    _getTopContentAdditionalClass: function(page) {
+      if (this._showPageTabs(page)) {
+        return 'with-tabs';
+      }
+      return '';
+    },
+
+    _importPageElement: function(page, pagePrefix, pageBaseUrl) {
+      let self = this;
+      return new Promise(function(resolve, reject) {
+        let pageName = pagePrefix + page;
+        if (!Polymer.isInstance(self.$$(pageName))) {
+          let resolvedPageUrl = self.resolveUrl(pageBaseUrl + pageName + '.html');
+          self.importHref(resolvedPageUrl, function() {
+            resolve();
+          }, function(err) {
+            reject(err);
+          }, true);
+        } else {
+          resolve();
+        }
+      });
+    },
+
+    _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix) {
+      let clickedTabName = e.detail.item.getAttribute('name');
+      if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
+        // tab element already loaded, no need for loading messages
+        return;
+      }
+      this.fire('global-loading', {
+        message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
+        active: true,
+        loadingSource: loadingSource
+      });
+    },
+
+    /**
+     * "other" can be any property that must be defined before the method is executed
+     */
+    _showSidebarStatus: function(listPageActive, subPageOrTabAttached, other) {
+      let showStatus = !listPageActive && !!subPageOrTabAttached;
+      return !other ? showStatus : (showStatus && other);
+    },
+
+    _handlePageTabAttached: function(e) {
+      e.stopImmediatePropagation();
+      // just a flag to know when to show sidebar status element
+      this.set('_subPageOrTabAttached', true);
+    }
+
+  };
+</script>

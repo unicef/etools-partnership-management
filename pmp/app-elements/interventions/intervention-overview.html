@@ -14,7 +14,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
 <link rel="import" href="fr-numbers/fund-reservations-display.html">
@@ -62,12 +62,12 @@
 
       #monitoring-visits-panel {
         --ecp-content: {
-          padding: 10px 0 25px;
+          padding: 10px 0 24px;
         }
       }
 
       #top-container {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
     </style>
 
@@ -160,8 +160,8 @@
         is: 'intervention-overview',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -192,6 +192,15 @@
           sectors: {
             type: Array
           },
+        },
+
+        attached: function() {
+          /**
+           * Disable loading message for overview tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
         },
 
         _interventionChanged: function(intervention) {

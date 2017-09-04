@@ -3,8 +3,21 @@
   "shell": "pmp/app-shell.html",
   "fragments": [
     "pmp/pages/page-partners.html",
+    "pmp/app-elements/partners/partners-list.html",
+    "pmp/app-elements/partners/partner-overview.html",
+    "pmp/app-elements/partners/partner-details.html",
+
     "pmp/pages/page-agreements.html",
+    "pmp/app-elements/agreements/agreements-list.html",
+    "pmp/app-elements/agreements/agreement-details.html",
+
     "pmp/pages/page-interventions.html",
+    "pmp/app-elements/interventions/interventions-list.html",
+    "pmp/app-elements/interventions/intervention-overview.html",
+    "pmp/app-elements/interventions/intervention-details.html",
+    "pmp/app-elements/interventions/intervention-review-and-sign.html",
+    "pmp/app-elements/interventions/intervention-attachments.html",
+
     "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [

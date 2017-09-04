@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
@@ -19,7 +20,7 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -76,10 +77,7 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
-      .contingencyPD {
-        @apply(--layout-flex);
-        @apply(--layout-horizontal);
-        align-items: center;
+      paper-toggle-button {
         font-size: 16px;
       }
 
@@ -200,10 +198,10 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3 contingencyPD">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[intervention.permissions.required.contingency_pd]]"></paper-toggle-button> Contingency PD
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
+          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
         </div>
-        <div class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
@@ -223,7 +221,7 @@
           </etools-info-tooltip>
 
         </div>
-        <div class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
                                important-warning>
@@ -316,10 +314,10 @@
         is: 'intervention-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -419,6 +417,23 @@
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
+         },
+         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
+          if (!this._showContingencyPd(agreement)) {
+            return true;
+          }
+          if (contingencyPd && intervention.status !== 'active') {
+            return false;
+          }
+          return true;
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
@@ -640,9 +655,7 @@
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
-          if (!this.intervention.contingency_pd) {
-            fieldSelectors.push('#intStart', '#intEnd');
-          } else if (this.intervention.status === 'active') {
+          if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
           fieldSelectors.forEach(function(selector) {

@@ -1,7 +1,8 @@
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.ArrayHelperBehavior */
-  pmpBehaviors.ArrayHelperBehavior = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ArrayHelper */
+  EtoolsPmpApp.Behaviors.ArrayHelper = {
     /**
      * Compare arrays.
      * base array can be an array of values or an array of objects (if objects use basePropertyToVerify for matches)
@@ -41,7 +42,7 @@
 
         return diffVals;
       } catch (err) {
-        console.error('pmpBehaviors.ArrayHelperBehavior.compareArrays error occurred', err);
+        console.error('EtoolsPmpApp.Behaviors.ArrayHelper.compareArrays error occurred', err);
       }
     },
     /**

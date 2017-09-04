@@ -8,7 +8,7 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 
@@ -94,10 +94,10 @@
 
         behaviors: [
           EtoolsLogsBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.ArrayHelperBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.ArrayHelper,
           etoolsBehaviors.DynamicDialogBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {

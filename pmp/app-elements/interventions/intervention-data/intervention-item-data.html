@@ -1,7 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -22,9 +23,9 @@
 
         is: 'intervention-item-data',
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
 
@@ -54,6 +55,13 @@
             type: Array,
             statePath: 'sectors'
           },
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'pd-ssfa-data'
+          }
         },
 
         attached: function() {
@@ -62,7 +70,11 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading intervention data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading PD/SSFA data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
           }
@@ -86,7 +98,7 @@
             var self = this;
             // update the interventions list in dexieDB
             var mappedResponse = this._formatResponseDataForDexie(response.detail);
-            etoolsAppConfig.db.table('interventions').put(mappedResponse).then(function() {
+            EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
               self.fire('reload-list');
             });
           }
@@ -177,7 +189,11 @@
                 this.set('handleResponseAdditionalCallback', callback);
               }
               this._prepareEndpoint(data.interventionId);
-              this.fire('global-loading', {message: 'Changing intervention status...', active: true});
+              this.fire('global-loading', {
+                message: 'Changing intervention status...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
             } else {
@@ -258,7 +274,11 @@
                 return elem.year || elem.programmatic;
               });
             }
-            this.fire('global-loading', {message: 'Saving intervention data...', active: true});
+            this.fire('global-loading', {
+              message: 'Saving intervention data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             // fire in the hole
             this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
                 intervention, url, withUpload, prepareMultipartData);

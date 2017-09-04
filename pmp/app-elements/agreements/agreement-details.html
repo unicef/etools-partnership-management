@@ -20,9 +20,8 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
@@ -301,10 +300,9 @@
         is: 'agreement-details',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions
         ],
 
         properties: {
@@ -382,10 +380,16 @@
           Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
         },
         attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+          this.fire('agreements-page-attached');
+
           this.async(function() {
-              this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
-            }
-          );
+            this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
+          });
         },
         detached: function() {
           if (this.generatePCADialog) {
@@ -473,8 +477,7 @@
             this._resetDropdown('#agreementType');
             this.resetSignedByFields(agreement);
           }
-          this.fire('global-loading', {active: false});
-
+          this.fire('global-loading', {active: false, loadingSource: 'ag-data'});
         },
         resetAttachedAgreementElem: function(agreement) {
           // forces etools-single-file to redraw the element

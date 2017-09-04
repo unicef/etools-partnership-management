@@ -1,8 +1,10 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  pmpBehaviors.statusBehaviorImpl = { // eslint-disable-line no-undef
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl = { // eslint-disable-line no-undef
     properties: {
       status: {
         type: String,
@@ -15,6 +17,9 @@
       editMode: {
         type: Boolean,
         value: true
+      },
+      active: {
+        type: Boolean
       },
       minimumDistanceFromWindowTop: {
         type: Number,
@@ -29,7 +34,8 @@
     },
 
     observers: [
-        '_handleStatusChange(status)'
+        '_handleStatusChange(status)',
+        '_activeFlagChanged(active)'
     ],
 
     detached: function() {
@@ -51,6 +57,12 @@
         return null;
       }
       return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
+    },
+
+    _activeFlagChanged: function(active) {
+      if (active) {
+        this.debounce('etools-status-active-changed', this._forceScollPositionRecalculation.bind(this), 20);
+      }
     },
 
     _handleStickyScroll: function() {
@@ -177,7 +189,6 @@
       this.debounce('reset-status-actions', function() {
         this._computeAvailableStatuses(status);
         this._computeAvailableActions(status);
-        this._forceScollPositionRecalculation();
       }.bind(this), 50);
     },
 
@@ -198,11 +209,10 @@
     },
   };
 
-  /** @polymerBehavior pmpBehaviors.statusBehavior */
-
-  pmpBehaviors.statusBehavior = [
-    etoolsBehaviors.DynamicDialogBehavior,
-    pmpBehaviors.statusBehaviorImpl,
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommon = [
     EtoolsLogsBehavior,
+    etoolsBehaviors.DynamicDialogBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl
   ];
 </script>

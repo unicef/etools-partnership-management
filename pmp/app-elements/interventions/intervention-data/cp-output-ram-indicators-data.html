@@ -2,7 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 
 <dom-module id="cp-output-ram-indicators-data">
 
@@ -22,8 +22,8 @@
 
         is: 'cp-output-ram-indicators-data',
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
           ramIndicators: {
@@ -51,6 +51,14 @@
           globalMessage: {
             type: String,
             value: 'Getting selected CP Output indicators failed!'
+          },
+
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'cpo-ram-ind'
           }
 
         },
@@ -61,7 +69,11 @@
 
         _cpOutputIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading ram indicators data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading ram indicators data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.set('endpoint', this.getEndpoint('ramIndicators', {id: newId}));
           }
@@ -72,7 +84,7 @@
          */
         _handleResponse: function(response) {
           this.set('ramIndicators', response.detail);
-          this.fire('global-loading', {active: false});
+          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
         /**

@@ -2,7 +2,8 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 
 <dom-module id="partner-item-data">
 
@@ -22,8 +23,8 @@
 
         is: 'partner-item-data',
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
 
@@ -50,7 +51,14 @@
 
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
-          ajaxEl: Object
+          ajaxEl: Object,
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'partner-data'
+          }
         },
         attached: function() {
           this.ajaxEl = this.$.ajax;
@@ -66,7 +74,11 @@
             // set an empty partner
             this._setPartner({});
             // set the new endpoint
-            this.fire('global-loading', {message: 'Loading partner data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partner data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           } else {
@@ -125,12 +137,12 @@
           if (this.$.ajax.get('method') !== 'GET') {
             var self = this;
             // update the partners list in dexieDB
-            etoolsAppConfig.db.table('partners').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('partners').put(response.detail).then(function() {
               self.fire('reload-list');
             });
           }
           if (this.$.ajax.get('method') === 'DELETE') {
-            etoolsAppConfig.db.table('partners').delete(this.deletedPartnerId).then(function() {
+            EtoolsPmpApp.DexieDb.table('partners').delete(this.deletedPartnerId).then(function() {
               self.fire('reload-list');
             });
           }
@@ -150,7 +162,11 @@
             return;
           }
 
-          this.fire('global-loading', {message: 'Creating new partner...', active: true});
+          this.fire('global-loading', {
+            message: 'Creating new partner...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
 
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
@@ -230,7 +246,11 @@
                   }, this);
                 }
               }
-              this.fire('global-loading', {message: 'Saving partner data...', active: true});
+              this.fire('global-loading', {
+                message: 'Saving partner data...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
               this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
