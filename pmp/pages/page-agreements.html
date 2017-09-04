@@ -163,7 +163,7 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        pmpBehaviors.PageUtilsBehavior
+        EtoolsPmpApp.Behaviors.PageUtils
       ],
 
       properties: {
@@ -235,6 +235,7 @@
         routeData: {
           type: Object
         },
+        agreementQueryParams: Object,
         agreement: {
           type: Object,
           observer: '_agreementChanged'
