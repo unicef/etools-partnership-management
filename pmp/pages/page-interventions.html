@@ -228,9 +228,9 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior,
-        pmpBehaviors.PageUtilsBehavior,
-        pmpBehaviors.InterventionPermissionsBehavior,
-        pmpBehaviors.SaveInterventionBehavior
+        EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.InterventionPermissions,
+        EtoolsPmpApp.Behaviors.SaveIntervention
       ],
       properties: {
         interventionPage: {
@@ -316,6 +316,7 @@
         intervDetailsActive: {
           type: Boolean
         },
+        newInterventionActive: Boolean,
         routeDataNewInterv: {
           type: Object
         },

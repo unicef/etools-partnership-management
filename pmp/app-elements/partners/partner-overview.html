@@ -5,7 +5,7 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../interventions/behaviors/fr-numbers-consistency-behavior.html">
@@ -254,10 +254,10 @@
         is: 'partner-overview',
 
         behaviors: [
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.RiskRatingBehavior,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.RiskRating,
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
         properties: {
           user: Object,
