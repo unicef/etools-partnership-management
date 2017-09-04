@@ -17,6 +17,7 @@
     "pmp/app-elements/interventions/intervention-details.html",
     "pmp/app-elements/interventions/intervention-review-and-sign.html",
     "pmp/app-elements/interventions/intervention-attachments.html",
+    "pmp/app-elements/interventions/intervention-reports.html",
 
     "pmp/pages/page-not-found.html"
   ],

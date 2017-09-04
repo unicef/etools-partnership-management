@@ -180,9 +180,10 @@
                                       edit-mode="[[!_isAttachmentsTabReadonly(permissions, intervention, intervention.status)]]">
             </intervention-attachments>
           </template>
+
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'reports')]]">
-            <intervention-reports id="interventionReports">
-            </intervention-reports>
+            <intervention-reports id="interventionReports"
+                                  name="reports"></intervention-reports>
           </template>
 
         </iron-pages>
