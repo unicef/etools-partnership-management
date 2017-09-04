@@ -53,6 +53,11 @@
       }
     },
 
+    reloadData: function() {
+      this.$.ajax.set('url', null);
+      this.$.ajax.set('url', this.endpoint.url);
+    },
+
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.DataElement */
