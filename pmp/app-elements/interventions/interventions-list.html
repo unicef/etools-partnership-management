@@ -13,6 +13,7 @@
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -362,6 +363,10 @@
             type: String,
             notify: true
           },
+          _sortableFieldNames: {
+            type: Array,
+            value: ['number', 'partner_name', 'start', 'end']
+          }
         },
 
         listeners: {
@@ -381,7 +386,13 @@
         },
 
         attached: function() {
-          this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...');
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+
+          this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
         },
         _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {
@@ -465,29 +476,27 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          var parms = this.urlParams;
-          if (!active || !parms) {
+          let urlQueryParams = this.urlParams;
+          if (!active || !urlQueryParams) {
             return;
           }
           this.set('initComplete', false);
-          this.set('q', parms.q ? parms.q : '');
-          this.set('selectedDocumentTypes', parms.type ? this._setSelectedDocTypes(parms.type) : []);
-          this.set('selectedStatuses', parms.status ? this._setSelectedStatuses(parms.status) : []);
-          this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
-          this.set('selectedSectors', parms.sector ? this._setSelectedSectors(parms.sector) : []);
+          this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+          this.set('selectedDocumentTypes', urlQueryParams.type ? this._setSelectedDocTypes(urlQueryParams.type) : []);
+          this.set('selectedStatuses', urlQueryParams.status ? this._setSelectedStatuses(urlQueryParams.status) : []);
+          this.set('selectedCpOutputs',
+              urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
+          this.set('selectedSectors', urlQueryParams.sector ? this._setSelectedSectors(urlQueryParams.sector) : []);
           this.set('selectedUnicefFocalPoints',
-              parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
-          this.set('selectedOffices', parms.offices ? this._setSelectedOffices(parms.offices) : []);
-          this.set('startDate', parms.start ? parms.start : '');
-          this.set('endDate', parms.end ? parms.end : '');
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
-          // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'partner_name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
+              urlQueryParams.unicef_focal_points ?
+                  this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
+          this.set('selectedOffices', urlQueryParams.offices ? this._setSelectedOffices(urlQueryParams.offices) : []);
+          this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
+          this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+          // format of sort param is sort=field.order ex: sort=partner_name.asc
+          let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
 
@@ -728,6 +737,9 @@
 
         _setSelectedStatuses: function(statuses) {
           var statusesStrArr = statuses.split('|');
+          if (!this.interventionStatuses || !this.interventionStatuses.length) {
+            return [];
+          }
           return this.interventionStatuses.filter(function(status) {
             return statusesStrArr.indexOf(status.value) > -1;
           });
