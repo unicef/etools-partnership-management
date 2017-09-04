@@ -22,7 +22,7 @@
     "pmpBehaviors": true,
     "etoolsBehaviors": true,
     "EtoolsLogsBehavior": true,
-    "etoolsAppConfig": true,
+    "EtoolsPmpApp": true,
     "etoolsAjaxDefaultDexieDbPrefix": true,
     "_data": true,
     "_setData": true,

@@ -163,11 +163,12 @@
 
             // clear only data sets
             var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-            var restampLandingPage = this.page === afterDataRefreshLandingPage
-                                     || (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
+            var restampLandingPage = this.page === afterDataRefreshLandingPage ||
+                (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
             var self = this;
-            EtoolsPmpApp.DexieDb.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions', function() {
+            EtoolsPmpApp.DexieDb.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions',
+                function() {
               if (self.partnersSelected) {
                 EtoolsPmpApp.DexieDb.partners.clear();
                 EtoolsPmpApp.DexieDb.collectionsList.delete('partners');

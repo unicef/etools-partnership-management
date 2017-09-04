@@ -2,7 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 
 <dom-module id="monitoring-visits-data">
 
@@ -22,7 +22,7 @@
 
         is: 'monitoring-visits-data',
         behaviors: [
-          etoolsAppConfig.globals,
+          EtoolsPmpApp.Behaviors.Endpoints,
           pmpBehaviors.AjaxServerErrorsBehavior
         ],
         properties: {

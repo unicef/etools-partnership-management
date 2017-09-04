@@ -9,7 +9,7 @@
 <link rel="import" href="../../../bower_components/etools-profile-dropdown/etools-profile-dropdown.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-dexie-db-config.html">
 
 <dom-module id="page-header">
 
@@ -117,8 +117,7 @@
       Polymer({
         is: 'page-header',
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
         ],
         properties: {
           countries: {
@@ -228,7 +227,7 @@
           window.location.href = window.location.origin + '/saml2/logout';
         },
         _clearDexieDbs: function() {
-          etoolsAppConfig.db.delete();
+          EtoolsPmpApp.DexieDb.delete();
         },
         _clearLocalStorage: function() {
           localStorage.clear();
