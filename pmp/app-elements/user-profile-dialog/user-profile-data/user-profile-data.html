@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <dom-module id="user-profile-data">
 
@@ -17,9 +16,8 @@
     Polymer({
       is: 'user-profile-data',
       behaviors: [
-        pmpBehaviors.DataElementBehavior,
-        pmpBehaviors.AjaxServerErrorsBehavior,
-        etoolsAppConfig.globals
+        EtoolsPmpApp.Behaviors.DataElement,
+        EtoolsPmpApp.Behaviors.AjaxServerErrors
       ],
       properties: {
         endpointName: {

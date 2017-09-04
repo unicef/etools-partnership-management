@@ -231,9 +231,9 @@
         is: 'intervention-planned-budget',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           etoolsBehaviors.EtoolsCurrencyBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {

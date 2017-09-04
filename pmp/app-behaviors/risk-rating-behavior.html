@@ -1,7 +1,8 @@
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.RiskRatingBehavior */
-  pmpBehaviors.RiskRatingBehavior = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.RiskRating */
+  EtoolsPmpApp.Behaviors.RiskRating = {
 
     getRiskRatingValue: function(riskRating) {
       if (typeof riskRating === 'string' && riskRating !== '') {

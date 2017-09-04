@@ -1,9 +1,10 @@
 <link rel="import" href="date-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.CommonGeneralBehaviorImpl */
-  pmpBehaviors.CommonGeneralBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.CommonImpl */
+  EtoolsPmpApp.Behaviors.CommonImpl = {
     /**
      * Prepare and return the string value we have to display on the interface.
      * Ex: partners and agreements lists data values.
@@ -105,9 +106,9 @@
 
   };
 
-  /** @polymerBehavior pmpBehaviors.CommonGeneralBehavior */
-  pmpBehaviors.CommonGeneralBehavior = [
-    pmpBehaviors.DateBehavior,
-    pmpBehaviors.CommonGeneralBehaviorImpl
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.Common */
+  EtoolsPmpApp.Behaviors.Common = [
+    EtoolsPmpApp.Behaviors.Date,
+    EtoolsPmpApp.Behaviors.CommonImpl
   ];
 </script>

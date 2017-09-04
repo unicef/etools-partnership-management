@@ -19,7 +19,7 @@
 <link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="intervention-amendments.html">
@@ -218,10 +218,9 @@
 
         behaviors: [
           EtoolsLogsBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions
         ],
 
         properties: {

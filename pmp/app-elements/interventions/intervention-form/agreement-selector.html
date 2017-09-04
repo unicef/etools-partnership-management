@@ -5,7 +5,7 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-selector">
@@ -59,7 +59,7 @@
       Polymer({
         is: 'agreement-selector',
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
           agreementId: {
