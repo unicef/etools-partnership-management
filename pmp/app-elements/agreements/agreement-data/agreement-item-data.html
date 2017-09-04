@@ -100,7 +100,7 @@
             this.set('handleSuccResponseAdditionalCallback', null);
           }
           if (this.$.ajax.get('method') !== 'GET') {
-            this.dispatch('addEditAgreement', this._getMinimalAgreemantData(response.detail));
+            this.dispatch('addEditAgreement', this._getMinimalAgreementData(response.detail));
 
             var self = this;
             // update the agreement list in dexieDB
@@ -111,7 +111,7 @@
           this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
-        _getMinimalAgreemantData: function(detail) {
+        _getMinimalAgreementData: function(detail) {
           var minimalAgrData = {
             agreement_number: '',
             agreement_type: '',

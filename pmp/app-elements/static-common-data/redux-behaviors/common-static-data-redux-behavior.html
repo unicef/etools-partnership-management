@@ -94,19 +94,16 @@
 
       case 'ADD_EDIT_AGREEMENT':
         const agreementsCopy = state.agreementsList.slice(0);
-        console.log('add-edit-agreement', action.agreement);
         let index = -1;
-        agreementsCopy.forEach(function(element, i) {
-          if (element.id === action.agreement.id) {
+        for (var i = 0; i < agreementsCopy.length; i++) {
+          if (agreementsCopy[i].id === action.agreement.id) {
             index = i;
-            return;
+            break;
           }
-        });
+        }
         if (index > -1) {
-          console.log('edit');
           agreementsCopy[index] = action.agreement;
         } else {
-          console.log('push');
           agreementsCopy.push(action.agreement);
         }
         return Object.assign({}, state, {agreementsList: agreementsCopy});
