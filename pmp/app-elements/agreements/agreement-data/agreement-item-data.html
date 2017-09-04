@@ -3,6 +3,7 @@
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-item-data">
 
@@ -23,7 +24,8 @@
         is: 'agreement-item-data',
         behaviors: [
           etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          pmpBehaviors.AjaxServerErrorsBehavior,
+          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
         ],
         properties: {
 
@@ -59,6 +61,14 @@
             value: 'ag-data'
           }
         },
+        actions: {
+          addEditAgreement: function(agreement) {
+            return {
+              type: 'ADD_EDIT_AGREEMENT',
+              agreement: agreement
+            }
+          }
+        },
 
         attached: function() {
           this.ajaxEl = this.$.ajax;
@@ -89,6 +99,8 @@
             this.set('handleSuccResponseAdditionalCallback', null);
           }
           if (this.$.ajax.get('method') !== 'GET') {
+            this.dispatch('addEditAgreement', this._getMinimalAgreemantData(response.detail));
+
             var self = this;
             // update the agreement list in dexieDB
             etoolsAppConfig.db.table('agreements').put(response.detail).then(function() {
@@ -98,6 +110,29 @@
           this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
+        _getMinimalAgreemantData: function(detail) {
+          var minimalAgrData = {
+            agreement_number: '',
+            agreement_type: '',
+            end: null,
+            id: null,
+            partner: null,
+            partner_name: null,
+            signed_by: null,
+            signed_by_partner_date: null,
+            signed_by_unicef_date: null,
+            start: null,
+            status: ''
+          };
+          for (var propName in minimalAgrData) {
+            if (!detail.hasOwnProperty(propName)) {
+              console.warn('Mapping property not found');
+            } else {
+              minimalAgrData[propName] = detail[propName];
+            }
+          }
+           return minimalAgrData;
+        },
         /**
          * Set the method of the request and the body.
          * Used for unsafe requests (PATCH/POST).
