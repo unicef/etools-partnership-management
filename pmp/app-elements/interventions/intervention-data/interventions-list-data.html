@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
 <link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
@@ -25,7 +26,9 @@
 
         is: 'interventions-list-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior],
+        behaviors: [
+          EtoolsPmpApp.Behaviors.DataElement
+        ],
 
         properties: {
 

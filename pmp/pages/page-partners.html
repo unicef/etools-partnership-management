@@ -157,7 +157,7 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        pmpBehaviors.PageUtilsBehavior,
+        EtoolsPmpApp.Behaviors.PageUtils,
       ],
 
       properties: {
@@ -170,6 +170,7 @@
         routeData: {
           type: Object,
         },
+        queryParams: Object,
         activeTab: {
           type: String,
           value: '',

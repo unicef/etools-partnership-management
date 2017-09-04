@@ -2,9 +2,10 @@
 <link rel="import" href="../../../app-behaviors/array-helper-behavior.html">
 
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.SaveInterventionBehaviorImpl */
-  pmpBehaviors.SaveInterventionBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SaveInterventionImpl */
+  EtoolsPmpApp.Behaviors.SaveInterventionImpl = {
 
     _validateAndSaveIntervention: function(event) {
       if (event) {
@@ -142,10 +143,10 @@
     },
   };
 
-  /** @polymerBehavior pmpBehaviors.SaveInterventionBehavior */
-  pmpBehaviors.SaveInterventionBehavior = [
-    pmpBehaviors.SaveInterventionBehaviorImpl,
-    pmpBehaviors.ArrayHelperBehavior,
-    pmpBehaviors.ModifiedInterventionFieldsBehavior
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SaveIntervention */
+  EtoolsPmpApp.Behaviors.SaveIntervention = [
+    EtoolsPmpApp.Behaviors.SaveInterventionImpl,
+    EtoolsPmpApp.Behaviors.ArrayHelper,
+    EtoolsPmpApp.Behaviors.ModifiedInterventionFields
   ];
 </script>

@@ -2,8 +2,9 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 
 <dom-module id="agreement-item-data">
 
@@ -23,9 +24,9 @@
 
         is: 'agreement-item-data',
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
 
@@ -103,7 +104,7 @@
 
             var self = this;
             // update the agreement list in dexieDB
-            etoolsAppConfig.db.table('agreements').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('agreements').put(response.detail).then(function() {
               self.fire('reload-list');
             });
           }
