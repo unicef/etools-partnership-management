@@ -19,7 +19,6 @@
     "Polymer": true,
     "_": true,
     "Dexie": true,
-    "pmpBehaviors": true,
     "etoolsBehaviors": true,
     "EtoolsLogsBehavior": true,
     "EtoolsPmpApp": true,
