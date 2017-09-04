@@ -248,6 +248,16 @@
         ready: function() {
           this._setMockData();
         },
+
+        attached: function() {
+          /**
+           * Disable loading message for report progress tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+          // this.fire('reports-page-attached');
+        },
+
         _computeIcon: function(opened) {
           return opened ? 'icons:expand-less' : 'icons:expand-more';
         },

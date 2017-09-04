@@ -7,13 +7,11 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
-<link rel="import" href="../app-elements/reports/reports-list.html">
-<link rel="import" href="../app-elements/reports/report-summary.html">
-<link rel="import" href="../app-elements/reports/report-progress.html">
 
 <dom-module id="page-reports">
 
@@ -53,8 +51,10 @@
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
             <paper-tabs id="reportTabs"
-                selected="{{routeData.tab}}"
-                attr-for-selected="name" noink bottom-item>
+                        selected="{{activeTab}}"
+                        attr-for-selected="name"
+                        noink bottom-item
+                        on-iron-select="_handleTabSelectAction">
 
               <paper-tab name="summary" link>
                 <span class="tab-content">Report Summary</span>
@@ -74,8 +74,8 @@
       <div id="pageContent">
 
         <etools-error-messages-box id="errorsBox"
-                                  title="Errors Saving Report"
-                                  errors="{{serverErrors}}"></etools-error-messages-box>
+                                   title="Errors Saving Report"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
         <iron-pages id="reportsPages"
                     selected="{{reportPage}}"
                     attr-for-selected="name"
@@ -93,7 +93,7 @@
           </div>
           <div class="page" name="progress">
             <report-progress id="reportDetails"
-                            report="[[report]]"></report-progress>
+                             report="[[report]]"></report-progress>
           </div>
         </iron-pages>
 
@@ -115,7 +115,10 @@
 
       is: 'page-reports',
 
-      behaviors: [EtoolsLogsBehavior],
+      behaviors: [
+        EtoolsLogsBehavior,
+        EtoolsPmpApp.Behaviors.PageUtils
+      ],
 
       properties: {
         tabsActive: {
@@ -126,6 +129,11 @@
         },
         routeData: {
           type: Object,
+        },
+        activeTab: {
+          type: String,
+          value: '',
+          observer: '_activeTabChanged'
         },
         report: {
           type: Object,
@@ -139,7 +147,7 @@
 
       observers: [
         '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, routeData.tab)'
+        '_pageChanged(listActive, activeTab)'
       ],
 
       ready: function() {
@@ -148,17 +156,59 @@
         }.bind(this), 500)
       },
 
-      _getActivePage: function(listActive, tab) {
-        if (listActive) {
-          return 'list';
+      attached: function() {
+        // deactivate main page loading msg triggered in app-shell
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        /**
+         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+         */
+        let loadingMsg = 'Loading ' + (this.listActive ? 'reports list' :
+            (this._removeStrDash(this.activeTab) + ' page')) + ' elements...';
+        console.log(loadingMsg);
+        this.fire('global-loading', {
+          message: loadingMsg,
+          active: true,
+          loadingSource: 'reports-page'
+        });
+      },
+
+      _setActivePage: function(listActive, tab) {
+//        if (listActive) {
+//          return 'list';
+//        } else {
+//          return tab;
+//        }
+        let page = 'list';
+        let pagePrefix = 'reports-';
+        let pageBaseUrl = '../app-elements/reports/';
+        if (!listActive) {
+          page = tab;
+          pagePrefix = 'report-';
         } else {
-          return tab;
+          this.set('serverErrors', []);
+        }
+        if (page) {
+          let self = this;
+          console.log(page, pagePrefix, pageBaseUrl);
+          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
+            self.set('reportPage', page);
+          })
+              .catch(function(err) {
+                self.logError('Report page import error occurred', '[report(s) ' + page + ']', err);
+                self.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+                self._triggerPageNotFound();
+              });
         }
       },
 
       _pageChanged: function(listActive, tab) {
-        var activePage = this._getActivePage(listActive, tab);
-        this.set('reportPage', activePage);
+        this._setActivePage(listActive, tab);
+      },
+
+      _activeTabChanged: function(activeTab) {
+        if (activeTab) {
+          this.set('routeData.tab', activeTab);
+        }
       },
 
       _updateUrlTab: function(tab) {
@@ -171,15 +221,13 @@
             tabs.notifyResize();
           }
           this.fire('update-main-path', {path: this.route.path});
+          this.set('activeTab', tab);
         }.bind(this), 50);
       },
 
-      _getTopContentAdditionalClass: function(listActive) {
-        if (!listActive) {
-          return 'with-tabs';
-        }
-        return '';
-      },
+      _handleTabSelectAction: function(e) {
+        this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
+      }
 
     });
 

@@ -8,8 +8,6 @@
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
-
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -99,6 +97,15 @@
 
       Polymer({
         is: 'report-summary',
+
+        attached: function() {
+          /**
+           * Disable loading message for report summary tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+          // this.fire('reports-page-attached');
+        },
       });
 
     })();

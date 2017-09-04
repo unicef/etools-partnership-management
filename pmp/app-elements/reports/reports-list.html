@@ -16,10 +16,10 @@
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
@@ -234,11 +234,11 @@
         is: 'reports-list',
 
         behaviors: [
-          pmpBehaviors.AppNavigationHelperBehavior,
-          pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.ListsCommonBehavior
+          EtoolsPmpApp.Behaviors.AppNavigationHelper,
+          EtoolsPmpApp.Behaviors.ListFilters,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.ListsCommon
         ],
 
         properties: {
@@ -267,6 +267,16 @@
         ready: function() {
           this.setMockFilters();
         },
+
+        attached: function() {
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+          // this.listAttachedCallback(this.active, 'Loading reports list data...', 'reports-list');
+        },
+
         reloadListData: function() {
           this.$$('#reports').reloadData();
         },
@@ -298,11 +308,7 @@
               disabled: false
             },
           ]);
-        },
-
-        attached: function() {
-          this.listAttachedCallback(this.active, 'Loading reports list data...');
-        },
+        }
 
       });
     })();

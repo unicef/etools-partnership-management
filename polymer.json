@@ -18,6 +18,11 @@
     "pmp/app-elements/interventions/intervention-review-and-sign.html",
     "pmp/app-elements/interventions/intervention-attachments.html",
 
+    "pmp/pages/page-reports.html",
+    "pmp/app-elements/reports/reports-list.html",
+    "pmp/app-elements/reports/report-summary.html",
+    "pmp/app-elements/reports/report-progress.html",
+
     "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [
