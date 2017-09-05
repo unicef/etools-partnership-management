@@ -118,11 +118,6 @@
           }
         },
 
-        reloadData: function() {
-          this.$.ajax.set('url', null);
-          this.$.ajax.set('url', this.endpoint.url);
-        },
-
         query: function(field, order, searchString, partnerType, csoType,
                         pageNumber, pageSize, showHidden, showQueryLoading) {
 
