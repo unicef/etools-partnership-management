@@ -52,7 +52,7 @@
     "etools-file": "1.2.4",
     "etools-loading": "unicef-polymer/etools-loading#05b913b",
     "etools-page-refresh": "1.1.2",
-    "etools-searchable-multiselection-menu": "2.2.2",
+    "etools-searchable-multiselection-menu": "2.2.4",
     "etools-profile-dropdown": "1.0.7",
     "etools-info-tooltip": "^1.0.1",
     "paper-checkbox": "1.4.2",
