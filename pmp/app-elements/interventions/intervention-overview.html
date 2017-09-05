@@ -25,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -239,7 +239,7 @@
           var sectorIds = [];
           var sectors = [];
 
-          this.intervention.sector_locations.forEach(function(locLvl1) {
+          this.intervention.original_sectors.forEach(function(locLvl1) {
             locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });

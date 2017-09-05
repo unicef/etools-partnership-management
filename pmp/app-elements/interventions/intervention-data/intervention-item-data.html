@@ -84,9 +84,9 @@
          * Handle received data from request
          */
         _handleResponse: function(response) {
-
+          response.detail.original_sectors = JSON.parse(JSON.stringify(response.detail.sector_locations));
           this._setIntervention(response.detail);
-
+          
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
