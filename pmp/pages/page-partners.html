@@ -249,13 +249,6 @@
         }
       },
 
-      _reloadPartnersListData: function() {
-        let list = this.$$('#list');
-        if (list) {
-          list.reloadListData();
-        }
-      },
-
       _setActivePage: function(listActive, tab) {
         let page = 'list';
         let pagePrefix = 'partners-';
@@ -327,7 +320,6 @@
       },
 
       _handlePartnerDeleted: function() {
-        this._reloadPartnersListData();
         this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
         this.fire('toast', {text: 'Partner successfully deleted', showCloseBtn: true});
         this.fire('update-main-path', {path: 'partners/list'});
