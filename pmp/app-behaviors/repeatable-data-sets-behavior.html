@@ -1,10 +1,12 @@
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../styles/app-mixins.html">
+<link rel="import" href="../app-config/app-endpoints-behavior.html">
 
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.RepeatableDataSetsBehaviorImpl */
-  pmpBehaviors.RepeatableDataSetsBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.RepeatableDataSetsImpl */
+  EtoolsPmpApp.Behaviors.RepeatableDataSetsImpl = {
     // make sure you add DynamicDialogBehavior too in your element
     properties: {
       dataItems: {
@@ -177,10 +179,11 @@
     }
   };
 
-  /** @polymerBehavior pmpBehaviors.RepeatableDataSetsBehavior */
-  pmpBehaviors.RepeatableDataSetsBehavior = [
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.RepeatableDataSets */
+  EtoolsPmpApp.Behaviors.RepeatableDataSets = [
     etoolsBehaviors.DynamicDialogBehavior,
-    pmpBehaviors.RepeatableDataSetsBehaviorImpl
+    EtoolsPmpApp.Behaviors.Endpoints,
+    EtoolsPmpApp.Behaviors.RepeatableDataSetsImpl
   ];
 
 </script>

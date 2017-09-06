@@ -135,6 +135,7 @@
         <!-- sidebar content start -->
         <div id="sidebar">
           <agreement-status status$="[[agreement.status]]"
+                            active="[[!agreementListActive]]"
                             new-agreement$="[[newAgreementActive]]"
                             agreement-id$="[[agreement.id]]"
                             agreement-type="[[agreement.agreement_type]]"
@@ -162,7 +163,7 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        pmpBehaviors.PageUtilsBehavior
+        EtoolsPmpApp.Behaviors.PageUtils
       ],
 
       properties: {
@@ -234,6 +235,7 @@
         routeData: {
           type: Object
         },
+        agreementQueryParams: Object,
         agreement: {
           type: Object,
           observer: '_agreementChanged'

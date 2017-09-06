@@ -198,6 +198,7 @@
       <template is="dom-if" if="[[_showSidebarStatus(intervListActive, _subPageOrTabAttached)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
+                               active="[[!intervListActive]]"
                                intervention-id$="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
                                intervention-agreement-status="[[agreement.status]]"
@@ -219,9 +220,9 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior,
-        pmpBehaviors.PageUtilsBehavior,
-        pmpBehaviors.InterventionPermissionsBehavior,
-        pmpBehaviors.SaveInterventionBehavior
+        EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.InterventionPermissions,
+        EtoolsPmpApp.Behaviors.SaveIntervention
       ],
       properties: {
         interventionPage: {
@@ -307,6 +308,7 @@
         intervDetailsActive: {
           type: Boolean
         },
+        newInterventionActive: Boolean,
         routeDataNewInterv: {
           type: Object
         },

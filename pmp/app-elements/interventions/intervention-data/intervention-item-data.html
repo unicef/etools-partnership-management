@@ -1,7 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -22,9 +23,9 @@
 
         is: 'intervention-item-data',
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
 
@@ -97,7 +98,7 @@
             var self = this;
             // update the interventions list in dexieDB
             var mappedResponse = this._formatResponseDataForDexie(response.detail);
-            etoolsAppConfig.db.table('interventions').put(mappedResponse).then(function() {
+            EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
               self.fire('reload-list');
             });
           }

@@ -1,0 +1,147 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+
+<dom-module id="cluster-indicator">
+  <template strip-whitespace>
+    <style include="grid-layout-styles shared-styles">
+      paper-input,
+      paper-textarea,
+      paper-material {
+        width: 100%;
+      }
+      .input-label {
+        min-height: 24px;
+        padding-top: 4px;
+        min-width: 0px;
+      }
+      .input-label[empty]::after {
+        content: "—";
+      }
+    </style>
+
+    <div class="row-h flex-c">
+      <div class="col col-5">
+        <etools-single-selection-menu id$="responsePlanDropdw"
+                                   label="Response Plan"
+                                   placeholder="&#8212;"
+                                   selected-values="{{indicator.responsePlan}}"
+                                   options="[[hrps]]"
+                                   option-label="name"
+                                   option-value="id"
+                                   error-message="Please select Response Plan">
+         </etools-single-selection-menu>
+      </div>
+      <div class="col col-5">
+        <etools-single-selection-menu id$="clusterDropdw"
+                                   label="Cluster"
+                                   placeholder="&#8212;"
+                                   selected-values="{{indicator.clusterId}}"
+                                   options="[[clusters]]"
+                                   option-label="name"
+                                   option-value="id"
+                                   error-message="Please select Cluster"
+                                   on-iron-activate="selectedClusterIndicatorChanged">
+        </etools-single-selection-menu>
+      </div>
+    </div>
+    <div class="row-h flex-c">
+      <etools-single-selection-menu id$="clusterIndicatorsDropdw"
+                                   label="Indicator"
+                                   placeholder="&#8212;"
+                                   selected-values="{{indicator.clusterIndicatorId}}"
+                                   options="[[clusterIndicators]]"
+                                   option-label="name"
+                                   option-value="id"
+                                   error-message="Please select Indicator">
+      </etools-single-selection-menu>
+    </div>
+    <div class="row-h flex-c">
+      <div class="col col-2">
+        <div class="layout-vertical">
+          <paper-input label="Baseline"
+                      value="{{indicator.baseline}}"
+                      type="number"
+                      placeholder="&#8212;">
+          </paper-input>
+        </div>
+      </div>
+      <div class="col col-3">
+         <paper-input label="Target"
+                      value="{{indicator.target}}"
+                      type="number"
+                      placeholder="&#8212;">
+          </paper-input>
+      </div>
+    </div>
+    <div class="row-h flex-c">
+      <div class="layout-vertical">
+        <label class="paper-label">Means of Verification</label>
+        <label class="input-label" empty$="[[!indicator.means_of_verification]]">[[indicator.means_of_verification]]</label>
+      </div>
+    </div>
+    <div class="row-h flex-c">
+      <etools-multi-selection-menu id$="locationsDropdw"
+                                   label="Locations"
+                                   placeholder="&#8212;"
+                                   selected-values="{{indicator.locationIds}}"
+                                   options="[[locations]]"
+                                   option-label="name"
+                                   option-value="id"
+                                   error-message="Please select sector locations">
+      </etools-multi-selection-menu>
+    </div>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'cluster-indicator',
+
+        behaviors: [
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+        ],
+
+        properties: {
+          indicator: {
+            type: Object
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          clusterIndicators: {
+            type: Array,
+            //statePath: 'clusterIndicators'
+          },
+          hrps: {
+            type: Array,
+            //statePath: "hrps"
+          }
+        },
+
+        _selectedClusterIndicatorChanged: function(event) {
+          if (!event.detail.item.item) {
+            return;
+          }
+          var clusterIndDetails = event.detail.item.item;
+          this._fillInFields(clusterIndDetails);
+        },
+        _fillInFields: function(clusterIndDetails) {
+          this.indicator.means_of_verification = clusterIndDetails.means_of_verification;
+          this.indicator.lodationIds = clusterIndDetails.locationIds;
+        },
+
+    });
+  })();
+  </script>
+</dom-module>

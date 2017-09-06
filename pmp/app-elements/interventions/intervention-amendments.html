@@ -167,11 +167,11 @@
         is: 'intervention-amendments',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.RepeatableDataSetsBehavior,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
           etoolsBehaviors.DynamicDialogBehavior,
-          pmpBehaviors.DateBehavior,
-          pmpBehaviors.DropdownBehavior
+          EtoolsPmpApp.Behaviors.Date,
+          EtoolsPmpApp.Behaviors.Dropdown
         ],
 
         properties: {
