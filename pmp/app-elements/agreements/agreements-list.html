@@ -575,7 +575,8 @@
 
         // get partners by ids
         _getPartnersByIds: function(partnerIds) {
-          if (partnerIds instanceof Array && partnerIds.length) {
+          if (partnerIds instanceof Array && partnerIds.length &&
+              this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
             var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
               return partnerIds.indexOf(partner.value + '') > -1;
             });
