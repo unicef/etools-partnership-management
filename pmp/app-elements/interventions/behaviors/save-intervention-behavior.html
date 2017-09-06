@@ -26,7 +26,7 @@
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
         let interventionDetFields = ['agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-          'partner_focal_points', 'country_programme', 'sector_locations'];
+          'partner_focal_points', 'country_programme', 'sections'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           interventionDetFields.push('start', 'end');
         }

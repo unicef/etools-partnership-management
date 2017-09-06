@@ -25,6 +25,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="intervention-form/agreement-selector.html">
@@ -32,7 +33,6 @@
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
-<link rel="import" href="intervention-sector-locations.html">
 
 <dom-module id="intervention-details">
 
@@ -247,11 +247,30 @@
                                         error-message="Please select CP Structure">
           </etools-single-selection-menu>
       </div>
-        <intervention-sector-locations id="sectorLocations"
-                                        data-items="[[_sectorLocationData]]"
-                                        edit-mode$="[[intervention.permissions.edit.sector_locations]]"
-                                        required$="[[intervention.permissions.required.sector_locations]]">
-        </intervention-sector-locations>
+      <div class="row-h flex-c">
+        <etools-multi-selection-menu id="sections"
+                                     label="Section(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.sections}}"
+                                     options="[[sectors]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.sections]]"
+                                     required$="[[intervention.permissions.required.sections]]"
+                                     auto-validate
+                                     error-message="Please select a section">
+          </etools-multi-selection-menu>
+      </div>
+      <div class="row-h flex-c" hidden$="[[!intervention.clusterNames.length]]">
+        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+          TODO [[intervention.clusterNames]]
+        </etools-form-element-wrapper>
+      </div>
+      <div class="row-h flex-c" hidden$="[[!intervention.locationNames.length]]">
+        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
+          TODO [[intervention.locationNames]] + see all btn
+        </etools-form-element-wrapper>
+      </div>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
@@ -329,6 +348,10 @@
             type: Array,
             value: []
           },
+          sectors: {
+            type: Array,
+            statePath: 'sectors'
+          },
           offices: {
             type: Array,
             statePath: 'offices'
@@ -369,14 +392,6 @@
           _frsEndConsistencyWarning: {
             type: String,
             value: ''
-          },
-          _forceSectorLocationsRefresh: {
-            type: Boolean,
-            value: false
-          },
-          _sectorLocationData: {
-            type: Array,
-            value: []
           }
         },
 
@@ -385,7 +400,6 @@
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
-          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
@@ -502,7 +516,6 @@
         },
 
         _interventionChanged: function(intervention) {
-          console.log('intervention.edit.contingency_pd',intervention.permissions.edit.contingency_pd);
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
               this.set('selectedPartnerId', null);
@@ -595,43 +608,10 @@
           return options;
         },
 
-        prepareSectorLocations: function(intervention, forceSectorLocationsRefresh) {
-          if (forceSectorLocationsRefresh) {
-            this.set('_forceSectorLocationsRefresh', false);
-            return;
-          }
-          if (!intervention) {
-            intervention = this.intervention;
-          }
-
-          let sectorLocationData = [];
-          if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
-            sectorLocationData = intervention.sector_locations.map(function(sectorLocation) {
-              return {
-                id: sectorLocation.id,
-                sector: (sectorLocation.sector && typeof sectorLocation.sector === 'object')
-                    ? sectorLocation.sector.id
-                    : sectorLocation.sector,
-                locations: this._prepareLocationsForSave(sectorLocation.locations)
-              };
-            }.bind(this));
-          }
-          this.set('_sectorLocationData', sectorLocationData);
-        },
-
-        _prepareLocationsForSave: function(locations) {
-          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length === 0)) {
-            return [];
-          }
-          return locations.map(function(location) {
-            return (location && typeof location === 'object') ?  location.id : location;
-          });
-        },
-
         validate: function() {
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-            '#partnerFocalPts', '#cpStructure', '#sectorLocations',
+            '#partnerFocalPts', '#cpStructure', '#sections',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');

@@ -259,11 +259,6 @@
               withUpload = true;
               prepareMultipartData = true;
             }
-            if (Array.isArray(intervention.sector_locations)) {
-              intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
-                return elem.sector || (Array.isArray(elem.locations) && elem.locations.length);
-              });
-            }
             if (Array.isArray(intervention.result_links)) {
               intervention.result_links = intervention.result_links.filter(function(elem) {
                 return elem.cp_output || (Array.isArray(elem.ram_indicators) && elem.ram_indicators.length);
@@ -287,7 +282,8 @@
 
         _formatResponseDataForDexie: function(responseDetail) {
           var dexieObject = {};
-          dexieObject.sectors = [];
+          // TODO: check if it should be renamed (sectors are new sections field) and update PD list details row as well
+          dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
           dexieObject.cso_contribution = 0;
@@ -306,7 +302,6 @@
 
           this._updatePlannedBudgetInfo(dexieObject, responseDetail);
           this._updateOffices(dexieObject, responseDetail);
-          this._updateSectors(dexieObject, responseDetail);
           this._updateFrInfo(dexieObject, responseDetail.frs_details);
 
           responseDetail.result_links.forEach(function(elem) {
@@ -353,28 +348,10 @@
             return office.name;
           });
         },
-        _updateSectors: function(dexieObject, responseDetail) {
-          if (!responseDetail.sector_locations || !responseDetail.sector_locations.length) {
-            dexieObject.sectors = [];
-            return;
-          }
-          dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
-        },
         _getSelectedSectorsNames: function(responseDetail) {
-           var selectedSectorIds = responseDetail.sector_locations.map(function(sl) {
-            return (sl.sector && typeof sl.sector === 'object')
-                    ? sl.sector.id.toString()
-                    : sl.sector.toString();
-          });
-          var selectedSectors = this.sectors.filter(function(sector) {
-            return selectedSectorIds.indexOf(sector.id.toString()) > -1;
-          });
-          if (!selectedSectors) {
-            return [];
-          }
-          return selectedSectors.map(function(s) {
-            return s.name;
-          });
+          // TODO: get sectors/sections names for dexie
+          // responseDetail.sections ids will be used here
+          return [];
         }
 
       });
