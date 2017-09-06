@@ -1,0 +1,47 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior */
+  EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior = {
+
+    getAllPermissions: function() {
+     return {
+       defaultPermissions: [
+         'loggedInDefault',
+         'userInfoMenu',
+         'viewPartnerDetails',
+         'viewAgreementDetails',
+         'viewInterventionDetails',
+       ],
+       unicefUserPermissions: [
+         'editInterventionDetails'
+       ],
+       superPermissions: [
+         'loggedInDefault',
+         'userInfoMenu',
+         'interventionsMenu',
+         'statsMenu',
+         'viewPartnerDetails',
+         'editPartnerDetails',
+         'viewAgreementDetails',
+         'editAgreementDetails',
+         'viewInterventionDetails',
+         'editInterventionDetails'
+       ],
+       partnershipManagerPermissions: [
+         'partnershipManager',
+         'editPartnerDetails',
+         'editAgreementDetails',
+       ],
+       PMEPermissions: [
+         'PME'
+       ],
+       ICTPermissions: [
+         'ICT'
+       ]
+     };
+    }
+
+  };
+</script>

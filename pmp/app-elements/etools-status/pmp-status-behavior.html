@@ -1,8 +1,10 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  pmpBehaviors.statusBehaviorImpl = { // eslint-disable-line no-undef
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl = { // eslint-disable-line no-undef
     properties: {
       status: {
         type: String,
@@ -207,11 +209,10 @@
     },
   };
 
-  /** @polymerBehavior pmpBehaviors.statusBehavior */
-
-  pmpBehaviors.statusBehavior = [
-    etoolsBehaviors.DynamicDialogBehavior,
-    pmpBehaviors.statusBehaviorImpl,
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommon = [
     EtoolsLogsBehavior,
+    etoolsBehaviors.DynamicDialogBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl
   ];
 </script>
