@@ -12,7 +12,6 @@
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -179,8 +178,7 @@
         is: 'result-link-lower-results',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {

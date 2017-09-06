@@ -20,7 +20,7 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -225,7 +225,7 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -292,10 +292,10 @@
         is: 'intervention-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -350,8 +350,7 @@
             value: []
           },
           agreement: {
-            type: Object,
-            value: null
+            type: Object
           },
           interventionRequiredField: {
             type: Boolean,
@@ -409,8 +408,6 @@
             return true;
           }
           if (contingencyPd && intervention.status !== 'active') {
-            this.set('intervention.start', null);
-            this.set('intervention.end', null);
             return false;
           }
           return true;
