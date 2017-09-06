@@ -575,7 +575,8 @@
 
         // get partners by ids
         _getPartnersByIds: function(partnerIds) {
-          if (partnerIds instanceof Array && partnerIds.length) {
+          if (partnerIds instanceof Array && partnerIds.length &&
+              this.partnersDropdownData instanceof Array && this.partnersDropdownData.length) {
             var _selectedPartners = this.partnersDropdownData.filter(function(partner) {
               return partnerIds.indexOf(partner.value + '') > -1;
             });
@@ -603,21 +604,6 @@
             return new Date(date);
           }
         },
-
-//        _addDays: function(date, numDays) {
-//          if (date instanceof Date && date !== 'Invalid Date') {
-//            date.setDate(date.getDate() + numDays);
-//            return date;
-//          }
-//        },
-//
-//        _subtractDayString: function(dateString) {
-//          if (dateString && dateString.length) {
-//            return this._addDays(this._convertToDate(dateString), -1).toISOString();
-//          } else {
-//            return dateString;
-//          }
-//        },
 
         // verify date and prettify or not
         _checkAndShowAgreementDate: function(dateString) {

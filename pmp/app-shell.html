@@ -34,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
-<link rel="import" href="app-behaviors/notification-toasts-behavior.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -58,13 +58,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles app-drawer-styles shared-styles">
+    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style">
 
       :host {
         display: block;
@@ -76,39 +77,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       app-header {
         background-color: var(--header-bg-color);
-      }
-
-      .toast-dismiss-btn {
-        --paper-button: {
-          padding: 8px;
-          min-width: 16px;
-          margin: 0 -8px 0 24px;
-        };
-      }
-      .toast-dismiss-btn-general-style {
-        text-transform: uppercase;
-        color: var(--primary-color);
-      }
-      .toast-dismiss-btn-multi-line {
-        --paper-button: {
-          padding: 8px;
-          min-width: 16px;
-          margin: 16px -8px -8px 0;
-          @apply(--layout-self-end);
-        };
-      }
-      .toast-general-style {
-        max-width: 568px !important;
-        min-height: 40px;
-        max-height: 70vh !important;
-      }
-      .toast {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-      }
-      .toast-multi-line {
-        @apply(--layout-vertical);
-        text-align: justify;
       }
 
       .main-page {
