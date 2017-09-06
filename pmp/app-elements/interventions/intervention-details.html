@@ -239,7 +239,7 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -372,8 +372,7 @@
             value: []
           },
           agreement: {
-            type: Object,
-            value: null
+            type: Object
           },
           interventionRequiredField: {
             type: Boolean,
