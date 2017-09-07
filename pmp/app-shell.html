@@ -274,7 +274,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
-          if (!!!routePage) {
+          if (!routePage) {
             this.fire('update-main-path', {path: 'partners/list'});
             return;
           }
