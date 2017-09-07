@@ -67,7 +67,7 @@
             return {
               type: 'DELETE_PARTNER',
               partnerId: partnerId
-            }
+            };
           }
         },
         attached: function() {
@@ -162,7 +162,8 @@
           this.handleErrorResponse(response);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
-            this.handleErrResponseAdditionalCallback.bind(this, this.formatServerErrorAsText(this.tryGetResponseError(response)))();
+            this.handleErrResponseAdditionalCallback.bind(this,
+                  this.formatServerErrorAsText(this.tryGetResponseError(response)))();
           }
           this.handleErrResponseAdditionalCallback = null;
           this.handleSuccResponseAdditionalCallback = null;
