@@ -340,8 +340,7 @@
           },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes',
-            observer: '_initDocTypes'
+            statePath: 'interventionDocTypes'
           },
           pcaDocTypes: {
             type: Array,
@@ -599,6 +598,7 @@
          * When an agreement is selected then check it's type and update document types dropdown
          */
         _getCurrentDocTypes: function(agreement, documentTypes) {
+          this._initDocTypes(documentTypes);
           var options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
