@@ -129,7 +129,9 @@
           }
         },
 
-        observers: ['_frsDetailsChanged(intervention.frs_details)'],
+        observers: [
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash)'
+        ],
 
         ready: function() {
           this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
