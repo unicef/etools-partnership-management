@@ -59,7 +59,7 @@
       return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
     },
 
-    _activeFlagChanged: function(active) {
+    _activeFlagChanged: function(active) { 
       if (active) {
         this.debounce('etools-status-active-changed', this._forceScollPositionRecalculation.bind(this), 20);
       }
@@ -159,21 +159,17 @@
 
     _setAllActionsToHidden: function() {
       var possibleActions = this.possibleActions;
-      possibleActions.forEach(function(elem) {
-        elem.hidden = true;
-      });
-
-      this.set('possibleActions', possibleActions);
+      possibleActions.forEach(function(elem, index) {
+        this.set(['possibleActions', index, 'hidden'], true);
+      }.bind(this));
     },
 
     _setAllStatusesToHidden: function() {
       var possibleStatuses = this.possibleStatuses;
-      possibleStatuses.forEach(function(elem) {
-        elem.hidden = true;
-        elem.completed = false;
-      });
-
-      this.set('possibleStatuses', possibleStatuses);
+      possibleStatuses.forEach(function(elem, index) {
+        this.set(['possibleStatuses', index, 'hidden'], true);
+        this.set(['possibleStatuses', index, 'completed'], false);
+      }.bind(this));
     },
 
     _updateStatus: function(newStatus) {
