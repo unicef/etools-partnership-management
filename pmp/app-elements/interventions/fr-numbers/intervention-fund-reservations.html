@@ -130,7 +130,8 @@
         },
 
         observers: [
-          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash)'
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' + 
+            ' intervention.start, intervention.end)',
         ],
 
         ready: function() {
@@ -351,7 +352,6 @@
         _disableFrsCheckLoadingMsg: function() {
           this.fire('global-loading', {active: false, loadingSource: this._frsNrsLoadingMsgSource});
         }
-
       });
     })();
   </script>
