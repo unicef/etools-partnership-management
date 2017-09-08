@@ -14,6 +14,10 @@
         type: String,
         value: ''
       },
+      warningMessage: {
+        type: String,
+        value: ''
+      },
       editMode: {
         type: Boolean,
         value: true
@@ -143,11 +147,8 @@
 
     _showStatusChangeConfirmationDialog: function() {
       if (this.warningDialog) {
-        var warningMessage = 'Are you sure you want to change status from: <strong>\''
-            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
-
         if (this.statusChangeWarningDialogContent) {
-          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
           this.warningDialog.opened = true;
         } else {
           this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
@@ -178,6 +179,7 @@
       }
 
       this.set('newStatus', newStatus);
+      this._computeWarningMessage(newStatus);
       this._showStatusChangeConfirmationDialog();
     },
 
@@ -203,6 +205,14 @@
     _computeAvailableStatuses: function(status) {
       // children should overwrite this
     },
+    _computeWarningMessage: function(newStatus) {
+      // children might want to overwrite this
+      this.set('warningMessage', this._getDefaultWarningMessage());
+    },
+    _getDefaultWarningMessage: function() {
+      return 'You are changing the status from <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Are you sure?';
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */

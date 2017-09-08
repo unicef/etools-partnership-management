@@ -304,7 +304,25 @@
           }
           return true;
         },
-
+        _computeWarningMessage: function(newStatus) {
+          switch (newStatus) {
+            case 'terminated':
+              this.set('warningMessage', 'You are about to terminate this PD. Are you sure?'); 
+              break;
+            case 'active': 
+              this.set('warningMessage', 'You are about to activate this PD. Are you sure?'); 
+              break;
+            case 'suspended': 
+              this.set('warningMessage', 'You are about to suspend this PD. Are you sure?'); 
+              break;
+            case 'signed': 
+              this.set('warningMessage', 'You are about to unsuspend this PD. Are you sure?'); 
+              break;
+            default: 
+              this.set('warningMessage', this._getDefaultWarningMessage());
+              break;
+          }
+        },
         _setStatusTerminated: function() {
           this._updateStatus('terminated');
         },

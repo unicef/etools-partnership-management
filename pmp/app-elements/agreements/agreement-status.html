@@ -259,7 +259,22 @@
           }
           return true;
         },
-
+        _computeWarningMessage: function(newStatus) {
+          switch (newStatus) {
+            case 'terminated':
+              this.set('warningMessage', 'You are about to terminate this Agreement. Are you sure?'); 
+              break;
+            case 'suspended': 
+              this.set('warningMessage', 'You are about to suspend this Agreement. Are you sure?'); 
+              break;
+            case 'signed': 
+              this.set('warningMessage', 'You are about to unsuspend this Agreement. Are you sure?'); 
+              break;
+            default: 
+              this.set('warningMessage', this._getDefaultWarningMessage());
+              break;
+          }
+        },
         _setStatusTerminated: function() {
           this._updateStatus('terminated');
         },
