@@ -364,8 +364,7 @@
       },
 
       _handleCreatePartnerError: function(errorDetails) {
-        var toastMsg = (typeof errorDetails === 'object' && errorDetails.error) ? errorDetails.error : errorDetails;
-        this.fire('toast', {text: toastMsg, showCloseBtn: true});
+        this.fire('toast', {text: errorDetails, showCloseBtn: true});
       },
 
       _partnerChanged: function(partner) {
