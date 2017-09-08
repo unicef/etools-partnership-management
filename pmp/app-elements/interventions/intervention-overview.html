@@ -14,7 +14,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
 <link rel="import" href="fr-numbers/fund-reservations-display.html">
@@ -25,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -50,6 +50,7 @@
       }
 
       .sector-label {
+        display: inline-block;
         white-space: nowrap;
         height: 19px;
         text-align: center;
@@ -160,8 +161,8 @@
         is: 'intervention-overview',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -239,7 +240,7 @@
           var sectorIds = [];
           var sectors = [];
 
-          this.intervention.sector_locations.forEach(function(locLvl1) {
+          this.intervention.original_sectors.forEach(function(locLvl1) {
             locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });

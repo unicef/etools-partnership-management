@@ -15,7 +15,6 @@
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
@@ -195,10 +194,9 @@
         is: 'assessments-items',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.DateBehavior
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Date
         ],
 
         properties: {
@@ -219,8 +217,8 @@
           dateSubmitedErrorMessages: {
             type: Object,
             value: {
-              missing: 'Assessment type is required',
-              futureDate: 'The Date of Report cannot be in the future'
+              missing: 'Date of Assessment is required',
+              futureDate: 'Date of Assesment cannot be in the future'
             }
           }
         },

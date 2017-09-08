@@ -32,7 +32,7 @@
       Polymer({
         is: 'intervention-status',
         behaviors: [
-          pmpBehaviors.statusBehavior
+          EtoolsPmpApp.Behaviors.EtoolsStatusCommon
         ],
         properties: {
           interventionId: {
@@ -156,14 +156,10 @@
 
             for (let key in this.possibleActions) {
               let actionName = this.possibleActions[key].label;
-              let config = this.possibleActions[key];
 
               if (availableOptions.indexOf(actionName) > -1) {
-                config.hidden = false;
+                this.set(['possibleActions', key, 'hidden'], false);
               }
-
-              this.set(['possibleActions', key], null);
-              this.set(['possibleActions', key], config);
             }
         },
 
@@ -262,16 +258,14 @@
           }
 
           for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-            let workingStatus = this.possibleStatuses[key];
-            if (workingStatus.label === activeStatus) {
+            let workingStatusLabel = this.possibleStatuses[key].label;
+            if (workingStatusLabel === activeStatus) {
               completedFlag = true;
             }
-            if (availableStatuses.indexOf(workingStatus.label) > -1) {
-              workingStatus.hidden = false;
+            if (availableStatuses.indexOf(workingStatusLabel) > -1) {
+              this.set(['possibleStatuses', key, 'hidden'], false);
             }
-            workingStatus.completed = completedFlag;
-            this.set(['possibleStatuses', key], null);
-            this.set(['possibleStatuses', key], workingStatus);
+            this.set(['possibleStatuses', key, 'completed'], completedFlag);
           }
         },
 

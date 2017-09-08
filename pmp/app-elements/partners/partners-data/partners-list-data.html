@@ -2,8 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
-
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="partners-list-data">
@@ -28,9 +27,8 @@
         is: 'partners-list-data',
 
         behaviors: [
-          pmpBehaviors.DataElementBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig.globals
+          EtoolsPmpApp.Behaviors.DataElement,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
         properties: {
@@ -118,11 +116,6 @@
             this.dispatch('setPartnersDropdown', preparedData);
             this.dispatch('setCivilSocietyOrganizationPartners', civilSocietyOrganizationPartners);
           }
-        },
-
-        reloadData: function() {
-          this.$.ajax.set('url', null);
-          this.$.ajax.set('url', this.endpoint.url);
         },
 
         query: function(field, order, searchString, partnerType, csoType,

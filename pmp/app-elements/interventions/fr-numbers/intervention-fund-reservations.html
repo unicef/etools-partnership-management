@@ -8,7 +8,7 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 
@@ -94,10 +94,10 @@
 
         behaviors: [
           EtoolsLogsBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.ArrayHelperBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.ArrayHelper,
           etoolsBehaviors.DynamicDialogBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -122,10 +122,17 @@
             type: String,
             value: ''
           },
-          _frsConfirmationsDialogMessage: String
+          _frsConfirmationsDialogMessage: String,
+          _frsNrsLoadingMsgSource: {
+            type: String,
+            value: 'fr-nrs-check'
+          }
         },
 
-        observers: ['_frsDetailsChanged(intervention.frs_details)'],
+        observers: [
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' +
+            ' intervention.start, intervention.end)',
+        ],
 
         ready: function() {
           this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
@@ -208,7 +215,11 @@
         frNumbersUpdateHandler: function(e) {
           e.stopImmediatePropagation();
           let frNumbers = e.detail.frs;
-          this.fire('global-loading', {message: 'Checking FR Numbers updates...', active: true});
+          this.fire('global-loading', {
+            message: 'Checking FR Numbers updates...',
+            active: true,
+            loadingSource: this._frsNrsLoadingMsgSource
+          });
           if (frNumbers.length === 0) {
             this._handleEmptyFrsAfterUpdate();
             return;
@@ -225,12 +236,12 @@
           let currentInterventionFrs = this._getCurrentFrs();
           if (currentInterventionFrs.length === 0) {
             // there is no change on FR Numbers
-            this.fire('global-loading', {active: false});
+            this._disableFrsCheckLoadingMsg();
             return;
           }
           // all FR Numbers have been deleted
           this._triggerPdFrsUpdate({frs: []});
-          this.fire('global-loading', {active: false});
+          this._disableFrsCheckLoadingMsg();
         },
 
         /**
@@ -243,7 +254,7 @@
             this._triggerFrsDetailsRequest(frNumbers);
             return;
           } // else no changes have been made to FR Numbers
-          this.fire('global-loading', {active: false});
+          this._disableFrsCheckLoadingMsg();
         },
 
         // handle frs validations warning confirmation
@@ -272,17 +283,18 @@
         _frsDetailsSuccessHandler: function(e) {
           e.stopImmediatePropagation();
           let frsDetails = e.detail;
-          let warning = this.checkFrsConsistency(frsDetails, this.intervention);
+          let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
             this._frsUpdateWarningMessage(warning);
-            this.fire('global-loading', {active: false});
+            this._disableFrsCheckLoadingMsg();
             // show warning
             this.set('_lastFrsDetailsReceived', frsDetails);
             this._openFrNumbersAmountsValidationWarning();
             return;
           }
           // append FR numbers to intervention
+          this._disableFrsCheckLoadingMsg();
           this._triggerPdFrsUpdate(frsDetails);
         },
 
@@ -291,7 +303,7 @@
          */
         _frsDetailsErrorHandler: function(e) {
           e.stopImmediatePropagation();
-          this.fire('global-loading', {active: false});
+          this._disableFrsCheckLoadingMsg();
           let frs = this._lastFrsDetailsRequested.map(function(fr) {
             return {fr_number: fr};
           });
@@ -335,6 +347,10 @@
           this.debounce('init-frs-warning', function() {
             self.set('_frsConsistencyWarning', self.checkFrsConsistency(frsDetails, self.intervention));
           }, 10);
+        },
+
+        _disableFrsCheckLoadingMsg: function() {
+          this.fire('global-loading', {active: false, loadingSource: this._frsNrsLoadingMsgSource});
         }
       });
     })();
