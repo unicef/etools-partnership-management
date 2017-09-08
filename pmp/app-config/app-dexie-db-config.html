@@ -17,10 +17,19 @@
     agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
     interventions: 'id, number, partner_name, document_type, ' +
     'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
-    user: 'id'
+    user: 'id',
+
+    // etools-ajax v2.0.0 requirements
+    // TODO: refactor above dexie version collections
+    listsExpireMapTable: "&name, expire",
+    ajaxDefaultDataTable: "&cacheKey, data, expire",
   });
 
-  // this is needed by etools-ajax, it should be removed once etools-ajax v2 is released
+  // this is needed by etools-ajax
+  // TODO: remove once etools-ajax v2 is released
   var etoolsCustomDexieDb = EtoolsPmpApp.DexieDb;
+
+  // configure app dexie db to be used for caching
+  window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || EtoolsPmpApp.DexieDb;
 
 </script>
