@@ -46,6 +46,9 @@
       }
       return false;
     },
+    /**
+     * skipEmptyListCheck - skip required when in the process of adding a new FR number
+     */
     validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention,
                                              interventionIsFromWhere, skipEmptyListCheck) {
       if (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere)) {
