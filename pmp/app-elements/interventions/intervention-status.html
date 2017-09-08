@@ -307,16 +307,16 @@
         _computeWarningMessage: function(newStatus) {
           switch (newStatus) {
             case 'terminated':
-              this.set('warningMessage', 'You are about to terminate this PD. Are you sure?'); 
+              this.set('warningMessage', 'You are about to terminate this PD. Do you want to continue?'); 
               break;
             case 'active': 
-              this.set('warningMessage', 'You are about to activate this PD. Are you sure?'); 
+              this.set('warningMessage', 'You are about to activate this PD. Do you want to continue?'); 
               break;
             case 'suspended': 
-              this.set('warningMessage', 'You are about to suspend this PD. Are you sure?'); 
+              this.set('warningMessage', 'You are about to suspend this PD. Do you want to continue?'); 
               break;
             case 'signed': 
-              this.set('warningMessage', 'You are about to unsuspend this PD. Are you sure?'); 
+              this.set('warningMessage', 'You are about to unsuspend this PD. Do you want to continue?'); 
               break;
             default: 
               this.set('warningMessage', this._getDefaultWarningMessage());
