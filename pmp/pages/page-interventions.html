@@ -490,6 +490,9 @@
               self.set('serverErrors', []);
               self.set('activeTab', 'details');
             }
+            if (page === 'details') {
+              self.set('activeTab', 'details');
+            }
             self.set('interventionPage', page);
             if (self._redirectToNewIntervPageInProgress) {
               self.set('_redirectToNewIntervPageInProgress', false);
