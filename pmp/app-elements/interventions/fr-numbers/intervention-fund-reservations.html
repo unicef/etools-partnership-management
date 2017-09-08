@@ -130,7 +130,7 @@
         },
 
         observers: [
-          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' + 
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' +
             ' intervention.start, intervention.end)',
         ],
 
@@ -283,7 +283,7 @@
         _frsDetailsSuccessHandler: function(e) {
           e.stopImmediatePropagation();
           let frsDetails = e.detail;
-          let warning = this.checkFrsConsistency(frsDetails, this.intervention);
+          let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
             this._frsUpdateWarningMessage(warning);
