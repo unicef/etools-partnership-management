@@ -1,5 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
@@ -25,7 +27,9 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior
         ],
         properties: {
 
@@ -86,7 +90,7 @@
         _handleResponse: function(response) {
           response.detail.original_sectors = JSON.parse(JSON.stringify(response.detail.sector_locations));
           this._setIntervention(response.detail);
-          
+
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
             this.handleResponseAdditionalCallback.bind(this, response.detail)();
@@ -94,16 +98,51 @@
             this.set('handleResponseAdditionalCallback', null);
           }
 
+          var self = this;
           if (this.$.ajax.get('method') !== 'GET') {
-            var self = this;
             // update the interventions list in dexieDB
             var mappedResponse = this._formatResponseDataForDexie(response.detail);
             EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
               self.fire('reload-list');
             });
+
+            if (response.detail.document_type && response.detail.document_type === 'SSFA' &&
+                response.detail.status !== 'draft') {
+              this.sendRequest({
+                endpoint: this.getEndpoint('agreementDetails', {id: response.detail.agreement})
+                }).then(function(resp) {
+                  self.updateAgreeementStatus.bind(self, resp)();
+                });
+            }
           }
         },
-
+        updateAgreeementStatus: function(agreement) {
+           var minimalAgreement = this._getMinimalAgreementData(agreement);
+           EtoolsPmpApp.DexieDb.table('agreements').put(minimalAgreement);
+        },
+        _getMinimalAgreementData: function(detail) {
+          var minimalAgrData = {
+            agreement_number: '',
+            agreement_type: '',
+            end: null,
+            id: null,
+            partner: null,
+            partner_name: null,
+            signed_by: null,
+            signed_by_partner_date: null,
+            signed_by_unicef_date: null,
+            start: null,
+            status: ''
+          };
+          for (var propName in minimalAgrData) {
+            if (!detail.hasOwnProperty(propName)) {
+              this.logWarn('Mapping property not found');
+            } else {
+              minimalAgrData[propName] = detail[propName];
+            }
+          }
+          return minimalAgrData;
+        },
         /**
          * Set the method of the request and the body.
          * Used for unsafe requests (PATCH/POST).
