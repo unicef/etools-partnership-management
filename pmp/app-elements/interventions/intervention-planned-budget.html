@@ -282,7 +282,7 @@
         },
 
         observers: [
-          '_checkFrsConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)',
+          '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
@@ -391,7 +391,7 @@
           }
         },
 
-        _checkFrsConsistency: function(frsTotalAmt, unicefCash) {
+        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash) {
           let unicefCashField = this.$$('#unicefCashUsd');
           if (this.emptyFrsList(this.intervention, 'interventionDetails')) {
             this.set('_frsConsistencyWarning', '');
