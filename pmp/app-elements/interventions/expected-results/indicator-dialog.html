@@ -19,6 +19,7 @@
 <link rel="import" href="../../../../styles/page-layout-styles.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
+<link rel="import" href="cluster-indicator-disaggregations.html">
 <link rel="import" href="cluster-indicator.html">
 <link rel="import" href="non-cluster-indicator.html">
 
@@ -53,7 +54,7 @@
         margin: 16px 24px;
         margin-bottom: 40px;
         border : solid 1px var(--dark-divider-color);
-        overflow-x: auto;
+        overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
       etools-dialog {
         --paper-dialog: {
@@ -87,7 +88,7 @@
                       attr-for-selected="name"
                       fallback-selection="details">
           <div name="details">
-            <div class="row-h flex-c" hidden>
+            <div class="row-h flex-c" >
               <div class="col col-4">
                 <etools-single-selection-menu id$="sectionDropdw"
                                               label="Section"
@@ -99,11 +100,11 @@
                 </etools-single-selection-menu>
               </div>
             </div>
-            <div class="row-h" hidden>
+            <div class="row-h" >
               <paper-toggle-button checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
             </div>
             <div class="indicator-content">
-              <div id="oldLayout">
+              <!-- <div id="oldLayout">
                 <div class="row-v flex-c">
                   <label class="paper-label">Type </label>
                   <div class="layout-horizontal">
@@ -191,13 +192,13 @@
                                     placeholder="&#8212;">
                     </paper-textarea>
                 </div>
-              </div>
-              <div id="newLayout" hidden>
+              </div> -->
+              <div id="newLayout" >
                 <template is="dom-if" if="[[!indicator.isCluster]]">
                   <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
                 </template>
                 <template is="dom-if" if="[[indicator.isCluster]]">
-                <cluster-indicator indicator="{{indicator}}"></cluster-indicator>
+                <cluster-indicator indicator="{{indicator}}" prp-cluster-indicator="{{prpClusterIndicator}}"></cluster-indicator>
                 </template>
               </div>
             </div>
@@ -205,9 +206,14 @@
           <div class="row-h flex-c" name="disaggregations">
               <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
 
-              <indicator-dissaggregations data-items="{{disaggregations}}"
-                                          on-disaggregation-change="_centerDialog">
+              <indicator-dissaggregations hidden="[[indicator.isCluster]]"
+                data-items="{{disaggregations}}"
+                on-disaggregation-change="_centerDialog">
               </indicator-dissaggregations>
+
+              <cluster-indicator-disaggregations hidden="[[!indicator.isCluster]]"
+              disaggregations="{{disaggregations}}">
+              </cluster-indicator-disaggregations>
           </div>
         </iron-pages>
       </div>
@@ -278,12 +284,24 @@
             type: Array,
             statePath: 'sectors'
           },
+          prpClusterIndicator: {
+            type: Object,
+            observer: '_prpClusterIndicatorChanged'
+          }
         },
         observers: [
           '_indicatorDataChange(indicator.*)',
           '_updateIndicatorValsAtUnitChange(unit.*)',
           '_setDisaggregationsCount(disaggregations.length)'
         ],
+        _prpClusterIndicatorChanged: function(prpClusterIndicator) {
+          if (!prpClusterIndicator || !prpClusterIndicator.disaggregations
+           || !prpClusterIndicator.disaggregations.length) {
+            this.disaggregations = [];
+          } else {
+            this.disaggregations = prpClusterIndicator.disaggregations;
+          }
+        },
         _setDisaggregationsCount: function(length) {
           this.disaggregationsCount = length;
         },

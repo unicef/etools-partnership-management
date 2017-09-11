@@ -16,14 +16,7 @@
       paper-material {
         width: 100%;
       }
-      .input-label {
-        min-height: 24px;
-        padding-top: 4px;
-        min-width: 0px;
-      }
-      .input-label[empty]::after {
-        content: "—";
-      }
+
     </style>
 
     <div class="row-h flex-c">
@@ -46,8 +39,7 @@
                                    options="[[clusters]]"
                                    option-label="name"
                                    option-value="id"
-                                   error-message="Please select Cluster"
-                                   on-iron-activate="selectedClusterIndicatorChanged">
+                                   error-message="Please select Cluster">
         </etools-single-selection-menu>
       </div>
     </div>
@@ -56,7 +48,8 @@
                                    label="Indicator"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.clusterIndicatorId}}"
-                                   options="[[clusterIndicators]]"
+                                   selected-item="{{prpClusterIndicator}}"
+                                   options="[[prpClusterIndicators]]"
                                    option-label="name"
                                    option-value="id"
                                    error-message="Please select Indicator">
@@ -119,26 +112,45 @@
             type: Array,
             statePath: 'locations'
           },
-          clusterIndicators: {
+          prpClusterIndicators: {
             type: Array,
+            value: function() {
+              return [
+                {
+                  id: 1,
+                  name: 'Test PRP indicator',
+                  means_of_verification: "means of verif 1",
+                  locationIds: [1,2,3],
+                  disaggregations: [{
+                    id: 1,
+                    name: 'Age C',
+                    groups: ['1-20', '21-30']
+                  }]
+                }
+              ];
+            }
             //statePath: 'clusterIndicators'
           },
           hrps: {
             type: Array,
             //statePath: "hrps"
+          },
+          prpClusterIndicator: {
+            type: Object,
+            notify: true,
+            observer: '_selectedPrpClusterIndicatorChanged'
           }
         },
 
-        _selectedClusterIndicatorChanged: function(event) {
-          if (!event.detail.item.item) {
+        _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
+          if (!prpClusterIndic) {
             return;
           }
-          var clusterIndDetails = event.detail.item.item;
-          this._fillInFields(clusterIndDetails);
+          this._fillInFields(prpClusterIndic);
         },
-        _fillInFields: function(clusterIndDetails) {
-          this.indicator.means_of_verification = clusterIndDetails.means_of_verification;
-          this.indicator.lodationIds = clusterIndDetails.locationIds;
+        _fillInFields: function(prpClusterIndic) {
+          this.indicator.means_of_verification = prpClusterIndic.means_of_verification;
+          this.indicator.lodationIds = prpClusterIndic.locationIds;
         },
 
     });
