@@ -12,12 +12,12 @@
   EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
   EtoolsPmpApp.DexieDb.version(1).stores({
     collectionsList: 'name, expire',
-    countries: 'id',
+    countries: 'id', // TODO: might not be needed, check & remove
     partners: 'id, name, rating, vendor_number',
     agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
     interventions: 'id, number, partner_name, document_type, ' +
     'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
-    user: 'id',
+    user: 'id', // TODO: might not be needed, check & remove
 
     // etools-ajax v2.0.0 requirements
     // TODO: refactor above dexie version collections
@@ -31,5 +31,4 @@
 
   // configure app dexie db to be used for caching
   window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || EtoolsPmpApp.DexieDb;
-
 </script>

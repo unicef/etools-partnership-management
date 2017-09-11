@@ -1,0 +1,36 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.LocationsDataImpl */
+    EtoolsPmpApp.Behaviors.LocationsDataImpl = {
+
+      actions: {
+        setLocations: function(locationsData) {
+          return {
+            type: 'SET_LOCATIONS',
+            locations: locationsData
+          };
+        }
+      },
+
+      _handleLocationsResponse: function(response) {
+        if (response.detail && response.detail.length > 0) {
+          // set locations values
+          this.dispatch('setLocations', response.detail);
+        }
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.LocationsData */
+    EtoolsPmpApp.Behaviors.LocationsData = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.LocationsDataImpl
+    ];
+  })();
+</script>

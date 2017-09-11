@@ -1,0 +1,61 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DropdownsPmpDataImpl */
+    EtoolsPmpApp.Behaviors.DropdownsPmpDataImpl = {
+
+      actions: {
+        setFileTypes: function(fileTypesData) {
+          return {
+            type: 'SET_FILE_TYPES',
+            fileTypes: fileTypesData
+          };
+        },
+        setCpOutputs: function(cpOutputsData) {
+          return {
+            type: 'SET_CP_OUTPUTS',
+            cpOutputs: cpOutputsData
+          };
+        },
+        setSignedByUnicefUsers: function(signedByUnicefUsersData) {
+          return {
+            type: 'SET_SIGNED_BY_UNICEF_USERS',
+            signedByUnicefUsers: signedByUnicefUsersData
+          };
+        }
+      },
+
+      _handleDropdownsPmpResponse: function(response) {
+        if (response.detail) {
+          // set file types value
+          if (Array.isArray(response.detail.file_types) && response.detail.file_types.length > 0) {
+            this.dispatch('setFileTypes', response.detail.file_types);
+          }
+
+          // set CP Outputs values
+          if (Array.isArray(response.detail.cp_outputs) && response.detail.cp_outputs.length > 0) {
+            this.dispatch('setCpOutputs', response.detail.cp_outputs);
+          }
+          // set Signed By UNICEF Users
+          if (Array.isArray(response.detail.signed_by_unicef_users)
+              && response.detail.signed_by_unicef_users.length > 0) {
+            this.dispatch('setSignedByUnicefUsers', response.detail.signed_by_unicef_users);
+          }
+        }
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DropdownsPmpData */
+    EtoolsPmpApp.Behaviors.DropdownsPmpData = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.DropdownsPmpDataImpl
+    ];
+  })();
+</script>
+

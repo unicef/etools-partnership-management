@@ -1,19 +1,37 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
 
-<link rel="import" href="redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="behaviors/country-programmes-data.html">
+<link rel="import" href="behaviors/dropdowns-pmp-data.html">
+<link rel="import" href="behaviors/dropdowns-static-data.html">
+<link rel="import" href="behaviors/locations-data.html">
+<link rel="import" href="behaviors/offices-data.html">
+<link rel="import" href="behaviors/sections-data.html">
+<link rel="import" href="behaviors/sectors-data.html">
+<link rel="import" href="behaviors/unicef-users-data.html">
+<link rel="import" href="behaviors/user-country-data.html">
 
 <dom-module id="static-common-data">
   <script>
     Polymer({
       is: 'static-common-data',
       behaviors: [
+        EtoolsLogsBehavior,
         EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.Endpoints,
-        EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+        EtoolsPmpApp.Behaviors.CountryProgrammesData,
+        EtoolsPmpApp.Behaviors.DropdownsPmpData,
+        EtoolsPmpApp.Behaviors.DropdownsStaticData,
+        EtoolsPmpApp.Behaviors.LocationsData,
+        EtoolsPmpApp.Behaviors.OfficesData,
+        EtoolsPmpApp.Behaviors.SectionsData,
+        EtoolsPmpApp.Behaviors.SectorsData,
+        EtoolsPmpApp.Behaviors.UnicefUsersData,
+        EtoolsPmpApp.Behaviors.UserCountryData
       ],
       properties: {
         dataEndpointNames: {
@@ -22,159 +40,28 @@
             'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
         }
       },
-      actions: {
-        setCountryProgrammesData: function(cpData) {
-          return {
-            type: 'SET_CP_DATA',
-            countryProgrammes: cpData
-          };
-        },
-        setFileTypes: function(fileTypesData) {
-          return {
-            type: 'SET_FILE_TYPES',
-            fileTypes: fileTypesData
-          };
-        },
-        setCpOutputs: function(cpOutputsData) {
-          return {
-            type: 'SET_CP_OUTPUTS',
-            cpOutputs: cpOutputsData
-          };
-        },
-        setSignedByUnicefUsers: function(signedByUnicefUsersData) {
-          return {
-            type: 'SET_SIGNED_BY_UNICEF_USERS',
-            signedByUnicefUsers: signedByUnicefUsersData
-          };
-        },
-        setInterventionDocTypes: function(docTypes) {
-          return {
-            type: 'SET_INTERVENTION_DOC_TYPES',
-            interventionDocTypes: docTypes
-          };
-        },
-        setInterventionStatuses: function(statuses) {
-          return {
-            type: 'SET_INTERVENTION_STATUSES',
-            statuses: statuses
-          };
-        },
-        setCurrencies: function(currenciesData) {
-          return {
-            type: 'SET_CURRENCIES',
-            currencies: currenciesData
-          };
-        },
-        setAgencyChoices: function(agencyChoices) {
-          return {
-            type: 'SET_AGENCY_CHOICHES',
-            agencyChoices: agencyChoices
-          };
-        },
-        setAgreementAmendmentTypes: function(agreementAmmendmentTypes) {
-          return {
-            type: 'SET_AGREEMENT_AMENDMENT_TYPES',
-            agreementAmendmentTypes: agreementAmmendmentTypes
-          };
-        },
-        setCsoTypes: function(csoTypes) {
-          return {
-            type: 'SET_CSO_TYPES',
-            csoTypes: csoTypes
-          };
-        },
-        setPartnerTypes: function(partnerTypes) {
-          return {
-            type: 'SET_PARTNER_TYPES',
-            partnerTypes: partnerTypes
-          };
-        },
-        setAssessmentTypes: function(assessmentTypes) {
-          return {
-            type: 'SET_ASSESSMENT_TYPES',
-            assessmentTypes: assessmentTypes
-          };
-        },
-        setInterventionAmendmentTypes: function(interventionAmendmentTypes) {
-          return {
-            type: 'SET_INTERVENTION_AMENDMENT_TYPES',
-            interventionAmendmentTypes: interventionAmendmentTypes
-          };
-        },
-        setAgreementTypes: function(agreementTypesData) {
-          return {
-            type: 'SET_AGREEMENT_TYPES',
-            agreementTypes: agreementTypesData
-          };
-        },
-        setAgreementStatuses: function(agreementStatusesData) {
-          return {
-            type: 'SET_AGREEMENT_STATUSES',
-            statuses: agreementStatusesData
-          };
-        },
-        setLocations: function(locationsData) {
-          return {
-            type: 'SET_LOCATIONS',
-            locations: locationsData
-          };
-        },
-        setOfficesData: function(officesData) {
-          return {
-            type: 'SET_OFFICES',
-            offices: officesData
-          };
-        },
-        setSectionsData: function(sectionsData) {
-          return {
-            type: 'SET_SECTIONS',
-            sections: sectionsData
-          };
-        },
-        setSectors: function(sectorsData) {
-          return {
-            type: 'SET_SECTORS',
-            sectors: sectorsData
-          };
-        },
-        setUsersData: function(usersData) {
-          return {
-            type: 'SET_UNICEF_USERS_DATA',
-            unicefUsersData: usersData
-          };
-        },
-        setUserCountryData: function(countryData) {
-          return {
-            type: 'SET_USER_COUNTRY_DATA',
-            countryData: countryData
-          };
-        }
-      },
 
       ready: function() {
         let currentEndpoint;
         let self = this;
         this.dataEndpointNames.forEach(function(endpointName) {
-          currentEndpoint = this.getEndpoint(endpointName);
+          currentEndpoint = self.getEndpoint(endpointName);
           self._makeRequest(currentEndpoint, self._getEndpointSuccessHandler(endpointName), self._errorHandler);
         });
       },
-
 
       _makeRequest: function(endpoint, successHandler, errorHandler) {
         this.sendRequest({
           endpoint: endpoint
         }).then(function(resp) {
-          console.log(resp);
           successHandler.bind(this, resp)();
         }).catch(function(error) {
-          console.log(error);
-          errorHandler.bind(this)();
+          errorHandler.bind(this, error)();
         });
       },
 
       _errorHandler: function(err) {
-        console.error(err);
+        this.logError('Error getting static data', 'static-common-data', err);
       },
 
       _getEndpointSuccessHandler: function(endpointName) {
@@ -198,44 +85,7 @@
           case 'userCountryDetails':
             return this._handleUserCountryDataResponse;
         }
-      },
-
-      _handleCountryProgrammesResponse: function(response) {
-
-      },
-
-      _handleDropdownsPmpResponse: function(response) {
-
-      },
-
-      _handleDropdownsStaticResponse: function(response) {
-
-      },
-
-      _handleLocationsResponse: function(response) {
-
-      },
-
-      _handleOfficesResponse: function(response) {
-
-      },
-
-      _handleSectionsResponse: function(response) {
-
-      },
-
-      _handleSectorsResponse: function(response) {
-
-      },
-
-      _handleUnicefUsersResponse: function(response) {
-
-      },
-
-      _handleUserCountryDataResponse: function(response) {
-
       }
-
 
     });
   </script>
