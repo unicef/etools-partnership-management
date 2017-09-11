@@ -106,15 +106,13 @@
               self.fire('reload-list');
             });
 
-
             if (response.detail.document_type && response.detail.document_type === 'SSFA' &&
                 response.detail.status !== 'draft') {
-
               this.sendRequest({
                 endpoint: this.getEndpoint('agreementDetails', {id: response.detail.agreement})
                 }).then(function(resp) {
                   self.updateAgreeementStatus.bind(self, resp)();
-                })
+                });
             }
           }
         },
