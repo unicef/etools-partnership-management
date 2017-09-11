@@ -25,13 +25,13 @@
       } else {
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
-        let primitveDetailsFields = ['agreement', 'document_type', 'title', 'country_programme'];
-        let objectDetailsFields = ['unicef_focal_points', 'partner_focal_points', 'sector_locations', 'offices'];
+        let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
+        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sector_locations', 'offices'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
-          primitveDetailsFields.push('start', 'end');
+          detailsPrimitiveFields.push('start', 'end');
         }
-        interventionDetailsAreValid = this._validateInterventionPrimitiveFields(primitveDetailsFields) &&
-            this._validateInterventionObjectFields(objectDetailsFields);
+        interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+            this._validateInterventionObjectFields(detailsObjFields);
 
         this.set('_forceDetUiValidationOnAttach', true);
       }
@@ -45,10 +45,9 @@
         // validate current data that belongs to this tab against permissions
         let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
           'unicef_signatory', 'signed_by_unicef_date'];
-        let reviewAndSignObjectFields = ['signed_pd_document'];
-          console.log(this.intervention.signed_pd_document);
+        let reviewAndSignObjFields = ['signed_pd_document'];
         reviewAndSignIsValid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
-          this._validateInterventionObjectFields(objectDetailsFields);
+          this._validateInterventionObjectFields(reviewAndSignObjFields);
         this.set('_forceReviewUiValidationOnAttach', true);
       }
 
