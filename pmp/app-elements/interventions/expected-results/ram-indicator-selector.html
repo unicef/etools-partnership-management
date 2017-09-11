@@ -3,14 +3,16 @@
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../intervention-data/cp-output-ram-indicators-data.html">
 
 <dom-module id="ram-indicator-selector">
   <template>
@@ -26,10 +28,6 @@
         padding: 15px 0;
       }
     </style>
-
-    <cp-output-ram-indicators-data ram-indicators="{{cpIndicators}}"
-                                   cp-output-id="[[cpOutputId]]">
-    </cp-output-ram-indicators-data>
 
     <div class="row-h flex-c">
       <div class="col col-4">
@@ -71,6 +69,9 @@
       Polymer({
         is: 'ram-indicator-selector',
         behaviors: [
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions
         ],
@@ -89,7 +90,8 @@
           },
           cpOutputId: {
             type: Number,
-            notify: true
+            notify: true,
+            observer: '_cpOutputIdChanged'
           },
           cpIndicators: {
             type: Array,
@@ -127,6 +129,10 @@
             value: {
               dropdown: true
             }
+          },
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'cpo-ram-ind'
           }
         },
 
@@ -137,6 +143,33 @@
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
+
+        _cpOutputIdChanged: function(newId) {
+          if (newId) {
+            this.fire('global-loading', {
+              message: 'Loading ram indicators data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
+
+            let ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: newId});
+            let self = this;
+            this.sendRequest({
+              endpoint: ramIndicatorsEndpoint
+            }).then(function(response) {
+              self._handleRamIndicatorsReqResponse(response);
+            }).catch(function(error) {
+              // TODO: refactor ajax error handler, error response has changed
+              self.handleErrorResponse(error.response);
+            });
+          }
+        },
+
+        _handleRamIndicatorsReqResponse: function(response) {
+          this.set('cpIndicators', response);
+          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+        },
+
         _selectedCpIndicatorsIdsChanged: function(ids) {
           if (ids instanceof Array && ids.length && this.firstLoadCpIndicatorsUse) {
             // prepare cp indicators id to be set as selected, used only once, at element init

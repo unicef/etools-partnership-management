@@ -3,7 +3,6 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
@@ -76,9 +75,6 @@
       /* amendment template download section styles end */
 
     </style>
-    <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
 
     <!-- include required and not future date validator -->
     <required-and-not-future-date-validator></required-and-not-future-date-validator>
@@ -106,8 +102,6 @@
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
                                  icon="cancel"></paper-icon-button>
-              <!-- TODO: can we delete any amendment any time?
-              disabled="[[!_canBeRemoved(index, editMode)]]" -->
             </div>
           </div>
           <div class="item-content">
@@ -274,22 +268,6 @@
           }
           return false;
         },
-        /**
-         * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        // TODO: this might not be needed; clarify when agreement amendments can be removed !!!
-        // _canBeRemoved: function(index, editMode) {
-        //   if (!editMode) {
-        //     return false;
-        //   }
-        //   var amendment = this.dataItems[index];
-        //   var amendmentId = parseInt(amendment.id, 10);
-        //   if (amendment && isNaN(amendmentId) === false && amendmentId > 0 && amendment.signed_amendment) {
-        //     // amendment already saved (has an id assigned)
-        //     return false;
-        //   }
-        //   return true;
-        // },
 
         /**
          * If the amendment can be removed, the left border and top badge needs to have a different style.
