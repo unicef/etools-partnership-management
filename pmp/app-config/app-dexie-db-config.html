@@ -11,14 +11,13 @@
 
   EtoolsPmpApp.DexieDb = new Dexie('pmpApp');
   EtoolsPmpApp.DexieDb.version(1).stores({
-    collectionsList: 'name, expire',
+    collectionsList: 'name, expire', // TODO: to be removed after etools-ajax v1 is removed from all elements
     partners: 'id, name, rating, vendor_number',
     agreements: 'id, agreement_number, agreement_type, partner_name, start, end, status',
     interventions: 'id, number, partner_name, document_type, ' +
     'cp_outputs, status, title, start, end, sectors, unicef_focal_points, offices',
 
     // etools-ajax v2.0.0 requirements
-    // TODO: refactor above dexie version collections
     listsExpireMapTable: "&name, expire",
     ajaxDefaultDataTable: "&cacheKey, data, expire",
   });

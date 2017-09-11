@@ -3,7 +3,8 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 
 <dom-module id="countries-dropdown">
@@ -68,10 +69,6 @@
         margin-right: 16px;
       }
     </style>
-    <etools-ajax id="ajax"
-                 method="POST"
-                 on-success="_handleResponse"
-                 on-fail="_handleError"></etools-ajax>
 
     <template is="dom-if" if="[[countrySelectorVisible]]">
 
@@ -102,6 +99,8 @@
       is: 'countries-dropdown',
 
       behaviors: [
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.Endpoints,
         etoolsBehaviors.EtoolsRefreshBehavior
       ],
@@ -121,14 +120,30 @@
       _countrySelected: function(e) {
         if (e.detail.item.countryId !== this.current) {
           //send post request to change_coutry endpoint
-          this.$.ajax.body = {country: e.detail.item.countryId};
-          this.$.ajax.endpoint = this.getEndpoint('changeCountry');
+          let selectedCountryId = e.detail.item.countryId;
+          this._triggerCountryChangeRequest(selectedCountryId);
         }
-        // this.set('country', this.$.repeat.itemForElement(e.detail.item));
       },
-      _handleResponse: function(res) {
-        this.fire('global-loading', {message: 'Please wait while country is changing...', active: true});
+      _triggerCountryChangeRequest: function(countryId) {
+        let self = this;
+        this.sendRequest({
+          endpoint: this.getEndpoint('changeCountry'),
+          method: 'POST',
+          body: {country: countryId}
+        }).then(function(resp) {
+          self._handleResponse();
+        }).catch(function(error) {
+          self._handleError(error);
+        });
+      },
+      _handleResponse: function() {
+        this.fire('global-loading', {
+          message: 'Please wait while country is changing...',
+          active: true,
+          loadingSource: 'country-change'
+        });
         this.fire('update-main-path', {path: ''});
+        // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
         this.refresh();
       },
       _countrySelectorUpdate: function(countries) {
@@ -136,12 +151,12 @@
           this.countrySelectorVisible = true;
         }
       },
-      _handleError: function(rsp, err) {
-        console.log(rsp);
-        console.log(err);
-        console.log('TODO: this should be a larger alert.');
+      _handleError: function(error) {
+        this.logError('Country change failed!', 'countries-dropdown', error);
+        // TODO: this should be a larger alert.
         this.$.countriesListbox.selected = this.current;
         this.fire('toast', {text: 'Something went wrong changing your workspace. Please try again'});
+        this.fire('global-loading', {active: false, loadingSource: 'country-change'});
       }
 
     });
