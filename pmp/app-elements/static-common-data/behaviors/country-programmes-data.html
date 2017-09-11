@@ -1,4 +1,5 @@
 <link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 <script>
   (function() {
     'use strict';
@@ -18,9 +19,9 @@
       },
 
       _handleCountryProgrammesResponse: function(response) {
-        if (response.detail && response.detail.length > 0) {
+        if (!_.isEmpty(response)) {
           // set setUsersData values
-          this.dispatch('setCountryProgrammesData', response.detail);
+          this.dispatch('setCountryProgrammesData', response);
         }
       }
 

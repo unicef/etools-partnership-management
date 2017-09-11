@@ -1,5 +1,5 @@
 <link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
-
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 <script>
   (function() {
     'use strict';
@@ -19,9 +19,9 @@
       },
 
       _handleUserCountryDataResponse: function(response) {
-        if (response.detail && response.detail.length > 0) {
+        if (!_.isEmpty(response)) {
           // set user country data
-          this.dispatch('setUserCountryData', response.detail[0]);
+          this.dispatch('setUserCountryData', response[0]);
         }
       }
 

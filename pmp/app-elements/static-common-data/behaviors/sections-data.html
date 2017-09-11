@@ -20,10 +20,9 @@
       },
 
       _handleSectionsResponse: function(response) {
-        let values = _.get(response, 'detail');
-        if (!_.isEmpty(values)) {
+        if (!_.isEmpty(response)) {
           // set offices values
-          this.dispatch('setSectionsData', values);
+          this.dispatch('setSectionsData', response);
         }
       }
 

@@ -51,12 +51,13 @@
       },
 
       _makeRequest: function(endpoint, successHandler, errorHandler) {
+        let self = this;
         this.sendRequest({
           endpoint: endpoint
         }).then(function(resp) {
-          successHandler.bind(this, resp)();
+          successHandler.bind(self, resp)();
         }).catch(function(error) {
-          errorHandler.bind(this, error)();
+          errorHandler.bind(self, error)();
         });
       },
 
