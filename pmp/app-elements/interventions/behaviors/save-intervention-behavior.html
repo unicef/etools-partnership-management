@@ -99,7 +99,7 @@
       return valid;
     },
     _primtiveFieldIsEmpty: function(fieldVal) {
-      return fieldVal === null || fieldVal === undefined;
+      return fieldVal === null || fieldVal === undefined || fieldVal === '';
     },
 
     _prepareDataForSave: function(interventionData, interventionDetailsEl) {
