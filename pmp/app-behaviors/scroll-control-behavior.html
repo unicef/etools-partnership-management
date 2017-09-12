@@ -1,0 +1,35 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ScrollControl */
+  EtoolsPmpApp.Behaviors.ScrollControl = {
+
+    properties: {
+      contentContainer: {
+        type: Object,
+        value: function() {
+          return this._getContentContainer();
+        }
+      },
+    },
+
+    _getContentContainer: function() {
+      if (window.isIE) {
+        return document.documentElement;
+      }
+      if (!document.querySelector('app-shell')) {
+        return null;
+      }
+      if (!document.querySelector('app-shell').$$('#appHeadLayout')) {
+        return null;
+      }
+      return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
+    },
+
+    _setContentScrollPosition: function(offsetFromTop) {
+      // this.contentContainer.scrollTop = offsetFromTop;
+    }
+
+  };
+</script>

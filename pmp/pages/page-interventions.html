@@ -10,6 +10,7 @@
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
@@ -197,7 +198,8 @@
       <!-- sidebar content start -->
       <template is="dom-if" if="[[_showSidebarStatus(intervListActive, _subPageOrTabAttached)]]">
         <div id="sidebar">
-          <intervention-status status="[[intervention.status]]"
+          <intervention-status id="status"
+                               status="[[intervention.status]]"
                                active="[[!intervListActive]]"
                                intervention-id$="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
@@ -220,6 +222,7 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior,
+        EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
         EtoolsPmpApp.Behaviors.SaveIntervention
@@ -389,9 +392,9 @@
       },
 
       _interventionChanged: function(intervention, permissions) {
-
         this._displayAnyMigrationErrors(intervention);
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
+        this._setContentScrollPosition(0);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
