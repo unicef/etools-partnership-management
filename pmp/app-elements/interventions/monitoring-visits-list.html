@@ -9,7 +9,7 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
-<link rel="import" href="../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -103,7 +103,7 @@
         behaviors: [
           EtoolsLogsBehavior,
           EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common
         ],
@@ -137,9 +137,8 @@
               self.set('monitoringVisits', resp);
               self.set('showLoading', false);
             }).catch(function(error) {
-              // TODO: refactor ajax error handler, error response has changed
               self.set('showLoading', false);
-              self.handleErrorResponse(error.response);
+              self.parseRequestErrorsAndShowAsToastMsgs(error.response);
             });
           }
         },

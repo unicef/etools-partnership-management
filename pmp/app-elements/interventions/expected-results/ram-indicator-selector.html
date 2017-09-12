@@ -9,7 +9,7 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -71,7 +71,7 @@
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions
         ],
@@ -130,7 +130,7 @@
               dropdown: true
             }
           },
-          ajaxLoadingMsgSource: {
+          ramIndicatorsLoadingMsgSource: {
             type: String,
             value: 'cpo-ram-ind'
           }
@@ -149,7 +149,7 @@
             this.fire('global-loading', {
               message: 'Loading ram indicators data...',
               active: true,
-              loadingSource: this.ajaxLoadingMsgSource
+              loadingSource: this.ramIndicatorsLoadingMsgSource
             });
 
             let ramIndicatorsEndpoint = this.getEndpoint('ramIndicators', {id: newId});
@@ -159,15 +159,15 @@
             }).then(function(response) {
               self._handleRamIndicatorsReqResponse(response);
             }).catch(function(error) {
-              // TODO: refactor ajax error handler, error response has changed
-              self.handleErrorResponse(error.response);
+              self.fire('global-loading', {active: false, loadingSource: self.ramIndicatorsLoadingMsgSource});
+              self.parseRequestErrorsAndShowAsToastMsgs(error.response);
             });
           }
         },
 
         _handleRamIndicatorsReqResponse: function(response) {
           this.set('cpIndicators', response);
-          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+          this.fire('global-loading', {active: false, loadingSource: this.ramIndicatorsLoadingMsgSource});
         },
 
         _selectedCpIndicatorsIdsChanged: function(ids) {
