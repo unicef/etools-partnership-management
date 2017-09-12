@@ -18,7 +18,6 @@
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
                    on-intervention-draft-event="_setStatusDraft"
-                   on-intervention-active-event="_setStatusActive"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_unsuspendIntervention">
@@ -102,11 +101,6 @@
                 label: 'Change to draft',
                 hidden: true,
                 event: 'intervention-draft-event'
-              },
-              {
-                label: 'Activate',
-                hidden: true,
-                event: 'intervention-active-event'
               },
               {
                 label: 'Suspend',
@@ -304,17 +298,28 @@
           }
           return true;
         },
-
+        _computeWarningMessage: function(newStatus) {
+          switch (newStatus) {
+            case 'terminated':
+              this.set('warningMessage', 'You are about to terminate this PD. Do you want to continue?');
+              break;
+            case 'suspended':
+              this.set('warningMessage', 'You are about to suspend this PD. Do you want to continue?');
+              break;
+            case 'signed':
+              this.set('warningMessage', 'You are about to unsuspend this PD. Do you want to continue?');
+              break;
+            default:
+              this.set('warningMessage', this._getDefaultWarningMessage());
+              break;
+          }
+        },
         _setStatusTerminated: function() {
           this._updateStatus('terminated');
         },
 
         _setStatusDraft: function() {
           this._updateStatus('draft');
-        },
-
-        _setStatusActive: function() {
-          this._updateStatus('active');
         },
 
         _setStatusSuspended: function() {
