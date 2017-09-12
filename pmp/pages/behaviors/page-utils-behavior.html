@@ -8,6 +8,19 @@
       _subPageOrTabAttached: {
         type: Boolean,
         value: false
+      },
+      listPageQueryParams: {
+        type: Object,
+        observer: '_handleQueryParams'
+      },
+      listQueryParams: {
+        type: Object,
+      },
+    },
+
+    _handleQueryParams: function(params) {
+      if (params !== null && Object.keys(params).length) {
+        this.set('listQueryParams', params);
       }
     },
 
