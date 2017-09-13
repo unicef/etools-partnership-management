@@ -125,6 +125,11 @@
         }
       },
       _triggerCountryChangeRequest: function(countryId) {
+        this.fire('global-loading', {
+          message: 'Please wait while country is changing...',
+          active: true,
+          loadingSource: 'country-change'
+        });
         let self = this;
         this.sendRequest({
           endpoint: this.getEndpoint('changeCountry'),
@@ -137,11 +142,6 @@
         });
       },
       _handleResponse: function() {
-        this.fire('global-loading', {
-          message: 'Please wait while country is changing...',
-          active: true,
-          loadingSource: 'country-change'
-        });
         this.fire('update-main-path', {path: ''});
         // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
         this.refresh();
