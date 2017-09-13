@@ -1,0 +1,37 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.CountryProgrammesDataImpl */
+    EtoolsPmpApp.Behaviors.CountryProgrammesDataImpl = {
+
+      actions: {
+        setCountryProgrammesData: function(cpData) {
+          return {
+            type: 'SET_CP_DATA',
+            countryProgrammes: cpData
+          };
+        }
+      },
+
+      _handleCountryProgrammesResponse: function(response) {
+        if (!_.isEmpty(response)) {
+          // set setUsersData values
+          this.dispatch('setCountryProgrammesData', response);
+        }
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.CountryProgrammesData */
+    EtoolsPmpApp.Behaviors.CountryProgrammesData = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.CountryProgrammesDataImpl
+    ];
+
+  })();
+</script>

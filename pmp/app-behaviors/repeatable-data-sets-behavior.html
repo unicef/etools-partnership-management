@@ -1,6 +1,9 @@
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../styles/app-mixins.html">
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../app-config/app-endpoints-behavior.html">
+
+<link rel="import" href="../../styles/app-mixins.html">
 
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -35,6 +38,18 @@
       deleteConfirmationMessage: {
         type: String,
         value: 'Are you sure you want to delete this item?'
+      },
+      deleteLoadingSource: {
+        type: String,
+        value: 'delete-data-set'
+      },
+      deleteActionLoadingMsg: {
+        type: String,
+        value: 'Deleting items from server...'
+      },
+      deleteActionDefaultErrMsg: {
+        type: String,
+        value: 'Deleting items from server action has failed!'
       }
     },
 
@@ -65,7 +80,7 @@
 
     _getItemModelObject: function() {
       if (this.dataSetModel === null) {
-        var newObj = {};
+        let newObj = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
             newObj[property] = ''; //(this.model[0][property]) ? this.model[0][property] :
@@ -83,7 +98,7 @@
       }
       this._makeSureDataItemsAreValid();
 
-      var newObj = this._getItemModelObject();
+      let newObj = this._getItemModelObject();
       this.push('dataItems', newObj);
     },
 
@@ -94,38 +109,50 @@
       this.elToDeleteIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
       this.deleteDialog.opened = true;
     },
-    _handleDeleteResponse: function(event) {
-        this._deleteElement();
-        this.elToDeleteIndex = -1;
-        this.fire('global-loading', {active: false});
+    _handleDeleteResponse: function() {
+      this._deleteElement();
+      this.elToDeleteIndex = -1;
+      this.fire('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
     },
-    _handleDeleteError: function(event) {
-        this.fire('global-loading', {active: false});
-        var msg = event.detail.request.detail.request.response;
-        this.fire('toast', {text: msg, showCloseBtn: true});
+    _handleDeleteError: function(responseErr) {
+      this.fire('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      let msg = this.deleteActionDefaultErrMsg;
+      if (responseErr instanceof Array && responseErr.length > 0) {
+        msg = responseErr.join('\n');
+      } else if (typeof responseErr === 'string') {
+        msg = responseErr;
+      }
+
+      this.fire('toast', {text: msg, showCloseBtn: true});
     },
     _onDeleteConfirmation: function(event) {
       this.deleteDialog.opened = false;
       if (event.detail.confirmed === true) {
-        var id = this.dataItems[this.elToDeleteIndex].id;
+        let id = this.dataItems[this.elToDeleteIndex].id;
 
         if (id) {
-          this.fire('global-loading', {message: 'Deleting items from server...', active: true});
 
-          var deleteAjax = this.$$('#deleteAjax');
-          if ((!deleteAjax) || (!this._deleteEpName)) {
-            console.error('you must define etools-ajax with id "deleteAjax" and ' +
-             'property _deleteEpName to remove existing records');
+          if (!this._deleteEpName) {
+            this.logError('You must define _deleteEpName property to be able to remove existing records');
             return;
           }
-          if (!this.getEndpoint) {
-            console.error('your element must use etoolsConfig.globals behaviour to remove exiting items');
-            return;
-          }
-          var endpoint = this.getEndpoint(this._deleteEpName, {id: id});
-          deleteAjax.set('method', 'DELETE');
-          deleteAjax.set('endpoint', endpoint);
-          deleteAjax.set('body', {});
+          this.fire('global-loading', {
+            message: this.deleteActionLoadingMsg,
+            active: true,
+            loadingSource: this.deleteLoadingSource
+          });
+
+          let self = this;
+          let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
+          this.sendRequest({
+            method: 'DELETE',
+            endpoint: deleteEndpoint,
+            body: {}
+          }).then(function(resp) {
+            self._handleDeleteResponse(resp);
+          }).catch(function(error) {
+            self._handleDeleteError(error.response);
+          });
 
         } else {
           this._deleteElement();
@@ -142,7 +169,7 @@
       if (!this.editMode) {
         return;
       }
-      var index = this.elToDeleteIndex;
+      let index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
         this.fire('delete-confirm', {index: this.elToDeleteIndex});
@@ -150,7 +177,7 @@
     },
 
     _createDeleteConfirmationDialog: function() {
-      var deleteConfirmationContent = document.createElement('div');
+      let deleteConfirmationContent = document.createElement('div');
       deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
       this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
           'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
@@ -181,8 +208,10 @@
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.RepeatableDataSets */
   EtoolsPmpApp.Behaviors.RepeatableDataSets = [
+    EtoolsLogsBehavior,
     etoolsBehaviors.DynamicDialogBehavior,
     EtoolsPmpApp.Behaviors.Endpoints,
+    EtoolsAjaxRequestBehavior,
     EtoolsPmpApp.Behaviors.RepeatableDataSetsImpl
   ];
 

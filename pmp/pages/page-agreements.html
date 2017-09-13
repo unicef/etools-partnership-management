@@ -31,7 +31,7 @@
     <app-route
         route="{{route}}"
         pattern="agreements/list"
-        query-params="{{agreementQueryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{agreementListActive}}"></app-route>
 
     <app-route
@@ -115,7 +115,7 @@
                              name="list"
                              active="[[agreementListActive]]"
                              csv-download-url="{{csvDownloadUrl}}"
-                             url-params="[[agreementQueryParams]]">
+                             url-params="[[listQueryParams]]">
             </agreements-list>
           </template>
 
@@ -237,7 +237,6 @@
         routeData: {
           type: Object
         },
-        agreementQueryParams: Object,
         agreement: {
           type: Object,
           observer: '_agreementChanged'
