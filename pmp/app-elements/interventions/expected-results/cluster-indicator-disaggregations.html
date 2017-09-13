@@ -24,8 +24,8 @@
       }
 
     </style>
-    <div hidden$="[[!disaggreagtions.length]]">
-      <template is="dom-repeat" items="{{disaggreagtions}}" as="item">
+    <div hidden$="[[!disaggregations.length]]">
+      <template is="dom-repeat" items="{{disaggregations}}" as="item">
         <div class="row-h ">
             <div class="col col-4">
               <div class="layout-vertical">
@@ -43,7 +43,7 @@
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[disaggreagtions.length]]">
+    <div class="row-h" hidden$="[[!_noDisaggregations(disaggregations, disaggregations.length)]]">
       <p>There are no disaggregations added.</p>
     </div>
   </template>
@@ -56,16 +56,17 @@
         is: 'cluster-indicator-disaggregations',
 
         properties: {
-          disaggreagtions: {
-            type: Array,
-            value: [{
-                    id: 1,
-                    name: 'Age C',
-                    groups: ['1-20', '21-30']
-                  }]
+          disaggregations: {
+            type: Array
           }
         },
+        _noDisaggregations: function(disaggregations, disaggregLength) {
+          return (!disaggregations || !disaggregLength) ;
+        },
         _getGroupNames: function(groups) {
+          if (!groups) {
+            return;
+          }
           return groups.join(';');
         }
       });

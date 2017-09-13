@@ -101,119 +101,29 @@
               </div>
             </div>
             <div class="row-h" >
-              <paper-toggle-button checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
+              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]" checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
             </div>
             <div class="indicator-content">
-              <!-- <div id="oldLayout">
-                <div class="row-v flex-c">
-                  <label class="paper-label">Type </label>
-                  <div class="layout-horizontal">
-                    <etools-checkable-input type="radio" label="#" label-alignment="right"
-                                            checked="{{unit.numeric}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="yesno,percentage"></etools-checkable-input>
-                    <etools-checkable-input type="radio" label="%" label-alignment="right"
-                                            checked="{{unit.percentage}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="numeric,yesno"></etools-checkable-input>
-                    <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
-                                            checked="{{unit.yesno}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="numeric,percentage"></etools-checkable-input>
-                  </div>
-                </div>
-                <div class="row-h flex-c">
-                  <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
-                </div>
-
-                <div class="row-h flex-c">
-                  <div class="col col-3">
-                    <template is="dom-if" if="[[unit.numeric]]">
-                      <paper-input label="Baseline"
-                                  value="{{indicator.baseline}}"
-                                  type="number"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.percentage]]">
-                      <paper-input label="Baseline"
-                                  value="{{indicator.baseline}}"
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  allowed-pattern="[0-9\.]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.yesno]]">
-                      <paper-dropdown-menu label="Baseline" noink always-float-label>
-                        <paper-menu class="dropdown-content"
-                                    attr-for-selected="name"
-                                    selected="{{indicator.baseline}}">
-                          <paper-item name="yes">Yes</paper-item>
-                          <paper-item name="no">No</paper-item>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-                    </template>
-                  </div>
-                  <div class="col col-3">
-                    <template is="dom-if" if="[[unit.numeric]]">
-                      <paper-input label="Target"
-                                  value="{{indicator.target}}"
-                                  type="number"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.percentage]]">
-                      <paper-input label="Target"
-                                  value="{{indicator.target}}"
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  allowed-pattern="[0-9\.]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.yesno]]">
-                      <paper-dropdown-menu label="Target" noink always-float-label>
-                        <paper-menu class="dropdown-content"
-                                    attr-for-selected="name"
-                                    selected="{{indicator.target}}">
-                          <paper-item name="yes">Yes</paper-item>
-                          <paper-item name="no">No</paper-item>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-                    </template>
-                  </div>
-                </div>
-                <div class="row-h flex-c">
-                    <paper-textarea label="Means of Verification"
-                                    value="{{indicator.means_of_verification}}"
-                                    placeholder="&#8212;">
-                    </paper-textarea>
-                </div>
-              </div> -->
               <div id="newLayout" >
-                <template is="dom-if" if="[[!indicator.isCluster]]">
+                <template is="dom-if" if="[[!indicator.isCluster]]" >
                   <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
                 </template>
-                <template is="dom-if" if="[[indicator.isCluster]]">
-                <cluster-indicator indicator="{{indicator}}" prp-cluster-indicator="{{prpClusterIndicator}}"></cluster-indicator>
+                <template is="dom-if" if="[[indicator.isCluster]]" >
+                  <cluster-indicator indicator="{{indicator}}" prp-cluster-indicator="{{prpClusterIndicator}}"></cluster-indicator>
                 </template>
               </div>
             </div>
           </div>
           <div class="row-h flex-c" name="disaggregations">
               <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
-
-              <indicator-dissaggregations hidden="[[indicator.isCluster]]"
-                data-items="{{disaggregations}}"
-                on-disaggregation-change="_centerDialog">
-              </indicator-dissaggregations>
-
-              <cluster-indicator-disaggregations hidden="[[!indicator.isCluster]]"
-              disaggregations="{{disaggregations}}">
-              </cluster-indicator-disaggregations>
+              <template is="dom-if" if="[[!indicator.isCluster]]" restamp>
+                <indicator-dissaggregations data-items="{{disaggregations}}">
+                </indicator-dissaggregations>
+              </template>
+              <template is="dom-if" if="[[indicator.isCluster]]" restamp>
+                <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
+                </cluster-indicator-disaggregations>
+              </template>
           </div>
         </iron-pages>
       </div>
@@ -235,7 +145,8 @@
 
         properties: {
           indicator: {
-            type: Object
+            type: Object,
+            observer: 'indiChanged'
           },
           activeTab: {
             type: String,
@@ -276,6 +187,10 @@
             type: Array,
             value: []
           },
+          prpDisaggregations: {
+            type: Array,
+            value: []
+          },
           disaggregationsCount: {
             type: Number,
             value: 0
@@ -290,99 +205,51 @@
           }
         },
         observers: [
-          '_indicatorDataChange(indicator.*)',
-          '_updateIndicatorValsAtUnitChange(unit.*)',
-          '_setDisaggregationsCount(disaggregations.length)'
+          '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, indicator.isCluster)'
         ],
-        _prpClusterIndicatorChanged: function(prpClusterIndicator) {
-          if (!prpClusterIndicator || !prpClusterIndicator.disaggregations
-           || !prpClusterIndicator.disaggregations.length) {
-            this.disaggregations = [];
-          } else {
-            this.disaggregations = prpClusterIndicator.disaggregations;
+        indiChanged: function(newi, oldi) {
+          if (!newi) {
+            console.trace();
+            console.log('Indicator is empty');
           }
         },
-        _setDisaggregationsCount: function(length) {
-          this.disaggregationsCount = length;
+        _indicatorIsNew: function(indicator) {
+          return (!indicator || !indicator.id);
+        },
+        _prpClusterIndicatorChanged: function(prpClusterIndicator) {
+          console.log('cluster ind changed', prpClusterIndicator);
+          if (!prpClusterIndicator || !prpClusterIndicator.disaggregations
+           || !prpClusterIndicator.disaggregations.length) {
+            this.prpDisaggregations = [];
+          } else {
+            this.prpDisaggregations = prpClusterIndicator.disaggregations;
+          }
+        },
+        _setDisaggregationsCount: function(disaggregs, disaggregsLength, prpDisaggregs, prpDisaggregsLength) {
+          console.log(disaggregs, disaggregsLength, prpDisaggregs, prpDisaggregsLength);
+          if (!this.indicator) {
+            return;
+          }
+          if (this.indicator.isCluster) {
+            this.disaggregationsCount = prpDisaggregsLength;
+          } else {
+            this.disaggregationsCount = disaggregsLength;
+          }
+
         },
         _getDisaggregationsTabTitle: function(disaggregationsCount) {
           return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
         },
-        _indicatorDataChange: function(data) {
-          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
-            if (this.unit.percentage && data.value !== '') {
-              var val = parseInt(data.value, 10);
-              if (isNaN(val) || val < 0) {
-                val = 0;
-              }
-              if (val > 100) {
-                val = 100;
-              }
-              this.set(data.path, val);
-            }
-          }
-        },
 
-        _updateIndicatorValsAtUnitChange: function(data) {
-          this.debounce('indicatorUnitChanged', function() {
-            if (!this.indicator) {
-              return;
-            }
-            var activeUnit = this._getActiveUnit();
-            var resetFields = false;
-            var baseline = parseFloat(this.indicator.baseline);
-            var target = parseFloat(this.indicator.target);
-
-            switch (activeUnit) {
-              case 'numeric':
-                if (isNaN(baseline)) {
-                  this.set('indicator.baseline', '');
-                }
-                if (isNaN(target)) {
-                  this.set('indicator.target', '');
-                }
-                break;
-              case 'percentage':
-                if (baseline < 0 || baseline > 100 || isNaN(baseline)) {
-                  this.set('indicator.baseline', '');
-                }
-                if (target < 0 || target > 100 || isNaN(target)) {
-                  this.set('indicator.target', '');
-                }
-                break;
-              case 'yesno':
-                if (this.indicator.baseline !== 'yes' && this.indicator.baseline !== 'no') {
-                  this.set('indicator.baseline', '');
-                }
-                if (this.indicator.target !== 'yes' && this.indicator.target !== 'no') {
-                  this.set('indicator.target', '');
-                }
-
-                break;
-            }
-          }.bind(this), 50);
-        },
-
-        _unitChanged: function(event) {
-          Polymer.dom(event).localTarget.setAttribute('checked', true);//*Prevent no radio btn selected
-          var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
-          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== '') {
-            var unitKeys = unitKeysToReset.split(',');
-            unitKeys.forEach(function(key) {
-              this.set('unit.' + key, false);
-            }.bind(this));
-          }
-        },
-
-        _getActiveUnit: function() {
-          var unit = 'numeric';
-          for (var k in this.unit) {
-            if (this.unit[k] === true) {
-              unit = k;
-            }
-          }
-          return unit;
-        },
+        // _getActiveUnit: function() {
+        //   var unit = 'numeric';
+        //   for (var k in this.unit) {
+        //     if (this.unit[k] === true) {
+        //       unit = k;
+        //     }
+        //   }
+        //   return unit;
+        // },
 
         openIndicatorDialog: function() {
           this.activeTab = 'details';
@@ -430,17 +297,10 @@
           this.set('indicator', data);
         },
 
-        _centerDialog: function() {
-          var d = Polymer.dom(this.$.indicatorDialog.root).querySelector('paper-dialog');
-          if (d) {
-            d.center();
-          }
-        },
-
         _closeIndicatorDialog: function(event) {
           if (event.detail.confirmed) {
             // get indicator data
-            this.indicator.unit = this._getActiveUnit();
+           // this.indicator.unit = this._getActiveUnit();
             this.indicator.disaggregation_logic = this._prepareDisaggregations();
             // fire it up :)
             this.fire('indicator-dialog-close', {

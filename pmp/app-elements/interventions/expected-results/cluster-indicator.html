@@ -106,7 +106,8 @@
 
         properties: {
           indicator: {
-            type: Object
+            type: Object,
+            observer: 'indiChanged'
           },
           locations: {
             type: Array,
@@ -141,7 +142,12 @@
             observer: '_selectedPrpClusterIndicatorChanged'
           }
         },
-
+         indiChanged: function(newi, oldi) {
+          if (!newi) {
+            console.trace();
+            console.log('Indicator is empty');
+          }
+        },
         _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
           if (!prpClusterIndic) {
             return;
@@ -149,6 +155,11 @@
           this._fillInFields(prpClusterIndic);
         },
         _fillInFields: function(prpClusterIndic) {
+          console.log(this);
+          if(typeof this.indicator === 'undefined') {
+           // console.trace();
+          }
+          console.log(typeof this.indicator);
           this.indicator.means_of_verification = prpClusterIndic.means_of_verification;
           this.indicator.lodationIds = prpClusterIndic.locationIds;
         },

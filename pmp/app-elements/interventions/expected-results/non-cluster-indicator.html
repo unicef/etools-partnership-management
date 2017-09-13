@@ -150,6 +150,7 @@
 
         },
         observers: [
+           '_indicatorDataChange(indicator.*)',
            '_baselineUnknownChanged(indicator.baselineIsUnknown)'
         ],
         _unitIsNumeric: function(unit) {
@@ -160,7 +161,22 @@
           if (isUnknown) {
             this.set('indicator.baseline', null);
           }
-        }
+        },
+
+        _indicatorDataChange: function(data) {
+          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
+            if (this.indicator.unit === 'percentage' && data.value !== '') {
+              var val = parseInt(data.value, 10);
+              if (isNaN(val) || val < 0) {
+                val = 0;
+              }
+              if (val > 100) {
+                val = 100;
+              }
+              this.set(data.path, val);
+            }
+          }
+        },
 
     });
   })();
