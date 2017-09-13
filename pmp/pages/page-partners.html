@@ -30,7 +30,7 @@
     <app-route
         route="{{route}}"
         pattern="[[currentPage]]/list"
-        query-params="{{queryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
@@ -108,7 +108,8 @@
                            current-page="[[currentPage]]"
                            active="[[listActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[queryParams]]"></partners-list>
+                           url-params="[[listQueryParams]]">
+            </partners-list>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(partnerPage, 'overview')]]">
@@ -170,7 +171,6 @@
         routeData: {
           type: Object,
         },
-        queryParams: Object,
         activeTab: {
           type: String,
           value: '',
