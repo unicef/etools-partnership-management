@@ -15,7 +15,7 @@
                  endpoint="[[endpoint]]"
                  caching-storage="dexie"
                  on-success="_handleResponse"
-                 on-fail="handleErrorResponse"></etools-ajax>
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -38,7 +38,9 @@
             readOnly: true,
             notify: true
           },
-
+          originalIntervention: {
+            type: Object
+          },
           endpoint: {
             type: Object
           },
@@ -83,7 +85,14 @@
             this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
           }
         },
-
+        _handleErrorResponse: function(response) {
+          this.handleErrorResponse(response);
+          this._restoreUnsuccessfullyDeletedFrs();
+        },
+        _restoreUnsuccessfullyDeletedFrs: function() {
+           this.set('intervention.frs_details', this.originalIntervention.frs_details);
+           this.set('intervention.frs', this.originalIntervention.frs);
+        },
         /**
          * Handle received data from request
          */
