@@ -21,11 +21,6 @@
         type: Object,
         value: null
       },
-      open: {
-        type: Boolean,
-        value: true,
-        reflectToAttribute: true
-      },
       editMode: {
         type: Boolean,
         reflectToAttribute: true,
@@ -61,17 +56,6 @@
     detached: function() {
       // remove delete confirmation dialog when the element is detached
       this.removeDialog(this.deleteDialog);
-    },
-
-    _toggle: function() {
-      this.set('open', !this.open);
-    },
-
-    _getExpandBtnIcon: function(open) {
-      if (!open) {
-        return 'icons:expand-more';
-      }
-      return 'icons:expand-less';
     },
 
     _emptyList: function(listLength) {

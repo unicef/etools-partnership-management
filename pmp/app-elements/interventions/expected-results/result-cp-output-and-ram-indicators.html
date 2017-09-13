@@ -1,0 +1,49 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
+
+<dom-module id="result-cp-output-and-ram-indicators">
+  <template>
+    <style>
+      :host {
+
+      }
+    </style>
+
+    <etools-dialog id="cpOutputRamIndicatorsDialog"
+                   size="md"
+                   dialog-title="Add/Update CP Output/Ram Indicators"
+                   ok-btn-text="Add/Update"
+                   on-close="_saveChanges"
+                   disable-confirm-btn="[[disableConfirmBtn]]"
+                   keep-dialog-open
+                   no-padding>
+
+      <div id="dialog-content">
+        ok, let's do this sh...!
+      </div>
+
+    </etools-dialog>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'result-cp-output-and-ram-indicators',
+
+      properties: {
+        availableCpOutputs: {
+          type: Array,
+          value: []
+        },
+        selectedCpOutputRamIndicators: {
+          type: Array,
+          value: []
+        }
+      },
+
+      openDialog: function() {
+        this.$.cpOutputRamIndicatorsDialog.opened = true;
+      },
+      _saveChanges: function() {}
+    });
+  </script>
+</dom-module>

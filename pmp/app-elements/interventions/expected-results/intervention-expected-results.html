@@ -1,23 +1,25 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../styles/file-styles.html">
-<link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../../styles/file-styles.html">
+<link rel="import" href="../../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/date-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../../app-behaviors/date-behavior.html">
 
-<link rel="import" href="expected-results/ram-indicator-selector.html">
-<link rel="import" href="expected-results/result-link-lower-results.html">
-<link rel="import" href="expected-results/indicator-dialog.html">
+<link rel="import" href="result-cp-output-and-ram-indicators.html">
+
+<link rel="import" href="ram-indicator-selector.html">
+<link rel="import" href="result-link-lower-results.html">
+<link rel="import" href="indicator-dialog.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
@@ -47,9 +49,18 @@
                                  data-args$="[[index]]"
                                  icon="cancel"
                                  disabled$="[[!editMode]]"></paper-icon-button>
+
+              <paper-icon-button class="action"
+                                 on-tap="_openEditExpectedResultDialog"
+                                 data-args$="[[index]]"
+                                 icon="edit"
+                                 disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
+
+
+
             <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
                                     cp-output-id="{{item.cp_output}}"
                                     selected-cp-indicators-ids="{{item.ram_indicators}}"
@@ -77,7 +88,7 @@
 
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                 on-tap="_addNewResult"
+                 on-tap="_openEditExpectedResultDialog"
                  title="Add"></paper-fab>
     </div>
 
@@ -121,6 +132,11 @@
           },
           selectedCpStructure: {
             type: String
+          },
+          cpOutputRamIndicatorsEditElem: Object,
+          cpOutputs: {
+            type: Array,
+            statePath: 'cpOutputs'
           }
         },
 
@@ -130,6 +146,9 @@
         ],
 
         ready: function() {
+          // init cp outputs and ram indicator add/edit element
+          this._createAddEditCpOutputRamIndicatorsElement();
+
           this.dataSetModel = {
             id: null,
             intervention: null,
@@ -154,17 +173,33 @@
           if (this.indicatorDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
+          if (this.cpOutputRamIndicatorsEditElem) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.cpOutputRamIndicatorsEditElem);
+          }
+        },
+
+        _createAddEditCpOutputRamIndicatorsElement: function() {
+          this.cpOutputRamIndicatorsEditElem = Polymer.dom(document.querySelector('body'))
+              .querySelector('#cpOutputRamIndicatorsEditElem');
+          console.log(this.cpOutputRamIndicatorsEditElem);
+          if (!this.cpOutputRamIndicatorsEditElem) {
+            console.log('cp output selector not added to body');
+            this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
+            this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
+            Polymer.dom(document.querySelector('body')).appendChild(this.cpOutputRamIndicatorsEditElem);
+          }
         },
         /**
          * Add/update indicators data
          */
         indicatorDialogDataReceived: function(data) {
-          var actionParams = data.actionParams;
-          var indicator = data.indicatorData;
-          for (var i = 0; i < this.dataItems.length; i++) {
+          let actionParams = data.actionParams;
+          let indicator = data.indicatorData;
+          let i;
+          for (i = 0; i < this.dataItems.length; i++) {
             //search expected result item by output id
             if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
-              var indicatorPaths = 'dataItems.' + i + '.ll_results.' +
+              let indicatorPaths = 'dataItems.' + i + '.ll_results.' +
                   actionParams.llResultIndex + '.applied_indicators';
               if (actionParams.appliedIndicatorsIndex !== null) {
                 // we just edited an indicator, replace data in indicators list
@@ -188,7 +223,7 @@
 
         // get selected cpoutputs ids
         _getSelectedCpOutputsIds: function() {
-          var selectedCpOIds = [];
+          let selectedCpOIds = [];
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(result) {
               if (result.cp_output) {
@@ -202,23 +237,23 @@
         // every time cp_output is selected update alreadySelectedCpOutputs
         // and do not show alreadySelectedCpOutputs in other dorpdowns
         _dataItemsChanges: function(item) {
-          var change = item.path.substring(item.path.lastIndexOf('.') + 1);
+          let change = item.path.substring(item.path.lastIndexOf('.') + 1);
           if (change === 'cp_output' || change === 'length') {
             this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
           }
         },
 
-        /**
-         * Validate last added amendment and if is not empty add a new one
-         */
-        _addNewResult: function() {
-          this._addElement();
+        _openEditExpectedResultDialog: function() {
+          if (this.cpOutputRamIndicatorsEditElem) {
+//            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', this.cpOutputs);
+            this.cpOutputRamIndicatorsEditElem.openDialog();
+          }
         },
 
         // open indicator dialog to add or edit indicator
         _openIndicatorDialog: function(event) {
           event.stopImmediatePropagation();
-          var actionParams = event.detail;
+          let actionParams = event.detail;
 
           if (actionParams.appliedIndicatorsIndex === null) {
             this.indicatorDialog.setAddLabel();
@@ -235,10 +270,10 @@
         },
 
         validate: function() {
-          var valid = true;
+          let valid = true;
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
-              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
+              let cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
               if (!cpOutputAndRamIndicatorsSelector.validate()) {
                 valid = false;
               }
@@ -250,7 +285,7 @@
         resetValidations: function() {
           if (this.dataItems.length > 0) {
             this.dataItems.forEach(function(item, index) {
-              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
+              let cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
               if (cpOutputAndRamIndicatorsSelector) {
                 cpOutputAndRamIndicatorsSelector.resetValidations();
               }
