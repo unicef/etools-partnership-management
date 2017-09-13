@@ -370,8 +370,6 @@
       },
 
       _partnerChanged: function(partner) {
-        this._setContentScrollPosition(0);
-
         if (typeof partner === 'object' && Object.keys(partner).length > 0) {
           // dismiss partner details pages loading
           this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
@@ -381,6 +379,7 @@
           // keep a copy of loaded partner to be able to check changed data
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
+        this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {
