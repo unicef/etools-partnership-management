@@ -14,7 +14,6 @@
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
-<link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
 
@@ -150,8 +149,6 @@
             <intervention-details id="interventionDetails"
                                   name="details"
                                   intervention="{{intervention}}"
-                                  partner-staff-members="[[partnerStaffMembers]]"
-                                  selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
                                   on-update-intervention-status="_updateInterventionStatus"
                                   original-intervention="[[originalIntervention]]">
@@ -184,10 +181,6 @@
                                 intervention-id="[[selectedInterventionId]]"
                                 original-intervention="[[originalIntervention]]"
                                 error-event-name="intervention-save-error"></intervention-item-data>
-
-        <partner-staff-members-data partner-id="[[partnerId]]"
-                                    prepared-staff-members-data="{{partnerStaffMembers}}">
-        </partner-staff-members-data>
 
         <agreement-item-data id="agreement"
                              agreement-id="[[intervention.agreement]]"
@@ -242,10 +235,6 @@
         },
         originalIntervention: {
           type: Object
-        },
-        partnerStaffMembers: Array,
-        partnerId: {
-          type: Number
         },
         agreement: {
           type: Object
