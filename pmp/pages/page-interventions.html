@@ -41,7 +41,7 @@
     <app-route
         route="{{route}}"
         pattern="interventions/list"
-        query-params="{{interventionsQueryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{intervListActive}}"></app-route>
 
     <app-route
@@ -135,7 +135,7 @@
                                 name="list"
                                 active="[[intervListActive]]"
                                 csv-download-url="{{csvDownloadUrl}}"
-                                url-params="[[interventionsQueryParams]]">
+                                url-params="[[listQueryParams]]">
             </interventions-list>
           </template>
 
@@ -332,7 +332,7 @@
         },
         _forceDetUiValidationOnAttach: Boolean,
         _forceReviewUiValidationOnAttach: Boolean,
-        interventionsQueryParams: Object
+
       },
       observers: [
         /**
