@@ -1,0 +1,49 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+
+<dom-module id="pd-output-ssfa-expected-result">
+  <template>
+    <style>
+      :host {
+
+      }
+      .pd-output-name {
+        padding: 0 0 30px;
+      }
+
+    </style>
+
+    <etools-dialog id="pdOutputOrSsfaExpectedResultDialog"
+                   size="md"
+                   dialog-title="Add/Update PD Output or SSFA expected result"
+                   ok-btn-text="Add/Update"
+                   keep-dialog-open>
+
+      <div class="pd-output-name">
+        <paper-input label="PD Output or SSFA expected result"
+                     placeholder="&#8212;"
+                     value="[[pdExpectedResultName]]"></paper-input>
+      </div>
+
+    </etools-dialog>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'pd-output-ssfa-expected-result',
+
+      properties: {
+        pdExpectedResultName: {
+          type: String,
+          value: []
+        }
+      },
+
+      openDialog: function() {
+        this.$.pdOutputOrSsfaExpectedResultDialog.opened = true;
+      }
+
+    });
+  </script>
+</dom-module>

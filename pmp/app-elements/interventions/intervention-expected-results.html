@@ -1,25 +1,25 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
-<link rel="import" href="../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../../styles/file-styles.html">
-<link rel="import" href="../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../../app-behaviors/date-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 
-<link rel="import" href="result-cp-output-and-ram-indicators.html">
+<link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
 
-<link rel="import" href="ram-indicator-selector.html">
-<link rel="import" href="result-link-lower-results.html">
-<link rel="import" href="indicator-dialog.html">
+<link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
+
+<link rel="import" href="expected-results/result-link-lower-results.html">
+<link rel="import" href="expected-results/indicator-dialog.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
@@ -59,16 +59,14 @@
           </div>
           <div class="item-content">
 
-
-
-            <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
-                                    cp-output-id="{{item.cp_output}}"
-                                    selected-cp-indicators-ids="{{item.ram_indicators}}"
-                                    selected-cp-structure="[[selectedCpStructure]]"
-                                    already-selected-cpo="[[alreadySelectedCpOutputs]]"
-                                    required$="[[required]]"
-                                    edit-mode$="[[editMode]]">
-            </ram-indicator-selector>
+            <div class="row-h flex-c">
+              <div class="col col-4">
+                <etools-form-element-wrapper label="CP Output">
+                  <span>[[_getCpOutputNameById(item.cp_output)]]</span>
+                </etools-form-element-wrapper>
+              </div>
+              <div class="col col-8"></div>
+            </div>
 
             <result-link-lower-results id$="lowerResult_[[index]]"
                                        data-items="{{item.ll_results}}"
@@ -88,7 +86,7 @@
 
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                 on-tap="_openEditExpectedResultDialog"
+                 on-tap="_addNewCpOutputAndRamIndicators"
                  title="Add"></paper-fab>
     </div>
 
@@ -103,8 +101,7 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.RepeatableDataSets,
-          EtoolsPmpApp.Behaviors.Date
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {
@@ -123,10 +120,6 @@
           editMode: {
             type: Boolean
           },
-          alreadySelectedCpOutputs: {
-            type: Array,
-            value: []
-          },
           indicatorDialog: {
             type: Object
           },
@@ -137,12 +130,19 @@
           cpOutputs: {
             type: Array,
             statePath: 'cpOutputs'
-          }
+          },
+          availableCpOutputs: {
+            type: Array,
+            computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'
+          },
+          alreadySelectedCpOutputs: {
+            type: Array,
+            value: []
+          },
         },
 
         observers: [
-          '_dataItemsChanged(dataItems)',
-          '_dataItemsChanges(dataItems.*)'
+          '_dataItemsChanged(dataItems.length)'
         ],
 
         ready: function() {
@@ -186,9 +186,91 @@
             console.log('cp output selector not added to body');
             this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
             this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
+
+            this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
+                this._handleNewResultAdded.bind(this));
+
             Polymer.dom(document.querySelector('body')).appendChild(this.cpOutputRamIndicatorsEditElem);
           }
         },
+
+        _computeAvailableCpOutputs: function(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure) {
+          console.log(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure);
+          let selectedCpStructureId = parseInt(selectedCpStructure, 10);
+          return cpOutputs.filter(function(cp) {
+            let notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
+            let belongsToCpStructure = true;
+            if (selectedCpStructureId > 0 && selectedCpStructureId !== parseInt(cp.country_programme, 10)) {
+              belongsToCpStructure = false;
+            }
+            if (notSelected && belongsToCpStructure) {
+              console.log(cp.country_programme);
+            }
+            return notSelected && belongsToCpStructure;
+          });
+        },
+
+        _dataItemsChanged: function(dataItemsLength) {
+          if (dataItemsLength > 0) {
+            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
+          } else {
+            this.set('alreadySelectedCpOutputs', []);
+          }
+        },
+
+        // get selected cpoutputs ids
+        _getSelectedCpOutputsIds: function() {
+          let selectedCpOIds = [];
+          if (this.dataItems.length > 0) {
+            this.dataItems.forEach(function(result) {
+              if (result.cp_output) {
+                selectedCpOIds.push(result.cp_output);
+              }
+            });
+          }
+          return selectedCpOIds;
+        },
+
+        _addNewCpOutputAndRamIndicators: function() {
+          this._openCpOutputAndRamIndicatorsDialog();
+        },
+
+        _handleNewResultAdded: function(e) {
+          e.stopImmediatePropagation();
+          console.log('new result: ', e.detail.result);
+          this.push('dataItems', e.detail.result);
+        },
+
+        _openCpOutputAndRamIndicatorsDialog: function(expectedResultId, cpOutputId, ramIndicatorsIds) {
+          if (this.cpOutputRamIndicatorsEditElem) {
+            this.cpOutputRamIndicatorsEditElem.set('interventionId', this.interventionId);
+            this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
+            this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
+            this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
+
+            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', this.availableCpOutputs);
+            this.cpOutputRamIndicatorsEditElem.resetErrorMessages();
+
+            this.cpOutputRamIndicatorsEditElem.openDialog();
+          }
+        },
+
+        _getCpOutputNameById: function(cpOutputId) {
+          let cpOutputName = '';
+          cpOutputId = parseInt(cpOutputId, 10);
+          if (!isNaN(cpOutputId)) {
+            let cpOutput = this.cpOutputs.find(function(cp) {
+              return cp.id === cpOutputId;
+            });
+            if (cpOutput) {
+              cpOutputName = cpOutput.name;
+            } else {
+              // TODO: ghost data issue, old cp, get it's name somehow
+            }
+          }
+          return cpOutputName;
+        },
+
         /**
          * Add/update indicators data
          */
@@ -213,42 +295,6 @@
             }
           }
         },
-        _dataItemsChanged: function(dataItems) {
-          if (!Array.isArray(dataItems)) {
-            this.set('dataItems', []);
-          } else {
-            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
-          }
-        },
-
-        // get selected cpoutputs ids
-        _getSelectedCpOutputsIds: function() {
-          let selectedCpOIds = [];
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(result) {
-              if (result.cp_output) {
-                selectedCpOIds.push(result.cp_output);
-              }
-            });
-          }
-          return selectedCpOIds;
-        },
-
-        // every time cp_output is selected update alreadySelectedCpOutputs
-        // and do not show alreadySelectedCpOutputs in other dorpdowns
-        _dataItemsChanges: function(item) {
-          let change = item.path.substring(item.path.lastIndexOf('.') + 1);
-          if (change === 'cp_output' || change === 'length') {
-            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
-          }
-        },
-
-        _openEditExpectedResultDialog: function() {
-          if (this.cpOutputRamIndicatorsEditElem) {
-//            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', this.cpOutputs);
-            this.cpOutputRamIndicatorsEditElem.openDialog();
-          }
-        },
 
         // open indicator dialog to add or edit indicator
         _openIndicatorDialog: function(event) {
@@ -267,30 +313,6 @@
 
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
-        },
-
-        validate: function() {
-          let valid = true;
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              let cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
-              if (!cpOutputAndRamIndicatorsSelector.validate()) {
-                valid = false;
-              }
-            }.bind(this));
-          }
-          return valid;
-        },
-
-        resetValidations: function() {
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              let cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
-              if (cpOutputAndRamIndicatorsSelector) {
-                cpOutputAndRamIndicatorsSelector.resetValidations();
-              }
-            }.bind(this));
-          }
         }
 
       });

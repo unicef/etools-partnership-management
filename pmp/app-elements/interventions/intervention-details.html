@@ -31,7 +31,7 @@
 <link rel="import" href="intervention-form/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
-<link rel="import" href="expected-results/intervention-expected-results.html">
+<link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="intervention-sector-locations.html">
 
@@ -282,7 +282,6 @@
                                      data-items="{{intervention.result_links}}"
                                      selected-cp-structure="[[intervention.country_programme]]"
                                      intervention-id="[[intervention.id]]"
-                                     required$="[[intervention.permissions.required.result_links]]"
                                      edit-mode$="[[intervention.permissions.edit.result_links]]">
       </intervention-expected-results>
     </etools-content-panel>
@@ -548,7 +547,7 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
+          var elements = ['sectorLocations', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
           }.bind(this));
@@ -652,7 +651,7 @@
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
-            '#plannedBudget', '#expectedResults', '#plannedVisits'];
+            '#plannedBudget', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
