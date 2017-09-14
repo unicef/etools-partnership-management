@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -163,7 +164,8 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        EtoolsPmpApp.Behaviors.PageUtils
+        EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.ScrollControl
       ],
 
       properties: {
@@ -379,6 +381,7 @@
         // keep a copy of the agreement before changes are made and use it later to save only the changes
         this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
         this.set('serverErrors', []);
+        this._setContentScrollPosition(0);
       },
 
       /**
