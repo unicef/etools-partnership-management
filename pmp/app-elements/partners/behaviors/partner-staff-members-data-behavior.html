@@ -54,6 +54,8 @@
               name: staffMember.first_name + ' ' + staffMember.last_name,
               active: staffMember.active
             };
+          }).filter(function(staffMember) {
+            return staffMember.active;
           });
           this.set('staffMembers', preparedStaffMembers);
         }
