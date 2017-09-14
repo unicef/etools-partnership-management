@@ -45,6 +45,9 @@
         contentContainer.style.boxSizing = 'border-box';
         contentContainer.style.paddingBottom = '90px';
       }
+      if (this.globalLoadingElement) {
+        this.globalLoadingElement.style.position = 'fixed';
+      }
     }
 
   };
