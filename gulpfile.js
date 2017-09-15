@@ -139,7 +139,7 @@ gulp.task('default', gulp.series([
   clean.build,
   project.merge(source, dependencies),
   project.serviceWorker,
-  shell.task(['git rev-parse HEAD > revision.txt'])
+  shell.task(['git rev-parse HEAD > build/pmp/bundled/revision.txt'])
 ]));
 
 // Run polylint,
@@ -158,5 +158,5 @@ gulp.task('fullBuild', gulp.series([
   project.merge(source, dependencies),
   project.serviceWorker,
   etoolsBuild.buildTemplate,
-  shell.task(['git rev-parse HEAD > revision.txt'])
+  shell.task(['git rev-parse HEAD > build/pmp/bundled/revision.txt'])
 ]));
