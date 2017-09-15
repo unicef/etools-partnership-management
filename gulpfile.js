@@ -73,6 +73,7 @@ const html = require('./gulp-tasks/html.js');             //Any processing on ht
 const css = require('./gulp-tasks/css.js');               //Any processing on css
 const project = require('./gulp-tasks/project.js');
 const polylint = require('gulp-polylint');
+const shell = require('gulp-shell');
 
 // Log task end messages
 var log = function (message) {
@@ -137,7 +138,8 @@ function dependencies() {
 gulp.task('default', gulp.series([
   clean.build,
   project.merge(source, dependencies),
-  project.serviceWorker
+  project.serviceWorker,
+  shell.task(['git rev-parse HEAD > revision.txt'])
 ]));
 
 // Run polylint,
@@ -155,5 +157,6 @@ gulp.task('fullBuild', gulp.series([
   clean.fullBuild,
   project.merge(source, dependencies),
   project.serviceWorker,
-  etoolsBuild.buildTemplate
+  etoolsBuild.buildTemplate,
+  shell.task(['git rev-parse HEAD > revision.txt'])
 ]));
