@@ -6,6 +6,6 @@ bower_components/
 *.sublime-project
 *.sublime-workspace.vscode/
 .vscode/settings.json
-
+revision.txt
 *.sublime-workspace.vscode/settings.json
 vscode/*
