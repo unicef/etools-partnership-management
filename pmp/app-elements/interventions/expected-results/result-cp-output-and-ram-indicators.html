@@ -111,7 +111,10 @@
           type: Boolean,
           value: false
         },
-        _preventRamIndicatorReset: Boolean
+        _preventRamIndicatorReset: Boolean,
+        editIndex: {
+          value: null
+        }
       },
 
       ready: function() {
@@ -123,7 +126,6 @@
       },
 
       _cpOutputSelected: function(cpOutputId) {
-        console.log('selected', cpOutputId);
         if (cpOutputId) {
           // request ram indicators list
           this._setRamIndicatorsSpinnerText(this.ramIndicatorsLoadingMsg);
@@ -172,6 +174,7 @@
       },
 
       resetData: function() {
+        this.set('editIndex', null);
         this.set('selectedCpOutputId', undefined);
         this.set('availableCpOutputs', []);
         this.set('cpOutputRamIndicators', []);
@@ -182,7 +185,6 @@
       },
 
       _saveChanges: function() {
-        console.log('start saving changes...');
         this.$.cpOutput.validate();
         this.$.indicators.validate();
 
@@ -202,6 +204,7 @@
           this._saveExpectedResult(endpoint, 'POST', result, this._newResultSuccessfullyAdded);
         } else {
           endpoint = this._getResultDetailsEndpoint(this.expectedResultId);
+          this._saveExpectedResult(endpoint, 'PATCH', result, this._resultSuccessfullyUpdated);
         }
       },
 
@@ -250,6 +253,12 @@
 
       _newResultSuccessfullyAdded: function(response) {
         this.fire('new-expected-result-added', {result: response});
+        this.closeDialog();
+      },
+
+      _resultSuccessfullyUpdated: function(response) {
+        console.log(this.editIndex);
+        this.fire('expected-result-updated', {index: this.editIndex, result: response});
         this.closeDialog();
       }
 

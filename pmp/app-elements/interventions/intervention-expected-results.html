@@ -6,9 +6,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -17,13 +15,12 @@
 <link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
-
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
+    <style include="grid-layout-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -72,8 +69,7 @@
               </div>
             </div>
 
-            <result-link-lower-results id$="lowerResult_[[index]]"
-                                       data-items="{{item.ll_results}}"
+            <result-link-lower-results data-items="{{item.ll_results}}"
                                        edit-mode$="[[editMode]]"
                                        cp-output-id="[[item.cp_output]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
@@ -153,14 +149,6 @@
           // init cp outputs and ram indicator add/edit element
           this._createAddEditCpOutputRamIndicatorsElement();
 
-          this.dataSetModel = {
-            id: null,
-            intervention: null,
-            cp_output: null,
-            ram_indicators: [],
-            ll_results: []
-          };
-
           // init indicator dialog data
           this.indicatorDialog = document.createElement('indicator-dialog');
           this.indicatorDialog.setAttribute('id', 'indicatorDialog');
@@ -191,6 +179,9 @@
 
             this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
                 this._handleNewResultAdded.bind(this));
+
+            this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated',
+                this._handleResultUpdated.bind(this));
 
             Polymer.dom(document.querySelector('body')).appendChild(this.cpOutputRamIndicatorsEditElem);
           }
@@ -234,9 +225,9 @@
         },
 
         _editCpOutputAndRamIndicators: function(e) {
-          let index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
-
-          if (!index) {
+          let index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
+          console.log(index);
+          if (!(index >= 0)) {
             this.logError('Can not edit, invalid index selected', 'expected-results');
             return;
           }
@@ -247,7 +238,7 @@
             return;
           }
 
-          this._openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators);
+          this._openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators, index);
         },
 
         _handleNewResultAdded: function(e) {
@@ -255,7 +246,14 @@
           this.push('dataItems', e.detail.result);
         },
 
-        _openCpOutputAndRamIndicatorsDialog: function(expectedResultId, cpOutputId, ramIndicatorsIds) {
+        _handleResultUpdated: function(e) {
+          e.stopImmediatePropagation();
+          console.log(e.detail.result, e.detail.index);
+          this.set(['dataItems', e.detail.index, 'cp_output'], e.detail.result.cp_output);
+          this.set(['dataItems', e.detail.index, 'ram_indicators'], e.detail.result.ram_indicators);
+        },
+
+        _openCpOutputAndRamIndicatorsDialog: function(expectedResultId, cpOutputId, ramIndicatorsIds, editIndex) {
           if (this.cpOutputRamIndicatorsEditElem) {
             this.cpOutputRamIndicatorsEditElem.resetData();
 
@@ -278,6 +276,7 @@
 
               // prevent ram indicators reset at first request, edit operation
               this.cpOutputRamIndicatorsEditElem.set('_preventRamIndicatorReset', true);
+              this.cpOutputRamIndicatorsEditElem.set('editIndex', editIndex);
             }
             this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
             this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
