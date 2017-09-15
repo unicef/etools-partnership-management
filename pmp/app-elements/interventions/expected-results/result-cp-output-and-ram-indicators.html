@@ -31,7 +31,7 @@
                    size="md"
                    dialog-title="Add/Update CP Output/Ram Indicators"
                    ok-btn-text="Add/Update"
-                   opened="[[opened]]"
+                   opened="{{opened}}"
                    on-confirm-btn-clicked="_saveChanges"
                    keep-dialog-open>
 
@@ -110,8 +110,8 @@
         opened: {
           type: Boolean,
           value: false
-        }
-
+        },
+        _preventRamIndicatorReset: Boolean
       },
 
       ready: function() {
@@ -119,7 +119,6 @@
       },
 
       _enableAutovalidate: function() {
-        console.log('ok');
         this.set('autovalidateActive', true);
       },
 
@@ -144,7 +143,10 @@
       },
 
       _handleRamIndicatorsReqResponse: function(response) {
-        this.set('selectedRamIndicatorsIds', []);
+        if (!this._preventRamIndicatorReset) {
+          this.set('selectedRamIndicatorsIds', []);
+        }
+        this.set('_preventRamIndicatorReset', false);
         this.set('cpOutputRamIndicators', response);
         this._showRamIndicatorsLoadingSpinner(false);
       },
@@ -169,7 +171,12 @@
         this.set('opened', false);
       },
 
-      resetErrorMessages: function() {
+      resetData: function() {
+        this.set('selectedCpOutputId', undefined);
+        this.set('availableCpOutputs', []);
+        this.set('cpOutputRamIndicators', []);
+        this.set('selectedRamIndicatorsIds', undefined);
+
         this.$.cpOutput.set('invalid', false);
         this.$.indicators.set('invalid', false);
       },

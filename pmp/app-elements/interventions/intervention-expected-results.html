@@ -50,22 +50,26 @@
                                  icon="cancel"
                                  disabled$="[[!editMode]]"></paper-icon-button>
 
-              <paper-icon-button class="action"
-                                 on-tap="_openEditExpectedResultDialog"
+              <paper-icon-button class="action edit"
+                                 on-tap="_editCpOutputAndRamIndicators"
                                  data-args$="[[index]]"
-                                 icon="edit"
+                                 icon="create"
                                  disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
 
-            <div class="row-h flex-c">
+            <div class="row-h">
               <div class="col col-4">
                 <etools-form-element-wrapper label="CP Output">
                   <span>[[_getCpOutputNameById(item.cp_output)]]</span>
                 </etools-form-element-wrapper>
               </div>
-              <div class="col col-8"></div>
+              <div class="col col-8">
+                <etools-form-element-wrapper label="Ram Indicators">
+                  <span>[[_getCpOutputIndicatorsNamesById(item.ram_indicators)]]</span>
+                </etools-form-element-wrapper>
+              </div>
             </div>
 
             <result-link-lower-results id$="lowerResult_[[index]]"
@@ -181,9 +185,7 @@
         _createAddEditCpOutputRamIndicatorsElement: function() {
           this.cpOutputRamIndicatorsEditElem = Polymer.dom(document.querySelector('body'))
               .querySelector('#cpOutputRamIndicatorsEditElem');
-          console.log(this.cpOutputRamIndicatorsEditElem);
           if (!this.cpOutputRamIndicatorsEditElem) {
-            console.log('cp output selector not added to body');
             this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
             this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
 
@@ -195,16 +197,12 @@
         },
 
         _computeAvailableCpOutputs: function(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure) {
-          console.log(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure);
           let selectedCpStructureId = parseInt(selectedCpStructure, 10);
           return cpOutputs.filter(function(cp) {
             let notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
             let belongsToCpStructure = true;
             if (selectedCpStructureId > 0 && selectedCpStructureId !== parseInt(cp.country_programme, 10)) {
               belongsToCpStructure = false;
-            }
-            if (notSelected && belongsToCpStructure) {
-              console.log(cp.country_programme);
             }
             return notSelected && belongsToCpStructure;
           });
@@ -235,26 +233,62 @@
           this._openCpOutputAndRamIndicatorsDialog();
         },
 
+        _editCpOutputAndRamIndicators: function(e) {
+          let index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
+
+          if (!index) {
+            this.logError('Can not edit, invalid index selected', 'expected-results');
+            return;
+          }
+
+          let result = this.dataItems[index];
+          if (!result) {
+            this.logError('Result not found in data items by index: ' + index, 'expected-results');
+            return;
+          }
+
+          this._openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators);
+        },
+
         _handleNewResultAdded: function(e) {
           e.stopImmediatePropagation();
-          console.log('new result: ', e.detail.result);
           this.push('dataItems', e.detail.result);
         },
 
         _openCpOutputAndRamIndicatorsDialog: function(expectedResultId, cpOutputId, ramIndicatorsIds) {
           if (this.cpOutputRamIndicatorsEditElem) {
+            this.cpOutputRamIndicatorsEditElem.resetData();
+
             this.cpOutputRamIndicatorsEditElem.set('interventionId', this.interventionId);
             this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
-            this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
             this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
 
-            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', this.availableCpOutputs);
-            this.cpOutputRamIndicatorsEditElem.resetErrorMessages();
+            let availableCpOutputsOptions = this.availableCpOutputs.slice(0);
+            if (cpOutputId) {
+              /**
+               * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
+               * as user might want to edit only the ram indicators
+               */
+              let currentCpOutputData = this.cpOutputs.find(function(cp) {
+                return parseInt(cp.id, 10) === parseInt(cpOutputId, 10);
+              });
+              if (currentCpOutputData) {
+                availableCpOutputsOptions.push(currentCpOutputData);
+              } // else => old cp output, not found, it's data will be requested by the cp outputs dropdown
+
+              // prevent ram indicators reset at first request, edit operation
+              this.cpOutputRamIndicatorsEditElem.set('_preventRamIndicatorReset', true);
+            }
+            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
+            this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
 
             this.cpOutputRamIndicatorsEditElem.openDialog();
           }
         },
 
+        /**
+         * TODO: Replace this with data from request response, cp_output_name
+         */
         _getCpOutputNameById: function(cpOutputId) {
           let cpOutputName = '';
           cpOutputId = parseInt(cpOutputId, 10);
@@ -266,9 +300,17 @@
               cpOutputName = cpOutput.name;
             } else {
               // TODO: ghost data issue, old cp, get it's name somehow
+              // Add this on the server response
             }
           }
           return cpOutputName;
+        },
+
+        /**
+         * TODO: get the right indicators names
+         */
+        _getCpOutputIndicatorsNamesById: function(ramIndicatorsIds) {
+          return ramIndicatorsIds.join('-indicator-name, ') + '-indicator-name';
         },
 
         /**
