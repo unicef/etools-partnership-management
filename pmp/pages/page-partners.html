@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
@@ -30,7 +31,7 @@
     <app-route
         route="{{route}}"
         pattern="[[currentPage]]/list"
-        query-params="{{queryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
@@ -108,7 +109,8 @@
                            current-page="[[currentPage]]"
                            active="[[listActive]]"
                            csv-download-url="{{csvDownloadUrl}}"
-                           url-params="[[queryParams]]"></partners-list>
+                           url-params="[[listQueryParams]]">
+            </partners-list>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(partnerPage, 'overview')]]">
@@ -158,6 +160,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.ScrollControl,
       ],
 
       properties: {
@@ -170,7 +173,6 @@
         routeData: {
           type: Object,
         },
-        queryParams: Object,
         activeTab: {
           type: String,
           value: '',
@@ -377,6 +379,7 @@
           // keep a copy of loaded partner to be able to check changed data
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
+        this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {

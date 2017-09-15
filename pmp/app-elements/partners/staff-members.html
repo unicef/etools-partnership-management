@@ -163,10 +163,7 @@
       },
 
       _canBeRemoved: function(id) {
-        if (!this.editMode) {
-          return false;
-        }
-        if (id) {
+        if (!this.editMode || id) {
           return false;
         }
         return true;

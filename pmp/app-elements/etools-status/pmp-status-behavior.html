@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-behaviors/scroll-control-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -14,6 +15,10 @@
         type: String,
         value: ''
       },
+      warningMessage: {
+        type: String,
+        value: ''
+      },
       editMode: {
         type: Boolean,
         value: true
@@ -25,7 +30,6 @@
         type: Number,
         value: 76
       },
-      contentContainer: Object,
       sectionName: String, // PD/SSFA, Partners, Agreements
       possibleStatuses: Array,
       possibleActions: Array,
@@ -46,27 +50,13 @@
       this._resetResizeHandler();
     },
 
-    _getContentContainer: function() {
-      if (window.isIE) {
-        return window;
-      }
-      if (!document.querySelector('app-shell')) {
-        return null;
-      }
-      if (!document.querySelector('app-shell').$$('#appHeadLayout')) {
-        return null;
-      }
-      return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
-    },
-
-    _activeFlagChanged: function(active) { 
+    _activeFlagChanged: function(active) {
       if (active) {
         this.debounce('etools-status-active-changed', this._forceScollPositionRecalculation.bind(this), 20);
       }
     },
 
     _handleStickyScroll: function() {
-      this.set('contentContainer', this._getContentContainer());
       if (!this.contentContainer) {
         return;
       }
@@ -143,11 +133,8 @@
 
     _showStatusChangeConfirmationDialog: function() {
       if (this.warningDialog) {
-        var warningMessage = 'Are you sure you want to change status from: <strong>\''
-            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
-
         if (this.statusChangeWarningDialogContent) {
-          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
           this.warningDialog.opened = true;
         } else {
           this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
@@ -178,6 +165,7 @@
       }
 
       this.set('newStatus', newStatus);
+      this._computeWarningMessage(newStatus);
       this._showStatusChangeConfirmationDialog();
     },
 
@@ -203,11 +191,20 @@
     _computeAvailableStatuses: function(status) {
       // children should overwrite this
     },
+    _computeWarningMessage: function(newStatus) {
+      // children might want to overwrite this
+      this.set('warningMessage', this._getDefaultWarningMessage());
+    },
+    _getDefaultWarningMessage: function() {
+      return 'You are changing the status from <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */
   EtoolsPmpApp.Behaviors.EtoolsStatusCommon = [
     EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.ScrollControl,
     etoolsBehaviors.DynamicDialogBehavior,
     EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl
   ];
