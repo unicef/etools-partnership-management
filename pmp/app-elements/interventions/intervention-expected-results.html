@@ -225,9 +225,9 @@
           } else {
             this.indicatorDialog.setTitle('Edit Indicator');
           }
-
+          this.indicatorDialog.toastEventSource = this;
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
-           this.indicatorDialog.resetValidations();
+          this.indicatorDialog.resetValidations();
           console.log('setIndicatorData result', this.indicatorDialog.indicator);
           this.indicatorDialog.openIndicatorDialog();
         },

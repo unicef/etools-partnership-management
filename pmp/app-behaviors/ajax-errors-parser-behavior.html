@@ -65,10 +65,13 @@
       return errors;
     },
 
-    parseRequestErrorsAndShowAsToastMsgs: function(errorResponse) {
+    parseRequestErrorsAndShowAsToastMsgs: function(errorResponse, source) {
       let errorsString = this.formatServerErrorAsText(errorResponse);
       if (errorsString) {
-        this.fire('toast', {text: errorsString, showCloseBtn: true});
+         if (!source) {
+           source = this;
+        }
+        source.fire('toast', {text: errorsString, showCloseBtn: true});
       }
     }
 

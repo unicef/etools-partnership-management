@@ -234,14 +234,6 @@
           actionParams: {
             type: Object
           },
-          // unit: {
-          //   type: Object,
-          //   value: {
-          //     numeric: true,
-          //     percentage: false,
-          //     yesno: false
-          //   }
-          // },
           disaggregations: {
             type: Array,
             value: []
@@ -265,7 +257,8 @@
           isCluster: {
             type: Boolean,
             value: false
-          }
+          },
+          toastEventSource: Object
         },
         observers: [
           '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, isCluster)'
@@ -409,12 +402,13 @@
             indicatorData: response,
             actionParams: this.actionParams
           });
+          this.$.indicatorDialog.opened = false;
         },
         _handleSaveIndicatorError: function(error) {
           this._stopSpinner();
           let errorMsg = this.formatServerErrorAsText(error);
-          this.fire('toast', {active: true, text: errorMsg , showCloseBtn: true});
-          console.log('error', error); //TODO show error
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+          console.log('error', error);
         },
         _getIndicatorBody: function() {
            let body = this._getIndicatorModelForSave();
