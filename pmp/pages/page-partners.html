@@ -342,6 +342,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
+          this._setContentScrollPosition(0);
         }
       },
 
