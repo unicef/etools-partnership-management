@@ -142,6 +142,10 @@
             observer: '_selectedPrpClusterIndicatorChanged'
           }
         },
+
+        observers: [
+          '_indicatorDataChange(indicator.*)',
+        ],
          indiChanged: function(newi, oldi) {
           if (!newi) {
             console.trace();
@@ -155,14 +159,31 @@
           this._fillInFields(prpClusterIndic);
         },
         _fillInFields: function(prpClusterIndic) {
-          console.log(this);
-          if(typeof this.indicator === 'undefined') {
-           // console.trace();
-          }
           console.log(typeof this.indicator);
           this.indicator.means_of_verification = prpClusterIndic.means_of_verification;
-          this.indicator.lodationIds = prpClusterIndic.locationIds;
+          this.indicator.locations = prpClusterIndic.locationIds;
         },
+         _indicatorDataChange: function(data) {
+          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
+            if (this.indicator.unit === 'percentage' && data.value !== '') {
+              var val = parseInt(data.value, 10);
+              if (isNaN(val) || val < 0) {
+                val = 0;
+              }
+              if (val > 100) {
+                val = 100;
+              }
+              this.set(data.path, val);
+            }
+          }
+        },
+        validate: function() {
+          return this.$.clusterIndicatorsDropdw.validate();
+        },
+        resetValidations: function() {
+          this.$.clusterIndicatorsDropdw.invalid = false;
+        }
+
 
     });
   })();

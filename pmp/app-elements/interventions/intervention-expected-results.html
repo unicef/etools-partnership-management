@@ -174,7 +174,7 @@
                 // new indicator added
                 this.push(indicatorPaths, indicator);
               }
-              break; // stop exp res search, already found
+              break;
             }
           }
         },
@@ -221,16 +221,14 @@
           var actionParams = event.detail;
 
           if (actionParams.appliedIndicatorsIndex === null) {
-            this.indicatorDialog.setAddLabel();
             this.indicatorDialog.setTitle('Add Indicator');
           } else {
-            this.indicatorDialog.setEditLabel();
             this.indicatorDialog.setTitle('Edit Indicator');
           }
 
-          this.indicatorDialog.resetData();
-
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
+           this.indicatorDialog.resetValidations();
+          console.log('setIndicatorData result', this.indicatorDialog.indicator);
           this.indicatorDialog.openIndicatorDialog();
         },
 

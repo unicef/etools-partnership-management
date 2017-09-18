@@ -8,12 +8,13 @@
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       .radioGroup {
         width: 320px;
       }
@@ -41,9 +42,9 @@
       <div class="layout-vertical">
         <label class="paper-label">Type </label>
         <div class="radioGroup">
-          <paper-radio-group selected="{{indicator.unit}}">
-            <paper-radio-button class="no-left-padding" name="numeric">Quantity (#)</paper-radio-button>
-            <paper-radio-button name="percent">Percent/Ratio</paper-radio-button>
+          <paper-radio-group selected="{{indicator.indicator.unit}}">
+            <paper-radio-button class="no-left-padding" name="number">Quantity (#)</paper-radio-button>
+            <paper-radio-button name="percentage">Percent/Ratio</paper-radio-button>
           </paper-radio-group>
 
         </div>
@@ -51,7 +52,7 @@
       <div class="layout-vertical">
         <label class="paper-label">Display Type </label>
         <div class="radioGroup">
-           <paper-radio-group selected="{{indicator.displayUnit}}">
+           <paper-radio-group selected="{{indicator.indicator.display_type}}">
             <paper-radio-button class="no-left-padding" name="percentage">Percentage</paper-radio-button>
             <paper-radio-button name="ratio">Ratio</paper-radio-button>
           </paper-radio-group>
@@ -59,7 +60,10 @@
       </div>
     </div>
     <div class="row-h flex-c">
-      <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
+      <paper-input id="title" required label="Indicator"
+        value="{{indicator.indicator.title}}" placeholder="&#8212;"
+        error-message="Please add a title" auto-validate>
+      </paper-input>
     </div>
 
     <!-- Baseline & Target -->
@@ -177,6 +181,12 @@
             }
           }
         },
+        validate: function() {
+          return this.$.title.validate();
+        },
+        resetValidations: function() {
+          this.$.title.invalid = false;
+        }
 
     });
   })();

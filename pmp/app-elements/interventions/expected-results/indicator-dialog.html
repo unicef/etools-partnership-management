@@ -10,13 +10,14 @@
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
 <link rel="import" href="cluster-indicator-disaggregations.html">
@@ -24,6 +25,9 @@
 <link rel="import" href="non-cluster-indicator.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+
 
 <dom-module id="indicator-dialog">
   <template strip-whitespace>
@@ -33,16 +37,9 @@
       }
 
       :host {
-        --etools-checkable-input-label: {
-          font-size: 14px;
-        };
         --etools-dialog-scrollable: {
           margin-top: 10px !important;
         };
-      }
-
-      etools-checkable-input:not(:last-of-type) {
-        margin-right: 30px;
       }
       paper-input,
       paper-textarea,
@@ -64,7 +61,10 @@
 
     </style>
 
-    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog" no-padding>
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
+     on-close="_cleanUp"
+     on-confirm-btn-clicked="_validateAndSaveIndicator" no-padding
+     ok-btn-text="Save" keep-dialog-open>
      <div>
         <div class="page-top-content in-modal">
           <div class="top-content-row">
@@ -92,35 +92,35 @@
               <div class="col col-4">
                 <etools-single-selection-menu id$="sectionDropdw"
                                               label="Section"
-                                              selected="{{indicator.sectionId}}"
+                                              selected="{{indicator.section}}"
                                               placeholder="&#8212;"
-                                              options="[[sectors]]"
+                                              options="[[sections]]"
                                               option-label="name"
                                               option-value="id">
                 </etools-single-selection-menu>
               </div>
             </div>
             <div class="row-h" >
-              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]" checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
+              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]" checked="{{isCluster}}"></paper-toggle-button> Cluster Indicator
             </div>
             <div class="indicator-content">
               <div id="newLayout" >
-                <template is="dom-if" if="[[!indicator.isCluster]]" >
-                  <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
+                <template is="dom-if" if="[[!isCluster]]" >
+                  <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"> </non-cluster-indicator>
                 </template>
-                <template is="dom-if" if="[[indicator.isCluster]]" >
-                  <cluster-indicator indicator="{{indicator}}" prp-cluster-indicator="{{prpClusterIndicator}}"></cluster-indicator>
+                <template is="dom-if" if="[[isCluster]]" >
+                  <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}" prp-cluster-indicator="{{prpClusterIndicator}}"></cluster-indicator>
                 </template>
               </div>
             </div>
           </div>
           <div class="row-h flex-c" name="disaggregations">
               <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
-              <template is="dom-if" if="[[!indicator.isCluster]]" restamp>
+              <template is="dom-if" if="[[!isCluster]]" restamp>
                 <indicator-dissaggregations data-items="{{disaggregations}}">
                 </indicator-dissaggregations>
               </template>
-              <template is="dom-if" if="[[indicator.isCluster]]" restamp>
+              <template is="dom-if" if="[[isCluster]]" restamp>
                 <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
                 </cluster-indicator-disaggregations>
               </template>
@@ -140,7 +140,10 @@
         is: 'indicator-dialog',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+          EtoolsAjaxRequestBehavior
         ],
 
         properties: {
@@ -148,41 +151,97 @@
             type: Object,
             observer: 'indiChanged'
           },
+          indicatorId: {
+            type: String
+          },
           activeTab: {
             type: String,
             valus: 'details',
           },
+          // indicatorModel: {
+          //   type: Object,
+          //   value: {
+          //     id: null,
+          //     isCluster: false,
+          //     name: null,
+          //     baseline: null,
+          //     target: null,
+          //     means_of_verification: null,
+          //     unit: 'numeric',
+          //     displayUnit: 'percentage',
+          //     disaggregation_logic: null,
+          //     sectionId: null,
+          //     baselineIsUnknown: false,
+          //     clusterIndicatorId: null,
+          //     clusterId: null,
+          //     responsePlanId: null,
+          //     locationIds: null
+          //   }
+          // },
           indicatorModel: {
             type: Object,
             value: {
               id: null,
-              name: null,
+              indicator: {
+                id: null,
+                title: null,
+                unit: 'number',
+                display_type: 'percentage'
+              },
+              section: null,
               baseline: null,
               target: null,
               means_of_verification: null,
-              unit: 'numeric',
-              displayUnit: 'percentage',
-              disaggregation_logic: null,
-              sectionId: null,
-              isCluster: false,
-              baselineIsUnknown: false,
-              clusterIndicatorId: null,
-              clusterId: null,
-              responsePlanId: null,
-              locationIds: null
+              locations: []
             }
+          },
+          nonClusterIndicatorCreateModel: {
+            type: Object,
+            value: {
+              id: null,
+              indicator: {
+                id: null,
+                title: null,
+                unit: 'number',
+                display_type: 'percentage'
+              },
+              section: null,
+              baseline: null,
+              target: null,
+              means_of_verification: null,
+              locations: [],
+              dsaggregation: []
+            }
+          },
+          nonClusterIndicatorEditModel: {
+             type: Object,
+             value: {
+              id: null,
+              section: null,
+              baseline: null,
+              target: null,
+              means_of_verification: null,
+              locations: [],
+              disaggregation: []
+            }
+          },
+          clusterIndicatorCreateModel: {
+            type: Object
+          },
+          clusterIndicatorEditModel: {
+            type: Object
           },
           actionParams: {
             type: Object
           },
-          unit: {
-            type: Object,
-            value: {
-              numeric: true,
-              percentage: false,
-              yesno: false
-            }
-          },
+          // unit: {
+          //   type: Object,
+          //   value: {
+          //     numeric: true,
+          //     percentage: false,
+          //     yesno: false
+          //   }
+          // },
           disaggregations: {
             type: Array,
             value: []
@@ -195,17 +254,21 @@
             type: Number,
             value: 0
           },
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
           prpClusterIndicator: {
             type: Object,
             observer: '_prpClusterIndicatorChanged'
+          },
+          isCluster: {
+            type: Boolean,
+            value: false
           }
         },
         observers: [
-          '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, indicator.isCluster)'
+          '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, isCluster)'
         ],
         indiChanged: function(newi, oldi) {
           if (!newi) {
@@ -226,11 +289,10 @@
           }
         },
         _setDisaggregationsCount: function(disaggregs, disaggregsLength, prpDisaggregs, prpDisaggregsLength) {
-          console.log(disaggregs, disaggregsLength, prpDisaggregs, prpDisaggregsLength);
           if (!this.indicator) {
             return;
           }
-          if (this.indicator.isCluster) {
+          if (this.isCluster) {
             this.disaggregationsCount = prpDisaggregsLength;
           } else {
             this.disaggregationsCount = disaggregsLength;
@@ -256,58 +318,113 @@
           this.$.indicatorDialog.opened = true;
         },
 
-        // change ok btn label to some edit label or add label texts
-        setEditLabel: function() {
-          this.$.indicatorDialog.okBtnText = 'Edit Indicator';
-        },
-        setAddLabel: function() {
-          this.$.indicatorDialog.okBtnText = 'Add Indicator';
-        },
         setTitle: function(title) {
           this.$.indicatorDialog.dialogTitle = title;
         },
 
         setIndicatorData: function(data, actionParams) {
-          if (!data) {
-            data = JSON.parse(JSON.stringify(this.indicatorModel));
+           this.set('actionParams', actionParams); //actionParams wtf?
+
+          if (!data) { //new indicator
+            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
+            this.isCluster = false;
+            return;
           }
-          this.set('actionParams', actionParams);
+
+          this.isCluster = !!data.cluster_id;
 
           // set unit
-          for (var k in this.unit) {
-            if (k !== data.unit) {
-              this.set('unit.' + k, false);
-            } else {
-              this.set('unit.' + k, true);
-            }
-          }
-          // set disaggregations
-          if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
-            var disaggregationsKeys = Object.keys(data.disaggregation_logic);
-            this.set('disaggregations', []);
-            if (disaggregationsKeys.length) {
-              disaggregationsKeys.forEach(function(key) {
-                this.push('disaggregations', {
-                  disaggregate_by: key,
-                  disaggregation_groups: data.disaggregation_logic[key].join(';')
-                });
-              }.bind(this));
-            }
-          }
+          // for (var k in this.unit) {
+          //   if (k !== data.unit) {
+          //     this.set('unit.' + k, false);
+          //   } else {
+          //     this.set('unit.' + k, true);
+          //   }
+          // }
+          // set disaggregations !!!! TODO !!!
+          // if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
+          //   var disaggregationsKeys = Object.keys(data.disaggregation_logic);
+          //   this.set('disaggregations', []);
+          //   if (disaggregationsKeys.length) {
+          //     disaggregationsKeys.forEach(function(key) {
+          //       this.push('disaggregations', {
+          //         disaggregate_by: key,
+          //         disaggregation_groups: data.disaggregation_logic[key].join(';')
+          //       });
+          //     }.bind(this));
+          //   }
+          // }
           this.set('indicator', data);
         },
+        _cleanUp: function() {
+          this._stopSpinner();
+          //Anything else?
+        },
+        _stopSpinner: function() {
+          this.$.indicatorDialog.stopSpinner();
+        },
+        _validateAndSaveIndicator: function(event) {
+          if (!this.validate()) {
+            return;
+          }
 
-        _closeIndicatorDialog: function(event) {
-          if (event.detail.confirmed) {
-            // get indicator data
-           // this.indicator.unit = this._getActiveUnit();
-            this.indicator.disaggregation_logic = this._prepareDisaggregations();
-            // fire it up :)
-            this.fire('indicator-dialog-close', {
-              indicatorData: this.indicator,
-              actionParams: this.actionParams
-            });
-          } // else, just close
+          this.$.indicatorDialog.startSpinner();
+
+          let endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
+          let method = this.indicator.id ? 'PATCH': 'POST';
+          let body = this._getIndicatorBody();
+          let self = this;
+
+          this.sendRequest({
+            endpoint: endpoint,
+            method: method,
+            body: body
+          }).then(function(resp) {
+            self._handleSaveIndicatorResponse(resp);
+          }).catch(function(error) {
+            self._handleSaveIndicatorError(error.response);
+          });
+
+          //TODO this.indicator.disaggregation_logic = this._prepareDisaggregations();
+        },
+        validate: function() {
+          var valid = true;
+          if (this.isCluster) {
+            valid = this.$$('#clusterIndicatorEl').validate();
+          } else {
+             valid = this.$$('#nonClusterIndicatorEl').validate();
+          }
+          return valid;
+        },
+        _getIdForEndpoint: function() {
+          return this.indicator.id ? this.indicator.id : this.actionParams.llResultId;
+        },
+        _getEndpointName: function() {
+          return this.indicator.id ? 'getEditDeleteIndicator' : 'createIndicator';
+        },
+        _handleSaveIndicatorResponse: function(response) {
+          console.log('response', response);
+          this._stopSpinner();
+          this.fire('indicator-dialog-close', {
+            indicatorData: response,
+            actionParams: this.actionParams
+          });
+        },
+        _handleSaveIndicatorError: function(error) {
+          this._stopSpinner();
+          let errorMsg = this.formatServerErrorAsText(error);
+          this.fire('toast', {active: true, text: errorMsg , showCloseBtn: true});
+          console.log('error', error); //TODO show error
+        },
+        _getIndicatorBody: function() {
+           let body = this._getIndicatorModelForSave();
+           Object.assign(body, _.pick(this.indicator, _.keys(body)));
+           return body;
+        },
+        _getIndicatorModelForSave: function() {
+          let modelName = this.isCluster ? 'clusterIndicator' : 'nonClusterIndicator';
+          modelName += this.indicator.id ? 'EditModel' : 'CreateModel';
+          return JSON.parse(JSON.stringify(this[modelName]));
         },
 
         _prepareDisaggregations: function() {
@@ -324,12 +441,12 @@
           return null;
         },
 
-        resetData: function() {
-          this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
-          this.set('unit.numeric', true);
-          this.set('unit.percentage', false);
-          this.set('unit.yesno', false);
-          this.set('disaggregations', []);
+        resetValidations: function() {
+           if (this.isCluster) {
+            this.$$('#clusterIndicatorEl').resetValidations();
+          } else {
+            this.$$('#nonClusterIndicatorEl').resetValidations();
+          }
         }
 
       });
