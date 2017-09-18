@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
@@ -149,7 +150,8 @@
         is: 'non-cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsLogsBehavior
         ],
 
         properties: {
@@ -219,7 +221,7 @@
                 valid = false;
               }
             } else {
-              console.warn('Elem '+ elemIds[i] + ' not found');
+              this.logWarn('Elem '+ elemIds[i] + ' not found');
             }
           }
           return valid;
@@ -232,7 +234,7 @@
             if (elem) {
               elem.invalid = false;
             } else {
-              console.warn('Elem '+ elemIds[i] + ' not found');
+              this.logWarn('Elem '+ elemIds[i] + ' not found');
             }
           }
         }
