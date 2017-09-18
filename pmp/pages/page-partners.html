@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
@@ -159,6 +160,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.ScrollControl,
       ],
 
       properties: {
@@ -377,6 +379,7 @@
           // keep a copy of loaded partner to be able to check changed data
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
+        this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {
