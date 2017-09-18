@@ -8,26 +8,32 @@
 
     properties: {
       endpoint: {
-        type: Object
+        type: Object,
+        observer: '_endpointChanged'
       },
       data: {
         type: Array,
         readOnly: true,
         notify: true
       },
-
       db: {
         type: Object,
         value: function() {
           return EtoolsPmpApp.DexieDb; // TODO: check if this is really needed
         }
       },
-
       fireDataLoaded: {
         type: Boolean,
         value: false
+      },
+      _refreshInterval: {
+        type: Object,
+        value: null
       }
+    },
 
+    detached: function() {
+      this._removeAutomaticDataRefreshLoop();
     },
 
     ready: function() {
@@ -53,6 +59,33 @@
       }
     },
 
+    _endpointChanged: function() {
+      // Check if endpoint has expire property set and it's bigger than 0
+      if (this.method === 'GET' && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
+          this._removeAutomaticDataRefreshLoop();
+          this._setAutomaticDataRefreshLoop();
+        }
+    },
+
+    _removeAutomaticDataRefreshLoop: function() {
+      if(this._refreshInterval !== null) {
+        clearInterval(this._refreshInterval);
+        this.set('_refreshInterval', null);
+      }
+    },
+
+    _setAutomaticDataRefreshLoop: function() {
+      if (!this.endpoint || !this.endpoint.exp) {
+        return;
+      }
+
+      var refreshInterval = setInterval(function() {
+        this.set('url', null);
+        this.set('url', this.endpoint.url);
+      }.bind(this), this.endpoint.exp);
+
+      this.set('_refreshInterval', refreshInterval);
+    },
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.DataElement */
