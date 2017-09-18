@@ -78,13 +78,16 @@
       return listLength === 0;
     },
 
-    _getItemModelObject: function() {
+    _getItemModelObject: function(addNull) {
       if (this.dataSetModel === null) {
         let newObj = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
             newObj[property] = ''; //(this.model[0][property]) ? this.model[0][property] :
           }.bind(this));
+        }
+        if (addNull) {
+          return null;
         }
         return newObj;
       } else {

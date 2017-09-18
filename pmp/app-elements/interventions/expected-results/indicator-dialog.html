@@ -279,29 +279,8 @@
           }
 
           this.isCluster = !!data.cluster_id;
-
-          // set unit
-          // for (var k in this.unit) {
-          //   if (k !== data.unit) {
-          //     this.set('unit.' + k, false);
-          //   } else {
-          //     this.set('unit.' + k, true);
-          //   }
-          // }
-          // set disaggregations !!!! TODO !!!
-          // if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
-          //   var disaggregationsKeys = Object.keys(data.disaggregation_logic);
-          //   this.set('disaggregations', []);
-          //   if (disaggregationsKeys.length) {
-          //     disaggregationsKeys.forEach(function(key) {
-          //       this.push('disaggregations', {
-          //         disaggregate_by: key,
-          //         disaggregation_groups: data.disaggregation_logic[key].join(';')
-          //       });
-          //     }.bind(this));
-          //   }
-          // }
           this.set('indicator', data);
+          this.set('disaggregations', this.indicator.disaggregation);
         },
         _cleanUp: function() {
           this._stopSpinner();
