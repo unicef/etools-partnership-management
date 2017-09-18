@@ -42,9 +42,6 @@
     agreementAmendmentsTypeDelete:  {
       template: '/api/v2/agreements/amendments/types/<%=id%>/',
     },
-    lowerResultsDelete:  {
-      template: '/api/v2/reports/lower_results/<%=id%>/',
-    },
     myProfile:  {
       template: '/api/v2/users/myprofile/',
     },
@@ -141,7 +138,16 @@
     },
     pdExpectedResultDetails: {
       template: '/api/v2/interventions/result-links/<%=resultId%>/'
-    }
+    },
+    pdLowerResults: {
+      template: '/api/v2/interventions/result-links/<%=resultId%>/lower-results/'
+    },
+    pdLowerResultDetails: {
+      template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
+    },
+    lowerResultsDelete:  {
+      template: '/api/v2/reports/lower_results/<%=id%>/',
+    },
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */

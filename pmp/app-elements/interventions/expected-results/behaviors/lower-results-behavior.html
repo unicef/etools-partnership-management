@@ -1,0 +1,87 @@
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.LowerResultsImpl */
+  EtoolsPmpApp.Behaviors.LowerResultsImpl = {
+    properties: {
+      lowerResultNameEditElem: Object,
+    },
+
+    listeners: {
+      'add-new-lower-result': '_handleAddNewLowerResult',
+      'edit-lower-result': '_handleEditLowerResult'
+    },
+
+    createLowerResultNameDialog: function() {
+      this.lowerResultNameEditElem = Polymer.dom(document.querySelector('body'))
+          .querySelector('#pdLowerResultName');
+      if (!this.lowerResultNameEditElem) {
+        this.lowerResultNameEditElem = document.createElement('pd-lower-result-name');
+        this.lowerResultNameEditElem.setAttribute('id', 'pdLowerResultName');
+        this.lowerResultNameEditElem.set('toastEventSource', this);
+        this.lowerResultNameEditElem.addEventListener('lower-result-saved',
+            this._lowerResultSaved.bind(this));
+        Polymer.dom(document.querySelector('body')).appendChild(this.lowerResultNameEditElem);
+      }
+    },
+
+    _getExpectedResultIndex: function(resultId) {
+      let expectedResultIndex = null;
+      let resultsLength = this.dataItems.length;
+      for (expectedResultIndex = 0; resultsLength; expectedResultIndex++) {
+
+      }
+      if (!expectedResult) {
+        this.logError('Can not make changes if expected result ID is not specified', 'lower-results-behavior');
+      }
+    },
+
+    _lowerResultSaved: function(e) {
+      e.stopImmediatePropagation();
+      if (!e.detail.expectedResultId) {
+        this.logError('Can not make changes if expected result ID is not specified', 'lower-results-behavior');
+        return;
+      }
+
+
+
+//      if (!expectedResult)
+
+      if (!e.detail.lowerResultId) {
+        this.push('dataItems', e.detail.lowerResult);
+      } else {
+        this.set(['dataItems', e.detail.index, 'name'], e.detail.lowerResult.name);
+      }
+    },
+
+    _handleAddNewLowerResult: function(e) {
+      e.stopImmediatePropagation();
+      this._openLowerResultNameDialog(null, undefined, e.detail.expectedResultId);
+    },
+
+    _handleEditLowerResult: function(e) {
+      e.stopImmediatePropagation();
+      this._openLowerResultNameDialog(e.detail.lowerResultId, e.detail.lowerResultName, e.detail.expectedResultId);
+    },
+
+    _openLowerResultNameDialog: function(lowerResultId, lowerResultName, expectedResultId) {
+      if (this.lowerResultNameEditElem) {
+        this.lowerResultNameEditElem.resetData();
+        this.lowerResultNameEditElem.set('expectedResultId', expectedResultId);
+        if (lowerResultId) {
+          // edit operation
+          this.lowerResultNameEditElem.set('lowerResultId', lowerResultId);
+          this.lowerResultNameEditElem.set('lowerResultName', lowerResultName);
+        }
+        this.lowerResultNameEditElem.openDialog();
+      }
+    },
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.LowerResults */
+  EtoolsPmpApp.Behaviors.LowerResults = [
+    EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.LowerResultsImpl
+  ]
+</script>

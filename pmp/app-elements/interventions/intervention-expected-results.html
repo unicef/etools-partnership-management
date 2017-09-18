@@ -9,11 +9,12 @@
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 
 <link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
 
+<link rel="import" href="expected-results/behaviors/results-behavior.html">
+<link rel="import" href="expected-results/behaviors/lower-results-behavior.html">
 <link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
@@ -59,18 +60,19 @@
             <div class="row-h">
               <div class="col col-4">
                 <etools-form-element-wrapper label="CP Output">
-                  <span>[[_getCpOutputNameById(item.cp_output)]]</span>
+                  <span>[[getCpOutputNameById(item.cp_output)]]</span>
                 </etools-form-element-wrapper>
               </div>
               <div class="col col-8">
                 <etools-form-element-wrapper label="Ram Indicators">
-                  <span>[[_getCpOutputIndicatorsNamesById(item.ram_indicators)]]</span>
+                  <span>[[getCpOutputIndicatorsNamesById(item.ram_indicators)]]</span>
                 </etools-form-element-wrapper>
               </div>
             </div>
 
             <result-link-lower-results data-items="{{item.ll_results}}"
                                        edit-mode$="[[editMode]]"
+                                       expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
@@ -100,45 +102,23 @@
         is: 'intervention-expected-results',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.ExpectedResults,
+          EtoolsPmpApp.Behaviors.LowerResults
         ],
 
         properties: {
-          interventionId: {
-            type: Number
-          },
           _deleteEpName: {
             type: String,
             value: 'interventionResultLinkDelete',
             readOnly: true,
-          },
-          required: {
-            type: Boolean,
-            value: false
           },
           editMode: {
             type: Boolean
           },
           indicatorDialog: {
             type: Object
-          },
-          selectedCpStructure: {
-            type: String
-          },
-          cpOutputRamIndicatorsEditElem: Object,
-          cpOutputs: {
-            type: Array,
-            statePath: 'cpOutputs'
-          },
-          availableCpOutputs: {
-            type: Array,
-            computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'
-          },
-          alreadySelectedCpOutputs: {
-            type: Array,
-            value: []
-          },
+          }
         },
 
         observers: [
@@ -147,7 +127,9 @@
 
         ready: function() {
           // init cp outputs and ram indicator add/edit element
-          this._createAddEditCpOutputRamIndicatorsElement();
+          this.createAddEditCpOutputRamIndicatorsElement();
+          // init PD output or SSFA expected result add/edit element
+          this.createLowerResultNameDialog();
 
           // init indicator dialog data
           this.indicatorDialog = document.createElement('indicator-dialog');
@@ -165,68 +147,19 @@
           if (this.indicatorDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
-          if (this.cpOutputRamIndicatorsEditElem) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.cpOutputRamIndicatorsEditElem);
-          }
-        },
-
-        _createAddEditCpOutputRamIndicatorsElement: function() {
-          this.cpOutputRamIndicatorsEditElem = Polymer.dom(document.querySelector('body'))
-              .querySelector('#cpOutputRamIndicatorsEditElem');
-          if (!this.cpOutputRamIndicatorsEditElem) {
-            this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
-            this.cpOutputRamIndicatorsEditElem.setAttribute('id', 'cpOutputRamIndicatorsEditElem');
-
-            this.cpOutputRamIndicatorsEditElem.addEventListener('new-expected-result-added',
-                this._handleNewResultAdded.bind(this));
-
-            this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated',
-                this._handleResultUpdated.bind(this));
-
-            Polymer.dom(document.querySelector('body')).appendChild(this.cpOutputRamIndicatorsEditElem);
-          }
-        },
-
-        _computeAvailableCpOutputs: function(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure) {
-          let selectedCpStructureId = parseInt(selectedCpStructure, 10);
-          return cpOutputs.filter(function(cp) {
-            let notSelected = alreadySelectedCpOutputs.indexOf(cp.id) === -1;
-            let belongsToCpStructure = true;
-            if (selectedCpStructureId > 0 && selectedCpStructureId !== parseInt(cp.country_programme, 10)) {
-              belongsToCpStructure = false;
-            }
-            return notSelected && belongsToCpStructure;
-          });
+          this.removeCpOutputRamIndicatorsDialog();
         },
 
         _dataItemsChanged: function(dataItemsLength) {
-          if (dataItemsLength > 0) {
-            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
-          } else {
-            this.set('alreadySelectedCpOutputs', []);
-          }
-        },
-
-        // get selected cpoutputs ids
-        _getSelectedCpOutputsIds: function() {
-          let selectedCpOIds = [];
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(result) {
-              if (result.cp_output) {
-                selectedCpOIds.push(result.cp_output);
-              }
-            });
-          }
-          return selectedCpOIds;
+          this.setAlreadySelectedCpOutputs(dataItemsLength, this.dataItems);
         },
 
         _addNewCpOutputAndRamIndicators: function() {
-          this._openCpOutputAndRamIndicatorsDialog();
+          this.openCpOutputAndRamIndicatorsDialog();
         },
 
         _editCpOutputAndRamIndicators: function(e) {
-          let index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'), 10);
-          console.log(index);
+          let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
           if (!(index >= 0)) {
             this.logError('Can not edit, invalid index selected', 'expected-results');
             return;
@@ -238,78 +171,7 @@
             return;
           }
 
-          this._openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators, index);
-        },
-
-        _handleNewResultAdded: function(e) {
-          e.stopImmediatePropagation();
-          this.push('dataItems', e.detail.result);
-        },
-
-        _handleResultUpdated: function(e) {
-          e.stopImmediatePropagation();
-          console.log(e.detail.result, e.detail.index);
-          this.set(['dataItems', e.detail.index, 'cp_output'], e.detail.result.cp_output);
-          this.set(['dataItems', e.detail.index, 'ram_indicators'], e.detail.result.ram_indicators);
-        },
-
-        _openCpOutputAndRamIndicatorsDialog: function(expectedResultId, cpOutputId, ramIndicatorsIds, editIndex) {
-          if (this.cpOutputRamIndicatorsEditElem) {
-            this.cpOutputRamIndicatorsEditElem.resetData();
-
-            this.cpOutputRamIndicatorsEditElem.set('interventionId', this.interventionId);
-            this.cpOutputRamIndicatorsEditElem.set('expectedResultId', expectedResultId);
-            this.cpOutputRamIndicatorsEditElem.set('selectedRamIndicatorsIds', ramIndicatorsIds);
-
-            let availableCpOutputsOptions = this.availableCpOutputs.slice(0);
-            if (cpOutputId) {
-              /**
-               * cpOutputId is valid => edit operation, include curent cpOutput in the availableCpOutputsOptions
-               * as user might want to edit only the ram indicators
-               */
-              let currentCpOutputData = this.cpOutputs.find(function(cp) {
-                return parseInt(cp.id, 10) === parseInt(cpOutputId, 10);
-              });
-              if (currentCpOutputData) {
-                availableCpOutputsOptions.push(currentCpOutputData);
-              } // else => old cp output, not found, it's data will be requested by the cp outputs dropdown
-
-              // prevent ram indicators reset at first request, edit operation
-              this.cpOutputRamIndicatorsEditElem.set('_preventRamIndicatorReset', true);
-              this.cpOutputRamIndicatorsEditElem.set('editIndex', editIndex);
-            }
-            this.cpOutputRamIndicatorsEditElem.set('availableCpOutputs', availableCpOutputsOptions);
-            this.cpOutputRamIndicatorsEditElem.set('selectedCpOutputId', cpOutputId);
-
-            this.cpOutputRamIndicatorsEditElem.openDialog();
-          }
-        },
-
-        /**
-         * TODO: Replace this with data from request response, cp_output_name
-         */
-        _getCpOutputNameById: function(cpOutputId) {
-          let cpOutputName = '';
-          cpOutputId = parseInt(cpOutputId, 10);
-          if (!isNaN(cpOutputId)) {
-            let cpOutput = this.cpOutputs.find(function(cp) {
-              return cp.id === cpOutputId;
-            });
-            if (cpOutput) {
-              cpOutputName = cpOutput.name;
-            } else {
-              // TODO: ghost data issue, old cp, get it's name somehow
-              // Add this on the server response
-            }
-          }
-          return cpOutputName;
-        },
-
-        /**
-         * TODO: get the right indicators names
-         */
-        _getCpOutputIndicatorsNamesById: function(ramIndicatorsIds) {
-          return ramIndicatorsIds.join('-indicator-name, ') + '-indicator-name';
+          this.openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators, index);
         },
 
         /**

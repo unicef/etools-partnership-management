@@ -31,7 +31,7 @@
                    size="md"
                    dialog-title="Add/Update CP Output/Ram Indicators"
                    ok-btn-text="Add/Update"
-                   opened="{{opened}}"
+                   disable-confirm-btn="[[disableConfirmBtn]]"
                    on-confirm-btn-clicked="_saveChanges"
                    keep-dialog-open>
 
@@ -114,7 +114,12 @@
         _preventRamIndicatorReset: Boolean,
         editIndex: {
           value: null
-        }
+        },
+        disableConfirmBtn: {
+          type: Boolean,
+          value: false
+        },
+        toastEventSource: Object
       },
 
       ready: function() {
@@ -139,7 +144,7 @@
             self._handleRamIndicatorsReqResponse(response);
           }).catch(function(error) {
             self._showRamIndicatorsLoadingSpinner(false);
-            self.parseRequestErrorsAndShowAsToastMsgs(error.response);
+            self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
           });
         }
       },
@@ -166,14 +171,15 @@
       },
 
       openDialog: function() {
-        this.set('opened', true);
+        this.$.cpOutputRamIndicatorsDialog.set('opened', true);
       },
 
       closeDialog: function() {
-        this.set('opened', false);
+        this.$.cpOutputRamIndicatorsDialog.set('opened', false);
       },
 
       resetData: function() {
+        this.set('disableConfirmBtn', false);
         this.set('editIndex', null);
         this.set('selectedCpOutputId', undefined);
         this.set('availableCpOutputs', []);
@@ -211,7 +217,7 @@
       _isValidResult: function(result) {
         let valid = true;
         if (!result.intervention) {
-          this.logError('Intervention ID is missing! Can not save result.');
+          this.logError('Intervention ID is missing! Can not save result.', 'expected-results-modal');
           valid = false;
         }
         if (!result.cp_output || result.ram_indicators.length === 0) {
@@ -236,18 +242,21 @@
         let self = this;
         this._setRamIndicatorsSpinnerText(this.saveResultLoadingMsg);
         this._showRamIndicatorsLoadingSpinner(true);
+        this.set('disableConfirmBtn', true);
         this.sendRequest({
           method: method,
           endpoint: endpoint,
           body: result
         }).then(function(response) {
           self._showRamIndicatorsLoadingSpinner(false);
+          self.set('disableConfirmBtn', false);
           if (typeof successCallback === 'function') {
             successCallback.bind(self, response)();
           }
         }).catch(function(error) {
           self._showRamIndicatorsLoadingSpinner(false);
-          self.parseRequestErrorsAndShowAsToastMsgs(error.response);
+          self.set('disableConfirmBtn', false);
+          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
         });
       },
 
@@ -257,7 +266,6 @@
       },
 
       _resultSuccessfullyUpdated: function(response) {
-        console.log(this.editIndex);
         this.fire('expected-result-updated', {index: this.editIndex, result: response});
         this.closeDialog();
       }
