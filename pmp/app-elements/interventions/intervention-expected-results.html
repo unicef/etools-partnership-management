@@ -60,11 +60,13 @@
             <div class="row-h">
               <div class="col col-4">
                 <etools-form-element-wrapper label="CP Output">
+                  <!-- TODO: to be replaced with `item.cp_output_name` -->
                   <span>[[getCpOutputNameById(item.cp_output)]]</span>
                 </etools-form-element-wrapper>
               </div>
               <div class="col col-8">
                 <etools-form-element-wrapper label="Ram Indicators">
+                  <!-- TODO: to be replaced with `item.ram_indicators_names` splitted by `, ` -->
                   <span>[[getCpOutputIndicatorsNamesById(item.ram_indicators)]]</span>
                 </etools-form-element-wrapper>
               </div>
