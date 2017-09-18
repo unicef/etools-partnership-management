@@ -23,6 +23,7 @@
 <link rel="import" href="cluster-indicator-disaggregations.html">
 <link rel="import" href="cluster-indicator.html">
 <link rel="import" href="non-cluster-indicator.html">
+<link rel="import" href="save-indicator-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
@@ -62,9 +63,10 @@
     </style>
 
     <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
-     on-close="_cleanUp"
-     on-confirm-btn-clicked="_validateAndSaveIndicator" no-padding
-     ok-btn-text="Save" keep-dialog-open>
+     on-close="_cleanUp" no-padding
+     on-confirm-btn-clicked="_validateAndSaveIndicator"
+     ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
+     spinner-text="Saving Indicator...">
      <div>
         <div class="page-top-content in-modal">
           <div class="top-content-row">
@@ -143,13 +145,13 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AjaxErrorsParser,
-          EtoolsAjaxRequestBehavior
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.SaveIndicator
         ],
 
         properties: {
           indicator: {
-            type: Object,
-            observer: 'indiChanged'
+            type: Object
           },
           indicatorId: {
             type: String
@@ -195,42 +197,6 @@
               locations: []
             }
           },
-          nonClusterIndicatorCreateModel: {
-            type: Object,
-            value: {
-              id: null,
-              indicator: {
-                id: null,
-                title: null,
-                unit: 'number',
-                display_type: 'percentage'
-              },
-              section: null,
-              baseline: null,
-              target: null,
-              means_of_verification: null,
-              locations: [],
-              dsaggregation: []
-            }
-          },
-          nonClusterIndicatorEditModel: {
-             type: Object,
-             value: {
-              id: null,
-              section: null,
-              baseline: null,
-              target: null,
-              means_of_verification: null,
-              locations: [],
-              disaggregation: []
-            }
-          },
-          clusterIndicatorCreateModel: {
-            type: Object
-          },
-          clusterIndicatorEditModel: {
-            type: Object
-          },
           actionParams: {
             type: Object
           },
@@ -258,22 +224,20 @@
             type: Boolean,
             value: false
           },
-          toastEventSource: Object
+          toastEventSource: Object,
+          disableConfirmBtn: {
+            type: Boolean,
+            value: false
+          }
         },
         observers: [
           '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, isCluster)'
         ],
-        indiChanged: function(newi, oldi) {
-          if (!newi) {
-            console.trace();
-            console.log('Indicator is empty');
-          }
-        },
+
         _indicatorIsNew: function(indicator) {
           return (!indicator || !indicator.id);
         },
         _prpClusterIndicatorChanged: function(prpClusterIndicator) {
-          console.log('cluster ind changed', prpClusterIndicator);
           if (!prpClusterIndicator || !prpClusterIndicator.disaggregations
            || !prpClusterIndicator.disaggregations.length) {
             this.prpDisaggregations = [];
@@ -296,16 +260,6 @@
           return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
         },
 
-        // _getActiveUnit: function() {
-        //   var unit = 'numeric';
-        //   for (var k in this.unit) {
-        //     if (this.unit[k] === true) {
-        //       unit = k;
-        //     }
-        //   }
-        //   return unit;
-        // },
-
         openIndicatorDialog: function() {
           this.activeTab = 'details';
           this.$.indicatorDialog.opened = true;
@@ -316,7 +270,7 @@
         },
 
         setIndicatorData: function(data, actionParams) {
-           this.set('actionParams', actionParams); //actionParams wtf?
+          this.set('actionParams', actionParams);
 
           if (!data) { //new indicator
             this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
@@ -351,88 +305,11 @@
         },
         _cleanUp: function() {
           this._stopSpinner();
+          this.disableConfirmBtn = false;
           //Anything else?
         },
         _stopSpinner: function() {
           this.$.indicatorDialog.stopSpinner();
-        },
-        _validateAndSaveIndicator: function(event) {
-          if (!this.validate()) {
-            return;
-          }
-
-          this.$.indicatorDialog.startSpinner();
-
-          let endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
-          let method = this.indicator.id ? 'PATCH': 'POST';
-          let body = this._getIndicatorBody();
-          let self = this;
-
-          this.sendRequest({
-            endpoint: endpoint,
-            method: method,
-            body: body
-          }).then(function(resp) {
-            self._handleSaveIndicatorResponse(resp);
-          }).catch(function(error) {
-            self._handleSaveIndicatorError(error.response);
-          });
-
-          //TODO this.indicator.disaggregation_logic = this._prepareDisaggregations();
-        },
-        validate: function() {
-          var valid = true;
-          if (this.isCluster) {
-            valid = this.$$('#clusterIndicatorEl').validate();
-          } else {
-             valid = this.$$('#nonClusterIndicatorEl').validate();
-          }
-          return valid;
-        },
-        _getIdForEndpoint: function() {
-          return this.indicator.id ? this.indicator.id : this.actionParams.llResultId;
-        },
-        _getEndpointName: function() {
-          return this.indicator.id ? 'getEditDeleteIndicator' : 'createIndicator';
-        },
-        _handleSaveIndicatorResponse: function(response) {
-          console.log('response', response);
-          this._stopSpinner();
-          this.fire('indicator-dialog-close', {
-            indicatorData: response,
-            actionParams: this.actionParams
-          });
-          this.$.indicatorDialog.opened = false;
-        },
-        _handleSaveIndicatorError: function(error) {
-          this._stopSpinner();
-          let errorMsg = this.formatServerErrorAsText(error);
-          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
-          console.log('error', error);
-        },
-        _getIndicatorBody: function() {
-           let body = this._getIndicatorModelForSave();
-           Object.assign(body, _.pick(this.indicator, _.keys(body)));
-           return body;
-        },
-        _getIndicatorModelForSave: function() {
-          let modelName = this.isCluster ? 'clusterIndicator' : 'nonClusterIndicator';
-          modelName += this.indicator.id ? 'EditModel' : 'CreateModel';
-          return JSON.parse(JSON.stringify(this[modelName]));
-        },
-
-        _prepareDisaggregations: function() {
-          if (Array.isArray(this.disaggregations) && this.disaggregations.length > 0) {
-            var disaggregationsObj = {};
-            this.disaggregations.forEach(function(d) {
-              var groups = d.disaggregation_groups.split(';').map(function(g) {
-                return g.trim();
-              });
-              disaggregationsObj[d.disaggregate_by] = groups;
-            });
-            return disaggregationsObj;
-          }
-          return null;
         },
 
         resetValidations: function() {
