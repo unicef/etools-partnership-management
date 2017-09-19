@@ -549,7 +549,10 @@
 
           var elements = ['sectorLocations', 'plannedVisits'];
           elements.forEach(function(el) {
-            this.elementValidationReset('#' + el);
+            let elem = this.$$('#' + el);
+            if (elem && typeof elem.resetValidations === 'function') {
+              elem.resetValidations();
+            }
           }.bind(this));
           this.set('fieldsResetted', true);
         },

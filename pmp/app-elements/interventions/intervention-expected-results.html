@@ -35,6 +35,11 @@
           @apply(--paper-fab-btn-green);
         };
       }
+
+      .ram-indicator-name {
+        display: inline-block;
+        width: 100%;
+      }
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
@@ -60,14 +65,14 @@
             <div class="row-h">
               <div class="col col-4">
                 <etools-form-element-wrapper label="CP Output">
-                  <!-- TODO: to be replaced with `item.cp_output_name` -->
-                  <span>[[getCpOutputNameById(item.cp_output)]]</span>
+                  <span>[[item.cp_output_name]]</span>
                 </etools-form-element-wrapper>
               </div>
               <div class="col col-8">
                 <etools-form-element-wrapper label="Ram Indicators">
-                  <!-- TODO: to be replaced with `item.ram_indicators_names` splitted by `, ` -->
-                  <span>[[getCpOutputIndicatorsNamesById(item.ram_indicators)]]</span>
+                  <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+                    <span class="ram-indicator-name">[[ramIndicatorName]]</span>
+                  </template>
                 </etools-form-element-wrapper>
               </div>
             </div>

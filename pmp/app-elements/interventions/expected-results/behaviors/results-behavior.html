@@ -147,33 +147,6 @@
         return false;
       }
       return true;
-    },
-
-    /**
-     * TODO: Replace this with data from request response, cp_output_name
-     */
-    getCpOutputNameById: function(cpOutputId) {
-      let cpOutputName = '';
-      cpOutputId = parseInt(cpOutputId, 10);
-      if (!isNaN(cpOutputId)) {
-        let cpOutput = this.cpOutputs.find(function(cp) {
-          return cp.id === cpOutputId;
-        });
-        if (cpOutput) {
-          cpOutputName = cpOutput.name;
-        } else {
-          // TODO: ghost data issue, old cp, get it's name somehow
-          // Add this on the server response
-        }
-      }
-      return cpOutputName;
-    },
-
-    /**
-     * TODO: get the right indicators names
-     */
-    getCpOutputIndicatorsNamesById: function(ramIndicatorsIds) {
-      return ramIndicatorsIds.join('-indicator-name, ') + '-indicator-name';
     }
 
   };
