@@ -12,8 +12,7 @@
 
   <template>
     <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="dexie"
+                 options="[[options]]"
                  on-success="_handleResponse"
                  on-fail="_handleErrorResponse"></etools-ajax>
   </template>
@@ -52,7 +51,7 @@
           },
 
           handleResponseAdditionalCallback: Object,
-          ajaxEl: Object,
+
           offices: {
             type: Array,
             statePath: 'offices'
@@ -67,11 +66,14 @@
           ajaxLoadingMsgSource: {
             type: String,
             value: 'pd-ssfa-data'
-          }
-        },
-
-        attached: function() {
-          this.ajaxEl = this.$.ajax;
+          },
+          options: {
+            type: Object,
+              value: {
+                endpoint: null,
+                csrf: true
+              },
+          },
         },
 
         _interventionIdChanged: function(newId) {
@@ -81,12 +83,13 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this._prepareAndFireRequest();
-            this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
+            this.set('options.endpoint', this.getEndpoint('interventionDetails', {id: newId}));
           }
         },
         _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
+          // temporary. proof of concept only
+          var resp = {detail:{request:{detail:{request:{response: response}}}}};
+          this.handleErrorResponse(resp);
           this._restoreUnsuccessfullyDeletedFrs();
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
@@ -108,7 +111,7 @@
           }
 
           var self = this;
-          if (this.$.ajax.get('method') !== 'GET') {
+          if (!this.get('options.method') || this.get('options.method') !== 'GET') {
             // update the interventions list in dexieDB
             var mappedResponse = this._formatResponseDataForDexie(response.detail);
             EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
@@ -152,55 +155,12 @@
           }
           return minimalAgrData;
         },
-        /**
-         * Set the method of the request and the body.
-         * Used for unsafe requests (PATCH/POST).
-         */
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-          this.ajaxEl.setContentType(null);
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
-            this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
-          }
-          this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && ['PATCH', 'POST'].indexOf(method) > -1) {
-
-            if (multipart) {
-              this.ajaxEl.set('multiPart', true);
-            } else {
-              this.ajaxEl.set('multiPart', false);
-            }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
-            } else {
-              this.ajaxEl.set('prepareMultipartData', false);
-            }
-
-            this.ajaxEl.set('body', data);
-            this.ajaxEl.set('url', url);
-          }
-          // after body is set the request is automatically triggered
-        },
 
         _prepareEndpoint: function(interventionId) {
           if (interventionId > 0) {
             // check and prepare request URL
-            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
-              this.set('endpoint', this.getEndpoint('interventionDetails', {id: interventionId}));
+            if (!this.options.endpoint) {
+              this.set('options.endpoint', this.getEndpoint('interventionDetails', {id: interventionId}));
             }
           }
         },
@@ -243,7 +203,9 @@
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
+              // this._prepareAndFireRequest('PATCH', {status: data.status}, this.options.endpoint.url);
+              this.set('options.method', 'PATCH');
+              this.set('options.body', {status: data.status});
             } else {
               this.fire('toast', {
                 text: 'Changing status to \'' + data.status + '\' is not allowed!',
@@ -266,7 +228,7 @@
             if (intervention.id) {
               // prepare PATCH endpoint
               this._prepareEndpoint(intervention.id);
-              url = this.endpoint.url;
+              url = this.options.endpoint.url;
             } else {
               // new intervention, use POST method for the same endpoint
               var interventionsEndpoint = this.getEndpoint('interventions');
@@ -282,30 +244,25 @@
               this.set('handleResponseAdditionalCallback', callback);
             }
 
-            var withUpload = false; // used to set multipart prop on etools-ajax
-            var prepareMultipartData = false;
+            // var prepareMultipartData = false;
             if (this._hasFiles(intervention.attachments, 'attachment')) {
-              withUpload = true;
-              prepareMultipartData = true;
+              // prepareMultipartData = true;
             }
             // check prc_review_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'prc_review_document')) {
-              withUpload = true;
-              prepareMultipartData = true;
+              // prepareMultipartData = true;
             } else {
               delete intervention.prc_review_document;
             }
             // check signed_pd_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'signed_pd_document')) {
-              withUpload = true;
-              prepareMultipartData = true;
+              // prepareMultipartData = true;
             } else {
               delete intervention.signed_pd_document;
             }
 
             if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-              withUpload = true;
-              prepareMultipartData = true;
+              // prepareMultipartData = true;
             }
             if (Array.isArray(intervention.sector_locations)) {
               intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
@@ -327,9 +284,10 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            // fire in the hole
-            this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
-                intervention, url, withUpload, prepareMultipartData);
+
+            this.set('options.method', (isNew) ? 'POST' : 'PATCH');
+            this.set('options.body', intervention);
+            // this.set('options.url', url);
           }
         },
 
