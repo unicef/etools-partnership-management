@@ -253,7 +253,7 @@
                                      label="Section(s)"
                                      placeholder="&#8212;"
                                      selected-values="{{intervention.sections}}"
-                                     options="[[sectors]]"
+                                     options="[[sections]]"
                                      option-label="name"
                                      option-value="id"
                                      readonly$="[[!intervention.permissions.edit.sections]]"
@@ -345,9 +345,9 @@
             type: Array,
             value: []
           },
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
           offices: {
             type: Array,

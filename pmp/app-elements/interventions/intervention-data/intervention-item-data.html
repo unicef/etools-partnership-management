@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
@@ -57,9 +58,9 @@
             type: Array,
             statePath: 'offices'
           },
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
           /**
            * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
@@ -97,7 +98,6 @@
          * Handle received data from request
          */
         _handleResponse: function(response) {
-          response.detail.original_sectors = JSON.parse(JSON.stringify(response.detail.sector_locations));
           this._setIntervention(response.detail);
 
           // call additional callback, if any
@@ -329,9 +329,8 @@
         },
 
         _formatResponseDataForDexie: function(responseDetail) {
-          var dexieObject = {};
-          // TODO: check if it should be renamed (sectors are new sections field) and update PD list details row as well
-          dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
+          let dexieObject = {};
+          dexieObject.sections = this._getSelectedSectionsNames(responseDetail);
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
           dexieObject.cso_contribution = 0;
@@ -396,9 +395,19 @@
             return office.name;
           });
         },
-        _getSelectedSectorsNames: function(responseDetail) {
-          // TODO: get sectors/sections names for dexie
-          // responseDetail.sections ids will be used here
+        _getSelectedSectionsNames: function(responseDetail) {
+          if (responseDetail.sections) {
+            let sections = [];
+            let interventionSections = _.map(responseDetail.sections, function(sectionId) {
+              return parseInt(sectionId, 10);
+            });
+            this.sections.forEach(function(section) {
+              if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
+                sections.push(section.name);
+              }
+            });
+            return sections;
+          }
           return [];
         }
 
