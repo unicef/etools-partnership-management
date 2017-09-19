@@ -1,4 +1,6 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -49,7 +51,7 @@
           return;
         }
 
-        this.$.indicatorDialog.startSpinner();
+        this._startSpinner();
         this.disableConfirmBtn = true;
 
         let endpoint = this.getEndpoint(this._getEndpointName(), {id: this._getIdForEndpoint()});
@@ -72,7 +74,7 @@
         if (this.isCluster) {
           valid = this.$$('#clusterIndicatorEl').validate();
         } else {
-            valid = this.$$('#nonClusterIndicatorEl').validate();
+          valid = this.$$('#nonClusterIndicatorEl').validate();
         }
         return valid;
       },
@@ -113,6 +115,8 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.SaveIndicator */
   EtoolsPmpApp.Behaviors.SaveIndicator = [
     EtoolsPmpApp.Behaviors.SaveIndicatorImpl,
-    EtoolsAjaxRequestBehavior
+    EtoolsAjaxRequestBehavior,
+    EtoolsPmpApp.Behaviors.Endpoints,
+    EtoolsPmpApp.Behaviors.AjaxErrorsParser
   ];
 </script>
