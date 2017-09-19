@@ -90,7 +90,7 @@
         properties: {
           preDefinedDisaggregtions: {
             type: Array,
-            value: [{'id': 1, 'name':'Age', 'disaggregationGroups': '1-10;11-20'}, {'id': 2, 'name':'Gender', 'disaggregationGroups': 'm;f'}]
+            value: [{'id': 1, 'name': 'Age', 'disaggregationGroups': '1-10;11-20'}, {'id': 2, 'name': 'Gender', 'disaggregationGroups': 'm;f'}]
           }
         },
 
@@ -113,7 +113,7 @@
             return;
           }
           var nameArr =  Polymer.dom(event).localTarget.id.split('_');
-          var index = nameArr[nameArr.length -1];
+          var index = nameArr[nameArr.length - 1];
           this.$$('#disaggregationGroups_' + index).value = event.detail.item.item.disaggregationGroups;
 
         }
