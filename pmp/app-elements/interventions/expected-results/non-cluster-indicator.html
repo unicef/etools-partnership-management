@@ -11,6 +11,8 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/required-field-styles.html">
 
+<link rel="import" href="indicators_common_behavior.html">
+
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="non-cluster-indicator">
@@ -151,6 +153,7 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsLogsBehavior
         ],
 
@@ -169,8 +172,9 @@
 
         },
         observers: [
-           '_indicatorDataChange(indicator.*)',
-           '_baselineUnknownChanged(baselineIsUnknown)'
+          '_baselineChanged(indicator.baseline)',
+          '_targetChanged(indicator.target)',
+          '_baselineUnknownChanged(baselineIsUnknown)'
         ],
 
         _isReadonly: function(indicator) {
@@ -193,21 +197,6 @@
         _baselineUnknownChanged: function(isUnknown) {
           if (isUnknown) {
             this.set('indicator.baseline', null);
-          }
-        },
-
-        _indicatorDataChange: function(data) {
-          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
-            if (this.indicator.indicator.unit === 'percentage' && data.value !== '') {
-              var val = parseInt(data.value, 10);
-              if (isNaN(val) || val < 0) {
-                val = 0;
-              }
-              if (val > 100) {
-                val = 100;
-              }
-              this.set(data.path, val);
-            }
           }
         },
         validate: function() {

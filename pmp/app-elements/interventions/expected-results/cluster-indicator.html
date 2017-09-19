@@ -5,6 +5,8 @@
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
+<link rel="import" href="indicators_common_behavior.html">
+
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 
@@ -101,7 +103,8 @@
         is: 'cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
         ],
 
         properties: {
@@ -144,7 +147,8 @@
         },
 
         observers: [
-          '_indicatorDataChange(indicator.*)',
+          '_baselineChanged(indicator.baseline)',
+          '_targetChanged(indicator.target)',
         ],
          indiChanged: function(newi, oldi) {
           if (!newi) {
@@ -159,23 +163,8 @@
           this._fillInFields(prpClusterIndic);
         },
         _fillInFields: function(prpClusterIndic) {
-          console.log(typeof this.indicator);
           this.indicator.means_of_verification = prpClusterIndic.means_of_verification;
           this.indicator.locations = prpClusterIndic.locationIds;
-        },
-         _indicatorDataChange: function(data) {
-          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
-            if (this.indicator.unit === 'percentage' && data.value !== '') {
-              var val = parseInt(data.value, 10);
-              if (isNaN(val) || val < 0) {
-                val = 0;
-              }
-              if (val > 100) {
-                val = 100;
-              }
-              this.set(data.path, val);
-            }
-          }
         },
         validate: function() {
           return this.$.clusterIndicatorsDropdw.validate();
