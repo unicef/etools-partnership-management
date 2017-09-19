@@ -174,8 +174,8 @@
         },
 
         observers: [
-          '_parseSections(intervention.sections.length)',
-          '_parseCpOutputs(intervention.result_links.length)'
+          '_parseSections(sections.length, intervention.sections.length)',
+          '_parseCpOutputs(cpOutputs.length, intervention.result_links.length)'
         ],
 
         attached: function() {
@@ -187,8 +187,8 @@
           this.fire('intervention-page-attached');
         },
 
-        _parseCpOutputs: function(resultsLength) {
-          if (!resultsLength) {
+        _parseCpOutputs: function(cpOutputsLength, resultsLength) {
+          if (!cpOutputsLength || !resultsLength) {
             this.set('interventionCpOutputs', []);
             return;
           }
@@ -216,8 +216,8 @@
           }
         },
 
-        _parseSections: function(sectionsLength) {
-          if (!sectionsLength) {
+        _parseSections: function(sectionsLength, intSectionsLength) {
+          if (!sectionsLength || !intSectionsLength) {
             this.set('inteventionSections', []);
             return;
           }
