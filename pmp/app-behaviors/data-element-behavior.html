@@ -7,9 +7,12 @@
   EtoolsPmpApp.Behaviors.DataElementImpl = {
 
     properties: {
-      endpoint: {
+      options: {
         type: Object,
-        observer: '_endpointChanged'
+        value: {
+          endpoint: null,
+          csrf: true
+        },
       },
       data: {
         type: Array,
@@ -31,7 +34,9 @@
         value: null
       }
     },
-
+    observers: [
+      '_endpointChanged(options.endpoint)'
+    ],
     detached: function() {
       this._removeAutomaticDataRefreshLoop();
     },
@@ -44,7 +49,7 @@
       if (!this.endpointName) {
         console.warn('Please specify an endpointName property');
       } else {
-        this.endpoint = this.getEndpoint(this.endpointName);
+        this.options.endpoint = this.getEndpoint(this.endpointName);
       }
     },
 
@@ -80,8 +85,7 @@
       }
 
       var refreshInterval = setInterval(function() {
-        this.set('url', null);
-        this.set('url', this.endpoint.url);
+        this.$.ajax.send();
       }.bind(this), this.endpoint.exp);
 
       this.set('_refreshInterval', refreshInterval);

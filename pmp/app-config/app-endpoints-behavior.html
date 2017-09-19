@@ -25,7 +25,7 @@
     agreements: {
       template: '/api/v2/agreements/',
       exp: 30 * 60 * 1000, // 30min
-      cachingKey: 'agreements'
+      cacheTableName: 'agreements'
     },
     agreementDetails: {
       template: '/api/v2/agreements/<%=id%>/',
@@ -56,7 +56,7 @@
     partners: {
       url: '/api/v2/partners/',
       exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'partners'
+      cacheTableName: 'partners',
     },
     partnerDetails: {
       template: '/api/v2/partners/<%=id%>/',
@@ -76,7 +76,7 @@
     interventions: {
       url: '/api/v2/interventions/',
       exp: 10 * 60 * 1000, // 5min
-      cachingKey: 'interventions'
+      cacheTableName: 'interventions'
     },
     interventionDetails: {
       template: '/api/v2/interventions/<%=id%>/',

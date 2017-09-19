@@ -9,11 +9,8 @@
 <dom-module id="agreement-list-data">
 
   <template>
-
     <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="agreements"
+                 options="[[options]]"
                  on-success="_handleMyResponse"></etools-ajax>
 
   </template>

@@ -8,13 +8,9 @@
 <dom-module id="interventions-list-data">
 
   <template>
-
     <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="interventions"
+                 options="[[options]]"
                  on-success="_handleResponse"></etools-ajax>
-
   </template>
 
   <script>
