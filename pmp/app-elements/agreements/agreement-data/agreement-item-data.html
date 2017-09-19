@@ -11,10 +11,9 @@
 
   <template>
     <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="dexie"
+                 options="[[options]]"
                  on-success="_handleResponse"
-                 on-fail="handleErrorResponse"></etools-ajax>
+                 on-fail="_handleErrorResponse"></etools-ajax>
   </template>
 
   <script>
@@ -37,11 +36,13 @@
             readOnly: true,
             notify: true
           },
-
-          endpoint: {
-            type: Object
+          options: {
+            type: Object,
+            value: {
+              endpoint: null,
+              csrf: true
+            },
           },
-
           _partners: {
             type: Object
           },
@@ -51,11 +52,8 @@
             notify: true,
             observer: '_agreementIdChanged'
           },
-          withUpload: Boolean,
-          prepareMultipartData: Boolean,
 
           handleSuccResponseAdditionalCallback: Object,
-          ajaxEl: Object,
           /**
            * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
            */
@@ -73,8 +71,11 @@
           }
         },
 
-        attached: function() {
-          this.ajaxEl = this.$.ajax;
+        _prepareEndpoint: function(agreementId) {
+          if (agreementId > 0) {
+            // check and prepare request URL
+            this.set('options.endpoint', this.getEndpoint('agreementDetails', {id: agreementId}));
+          }
         },
 
         _agreementIdChanged: function(newId) {
@@ -84,11 +85,9 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this._prepareAndFireRequest();
-            this.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
+            this.set('options.endpoint', this.getEndpoint('agreementDetails', {id: newId}));
           }
         },
-
         /**
          * Handle received data from request
          */
@@ -101,7 +100,7 @@
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
-          if (this.$.ajax.get('method') !== 'GET') {
+          if (!this.options.method || this.options.method !== 'GET') {
             this.dispatch('addEditAgreement', this._getMinimalAgreementData(response.detail));
 
             var self = this;
@@ -111,6 +110,12 @@
             });
           }
           this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+        },
+
+        _handleErrorResponse: function(response) {
+          // temporary. proof of concept only
+          var resp = {detail:{request:{detail:{request:{response: response}}}}};
+          this.handleErrorResponse(resp);
         },
 
         _getMinimalAgreementData: function(detail) {
@@ -141,43 +146,11 @@
          * Used for unsafe requests (PATCH/POST).
          */
         _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-          this.ajaxEl.setContentType(null);
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
-            this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
-          }
-          this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
-            this.ajaxEl.set('multiPart', multipart);
-            this.ajaxEl.set('prepareMultipartData', prepareMultipartData);
-            this.ajaxEl.set('body', data);
-            this.ajaxEl.set('url', url);
-          }
-          // after body is set the request is automatically triggered
-        },
-
-        _prepareEndpoint: function(agreementId) {
-          if (agreementId > 0) {
-            // check and prepare request URL
-            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
-              this.set('endpoint', this.getEndpoint('agreementDetails', {id: agreementId}));
-            }
-          }
+          this.set('options.body', data);
+          this.set('options.method', method);
+          this.set('options.url', url);
+          this.set('options.multiPart', multipart);
+          this.set('options.prepareMultipartData', prepareMultipartData);
         },
 
         /**
@@ -200,7 +173,7 @@
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
+              this._prepareAndFireRequest('PATCH', {status: data.status}, this.options.endpoint.url);
             } else {
               this.fire('toast',
                   {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
@@ -236,7 +209,7 @@
             if (agreement.id) {
               // prepare PATCH endpoint
               this._prepareEndpoint(agreement.id);
-              url = this.endpoint.url;
+              url = this.options.endpoint.url;
             } else {
               // new agreement, use POST method for the same endpoint
               var agreementsEndpoint = this.getEndpoint('agreements');
