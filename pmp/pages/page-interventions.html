@@ -10,11 +10,11 @@
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
-<link rel="import" href="../app-elements/partners/partners-data/partner-staff-members-data.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
 
@@ -41,7 +41,7 @@
     <app-route
         route="{{route}}"
         pattern="interventions/list"
-        query-params="{{interventionsQueryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{intervListActive}}"></app-route>
 
     <app-route
@@ -135,7 +135,7 @@
                                 name="list"
                                 active="[[intervListActive]]"
                                 csv-download-url="{{csvDownloadUrl}}"
-                                url-params="[[interventionsQueryParams]]">
+                                url-params="[[listQueryParams]]">
             </interventions-list>
           </template>
 
@@ -150,8 +150,6 @@
             <intervention-details id="interventionDetails"
                                   name="details"
                                   intervention="{{intervention}}"
-                                  partner-staff-members="[[partnerStaffMembers]]"
-                                  selected-partner-id="{{partnerId}}"
                                   new-intervention="[[_newIntervention(newInterventionActive)]]"
                                   on-update-intervention-status="_updateInterventionStatus"
                                   original-intervention="[[originalIntervention]]">
@@ -182,11 +180,8 @@
         <intervention-item-data id="interventionData"
                                 intervention="{{intervention}}"
                                 intervention-id="[[selectedInterventionId]]"
+                                original-intervention="[[originalIntervention]]"
                                 error-event-name="intervention-save-error"></intervention-item-data>
-
-        <partner-staff-members-data partner-id="[[partnerId]]"
-                                    prepared-staff-members-data="{{partnerStaffMembers}}">
-        </partner-staff-members-data>
 
         <agreement-item-data id="agreement"
                              agreement-id="[[intervention.agreement]]"
@@ -220,6 +215,7 @@
       is: 'page-interventions',
       behaviors: [
         etoolsBehaviors.DynamicDialogBehavior,
+        EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
         EtoolsPmpApp.Behaviors.SaveIntervention
@@ -241,10 +237,6 @@
         },
         originalIntervention: {
           type: Object
-        },
-        partnerStaffMembers: Array,
-        partnerId: {
-          type: Number
         },
         agreement: {
           type: Object
@@ -331,7 +323,7 @@
         },
         _forceDetUiValidationOnAttach: Boolean,
         _forceReviewUiValidationOnAttach: Boolean,
-        interventionsQueryParams: Object
+
       },
       observers: [
         /**
@@ -389,7 +381,6 @@
       },
 
       _interventionChanged: function(intervention, permissions) {
-
         this._displayAnyMigrationErrors(intervention);
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
@@ -403,6 +394,7 @@
           this.async(function() {
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
+            this._setContentScrollPosition(0);
           }.bind(this), 1000);
         }
       },
@@ -413,6 +405,7 @@
             this.set('errorMsgBox_Title',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.set('serverErrors', intervention.metadata.error_msg);
+            this._setContentScrollPosition(0);
           }
         }
       },
@@ -488,6 +481,9 @@
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             if (page === 'list') {
               self.set('serverErrors', []);
+              self.set('activeTab', 'details');
+            }
+            if (page === 'details') {
               self.set('activeTab', 'details');
             }
             self.set('interventionPage', page);
@@ -608,6 +604,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
+          this._setContentScrollPosition(0);
         }
       },
 

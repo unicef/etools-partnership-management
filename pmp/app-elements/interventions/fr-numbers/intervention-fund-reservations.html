@@ -4,7 +4,7 @@
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
@@ -54,11 +54,6 @@
       }
     </style>
 
-    <etools-ajax url="[[_frsDetailsRequestUrl]]"
-                 on-success="_frsDetailsSuccessHandler"
-                 on-fail="_frsDetailsErrorHandler">
-    </etools-ajax>
-
     <etools-content-panel panel-title="Fund Reservations">
       <paper-icon-button slot="panel-btns"
                          icon="add"
@@ -94,6 +89,7 @@
 
         behaviors: [
           EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.ArrayHelper,
           etoolsBehaviors.DynamicDialogBehavior,
@@ -111,7 +107,6 @@
           frsConfirmationsDialog: {
             type: Object
           },
-          _frsDetailsRequestUrl: String,
           _frsDetailsRequestEndpoint: Object,
           _lastFrsDetailsRequested: {
             type: Array,
@@ -129,7 +124,10 @@
           }
         },
 
-        observers: ['_frsDetailsChanged(intervention.frs_details)'],
+        observers: [
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' +
+            ' intervention.start, intervention.end)',
+        ],
 
         ready: function() {
           this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
@@ -196,10 +194,10 @@
             this.updateFrNumbersEl.set('dataItems', frs);
             // deactivate save button until any valid change is made
             this.updateFrNumbersEl.set('disableConfirmBtn', true);
+
+            this.updateFrNumbersEl.set('interventionStatus', this.intervention.status);
             // open dialog
             this.updateFrNumbersEl.openDialog();
-            // reset frs details request URL
-            this.set('_frsDetailsRequestUrl', null);
           }
         },
 
@@ -274,13 +272,21 @@
             url += '&intervention=' + this.intervention.id;
           }
           this.set('_lastFrsDetailsRequested', frNumbers);
-          this.set('_frsDetailsRequestUrl', url);
+
+          let self = this;
+          this.sendRequest({
+            endpoint: {url: url}
+          }).then(function(resp) {
+            self._frsDetailsSuccessHandler(resp);
+          }).catch(function(error) {
+            self._frsDetailsErrorHandler(error.response);
+          });
+
         },
 
-        _frsDetailsSuccessHandler: function(e) {
-          e.stopImmediatePropagation();
-          let frsDetails = e.detail;
-          let warning = this.checkFrsConsistency(frsDetails, this.intervention);
+        _frsDetailsSuccessHandler: function(response) {
+          let frsDetails = response;
+          let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
             this._frsUpdateWarningMessage(warning);
@@ -298,8 +304,7 @@
         /**
          * frs details request failed
          */
-        _frsDetailsErrorHandler: function(e) {
-          e.stopImmediatePropagation();
+        _frsDetailsErrorHandler: function(responseErr) {
           this._disableFrsCheckLoadingMsg();
           let frs = this._lastFrsDetailsRequested.map(function(fr) {
             return {fr_number: fr};
@@ -309,7 +314,7 @@
           this.set('_lastFrsDetailsRequested', []);
           // show the invalid frs warning
           this.fire('toast', {
-            text: e.detail.request.detail.request.response.error,
+            text: responseErr.error,
             showCloseBtn: true
           });
 
@@ -349,7 +354,6 @@
         _disableFrsCheckLoadingMsg: function() {
           this.fire('global-loading', {active: false, loadingSource: this._frsNrsLoadingMsgSource});
         }
-
       });
     })();
   </script>

@@ -1,0 +1,77 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxErrorsParser */
+  EtoolsPmpApp.Behaviors.AjaxErrorsParser = {
+
+    _getErrorsArray: function(errors, prepareForToastMsg) {
+      let errorsArray = [];
+      if (!errors) {
+        return errorsArray;
+      }
+
+      if (prepareForToastMsg) {
+        errorsArray.push('Errors occurred:');
+      }
+
+      if (typeof errors === 'string') {
+        errorsArray.push(errors);
+        return errorsArray;
+      }
+      if (typeof errors === 'object' && typeof errors.error === 'string' && errors.error) {
+        errorsArray.push(errors.error);
+        return errorsArray;
+      }
+
+      if (Array.isArray(errors) && errors.length > 0) {
+        let err;
+        for (err in errors) {
+          errorsArray.push(errors[err]);
+        }
+        return errorsArray;
+      }
+
+      if (typeof errors === 'object' && Object.keys(errors).length > 0) {
+        let errField;
+        for (errField in errors) {
+          if (typeof errors[errField] === 'string') {
+            errorsArray.push('Field ' + errField + ' - ' + errors[errField]);
+            continue;
+          }
+          if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
+            let errF;
+            for (errF in errors[errField]) {
+              errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
+            }
+            continue;
+          }
+          if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
+            let key;
+            for (key in errors[errField]) {
+              errorsArray.push(errors[errField][key]);
+            }
+          }
+        }
+      }
+
+      return errorsArray;
+    },
+
+    formatServerErrorAsText: function(errors) {
+      let errorsArray = this._getErrorsArray(errors, false);
+      if (errorsArray && errorsArray.length) {
+        return errorsArray.join('\n');
+      }
+      return errors;
+    },
+
+    parseRequestErrorsAndShowAsToastMsgs: function(errorResponse) {
+      let errorsString = this.formatServerErrorAsText(errorResponse);
+      if (errorsString) {
+        this.fire('toast', {text: errorsString, showCloseBtn: true});
+      }
+    }
+
+  };
+
+</script>

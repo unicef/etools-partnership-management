@@ -25,12 +25,14 @@
       } else {
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
-        let interventionDetFields = ['agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-          'partner_focal_points', 'country_programme', 'sections'];
+        let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
+        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sections', 'offices'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
-          interventionDetFields.push('start', 'end');
+          detailsPrimitiveFields.push('start', 'end');
         }
-        interventionDetailsAreValid = this._validateInterventionFields(interventionDetFields);
+        interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+            this._validateInterventionObjectFields(detailsObjFields);
+
         this.set('_forceDetUiValidationOnAttach', true);
       }
 
@@ -40,10 +42,12 @@
         reviewAndSignIsValid = reviewAndSignEl.validate();
       } else {
         // review and signed element not stamped...
-        // validate current data that belongs to this tab tab against permissions
-        let interventionReviewAndSignFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
-          'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document'];
-        reviewAndSignIsValid = this._validateInterventionFields(interventionReviewAndSignFields);
+        // validate current data that belongs to this tab against permissions
+        let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
+          'unicef_signatory', 'signed_by_unicef_date'];
+        let reviewAndSignObjFields = ['signed_pd_document'];
+        reviewAndSignIsValid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
+          this._validateInterventionObjectFields(reviewAndSignObjFields);
         this.set('_forceReviewUiValidationOnAttach', true);
       }
 
@@ -73,7 +77,13 @@
       this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
     },
 
-    _validateInterventionFields: function(interventionFields) {
+    _validateInterventionObjectFields: function(interventionFields) {
+      return this._validateInterventionFields(interventionFields, _.isEmpty);
+    },
+    _validateInterventionPrimitiveFields:  function(interventionFields) {
+      return this._validateInterventionFields(interventionFields, this._primtiveFieldIsEmpty);
+    },
+    _validateInterventionFields: function(interventionFields, isEmptyPredicate) {
       let valid = true;
       let i;
       let fieldRequired;
@@ -81,12 +91,15 @@
       for (i = 0; i < interventionFields.length; i++) {
         fieldRequired = this.intervention.permissions.required[interventionFields[i]];
         fieldVal = this.intervention[interventionFields[i]];
-        if (fieldRequired && _.isEmpty(fieldVal)) {
+        if (fieldRequired && isEmptyPredicate(fieldVal)) {
           valid = false;
           break;
         }
       }
       return valid;
+    },
+    _primtiveFieldIsEmpty: function(fieldVal) {
+      return fieldVal === null || fieldVal === undefined || fieldVal === '';
     },
 
     _prepareDataForSave: function(interventionData, interventionDetailsEl) {

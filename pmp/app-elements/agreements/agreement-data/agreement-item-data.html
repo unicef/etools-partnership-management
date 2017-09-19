@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -26,7 +27,8 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsLogsBehavior
         ],
         properties: {
 
@@ -67,7 +69,7 @@
             return {
               type: 'ADD_EDIT_AGREEMENT',
               agreement: agreement
-            }
+            };
           }
         },
 
@@ -127,12 +129,12 @@
           };
           for (var propName in minimalAgrData) {
             if (!detail.hasOwnProperty(propName)) {
-              console.warn('Mapping property not found');
+              this.logWarn('Mapping property not found');
             } else {
               minimalAgrData[propName] = detail[propName];
             }
           }
-           return minimalAgrData;
+          return minimalAgrData;
         },
         /**
          * Set the method of the request and the body.

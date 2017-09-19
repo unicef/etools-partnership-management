@@ -1,0 +1,76 @@
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.PartnerStaffMembersDataImpl */
+    EtoolsPmpApp.Behaviors.PartnerStaffMembersDataImpl = {
+
+      properties: {
+        staffMembers: {
+          type: Array,
+          value: []
+        },
+        staffLoadingMsgSource: {
+          type: String,
+          value: 'staff-m'
+        }
+      },
+
+      /**
+       * This method will be used in the main element as observer for agreement.partner
+       * or in other partner id changed observer
+       */
+      getPartnerStaffMembers: function(newId) {
+        if (newId > 0) {
+          this.fire('global-loading', {
+            message: 'Loading partner staff members data...',
+            active: true,
+            loadingSource: this.staffLoadingMsgSource
+          });
+          let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
+          let self = this;
+          this.sendRequest({
+            endpoint: endpoint
+          }).then(function(response) {
+            self._handleStaffMembersResponse(response);
+          }).catch(function(error) {
+            self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-behavior', error);
+            self.fire('toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
+          });
+        }
+      },
+
+      _handleStaffMembersResponse: function(res) {
+        if (res instanceof Array && res.length) {
+          let preparedStaffMembers = res.map(function(staffMember) {
+            return {
+              id: staffMember.id,
+              name: staffMember.first_name + ' ' + staffMember.last_name,
+              active: staffMember.active
+            };
+          }).filter(function(staffMember) {
+            return staffMember.active;
+          });
+          this.set('staffMembers', preparedStaffMembers);
+        }
+        this.fire('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.PartnerStaffMembersData */
+    EtoolsPmpApp.Behaviors.PartnerStaffMembersData = [
+      EtoolsLogsBehavior,
+      EtoolsAjaxRequestBehavior,
+      EtoolsPmpApp.Behaviors.Endpoints,
+      EtoolsPmpApp.Behaviors.PartnerStaffMembersDataImpl
+    ]
+
+  })();
+</script>
