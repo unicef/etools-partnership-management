@@ -334,7 +334,8 @@
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
-        '_interventionChanged(intervention, permissions)'
+        '_interventionChanged(intervention, permissions)',
+        '_listActiveCallback(intervListActive)'
       ],
 
       listeners: {
@@ -633,6 +634,12 @@
         // force styles updates according with intervention permissions
         // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
+      },
+
+      _listActiveCallback: function(listActive) {
+        if (listActive) {
+          this._setContentScrollPosition(0);
+        }
       }
 
     });

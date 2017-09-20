@@ -249,7 +249,8 @@
 
       observers: [
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
-        '_observeRouteDataId(routeData.id)'
+        '_observeRouteDataId(routeData.id)',
+        '_listActiveCallback(listActive)'
       ],
 
       listeners: {
@@ -521,6 +522,12 @@
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
       },
+
+      _listActiveCallback: function(listActive) {
+        if (listActive) {
+          this._setContentScrollPosition(0);
+        }
+      }
 
     });
 

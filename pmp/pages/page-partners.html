@@ -207,7 +207,8 @@
       observers: [
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, activeTab)',
-        '_observeRouteDataId(routeData.id)'
+        '_observeRouteDataId(routeData.id)',
+        '_listActiveCallback(listActive)'
       ],
 
       listeners: {
@@ -444,6 +445,12 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+      },
+
+      _listActiveCallback: function(listActive) {
+        if (listActive) {
+          this._setContentScrollPosition(0);
+        }
       }
 
     });
