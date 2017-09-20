@@ -4,7 +4,6 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
@@ -279,7 +278,6 @@
                                      data-items="{{intervention.result_links}}"
                                      selected-cp-structure="[[intervention.country_programme]]"
                                      intervention-id="[[intervention.id]]"
-                                     required$="[[intervention.permissions.required.result_links]]"
                                      edit-mode$="[[intervention.permissions.edit.result_links]]">
       </intervention-expected-results>
     </etools-content-panel>
@@ -540,10 +538,10 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['expectedResults', 'plannedVisits'];
-          elements.forEach(function(el) {
-            this.elementValidationReset('#' + el);
-          }.bind(this));
+          let plannedVisitsEl = this.$$('#plannedVisits');
+          if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
+            plannedVisitsEl.resetValidations();
+          }
           this.set('fieldsResetted', true);
         },
 
@@ -611,7 +609,7 @@
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sections',
-            '#plannedBudget', '#expectedResults', '#plannedVisits'];
+            '#plannedBudget', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
@@ -654,7 +652,7 @@
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
-        },
+        }
 
       });
 

@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
@@ -10,7 +9,10 @@
 <link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../../app-elements/common-elements/etools-form-element-wrapper.html">
+
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="pd-lower-result-name.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -25,14 +27,6 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-      }
-
-      paper-input {
-        width: 100%;
-      }
-
-      paper-textarea {
-        width: 100%;
       }
 
       .indicator-col {
@@ -90,17 +84,18 @@
                                  data-args$="[[index]]"
                                  icon="cancel"
                                  disabled$="[[!editMode]]"></paper-icon-button>
+              <paper-icon-button class="action edit"
+                                 on-tap="_editLowerResult"
+                                 data-args$="[[index]]"
+                                 icon="create"
+                                 disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
             <div class="row-h">
-              <paper-input label="PD output or SSFA expected result"
-                           value="{{item.name}}"
-                           readonly$="[[!editMode]]"
-                           required
-                           auto-validate
-                           invalid
-                           error-message="PD output or SSFA expected result must be specified"></paper-input>
+              <etools-form-element-wrapper label="PD output or SSFA expected result">
+                <span>[[item.name]]</span>
+              </etools-form-element-wrapper>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
@@ -189,23 +184,33 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          }
+            value: false
+          },
+          expectedResultId: Number,
         },
 
-        ready: function() {
-          this.dataSetModel = {
-            id: null,
-            name: null,
-            applied_indicators: []
-          };
+        _addNewLowerResult: function() {
+          this.fire('add-new-lower-result', {expectedResultId: this.expectedResultId});
         },
 
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
+        _editLowerResult: function(e) {
+          let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
+          if (!(index >= 0)) {
+            this.logError('Can not edit, invalid index selected', 'lower-results');
+            return;
           }
+
+          let lowerResult = this.dataItems[index];
+          if (!lowerResult) {
+            this.logError('Lower result not found in data items by index: ' + index, 'lower-results');
+            return;
+          }
+
+          this.fire('edit-lower-result', {
+            expectedResultId: this.expectedResultId,
+            lowerResultId: lowerResult.id,
+            lowerResultName: lowerResult.name
+          });
         },
 
         _displayIndicatorValue: function(value) {
@@ -233,17 +238,6 @@
 
         _getIndicatorNr: function(indicatorIndex) {
           return parseInt(indicatorIndex, 10) + 1;
-        },
-
-        /**
-         * Validate last amendment type; if valid add a new one.
-         */
-        _addNewLowerResult: function() {
-          if (!this.cpOutputId) {
-            this.fire('toast', {text: 'Please select a CP Output first', showCloseBtn: true});
-            return;
-          }
-          this._addElement();
         },
 
         _addNewIndicator: function(event) {

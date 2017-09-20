@@ -48,105 +48,10 @@
         var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
           'sections', 'planned_budget', 'planned_visits'];
         var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
-        var modifiedExpectedResults = this._buildModifiedExpectedResultsObject();
 
-        return Object.assign({}, modifiedDetails, modifiedExpectedResults);
+        return Object.assign({}, modifiedDetails);
       },
-      _buildModifiedExpectedResultsObject: function() {
-        var modifExpectedResultsArray = this._getNewOrModifiedExpectedResults();
 
-        if (!_.isEmpty(modifExpectedResultsArray)) {
-          return {result_links: modifExpectedResultsArray};
-        }
-        return {};
-      },
-      _getNewOrModifiedExpectedResults: function() {
-        if (_.isEmpty(this.intervention.result_links)) {
-          return [];
-        }
-        var modifExpResults = this.intervention.result_links
-          .filter(this._expectedResultIsNewOrModified.bind(this))
-          .map(function(resultLink) {
-            if (_.isEmpty(resultLink.ll_results)) {
-              return resultLink;
-            }
-
-            resultLink.ll_results = this._getNewOrModifiedPSorSSFATOROutput(resultLink.ll_results,
-              this._getOriginalResultLink(resultLink.id));
-            return resultLink;
-          }.bind(this));
-
-        return modifExpResults;
-      },
-      _getOriginalResultLink: function(id) {
-        return this.originalIntervention.result_links.find(function(r) {
-          return r.id === id;
-        });
-      },
-      _getOriginalLlResult: function(id, originalResultLink) {
-        return originalResultLink.ll_results.find(function(r) {
-          return r.id === id;
-        });
-      },
-      _getNewOrModifiedPSorSSFATOROutput: function(llResults, originalResultLink) {
-        if (!originalResultLink || _.isEmpty(originalResultLink.ll_results)) {
-          return llResults;
-        }
-        var modifLlResults = llResults.filter(function(llResult) {
-          if (!llResult.id) {
-            return true;
-          }
-          var originalLlResult = originalResultLink.ll_results.find(function(r) {
-            return r.id === llResult.id;
-          });
-
-          if (!originalLlResult) {
-            return true;
-          }
-          return (JSON.stringify(originalLlResult) !== JSON.stringify(llResult));
-        }).map(function(llResult) {
-          if (_.isEmpty(llResult.applied_indicators)) {
-            return llResult;
-          }
-          llResult.applied_indicators = this._getNewOrModifiedIndicators(llResult.applied_indicators,
-            this._getOriginalLlResult(llResult.id, originalResultLink));
-          return llResult;
-        }.bind(this));
-        return modifLlResults;
-      },
-      _getNewOrModifiedIndicators: function(indicators, originalLlResult) {
-        if (!originalLlResult || _.isEmpty(originalLlResult.applied_indicators)) {
-          return indicators;
-        }
-        var modifIndicators = indicators.filter(function(indicator) {
-          if (!indicator.id) {
-            return true;
-          }
-          var originalIndicator = originalLlResult.applied_indicators.find(function(r) {
-            return r.id === indicator.id;
-          });
-          if (!originalIndicator) {
-            return true;
-          }
-          return (JSON.stringify(originalIndicator) !== JSON.stringify(indicator));
-        });
-
-        return modifIndicators;
-      },
-      _expectedResultIsNewOrModified: function(resultLink) {
-        if (_.isEmpty(this.originalIntervention.result_links)) {
-          return true;
-        }
-        if (!resultLink.id) {
-          return true;
-        }
-        var originalResultLink = this._getOriginalResultLink(resultLink.id);
-        if (!originalResultLink) {
-          return true;
-        }
-
-        return (JSON.stringify(originalResultLink) !== JSON.stringify(resultLink));
-      },
       _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
         var modifiedObject = {};
 
