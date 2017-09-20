@@ -33,6 +33,7 @@
       }
 
       .action {
+        color: var(--medium-icon-color);
         width: 36px;
         height: 36px;
       }
@@ -40,7 +41,11 @@
       .action.delete {
         color: var(--icon-delete-color);
       }
-      .action.delete[disabled] {
+      .action.edit {
+        color: var(--medium-icon-color);
+      }
+      .action.delete[disabled],
+      .action.edit[disabled] {
         visibility: hidden;
       }
       .action.delete-activity {
@@ -132,6 +137,9 @@
 
       .action.delete:not(:hover) {
         color: var(--medium-icon-color);
+      }
+      .action.edit:hover {
+        color: var(--dark-icon-color);
       }
       .add-btn-wrapper {
         padding-top: 15px;

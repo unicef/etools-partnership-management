@@ -68,8 +68,8 @@
     parseRequestErrorsAndShowAsToastMsgs: function(errorResponse, source) {
       let errorsString = this.formatServerErrorAsText(errorResponse);
       if (errorsString) {
-         if (!source) {
-           source = this;
+        if (!source) {
+          source = this;
         }
         source.fire('toast', {text: errorsString, showCloseBtn: true});
       }
