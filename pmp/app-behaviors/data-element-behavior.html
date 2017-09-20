@@ -1,5 +1,6 @@
 <link rel="import" href="../app-config/app-dexie-db-config.html"/>
 <link rel="import" href="../app-config/app-endpoints-behavior.html"/>
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -43,12 +44,25 @@
     },
 
     _elementReady: function() {
+      var self = this;
       if (!this.endpointName) {
         console.warn('Please specify an endpointName property');
       } else {
         this.options.endpoint = this.getEndpoint(this.endpointName);
         this._endpointChanged(this.options.endpoint);
+        this.sendRequest(this.options)
+        .then(function(resp) {
+          self._handleMyResponse(resp);
+        }).catch(function(error) {
+          //TODO: proper error handling
+          console.warn('list data fetch failed! Also, this error should be handled properly.');
+        });;
       }
+    },
+
+    // some children overwrite this function for custom data processing
+    _handleMyResponse: function(res) {
+      this._handleResonse(res);
     },
 
     _handleResponse: function(res) {
@@ -78,9 +92,7 @@
     },
 
     _setAutomaticDataRefreshLoop: function(newEndpoint) {
-      console.log('loop set to', newEndpoint.exp);
       var refreshInterval = setInterval(function() {
-        console.log('fire in the hole!');
         this.$.ajax.send();
       }.bind(this), newEndpoint.exp);
 
@@ -90,6 +102,7 @@
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.DataElement */
   EtoolsPmpApp.Behaviors.DataElement = [
+    EtoolsAjaxRequestBehavior,
     EtoolsPmpApp.Behaviors.Endpoints,
     EtoolsPmpApp.Behaviors.DataElementImpl
   ];

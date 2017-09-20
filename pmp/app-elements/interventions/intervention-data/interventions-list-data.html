@@ -1,17 +1,10 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
 <link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
 <dom-module id="interventions-list-data">
-
-  <template>
-    <etools-ajax id="ajax"
-                 options="[[options]]"
-                 on-success="_handleResponse"></etools-ajax>
-  </template>
 
   <script>
     (function() {
