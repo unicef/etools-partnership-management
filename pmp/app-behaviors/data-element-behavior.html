@@ -59,12 +59,13 @@
           self._handleMyResponse(resp);
         }).catch(function(error) {
           //TODO: proper error handling
+          console.log(error);
           console.warn('list data fetch failed! Also, this error should be handled properly.');
         });
     },
     // some children overwrite this function for custom data processing
     _handleMyResponse: function(res) {
-      this._handleResonse(res);
+      this._handleResponse(res);
     },
 
     _handleResponse: function(res) {
