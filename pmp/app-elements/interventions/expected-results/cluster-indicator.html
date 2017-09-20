@@ -51,7 +51,7 @@
                                     label="Response Plan"
                                     placeholder="&#8212;"
                                     selected-values="{{responsePlanId}}"
-                                    options="[[hrps]]"
+                                    options="[[responsePlans]]"
                                     option-label="name"
                                     option-value="id"
                                     error-message="Please select Response Plan">
@@ -154,6 +154,9 @@
           clusterId: {
             type: String
           },
+          clusters: {
+            type: Array
+          },
           prpClusterIndicators: {
             type: Array,
             value: function() {
@@ -172,9 +175,8 @@
               ];
             }
           },
-          hrps: {
+          responsePlans: {
             type: Array,
-            //statePath: "hrps"
           },
           prpClusterIndicator: {
             type: Object,
@@ -189,6 +191,7 @@
         observers: [
           '_baselineChanged(indicator.baseline)',
           '_targetChanged(indicator.target)',
+          '_populateClusters(responsePlanId)',
           '_populatePrpClusterIndicators(responsePlanId, clusterId)'
         ],
         indicatorChanged: function(indicator) {
@@ -199,19 +202,39 @@
             this.set('isNewIndicator', true);
           }
         },
+        _populateClusters: function(responsePlanId) {
+          if (!responsePlanId) {
+            return;
+          }
+          this.fire('start-spinner', {spinnerText: 'Loading PRP clusters..'});
+          let self = this;
+          this.sendRequest({
+            method: 'GET',
+            endpoint: this.getEndpoint('getPrpClusters', {id: responsePlanId})
+          }).then(function(response) {
+            self.clusters = response;
+            slf.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error.response});
+          })
+        },
         _populatePrpClusterIndicators: function(responsePlanId, clusterId) {
           if (!responsePlanId || !clusterId) {
             return;
           }
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
+          let self = this;
           this.sendRequest({
             method: 'GET',
             endpoint: this.getEndpoint('getPrpClusterIndicators', {id: clusterId})
-          }).then(function() {
-            this.fire('stop-spinner');
-          }).catch(function() {
-            this.fire('stop-spinner');
-          })
+          }).then(function(response) {
+            self.prpClusterIndicators = response
+            self.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error.response});
+          });
         },
         _getPrpClusterIndicator: function(clusterIndicId) {
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
@@ -224,11 +247,8 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self._handleGetPrpIndicatorError(error.response);
+            self.fire('show-toast', {error: error.response});
           });
-        },
-        _handleGetPrpIndicatorError: function(error) {
-          this.fire('show-toast', {error: error});
         },
         _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
           if (!prpClusterIndic) {
