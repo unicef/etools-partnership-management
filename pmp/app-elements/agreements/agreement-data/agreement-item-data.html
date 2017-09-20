@@ -1,5 +1,5 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
@@ -8,13 +8,6 @@
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 
 <dom-module id="agreement-item-data">
-
-  <template>
-    <etools-ajax id="ajax"
-                 options="[[options]]"
-                 on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
-  </template>
 
   <script>
     (function() {
@@ -25,8 +18,9 @@
         is: 'agreement-item-data',
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsAjaxRequestBehavior,
           EtoolsLogsBehavior
         ],
         properties: {
@@ -86,26 +80,27 @@
               loadingSource: this.ajaxLoadingMsgSource
             });
             this.set('options.endpoint', this.getEndpoint('agreementDetails', {id: newId}));
+            this._prepareAndFireRequest();
           }
         },
         /**
          * Handle received data from request
          */
         _handleResponse: function(response) {
-          this._setAgreement(response.detail);
+          this._setAgreement(response);
 
           // call additional callback, if any
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
+            this.handleSuccResponseAdditionalCallback.bind(this, response)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
           if (!this.options.method || this.options.method !== 'GET') {
-            this.dispatch('addEditAgreement', this._getMinimalAgreementData(response.detail));
+            this.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
 
             var self = this;
             // update the agreement list in dexieDB
-            EtoolsPmpApp.DexieDb.table('agreements').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('agreements').put(response).then(function() {
               self.fire('reload-list');
             });
           }
@@ -141,16 +136,26 @@
           }
           return minimalAgrData;
         },
-        /**
-         * Set the method of the request and the body.
-         * Used for unsafe requests (PATCH/POST).
-         */
+
         _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          this.set('options.body', data);
-          this.set('options.method', method);
-          this.set('options.url', url);
+          this.set('options.body', data || {});
+          this.set('options.method', method || 'GET');
+          this.set('options.url', url || this.options.endpoint.url);
           this.set('options.multiPart', multipart);
           this.set('options.prepareMultipartData', prepareMultipartData);
+          var self = this;
+
+          if (!this.options.url) {
+            return;
+          }
+
+          this.sendRequest(this.options)
+            .then(function(resp) {
+              self._handleResponse(resp);
+            }).catch(function(error) {
+              console.log(error);
+              self._handleErrorResponse(error);
+            });
         },
 
         /**

@@ -44,22 +44,24 @@
     },
 
     _elementReady: function() {
-      var self = this;
       if (!this.endpointName) {
         console.warn('Please specify an endpointName property');
       } else {
         this.options.endpoint = this.getEndpoint(this.endpointName);
         this._endpointChanged(this.options.endpoint);
-        this.sendRequest(this.options)
+        this._fireRequest();
+      }
+    },
+    _fireRequest: function() {
+      var self = this;
+      this.sendRequest(this.options)
         .then(function(resp) {
           self._handleMyResponse(resp);
         }).catch(function(error) {
           //TODO: proper error handling
           console.warn('list data fetch failed! Also, this error should be handled properly.');
-        });;
-      }
+        });
     },
-
     // some children overwrite this function for custom data processing
     _handleMyResponse: function(res) {
       this._handleResonse(res);
@@ -93,7 +95,7 @@
 
     _setAutomaticDataRefreshLoop: function(newEndpoint) {
       var refreshInterval = setInterval(function() {
-        this.$.ajax.send();
+        this._fireRequest();
       }.bind(this), newEndpoint.exp);
 
       this.set('_refreshInterval', refreshInterval);
