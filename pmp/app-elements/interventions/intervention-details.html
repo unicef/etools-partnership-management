@@ -282,7 +282,6 @@
                                      data-items="{{intervention.result_links}}"
                                      selected-cp-structure="[[intervention.country_programme]]"
                                      intervention-id="[[intervention.id]]"
-                                     required$="[[intervention.permissions.required.result_links]]"
                                      edit-mode$="[[intervention.permissions.edit.result_links]]">
       </intervention-expected-results>
     </etools-content-panel>
@@ -548,9 +547,12 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
+          var elements = ['sectorLocations', 'plannedVisits'];
           elements.forEach(function(el) {
-            this.elementValidationReset('#' + el);
+            let elem = this.$$('#' + el);
+            if (elem && typeof elem.resetValidations === 'function') {
+              elem.resetValidations();
+            }
           }.bind(this));
           this.set('fieldsResetted', true);
         },
@@ -652,7 +654,7 @@
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
-            '#plannedBudget', '#expectedResults', '#plannedVisits'];
+            '#plannedBudget', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
