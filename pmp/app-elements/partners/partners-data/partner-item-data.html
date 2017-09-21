@@ -1,9 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/data-item-behavior.html">
 
 <dom-module id="partner-item-data">
 
@@ -15,10 +12,7 @@
 
         is: 'partner-item-data',
         behaviors: [
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsAjaxRequestBehavior
+          EtoolsPmpApp.Behaviors.DataItem,
         ],
         properties: {
 
@@ -34,13 +28,6 @@
           },
           deletedPartnerId: {
             type: Number,
-          },
-          options: {
-            type: Object,
-              value: {
-                endpoint: null,
-                csrf: true
-              },
           },
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
@@ -82,27 +69,6 @@
           }
         },
 
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          this.set('options.body', data || {});
-          this.set('options.method', method || 'GET');
-          this.set('options.url', url || this.options.endpoint.url);
-          this.set('options.multiPart', multipart);
-          this.set('options.prepareMultipartData', prepareMultipartData);
-          var self = this;
-
-          if (!this.options.url) {
-            return;
-          }
-
-          this.sendRequest(this.options)
-            .then(function(resp) {
-              self._handleSuccResponse(resp);
-            }).catch(function(error) {
-              console.log(error);
-              self._handleErrorResponse(error);
-            });
-        },
-
         _handleSuccResponse: function(response) {
           this._setPartner(response);
 
@@ -112,8 +78,8 @@
             this.set('handleSuccResponseAdditionalCallback', null);
             this.set('handleErrResponseAdditionalCallback', null);
           }
-          let ajaxMethod = this.$.ajax.get('method');
           let self = this;
+          let ajaxMethod = this.options.method;
           if (['GET','DELETE'].indexOf(ajaxMethod) === -1) {
             // update the partners list in dexieDB
             EtoolsPmpApp.DexieDb.table('partners').put(response).then(function() {
@@ -196,12 +162,10 @@
               if (callback) {
                 this.set('handleSuccResponseAdditionalCallback', callback);
               }
-              this.withUpload = false; // used to set multipart prop on etools-ajax
-              this.prepareMultipartData = false;
+              let withUpload = false; // used to set multipart prop on etools-ajax
               if (partner.hasOwnProperty('core_values_assessment')) {
                 if (partner.core_values_assessment instanceof File) {
-                  this.withUpload = true;
-                  this.prepareMultipartData = true;
+                  withUpload = true;
                 } else {
                    delete partner.core_values_assessment;
                 }
@@ -212,8 +176,7 @@
 
                   partner.assessments = partner.assessments.map(function(assessment) {
                       if (assessment.report instanceof File) {
-                        this.withUpload = true;
-                        this.prepareMultipartData = true;
+                        withUpload = true;
                       } else {
                         delete assessment.report;
                       }
@@ -228,7 +191,7 @@
               });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
+              this._prepareAndFireRequest(action, partner, url, withUpload);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',

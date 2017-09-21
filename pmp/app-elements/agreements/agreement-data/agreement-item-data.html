@@ -1,10 +1,5 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
-
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/data-item-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 
 <dom-module id="agreement-item-data">
@@ -17,11 +12,7 @@
 
         is: 'agreement-item-data',
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsAjaxRequestBehavior,
-          EtoolsLogsBehavior
+          EtoolsPmpApp.Behaviors.DataItem,
         ],
         properties: {
 
@@ -29,13 +20,6 @@
             type: Object,
             readOnly: true,
             notify: true
-          },
-          options: {
-            type: Object,
-            value: {
-              endpoint: null,
-              csrf: true
-            },
           },
           _partners: {
             type: Object
@@ -86,7 +70,7 @@
         /**
          * Handle received data from request
          */
-        _handleResponse: function(response) {
+        _handleSuccResponse: function(response) {
           this._setAgreement(response);
 
           // call additional callback, if any
@@ -135,27 +119,6 @@
             }
           }
           return minimalAgrData;
-        },
-
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          this.set('options.body', data || {});
-          this.set('options.method', method || 'GET');
-          this.set('options.url', url || this.options.endpoint.url);
-          this.set('options.multiPart', multipart);
-          this.set('options.prepareMultipartData', prepareMultipartData);
-          var self = this;
-
-          if (!this.options.url) {
-            return;
-          }
-
-          this.sendRequest(this.options)
-            .then(function(resp) {
-              self._handleResponse(resp);
-            }).catch(function(error) {
-              console.log(error);
-              self._handleErrorResponse(error);
-            });
         },
 
         /**
@@ -230,19 +193,16 @@
               if (succCallback) {
                 this.set('handleSuccResponseAdditionalCallback', succCallback);
               }
-              this.withUpload = false; // used to set multipart prop on etools-ajax
-              this.prepareMultipartData = false;
+              let withUpload = false; // used to set multipart prop on etools-ajax
               if (agreement.hasOwnProperty('attached_agreement')) {
                 if (agreement.attached_agreement instanceof File) {
-                  this.withUpload = true;
-                  this.prepareMultipartData = true;
+                  withUpload = true;
                 } else {
                   delete agreement.attached_agreement;
                 }
               }
               if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
-                this.withUpload = true;
-                this.prepareMultipartData = true;
+                withUpload = true;
               }
               this.fire('global-loading', {
                 message: 'Saving agreement data...',
@@ -251,7 +211,7 @@
               });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, agreement, url, this.withUpload, this.prepareMultipartData);
+              this._prepareAndFireRequest(action, agreement, url, withUpload);
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',

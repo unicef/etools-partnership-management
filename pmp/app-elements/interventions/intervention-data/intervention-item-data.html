@@ -1,11 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
-
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/data-item-behavior.html">
 
 <dom-module id="intervention-item-data">
 
@@ -16,11 +11,7 @@
 
         is: 'intervention-item-data',
         behaviors: [
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsLogsBehavior,
-          EtoolsAjaxRequestBehavior
+          EtoolsPmpApp.Behaviors.DataItem,
         ],
         properties: {
 
@@ -59,13 +50,6 @@
             type: String,
             value: 'pd-ssfa-data'
           },
-          options: {
-            type: Object,
-              value: {
-                endpoint: null,
-                csrf: true
-              },
-          },
         },
 
         _interventionIdChanged: function(newId) {
@@ -78,27 +62,6 @@
             this.set('options.endpoint', this.getEndpoint('interventionDetails', {id: newId}));
             this._prepareAndFireRequest();
           }
-        },
-
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          this.set('options.body', data || {});
-          this.set('options.method', method || 'GET');
-          this.set('options.url', url || this.options.endpoint.url);
-          this.set('options.multiPart', multipart);
-          this.set('options.prepareMultipartData', prepareMultipartData);
-          var self = this;
-
-          if (!this.options.url) {
-            return;
-          }
-
-          this.sendRequest(this.options)
-            .then(function(resp) {
-              self._handleResponse(resp);
-            }).catch(function(error) {
-              console.log(error);
-              self._handleErrorResponse(error);
-            });
         },
 
         _handleErrorResponse: function(response) {
@@ -114,7 +77,7 @@
         /**
          * Handle received data from request
          */
-        _handleResponse: function(response) {
+        _handleSuccResponse: function(response) {
           response.original_sectors = JSON.parse(JSON.stringify(response.sector_locations));
           this._setIntervention(response);
 
@@ -257,25 +220,25 @@
               this.set('handleResponseAdditionalCallback', callback);
             }
 
-            // var prepareMultipartData = false;
+            var prepareMultipartData = false;
             if (this._hasFiles(intervention.attachments, 'attachment')) {
-              // prepareMultipartData = true;
+              prepareMultipartData = true;
             }
             // check prc_review_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'prc_review_document')) {
-              // prepareMultipartData = true;
+              prepareMultipartData = true;
             } else {
               delete intervention.prc_review_document;
             }
             // check signed_pd_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'signed_pd_document')) {
-              // prepareMultipartData = true;
+              prepareMultipartData = true;
             } else {
               delete intervention.signed_pd_document;
             }
 
             if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-              // prepareMultipartData = true;
+              prepareMultipartData = true;
             }
             if (Array.isArray(intervention.sector_locations)) {
               intervention.sector_locations = intervention.sector_locations.filter(function(elem) {
@@ -298,7 +261,7 @@
               loadingSource: this.ajaxLoadingMsgSource
             });
 
-            this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url);
+            this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH', intervention, url, prepareMultipartData);
           }
         },
 

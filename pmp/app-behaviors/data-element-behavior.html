@@ -35,6 +35,9 @@
         value: null
       }
     },
+    observers: [
+      '_endpointChanged(options.endpoint)'
+    ],
     detached: function() {
       this._removeAutomaticDataRefreshLoop();
     },
@@ -48,7 +51,6 @@
         console.warn('Please specify an endpointName property');
       } else {
         this.options.endpoint = this.getEndpoint(this.endpointName);
-        this._endpointChanged(this.options.endpoint);
         this._fireRequest();
       }
     },
@@ -80,8 +82,7 @@
     },
 
     _endpointChanged: function(newEndpoint) {
-      // Check if endpoint has expire property set and it's bigger than 0
-      if (newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
+      if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
           this._removeAutomaticDataRefreshLoop();
           this._setAutomaticDataRefreshLoop(newEndpoint);
         }
