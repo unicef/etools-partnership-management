@@ -7,8 +7,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
-<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 
@@ -342,6 +342,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
+          this._setContentScrollPosition(0);
         }
       },
 
@@ -443,7 +444,7 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-      }
+      },
 
     });
 

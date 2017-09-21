@@ -230,15 +230,29 @@
               activeStatus = 'Closed';
               break;
 
+            case 'ended':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Ended';
+              break;
+
+            // legacy version of 'ended'
             case 'implemented':
               availableStatuses = [
                 'Draft',
                 'Signed',
                 'Active',
                 'Ended',
+                'Closed',
               ];
               activeStatus = 'Ended';
               break;
+
             default:
               availableStatuses = [
                 'Draft',

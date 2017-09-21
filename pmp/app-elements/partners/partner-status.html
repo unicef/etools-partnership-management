@@ -11,11 +11,20 @@
         --status-top: auto;
         --etools-status-label-style: {
           font-weight: normal;
+          max-width: 120px;
         };
         --etools-status-container: {
           height: auto;
           min-height: 40px;
         };
+      }
+      @media only screen and (max-width: 1366px) {
+        :host {
+          --etools-status-label-style: {
+            font-weight: normal;
+            max-width: 100%;
+          };
+        }
       }
       etools-status {
         top: var(--status-top);
