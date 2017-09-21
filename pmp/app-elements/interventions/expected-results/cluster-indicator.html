@@ -28,18 +28,20 @@
     <template is="dom-if" if="[[!isNewIndicator]]">
       <div class="row-h flex-c">
         <div class="col col-5">
-          <etools-form-element-wrapper no-label-float label="Response Plan">
-            [[prpClusterIndicator.responsePlan.name]]
-          </etools-form-element-wrapper>
+          <div class="layout-vertical">
+            <label class="paper-label">Response Plan</label>
+            <label class="input-label" empty$="[[!prpClusterIndicator.responsePlan.name]]">[[prpClusterIndicator.responsePlan.name]]</label>
+          </div>
         </div>
         <div class="col col-5">
-          <etools-form-element-wrapper no-label-float label="Cluster">
-            [[prpClusterIndicator.cluster.name]]
-          </etools-form-element-wrapper>
+          <div class="layout-vertical">
+            <label class="paper-label">Cluster</label>
+            <label class="input-label" empty$="[[!prpClusterIndicator.cluster.name]]">[[prpClusterIndicator.cluster.name]]</label>
+          </div>
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-form-element-wrapper no-label-float label="Indicator">
+        <etools-form-element-wrapper no-label-float label="Indicator" required>
           [[prpClusterIndicator.title]]
         </etools-form-element-wrapper>
       </div>
