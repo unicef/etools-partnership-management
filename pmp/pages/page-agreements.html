@@ -7,7 +7,7 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
-<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
+
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -165,7 +165,6 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
-        EtoolsPmpApp.Behaviors.ScrollControl
       ],
 
       properties: {
@@ -249,8 +248,7 @@
 
       observers: [
         '_pageChanged(agreementListActive, newAgreementActive, agreementDetailsActive)',
-        '_observeRouteDataId(routeData.id)',
-        '_listActiveCallback(listActive)'
+        '_observeRouteDataId(routeData.id)'
       ],
 
       listeners: {
@@ -348,7 +346,6 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
-          this._setContentScrollPosition(0);
         }
       },
 
@@ -383,7 +380,6 @@
         // keep a copy of the agreement before changes are made and use it later to save only the changes
         this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
         this.set('serverErrors', []);
-        this._setContentScrollPosition(0);
       },
 
       /**
@@ -521,12 +517,6 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
-      },
-
-      _listActiveCallback: function(listActive) {
-        if (listActive) {
-          this._setContentScrollPosition(0);
-        }
       }
 
     });
