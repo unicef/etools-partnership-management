@@ -5,15 +5,16 @@
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
-  <template>
-    <style include="page-layout-styles grid-layout-styles">
-      #action-btns paper-icon-button {
+  <template strip-whitespace>
+    <style include="page-layout-styles grid-layout-styles repeatable-data-sets-styles">
+      /* #action-btns paper-icon-button {
         color: var(--secondary-text-color) !important;
-      }
+      } */
       div.col {
         align-items: center;
       }
@@ -36,26 +37,27 @@
           <div class="table">
             <div class="row-h header-row">
               <div class="col col-4"> Name</div>
-              <div class="col col-5"> Disaggregation Groups</div>
-              <div class="col col-3"> Actions</div>
+              <div class="col col-6"> Disaggregation Groups</div>
+              <div class="col col-2"> Actions</div>
             </div>
-
-            <div class="row-h">
-              <div class="col col-4">
-                Age
+            <template is="dom-repeat" items="[[dataItems]]">
+              <div class="row-h">
+                <div class="col col-4">
+                  [[item.name]]
+                </div>
+                <div class="col col-6">
+                  [[_displayGroups(item.groups)]]
+                </div>
+                <div class="col col-2" id="action-btns">
+                  <paper-icon-button class="action edit" icon="create"
+                              title="Edit">
+                  </paper-icon-button>
+                  <paper-icon-button class="action delete" icon="cancel"
+                              title="Delete">
+                  </paper-icon-button>
+                </div>
               </div>
-              <div class="col col-5">
-                1-10;11-20;21-30;
-              </div>
-              <div class="col col-3" id="action-btns">
-                <paper-icon-button icon="create"
-                            title="Edit">
-                </paper-icon-button>
-                <paper-icon-button icon="delete"
-                            title="Delete">
-                </paper-icon-button>
-              </div>
-            </div>
+            </template>
           </div>
         </etools-content-panel>
       </div>
@@ -71,23 +73,40 @@
       is: 'disaggregation-list',
 
       behaviors: [
-        pmpBehaviors.RepeatableDataSetsBehavior
+        EtoolsPmpApp.Behaviors.RepeatableDataSets
       ],
 
       properties: {
+        dataItems: {
+          type: Array,
+          // value: 'disaggregations'
+          value: [{name: 'Age', groups: ['1-10', '11-20', '21-40']},
+          {name: 'Gender', groups: ['M', 'F', 'O']},
+          {name: 'Testing something', groups: ['some text that its longer 65656 565656 77777', 'some text that its even longer 12345 12345 56656', 'some other long text 89898 676767']}]
+        },
         disaggregationModal: {
           type: Object
         }
       },
-       ready: function() {
+      ready: function() {
           this.disaggregationModal = document.createElement('add-disaggregation-dialog');
           this.disaggregationModal.setAttribute('id', 'disaggregationModal');
           Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
-        },
+      },
+      detached: function() {
+        if (this.disaggregationModal) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.disaggregationModal);
+        }
+      },
       _openModal: function() {
         this.disaggregationModal.open();
+      },
+      _displayGroups: function(groups) {
+        if (!groups || !groups.length) {
+          return '-';
+        }
+        return groups.join('; ');
       }
-
     });
   })();
 </script>
