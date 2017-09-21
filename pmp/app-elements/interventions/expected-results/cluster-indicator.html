@@ -216,11 +216,11 @@
             endpoint: this.getEndpoint('getPrpClusters', {id: responsePlanId})
           }).then(function(response) {
             self.clusters = response;
-            slf.fire('stop-spinner');
+            self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
             self.fire('show-toast', {error: error.response});
-          })
+          });
         },
         _populatePrpClusterIndicators: function(responsePlanId, clusterId) {
           if (!responsePlanId || !clusterId) {
@@ -232,7 +232,7 @@
             method: 'GET',
             endpoint: this.getEndpoint('getPrpClusterIndicators', {id: clusterId})
           }).then(function(response) {
-            self.prpClusterIndicators = response
+            self.prpClusterIndicators = response;
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');

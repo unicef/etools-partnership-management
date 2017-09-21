@@ -269,7 +269,7 @@
         },
          //* For dom-repeat to work ok
         _convertToArrayOfObj: function(disaggregations) {
-          return disaggregations.map(function(id){
+          return disaggregations.map(function(id) {
             return {id: id};
           });
         },
@@ -283,7 +283,7 @@
             e.stopImmediatePropagation();
           }
           this.$.indicatorDialog.stopSpinner();
-          this.spinnerText = "Saving indicator..";
+          this.spinnerText = 'Saving indicator..';
         },
         _startSpinner: function(e) {
           if (e) {

@@ -130,7 +130,7 @@
 
         },
         _isAlreadySelected: function(disagreg) {
-          let duplicateItems = this.dataItems.filter(function(item){
+          let duplicateItems = this.dataItems.filter(function(item) {
             return parseInt(item.disaggregationId) === parseInt(disagreg.id);
           });
           if (duplicateItems && duplicateItems.length) {
