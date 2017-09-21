@@ -272,7 +272,13 @@
 
           this.isCluster = !!data.cluster_id;
           this.set('indicator', data);
-          this.set('disaggregations', this.indicator.disaggregation);
+          this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
+        },
+         //* For dom-repeat to work ok
+        _convertToArrayOfObj: function(disaggregations) {
+          return disaggregations.map(function(id){
+            return {id: id};
+          });
         },
         _cleanUp: function() {
           this._stopSpinner();
@@ -289,7 +295,7 @@
         _startSpinner: function(e) {
           if (e) {
             e.stopImmediatePropagation();
-            this.set(spinnerText, e.detail.spinnerText);
+            this.set('spinnerText', e.detail.spinnerText);
             console.log(e);
           }
           this.$.indicatorDialog.startSpinner();

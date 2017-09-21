@@ -39,7 +39,16 @@
         }
       },
       clusterIndicatorCreateModel: {
-        type: Object
+        type: Object,
+        value: {
+          id: null,
+          section: null,
+          baseline: null,
+          target: null,
+          locations: [],
+          cluster_indicator_id: null,
+          cluster_indicator_title: null
+        }
       },
       clusterIndicatorEditModel: {
         type: Object
@@ -103,7 +112,24 @@
       _getIndicatorBody: function() {
           let body = this._getIndicatorModelForSave();
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
+          if (body.hasOwnProperty('disaggregation')) {
+            this._prepareDisaggregations(body);
+          }
           return body;
+      },
+      _prepareDisaggregations: function(body) {
+        if (!this.disaggregations || !this.disaggregations.length) {
+          return;
+        }
+        let i;
+        for(i = 0; i < this.disaggregations.length; i++) {
+          if (this.disaggregations[i].disaggregationId === null) {
+            this.disaggregations.splice(i, 1);
+          }
+        }
+        body.disaggregation = this.disaggregations.map(function(item) {
+          return item.disaggregationId;
+        });
       },
       _getIndicatorModelForSave: function() {
         let modelName = this.isCluster ? 'clusterIndicator' : 'nonClusterIndicator';

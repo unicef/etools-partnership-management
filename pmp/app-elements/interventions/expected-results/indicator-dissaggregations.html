@@ -34,7 +34,7 @@
 
     </style>
     <div hidden$="[[_emptyList(dataItems, dataItems.length)]]">
-      <template is="dom-repeat" items="{{dataItems}}" as="disaggregateById">
+      <template is="dom-repeat" items="{{dataItems}}" >
         <div class="row-h item-container no-h-margin">
           <div class="item-actions-container">
             <div class="actions">
@@ -49,10 +49,10 @@
               <div class="col col-4">
                 <etools-single-selection-menu id="disaggregate_by_[[index]]" label="Disaggregate By"
                                               options="{{preDefinedDisaggregtions}}"
-                                              selected="{{disaggregateById}}"
+                                              selected="{{item.disaggregationId}}"
                                               option-value="id"
                                               option-label="name"
-                                              on-iron-select="_displayDisaggregationGroups">
+                                              on-iron-select="_onDisaggregationSelected">
                 </etools-single-selection-menu>
               </div>
               <div class="col col-8">
@@ -90,32 +90,56 @@
         properties: {
           preDefinedDisaggregtions: {
             type: Array,
-            value: [{'id': 1, 'name': 'Age', 'disaggregationGroups': '1-10;11-20'}, {'id': 2, 'name': 'Gender', 'disaggregationGroups': 'm;f'}]
+            value: [{'id': 1, 'name': 'Age', 'disaggregationGroups': '1-10;11-20'},
+            {'id': 2, 'name': 'Gender', 'disaggregationGroups': 'm;f'}]
+          },
+          disaggregations: {
+            type: Array,
+            notify: true,
           }
         },
 
         ready: function() {
-          this.dataSetModel = null;
+          this.dataSetModel = {disaggregationId: null};
           this.editMode = true;
         },
+
         _emptyList: function(disaggregations, disaggregLength) {
           return (!disaggregations || !disaggregLength) ;
         },
 
-        /**
-         * Validate last amendment type; if valid add a new one.
-         */
         _addNewDisaggregation: function() {
-          this._addElement(true);
+          this._addElement();
         },
-        _displayDisaggregationGroups: function(event) {
+
+        _onDisaggregationSelected: function(event) {
           if (!event.detail.item.item) {
             return;
           }
-          var nameArr =  Polymer.dom(event).localTarget.id.split('_');
-          var index = nameArr[nameArr.length - 1];
-          this.$$('#disaggregationGroups_' + index).value = event.detail.item.item.disaggregationGroups;
+          let selectedDisagreg = event.detail.item.item;
+          var splitElId =  Polymer.dom(event).localTarget.id.split('_');
+          var index = splitElId[splitElId.length - 1];
 
+          if (this._isAlreadySelected(selectedDisagreg)) {
+            event.model.set('item', null);
+            event.model.set('item', {disaggregationId: null});
+            this.fire('show-toast', {error: 'Disaggregation already selected'});
+            return;
+          }
+          this._displayDisaggregationGroups(selectedDisagreg, index);
+
+        },
+        _isAlreadySelected: function(disagreg) {
+          let duplicateItems = this.dataItems.filter(function(item){
+            return parseInt(item.disaggregationId) === parseInt(disagreg.id);
+          });
+          if (duplicateItems && duplicateItems.length) {
+            return true;
+          }
+          return false;
+        },
+        _displayDisaggregationGroups: function(selectedDisagreg, index) {
+          this.$$('#disaggregationGroups_' + index).value = selectedDisagreg.disaggregationGroups;
         }
 
       });

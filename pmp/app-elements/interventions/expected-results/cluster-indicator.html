@@ -13,10 +13,11 @@
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
 <dom-module id="cluster-indicator">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       paper-input,
       paper-textarea,
       paper-material {
@@ -70,7 +71,7 @@
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-single-selection-menu id$="clusterIndicatorsDropdw"
+        <etools-single-selection-menu id="clusterIndicatorEl"
                                     label="Indicator"
                                     placeholder="&#8212;"
                                     selected-values="{{indicator.cluster_indicator_id}}"
@@ -112,7 +113,7 @@
       <etools-multi-selection-menu id$="locationsDropdw"
                                    label="Locations"
                                    placeholder="&#8212;"
-                                   selected-values="{{indicator.locationIds}}"
+                                   selected-values="{{indicator.locations}}"
                                    options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
@@ -165,7 +166,7 @@
                   id: 1,
                   name: 'Test PRP indicator',
                   means_of_verification: 'means of verif 1',
-                  locationIds: [1,2,3],
+                  locationIds: [1524, 2412],
                   disaggregations: [{
                     id: 1,
                     name: 'Age C',
@@ -180,11 +181,11 @@
           },
           prpClusterIndicator: {
             type: Object,
-            notify: true,
             observer: '_selectedPrpClusterIndicatorChanged'
           },
           prpDisaggregations: {
-            type: Array
+            type: Array,
+            notify: true
           }
         },
 
@@ -264,10 +265,10 @@
         },
 
         validate: function() {
-          return this.$.clusterIndicatorsDropdw.validate();
+          return this.$$('#clusterIndicatorEl').validate();
         },
         resetValidations: function() {
-          this.$.clusterIndicatorsDropdw.invalid = false;
+          this.$$('#clusterIndicatorEl').invalid = false;
         }
     });
   })();
