@@ -25,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -59,12 +59,6 @@
         text-transform: capitalize;
         font-weight: bold;
         color: var(--light-primary-text-color, #FFFFFF);
-      }
-
-      #monitoring-visits-panel {
-        --ecp-content: {
-          padding: 10px 0 24px;
-        }
       }
 
       #top-container {
@@ -136,7 +130,7 @@
           <br/>
           <div class="content" id="interventions_sectors">
             <template is="dom-repeat" items="[[sectors]]" as="sector">
-              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
+              <span class="sector-label" style$="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
             </template>
           </div>
         </div>
@@ -194,6 +188,10 @@
             type: Array
           },
         },
+        ready: function() {
+          this._parseCpOutputs();
+          this._parseLocationsAndSectors();
+        },
 
         attached: function() {
           /**
@@ -240,7 +238,7 @@
           var sectorIds = [];
           var sectors = [];
 
-          this.intervention.sector_locations.forEach(function(locLvl1) {
+          this.intervention.original_sectors.forEach(function(locLvl1) {
             locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });

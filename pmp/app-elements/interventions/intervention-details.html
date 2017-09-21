@@ -20,6 +20,7 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
+<link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -181,7 +182,7 @@
           <etools-multi-selection-menu id="partnerFocalPts"
                                        label="Partner Focal Point(s)"
                                        placeholder="&#8212;"
-                                       options="[[partnerStaffMembers]]"
+                                       options="[[staffMembers]]"
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{intervention.partner_focal_points}}"
@@ -315,6 +316,7 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions,
           EtoolsPmpApp.Behaviors.FrNumbersConsistency
@@ -334,14 +336,9 @@
             notify: true,
             observer: '_selectedPartnerIdChanged'
           },
-          partnerStaffMembers: {
-            type: Array,
-            value: []
-          },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes',
-            observer: '_initDocTypes'
+            statePath: 'interventionDocTypes'
           },
           pcaDocTypes: {
             type: Array,
@@ -582,14 +579,15 @@
             //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
+          this.getPartnerStaffMembers(id);
         },
         _resetDropdowns: function() {
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
           this.set('intervention.partner_focal_points', []);
-          this.set('partnerStaffMembers', []);
-          var partnerFpDropDown = this.$.partnerFocalPts;
+          this.set('staffMembers', []);
+          let partnerFpDropDown = this.$.partnerFocalPts;
           if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
@@ -599,7 +597,8 @@
          * When an agreement is selected then check it's type and update document types dropdown
          */
         _getCurrentDocTypes: function(agreement, documentTypes) {
-          var options = documentTypes;
+          this._initDocTypes(documentTypes);
+          let options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
               case 'PCA':

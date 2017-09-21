@@ -21,8 +21,8 @@
     },
 
     isIEBrowser: function() {
-      var userAgent = window.navigator.userAgent;
-      var ieBrowser = false;
+      let userAgent = window.navigator.userAgent;
+      let ieBrowser = false;
       if (userAgent.indexOf('Trident/') > -1) {
         // IE 11
         ieBrowser = true;
@@ -35,15 +35,18 @@
      */
     addIEBrowserStylesAdjustments: function() {
       this.classList.add('ie');
-      var appHeaderLayout = this.$.appHeadLayout;
+      let appHeaderLayout = this.$.appHeadLayout;
       appHeaderLayout.removeAttribute('fullbleed');
       appHeaderLayout.set('hasScrollingRegion', false);
       appHeaderLayout.style.minHeight = '100%';
-      var contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
+      let contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
       if (contentContainer) {
         contentContainer.style.minHeight = '100vh';
         contentContainer.style.boxSizing = 'border-box';
         contentContainer.style.paddingBottom = '90px';
+      }
+      if (this.globalLoadingElement) {
+        this.globalLoadingElement.style.position = 'fixed';
       }
     }
 
