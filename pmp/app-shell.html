@@ -40,7 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
 
 <link rel="import" href="app-elements/static-common-data/static-common-data.html">
-
+<link rel="import" href="app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
@@ -157,7 +157,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
-        etoolsBehaviors.LoadingBehavior
+        etoolsBehaviors.LoadingBehavior,
+        EtoolsPmpApp.Behaviors.ScrollControl
       ],
 
       properties: {
@@ -167,7 +168,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged'
         },
         route: {
-          type: Object
+          type: Object,
+          observer: '_routeChanged'
         },
         narrow: {
           type: Boolean,
@@ -206,7 +208,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       created: function() {
         this.checkIE11Browser();
       },
-
+      _routeChanged: function() {
+        this._setContentScrollPosition(0);
+      },
       ready: function() {
         // for some reason the "$=" will make basePath undefined, we need to use a local property
         this.baseUrl = this.basePath;
