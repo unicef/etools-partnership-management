@@ -92,6 +92,7 @@
                              label="Phone number"
                              value="{{item.phone}}"
                              placeholder="&#8212;"
+                             allowed-pattern="[0-9\ \.\+\-\(\)]"
                              readonly$="[[!editMode]]"
                              invalid$="[[!_isValid('phone', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="Phone number is required">
