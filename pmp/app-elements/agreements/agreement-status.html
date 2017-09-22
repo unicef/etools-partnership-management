@@ -132,7 +132,9 @@
             case 'suspended':
               // removes Save option
               availableOptions.pop();
-              availableOptions.push('Unsuspend');
+              if (this.agreementType !== 'SSFA') {
+                availableOptions.push('Unsuspend');
+              }
               break;
             case 'terminated':
               // removes Save option
@@ -262,15 +264,15 @@
         _computeWarningMessage: function(newStatus) {
           switch (newStatus) {
             case 'terminated':
-              this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?'); 
+              this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?');
               break;
-            case 'suspended': 
-              this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?'); 
+            case 'suspended':
+              this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?');
               break;
-            case 'signed': 
-              this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?'); 
+            case 'signed':
+              this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?');
               break;
-            default: 
+            default:
               this.set('warningMessage', this._getDefaultWarningMessage());
               break;
           }
