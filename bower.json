@@ -65,6 +65,6 @@
   "resolutions": {
     "neon-animation": "1 - 2",
     "moment-element": "^2.0.0",
-    "etools-ajax": "a72d415"
+    "etools-ajax": "c14b64f"
   }
 }
