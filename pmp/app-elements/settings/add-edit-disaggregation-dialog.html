@@ -13,9 +13,13 @@
 <dom-module id="add-edit-disaggregation-dialog">
   <template>
     <style include="grid-layout-styles repeatable-data-sets-styles buttons-styles shared-styles required-field-starred-styles">
+      paper-input {
+        width: 100%
+      }
       .groups {
        align-items: center;
        flex-wrap: wrap;
+       width: 520px;  /* For IE */
       }
       .newGroup {
         width: 80px;
