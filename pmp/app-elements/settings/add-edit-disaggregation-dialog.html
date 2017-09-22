@@ -40,7 +40,7 @@
     </style>
 
     <etools-dialog keep-dialog-open id="etoolsDialog" size="lg" ok-btn-text="Save"
-      dialog-title="Add/Edit Disaggregation"
+      dialog-title="Add Disaggregation" disable-confirm-btn="[[disableConfirmBtn]]"
       on-confirm-btn-clicked="_validateAndSaveDisaggregation">
       <div class="row-h flex-c">
         <div class="col col-4">
@@ -108,13 +108,17 @@
         },
         toastEventSource: {
           type: Object
+        },
+        disableConfirmBtn: {
+          type: Boolean,
+          value: false
         }
       },
       ready: function() {
         this.dataSetModel = {
           value: null,
           active: true,
-          gId: null //* This is for isNew flag
+          gId: null //* This is for isNew flag and edit functionality
         };
         this.editMode = true;
       },
@@ -122,13 +126,22 @@
         this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
       },
       _isNew: function(item) {
-        return item.gId === null || item.gId === undefined; //TODO
+        return item.gId === null || item.gId === undefined;
       },
+
       open: function() {
         this.$.etoolsDialog.opened = true;
       },
       close: function() {
-         this.$.etoolsDialog.opened = false;
+        this.$.etoolsDialog.opened = false;
+      },
+      startSpinner: function() {
+        this.disableConfirmBtn = true;
+        this.$.etoolsDialog.startSpinner();
+      },
+      stopSpinner: function() {
+        this.disableConfirmBtn = false;
+        this.$.etoolsDialog.stopSpinner();
       },
       _disaggregationChanged: function(disaggreg) {
         this.set('dataItems', disaggreg.disaggregation_values.map(function(g, index){
@@ -145,26 +158,27 @@
         if (!this.validate()) {
           return;
         }
+        this.startSpinner();
         let self = this;
-        let body = {
+        let requestParams = {
           method: 'POST',
           endpoint: this.getEndpoint('addGetDisaggregations'),
           body: this._getBody()
         };
-        console.log(body);
-        this.sendRequest(body).then(function(response) {
+        this.sendRequest(requestParams).then(function(response) {
           self.disaggregation = response;
           self.fire('disaggregation-saved', {
             indexInParent: self.indexInParent,
             disaggregation: self.disaggregation
           });
+          self.stopSpinner();
           self.close()
         }).catch(function(error) {
+          self.stopSpinner();
           self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
         });
 
       },
-
       _getBody: function() {
         this.disaggregation.disaggregation_values = this.dataItems;
         this._cleanUpDisaggregations( this.disaggregation.disaggregation_values);
@@ -179,9 +193,8 @@
           if (disaggregs[i].hasOwnProperty('gId')) {
             delete disaggregs[i].gId;
           }
-          if (this._isEmpty(disaggregs[i])) {
+          if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {
             disaggregs.splice(i, 1);
-            this.notify('dataItems');
           }
         }
 
