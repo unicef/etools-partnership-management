@@ -123,7 +123,7 @@
                                                       options="[[assessmentTypesOptions]]"
                                                       selected="{{item.type}}"
                                                       dynamic-align
-                                                      error-message="[[dateSubmitedErrorMessages.missing]]">
+                                                      error-message="Assessment Type is required">
                         </etools-single-selection-menu>
                       </template>
                     </div>
@@ -133,8 +133,9 @@
                                          label="Date of Assessment"
                                          value="{{item.completed_date}}"
                                          readonly$="[[!editMode]]"
-                                         error-message="Date of assessment is required"
-                                         no-init show-clear-btn></etools-date-input>
+                                         error-message="[[dateSubmitedErrorMessages.missing]]"
+                                         no-init show-clear-btn>
+                      </etools-date-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
