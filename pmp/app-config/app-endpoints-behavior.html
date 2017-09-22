@@ -145,9 +145,12 @@
     pdLowerResultDetails: {
       template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
     },
-    lowerResultsDelete:  {
+    lowerResultsDelete: {
       template: '/api/v2/reports/lower_results/<%=id%>/',
     },
+    addGetDisaggregations: {
+      url: '/api/v2/reports/disaggregations/'
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */

@@ -3,6 +3,8 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
@@ -51,10 +53,10 @@
             <label class="paper-label">Disaggregation Group</label>
             <div class="layout-horizontal groups">
               <template is="dom-repeat" items="[[dataItems]]">
-                <span hidden$="[[_isNew(item)]]">[[item.name]]</span>
+                <span hidden$="[[_isNew(item)]]">[[item.value]]</span>
                 <paper-input class="newGroup" hidden$="[[!_isNew(item)]]" no-label-float
                   label="New Group"
-                  value="{{item.name}}"></paper-input>
+                  value="{{item.value}}"></paper-input>
                   <paper-icon-button class="action delete no-padding" icon="cancel"
                     on-tap="_openDeleteConfirmation"
                     data-args$="[[index]]"
@@ -79,6 +81,8 @@
       is: 'add-edit-disaggregation-dialog',
       behaviors: [
         EtoolsPmpApp.Behaviors.RepeatableDataSets,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.AjaxErrorsParser,
         EtoolsAjaxRequestBehavior
       ],
       properties: {
@@ -87,15 +91,15 @@
           observer: '_disaggregationChanged'
         },
         dataItems: {
-          type: Array,
-          value: [{'name': '1-20', 'gId':1},{'name':'21-40', gId: 2}]
+          type: Array
         },
         disaggregationModel: {
           type: Object,
           value: {
             id: null,
+            active: true,
             name: undefined,
-            groups: []
+            disaggregation_values: []
           }
         },
         indexInParent: {
@@ -107,7 +111,11 @@
         }
       },
       ready: function() {
-        this.dataSetModel = {'name': null, 'gId': null};
+        this.dataSetModel = {
+          value: null,
+          active: true,
+          gId: null //* This is for isNew flag
+        };
         this.editMode = true;
       },
       initializeDisaggregation: function() {
@@ -123,9 +131,12 @@
          this.$.etoolsDialog.opened = false;
       },
       _disaggregationChanged: function(disaggreg) {
-        this.set('dataItems', disaggreg.groups.map(function(g, index) {
-          return {gId: index, name: g};
-        }));//* TODO
+        this.set('dataItems', disaggreg.disaggregation_values.map(function(g, index){
+          return {gId: index, value: g.value, active: g.active};
+        }));
+        if (!this.dataItems) {
+          this.dataItems = [];
+        }
       },
       _addNewGroup: function() {
         this._addElement();
@@ -135,39 +146,49 @@
           return;
         }
         let self = this;
-        this.sendRequest({
-          method: this._getMethod(),
-          endpoint: this._getEndpoint(''),
+        let body = {
+          method: 'POST',
+          endpoint: this.getEndpoint('addGetDisaggregations'),
           body: this._getBody()
-        }).then(function(response) {
+        };
+        console.log(body);
+        this.sendRequest(body).then(function(response) {
           self.disaggregation = response;
           self.fire('disaggregation-saved', {
-            indexInParent: this.indexInParent,
-            disaggregation: this.disaggregation
+            indexInParent: self.indexInParent,
+            disaggregation: self.disaggregation
           });
           self.close()
         }).catch(function(error) {
-           this.parseRequestErrorsAndShowAsToastMsgs(error.response, this.toastEventSource);
+          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
         });
 
+      },
 
-      },
-      _getMethod: function() {
-        if (this.disaggregation && this.disaggregation.id) {
-          return 'PATCH';
-        }
-        return 'POST';
-      },
-      _getEndpoint: function() {
-        if (this.disaggregation && this.disaggregation.id) {
-          return '';
-        }
-        return '';
-      },
       _getBody: function() {
+        this.disaggregation.disaggregation_values = this.dataItems;
+        this._cleanUpDisaggregations( this.disaggregation.disaggregation_values);
+        return this.disaggregation;
+      },
+      _cleanUpDisaggregations: function(disaggregs) {
+        if (!disaggregs || !disaggregs.length) {
+          return;
+        }
+        let i;
+        for(i = 0; i < disaggregs.length; i++) {
+          if (disaggregs[i].hasOwnProperty('gId')) {
+            delete disaggregs[i].gId;
+          }
+          if (this._isEmpty(disaggregs[i])) {
+            disaggregs.splice(i, 1);
+            this.notify('dataItems');
+          }
+        }
 
       },
-
+      _isEmpty: function(value) {
+        return (value === null || value === undefined || value === '');
+      },
       validate: function() {
         return this.$$('#disaggregateByEl').validate();
       },
