@@ -10,7 +10,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
-<link rel="import" href="add-edit-disaggregation-dialog.html">
+<link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
   <template strip-whitespace>
@@ -80,7 +80,7 @@
       },
       ready: function() {
         this.editMode = true;
-        this.disaggregationModal = document.createElement('add-edit-disaggregation-dialog');
+        this.disaggregationModal = document.createElement('add-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
       },
