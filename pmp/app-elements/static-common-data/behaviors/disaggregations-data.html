@@ -18,7 +18,6 @@
 
       _handleDisaggregationsResponse: function(response) {
         if (!_.isEmpty(response)) {
-          console.log(response);
           this.dispatch('setDisaggregationsData', response);
         }
       }

@@ -82,9 +82,6 @@
         this.editMode = true;
         this.disaggregationModal = document.createElement('add-edit-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
-        this.disaggregationModal.addEventListener('disaggregation-saved', function(event) {
-          this._onDisaggregationSaved(event.detail);
-        }.bind(this));
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
       },
 
@@ -109,9 +106,6 @@
       _addDisaggregation: function() {
         this.disaggregationModal.initializeDisaggregation();
         this._openModal();
-      },
-      _onDisaggregationSaved: function(eventData) {
-        this.push('dataItems', eventData.disaggregation);
       }
 
     });
