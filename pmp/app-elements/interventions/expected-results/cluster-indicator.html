@@ -68,7 +68,8 @@
                                     options="[[clusters]]"
                                     option-label="name"
                                     option-value="id"
-                                    error-message="Please select Cluster">
+                                    error-message="Please select Cluster"
+                                    on-iron-activate="_onClusterChange">
           </etools-single-selection-menu>
         </div>
       </div>
@@ -155,10 +156,12 @@
             statePath: 'locations'
           },
           responsePlanId: {
-            type: String
+            type: String,
+            observer: '_responsePlanIdChanged'
           },
           clusterId: {
-            type: String
+            type: String,
+            observer: '_clusterIdChanged'
           },
           clusters: {
             type: Array
@@ -197,7 +200,6 @@
         observers: [
           '_baselineChanged(indicator.baseline)',
           '_targetChanged(indicator.target)',
-          '_populateClusters(responsePlanId)',
           '_populatePrpClusterIndicators(responsePlanId, clusterId)'
         ],
         indicatorChanged: function(indicator) {
@@ -207,6 +209,9 @@
           } else { // on new
             this.set('isNewIndicator', true);
           }
+        },
+        _responsePlanIdChanged: function(responsePlanId) {
+          this._populateClusters(responsePlanId);
         },
         _populateClusters: function(responsePlanId) {
           if (!responsePlanId) {
@@ -225,8 +230,16 @@
             self.fire('show-toast', {error: error.response});
           });
         },
-        _populatePrpClusterIndicators: function(responsePlanId, clusterId) {
-          if (!responsePlanId || !clusterId) {
+        _onClusterChange: function(event) {
+          if (!event.detail.item.item) {
+            return;
+          }
+        },
+        _clusterIdChanged: function(clusterId) {
+          this._populatePrpClusterIndicators(clusterId);
+        },
+        _populatePrpClusterIndicators: function(clusterId) {
+          if (!clusterId) {
             return;
           }
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});

@@ -50,7 +50,7 @@
               <div class="col col-4">
                 <etools-single-selection-menu id="disaggregate_by_[[index]]" label="Disaggregate By"
                                               options="{{preDefinedDisaggregtions}}"
-                                              selected="{{item.disaggregationId}}"
+                                              selected="{{item.id}}"
                                               option-value="id"
                                               option-label="name"
                                               on-iron-select="_onDisaggregationSelected">
@@ -94,14 +94,14 @@
             type: Array,
             statePath: 'disaggregations'
           },
-          disaggregations: {
-            type: Array,
-            notify: true,
-          }
+          // disaggregations: {
+          //   type: Array,
+          //   notify: true,
+          // }
         },
 
         ready: function() {
-          this.dataSetModel = {disaggregationId: null};
+          this.dataSetModel = {id: null};
           this.editMode = true;
         },
 
@@ -123,7 +123,7 @@
 
           if (this._isAlreadySelected(selectedDisagreg)) {
             event.model.set('item', null);
-            event.model.set('item', {disaggregationId: null});
+            event.model.set('item', {id: null});
             this.fire('show-toast', {error: 'Disaggregation already selected'});
             return;
           }
@@ -131,8 +131,14 @@
 
         },
         _isAlreadySelected: function(disagreg) {
+          let justSelectedOne = this.dataItems.filter(function(d) {
+            return !d.id;
+          }).length;
+          if (!justSelectedOne) {//we're on page load
+            return;
+          }
           let duplicateItems = this.dataItems.filter(function(item) {
-            return parseInt(item.disaggregationId) === parseInt(disagreg.id);
+            return parseInt(item.id) === parseInt(disagreg.id);
           });
           if (duplicateItems && duplicateItems.length) {
             return true;
@@ -140,7 +146,9 @@
           return false;
         },
         _displayDisaggregationGroups: function(selectedDisagreg, index) {
-          this.$$('#disaggregationGroups_' + index).value = selectedDisagreg.disaggregationGroups;
+          this.$$('#disaggregationGroups_' + index).value = selectedDisagreg.disaggregation_values.map(function(d) {
+            return d.value;
+          }).join('; ');
         }
 
       });
