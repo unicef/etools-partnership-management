@@ -87,11 +87,11 @@
 
         _handleMyResponse: function(res) {
           this._handleResponse(res);
-          if (res.detail && res.detail.length) {
-            this.dispatch('setPartners', res.detail);
+          if (res && res.length) {
+            this.dispatch('setPartners', res);
             var preparedData = [];
             var civilSocietyOrganizationPartners = [];
-            res.detail.forEach(function(p) {
+            res.forEach(function(p) {
               if (!p.hidden && p.partner_type === 'Civil Society Organization') {
                 civilSocietyOrganizationPartners.push(p);
               }

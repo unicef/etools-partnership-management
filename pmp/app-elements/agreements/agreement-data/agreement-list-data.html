@@ -61,7 +61,7 @@
 
         _handleMyResponse: function(res) {
           this._handleResponse(res);
-          this.dispatch('setAgreements', res.detail);
+          this.dispatch('setAgreements', res);
         },
 
         query: function(field, order, searchString, agreementType,
