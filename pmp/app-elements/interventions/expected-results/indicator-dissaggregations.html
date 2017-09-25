@@ -12,6 +12,7 @@
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="indicator-dissaggregations">
   <template strip-whitespace>
@@ -84,14 +85,14 @@
         is: 'indicator-dissaggregations',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         ],
 
         properties: {
           preDefinedDisaggregtions: {
             type: Array,
-            value: [{'id': 1, 'name': 'Age', 'disaggregationGroups': '1-10;11-20'},
-            {'id': 2, 'name': 'Gender', 'disaggregationGroups': 'm;f'}]
+            statePath: 'disaggregations'
           },
           disaggregations: {
             type: Array,
