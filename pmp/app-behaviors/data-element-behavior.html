@@ -89,7 +89,7 @@
     },
 
     _removeAutomaticDataRefreshLoop: function() {
-      if(this._refreshInterval !== null) {
+      if (this._refreshInterval !== null) {
         clearInterval(this._refreshInterval);
         this.set('_refreshInterval', null);
       }
