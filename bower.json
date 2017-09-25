@@ -40,7 +40,7 @@
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
     "etools-ajax": "unicef-polymer/etools-ajax#c14b64f",
     "etools-app-selector": "1.0.6",
-    "etools-behaviors": "1.0.1",
+    "etools-behaviors": "1.0.2",
     "etools-checkable-input": "1.0.8",
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
