@@ -120,27 +120,31 @@
           if (!this.editMode) {
             return;
           }
-          let availableOptions = ['Save'];
+          let availableOptions = [];
 
           switch (status) {
             case 'signed':
+              availableOptions.push('Save');
               if (this.agreementType !== 'SSFA') {
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
               }
               break;
+
             case 'suspended':
-              // removes Save option
-              availableOptions.pop();
-              availableOptions.push('Unsuspend');
+              if (this.agreementType !== 'SSFA') {
+                availableOptions.push('Unsuspend');
+              }
               break;
+
             case 'terminated':
-              // removes Save option
-              availableOptions.pop();
               break;
+
             case 'ended':
-              // removes Save option
-              availableOptions.pop();
+              break;
+
+            default:
+              availableOptions.push('Save');
               break;
           }
 
@@ -262,15 +266,15 @@
         _computeWarningMessage: function(newStatus) {
           switch (newStatus) {
             case 'terminated':
-              this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?'); 
+              this.set('warningMessage', 'You are about to terminate this Agreement. Do you want to continue?');
               break;
-            case 'suspended': 
-              this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?'); 
+            case 'suspended':
+              this.set('warningMessage', 'You are about to suspend this Agreement. Do you want to continue?');
               break;
-            case 'signed': 
-              this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?'); 
+            case 'signed':
+              this.set('warningMessage', 'You are about to unsuspend this Agreement. Do you want to continue?');
               break;
-            default: 
+            default:
               this.set('warningMessage', this._getDefaultWarningMessage());
               break;
           }

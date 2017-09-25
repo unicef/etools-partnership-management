@@ -184,6 +184,8 @@
   });
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsDataReduxStore */
-  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore);
+  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore) || {};
+  // the || {} at the end is there to make the linting script happy
 </script>
