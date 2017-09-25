@@ -53,8 +53,7 @@
             <label class="paper-label">Disaggregation Group</label>
             <div class="layout-horizontal groups">
               <template is="dom-repeat" items="[[dataItems]]">
-                <span hidden$="[[_isNew(item)]]">[[item.value]]</span>
-                <paper-input class="newGroup" hidden$="[[!_isNew(item)]]" no-label-float
+                <paper-input class="newGroup" no-label-float
                   label="New Group"
                   value="{{item.value}}"></paper-input>
                   <paper-icon-button class="action delete no-padding" icon="cancel"
@@ -102,10 +101,6 @@
             disaggregation_values: []
           }
         },
-        indexInParent: {
-          type: Number,
-          value: -1
-        },
         toastEventSource: {
           type: Object
         },
@@ -117,18 +112,13 @@
       ready: function() {
         this.dataSetModel = {
           value: null,
-          active: true,
-          gId: null //* This is for isNew flag and edit functionality
+          active: true
         };
         this.editMode = true;
       },
       initializeDisaggregation: function() {
         this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
       },
-      _isNew: function(item) {
-        return item.gId === null || item.gId === undefined;
-      },
-
       open: function() {
         this.$.etoolsDialog.opened = true;
       },
@@ -144,8 +134,8 @@
         this.$.etoolsDialog.stopSpinner();
       },
       _disaggregationChanged: function(disaggreg) {
-        this.set('dataItems', disaggreg.disaggregation_values.map(function(g, index){
-          return {gId: index, value: g.value, active: g.active};
+        this.set('dataItems', disaggreg.disaggregation_values.map(function(g){
+          return {value: g.value, active: g.active};
         }));
         if (!this.dataItems) {
           this.dataItems = [];
@@ -168,7 +158,6 @@
         this.sendRequest(requestParams).then(function(response) {
           self.disaggregation = response;
           self.fire('disaggregation-saved', {
-            indexInParent: self.indexInParent,
             disaggregation: self.disaggregation
           });
           self.stopSpinner();
@@ -190,9 +179,6 @@
         }
         let i;
         for(i = 0; i < disaggregs.length; i++) {
-          if (disaggregs[i].hasOwnProperty('gId')) {
-            delete disaggregs[i].gId;
-          }
           if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {
             disaggregs.splice(i, 1);
           }

@@ -77,11 +77,6 @@
         disaggregationModal: {
           type: Object
         },
-        _deleteEpName: {
-          type: String,
-          value: '',
-          readOnly: true,
-        },
       },
       ready: function() {
         this.editMode = true;
@@ -115,18 +110,8 @@
         this.disaggregationModal.initializeDisaggregation();
         this._openModal();
       },
-      _editDisaggregation: function(event) {
-        this.disaggregationModal.indexInParent = event.model.index;
-        this.disaggregationModal.disaggregation = event.model.item;
-        this._openModal();
-      },
       _onDisaggregationSaved: function(eventData) {
-        if (eventData.indexInParent === -1) {
-          this.push('dataItems', eventData.disaggregation);
-        } else {
-          let pathToDisaggregation = 'dataItems' + eventdata.indexInParent;
-          this.set(pathToDisaggregation, JSON.parse(JSON.stringify(eventData.disaggregation)));
-        }
+        this.push('dataItems', eventData.disaggregation);
       }
 
     });
