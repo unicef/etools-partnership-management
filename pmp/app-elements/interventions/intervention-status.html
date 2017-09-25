@@ -140,44 +140,48 @@
           if (!this.editMode) {
             return;
           }
-          let availableOptions = ['Save'];
+          let availableOptions = [];
 
           switch (status) {
 
             case 'signed':
               availableOptions.push('Suspend');
+              availableOptions.push('Save');
               break;
 
             case 'active':
               availableOptions.push('Terminate');
+              availableOptions.push('Save');
               break;
 
             case 'suspended':
-              availableOptions.pop();
               availableOptions.push('Unsuspend');
               break;
 
             case 'terminated':
-              availableOptions.pop();
               break;
 
             case 'closed':
-              if (this.activeTab !== 'attachments') {
-                availableOptions.pop();
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
               break;
 
             case 'ended':
-              if (this.activeTab !== 'attachments') {
-                availableOptions.pop();
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
               break;
 
             // legacy version of 'ended'
             case 'implemented':
-              if (this.activeTab !== 'attachments') {
-                availableOptions.pop();
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
+              break;
+
+            default:
+              availableOptions.push('Save');
               break;
           }
 
