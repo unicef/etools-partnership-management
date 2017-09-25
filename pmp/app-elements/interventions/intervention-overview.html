@@ -130,7 +130,7 @@
           <br/>
           <div class="content" id="interventions_sectors">
             <template is="dom-repeat" items="[[sectors]]" as="sector">
-              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
+              <span class="sector-label" style$="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
             </template>
           </div>
         </div>
@@ -187,6 +187,10 @@
           sectors: {
             type: Array
           },
+        },
+        ready: function() {
+          this._parseCpOutputs();
+          this._parseLocationsAndSectors();
         },
 
         attached: function() {

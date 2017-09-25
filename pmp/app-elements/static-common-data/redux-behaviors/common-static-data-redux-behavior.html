@@ -31,7 +31,8 @@
     agreementTypes: [],
     agreementStatuses: [],
     csoPartners: [],
-    countryData: {}
+    countryData: {},
+    disaggregations: []
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -172,10 +173,19 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+      case 'SET_DISAGGREGATIONS_DATA':
+        return Object.assign({}, state, {disaggregations: action.disaggregations});
+      case 'ADD_DISAGGREGATION':
+        let disaggregsCopy = state.disaggregations.slice(0);
+        disaggregsCopy.push(action.disaggregation);
+        return Object.assign({}, state, {disaggregations: disaggregsCopy});
+
     }
   });
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsDataReduxStore */
-  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore);
+  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore) || {};
+  // the || {} at the end is there to make the linting script happy
 </script>
