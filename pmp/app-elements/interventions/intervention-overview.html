@@ -188,10 +188,12 @@
             type: Array
           },
         },
-        ready: function() {
-          this._parseCpOutputs();
-          this._parseLocationsAndSectors();
-        },
+
+        observers: [
+          // TODO: make sure sector_location is removed after PRP integration changes are merged
+          '_parseLocationsAndSectors(allSectors.length, intervention.original_sectors.length)',
+          '_parseCpOutputs(allCpOutputs.length, intervention.result_links.length)'
+        ],
 
         attached: function() {
           /**
