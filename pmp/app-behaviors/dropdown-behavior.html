@@ -1,8 +1,9 @@
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
-  /** @polymerBehavior pmpBehaviors.DropdownBehavior */
-  pmpBehaviors.DropdownBehavior = {
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.Dropdown */
+  EtoolsPmpApp.Behaviors.Dropdown = {
     // Put a button with on-tap="clearDropdown" just before
     // a paper-dropdown-menu to add a clear selection button
     clearDropdown: function(e) {
@@ -13,7 +14,19 @@
           menu.set('selected', null);
         }
       }
-    }
+    },
+    // set autoValidate to true on first focus
+    _onFocusChangedUpdateAutovalidate: function(e) {
+      let dropdown = e.target;
+      this.debounce('dropdown-focus', function() {
+        if (e.detail && e.detail.value) {
+          if (dropdown.is && dropdown.is === 'etools-multi-selection-menu' &&
+              !dropdown.autoValidate) {
+            dropdown.set('autoValidate', true);
+          }
+        }
+      }, 10);
+    },
 
   };
 </script>

@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
 <link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
@@ -25,7 +26,9 @@
 
         is: 'interventions-list-data',
 
-        behaviors: [pmpBehaviors.DataElementBehavior],
+        behaviors: [
+          EtoolsPmpApp.Behaviors.DataElement
+        ],
 
         properties: {
 
@@ -70,7 +73,11 @@
           var _this = this;
 
           if (showQueryLoading) {
-            this.fire('global-loading', {message: 'Loading PD/SSFA ToR list data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading PD/SSFA list data...',
+              active: true,
+              loadingSource: 'pd-ssfa-list'
+            });
           }
 
           this.db.transaction('r', this.db.interventions, function() {
@@ -99,7 +106,7 @@
 
               if (cpOutputs.length) {
                 var matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
-                  return cpOutputs.indexOf(cpOut) > -1;
+                  return cpOutputs.indexOf(cpOut + '') > -1;
                 });
                 if (matchCpOut && matchCpOut.length === 0) {
                   return false;
@@ -124,10 +131,9 @@
                   return false;
                 }
               }
-
               if (unicefFocalPoints.length) {
                 var matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
-                  return unicefFocalPoints.indexOf(fPt) > -1;
+                  return unicefFocalPoints.indexOf(fPt + '') > -1;
                 });
                 if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
                   return false;
@@ -136,7 +142,7 @@
 
               if (offices.length) {
                 var matchOffices = intervention.offices.filter(function(officeId) {
-                  return offices.indexOf(officeId) > -1;
+                  return offices.indexOf(officeId + '') > -1;
                 });
                 if (matchOffices && matchOffices.length === 0) {
                   return false;
@@ -179,10 +185,10 @@
 
           }).then(function(result) {
             _this._setFilteredInterventions(result);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
           });
         }
 

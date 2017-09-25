@@ -1,0 +1,242 @@
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="etools-action-button.html">
+
+<dom-module id="etools-status">
+  <template>
+    <style>
+      :host {
+        --ecp-content: {
+          padding: 0px;
+        };
+        display: block;
+        position: relative;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      etools-content-panel {
+        width: 100%;
+      }
+      .top-container {
+        padding: 24px 24px 35px;
+        @apply --etools-status-top-container-styles;
+      }
+      .bottom-container {
+        border-top: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        padding: 24px;
+        @apply --etools-status-bottom-container;
+      }
+      etools-action-button {
+        @apply --etools-status-button-styles;
+      }
+      .divider-line {
+        @apply --layout-flex;
+        margin: 8px 11px;
+        border-left: 1px solid var(--etools-status-divider-color, rgba(0, 0, 0, .78));
+        padding-top: 40px;
+        @apply --etools-status-divider-styles;
+      }
+
+      .divider-line:first-child {
+        display: none;
+      }
+
+      .status-container {
+        @apply --layout-horizontal;
+        min-height: 24px;
+        @apply --etools-status-container;
+      }
+      .status-icon, .status {
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-warp;
+      }
+      .icon-wrapper {
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        background-color: var(--etools-status-icon-inactive-color, #9D9D9D);
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        color: var(--etools-status-icon-text-color, #FFFFFF);
+        font-size: 12px;
+      }
+      .icon-wrapper iron-icon {
+        --iron-icon-height: 16px;
+        --iron-icon-width: 16px;
+        color: white;
+        display: none;
+      }
+      .icon-wrapper iron-icon,
+      .icon-wrapper span {
+        @apply --layout-self-center;
+      }
+      .icon-wrapper span {
+        height: 14px;
+        line-height: 14px;
+      }
+      .status {
+        margin-left: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        text-transform: capitalize;
+        color: var(--etools-status-text-color, #9D9D9D);
+      }
+      .pending .status {
+        color: var(--etools-status-inactive-text-color, rgba(0,0,0,.87));
+        font-weight: 500;
+      }
+      .pending .status-icon .icon-wrapper {
+        background-color: var(--etools-status-icon-pending-color, #0099FF);
+      }
+      .custom .status-icon .icon-wrapper {
+        /* I don't know why, but ie11 doens't like "initial" */
+        background-color: inherit;
+        width: 29px;
+        height: 29px;
+        margin-left: -3px;
+      }
+      .custom .status-icon .icon-wrapper .custom-icon  {
+        --iron-icon-height: 100%;
+        --iron-icon-width: 100%;
+        width: 100%;
+        height: 100%;
+      }
+      .custom .status-icon .icon-wrapper span {
+        display: none;
+      }
+      .custom .status-icon .icon-wrapper .custom-icon {
+        display: block;
+        color: var(--etools-status-icon-pending-color, #0099FF);
+      }
+      .completed .status-icon .icon-wrapper {
+        background-color: var(--etools-status-icon-completed-color, #75c300);
+      }
+      .custom .status {
+         margin-left: 7px;
+      }
+      .completed .status, .custom .status {
+        font-weight: bold;
+        color: var(--etools-status-inactive-text-color, rgba(0, 0, 0, 0.87));
+        @apply --etools-status-label-style;
+      }
+      .completed .icon-wrapper span {
+        display: none;
+      }
+      .completed .icon-wrapper iron-icon.done-icon {
+        display: block;
+        width: 18px;
+      }
+
+    </style>
+
+    <etools-content-panel panel-title="Status">
+      <div class="top-container">
+        <template is="dom-repeat" items="[[availableStatuses]]" as="status">
+            <div class="divider-line"></div>
+            <div class$="status-container [[_getStatusCssClass(status, index)]]">
+              <div class="status-icon">
+                <span class="icon-wrapper" style$="[[status.iconContainerStyles]]">
+                  <span>[[_getTrueIndex(index)]]</span>
+                  <iron-icon class="done-icon" icon="done"></iron-icon>
+                  <iron-icon class="custom-icon" icon$="[[status.icon]]" style$="[[status.iconStyles]]"></iron-icon>
+                </span>
+              </div>
+
+              <div class="status">
+                <span>[[status.label]]</span>
+              </div>
+
+            </div>
+        </template>
+      </div>
+      <div class="bottom-container" hidden$="[[hideActions]]">
+          <etools-action-button actions="[[actions]]"></etools-action-button>
+      </div>
+    </etools-content-panel>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'etools-status',
+      properties: {
+        statuses: {
+          type: Array,
+          value: []
+        },
+        availableStatuses: {
+          type: Array,
+        },
+        actions: {
+          type: Array,
+          value: []
+        },
+        hideActions: {
+          type: Boolean,
+          value: true
+        }
+      },
+      observers: [
+        '_handleStatusChanged(statuses, statuses.*)',
+        '_handleActionsChanged(actions, actions.*)'
+      ],
+      _handleStatusChanged: function(statuses) {
+        this.debounce('etools-status-options-changed-handler', function() {
+          this._computeAvailableStatuses(statuses);
+        }.bind(this), 10);
+      },
+      _handleActionsChanged: function(statuses) {
+        this.debounce('etools-actions-options-changed-handler', function() {
+          let hidden = true;
+          this.actions.forEach(function(elem) {
+            hidden = elem.hidden && hidden;
+          }.bind(this));
+          this.set('hideActions', hidden);
+        }.bind(this), 10);
+      },
+      _getStatusIcon: function(icon) {
+        return icon || 'done';
+      },
+      _getCustomIconColor: function(color) {
+        if (color) {
+          return 'color: ' + color;
+        }
+        return '';
+      },
+      _getStatusCssClass: function(status, index) {
+        if (status.completed && !status.icon) {
+          return 'completed';
+        }
+        if (status.completed && status.icon) {
+          return 'custom';
+        }
+        if (index === 0) {
+          return 'pending';
+        }
+        return '';
+      },
+      _getTrueIndex: function(index) {
+        return 1 + index;
+      },
+      _computeAvailableStatuses: function(statuses) {
+        this.set('availableStatuses', []);
+        this.async(function() {
+          let filteredStatuses =  statuses.filter(function(elem) {
+            return !elem.hidden;
+          });
+          this.set('availableStatuses', filteredStatuses);
+        });
+      },
+    });
+  </script>
+
+</dom-module>

@@ -5,21 +5,28 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="intervention-form/agreement-selector.html">
 
@@ -27,17 +34,17 @@
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="intervention-sector-locations.html">
-<link rel="import" href="intervention-status.html">
 
 <dom-module id="intervention-details">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
+
       paper-input,
       paper-textarea,
       agreement-selector,
@@ -49,6 +56,7 @@
         padding: 0;
         background-color: var(--ecp-content-bg-color, #FFFFFF);
       }
+
       paper-material paper-toolbar {
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: var(--medium-theme-background-color);
@@ -62,6 +70,7 @@
           margin-left: 0;
         };
       }
+
       .expiry-warning {
         @apply(--layout-vertical);
         @apply(--layout-flex);
@@ -69,29 +78,47 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
+      paper-toggle-button {
+        font-size: 16px;
+      }
+
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          @apply(--pmp-form-field-frs-inconsistency-icon);
+        };
+      }
+
+      etools-date-input.frs-inconsistent {
+        --paper-input-container-input: {
+          color: var(--error-color);
+        }
+      }
+      div[no-left-padding] {
+        padding-left: 0px !important;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
       <div class="row-h flex-c">
         <div class="col col-6">
           <agreement-selector id="agreementSelector"
-            agreement-id="{{intervention.agreement}}"
-            partner-id="{{selectedPartnerId}}"
-            selected-agreement="{{agreement}}"
-            intervention-id="[[intervention.id]]"
-            edit-mode$="[[editMode]]"></agreement-selector>
+                              agreement-id="{{intervention.agreement}}"
+                              partner-id="{{selectedPartnerId}}"
+                              selected-agreement="{{agreement}}"
+                              intervention="[[intervention]]"></agreement-selector>
         </div>
         <div class="col col-3">
-           <etools-single-selection-menu id="documentType"
-                                          label="Document Type"
-                                          placeholder="&#8212;"
-                                          options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
-                                          selected="{{intervention.document_type}}"
-                                          hide-search
-                                          dynamic-align
-                                          required auto-validate
-                                          error-message="Document type is required"
-                                          readonly$="[[!editMode]]">
+          <etools-single-selection-menu id="documentType"
+                                        label="Document Type"
+                                        placeholder="&#8212;"
+                                        options="[[_getCurrentDocTypes(agreement, documentTypes)]]"
+                                        selected="{{intervention.document_type}}"
+                                        hide-search
+                                        dynamic-align
+                                        readonly$="[[!intervention.permissions.edit.document_type]]"
+                                        required$="[[intervention.permissions.required.document_type]]"
+                                        auto-validate
+                                        error-message="Document type is required">
           </etools-single-selection-menu>
 
         </div>
@@ -111,114 +138,129 @@
                      placeholder="&#8212;"
                      char-counter
                      maxlength="256"
-                     required auto-validate
-                     error-message="Please add a title"
-                     readonly$="[[!editMode]]"></paper-input>
+                     readonly$="[[!intervention.permissions.edit.title]]"
+                     required$="[[intervention.permissions.required.title]]"
+                     auto-validate
+                     error-message="Please add a title"></paper-input>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
-          <etools-searchable-multiselection-menu id="unicefOffices"
-                                                 label="UNICEF Office(s)"
-                                                 placeholder="&#8212;"
-                                                 options="[[offices]]"
-                                                 custom-object-options
-                                                 option-label="name"
-                                                 option-value="id"
-                                                 selected="{{intervention.offices}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 multi required auto-validate
-                                                 error-message="Please select intervention's office(s)"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+          <etools-multi-selection-menu id="unicefOffices"
+                                       label="UNICEF Office(s)"
+                                       placeholder="&#8212;"
+                                       options="[[offices]]"
+                                       option-label="name"
+                                       option-value="id"
+                                       selected-values="{{intervention.offices}}"
+                                       dynamic-align
+                                       readonly$="[[!intervention.permissions.edit.offices]]"
+                                       required$="[[intervention.permissions.required.offices]]"
+                                       auto-validate
+                                       error-message="Please select intervention's office(s)"
+                                       avoid-header-overlapping-dropdown>
+          </etools-multi-selection-menu>
         </div>
         <div class="col col-6">
-          <etools-searchable-multiselection-menu id="unicefFocalPts"
-                                                 label="UNICEF Focal Point(s)"
-                                                 placeholder="&#8212;"
-                                                 options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
-                                                 custom-object-options
-                                                 option-label="full_name"
-                                                 option-value="user_id"
-                                                 selected="{{intervention.unicef_focal_points}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 multi
-                                                 required$="[[interventionRequiredField]]"
-                                                 auto-validate
-                                                 error-message="Please select UNICEF focal points"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+          <etools-multi-selection-menu id="unicefFocalPts"
+                                       label="UNICEF Focal Point(s)"
+                                       placeholder="&#8212;"
+                                       options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
+                                       option-label="full_name"
+                                       option-value="user_id"
+                                       selected-values="{{intervention.unicef_focal_points}}"
+                                       dynamic-align
+                                       readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
+                                       required$="[[intervention.permissions.required.unicef_focal_points]]"
+                                       auto-validate
+                                       error-message="Please select UNICEF focal points"
+                                       avoid-header-overlapping-dropdown>
+          </etools-multi-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
         <div class="col col-6">
-          <etools-searchable-multiselection-menu id="partnerFocalPts"
-                                                 label="Partner Focal Point(s)"
-                                                 placeholder="&#8212;"
-                                                 options="[[partnerStaffMembers]]"
-                                                 custom-object-options
-                                                 option-value="id"
-                                                 option-label="name"
-                                                 selected="{{intervention.partner_focal_points}}"
-                                                 update-selected
-                                                 selected-requires-valid-options
-                                                 dynamic-align
-                                                 multi
-                                                 required$="[[interventionRequiredField]]"
-                                                 auto-validate
-                                                 error-message="Please select partner focal points"
-                                                 readonly$="[[!editMode]]">
-          </etools-searchable-multiselection-menu>
+          <etools-multi-selection-menu id="partnerFocalPts"
+                                       label="Partner Focal Point(s)"
+                                       placeholder="&#8212;"
+                                       options="[[staffMembers]]"
+                                       option-value="id"
+                                       option-label="name"
+                                       selected-values="{{intervention.partner_focal_points}}"
+                                       dynamic-align
+                                       readonly$="[[!intervention.permissions.edit.partner_focal_points]]"
+                                       required$="[[intervention.permissions.required.partner_focal_points]]"
+                                       auto-validate
+                                       error-message="Please select partner focal points"
+                                       avoid-header-overlapping-dropdown>
+          </etools-multi-selection-menu>
         </div>
       </div>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
-      <div class="row-h flex-c">
-        <div class="col col-3">
-            <etools-single-selection-menu id="hrps"
-                                          label="In response to an HRP, Select"
-                                          placeholder="&#8212;"
-                                          options="[[hrps]]"
-                                          option-value="id"
-                                          option-label="name"
-                                          selected="{{intervention.hrp}}"
-                                          dynamic-align
-                                          readonly$="[[!editMode]]">
-          </etools-single-selection-menu>
+      <div class="row-h flex-c row-second-bg">
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
+          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
         </div>
-        <div class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
-          <etools-date-input id="intStart"
-                             label="Start date"
-                             value="{{intervention.start}}"
-                             readonly$="[[!editMode]]"
-                             error-message="Please select start date"
-                             required$="[[nterventionRequiredField]]"
-                             auto-validate
-                             no-init show-clear-btn>
-          </etools-date-input>
+          <etools-info-tooltip icon="report" icon-first
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
+                               important-warning>
+            <etools-date-input slot="field"
+                               id="intStart"
+                               class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
+                               label="Start date"
+                               value="{{intervention.start}}"
+                               readonly$="[[!intervention.permissions.edit.start]]"
+                               required$="[[intervention.permissions.required.start]]"
+                               error-message="Please select start date"
+                               auto-validate
+                               no-init show-clear-btn>
+            </etools-date-input>
+            <span slot="message">[[_frsStartConsistencyWarning]]</span>
+          </etools-info-tooltip>
+
         </div>
-        <div class="col col-3">
-          <!-- End date -->
-          <etools-date-input id="intEnd"
-                             label="End date"
-                             value="{{intervention.end}}"
-                             readonly$="[[!editMode]]"
-                             error-message="Please select end date"
-                             required$="[[nterventionRequiredField]]"
-                             auto-validate
-                             no-init show-clear-btn>
-          </etools-date-input>
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
+          <etools-info-tooltip icon="report" icon-first
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
+                               important-warning>
+            <etools-date-input slot="field"
+                               id="intEnd"
+                               class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
+                               label="End date"
+                               value="{{intervention.end}}"
+                               readonly$="[[!intervention.permissions.edit.end]]"
+                               required$="[[intervention.permissions.required.end]]"
+                               error-message="Please select end date"
+                               auto-validate
+                               no-init show-clear-btn>
+            </etools-date-input>
+            <span slot="message">[[_frsEndConsistencyWarning]]</span>
+          </etools-info-tooltip>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
         </div>
+      </div>
+      <div class="row-h flex-c">
+        <etools-single-selection-menu id="cpStructure"
+                                        label="CP Structure"
+                                        placeholder="&#8212;"
+                                        options="[[cpStructureOptions]]"
+                                        option-value="id"
+                                        option-label="name"
+                                        selected="{{intervention.country_programme}}"
+                                        dynamic-align
+                                        hide-search
+                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                        required$="[[intervention.permissions.required.country_programme]]"
+                                        auto-validate
+                                        error-message="Please select CP Structure">
+          </etools-single-selection-menu>
       </div>
       <div class="row-h flex-c">
         <paper-material elevation="0">
@@ -226,35 +268,39 @@
             <div class="title">Section/Cluster, Locations</div>
           </paper-toolbar>
           <intervention-sector-locations id="sectorLocations"
-                                         data-items="{{intervention.sector_locations}}"
-                                         edit-mode$="[[editMode]]"
-                                         required$="[[interventionRequiredField]]">
+                                         data-items="[[_sectorLocationData]]"
+                                         edit-mode$="[[intervention.permissions.edit.sector_locations]]"
+                                         required$="[[intervention.permissions.required.sector_locations]]"
+                                         on-change-sector-locations="_changeSectorLocations">
           </intervention-sector-locations>
         </paper-material>
       </div>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="PD Output or SSFA TOR Expected results">
+    <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
       <intervention-expected-results id="expectedResults"
-          data-items="{{intervention.result_links}}"
-          edit-mode$="[[editMode]]"
-          intervention-id="[[intervention.id]]"
-          required$="[[interventionRequiredField]]">
+                                     data-items="{{intervention.result_links}}"
+                                     selected-cp-structure="[[intervention.country_programme]]"
+                                     intervention-id="[[intervention.id]]"
+                                     required$="[[intervention.permissions.required.result_links]]"
+                                     edit-mode$="[[intervention.permissions.edit.result_links]]">
       </intervention-expected-results>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="Planned Budget">
-      <intervention-planned-budget id="plannedBudget"
-                                   data-items="{{intervention.planned_budget}}"
-                                   intervention-id="[[intervention.id]]"
-                                   edit-mode$="[[editMode]]"
-                                   years="[[years]]">
-      </intervention-planned-budget>
-    </etools-content-panel>
+    <intervention-planned-budget id="plannedBudget"
+                                 class="content-section"
+                                 planned-budget="{{intervention.planned_budget}}"
+                                 intervention-id="[[intervention.id]]"
+                                 intervention="[[intervention]]"
+                                 edit-mode="[[intervention.permissions.edit.planned_budget]]"
+                                 unicef-cash-edit-mode="[[intervention.permissions.edit.planned_budget_unicef_cash]]"
+                                 required="[[intervention.permissions.required.planned_budget]]">
+    </intervention-planned-budget>
+
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
-                                   edit-mode$="[[editMode]]"
+                                   edit-mode$="[[intervention.permissions.edit.planned_visits]]"
                                    years="[[years]]">
       </intervention-planned-visits>
     </etools-content-panel>
@@ -269,9 +315,11 @@
         is: 'intervention-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -288,14 +336,9 @@
             notify: true,
             observer: '_selectedPartnerIdChanged'
           },
-          partnerStaffMembers: {
-            type: Array,
-            value: []
-          },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes',
-            observer: '_initDocTypes'
+            statePath: 'interventionDocTypes'
           },
           pcaDocTypes: {
             type: Array,
@@ -313,44 +356,155 @@
             type: Array,
             statePath: 'unicefUsersData'
           },
-          hrps: {
+          countryProgrammes: {
             type: Array,
-            statePath: 'hrps'
+            statePath: 'countryProgrammes'
+          },
+          cpStructureOptions: {
+            type: Object,
+            value: []
           },
           years: {
             type: Array,
             value: []
           },
           agreement: {
-            type: Object,
-            value: null
+            type: Object
+          },
+          originalIntervention: {
+            type: Object
           },
           interventionRequiredField: {
             type: Boolean,
             value: false
           },
           newIntervention: {
-            type: Boolean,
-            observer: 'newInterventionFlagChanged'
+            type: Boolean
           },
           fieldsResetted: {
             type: Boolean
           },
-          editMode: {
-            type: Boolean,
-//            value: false,
-            observer: '_editModeChanged'
+          _frsStartConsistencyWarning: {
+            type: String,
+            value: ''
           },
+          _frsEndConsistencyWarning: {
+            type: String,
+            value: ''
+          },
+          _forceSectorLocationsRefresh: {
+            type: Boolean,
+            value: false
+          },
+          _sectorLocationData: {
+            type: Array,
+            value: []
+          }
         },
 
         observers: [
-          '_setYears(intervention.start, intervention.end)'
+          '_newInterventionFlagChanged(newIntervention)',
+          '_setYears(intervention.start, intervention.end)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
+          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
+          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
+          /*Making sure country_programme is set to default after originalIntervention is set,
+           otherwise on save, country_programme is not seen as modified*/
+          '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
+          '_contingencyPDChanged(intervention.contingency_pd)'
         ],
 
         ready: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
+         },
+         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
+          if (!this._showContingencyPd(agreement)) {
+            return true;
+          }
+          if (contingencyPd && intervention.status !== 'active') {
+            return false;
+          }
+          return true;
+        },
+        _filterCountryProgrammes: function(countryProgrammes) {
+          return countryProgrammes.filter(function(cp) {
+            return cp.active || cp.future;
+          });
+        },
+        _getCurrentCountryProgramme: function(countryProgrammes) {
+          if (countryProgrammes && countryProgrammes.length > 1) {
+            return countryProgrammes.find(function(cp) {
+              return !cp.future && !cp.special;
+            });
+          }
+          return (countryProgrammes && countryProgrammes.length) ? countryProgrammes[0] : null;
+        },
+        _countryProgrammesChanged: function(cp) {
+          let cpStructures = this._filterCountryProgrammes(cp);
+          this.set('cpStructureOptions', cpStructures);
+          this._setDefaultSelectedCpStructure(cpStructures);
+        },
+        _hasExpiredCpAssigned: function(cpId) {
+          if (cpId > 0 && this.cpStructureOptions instanceof Array && this.cpStructureOptions.length) {
+            let cp = this.cpStructureOptions.find(function(cp) {
+              return parseInt(cp.id, 10) === parseInt(cpId, 10);
+            });
+            if (!cp) {
+              return true;
+            }
+          }
+          return false;
+        },
+        _setDefaultSelectedCpStructure: function(cpStructures) {
+          if (this.intervention && this.intervention.country_programme) {
+            let cpStructureIsOld = this._hasExpiredCpAssigned(this.intervention.country_programme);
+            if (cpStructureIsOld) {
+              this.fire('toast', {text: 'This intervention has an old/expired CP Structure!', showCloseBtn: true});
+            }
+            return;
+          }
+          let currentCP;
+          if (cpStructures && cpStructures.length) {
+            if (cpStructures.length === 1) {
+              currentCP = cpStructures[0].id;
+            } else {
+              currentCP = this._getCurrentCountryProgramme(cpStructures);
+            }
+            this.set('intervention.country_programme', currentCP ? currentCP.id : null);
+          }
+        },
+        _contingencyPDChanged: function(newValue) {
+          if (newValue && this.intervention.status === 'signed') {
+           this._updateDatesRequiredState(false);
+          } else {
+            if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
+              this._updateDatesRequiredState(true);
+            }
+          }
+          this.$.intStart.updateStyles();
+          this.$.intEnd.updateStyles();
+        },
+        _updateDatesRequiredState: function(isRequired) {
+           this.set('intervention.permissions.required.start', isRequired);
+           this.set('intervention.permissions.required.end', isRequired);
+        },
+        _showContingencyPd: function(agreement) {
+          if (!agreement) {
+            return false;
+          }
+          if ('PCA' === agreement.agreement_type) {
+            return true;
+          }
+          return false;
+        },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
             return;
@@ -369,44 +523,35 @@
           this.set('ssfaDocTypes', ssfaTypes);
         },
 
-        _editModeChanged: function() {
-          this.updateStyles();
-        },
-
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
-            if (intervention.id > 0) {
-              this.set('interventionRequiredField', this._requiredInterventionField(intervention.status));
-            } else {
+            if (!intervention.id) {
               this.set('selectedPartnerId', null);
             }
 
             this.set('fieldsResetted', false);
-            this.newInterventionFlagChanged();
+            this._newInterventionFlagChanged();
           }
         },
 
-        newInterventionFlagChanged: function(newValue) {
+        _newInterventionFlagChanged: function() {
           if (this.intervention && !this.fieldsResetted) {
             this._resetValidations();
           }
-          if (newValue) {
-            this.set('interventionRequiredField', false);
-          }
-
         },
 
         _resetValidations: function() {
           this.$.agreementSelector.resetValidations();
           this.$.documentType.resetInvalidState();
+          this.$.plannedBudget.resetValidations();
+
           var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'hrps', 'intStart', 'intEnd'];
+            'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults',
-            'plannedBudget', 'plannedVisits'];
+          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
           elements.forEach(function(el) {
             this.elementValidationReset('#' + el);
           }.bind(this));
@@ -415,7 +560,7 @@
 
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
-            && typeof interventionEnd === 'string' && interventionEnd !== '') {
+              && typeof interventionEnd === 'string' && interventionEnd !== '') {
             var start = parseInt(interventionStart.substr(0, 4), 10);
             var end = parseInt(interventionEnd.substr(0, 4), 10);
             var years = [];
@@ -434,17 +579,18 @@
           if (typeof oldId === 'number'
               && id !== oldId
               && !this.agreement) {
-                //Prevent reset on changes caused by initialization of the fields
+            //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
+          this.getPartnerStaffMembers(id);
         },
         _resetDropdowns: function() {
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
           this.set('intervention.partner_focal_points', []);
-          this.set('partnerStaffMembers', []);
-          var partnerFpDropDown = this.$.partnerFocalPts;
+          this.set('staffMembers', []);
+          let partnerFpDropDown = this.$.partnerFocalPts;
           if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
@@ -454,7 +600,8 @@
          * When an agreement is selected then check it's type and update document types dropdown
          */
         _getCurrentDocTypes: function(agreement, documentTypes) {
-          var options = documentTypes;
+          this._initDocTypes(documentTypes);
+          let options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
               case 'PCA':
@@ -471,24 +618,28 @@
           return options;
         },
 
-        /**
-         * Some interventions fields are required only if status is active or implemented
-         */
-        _requiredInterventionField: function(status) {
-          return status === 'active' || status === 'implemented';
-        },
+        prepareSectorLocations: function(intervention, forceSectorLocationsRefresh) {
+          if (forceSectorLocationsRefresh) {
+            this.set('_forceSectorLocationsRefresh', false);
+            return;
+          }
+          if (!intervention) {
+            intervention = this.intervention;
+          }
 
-        prepareSectorLocations: function() {
-          if (this.intervention.sector_locations.length > 0) {
-            return this.intervention.sector_locations.map(function(sectorLocation) {
+          let sectorLocationData = [];
+          if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
+            sectorLocationData = intervention.sector_locations.map(function(sectorLocation) {
               return {
                 id: sectorLocation.id,
-                sector: (sectorLocation.sector && sectorLocation.sector.id) ? sectorLocation.sector.id : null,
+                sector: (sectorLocation.sector && typeof sectorLocation.sector === 'object')
+                    ? sectorLocation.sector.id
+                    : sectorLocation.sector,
                 locations: this._prepareLocationsForSave(sectorLocation.locations)
               };
             }.bind(this));
           }
-          return [];
+          this.set('_sectorLocationData', sectorLocationData);
         },
 
         _prepareLocationsForSave: function(locations) {
@@ -496,17 +647,21 @@
             return [];
           }
           return locations.map(function(location) {
-            return location.id;
+            return (location && typeof location === 'object') ?  location.id : location;
           });
         },
 
         validate: function() {
-          var valid = true;
-          var fields = ['agreementSelector', 'documentType', 'title', 'unicefOffices', 'unicefFocalPts',
-            'partnerFocalPts', 'intStart', 'intEnd', 'sectorLocations',
-            'plannedBudget', 'expectedResults'];
-          fields.forEach(function(field) {
-            if (!this.$$('#' + field).validate()) {
+          let valid = true;
+          let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
+            '#partnerFocalPts', '#cpStructure', '#sectorLocations',
+            '#plannedBudget', '#expectedResults', '#plannedVisits'];
+          if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
+            fieldSelectors.push('#intStart', '#intEnd');
+          }
+          fieldSelectors.forEach(function(selector) {
+            let field = this.$$(selector);
+            if (field && !field.validate()) {
               valid = false;
             }
           }.bind(this));
@@ -521,6 +676,36 @@
               return diff + ' days until expiry';
             }
           }
+        },
+
+        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsStartConsistencyWarning', null);
+            this.$.intStart.updateStyles();
+            return;
+          }
+          this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
+              frsEarliestStartDate, 'start date', true));
+          this.$.intStart.updateStyles();
+        },
+
+        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+            this.set('_frsEndConsistencyWarning', '');
+            this.$.intEnd.updateStyles();
+            return;
+          }
+          this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
+              frsLatestEndDate, 'end date', true));
+          this.$.intEnd.updateStyles();
+        },
+
+        _changeSectorLocations: function(e) {
+          e.stopImmediatePropagation();
+          if (!this.intervention) {
+            return;
+          }
+          this.set('intervention.sector_locations', e.detail.sectorLocations);
         }
 
       });

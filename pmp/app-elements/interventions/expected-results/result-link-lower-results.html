@@ -1,7 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
@@ -12,7 +11,6 @@
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -81,9 +79,7 @@
       }
 
     </style>
-      <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
+
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -98,13 +94,13 @@
           </div>
           <div class="item-content">
             <div class="row-h">
-              <paper-input label="PD or SSFA ToR Output"
+              <paper-input label="PD output or SSFA expected result"
                            value="{{item.name}}"
                            readonly$="[[!editMode]]"
                            required
                            auto-validate
                            invalid
-                           error-message="Lower Output needs to be specified!"></paper-input>
+                           error-message="PD output or SSFA expected result must be specified"></paper-input>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
@@ -162,10 +158,10 @@
     <div class="add-btn-wrapper">
       <paper-button class="secondary-btn"
                     on-tap="_addNewLowerResult"
-                    title="Add PD or SSFA ToR OUTPUT"
+                    title="Add PD or SSFA OUTPUT"
                     disabled$="[[!editMode]]"
                     hidden$="[[!editMode]]">
-        Add PD or SSFA ToR OUTPUT
+        Add PD output or SSFA expected result
       </paper-button>
     </div>
 
@@ -179,8 +175,7 @@
         is: 'result-link-lower-results',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {

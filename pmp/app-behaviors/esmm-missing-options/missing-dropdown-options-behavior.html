@@ -1,8 +1,9 @@
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehaviorImpl */
-  pmpBehaviors.MissingDropdownOptionsBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl */
+  EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl = {
 
     setDropdownMissingOptionsAjaxDetails: function(dropdownEl, endpointName, params) {
       try {
@@ -13,10 +14,10 @@
           dropdownEl.set('url', endpointUrl);
           dropdownEl.set('ajaxParams', params);
         } else {
-          throw new Error('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+          console.warn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
         }
       } catch (err) {
-        console.error('An error occurred at ghost data esmm setup.', err);
+        console.warn('An error occurred at ghost data esmm setup.', err);
       }
     },
 
@@ -34,9 +35,9 @@
 
   };
 
-  /** @polymerBehavior pmpBehaviors.MissingDropdownOptionsBehavior */
-  pmpBehaviors.MissingDropdownOptionsBehavior = [
-    etoolsAppConfig.globals,
-    pmpBehaviors.MissingDropdownOptionsBehaviorImpl
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.MissingDropdownOptions */
+  EtoolsPmpApp.Behaviors.MissingDropdownOptions = [
+    EtoolsPmpApp.Behaviors.Endpoints,
+    EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl
   ];
 </script>

@@ -1,0 +1,29 @@
+
+<script>
+  window.EtoolsLogsLevel = 'INFO';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AppConfig */
+  EtoolsPmpApp.Behaviors.AppConfig = {
+    properties: {
+      baseSite: {
+        type: String,
+        value: function() {
+          return window.location.origin;
+        }
+      },
+      basePath: {
+        type: String,
+        value: '/pmp/' // (window.location.port === '8080') ? '/' : '/pmp/'
+      },
+      loginPath: {
+        type: Boolean,
+        value: function() {
+          return window.location.origin + '/login/';
+        }
+      }
+    }
+
+  };
+</script>

@@ -2,8 +2,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/data-element-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
-
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="partners-list-data">
@@ -28,9 +27,8 @@
         is: 'partners-list-data',
 
         behaviors: [
-          pmpBehaviors.DataElementBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          etoolsAppConfig.globals
+          EtoolsPmpApp.Behaviors.DataElement,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
         properties: {
@@ -132,7 +130,11 @@
           var _this = this;
 
           if (showQueryLoading) {
-            this.fire('global-loading', {message: 'Loading partners list data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partners list data...',
+              active: true,
+              loadingSource: 'partners-list'
+            });
           }
 
           this.db.transaction('r', this.db.partners, function() {
@@ -159,7 +161,7 @@
               if (searchString && searchString.length) {
                 var vnMatch = true;
                 if (partner.vendor_number) {
-                  vnMatch = partner.vendor_number.indexOf(searchString) < 0;
+                  vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
                 }
                 if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
                     partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
@@ -191,10 +193,10 @@
 
           }).then(function(result) {
             _this._setFilteredPartners(result);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           }).catch(function(error) {
             console.error('Error querying partners: ' + error);
-            _this.fire('global-loading', {active: false});
+            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           });
         }
 

@@ -4,19 +4,16 @@
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
@@ -85,9 +82,6 @@
       }
 
     </style>
-     <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
 
     <paper-material elevation="[[elevation]]">
 
@@ -129,7 +123,7 @@
                                                       options="[[assessmentTypesOptions]]"
                                                       selected="{{item.type}}"
                                                       dynamic-align
-                                                      error-message="[[dateSubmitedErrorMessages.missing]]">
+                                                      error-message="Assessment Type is required">
                         </etools-single-selection-menu>
                       </template>
                     </div>
@@ -139,8 +133,9 @@
                                          label="Date of Assessment"
                                          value="{{item.completed_date}}"
                                          readonly$="[[!editMode]]"
-                                         error-message="Date of assessment is required"
-                                         no-init show-clear-btn></etools-date-input>
+                                         error-message="[[dateSubmitedErrorMessages.missing]]"
+                                         no-init show-clear-btn>
+                      </etools-date-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
@@ -196,10 +191,9 @@
         is: 'assessments-items',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.RepeatableDataSetsBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.DateBehavior
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Date
         ],
 
         properties: {
@@ -220,8 +214,8 @@
           dateSubmitedErrorMessages: {
             type: Object,
             value: {
-              missing: 'Assessment type is required',
-              futureDate: 'The Date of Report cannot be in the future'
+              missing: 'Date of Assessment is required',
+              futureDate: 'Date of Assesment cannot be in the future'
             }
           }
         },
@@ -259,9 +253,13 @@
         _assessmentPropertyChanged: function(dataPath) {
           if (dataPath.path !== 'dataItems' && dataPath.path !== 'dataItems.splices' &&
               dataPath.path !== 'dataItems.length' && dataPath.path.indexOf('current') === -1) {
-            var path = dataPath.path.split('.');
-            var index = path[path.length - 2].replace('#', '');
-            this._validateAssessment(index);
+            var dataPathPieces = dataPath.path.split('.');
+            var path = dataPathPieces[0] + '.' + dataPathPieces[1];
+            if (path.indexOf('#') > -1) {
+              var item = this.get(path);
+              var index = this.dataItems.indexOf(item);
+              this._validateAssessment(index);
+            }
           }
         },
 
@@ -353,11 +351,16 @@
 
           fields.forEach(function(fieldSelector) {
             var fieldEl = this.$$(fieldSelector);
+            var reportFileLength = 0;
+
+            if (typeof this.dataItems[index].report_file === 'string') {
+               reportFileLength = this.dataItems[index].report_file.length;
+            }
             if (fieldEl) {
               var fieldName = this._getFileTypeForValidation(fieldSelector);
               var validField = this._isValid(fieldName, this.dataItems[index].type,
                   this.dataItems[index].completed_date, this.dataItems[index].report,
-                  this.dataItems[index].report_file.length, fieldEl);
+                  reportFileLength, fieldEl);
               fieldEl.invalid = !validField;
               if (!validField) {
                 valid = false;

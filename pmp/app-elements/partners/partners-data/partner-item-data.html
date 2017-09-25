@@ -2,7 +2,9 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="partner-item-data">
 
@@ -22,8 +24,9 @@
 
         is: 'partner-item-data',
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         ],
         properties: {
 
@@ -42,12 +45,30 @@
             notify: true,
             observer: '_partnerIdChanged'
           },
+          deletedPartnerId: {
+            type: Number,
+          },
           withUpload: Boolean,
           prepareMultipartData: Boolean,
 
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
-          ajaxEl: Object
+          ajaxEl: Object,
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'partner-data'
+          }
+        },
+        actions: {
+           deletePartner: function(partnerId) {
+            return {
+              type: 'DELETE_PARTNER',
+              partnerId: partnerId
+            };
+          }
         },
         attached: function() {
           this.ajaxEl = this.$.ajax;
@@ -63,7 +84,11 @@
             // set an empty partner
             this._setPartner({});
             // set the new endpoint
-            this.fire('global-loading', {message: 'Loading partner data...', active: true});
+            this.fire('global-loading', {
+              message: 'Loading partner data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
             this._prepareAndFireRequest();
             this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
           } else {
@@ -118,11 +143,17 @@
             this.set('handleSuccResponseAdditionalCallback', null);
             this.set('handleErrResponseAdditionalCallback', null);
           }
-
-          if (this.$.ajax.get('method') !== 'GET') {
-            var self = this;
+          let ajaxMethod = this.$.ajax.get('method');
+          let self = this;
+          if (['GET','DELETE'].indexOf(ajaxMethod) === -1) {
             // update the partners list in dexieDB
-            etoolsAppConfig.db.table('partners').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('partners').put(response.detail).then(function() {
+              self.fire('reload-list');
+            });
+          }
+          if (ajaxMethod === 'DELETE') {
+            this.dispatch('deletePartner', this.deletedPartnerId);
+            EtoolsPmpApp.DexieDb.table('partners').delete(this.deletedPartnerId).then(function() {
               self.fire('reload-list');
             });
           }
@@ -131,23 +162,11 @@
           this.handleErrorResponse(response);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
-            this.handleErrResponseAdditionalCallback.bind(this, this.tryGetResponseErrorMsg(response))();
+            this.handleErrResponseAdditionalCallback.bind(this,
+                  this.formatServerErrorAsText(this.tryGetResponseError(response)))();
           }
           this.handleErrResponseAdditionalCallback = null;
-        },
-        hidePartner: function(partner) {
-          if (typeof partner === 'object' && Object.keys(partner).length === 0) {
-            this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
-            return;
-          }
-
-          this._prepareEndpoint(partner.id);
-          delete partner.id;
-          this.ajaxEl.set('method', 'PATCH');
-          this.ajaxEl.set('multiPart', false);
-          this.ajaxEl.set('prepareMultipartData', false);
-          this.ajaxEl.set('body', partner);
-          this.ajaxEl.set('url', this.endpoint.url);
+          this.handleSuccResponseAdditionalCallback = null;
         },
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
           if (!vendorNoObj && !vendorNoObj.vendor) {
@@ -155,7 +174,11 @@
             return;
           }
 
-          this.fire('global-loading', {message: 'Creating new partner...', active: true});
+          this.fire('global-loading', {
+            message: 'Creating new partner...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
 
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
@@ -168,28 +191,44 @@
           this.ajaxEl.set('body', {});
 
         },
+        deletePartner: function(partner, succCallback, errCallback) {
+          if (!partner.id) {
+            return;
+          }
+          var endpoint = this.getEndpoint('deletePartner', {id: partner.id});
+          this.deletedPartnerId = partner.id;
+
+          this.handleSuccResponseAdditionalCallback = succCallback;
+          this.handleErrResponseAdditionalCallback = errCallback;
+
+          this.ajaxEl.set('method', 'DELETE');
+          this.ajaxEl.set('multiPart', false);
+          this.ajaxEl.set('prepareMultipartData', false);
+          this.ajaxEl.set('url', endpoint.url);
+          this.ajaxEl.set('body', {});
+        },
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
           } else {
             var url = null;
             var isNew = false;
-
-            if (partner.id) {
-              // prepare PATCH endpoint
-              this._prepareEndpoint(partner.id);
-              url = this.endpoint.url;
-            } else {
-              // new partner, use POST method for the same endpoint
-              var partnersEndpoint = this.getEndpoint('partners');
-              url = partnersEndpoint.url;
-              isNew = true;
-            }
+            var partnerId = partner.id;
             // remove id from data
             if (partner.id) {
               delete partner.id;
             }
             if (Object.keys(partner).length > 0) {
+              if (partnerId) {
+                // prepare PATCH endpoint
+                this._prepareEndpoint(partnerId);
+                url = this.endpoint.url;
+              } else {
+                // new partner, use POST method for the same endpoint
+                var partnersEndpoint = this.getEndpoint('partners');
+                url = partnersEndpoint.url;
+                isNew = true;
+              }
               // set additional callback if any
               if (callback) {
                 this.set('handleSuccResponseAdditionalCallback', callback);
@@ -219,7 +258,11 @@
                   }, this);
                 }
               }
-              this.fire('global-loading', {message: 'Saving partner data...', active: true});
+              this.fire('global-loading', {
+                message: 'Saving partner data...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
               var action = (isNew) ? 'POST' : 'PATCH';
               this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);

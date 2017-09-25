@@ -1,16 +1,18 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-
-<link rel="import" href="intervention-data/monitoring-visits-data.html">
-
 
 <dom-module id="monitoring-visits-list">
 
@@ -20,81 +22,90 @@
       :host {
         @apply(--layout-flex);
       }
-      .monitoring-visits-warning {
-        padding: 0 20px;
+      .monitoring-visits-container {
+        position: relative;
+      }
+      etools-loading {
+        margin-top: -10px;
+        margin-bottom: -40px;
       }
 
     </style>
-    <monitoring-visits-data monitoring-visits="{{monitoringVisits}}"
-                            intervention-id="[[interventionId]]">
-    </monitoring-visits-data>
+    <div class="monitoring-visits-container">
+      <etools-loading loading-text="Loading monitoring visits"
+                      active$="[[showLoading]]"></etools-loading>
 
-    <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
-      <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] resuls" no-collapse>
-        <etools-data-table-column class="col-2" field="reference_number">
-            Reference #
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="primary_traveler" >
-            Traveler
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="travel_type">
-            Travel Type
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="date">
-            When
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="locations">
-            Locations
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2" field="status">
-            Status
-        </etools-data-table-column>
-      </etools-data-table-header>
+      <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
+        <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
+          <etools-data-table-column class="col-2" field="reference_number">
+              Reference #
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="primary_traveler" >
+              Traveler
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="travel_type">
+              Travel Type
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="date">
+              When
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="locations">
+              Locations
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2" field="status">
+              Status
+          </etools-data-table-column>
+        </etools-data-table-header>
 
-      <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-2">
-              <a class="truncate" href="#" title="[[visit.reference_number]]">
-                [[visit.reference_number]]
-              </a>
-            </span>
-            <span class="col-data col-2" title="[[visit.primary_traveler]]">
-              <span class="truncate"> [[visit.primary_traveler]] </span>
-            </span>
-            <span class="col-data col-2" title="[[visit.travel_type]]">
-                [[visit.travel_type]]
-            </span>
-            <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
-                [[getDateDisplayValue(visit.date)]]
-            </span>
-            <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
-                [[getDisplayValue(visit.locations)]]
-            </span>
-            <span class="col-data col-2 capitalize" title="[[visit.status]]">
-                [[visit.status]]
-            </span>
-          </div>
-        </etools-data-table-row>
-      </template>
+        <template id="rows" is="dom-repeat" items="[[monitoringVisits]]" as="visit" initial-count="10">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-2">
+                <a class="truncate"
+                   href$="/t2f/edit-travel/[[visit.trip_id]]"
+                   title="[[visit.reference_number]]"
+                   target="_blank">
+                  [[visit.reference_number]]
+                </a>
+              </span>
+              <span class="col-data col-2" title="[[visit.primary_traveler]]">
+                <span class="truncate"> [[visit.primary_traveler]] </span>
+              </span>
+              <span class="col-data col-2" title="[[visit.travel_type]]">
+                  [[visit.travel_type]]
+              </span>
+              <span class="col-data col-2" title="[[getDateDisplayValue(visit.date)]]">
+                  [[getDateDisplayValue(visit.date)]]
+              </span>
+              <span class="col-data col-2" title="[[getDisplayValue(visit.locations)]]">
+                  [[getDisplayValue(visit.locations)]]
+              </span>
+              <span class="col-data col-2 capitalize" title="[[visit.status]]">
+                  [[visit.status]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
+      </div>
+      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
+        <p>There are no monitoring visits for this intervention.</p>
+      </div>
     </div>
-    <div class="monitoring-visits-warning" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
-      <p>There are no monitoring visits for this intervention.</p>
-    </div>
-
   </template>
 
   <script>
     (function() {
       'use strict';
 
-      var _interventionsLastNavigated = null;
-
       Polymer({
         is: 'monitoring-visits-list',
 
         behaviors: [
-          pmpBehaviors.CommonGeneralBehavior,
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -102,17 +113,40 @@
             type: Boolean,
             value: false
           },
+          showLoading: {
+            type: Boolean,
+            value: true
+          },
           monitoringVisits: {
             type: Array
           },
           interventionId: {
             type: Number,
+            observer: '_interventionIdChanged'
+          }
+        },
+
+        _interventionIdChanged: function(newId) {
+          if (newId) {
+            this.set('showLoading', true);
+            let monitoringVisitsEndpoint = this.getEndpoint('monitoringVisits', {id: newId});
+            let self = this;
+            this.sendRequest({
+              endpoint: monitoringVisitsEndpoint
+            }).then(function(resp) {
+              self.set('monitoringVisits', resp);
+              self.set('showLoading', false);
+            }).catch(function(error) {
+              self.set('showLoading', false);
+              self.parseRequestErrorsAndShowAsToastMsgs(error.response);
+            });
           }
         },
 
         _hideMonitoringVisits: function(length) {
           return length === 0;
-        },
+        }
+
       });
 
     })();

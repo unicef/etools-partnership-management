@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
@@ -9,10 +10,10 @@
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-error-messages-box.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -24,7 +25,6 @@
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
-<link rel="import" href="partner-status.html">
 
 <dom-module id="partner-details">
 
@@ -32,7 +32,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles risk-rating-styles">
       :host {
-        @apply(--layout-horizontal);
+        @apply --layout-vertical;
         width: 100%;
 
         --etools-checkable-input-label: {
@@ -51,14 +51,13 @@
       #core-values-assessment {
         width: 100%;
       }
-
+      etools-single-file {
+        --etools-file-upload-button: {
+          /* IE fix */
+          min-width: 150px !important;
+        }
+      }
     </style>
-    <!-- main page content start -->
-    <div id="pageContent">
-
-      <etools-error-messages-box id="errorsBox"
-                                 title="Errors Saving Partner"
-                                 errors="{{serverErrors}}"></etools-error-messages-box>
 
       <etools-content-panel class="content-section" panel-title="Partner Details">
         <div class="row-h flex-c">
@@ -102,15 +101,14 @@
           </div>
           <div class="col col-4">
             <!-- Shared partner -->
-            <etools-searchable-multiselection-menu label="Shared Partner"
-                                                   options="[[sharedPartenerValues]]"
-                                                   selected="{{partner.shared_with}}"
-                                                   custom-object-options
-                                                   update-selected
-                                                   dynamic-align
-                                                   readonly$="[[!editMode]]"
-                                                   multi>
-            </etools-searchable-multiselection-menu>
+            <etools-multi-selection-menu label="Shared Partner"
+                                         options="[[sharedPartenerValues]]"
+                                         selected-values="{{partner.shared_with}}"
+                                         dynamic-align
+                                         readonly$="[[!editMode]]"
+                                         multi
+                                         avoid-header-overlapping-dropdown>
+            </etools-multi-selection-menu>
           </div>
         </div>
 
@@ -215,18 +213,6 @@
       <etools-content-panel class="content-section" panel-title="Partner Contacts ([[partner.staff_members.length]])" show-expand-btn>
         <staff-members id="staffMembersList" data-items="{{partner.staff_members}}" edit-mode="[[editMode]]"></staff-members>
       </etools-content-panel>
-
-    </div> <!-- main page content end -->
-
-    <!-- sidebar content start -->
-    <div id="sidebar">
-      <partner-status on-save-partner="_validateAndTriggerPartnerSave"
-        partner="[[partner]]"
-        edit-mode$="[[editMode]]">
-      </partner-status>
-    </div>
-    <!-- sidebar content end -->
-
   </template>
 
   <script>
@@ -237,9 +223,9 @@
         is: 'partner-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.RiskRatingBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.RiskRating
         ],
 
         properties: {
@@ -261,7 +247,6 @@
             type: Array,
             statePath: 'partnerTypes'
           },
-          originalPartnerData: Object,
           sharedPartenerValues: {
             type: Array,
             statePath: 'agencyChoices'
@@ -269,12 +254,18 @@
           showCoreValuesAssessmentAttachment: {
             type: Boolean,
             value: false
-          },
-          serverErrors: {
-            type: Array,
-            value: []
           }
         },
+
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+          this.fire('partners-page-attached');
+        },
+
         _hideDeleteBtn: function() {
           if (!this.partner.core_values_assessment_file) {
             return false;
@@ -282,13 +273,10 @@
           return true;
         },
         _partnerChanged: function(partner) {
-          this.set('serverErrors', []);
           if (typeof partner === 'object' && Object.keys(partner).length > 0) {
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type));
-            // keep a copy of loaded partner to be able to check changed data
-            this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
           }
         },
 
@@ -321,50 +309,6 @@
           }
           return valid;
         },
-
-        _cleanUpdateData: function(partner) {
-          var updateableFields = [
-              'alternate_name',
-              'shared_with',
-              'staff_members',
-              'assessments',
-              'core_values_assessment'
-            ];
-          var changes = {};
-          updateableFields.forEach(function(fieldName) {
-            // TODO: improve this
-            if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
-              if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
-                changes[fieldName] = partner[fieldName];
-              }
-            } else if (fieldName === 'core_values_assessment') {
-              if ((partner.hasOwnProperty('core_values_assessment')) &&
-                (partner.core_values_assessment instanceof File)) {
-                  changes.core_values_assessment = partner.core_values_assessment;
-              }
-            } else {
-              if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
-                changes[fieldName] = partner[fieldName];
-              }
-            }
-          }.bind(this));
-          return changes;
-        },
-        _validateAndTriggerPartnerSave: function(event) {
-          event.stopImmediatePropagation();
-          if (!this.editMode) {
-            return;
-          }
-          if (this._validatePartner()) {
-            var partnerChanges = this._cleanUpdateData(this.partner);
-            partnerChanges.id = this.partner.id;
-            this.fire('save-partner', partnerChanges);
-          } else {
-            this.fire('toast', {text: 'Please check assessments and partner contacts for ' +
-              'invalid fields or empty data rows!', showCloseBtn: true});
-          }
-
-        }
 
       });
 

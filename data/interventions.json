@@ -2,7 +2,7 @@
   {
     "id": 1,
     "number": "sadfsdf",
-    "hrp": 7,
+    "country_programme": 7,
     "document_type": "SSFA",
     "partner_name": "My test partner",
     "status": "implemented",
@@ -29,7 +29,7 @@
   {
     "id": 2,
     "number": "blk:53",
-    "hrp": 8,
+    "country_programme": 8,
     "document_type": "PD",
     "partner_name": "Awesome Partner Org",
     "status": "active",
@@ -46,7 +46,7 @@
   {
     "id": 3,
     "number": "blk:50",
-    "hrp": 9,
+    "country_programme": 9,
     "document_type": "PD",
     "partner_name": "QA Production Test",
     "status": "draft",
@@ -63,7 +63,7 @@
   {
     "id": 4,
     "number": "blk:48",
-    "hrp": null,
+    "country_programme": null,
     "document_type": "PD",
     "partner_name": "QA Production Test",
     "status": "draft",
@@ -80,7 +80,7 @@
   {
     "id": 5,
     "number": "/PD201601|47",
-    "hrp": 14,
+    "country_programme": 14,
     "document_type": "PD",
     "partner_name": "ICO test Partner",
     "status": "draft",
@@ -97,7 +97,7 @@
   {
     "id": 6,
     "number": "blk:46",
-    "hrp": 11,
+    "country_programme": 11,
     "document_type": "PD",
     "partner_name": "Partners for food",
     "status": "draft",
@@ -114,7 +114,7 @@
   {
     "id": 7,
     "number": "/PD201601|41",
-    "hrp": 14,
+    "country_programme": 14,
     "document_type": "PD",
     "partner_name": "Education au Bandundu",
     "status": "active",
@@ -131,7 +131,7 @@
   {
     "id": 8,
     "number": "/IC201601-01/PD201601",
-    "hrp": 9,
+    "country_programme": 9,
     "document_type": "PD",
     "partner_name": "QA Production Test",
     "status": "draft",
@@ -148,7 +148,7 @@
   {
     "id": 9,
     "number": "/PCA201606/PD201601",
-    "hrp": 14,
+    "country_programme": 14,
     "document_type": "PD",
     "partner_name": "Education in DRC",
     "status": "draft",
@@ -165,7 +165,7 @@
   {
     "id": 10,
     "number": "blk:36",
-    "hrp": null,
+    "country_programme": null,
     "document_type": "SSFA",
     "partner_name": "Test3",
     "status": "draft",
@@ -182,7 +182,7 @@
   {
     "id": 11,
     "number": "blk:35",
-    "hrp": null,
+    "country_programme": null,
     "document_type": "PD",
     "partner_name": "Test3",
     "status": "draft",
@@ -199,7 +199,7 @@
   {
     "id": 12,
     "number": "2016-12",
-    "hrp": 14,
+    "country_programme": 14,
     "document_type": "PD",
     "partner_name": "For a Better Education in DRC",
     "status": "active",
@@ -216,7 +216,7 @@
   {
     "id": 13,
     "number": "UNASSIGNED|31",
-    "hrp": null,
+    "country_programme": null,
     "document_type": "PD",
     "partner_name": "French Natcom",
     "status": "draft",
@@ -233,7 +233,7 @@
   {
     "id": 14,
     "number": "UNASSIGNED|30",
-    "hrp": null,
+    "country_programme": null,
     "document_type": "PD",
     "partner_name": "Adult Basic Community Org",
     "status": "draft",
@@ -250,7 +250,7 @@
   {
     "id": 15,
     "number": "UNASSIGNED|29",
-    "hrp": 9,
+    "country_programme": 9,
     "document_type": "PD",
     "partner_name": "Ministry of eTools",
     "status": "draft",
@@ -267,7 +267,7 @@
   {
     "id": 16,
     "number": "APO_PCA_int001",
-    "hrp": 9,
+    "country_programme": 9,
     "document_type": "PD",
     "partner_name": "Awesome Partner Org",
     "status": "draft",
@@ -284,7 +284,7 @@
   {
     "id": 17,
     "number": "UNASSIGNED|23",
-    "hrp": 6,
+    "country_programme": 6,
     "document_type": "SHPD",
     "partner_name": "United pawpaw workers",
     "status": "active",
@@ -301,7 +301,7 @@
   {
     "id": 18,
     "number": "UNASSIGNED|21",
-    "hrp": 11,
+    "country_programme": 11,
     "document_type": "PD",
     "partner_name": "Shafaq",
     "status": "active",
@@ -318,7 +318,7 @@
   {
     "id": 19,
     "number": "PCA/PD/1/2/3",
-    "hrp": 9,
+    "country_programme": 9,
     "document_type": "PD",
     "partner_name": "Chiild Protection Society ",
     "status": "active",
@@ -335,7 +335,7 @@
   {
     "id": 20,
     "number": "UNASSIGNED|19",
-    "hrp": 11,
+    "country_programme": 11,
     "document_type": "PD",
     "partner_name": "UK National Committee",
     "status": "draft",
@@ -352,7 +352,7 @@
   {
     "id": 21,
     "number": "UPW001",
-    "hrp": 8,
+    "country_programme": 8,
     "document_type": "PD",
     "partner_name": "United pawpaw workers",
     "status": "active",
@@ -369,7 +369,7 @@
   {
     "id": 22,
     "number": "UNASSIGNED|16",
-    "hrp": 6,
+    "country_programme": 6,
     "document_type": "PD",
     "partner_name": "Ministry of eTools",
     "status": "draft",

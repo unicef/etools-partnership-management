@@ -3,15 +3,16 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="intervention-sector-locations">
@@ -30,6 +31,7 @@
           @apply(--paper-fab-btn-green);
         };
       }
+
       #bottom-actions {
         padding-bottom: 10px;
       }
@@ -54,37 +56,34 @@
           <div class="item-content">
             <div class="row-h">
               <div class="col col-3">
-                 <etools-single-selection-menu id$="sector_[[index]]"
-                                                       class="sector"
-                                                       label="Section/Cluster"
-                                                       placeholder="&#8212;"
-                                                       selected="{{item.sector.id}}"
-                                                       options="[[sectors]]"
-                                                       option-label="name"
-                                                       option-value="id"
-                                                       on-iron-activate="_sectorSelected"
-                                                       required$="[[required]]"
-                                                       auto-validate
-                                                       error-message="Please select a sector"
-                                                       readonly$="[[!editMode]]">
+                <etools-single-selection-menu id$="sector_[[index]]"
+                                              class="sector"
+                                              label="Section/Cluster"
+                                              placeholder="&#8212;"
+                                              selected="{{item.sector}}"
+                                              options="[[sectors]]"
+                                              option-label="name"
+                                              option-value="id"
+                                              on-iron-activate="_sectorSelected"
+                                              required$="[[_getFieldRequired(required, item.locations.length)]]"
+                                              auto-validate
+                                              error-message="Please select a sector"
+                                              readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
               <div class="col col-9">
-                <etools-searchable-multiselection-menu id$="locations_[[index]]"
-                                                       label="Locations"
-                                                       placeholder="&#8212;"
-                                                       value="[[_setSectorLocations(item.locations, locations.length)]]"
-                                                       options="[[locations]]"
-                                                       custom-object-options
-                                                       option-label="name"
-                                                       option-value="id"
-                                                       on-value-change="_locationsSelected"
-                                                       multi
-                                                       required$="[[required]]"
-                                                       auto-validate
-                                                       error-message="Please select sector locations"
-                                                       readonly$="[[!editMode]]">
-                </etools-searchable-multiselection-menu>
+                <etools-multi-selection-menu id$="locations_[[index]]"
+                                             label="Locations"
+                                             placeholder="&#8212;"
+                                             selected-values="{{item.locations}}"
+                                             options="[[locations]]"
+                                             option-label="name"
+                                             option-value="id"
+                                             required$="[[_getFieldRequired(required, item.sector)]]"
+                                             auto-validate
+                                             error-message="Please select sector locations"
+                                             readonly$="[[!editMode]]">
+                </etools-multi-selection-menu>
               </div>
             </div>
           </div>
@@ -110,9 +109,8 @@
         is: 'intervention-sector-locations',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {
@@ -136,6 +134,7 @@
         },
         observers: [
           '_dataItemsChanged(dataItems)',
+          '_sectorLocationsChanges(dataItems.*)'
         ],
 
         ready: function() {
@@ -145,11 +144,14 @@
             locations: []
           };
         },
-
         _dataItemsChanged: function(dataItems) {
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
+        },
+
+        _getFieldRequired: function(required, data) {
+          return required || !!data;
         },
 
         _sectorSelected: function(event) {
@@ -170,36 +172,7 @@
             return;
           }
 
-          this.set('dataItems.' + event.model.index + '.sector', {
-            id: sectorSelected.id,
-            name: sectorSelected.name
-          });
-
-        },
-        _setSectorLocations: function(locations) {
-          if (Array.isArray(locations) && locations.length > 0 && this.locations.length) {
-            var selectedLocationsIds = locations.map(function(location) {
-              return parseInt(location.id, 10);
-            });
-            return this.locations.filter(function(l) {
-              return selectedLocationsIds.indexOf(parseInt(l.id, 10)) > -1;
-            });
-          }
-          return [];
-        },
-
-        _locationsSelected: function(event) {
-          var locationsSelected = event.detail.selectedValues;
-          if (Array.isArray(locationsSelected) && locationsSelected.length > 0) {
-            this.set('dataItems.' + event.model.index + '.locations', locationsSelected.map(function(l) {
-              return {
-                id: parseInt(l.id, 10),
-                name: l.name
-              };
-            }));
-          } else {
-            this.set('dataItems.' + event.model.index + '.locations', []);
-          }
+          this.set('dataItems.' + event.model.index + '.sector', sectorSelected.id);
         },
 
         _sectorAlreadySelected: function(sectorId, dropdownIdx) {
@@ -235,16 +208,13 @@
             this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
             valid = false;
           } else {
-            if (!this.required) {
-              return valid;
-            }
             this.dataItems.forEach(function(item, index) {
               var sectorEl = this.$$('#sector_' + index);
               var locationsEl = this.$$('#locations_' + index);
-              if (!sectorEl.validate()) {
+              if (sectorEl && !sectorEl.validate()) {
                 valid = false;
               }
-              if (!locationsEl.validate()) {
+              if (locationsEl && !locationsEl.validate()) {
                 valid = false;
               }
             }.bind(this));
@@ -268,6 +238,9 @@
               }
             }.bind(this));
           }
+        },
+        _sectorLocationsChanges: function(sectorLocations) {
+          this.fire('change-sector-locations',  {sectorLocations: sectorLocations.base});
         }
 
       });

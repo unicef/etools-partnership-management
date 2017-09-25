@@ -1,0 +1,158 @@
+<link rel="import" href="../../scripts/lodash/lodash.html">
+<link rel="import" href="app-config-behavior.html">
+<script>
+  /**
+   * PMP app endpoints list.
+   */
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
+  EtoolsPmpApp.Endpoints = {
+    changeCountry: {
+      url: '/users/api/changecountry/'
+    },
+    // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
+    unicefUsers: {
+      url: '/users/api/',
+      exp: 60 * 60 * 1000, // 1h
+      cachingKey: 'unicefUsers'
+    },
+    user: {
+      url: '/users/api/profile/',
+      exp: 10 * 60 * 1000, // 10min
+      cachingKey: 'user'
+    },
+    agreements: {
+      template: '/api/v2/agreements/',
+      exp: 30 * 60 * 1000, // 30min
+      cachingKey: 'agreements'
+    },
+    agreementDetails: {
+      template: '/api/v2/agreements/<%=id%>/',
+    },
+    partnerAssessmentDelete: {
+      template: '/api/v2/partners/assessments/<%=id%>/',
+    },
+    interventionResultLinkDelete: {
+      template: '/api/v2/interventions/results/<%=id%>/',
+    },
+    agreementAmendmentsDelete: {
+      template: '/api/v2/agreements/amendments/<%=id%>/',
+    },
+    agreementAmendmentsTypeDelete:  {
+      template: '/api/v2/agreements/amendments/types/<%=id%>/',
+    },
+    lowerResultsDelete:  {
+      template: '/api/v2/reports/lower_results/<%=id%>/',
+    },
+    myProfile:  {
+      template: '/api/v2/users/myprofile/',
+    },
+    countries: {
+      url: '/api/countries/', // API request receives a 404 for now
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'countries'
+    },
+    partners: {
+      url: '/api/v2/partners/',
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'partners'
+    },
+    partnerDetails: {
+      template: '/api/v2/partners/<%=id%>/',
+      // exp: 6 * 1000, // 6 sec
+      // if this caching key is missing then the data will be cached with the url as key
+      // cachingKey: 'partnerDetails'
+    },
+    createPartner: {
+      template: '/api/v2/partners/add/?vendor=<%=vendor%>',
+    },
+    deletePartner: {
+      template: '/api/v2/partners/delete/<%=id%>/',
+    },
+    partnerStaffMembers: {
+      template: '/api/v2/partners/<%=id%>/staff-members/',
+    },
+    interventions: {
+      url: '/api/v2/interventions/',
+      exp: 10 * 60 * 1000, // 5min
+      cachingKey: 'interventions'
+    },
+    interventionDetails: {
+      template: '/api/v2/interventions/<%=id%>/',
+    },
+    dropdownsPmp: {
+      url: '/api/v2/dropdowns/pmp',
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'dropdownsPmp'
+    },
+    dropdownsStatic: {
+      url: '/api/v2/dropdowns/static',
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'dropdownsStatic'
+    },
+    sectors: {
+      url: '/api/reports/sectors',
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'sectors'
+    },
+    locations: {
+      url: '/api/locations',
+      exp: 60 * 60 * 60 * 1000, // 60h
+      cachingKey: 'locations'
+    },
+    offices: {
+      url: '/api/offices',
+      exp: 6 * 60 * 60 * 1000, // 6h
+      cachingKey: 'offices'
+    },
+    // TODO: might not be needed, gov in simple removed
+    countryProgrammes: {
+      cachingKey: 'countryProgrammes',
+      exp: 5 * 60 * 1000, // 5min
+      url: '/api/v2/reports/countryprogramme/'
+    },
+    sections: {
+      url: '/api/sections',
+      exp: 6 * 60 * 60 * 1000,
+      cachingKey: 'sections'
+    },
+    ramIndicators: {
+      template: '/api/v2/reports/results/<%=id%>/indicators/',
+    },
+    monitoringVisits: {
+      template: '/api/t2f/travels/activities/partnership/<%=id%>/',
+    },
+    sectorLocationsDelete: {
+      template: '/api/v2/interventions/sector-locations/<%=id%>/'
+    },
+    cpOutputsByIdsAsValues: {
+      // it's gonna be used for getting old cp outputs for esmm dropdown
+      url: '/api/v2/reports/results'
+    },
+    frNumbersDetails: {
+      url: '/api/v2/funds/frs'
+    },
+    userCountryDetails: {
+      url: '/api/v2/users/country'
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
+  EtoolsPmpApp.Behaviors.EndpointsImpl = {
+    getEndpoint: function(endpointName, data) {
+      let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
+      if (endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '') {
+        endpoint.url = this.baseSite + _.template(endpoint.template)(data);
+      }
+      return endpoint;
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.Endpoints */
+  EtoolsPmpApp.Behaviors.Endpoints = [
+    EtoolsPmpApp.Behaviors.AppConfig,
+    EtoolsPmpApp.Behaviors.EndpointsImpl
+  ];
+
+</script>

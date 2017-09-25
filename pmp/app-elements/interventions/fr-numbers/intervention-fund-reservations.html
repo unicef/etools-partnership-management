@@ -1,0 +1,360 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+
+<link rel="import" href="../../../../styles/app-mixins.html">
+
+<link rel="import" href="../../../app-behaviors/array-helper-behavior.html">
+
+<link rel="import" href="update-fr-numbers.html">
+<link rel="import" href="../behaviors/fr-numbers-consistency-behavior.html">
+
+<dom-module id="intervention-fund-reservations">
+  <template strip-whitespace>
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+
+      :host {
+        display: block;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      #frs-container {
+        padding: 16px 0;
+      }
+      .fr-number {
+        padding: 8px 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      .warning {
+        padding: 24px;
+      }
+      .warning,
+      .fr-number {
+        line-height: 24px;
+      }
+      etools-info-tooltip {
+        --etools-tooltip-trigger-icon: {
+          margin-left: 24px !important;
+        };
+      }
+    </style>
+
+    <etools-content-panel panel-title="Fund Reservations">
+      <paper-icon-button slot="panel-btns"
+                         icon="add"
+                         on-tap="_openFrsUpdateDialog"
+                         hidden$="[[!editMode]]"
+                         disabled$="[[!editMode]]"></paper-icon-button>
+      <div id="frs-container" hidden$="[[!noFrsWarning(intervention.frs_details)]]">
+        <etools-info-tooltip icon="report" icon-first
+                             hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                             important-warning>
+          <div slot="field">
+            <template is="dom-repeat" items="[[intervention.frs_details.frs]]">
+              <span class="fr-number">[[item.fr_number]]</span>
+            </template>
+          </div>
+          <span slot="message">[[_frsConsistencyWarning]]</span>
+        </etools-info-tooltip>
+      </div>
+      <div class="warning" hidden$="[[noFrsWarning(intervention.frs_details)]]">
+        [[_getFrsWarningText(intervention.id)]]
+      </div>
+
+    </etools-content-panel>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'intervention-fund-reservations',
+
+        behaviors: [
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.ArrayHelper,
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
+        ],
+
+        properties: {
+          intervention: Object,
+          editMode: {
+            type: Boolean
+          },
+          updateFrNumbersEl: {
+            type: Object
+          },
+          frsConfirmationsDialog: {
+            type: Object
+          },
+          _frsDetailsRequestEndpoint: Object,
+          _lastFrsDetailsRequested: {
+            type: Array,
+            value: []
+          },
+          _lastFrsDetailsReceived: Object,
+          _frsConsistencyWarning: {
+            type: String,
+            value: ''
+          },
+          _frsConfirmationsDialogMessage: String,
+          _frsNrsLoadingMsgSource: {
+            type: String,
+            value: 'fr-nrs-check'
+          }
+        },
+
+        observers: [
+          '_frsDetailsChanged(intervention.frs_details, intervention.planned_budget.unicef_cash,' +
+            ' intervention.start, intervention.end)',
+        ],
+
+        ready: function() {
+          this.set('_frsDetailsRequestEndpoint', this.getEndpoint('frNumbersDetails'));
+        },
+
+        attached: function() {
+          this._createUpdateFrNumbersEl();
+          this._createFrsConfirmationsDialog();
+        },
+
+        detached: function() {
+          // remove update frs el on fr el detached
+          if (this.updateFrNumbersEl) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.updateFrNumbersEl);
+          }
+          // remove confirmations frs dialog on fr element detached
+          if (this.frsConfirmationsDialog) {
+            this.removeDialog(this.frsConfirmationsDialog);
+          }
+        },
+
+        _createUpdateFrNumbersEl: function() {
+          // init frs update element
+          this.updateFrNumbersEl = document.createElement('update-fr-numbers');
+          this.updateFrNumbersEl.setAttribute('id', 'frNumbersUpdateEl');
+
+          // attach frs update handler (on modal/dialog close)
+          this.updateFrNumbersEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler.bind(this));
+
+          Polymer.dom(document.querySelector('body')).appendChild(this.updateFrNumbersEl);
+        },
+
+        _createFrsConfirmationsDialog: function() {
+          // init frs confirmations dialog element
+          this._frsConfirmationsDialogMessage = document.createElement('span');
+          this._frsConfirmationsDialogMessage.setAttribute('id', 'frsConfirmationsDialogMessage');
+
+          this.frsConfirmationsDialog = this.createDialog('Fund Reservation Warning', 'md', 'Yes', 'No',
+              this._frsUpdatesWarningConfirmationHandler.bind(this), this._frsConfirmationsDialogMessage);
+        },
+
+        _frsUpdateWarningMessage: function(warning) {
+          if (this.frsConfirmationsDialog && this._frsConfirmationsDialogMessage) {
+            if (this._frsConfirmationsDialogMessage) {
+              this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
+            } else {
+              this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
+            }
+          }
+        },
+
+        _openFrsUpdateDialog: function(frNumbersList) {
+          if (!this.editMode) {
+            return;
+          }
+          if (this.updateFrNumbersEl) {
+            // populate dialog with current frs numbers deep copy
+            let currentFrs = this._getCurrentFrs();
+            let frs = frNumbersList instanceof Array
+                ? frNumbersList
+                : currentFrs.map(function(fr) {
+                  return {fr_number: fr.fr_number};
+                });
+            this.updateFrNumbersEl.set('dataItems', frs);
+            // deactivate save button until any valid change is made
+            this.updateFrNumbersEl.set('disableConfirmBtn', true);
+
+            this.updateFrNumbersEl.set('interventionStatus', this.intervention.status);
+            // open dialog
+            this.updateFrNumbersEl.openDialog();
+          }
+        },
+
+        // get current intervention frs numbers
+        _getCurrentFrs: function() {
+          return (this.intervention.frs_details && this.intervention.frs_details.frs instanceof Array)
+              ? this.intervention.frs_details.frs : [];
+        },
+
+        frNumbersUpdateHandler: function(e) {
+          e.stopImmediatePropagation();
+          let frNumbers = e.detail.frs;
+          this.fire('global-loading', {
+            message: 'Checking FR Numbers updates...',
+            active: true,
+            loadingSource: this._frsNrsLoadingMsgSource
+          });
+          if (frNumbers.length === 0) {
+            this._handleEmptyFrsAfterUpdate();
+            return;
+          }
+          // FR Numbers not empty
+          this._handleNotEmptyFrsAfterUpdate(frNumbers);
+        },
+
+        /**
+         * After FR Numbers update the numbers list might be empty.
+         * This can happen is the user removed all the existing numbers or if there is no change made
+         */
+        _handleEmptyFrsAfterUpdate: function() {
+          let currentInterventionFrs = this._getCurrentFrs();
+          if (currentInterventionFrs.length === 0) {
+            // there is no change on FR Numbers
+            this._disableFrsCheckLoadingMsg();
+            return;
+          }
+          // all FR Numbers have been deleted
+          this._triggerPdFrsUpdate({frs: []});
+          this._disableFrsCheckLoadingMsg();
+        },
+
+        /**
+         * Updates made and FR Numbers list is not empty
+         */
+        _handleNotEmptyFrsAfterUpdate: function(frNumbers) {
+          let diff = this.getArraysDiff(this._getCurrentFrs(), frNumbers, 'fr_number');
+          if (diff.length) {
+            // request FR Numbers details from server
+            this._triggerFrsDetailsRequest(frNumbers);
+            return;
+          } // else no changes have been made to FR Numbers
+          this._disableFrsCheckLoadingMsg();
+        },
+
+        // handle frs validations warning confirmation
+        _frsUpdatesWarningConfirmationHandler: function(e) {
+          e.stopImmediatePropagation();
+          if (e.detail.confirmed) {
+            // confirmed, add numbers to intervention
+            this._triggerPdFrsUpdate(Object.assign({}, this._lastFrsDetailsReceived));
+            this.set('_lastFrsDetailsReceived', null);
+          }
+          // frs warning not confirmed/cancelled, frs update is canceled
+        },
+
+        /**
+         * Get FR Numbers details from server
+         */
+        _triggerFrsDetailsRequest: function(frNumbers) {
+          let url = this._frsDetailsRequestEndpoint.url + '?values=' + frNumbers.join(',');
+          if (this.intervention.id) {
+            url += '&intervention=' + this.intervention.id;
+          }
+          this.set('_lastFrsDetailsRequested', frNumbers);
+
+          let self = this;
+          this.sendRequest({
+            endpoint: {url: url}
+          }).then(function(resp) {
+            self._frsDetailsSuccessHandler(resp);
+          }).catch(function(error) {
+            self._frsDetailsErrorHandler(error.response);
+          });
+
+        },
+
+        _frsDetailsSuccessHandler: function(response) {
+          let frsDetails = response;
+          let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
+          this.set('_frsConsistencyWarning', warning);
+          if (warning) {
+            this._frsUpdateWarningMessage(warning);
+            this._disableFrsCheckLoadingMsg();
+            // show warning
+            this.set('_lastFrsDetailsReceived', frsDetails);
+            this._openFrNumbersAmountsValidationWarning();
+            return;
+          }
+          // append FR numbers to intervention
+          this._disableFrsCheckLoadingMsg();
+          this._triggerPdFrsUpdate(frsDetails);
+        },
+
+        /**
+         * frs details request failed
+         */
+        _frsDetailsErrorHandler: function(responseErr) {
+          this._disableFrsCheckLoadingMsg();
+          let frs = this._lastFrsDetailsRequested.map(function(fr) {
+            return {fr_number: fr};
+          });
+          // open FR Numbers modal with the same state as before details request
+          this._openFrsUpdateDialog(frs);
+          this.set('_lastFrsDetailsRequested', []);
+          // show the invalid frs warning
+          this.fire('toast', {
+            text: responseErr.error,
+            showCloseBtn: true
+          });
+
+        },
+
+        // trigger new FR Numbers update on main intervention
+        _triggerPdFrsUpdate: function(newFrsDetails) {
+          this.fire('frs-update', {frsDetails: newFrsDetails});
+        },
+
+        noFrsWarning: function(frsDetails) {
+          let frs = this._getCurrentFrs();
+          return !!frs.length;
+        },
+
+        _openFrNumbersAmountsValidationWarning: function() {
+          if (this.frsConfirmationsDialog) {
+            this.frsConfirmationsDialog.opened = true;
+          }
+        },
+
+        _getFrsWarningText: function(interventionId) {
+          let msg = 'There are no fund reservations numbers added.';
+          if (!interventionId) {
+            msg = 'You can not add FR Numbers. The PD/SSFA needs to be saved first.';
+          }
+          return msg;
+        },
+
+        _frsDetailsChanged: function(frsDetails) {
+          let self = this;
+          this.debounce('init-frs-warning', function() {
+            self.set('_frsConsistencyWarning', self.checkFrsConsistency(frsDetails, self.intervention));
+          }, 10);
+        },
+
+        _disableFrsCheckLoadingMsg: function() {
+          this.fire('global-loading', {active: false, loadingSource: this._frsNrsLoadingMsgSource});
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,24 +1,32 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/page-layout-styles.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
+<link rel="import" href="cluster-indicator.html">
+<link rel="import" href="non-cluster-indicator.html">
+
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="indicator-dialog">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles">
+    <style include="page-layout-styles grid-layout-styles shared-styles">
       [hidden] {
         display: none !important;
       }
@@ -27,10 +35,8 @@
         --etools-checkable-input-label: {
           font-size: 14px;
         };
-        --paper-dialog-scrollable: {
-          width: 100%;
-          overflow-x: hidden;
-          padding: 0;
+        --etools-dialog-scrollable: {
+          margin-top: 10px !important;
         };
       }
 
@@ -43,134 +49,169 @@
         width: 100%;
       }
 
-      paper-material {
-        padding: 0;
+      .indicator-content {
+        margin: 16px 24px;
+        margin-bottom: 40px;
+        border : solid 1px var(--dark-divider-color);
+        overflow-x: auto;
       }
-      paper-material paper-toolbar {
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
-          margin-left: 0;
-        };
-      }
-
-      #indicator-content {
-        max-height: 600px;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-
-      .dissaggregation {
-        margin: 25px 0;
+      etools-dialog {
+        --paper-dialog: {
+          overflow-y: auto;
+        }
       }
 
     </style>
 
-    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog">
-      <div id="indicator-content">
-        <div class="row-h flex-c">
-          <etools-checkable-input type="radio" label="#" label-alignment="right"
-                                  checked="{{unit.numeric}}"
-                                  on-tap="_unitChanged"
-                                  data-unit-to-reset="yesno,percentage"></etools-checkable-input>
-          <etools-checkable-input type="radio" label="%" label-alignment="right"
-                                  checked="{{unit.percentage}}"
-                                  on-tap="_unitChanged"
-                                  data-unit-to-reset="numeric,yesno"></etools-checkable-input>
-          <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
-                                  checked="{{unit.yesno}}"
-                                  on-tap="_unitChanged"
-                                  data-unit-to-reset="numeric,percentage"></etools-checkable-input>
-        </div>
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog" no-padding>
+     <div>
+        <div class="page-top-content in-modal">
+          <div class="top-content-row">
+            <paper-tabs id="indicatorTabs"
+                selected="{{activeTab}}"
+                attr-for-selected="name"
+                noink bottom-item>
+              <paper-tab name="details" link>
+                <span class="tab-content">DETAILS</span>
+              </paper-tab>
 
-        <div class="row-h flex-c">
-          <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-3">
-            <template is="dom-if" if="[[unit.numeric]]">
-              <paper-input label="Baseline"
-                           value="{{indicator.baseline}}"
-                           type="number"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.percentage]]">
-              <paper-input label="Baseline"
-                           value="{{indicator.baseline}}"
-                           type="number"
-                           min="0"
-                           max="100"
-                           allowed-pattern="[0-9\.]"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.yesno]]">
-              <paper-dropdown-menu label="Baseline" noink always-float-label>
-                <paper-menu class="dropdown-content"
-                            attr-for-selected="name"
-                            selected="{{indicator.baseline}}">
-                  <paper-item name="yes">Yes</paper-item>
-                  <paper-item name="no">No</paper-item>
-                </paper-menu>
-              </paper-dropdown-menu>
-            </template>
-          </div>
-          <div class="col col-3">
-            <template is="dom-if" if="[[unit.numeric]]">
-              <paper-input label="Target"
-                           value="{{indicator.target}}"
-                           type="number"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.percentage]]">
-              <paper-input label="Target"
-                           value="{{indicator.target}}"
-                           type="number"
-                           min="0"
-                           max="100"
-                           allowed-pattern="[0-9\.]"
-                           placeholder="&#8212;">
-              </paper-input>
-            </template>
-            <template is="dom-if" if="[[unit.yesno]]">
-              <paper-dropdown-menu label="Target" noink always-float-label>
-                <paper-menu class="dropdown-content"
-                            attr-for-selected="name"
-                            selected="{{indicator.target}}">
-                  <paper-item name="yes">Yes</paper-item>
-                  <paper-item name="no">No</paper-item>
-                </paper-menu>
-              </paper-dropdown-menu>
-            </template>
-          </div>
-          <div class="col col-6">
-            <paper-textarea label="Means of Verification"
-                            value="{{indicator.means_of_verification}}"
-                            placeholder="&#8212;">
-            </paper-textarea>
+              <paper-tab name="disaggregations" link>
+                <span class="tab-content">[[_getDisaggregationsTabTitle(disaggregationsCount) ]]</span>
+              </paper-tab>
+            </paper-tabs>
           </div>
         </div>
 
-        <div class="row-h flex-c dissaggregation">
-          <paper-material elevation="0">
-            <paper-toolbar>
-              <div class="title">Dissaggregation</div>
-            </paper-toolbar>
-            <indicator-dissaggregations data-items="{{disaggregations}}"
-                                        on-disaggregation-change="_centerDialog">
-            </indicator-dissaggregations>
-          </paper-material>
-        </div>
+        <iron-pages id="indicatorPages"
+                      selected="{{activeTab}}"
+                      attr-for-selected="name"
+                      fallback-selection="details">
+          <div name="details">
+            <div class="row-h flex-c" hidden>
+              <div class="col col-4">
+                <etools-single-selection-menu id$="sectionDropdw"
+                                              label="Section"
+                                              selected="{{indicator.sectionId}}"
+                                              placeholder="&#8212;"
+                                              options="[[sectors]]"
+                                              option-label="name"
+                                              option-value="id">
+                </etools-single-selection-menu>
+              </div>
+            </div>
+            <div class="row-h" hidden>
+              <paper-toggle-button checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
+            </div>
+            <div class="indicator-content">
+              <div id="oldLayout">
+                <div class="row-v flex-c">
+                  <label class="paper-label">Type </label>
+                  <div class="layout-horizontal">
+                    <etools-checkable-input type="radio" label="#" label-alignment="right"
+                                            checked="{{unit.numeric}}"
+                                            on-tap="_unitChanged"
+                                            data-unit-to-reset="yesno,percentage"></etools-checkable-input>
+                    <etools-checkable-input type="radio" label="%" label-alignment="right"
+                                            checked="{{unit.percentage}}"
+                                            on-tap="_unitChanged"
+                                            data-unit-to-reset="numeric,yesno"></etools-checkable-input>
+                    <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
+                                            checked="{{unit.yesno}}"
+                                            on-tap="_unitChanged"
+                                            data-unit-to-reset="numeric,percentage"></etools-checkable-input>
+                  </div>
+                </div>
+                <div class="row-h flex-c">
+                  <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
+                </div>
+
+                <div class="row-h flex-c">
+                  <div class="col col-3">
+                    <template is="dom-if" if="[[unit.numeric]]">
+                      <paper-input label="Baseline"
+                                  value="{{indicator.baseline}}"
+                                  type="number"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </template>
+                    <template is="dom-if" if="[[unit.percentage]]">
+                      <paper-input label="Baseline"
+                                  value="{{indicator.baseline}}"
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  allowed-pattern="[0-9\.]"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </template>
+                    <template is="dom-if" if="[[unit.yesno]]">
+                      <paper-dropdown-menu label="Baseline" noink always-float-label>
+                        <paper-menu class="dropdown-content"
+                                    attr-for-selected="name"
+                                    selected="{{indicator.baseline}}">
+                          <paper-item name="yes">Yes</paper-item>
+                          <paper-item name="no">No</paper-item>
+                        </paper-menu>
+                      </paper-dropdown-menu>
+                    </template>
+                  </div>
+                  <div class="col col-3">
+                    <template is="dom-if" if="[[unit.numeric]]">
+                      <paper-input label="Target"
+                                  value="{{indicator.target}}"
+                                  type="number"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </template>
+                    <template is="dom-if" if="[[unit.percentage]]">
+                      <paper-input label="Target"
+                                  value="{{indicator.target}}"
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  allowed-pattern="[0-9\.]"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </template>
+                    <template is="dom-if" if="[[unit.yesno]]">
+                      <paper-dropdown-menu label="Target" noink always-float-label>
+                        <paper-menu class="dropdown-content"
+                                    attr-for-selected="name"
+                                    selected="{{indicator.target}}">
+                          <paper-item name="yes">Yes</paper-item>
+                          <paper-item name="no">No</paper-item>
+                        </paper-menu>
+                      </paper-dropdown-menu>
+                    </template>
+                  </div>
+                </div>
+                <div class="row-h flex-c">
+                    <paper-textarea label="Means of Verification"
+                                    value="{{indicator.means_of_verification}}"
+                                    placeholder="&#8212;">
+                    </paper-textarea>
+                </div>
+              </div>
+              <div id="newLayout" hidden>
+                <template is="dom-if" if="[[!indicator.isCluster]]">
+                  <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
+                </template>
+                <template is="dom-if" if="[[indicator.isCluster]]">
+                <cluster-indicator indicator="{{indicator}}"></cluster-indicator>
+                </template>
+              </div>
+            </div>
+          </div>
+          <div class="row-h flex-c" name="disaggregations">
+              <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
+
+              <indicator-dissaggregations data-items="{{disaggregations}}"
+                                          on-disaggregation-change="_centerDialog">
+              </indicator-dissaggregations>
+          </div>
+        </iron-pages>
       </div>
+
     </etools-dialog>
 
   </template>
@@ -182,9 +223,17 @@
       Polymer({
         is: 'indicator-dialog',
 
+        behaviors: [
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+        ],
+
         properties: {
           indicator: {
             type: Object
+          },
+          activeTab: {
+            type: String,
+            valus: 'details',
           },
           indicatorModel: {
             type: Object,
@@ -195,7 +244,15 @@
               target: null,
               means_of_verification: null,
               unit: 'numeric',
-              disaggregation_logic: null
+              displayUnit: 'percentage',
+              disaggregation_logic: null,
+              sectionId: null,
+              isCluster: false,
+              baselineIsUnknown: false,
+              clusterIndicatorId: null,
+              clusterId: null,
+              responsePlanId: null,
+              locationIds: null
             }
           },
           actionParams: {
@@ -212,13 +269,27 @@
           disaggregations: {
             type: Array,
             value: []
-          }
+          },
+          disaggregationsCount: {
+            type: Number,
+            value: 0
+          },
+          sectors: {
+            type: Array,
+            statePath: 'sectors'
+          },
         },
         observers: [
           '_indicatorDataChange(indicator.*)',
-          '_updateIndicatorValsAtUnitChange(unit.*)'
+          '_updateIndicatorValsAtUnitChange(unit.*)',
+          '_setDisaggregationsCount(disaggregations.length)'
         ],
-
+        _setDisaggregationsCount: function(length) {
+          this.disaggregationsCount = length;
+        },
+        _getDisaggregationsTabTitle: function(disaggregationsCount) {
+          return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
+        },
         _indicatorDataChange: function(data) {
           if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
             if (this.unit.percentage && data.value !== '') {
@@ -275,6 +346,7 @@
         },
 
         _unitChanged: function(event) {
+          Polymer.dom(event).localTarget.setAttribute('checked', true);//*Prevent no radio btn selected
           var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
           if (typeof unitKeysToReset === 'string' && unitKeysToReset !== '') {
             var unitKeys = unitKeysToReset.split(',');
@@ -295,6 +367,7 @@
         },
 
         openIndicatorDialog: function() {
+          this.activeTab = 'details';
           this.$.indicatorDialog.opened = true;
         },
 

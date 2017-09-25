@@ -6,6 +6,12 @@
 <dom-module id="grid-layout-styles">
   <template>
     <style>
+      .layout-horizontal {
+         @apply(--layout-horizontal);
+      }
+      .layout-vertical {
+         @apply(--layout-vertical);
+      }
       .row-h {
         @apply(--layout-horizontal);
       }
@@ -16,15 +22,45 @@
         /* flex container */
         @apply(--layout-flex);
       }
-
       .row-h, .row-v {
-        padding: 15px 25px;
+        padding: 16px 24px;
+      }
+
+      .row-v.t-border, .row-h.t-border {
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .row-v.b-border, .row-h.b-border {
+        border-bottom: 1px solid var(--dark-divider-color);
+      }
+
+      .row-v.header-row, .row-h.header-row {
+        color: var(--secondary-text-color);
+        border-bottom: 1px solid var(--dark-divider-color);
+        font-weight: 600;
+      }
+      .row-v.header-row > .col, .row-h.header-row > .col {
+        line-height: 24px;
+      }
+      .table .row-h:not(.header-row) {
+        border-top: 1px solid var(--dark-divider-color);
+      }
+      .table.form-fields .row-h:not(.header-row) {
+        padding: 8px 24px;
       }
 
       .row-second-bg {
         background-color: var(--light-theme-background-color);
       }
-
+      .center-align {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .right-align {
+        justify-content: flex-end;
+        align-items: center;
+        text-align: right;
+      }
       .no-overflow {
         /* used to prevent flexbox to change it's size if content grows */
         overflow: hidden;
@@ -34,7 +70,7 @@
         box-sizing: border-box;
       }
       .col:not(:first-of-type) {
-        padding-left: 25px;
+        padding-left: 24px;
       }
 
       .col-2 {
