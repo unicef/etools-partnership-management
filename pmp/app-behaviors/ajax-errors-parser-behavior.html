@@ -5,6 +5,13 @@
   EtoolsPmpApp.Behaviors.AjaxErrorsParser = {
 
     _getErrorsArray: function(errors, prepareForToastMsg) {
+      if (this._isObjDisguisedAsString(errors)) {
+          //* IE fix - on IE, 'errors' is string when it should be object
+          try {
+            errors = JSON.parse(errors);
+          } catch(e) {
+          }
+      }
       let errorsArray = [];
       if (!errors) {
         return errorsArray;
@@ -56,7 +63,10 @@
 
       return errorsArray;
     },
-
+    _isObjDisguisedAsString: function(errors) {
+      return (typeof errors === 'string' && errors.indexOf('{') > -1
+        && errors.indexOf('}') > -1 && errors.indexOf(':') > -1);
+    },
     formatServerErrorAsText: function(errors) {
       let errorsArray = this._getErrorsArray(errors, false);
       if (errorsArray && errorsArray.length) {
