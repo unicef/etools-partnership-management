@@ -10,7 +10,7 @@
         type: Array,
         notify: true
       },
-      ajaxEl: Object,
+      options: Object,
       useToastEvent: {
         type: Boolean,
         value: true
@@ -31,8 +31,7 @@
 
     tryGetResponseError: function(response) {
       try {
-        let req = response.detail.request.detail.request;
-        let error = req.response || req.xhr.response;
+        let error = response.response;
 
         // response.detail.request.detail.request.response could be null for 500 server errors,
         // we need to avoid returning null here
@@ -53,7 +52,7 @@
 
       let errorMessage = this.globalMessage;
 
-      if (['POST', 'PATCH', 'DELETE'].indexOf(this.ajaxEl.method) > -1) {
+      if (['POST', 'PATCH', 'DELETE'].indexOf(this.options.method) > -1) {
         this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];

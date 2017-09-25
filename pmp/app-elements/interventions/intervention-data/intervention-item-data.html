@@ -65,9 +65,7 @@
         },
 
         _handleErrorResponse: function(response) {
-          // temporary. proof of concept only
-          var resp = {detail: {request: {detail: {request: {response: response}}}}};
-          this.handleErrorResponse(resp);
+          this.handleErrorResponse(response);
           this._restoreUnsuccessfullyDeletedFrs();
         },
         _restoreUnsuccessfullyDeletedFrs: function() {

@@ -41,9 +41,7 @@
     },
     // Some children might overwrite this
     _handleErrorResponse: function(response) {
-      // temporary. proof of concept only
-      var resp = {detail: {request: {detail: {request: {response: response}}}}};
-      this.handleErrorResponse(resp);
+      this.handleErrorResponse(response);
     }
   };
 

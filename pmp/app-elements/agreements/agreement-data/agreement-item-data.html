@@ -91,12 +91,6 @@
           this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
-        _handleErrorResponse: function(response) {
-          // temporary. proof of concept only
-          var resp = {detail: {request: {detail: {request: {response: response}}}}};
-          this.handleErrorResponse(resp);
-        },
-
         _getMinimalAgreementData: function(detail) {
           var minimalAgrData = {
             agreement_number: '',
