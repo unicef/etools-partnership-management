@@ -1,5 +1,6 @@
 <link rel="import" href="../app-config/app-dexie-db-config.html"/>
 <link rel="import" href="../app-config/app-endpoints-behavior.html"/>
+<link rel="import" href="../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -25,6 +26,10 @@
         value: function() {
           return EtoolsPmpApp.DexieDb; // TODO: check if this is really needed
         }
+      },
+      globalMessage: {
+        type: String,
+        value: 'An error occurred while trying to fetch the data!'
       },
       fireDataLoaded: {
         type: Boolean,
@@ -60,9 +65,7 @@
         .then(function(resp) {
           self._handleMyResponse(resp);
         }).catch(function(error) {
-          //TODO: proper error handling
-          console.log(error);
-          console.warn('list data fetch failed! Also, this error should be handled properly.');
+          self.handleErrorResponse(error);
         });
     },
     // some children overwrite this function for custom data processing
@@ -108,7 +111,8 @@
   EtoolsPmpApp.Behaviors.DataElement = [
     EtoolsAjaxRequestBehavior,
     EtoolsPmpApp.Behaviors.Endpoints,
-    EtoolsPmpApp.Behaviors.DataElementImpl
+    EtoolsPmpApp.Behaviors.AjaxServerErrors,
+    EtoolsPmpApp.Behaviors.DataElementImpl,
   ];
 
 </script>
