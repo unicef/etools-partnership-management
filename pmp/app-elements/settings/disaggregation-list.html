@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -75,16 +76,14 @@
       behaviors: [
         EtoolsPmpApp.Behaviors.RepeatableDataSets,
         EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         EtoolsAjaxRequestBehavior
       ],
 
       properties: {
         dataItems: {
           type: Array,
-          // value: 'disaggregations'
-          // value: [{id: 1, name: 'Age', groups: ['1-10', '11-20', '21-40']},
-          // {id: 2, name: 'Gender', groups: ['M', 'F', 'O']},
-          // {id: 3, name: 'Testing something', groups: ['some text that its longer 65656 565656 77777', 'some text that its even longer 12345 12345 56656', 'some other long text 89898 676767']}]
+          statePath: 'disaggregations'
         },
         disaggregationModal: {
           type: Object
@@ -96,7 +95,6 @@
         },
       },
       ready: function() {
-        this._loadDisaggregations();
         this.editMode = true;
         this.disaggregationModal = document.createElement('add-edit-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
@@ -105,17 +103,7 @@
         }.bind(this));
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
       },
-      _loadDisaggregations: function() {
-        let self = this;
-        this.sendRequest({
-          method: 'GET',
-          endpoint: this.getEndpoint('addGetDisaggregations')
-        }).then(function(response) {
-          self.set('dataItems', response);
-        }).catch(function(error) {
-          //TODO
-        });
-      },
+
       detached: function() {
         if (this.disaggregationModal) {
           Polymer.dom(document.querySelector('body')).removeChild(this.disaggregationModal);
@@ -139,13 +127,11 @@
         this._openModal();
       },
       _editDisaggregation: function(event) {
-        console.log(event.model.item, event.model.index);
         this.disaggregationModal.indexInParent = event.model.index;
         this.disaggregationModal.disaggregation = event.model.item;
         this._openModal();
       },
       _onDisaggregationSaved: function(eventData) {
-        console.log('_onDisaggregationSaved',eventData);
         if (eventData.indexInParent === -1) {
           this.push('dataItems', eventData.disaggregation);
         } else {

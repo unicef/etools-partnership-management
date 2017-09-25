@@ -14,6 +14,7 @@
 <link rel="import" href="behaviors/sectors-data.html">
 <link rel="import" href="behaviors/unicef-users-data.html">
 <link rel="import" href="behaviors/user-country-data.html">
+<link rel="import" href="behaviors/disaggregations-data.html">
 
 <dom-module id="static-common-data">
   <script>
@@ -31,13 +32,14 @@
         EtoolsPmpApp.Behaviors.SectionsData,
         EtoolsPmpApp.Behaviors.SectorsData,
         EtoolsPmpApp.Behaviors.UnicefUsersData,
-        EtoolsPmpApp.Behaviors.UserCountryData
+        EtoolsPmpApp.Behaviors.UserCountryData,
+        EtoolsPmpApp.Behaviors.DisaggregationsData
       ],
       properties: {
         dataEndpointNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-            'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
+            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations']
         }
       },
 
@@ -85,6 +87,8 @@
             return this._handleUnicefUsersResponse;
           case 'userCountryDetails':
             return this._handleUserCountryDataResponse;
+          case 'addGetDisaggregations':
+            return this._handleDisaggregationsResponse;
         }
       }
 

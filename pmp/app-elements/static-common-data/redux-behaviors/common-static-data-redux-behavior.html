@@ -31,7 +31,8 @@
     agreementTypes: [],
     agreementStatuses: [],
     csoPartners: [],
-    countryData: {}
+    countryData: {},
+    disaggregations: []
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -172,6 +173,8 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+      case 'SET_DISAGGREGATIONS_DATA':
+        return Object.assign({}, state, {disaggregations: action.disaggregations});
     }
   });
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
