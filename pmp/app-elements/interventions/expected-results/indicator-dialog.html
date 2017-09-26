@@ -137,32 +137,12 @@
             type: Object
           },
           indicatorId: {
-            type: String
+            type: String//Is this used?
           },
           activeTab: {
             type: String,
             valus: 'details',
           },
-          // indicatorModel: {
-          //   type: Object,
-          //   value: {
-          //     id: null,
-          //     isCluster: false,
-          //     name: null,
-          //     baseline: null,
-          //     target: null,
-          //     means_of_verification: null,
-          //     unit: 'numeric',
-          //     displayUnit: 'percentage',
-          //     disaggregation_logic: null,
-          //     sectionId: null,
-          //     baselineIsUnknown: false,
-          //     clusterIndicatorId: null,
-          //     clusterId: null,
-          //     responsePlanId: null,
-          //     locationIds: null
-          //   }
-          // },
           indicatorModel: {
             type: Object,
             value: {
@@ -219,24 +199,30 @@
           'show-toast': '_showToast'
         },
         observers: [
-          '_setDisaggregationsCount(disaggregations, disaggregations.length, prpDisaggregations, prpDisaggregations.length, isCluster)'
+          '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
+          '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
         ],
 
         _indicatorIsNew: function(indicator) {
           return (!indicator || !indicator.id);
         },
 
-        _setDisaggregationsCount: function(disaggregs, disaggregsLength, prpDisaggregs, prpDisaggregsLength) {
-          if (!this.indicator) {
+        _setDisaggregationsCount1: function(disaggregs, prpDisaggregs) {
+          if (!this.indicator || !disaggregs || !prpDisaggregs) {
+            this.disaggregationsCount = 0;
             return;
           }
+          this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
+
+        },
+        _setDisaggregationsCount2: function(disaggregsLength, prpDisaggregsLength) {
           if (this.isCluster) {
             this.disaggregationsCount = prpDisaggregsLength;
           } else {
             this.disaggregationsCount = disaggregsLength;
           }
-
         },
+
         _getDisaggregationsTabTitle: function(disaggregationsCount) {
           return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
         },
@@ -272,6 +258,7 @@
         _cleanUp: function() {
           this._stopSpinner();
           this.disableConfirmBtn = false;
+          this.resetFields();
           //Anything else?
         },
         _stopSpinner: function(e) {
@@ -285,7 +272,6 @@
           if (e) {
             e.stopImmediatePropagation();
             this.set('spinnerText', e.detail.spinnerText);
-            console.log(e);
           }
           this.$.indicatorDialog.startSpinner();
         },
@@ -299,6 +285,12 @@
           } else {
             this.$$('#nonClusterIndicatorEl').resetValidations();
           }
+        },
+        resetFields: function() {
+          console.log('resetfields');
+          this.indicator = null;
+          this.disaggregations = [];
+          this.prpDisaggregations = [];
         }
 
       });

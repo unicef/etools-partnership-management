@@ -5,13 +5,19 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior */
   EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior = {
     _baselineChanged: function(baseline) {
-      if (this.indicator.indicator.unit === 'percentage' && baseline !== '') {
+      if (!baseline) {
+        return;
+      }
+      if (this.indicator.indicator.unit === 'percentage') {
         let val = this._getValidPercentageValue(baseline);
         this.set('indicator.baseline', val);
       }
      },
     _targetChanged: function(target) {
-        if (this.indicator.indicator.unit === 'percentage' && target !== '') {
+      if (!target) {
+        return;
+      }
+      if (this.indicator.indicator.unit === 'percentage') {
         let val = this._getValidPercentageValue(target);
         this.set('indicator.target', val);
       }

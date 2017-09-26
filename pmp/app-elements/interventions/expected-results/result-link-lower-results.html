@@ -226,12 +226,11 @@
           if (!indicator) {
             return '-';
           }
-          let title = indicator.cluster_indicator_title;
-          if (!title) {
-            title = indicator.indicator ? indicator.indicator.title : '-';
+          if (indicator.cluster_indicator_id) {
+            return indicator.cluster_indicator_title;
+          } else {
+            return indicator.indicator ? indicator.indicator.title : '-';
           }
-
-          return title;
         },
 
         _getIndicatorType: function(unit) {

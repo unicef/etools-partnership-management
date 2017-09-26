@@ -9,7 +9,7 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 
-<link rel="import" href="indicators_common_behavior.html">
+<link rel="import" href="indicators-common-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -203,11 +203,12 @@
           '_populatePrpClusterIndicators(responsePlanId, clusterId)'
         ],
         indicatorChanged: function(indicator) {
-          if (indicator.id) { // on edit
+          if (!indicator || !indicator.id) { // on new
+            this.set('isNewIndicator', true);
+          } else { // on edit
             this.set('isNewIndicator', false);
             this._getPrpClusterIndicator(indicator.cluster_indicator_id);
-          } else { // on new
-            this.set('isNewIndicator', true);
+
           }
         },
         _responsePlanIdChanged: function(responsePlanId) {
@@ -234,6 +235,7 @@
           if (!event.detail.item.item) {
             return;
           }
+          this.indicator.cluster_name = event.detail.item.item.name;
         },
         _clusterIdChanged: function(clusterId) {
           this._populatePrpClusterIndicators(clusterId);
