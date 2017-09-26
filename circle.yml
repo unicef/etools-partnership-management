@@ -13,14 +13,13 @@ dependencies:
     - docker build --rm=false -t unicef/etools-pmp-test:$CIRCLE_BRANCH --file docker-test .
     - mkdir -p ~/dockercache; docker save unicef/etools-pmp-test > ~/dockercache/pmptest.tar; docker save unicef/etools-pmp > ~/dockercache/pmp.tar
 
-
 test:
    override:
      - docker run -it unicef/etools-pmp-test:$CIRCLE_BRANCH
 
 deployment:
    hub:
-     branch: [develop, staging, master, pmp-redesign]
+     branch: [develop, staging, master, prp-integration]
      commands:
        - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
        - docker push unicef/etools-pmp:$CIRCLE_BRANCH
