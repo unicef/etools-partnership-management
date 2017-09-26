@@ -89,8 +89,8 @@
           this._handleResponse(res);
           if (res && res.length) {
             this.dispatch('setPartners', res);
-            var preparedData = [];
-            var civilSocietyOrganizationPartners = [];
+            let preparedData = [];
+            let civilSocietyOrganizationPartners = [];
             res.forEach(function(p) {
               if (!p.hidden && p.partner_type === 'Civil Society Organization') {
                 civilSocietyOrganizationPartners.push(p);
@@ -116,7 +116,7 @@
             this.currentQuery.abort();
           }
 
-          var _this = this;
+          let self = this;
 
           if (showQueryLoading) {
             this.fire('global-loading', {
@@ -126,10 +126,11 @@
             });
           }
 
-          this.db.transaction('r', this.db.partners, function() {
-            this.currentQuery = Dexie.currentTransaction;
+          let partnersDexieTable = EtoolsPmpApp.DexieDb.partners;
+          EtoolsPmpApp.DexieDb.transaction('r', partnersDexieTable, function() {
+            self.currentQuery = Dexie.currentTransaction;
 
-            var queryResult = _this.db.partners;
+            let queryResult = partnersDexieTable;
             if (field) {
               // note: null values don't appear in result set of sort
               queryResult = queryResult.orderBy(field);
@@ -148,7 +149,7 @@
               }
 
               if (searchString && searchString.length) {
-                var vnMatch = true;
+                let vnMatch = true;
                 if (partner.vendor_number) {
                   vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
                 }
@@ -171,7 +172,7 @@
             // instead of blocking the main query
             Dexie.ignoreTransaction(function() {
               queryResult.count(function(count) {
-                _this._setTotalResults(count);
+                self._setTotalResults(count);
               });
             });
 
@@ -181,11 +182,11 @@
                 .toArray();
 
           }).then(function(result) {
-            _this._setFilteredPartners(result);
-            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
+            self._setFilteredPartners(result);
+            self.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           }).catch(function(error) {
             console.error('Error querying partners: ' + error);
-            _this.fire('global-loading', {active: false, loadingSource: 'partners-list'});
+            self.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           });
         }
 

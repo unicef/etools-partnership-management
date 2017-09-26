@@ -74,7 +74,7 @@
             this.currentQuery.abort();
           }
 
-          var _this = this;
+          let self = this;
 
           if (showQueryLoading) {
             this.fire('global-loading', {
@@ -83,11 +83,11 @@
               loadingSource: 'ag-list'
             });
           }
+          let agreementsDexieTable = EtoolsPmpApp.DexieDb.agreements;
+          EtoolsPmpApp.DexieDb.transaction('r', agreementsDexieTable, function() {
+            self.currentQuery = Dexie.currentTransaction;
 
-          EtoolsPmpApp.DexieDb.transaction('r', this.db.agreements, function() {
-            this.currentQuery = Dexie.currentTransaction;
-
-            var queryResult = _this.db.agreements;
+            let queryResult = agreementsDexieTable;
             if (field) {
               // note: null values don't appear in result set of sort
               queryResult = queryResult.orderBy(field);
@@ -136,7 +136,7 @@
             // instead of blocking the main query
             Dexie.ignoreTransaction(function() {
               queryResult.count(function(count) {
-                _this._setTotalResults(count);
+                self._setTotalResults(count);
               });
             });
 
@@ -146,11 +146,11 @@
                 .toArray();
 
           }).then(function(result) {
-            _this._setFilteredAgreements(result);
-            _this.fire('global-loading', {active: false, loadingSource: 'ag-list'});
+            self._setFilteredAgreements(result);
+            self.fire('global-loading', {active: false, loadingSource: 'ag-list'});
           }).catch(function(error) {
             console.error('Error querying agreements: ' + error);
-            _this.fire('global-loading', {active: false, loadingSource: 'ag-list'});
+            self.fire('global-loading', {active: false, loadingSource: 'ag-list'});
           });
         }
 
