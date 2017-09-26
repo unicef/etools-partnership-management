@@ -45,6 +45,15 @@
         border : solid 1px var(--dark-divider-color);
         overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
+      .createDisaggreg {
+        color: var(--secondary-text-color);
+        padding: 8px 8px;
+        font-weight: 500;
+        font-size: 16px !important;
+      }
+      a {
+        color: var(--primary-color);
+      }
 
     </style>
 
@@ -102,8 +111,9 @@
               </div>
             </div>
           </div>
-          <div class="row-h flex-c" name="disaggregations">
-              <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
+          <div class="row-padding" name="disaggregations">
+              <div class="createDisaggreg">If disaggregation groups that you need are not pre-defined yet, you can create them <a href="/pmp/settings" target="_blank" >here</a>.</div>
+              <div>
               <template is="dom-if" if="[[!isCluster]]" restamp>
                 <indicator-dissaggregations data-items="{{disaggregations}}">
                 </indicator-dissaggregations>
@@ -112,6 +122,7 @@
                 <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
                 </cluster-indicator-disaggregations>
               </template>
+            </div>
           </div>
         </iron-pages>
       </div>
