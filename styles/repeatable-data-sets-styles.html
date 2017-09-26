@@ -1,9 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
+<link rel="import" href="action-icons-btns-styles.html">
+
 <dom-module id="repeatable-data-sets-styles">
   <template>
-    <style>
+    <style include="action-icons-btns-styles">
       .item-container {
         background: var(--ecp-content-bg-color, --primary-background-color);
       }
@@ -30,26 +32,6 @@
 
       .item-container .item-content > * {
         padding: 0 0 16px 24px;
-      }
-
-      .action {
-        color: var(--medium-icon-color);
-        width: 36px;
-        height: 36px;
-      }
-
-      .action.delete {
-        color: var(--icon-delete-color);
-      }
-      .action.edit {
-        color: var(--medium-icon-color);
-      }
-      .action.delete[disabled],
-      .action.edit[disabled] {
-        visibility: hidden;
-      }
-      .action.delete-activity {
-        color: var(--dark-disabled-icon-color);
       }
 
       #bottom-actions {
@@ -135,12 +117,6 @@
         margin-bottom: 0;
       }
 
-      .action.delete:not(:hover) {
-        color: var(--medium-icon-color);
-      }
-      .action.edit:hover {
-        color: var(--dark-icon-color);
-      }
       .add-btn-wrapper {
         padding-top: 15px;
         padding-bottom: 15px;
