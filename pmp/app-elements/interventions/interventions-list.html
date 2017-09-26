@@ -38,7 +38,7 @@
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         width: 100%;
       }
     </style>
@@ -520,7 +520,7 @@
                 selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Sectors',
+                filterName: 'Section/Cluster',
                 selectedValue: _.map(this.selectedSectors, 'id')
               },
               {
