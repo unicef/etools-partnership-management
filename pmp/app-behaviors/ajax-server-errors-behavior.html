@@ -33,7 +33,7 @@
       try {
         let error = response.response;
 
-        // response.detail.request.detail.request.response could be null for 500 server errors,
+        // response.response could be null for 500 server errors,
         // we need to avoid returning null here
         return error || this.globalMessage;
 
