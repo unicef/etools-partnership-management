@@ -1,4 +1,3 @@
-<link rel="import" href="../app-config/app-dexie-db-config.html"/>
 <link rel="import" href="../app-config/app-endpoints-behavior.html"/>
 <link rel="import" href="../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
@@ -20,12 +19,6 @@
         type: Array,
         readOnly: true,
         notify: true
-      },
-      db: {
-        type: Object,
-        value: function() {
-          return EtoolsPmpApp.DexieDb; // TODO: check if this is really needed
-        }
       },
       globalMessage: {
         type: String,

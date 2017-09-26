@@ -726,7 +726,7 @@
         },
         _setSelectedSectors: function(sectors) {
           var sectorsArr = sectors.split('|');
-          if (sectorsArr && sectorsArr.length) {
+          if (sectorsArr && sectorsArr.length && this.sectors && this.sectors.length) {
             var selectedSectors = this.sectors.filter(function(s) {
               return sectorsArr.indexOf(s.id) > -1;
             });
