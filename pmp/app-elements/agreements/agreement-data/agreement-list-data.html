@@ -3,7 +3,7 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../../app-behaviors/list-data-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-list-data">
@@ -17,7 +17,7 @@
         is: 'agreement-list-data',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.DataElement,
+          EtoolsPmpApp.Behaviors.ListData,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
