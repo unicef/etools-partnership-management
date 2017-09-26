@@ -23,7 +23,7 @@
         return errorsArray;
       }
 
-      if (Array.isArray(errors) && errors.length > 0) {
+      if (Array.isArray(errors) && errors.length > 0 && this._isArrayOfStrings(errors)) {
         let err;
         for (err in errors) {
           errorsArray.push(errors[err]);
@@ -38,17 +38,19 @@
             errorsArray.push('Field ' + errField + ' - ' + errors[errField]);
             continue;
           }
+          if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
+            errorsArray.push('Field ' + errField + ':');
+            let nestedErrs =  this._getErrorsArray(errors[errField]);
+            let j;
+            for (j = 0; j < nestedErrs.length; j++) {
+              errorsArray.push(nestedErrs[j]);
+            }
+            continue;
+          }
           if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
             let errF;
             for (errF in errors[errField]) {
               errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
-            }
-            continue;
-          }
-          if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-            let key;
-            for (key in errors[errField]) {
-              errorsArray.push(errors[errField][key]);
             }
           }
         }
@@ -56,7 +58,17 @@
 
       return errorsArray;
     },
-
+    _isArrayOfStrings: function(arr) {
+      let allStrings = true;
+      let i;
+      for(i = 0; i < arr.length; i++) {
+        if (typeof arr[i] !== 'string') {
+          allStrings = false;
+          break;
+        }
+      }
+      return allStrings;
+    },
     formatServerErrorAsText: function(errors) {
       let errorsArray = this._getErrorsArray(errors, false);
       if (errorsArray && errorsArray.length) {
@@ -67,6 +79,7 @@
 
     parseRequestErrorsAndShowAsToastMsgs: function(errorResponse, source) {
       let errorsString = this.formatServerErrorAsText(errorResponse);
+      console.log('errorsString', errorsString);
       if (errorsString) {
         if (!source) {
           source = this;
