@@ -30,17 +30,7 @@
     },
 
     tryGetResponseError: function(response) {
-      try {
-        let error = response.response;
-
-        // response.response could be null for 500 server errors,
-        // we need to avoid returning null here
-        return error || this.globalMessage;
-
-      } catch (ex) {
-        console.warn(ex);
-      }
-      return this.globalMessage;
+      return response.response || this.globalMessage;
     },
 
     handleErrorResponse: function(response) {
