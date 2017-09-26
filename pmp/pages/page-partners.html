@@ -7,14 +7,15 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
-<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
+<link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/partners/new-partner-dialog.html">
 <link rel="import" href="../app-elements/partners/partner-status.html">
 
@@ -444,7 +445,7 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
-      }
+      },
 
     });
 
