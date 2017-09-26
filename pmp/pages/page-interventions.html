@@ -194,6 +194,7 @@
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                active="[[!intervListActive]]"
+                               active-tab="[[routeData.intTab]]"
                                intervention-id$="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
                                intervention-agreement-status="[[agreement.status]]"
@@ -420,7 +421,7 @@
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
         }
-        if (['suspended', 'terminated', 'ended', 'closed'].indexOf(intervention.status) > -1) {
+        if (['suspended', 'terminated'].indexOf(intervention.status) > -1) {
           return true;
         }
         return false;

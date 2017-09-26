@@ -37,6 +37,10 @@
           interventionId: {
             type: Number
           },
+          activeTab: {
+            type: String,
+            observer: '_activeTabChanged'
+          },
           newIntervention: {
             type: Boolean,
             value: false
@@ -127,34 +131,67 @@
           this._handleStickyScroll();
         },
 
+        _activeTabChanged: function() {
+          this._computeAvailableActions(this.status);
+        },
+
         _computeAvailableActions: function(status) {
-            this._setAllActionsToHidden();
-            if (!this.editMode) {
-              return;
-            }
-            let availableOptions = ['Save'];
+          this._setAllActionsToHidden();
+          if (!this.editMode) {
+            return;
+          }
+          let availableOptions = [];
 
-            if (status !== 'draft' && status !== '') {
-              if (['signed', 'active'].indexOf(status) > -1) {
-                availableOptions.push('Suspend');
-                availableOptions.push('Terminate');
-              } else if (status === 'suspended') {
-                // removes Save option
-                availableOptions.pop();
-                availableOptions.push('Unsuspend');
-              } else {
-                // removes Save option
-                availableOptions.pop();
+          switch (status) {
+
+            case 'signed':
+              availableOptions.push('Suspend');
+              availableOptions.push('Save');
+              break;
+
+            case 'active':
+              availableOptions.push('Terminate');
+              availableOptions.push('Save');
+              break;
+
+            case 'suspended':
+              availableOptions.push('Unsuspend');
+              break;
+
+            case 'terminated':
+              break;
+
+            case 'closed':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
-            }
+              break;
 
-            for (let key in this.possibleActions) {
-              let actionName = this.possibleActions[key].label;
-
-              if (availableOptions.indexOf(actionName) > -1) {
-                this.set(['possibleActions', key, 'hidden'], false);
+            case 'ended':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
+              break;
+
+            // legacy version of 'ended'
+            case 'implemented':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
+              }
+              break;
+
+            default:
+              availableOptions.push('Save');
+              break;
+          }
+
+          for (let key in this.possibleActions) {
+            let actionName = this.possibleActions[key].label;
+
+            if (availableOptions.indexOf(actionName) > -1) {
+              this.set(['possibleActions', key, 'hidden'], false);
             }
+          }
         },
 
         _computeAvailableStatuses: function(status) {

@@ -120,29 +120,31 @@
           if (!this.editMode) {
             return;
           }
-          let availableOptions = ['Save'];
+          let availableOptions = [];
 
           switch (status) {
             case 'signed':
+              availableOptions.push('Save');
               if (this.agreementType !== 'SSFA') {
                 availableOptions.push('Suspend');
                 availableOptions.push('Terminate');
               }
               break;
+
             case 'suspended':
-              // removes Save option
-              availableOptions.pop();
               if (this.agreementType !== 'SSFA') {
                 availableOptions.push('Unsuspend');
               }
               break;
+
             case 'terminated':
-              // removes Save option
-              availableOptions.pop();
               break;
+
             case 'ended':
-              // removes Save option
-              availableOptions.pop();
+              break;
+
+            default:
+              availableOptions.push('Save');
               break;
           }
 
