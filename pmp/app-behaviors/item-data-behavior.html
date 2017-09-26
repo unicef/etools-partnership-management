@@ -8,8 +8,8 @@
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.DataItemImpl */
-  EtoolsPmpApp.Behaviors.DataItemImpl = {
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ItemDataImpl */
+  EtoolsPmpApp.Behaviors.ItemDataImpl = {
     properties: {
       options: {
         type: Object,
@@ -25,7 +25,7 @@
       this.set('options.method', method || 'GET');
       this.set('options.body', data || {});
       this.set('options.url', url || this.options.endpoint.url);
-      var self = this;
+      let self = this;
 
       if (!this.options.url) {
         return;
@@ -45,14 +45,14 @@
     }
   };
 
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.DataItem */
-  EtoolsPmpApp.Behaviors.DataItem = [
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ItemData */
+  EtoolsPmpApp.Behaviors.ItemData = [
     EtoolsAjaxRequestBehavior,
     EtoolsPmpApp.Behaviors.Endpoints,
     EtoolsLogsBehavior,
     EtoolsPmpApp.Behaviors.AjaxServerErrors,
     EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-    EtoolsPmpApp.Behaviors.DataItemImpl
+    EtoolsPmpApp.Behaviors.ItemDataImpl
   ];
 
 </script>

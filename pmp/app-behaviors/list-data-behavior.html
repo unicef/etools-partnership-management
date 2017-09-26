@@ -5,8 +5,8 @@
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.DataElementImpl */
-  EtoolsPmpApp.Behaviors.DataElementImpl = {
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ListDataImpl */
+  EtoolsPmpApp.Behaviors.ListDataImpl = {
 
     properties: {
       options: {
@@ -56,11 +56,11 @@
         console.warn('Please specify an endpointName property');
       } else {
         this.options.endpoint = this.getEndpoint(this.endpointName);
-        this._fireRequest();
+        this._requestListData();
       }
     },
-    _fireRequest: function() {
-      var self = this;
+    _requestListData: function() {
+      let self = this;
       this.sendRequest(this.options)
         .then(function(resp) {
           self._handleMyResponse(resp);
@@ -99,20 +99,18 @@
     },
 
     _setAutomaticDataRefreshLoop: function(newEndpoint) {
-      var refreshInterval = setInterval(function() {
-        this._fireRequest();
+      this._refreshInterval = setInterval(function() {
+        this._requestListData();
       }.bind(this), newEndpoint.exp);
-
-      this.set('_refreshInterval', refreshInterval);
     },
   };
 
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.DataElement */
-  EtoolsPmpApp.Behaviors.DataElement = [
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ListData */
+  EtoolsPmpApp.Behaviors.ListData = [
     EtoolsAjaxRequestBehavior,
     EtoolsPmpApp.Behaviors.Endpoints,
     EtoolsPmpApp.Behaviors.AjaxServerErrors,
-    EtoolsPmpApp.Behaviors.DataElementImpl,
+    EtoolsPmpApp.Behaviors.ListDataImpl,
   ];
 
 </script>
