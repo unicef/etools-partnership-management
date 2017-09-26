@@ -33,7 +33,7 @@
       return response.response || this.globalMessage;
     },
 
-    handleErrorResponse: function(response) {
+    handleErrorResponse: function(response, ajaxMethod) {
       this.fire('global-loading', {
         active: false,
         loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
@@ -42,7 +42,11 @@
 
       let errorMessage = this.globalMessage;
 
-      if (['POST', 'PATCH', 'DELETE'].indexOf(this.options.method) > -1) {
+      if (!ajaxMethod) {
+        ajaxMethod = 'GET';
+      }
+
+      if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
         this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];
