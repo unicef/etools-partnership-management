@@ -267,13 +267,13 @@
         },
 
         _hideDeleteBtn: function() {
-          if (!this.partner.core_values_assessment_file) {
+          if (!this.partner || !this.partner.core_values_assessment_file) {
             return false;
           }
           return true;
         },
         _partnerChanged: function(partner) {
-          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          if (!_.isEmpty(partner)) {
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type));

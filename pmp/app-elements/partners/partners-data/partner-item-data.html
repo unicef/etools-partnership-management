@@ -23,6 +23,14 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
+          partnerEndpoints: {
+            type: Object,
+            value: {
+              DETAILS: 'partnerDetails',
+              CREATE: 'createPartner',
+              DELETE: 'deletePartner'
+            }
+          },
           partner: {
             type: Object,
             readOnly: true,
@@ -38,6 +46,7 @@
           },
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
+          _skipDefaultErrorHandler: Boolean,
           /**
            * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
            */
@@ -65,7 +74,7 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this._triggerPartnerRequest({endpoint: this.getEndpoint('partnerDetails', {id: newId})});
+            this._triggerPartnerRequest({endpoint: this.getEndpoint(this.partnerEndpoints.DETAILS, {id: newId})});
           }
         },
 
@@ -103,8 +112,13 @@
           }
         },
 
-        _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
+        _handleErrorResponse: function(response, ajaxMethod) {
+          if (this._skipDefaultErrorHandler) {
+            this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+          } else {
+            this.handleErrorResponse(response, ajaxMethod);
+          }
+          this.set('_skipDefaultErrorHandler', false);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
             this.handleErrResponseAdditionalCallback.bind(this,
@@ -129,7 +143,8 @@
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
 
-          let endpoint = this.getEndpoint('createPartner', vendorNoObj);
+          this.set('_skipDefaultErrorHandler', true);
+          let endpoint = this.getEndpoint(this.partnerEndpoints.CREATE, vendorNoObj);
           this._triggerPartnerRequest({method: 'POST', endpoint: endpoint, body: {}});
         },
 
@@ -142,8 +157,8 @@
           this.handleSuccResponseAdditionalCallback = succCallback;
           this.handleErrResponseAdditionalCallback = errCallback;
 
-          let endpoint = this.getEndpoint('deletePartner', {id: partner.id});
-          this._triggerPartnerRequest({method: 'POST', endpoint: endpoint, body: {}});
+          let endpoint = this.getEndpoint(this.partnerEndpoints.DELETE, {id: partner.id});
+          this._triggerPartnerRequest({method: 'DELETE', endpoint: endpoint, body: {}});
         },
 
         savePartner: function(partner, callback) {
@@ -151,7 +166,6 @@
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
           } else {
             let endpoint = null;
-            let isNew = false;
             let partnerId = partner.id;
             // remove id from data
             if (partner.id) {
@@ -160,11 +174,14 @@
             if (Object.keys(partner).length > 0) {
               if (partnerId) {
                 // prepare PATCH endpoint
-                endpoint = this.getEndpoint('partnerDetails', {id: partnerId});
+                endpoint = this.getEndpoint(this.partnerEndpoints.DETAILS, {id: partnerId});
               } else {
-                // new partner, use POST method for the same endpoint
-                endpoint = this.getEndpoint('partners');
-                isNew = true;
+                // no valid partner id, cannot update
+                this.fire('toast', {
+                  text: 'Update cannot be made. Invalid partner ID.',
+                  showCloseBtn: true
+                });
+                return;
               }
               // set additional callback if any
               if (callback) {
@@ -198,8 +215,7 @@
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              let method = (isNew) ? 'POST' : 'PATCH';
-              this._triggerPartnerRequest({method: method, endpoint: endpoint, body: partner,
+              this._triggerPartnerRequest({method: 'PATCH', endpoint: endpoint, body: partner,
                 multiPart: withUpload, prepareMultipartData: withUpload});
             } else {
               this.fire('toast', {
