@@ -26,7 +26,7 @@
         // details element not stamped...
         // validate current data that belongs to details tab against permissions
         let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
-        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sector_locations', 'offices'];
+        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sections', 'offices'];
         if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
           detailsPrimitiveFields.push('start', 'end');
         }

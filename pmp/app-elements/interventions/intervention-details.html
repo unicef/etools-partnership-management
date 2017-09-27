@@ -2,11 +2,8 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
@@ -26,6 +23,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="intervention-form/agreement-selector.html">
@@ -33,7 +31,6 @@
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
-<link rel="import" href="intervention-sector-locations.html">
 
 <dom-module id="intervention-details">
 
@@ -46,29 +43,8 @@
       }
 
       paper-input,
-      paper-textarea,
-      agreement-selector,
-      paper-material {
+      agreement-selector {
         width: 100%;
-      }
-
-      paper-material {
-        padding: 0;
-        background-color: var(--ecp-content-bg-color, #FFFFFF);
-      }
-
-      paper-material paper-toolbar {
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
-          margin-left: 0;
-        };
       }
 
       .expiry-warning {
@@ -263,17 +239,28 @@
           </etools-single-selection-menu>
       </div>
       <div class="row-h flex-c">
-        <paper-material elevation="0">
-          <paper-toolbar>
-            <div class="title">Section/Cluster, Locations</div>
-          </paper-toolbar>
-          <intervention-sector-locations id="sectorLocations"
-                                         data-items="[[_sectorLocationData]]"
-                                         edit-mode$="[[intervention.permissions.edit.sector_locations]]"
-                                         required$="[[intervention.permissions.required.sector_locations]]"
-                                         on-change-sector-locations="_changeSectorLocations">
-          </intervention-sector-locations>
-        </paper-material>
+        <etools-multi-selection-menu id="sections"
+                                     label="Section(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.sections}}"
+                                     options="[[sections]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.sections]]"
+                                     required$="[[intervention.permissions.required.sections]]"
+                                     auto-validate
+                                     error-message="Please select a section">
+          </etools-multi-selection-menu>
+      </div>
+      <div class="row-h flex-c" hidden$="[[!intervention.clusterNames.length]]">
+        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+          TODO [[intervention.clusterNames]]
+        </etools-form-element-wrapper>
+      </div>
+      <div class="row-h flex-c" hidden$="[[!intervention.locationNames.length]]">
+        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
+          TODO [[intervention.locationNames]] + see all btn
+        </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
 
@@ -347,6 +334,10 @@
             type: Array,
             value: []
           },
+          sections: {
+            type: Array,
+            statePath: 'sections'
+          },
           offices: {
             type: Array,
             statePath: 'offices'
@@ -390,14 +381,6 @@
           _frsEndConsistencyWarning: {
             type: String,
             value: ''
-          },
-          _forceSectorLocationsRefresh: {
-            type: Boolean,
-            value: false
-          },
-          _sectorLocationData: {
-            type: Array,
-            value: []
           }
         },
 
@@ -406,7 +389,6 @@
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
-          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
@@ -550,13 +532,10 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'plannedVisits'];
-          elements.forEach(function(el) {
-            let elem = this.$$('#' + el);
-            if (elem && typeof elem.resetValidations === 'function') {
-              elem.resetValidations();
-            }
-          }.bind(this));
+          let plannedVisitsEl = this.$$('#plannedVisits');
+          if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
+            plannedVisitsEl.resetValidations();
+          }
           this.set('fieldsResetted', true);
         },
 
@@ -620,43 +599,10 @@
           return options;
         },
 
-        prepareSectorLocations: function(intervention, forceSectorLocationsRefresh) {
-          if (forceSectorLocationsRefresh) {
-            this.set('_forceSectorLocationsRefresh', false);
-            return;
-          }
-          if (!intervention) {
-            intervention = this.intervention;
-          }
-
-          let sectorLocationData = [];
-          if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
-            sectorLocationData = intervention.sector_locations.map(function(sectorLocation) {
-              return {
-                id: sectorLocation.id,
-                sector: (sectorLocation.sector && typeof sectorLocation.sector === 'object')
-                    ? sectorLocation.sector.id
-                    : sectorLocation.sector,
-                locations: this._prepareLocationsForSave(sectorLocation.locations)
-              };
-            }.bind(this));
-          }
-          this.set('_sectorLocationData', sectorLocationData);
-        },
-
-        _prepareLocationsForSave: function(locations) {
-          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length === 0)) {
-            return [];
-          }
-          return locations.map(function(location) {
-            return (location && typeof location === 'object') ?  location.id : location;
-          });
-        },
-
         validate: function() {
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-            '#partnerFocalPts', '#cpStructure', '#sectorLocations',
+            '#partnerFocalPts', '#cpStructure', '#sections',
             '#plannedBudget', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
@@ -700,14 +646,6 @@
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
-        },
-
-        _changeSectorLocations: function(e) {
-          e.stopImmediatePropagation();
-          if (!this.intervention) {
-            return;
-          }
-          this.set('intervention.sector_locations', e.detail.sectorLocations);
         }
 
       });
