@@ -126,6 +126,13 @@
         };
         this.editMode = true;
       },
+
+      broadcastAddDisaggregToOtherTabs: function(disaggregation) {
+        console.log('broadcastAddDisaggregToOtherTabs');
+        localStorage.setItem('update-redux',
+          JSON.stringify(this.actions.addDisaggregation(disaggregation)));
+        localStorage.removeItem('update-redux');
+      },
       initializeDisaggregation: function() {
         this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
       },
@@ -166,6 +173,7 @@
         this.sendRequest(requestParams).then(function(response) {
           self.disaggregation = response;
           self.dispatch('addDisaggregation', response);
+          self.broadcastAddDisaggregToOtherTabs(response);
           self.stopSpinner();
           self.close()
         }).catch(function(error) {

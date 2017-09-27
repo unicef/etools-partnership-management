@@ -256,7 +256,7 @@
             return;
           }
 
-          this.isCluster = !!data.cluster_id;
+          this.isCluster = !!data.cluster_indicator_id;
           this.set('indicator', data);
           this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
         },
