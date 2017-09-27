@@ -128,7 +128,6 @@
       },
 
       broadcastAddDisaggregToOtherTabs: function(disaggregation) {
-        console.log('broadcastAddDisaggregToOtherTabs');
         localStorage.setItem('update-redux',
           JSON.stringify(this.actions.addDisaggregation(disaggregation)));
         localStorage.removeItem('update-redux');

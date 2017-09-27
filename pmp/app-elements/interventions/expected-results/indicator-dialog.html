@@ -168,7 +168,8 @@
               baseline: null,
               target: null,
               means_of_verification: null,
-              locations: []
+              locations: [],
+              disaggregation: []
             }
           },
           actionParams: {
@@ -262,6 +263,9 @@
         },
          //* For dom-repeat to work ok
         _convertToArrayOfObj: function(disaggregations) {
+          if (!disaggregations) {
+            return [];
+          }
           return disaggregations.map(function(id) {
             return {id: id};
           });

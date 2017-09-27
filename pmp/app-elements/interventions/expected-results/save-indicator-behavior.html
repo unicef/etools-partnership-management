@@ -23,7 +23,7 @@
           target: null,
           means_of_verification: null,
           locations: [],
-          dsaggregation: []
+          disaggregation: []
         }
       },
       nonClusterIndicatorEditModel: {
@@ -118,6 +118,7 @@
           return body;
       },
       _prepareDisaggregations: function(body) {
+        console.log('prepareDisaggregs', this.disaggregations);
         if (!this.disaggregations || !this.disaggregations.length) {
           return;
         }

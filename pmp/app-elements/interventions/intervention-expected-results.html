@@ -199,7 +199,7 @@
                     JSON.parse(JSON.stringify(indicator)));
               } else {
                 // new indicator added
-                this.push(indicatorPaths, indicator);
+                this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'], indicator);
               }
               break;
             }
