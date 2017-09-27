@@ -112,7 +112,7 @@
             </div>
           </div>
           <div class="row-padding" name="disaggregations">
-              <div class="createDisaggreg">If disaggregation groups that you need are not pre-defined yet, you can create them <a href="/pmp/settings" target="_blank" >here</a>.</div>
+              <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not pre-defined yet, you can create them <a href="/pmp/settings" target="_blank" >here</a>.</div>
               <div>
               <template is="dom-if" if="[[!isCluster]]" restamp>
                 <indicator-dissaggregations data-items="{{disaggregations}}">
