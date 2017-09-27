@@ -1,6 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../app-behaviors/item-data-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-item-data">
 
@@ -12,10 +17,20 @@
 
         is: 'agreement-item-data',
         behaviors: [
-          EtoolsPmpApp.Behaviors.ItemData,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
-
+          agreementEndpoints: {
+            type: Object,
+            value: {
+              DETAILS: 'agreementDetails',
+              CREATE: 'agreements'
+            }
+          },
           agreement: {
             type: Object,
             readOnly: true,
@@ -49,11 +64,14 @@
           }
         },
 
-        _prepareEndpoint: function(agreementId) {
-          if (agreementId > 0) {
-            // check and prepare request URL
-            this.set('options.endpoint', this.getEndpoint('agreementDetails', {id: agreementId}));
-          }
+        _triggerAgreementRequest: function(options) {
+          let self = this;
+          let ajaxMethod = options.method || 'GET';
+          this.sendRequest(options).then(function(resp) {
+            self._handleSuccResponse(resp, ajaxMethod);
+          }).catch(function(error) {
+            self.handleErrorResponse(error, ajaxMethod);
+          });
         },
 
         _agreementIdChanged: function(newId) {
@@ -63,14 +81,13 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this.set('options.endpoint', this.getEndpoint('agreementDetails', {id: newId}));
-            this._prepareAndFireRequest();
+            this._triggerAgreementRequest({endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})});
           }
         },
         /**
          * Handle received data from request
          */
-        _handleSuccResponse: function(response) {
+        _handleSuccResponse: function(response, ajaxMethod) {
           this._setAgreement(response);
 
           // call additional callback, if any
@@ -79,10 +96,10 @@
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
-          if (!this.options.method || this.options.method !== 'GET') {
+          if (!ajaxMethod || ajaxMethod !== 'GET') {
             this.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
 
-            var self = this;
+            let self = this;
             // update the agreement list in dexieDB
             EtoolsPmpApp.DexieDb.table('agreements').put(response).then(function() {
               self.fire('reload-list');
@@ -92,7 +109,7 @@
         },
 
         _getMinimalAgreementData: function(detail) {
-          var minimalAgrData = {
+          let minimalAgrData = {
             agreement_number: '',
             agreement_type: '',
             end: null,
@@ -105,7 +122,8 @@
             start: null,
             status: ''
           };
-          for (var propName in minimalAgrData) {
+          let propName;
+          for (propName in minimalAgrData) {
             if (!detail.hasOwnProperty(propName)) {
               this.logWarn('Mapping property not found');
             } else {
@@ -128,14 +146,20 @@
               if (callback) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
-              this._prepareEndpoint(data.agreementId);
               this.fire('global-loading', {
                 message: 'Changing agreement status...',
                 active: true,
                 loadingSource: this.ajaxLoadingMsgSource
               });
+              let endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', {status: data.status}, this.options.endpoint.url);
+              this._triggerAgreementRequest({
+                method: 'PATCH',
+                endpoint: endpoint,
+                body: {
+                  status: data.status
+                }
+              });
             } else {
               this.fire('toast',
                   {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
@@ -147,8 +171,9 @@
           if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
             return false;
           }
-          var hasF = false;
-          for (var i = 0; i < list.length; i++) {
+          let hasF = false;
+          let i;
+          for (i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
             } else {
@@ -165,17 +190,15 @@
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
-            var url = null;
-            var isNew = false;
+            let endpoint = null;
+            let isNew = false;
 
             if (agreement.id) {
               // prepare PATCH endpoint
-              this._prepareEndpoint(agreement.id);
-              url = this.options.endpoint.url;
+              endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: agreement.id});
             } else {
               // new agreement, use POST method for the same endpoint
-              var agreementsEndpoint = this.getEndpoint('agreements');
-              url = agreementsEndpoint.url;
+              endpoint = this.getEndpoint(this.agreementEndpoints.CREATE);
               isNew = true;
             }
             // remove id from data
@@ -204,8 +227,9 @@
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, agreement, url, withUpload);
+              let method = (isNew) ? 'POST' : 'PATCH';
+              this._triggerAgreementRequest({method: method, endpoint: endpoint, body: agreement,
+                multiPart: withUpload, prepareMultipartData: withUpload});
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',
