@@ -109,7 +109,7 @@
           }
 
           let self = this;
-          if (!ajaxMethod || ajaxMethod !== 'GET') {
+          if (ajaxMethod !== 'GET') {
             // update the interventions list in dexieDB
             let mappedResponse = this._formatResponseDataForDexie(response);
             EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {

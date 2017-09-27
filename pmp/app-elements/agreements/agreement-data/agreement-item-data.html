@@ -96,7 +96,7 @@
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
-          if (!ajaxMethod || ajaxMethod !== 'GET') {
+          if (ajaxMethod !== 'GET') {
             this.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
 
             let self = this;
