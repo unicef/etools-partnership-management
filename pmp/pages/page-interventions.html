@@ -113,10 +113,9 @@
                 <span class="tab-content">Attachments</span>
               </paper-tab>
 
-              <!-- TODO: uncomment this after PD reports API and functionality is ready -->
-              <!--<paper-tab name="reports" link>-->
-                <!--<span class="tab-content">Reports</span>-->
-              <!--</paper-tab>-->
+              <paper-tab name="reports" link>
+                <span class="tab-content">Reports</span>
+              </paper-tab>
             </paper-tabs>
           </div>
         </template>
@@ -180,11 +179,10 @@
             </intervention-attachments>
           </template>
 
-          <!-- TODO: uncomment this after PD reports API and functionality is ready -->
-          <!--<template is="dom-if" if="[[_pageEquals(interventionPage, 'reports')]]">-->
-            <!--<intervention-reports id="interventionReports"-->
-                                  <!--name="reports"></intervention-reports>-->
-          <!--</template>-->
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'reports')]]">
+            <intervention-reports id="interventionReports"
+                                  name="reports"></intervention-reports>
+          </template>
 
         </iron-pages>
 
