@@ -1,75 +1,85 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
-<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+
 <dom-module id="user-profile-data">
-
-  <template>
-
-    <etools-ajax id="ajaxEl"
-                 endpoint="[[endpoint]]"
-                 on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
-  </template>
 
   <script>
     Polymer({
       is: 'user-profile-data',
       behaviors: [
-        EtoolsPmpApp.Behaviors.DataElement,
-        EtoolsPmpApp.Behaviors.AjaxServerErrors
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.AjaxErrorsParser
       ],
       properties: {
-        endpointName: {
-          type: String,
-          value: 'myProfile'
+        endpoint: {
+          type: String
         },
         userProfile: {
           type: Object,
           notify: true
         },
-        _saveActionInProgress: Boolean
+        _saveActionInProgress: Boolean,
+        profileSaveLoadingMsgSource: {
+          type: String,
+          value: 'profile-modal'
+        }
       },
+
       ready: function() {
-        this.ajaxEl = this.$.ajaxEl;
+        this.set('endpoint', this.getEndpoint('myProfile'));
+        this._makeProfileRequest();
       },
+
+      _makeProfileRequest: function(additionalConfig) {
+        let self = this;
+        let config = {
+          endpoint: this.endpoint
+        };
+        additionalConfig = additionalConfig || {};
+
+        this.sendRequest(Object.assign({}, config, additionalConfig)).then(function(resp) {
+          self._handleResponse(resp);
+        }).catch(function(error) {
+          self.parseRequestErrorsAndShowAsToastMsgs(error.response);
+          self._hideProfileSaveLoadingMsg();
+        });
+      },
+
       saveProfile: function(profile) {
-        var url = this.endpoint.url;
         if (_.isEmpty(profile)) {
           return;
         }
         if (!_.isEmpty(profile)) {
-          this.fire('global-loading', {message: 'Saving profile data...', active: true});
+          this.fire('global-loading', {
+            message: 'Saving profile data...',
+            active: true,
+            loadingSource: this.profileSaveLoadingMsgSource
+          });
           this.set('_saveActionInProgress', true);
-          this._prepareAndFireRequest('PATCH', profile, url);
+          this._makeProfileRequest({method: 'PATCH', body: profile});
         } else {
+          // TODO: this ain't right, each profile property value should be checked for changes,
+          // if no changes found, then fire this toast
           this.fire('toast', {
             text: 'There is nothing to save. No change detected on your profile.',
             showCloseBtn: true
           });
         }
       },
-      _prepareAndFireRequest: function(method, data, url) {
-        this._resetAjax();
-        if (!method) {
-          method = 'GET';
-        }
-        this.ajaxEl.set('method', method);
-        if (typeof data === 'object' && Object.keys(data).length > 0
-            && ['PATCH', 'POST'].indexOf(method) > -1) {
-          this.ajaxEl.set('body', data);
-          this.ajaxEl.set('url', url);
-        }
-      },
-      _resetAjax: function() {
-        this.ajaxEl.set('params', null);
-        this.ajaxEl.set('body', null);
-        this.ajaxEl.set('url', null);
-      },
+
       _handleResponse: function(response) {
-        this.set('userProfile', response.detail);
+        this.set('userProfile', response);
+        this._hideProfileSaveLoadingMsg();
+      },
+
+      _hideProfileSaveLoadingMsg: function() {
         if (this._saveActionInProgress) {
-          this.fire('global-loading');
+          this.fire('global-loading', {active: false, loadingSource: this.profileSaveLoadingMsgSource});
           this.set('_saveActionInProgress', false);
         }
       }

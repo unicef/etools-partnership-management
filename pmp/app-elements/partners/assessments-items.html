@@ -10,7 +10,6 @@
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
@@ -83,14 +82,11 @@
       }
 
     </style>
-     <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
 
     <paper-material elevation="[[elevation]]">
 
       <paper-toolbar>
-        <paper-icon-button on-click="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
+        <paper-icon-button on-tap="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
         <div class="title">Assessments</div>
       </paper-toolbar>
 
@@ -127,7 +123,7 @@
                                                       options="[[assessmentTypesOptions]]"
                                                       selected="{{item.type}}"
                                                       dynamic-align
-                                                      error-message="[[dateSubmitedErrorMessages.missing]]">
+                                                      error-message="Assessment Type is required">
                         </etools-single-selection-menu>
                       </template>
                     </div>
@@ -137,8 +133,9 @@
                                          label="Date of Assessment"
                                          value="{{item.completed_date}}"
                                          readonly$="[[!editMode]]"
-                                         error-message="Date of assessment is required"
-                                         no-init show-clear-btn></etools-date-input>
+                                         error-message="[[dateSubmitedErrorMessages.missing]]"
+                                         no-init show-clear-btn>
+                      </etools-date-input>
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
@@ -217,10 +214,15 @@
           dateSubmitedErrorMessages: {
             type: Object,
             value: {
-              missing: 'Assessment type is required',
-              futureDate: 'The Date of Report cannot be in the future'
+              missing: 'Date of Assessment is required',
+              futureDate: 'Date of Assesment cannot be in the future'
             }
-          }
+          },
+          open: {
+            type: Boolean,
+            value: true,
+            reflectToAttribute: true
+          },
         },
 
         observers: [
@@ -251,6 +253,17 @@
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
+        },
+
+        _toggle: function() {
+          this.set('open', !this.open);
+        },
+
+        _getExpandBtnIcon: function(open) {
+          if (!open) {
+            return 'icons:expand-more';
+          }
+          return 'icons:expand-less';
         },
 
         _assessmentPropertyChanged: function(dataPath) {

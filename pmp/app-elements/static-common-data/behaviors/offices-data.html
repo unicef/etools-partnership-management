@@ -1,0 +1,36 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.OfficesDataImpl */
+    EtoolsPmpApp.Behaviors.OfficesDataImpl = {
+
+      actions: {
+        setOfficesData: function(officesData) {
+          return {
+            type: 'SET_OFFICES',
+            offices: officesData
+          };
+        }
+      },
+
+      _handleOfficesResponse: function(response) {
+        if (!_.isEmpty(response)) {
+          // set offices values
+          this.dispatch('setOfficesData', response);
+        }
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.OfficesData */
+    EtoolsPmpApp.Behaviors.OfficesData = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.OfficesDataImpl
+    ];
+  })();
+</script>

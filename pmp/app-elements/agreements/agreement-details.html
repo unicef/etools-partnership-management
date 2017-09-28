@@ -25,7 +25,7 @@
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
-<link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
+<link rel="import" href="../partners/behaviors/partner-staff-members-data-behavior.html">
 
 <link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
@@ -165,7 +165,7 @@
                   id="signedByPartner"
                   label="Signed By Partner"
                   placeholder="&#8212;"
-                  options="[[activeStaffMembers]]"
+                  options="[[staffMembers]]"
                   option-value="id"
                   option-label="name"
                   selected="{{agreement.partner_manager}}"
@@ -231,7 +231,7 @@
           <etools-multi-selection-menu id="officers"
                                        label="Authorized Officers"
                                        placeholder="&#8212;"
-                                       options="[[_getAvailableAuthOfficers(activeStaffMembers, agreement.authorized_officers)]]"
+                                       options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{authorizedOfficers}}"
@@ -285,11 +285,6 @@
         </etools-content-panel>
       </template>
 
-
-      <partner-staff-members-data partner-id="[[agreement.partner]]"
-                                  prepared-staff-members-data="{{staffMembers}}">
-      </partner-staff-members-data>
-
   </template>
 
   <script>
@@ -302,7 +297,8 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.MissingDropdownOptions
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.PartnerStaffMembersData
         ],
 
         properties: {
@@ -330,11 +326,6 @@
             statePath: 'agreementTypes'
           },
           staffMembers: {
-            type: Array,
-            value: [],
-            observer: '_staffMembersChanged'
-          },
-          activeStaffMembers: {
             type: Array,
             value: []
           },
@@ -535,15 +526,15 @@
         },
 
         _partnerChanged: function(currentPartnerId) {
+          this.set('staffMembers', []);
           if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
             // partner not set or changed, reset related fields
             this.set('agreement.partner_manager', null);
-            this.set('staffMembers', []);
-            this.set('activeStaffMembers', []);
             this.set('authorizedOfficers', []);
             this.set('agreement.authorized_officers', []);
             this.set('oldSelectedPartnerId', currentPartnerId);
           }
+          this.getPartnerStaffMembers(currentPartnerId);
         },
 
         /**
@@ -571,18 +562,9 @@
           }
 
         },
-        _staffMembersChanged: function(staffMembers) {
-          if (!staffMembers || !staffMembers.length) {
-            this.set('activeStaffMembers', []);
-          }
-          var activeStaffMembers = staffMembers.filter(function(member) {
-            return member.active;
-          });
-          this.set('activeStaffMembers', activeStaffMembers);
-        },
-        _getAvailableAuthOfficers: function(activeStaffMembers, agreementAuthorizedOfficers) {
-          if (activeStaffMembers instanceof Array && activeStaffMembers.length) {
-            return activeStaffMembers;
+        _getAvailableAuthOfficers: function(staffMembers, agreementAuthorizedOfficers) {
+          if (staffMembers instanceof Array && staffMembers.length) {
+            return staffMembers;
           }
           if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
             return agreementAuthorizedOfficers.map(function(staffMember) {

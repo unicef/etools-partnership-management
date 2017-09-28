@@ -18,7 +18,6 @@
     <etools-status statuses="[[possibleStatuses]]"
                    actions="[[possibleActions]]"
                    on-intervention-draft-event="_setStatusDraft"
-                   on-intervention-active-event="_setStatusActive"
                    on-intervention-suspend-event="_setStatusSuspended"
                    on-intervention-terminate-event="_setStatusTerminated"
                    on-intervention-unsuspend-event="_unsuspendIntervention">
@@ -37,6 +36,10 @@
         properties: {
           interventionId: {
             type: Number
+          },
+          activeTab: {
+            type: String,
+            observer: '_activeTabChanged'
           },
           newIntervention: {
             type: Boolean,
@@ -104,11 +107,6 @@
                 event: 'intervention-draft-event'
               },
               {
-                label: 'Activate',
-                hidden: true,
-                event: 'intervention-active-event'
-              },
-              {
                 label: 'Suspend',
                 hidden: true,
                 event: 'intervention-suspend-event'
@@ -133,38 +131,67 @@
           this._handleStickyScroll();
         },
 
+        _activeTabChanged: function() {
+          this._computeAvailableActions(this.status);
+        },
+
         _computeAvailableActions: function(status) {
-            this._setAllActionsToHidden();
-            if (!this.editMode) {
-              return;
-            }
-            let availableOptions = ['Save'];
+          this._setAllActionsToHidden();
+          if (!this.editMode) {
+            return;
+          }
+          let availableOptions = [];
 
-            if (status !== 'draft' && status !== '') {
-              if (['signed', 'active'].indexOf(status) > -1) {
-                availableOptions.push('Suspend');
-                availableOptions.push('Terminate');
-              } else if (status === 'suspended') {
-                // removes Save option
-                availableOptions.pop();
-                availableOptions.push('Unsuspend');
-              } else {
-                // removes Save option
-                availableOptions.pop();
+          switch (status) {
+
+            case 'signed':
+              availableOptions.push('Suspend');
+              availableOptions.push('Save');
+              break;
+
+            case 'active':
+              availableOptions.push('Terminate');
+              availableOptions.push('Save');
+              break;
+
+            case 'suspended':
+              availableOptions.push('Unsuspend');
+              break;
+
+            case 'terminated':
+              break;
+
+            case 'closed':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
-            }
+              break;
 
-            for (let key in this.possibleActions) {
-              let actionName = this.possibleActions[key].label;
-              let config = this.possibleActions[key];
-
-              if (availableOptions.indexOf(actionName) > -1) {
-                config.hidden = false;
+            case 'ended':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
               }
+              break;
 
-              this.set(['possibleActions', key], null);
-              this.set(['possibleActions', key], config);
+            // legacy version of 'ended'
+            case 'implemented':
+              if (this.activeTab === 'attachments') {
+                availableOptions.push('Save');
+              }
+              break;
+
+            default:
+              availableOptions.push('Save');
+              break;
+          }
+
+          for (let key in this.possibleActions) {
+            let actionName = this.possibleActions[key].label;
+
+            if (availableOptions.indexOf(actionName) > -1) {
+              this.set(['possibleActions', key, 'hidden'], false);
             }
+          }
         },
 
         _computeAvailableStatuses: function(status) {
@@ -240,15 +267,29 @@
               activeStatus = 'Closed';
               break;
 
+            case 'ended':
+              availableStatuses = [
+                'Draft',
+                'Signed',
+                'Active',
+                'Ended',
+                'Closed',
+              ];
+              activeStatus = 'Ended';
+              break;
+
+            // legacy version of 'ended'
             case 'implemented':
               availableStatuses = [
                 'Draft',
                 'Signed',
                 'Active',
                 'Ended',
+                'Closed',
               ];
               activeStatus = 'Ended';
               break;
+
             default:
               availableStatuses = [
                 'Draft',
@@ -262,16 +303,14 @@
           }
 
           for (let key = this.possibleStatuses.length - 1; key >= 0; key--) {
-            let workingStatus = this.possibleStatuses[key];
-            if (workingStatus.label === activeStatus) {
+            let workingStatusLabel = this.possibleStatuses[key].label;
+            if (workingStatusLabel === activeStatus) {
               completedFlag = true;
             }
-            if (availableStatuses.indexOf(workingStatus.label) > -1) {
-              workingStatus.hidden = false;
+            if (availableStatuses.indexOf(workingStatusLabel) > -1) {
+              this.set(['possibleStatuses', key, 'hidden'], false);
             }
-            workingStatus.completed = completedFlag;
-            this.set(['possibleStatuses', key], null);
-            this.set(['possibleStatuses', key], workingStatus);
+            this.set(['possibleStatuses', key, 'completed'], completedFlag);
           }
         },
 
@@ -310,17 +349,28 @@
           }
           return true;
         },
-
+        _computeWarningMessage: function(newStatus) {
+          switch (newStatus) {
+            case 'terminated':
+              this.set('warningMessage', 'You are about to terminate this PD. Do you want to continue?');
+              break;
+            case 'suspended':
+              this.set('warningMessage', 'You are about to suspend this PD. Do you want to continue?');
+              break;
+            case 'signed':
+              this.set('warningMessage', 'You are about to unsuspend this PD. Do you want to continue?');
+              break;
+            default:
+              this.set('warningMessage', this._getDefaultWarningMessage());
+              break;
+          }
+        },
         _setStatusTerminated: function() {
           this._updateStatus('terminated');
         },
 
         _setStatusDraft: function() {
           this._updateStatus('draft');
-        },
-
-        _setStatusActive: function() {
-          this._updateStatus('active');
         },
 
         _setStatusSuspended: function() {

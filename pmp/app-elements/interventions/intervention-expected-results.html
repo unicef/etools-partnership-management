@@ -4,25 +4,24 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/date-behavior.html">
 
-<link rel="import" href="expected-results/ram-indicator-selector.html">
+<link rel="import" href="../../app-elements/common-elements/etools-form-element-wrapper.html">
+
+<link rel="import" href="expected-results/behaviors/results-behavior.html">
+<link rel="import" href="expected-results/behaviors/lower-results-behavior.html">
+<link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles file-styles buttons-styles">
+    <style include="grid-layout-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -36,10 +35,12 @@
           @apply(--paper-fab-btn-green);
         };
       }
+
+      .ram-indicator-name {
+        display: inline-block;
+        width: 100%;
+      }
     </style>
-    <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
@@ -51,21 +52,34 @@
                                  data-args$="[[index]]"
                                  icon="cancel"
                                  disabled$="[[!editMode]]"></paper-icon-button>
+
+              <paper-icon-button class="action edit"
+                                 on-tap="_editCpOutputAndRamIndicators"
+                                 data-args$="[[index]]"
+                                 icon="create"
+                                 disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
-            <ram-indicator-selector id$="cpOuputAndIndicators_[[index]]"
-                                    cp-output-id="{{item.cp_output}}"
-                                    selected-cp-indicators-ids="{{item.ram_indicators}}"
-                                    selected-cp-structure="[[selectedCpStructure]]"
-                                    already-selected-cpo="[[alreadySelectedCpOutputs]]"
-                                    required$="[[required]]"
-                                    edit-mode$="[[editMode]]">
-            </ram-indicator-selector>
 
-            <result-link-lower-results id$="lowerResult_[[index]]"
-                                       data-items="{{item.ll_results}}"
+            <div class="row-h">
+              <div class="col col-4">
+                <etools-form-element-wrapper label="CP Output">
+                  <span>[[item.cp_output_name]]</span>
+                </etools-form-element-wrapper>
+              </div>
+              <div class="col col-8">
+                <etools-form-element-wrapper label="Ram Indicators">
+                  <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+                    <span class="ram-indicator-name">[[ramIndicatorName]]</span>
+                  </template>
+                </etools-form-element-wrapper>
+              </div>
+            </div>
+
+            <result-link-lower-results data-items="{{item.ll_results}}"
                                        edit-mode$="[[editMode]]"
+                                       expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
@@ -81,7 +95,7 @@
 
     <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
-                 on-tap="_addNewResult"
+                 on-tap="_addNewCpOutputAndRamIndicators"
                  title="Add"></paper-fab>
     </div>
 
@@ -95,52 +109,34 @@
         is: 'intervention-expected-results',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.RepeatableDataSets,
-          EtoolsPmpApp.Behaviors.Date
+          EtoolsPmpApp.Behaviors.ExpectedResults,
+          EtoolsPmpApp.Behaviors.LowerResults
         ],
 
         properties: {
-          interventionId: {
-            type: Number
-          },
           _deleteEpName: {
             type: String,
             value: 'interventionResultLinkDelete',
             readOnly: true,
           },
-          required: {
-            type: Boolean,
-            value: false
-          },
           editMode: {
             type: Boolean
           },
-          alreadySelectedCpOutputs: {
-            type: Array,
-            value: []
-          },
           indicatorDialog: {
             type: Object
-          },
-          selectedCpStructure: {
-            type: String
           }
         },
 
         observers: [
-          '_dataItemsChanged(dataItems)',
-          '_dataItemsChanges(dataItems.*)'
+          '_dataItemsChanged(dataItems.length)'
         ],
 
         ready: function() {
-          this.dataSetModel = {
-            id: null,
-            intervention: null,
-            cp_output: null,
-            ram_indicators: [],
-            ll_results: []
-          };
+          // init cp outputs and ram indicator add/edit element
+          this.createAddEditCpOutputRamIndicatorsElement();
+          // init PD output or SSFA expected result add/edit element
+          this.createLowerResultNameDialog();
 
           // init indicator dialog data
           this.indicatorDialog = document.createElement('indicator-dialog');
@@ -158,17 +154,44 @@
           if (this.indicatorDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
           }
+          this.removeCpOutputRamIndicatorsDialog();
         },
+
+        _dataItemsChanged: function(dataItemsLength) {
+          this.setAlreadySelectedCpOutputs(dataItemsLength, this.dataItems);
+        },
+
+        _addNewCpOutputAndRamIndicators: function() {
+          this.openCpOutputAndRamIndicatorsDialog();
+        },
+
+        _editCpOutputAndRamIndicators: function(e) {
+          let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
+          if (!(index >= 0)) {
+            this.logError('Can not edit, invalid index selected', 'expected-results');
+            return;
+          }
+
+          let result = this.dataItems[index];
+          if (!result) {
+            this.logError('Result not found in data items by index: ' + index, 'expected-results');
+            return;
+          }
+
+          this.openCpOutputAndRamIndicatorsDialog(result.id, result.cp_output, result.ram_indicators, index);
+        },
+
         /**
          * Add/update indicators data
          */
         indicatorDialogDataReceived: function(data) {
-          var actionParams = data.actionParams;
-          var indicator = data.indicatorData;
-          for (var i = 0; i < this.dataItems.length; i++) {
+          let actionParams = data.actionParams;
+          let indicator = data.indicatorData;
+          let i;
+          for (i = 0; i < this.dataItems.length; i++) {
             //search expected result item by output id
             if (this.dataItems[i].cp_output === actionParams.cpOutputId) {
-              var indicatorPaths = 'dataItems.' + i + '.ll_results.' +
+              let indicatorPaths = 'dataItems.' + i + '.ll_results.' +
                   actionParams.llResultIndex + '.applied_indicators';
               if (actionParams.appliedIndicatorsIndex !== null) {
                 // we just edited an indicator, replace data in indicators list
@@ -182,47 +205,11 @@
             }
           }
         },
-        _dataItemsChanged: function(dataItems) {
-          if (!Array.isArray(dataItems)) {
-            this.set('dataItems', []);
-          } else {
-            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
-          }
-        },
-
-        // get selected cpoutputs ids
-        _getSelectedCpOutputsIds: function() {
-          var selectedCpOIds = [];
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(result) {
-              if (result.cp_output) {
-                selectedCpOIds.push(result.cp_output);
-              }
-            });
-          }
-          return selectedCpOIds;
-        },
-
-        // every time cp_output is selected update alreadySelectedCpOutputs
-        // and do not show alreadySelectedCpOutputs in other dorpdowns
-        _dataItemsChanges: function(item) {
-          var change = item.path.substring(item.path.lastIndexOf('.') + 1);
-          if (change === 'cp_output' || change === 'length') {
-            this.set('alreadySelectedCpOutputs', this._getSelectedCpOutputsIds());
-          }
-        },
-
-        /**
-         * Validate last added amendment and if is not empty add a new one
-         */
-        _addNewResult: function() {
-          this._addElement();
-        },
 
         // open indicator dialog to add or edit indicator
         _openIndicatorDialog: function(event) {
           event.stopImmediatePropagation();
-          var actionParams = event.detail;
+          let actionParams = event.detail;
 
           if (actionParams.appliedIndicatorsIndex === null) {
             this.indicatorDialog.setAddLabel();
@@ -236,30 +223,6 @@
 
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
-        },
-
-        validate: function() {
-          var valid = true;
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
-              if (!cpOutputAndRamIndicatorsSelector.validate()) {
-                valid = false;
-              }
-            }.bind(this));
-          }
-          return valid;
-        },
-
-        resetValidations: function() {
-          if (this.dataItems.length > 0) {
-            this.dataItems.forEach(function(item, index) {
-              var cpOutputAndRamIndicatorsSelector = this.$$('#cpOuputAndIndicators_' + index);
-              if (cpOutputAndRamIndicatorsSelector) {
-                cpOutputAndRamIndicatorsSelector.resetValidations();
-              }
-            }.bind(this));
-          }
         }
 
       });

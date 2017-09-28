@@ -37,9 +37,9 @@
     },
 
     prepareEtoolsFileDataFromUrl: function(fileUrl) {
-      var files = [];
+      let files = [];
       if (typeof fileUrl === 'string' && fileUrl !== '') {
-        var fileName = this.getFileNameFromURL(fileUrl);
+        let fileName = this.getFileNameFromURL(fileUrl);
         files = [{
           id: null,
           file_name: fileName,
@@ -54,34 +54,14 @@
     },
 
     /**
-     * Validate string value
-     */
-    validateStringValue: function(stringValue) {
-      if (typeof stringValue === 'string' && stringValue !== '') {
-        return true;
-      }
-      return false;
-    },
-
-    /**
-     * Validate integer value
-     */
-    validateIdValue: function(idValue) {
-      var id = parseInt(idValue, 10);
-      if (isNaN(id) || (!isNaN(id) && id <= 0)) {
-        return false;
-      }
-      return true;
-    },
-
-    /**
+     * TODO: move this method in another behavior
      * Reset field validation
      */
     fieldValidationReset: function(selector, useValidate) {
       if (!useValidate) {
         useValidate = false;
       }
-      var field = this.$$(selector);
+      let field = this.$$(selector);
       if (field) {
         if (useValidate) {
           field.validate();
@@ -90,19 +70,7 @@
         }
       }
       return field;
-    },
-
-    /**
-     * Reset element validations
-     * The element must have resetValidations method
-     */
-    elementValidationReset: function(selector) {
-      var elem = this.$$(selector);
-      if (elem && typeof elem.resetValidations === 'function') {
-        elem.resetValidations();
-      }
-      return elem;
-    },
+    }
 
   };
 

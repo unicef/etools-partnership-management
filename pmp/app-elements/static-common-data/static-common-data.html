@@ -1,0 +1,97 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-config/app-dexie-db-config.html">
+
+<link rel="import" href="behaviors/country-programmes-data.html">
+<link rel="import" href="behaviors/dropdowns-pmp-data.html">
+<link rel="import" href="behaviors/dropdowns-static-data.html">
+<link rel="import" href="behaviors/locations-data.html">
+<link rel="import" href="behaviors/offices-data.html">
+<link rel="import" href="behaviors/sections-data.html">
+<link rel="import" href="behaviors/sectors-data.html">
+<link rel="import" href="behaviors/unicef-users-data.html">
+<link rel="import" href="behaviors/user-country-data.html">
+<link rel="import" href="behaviors/disaggregations-data.html">
+
+<dom-module id="static-common-data">
+  <script>
+    Polymer({
+      is: 'static-common-data',
+      behaviors: [
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.CountryProgrammesData,
+        EtoolsPmpApp.Behaviors.DropdownsPmpData,
+        EtoolsPmpApp.Behaviors.DropdownsStaticData,
+        EtoolsPmpApp.Behaviors.LocationsData,
+        EtoolsPmpApp.Behaviors.OfficesData,
+        EtoolsPmpApp.Behaviors.SectionsData,
+        EtoolsPmpApp.Behaviors.SectorsData,
+        EtoolsPmpApp.Behaviors.UnicefUsersData,
+        EtoolsPmpApp.Behaviors.UserCountryData,
+        EtoolsPmpApp.Behaviors.DisaggregationsData
+      ],
+      properties: {
+        dataEndpointNames: {
+          type: Array,
+          value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
+            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations']
+        }
+      },
+
+      ready: function() {
+        let currentEndpoint;
+        let self = this;
+        this.dataEndpointNames.forEach(function(endpointName) {
+          currentEndpoint = self.getEndpoint(endpointName);
+          self._makeRequest(currentEndpoint, self._getEndpointSuccessHandler(endpointName), self._errorHandler);
+        });
+      },
+
+      _makeRequest: function(endpoint, successHandler, errorHandler) {
+        let self = this;
+        this.sendRequest({
+          endpoint: endpoint
+        }).then(function(resp) {
+          successHandler.bind(self, resp)();
+        }).catch(function(error) {
+          errorHandler.bind(self, error)();
+        });
+      },
+
+      _errorHandler: function(err) {
+        this.logError('Error getting static data', 'static-common-data', err);
+      },
+
+      _getEndpointSuccessHandler: function(endpointName) {
+        switch (endpointName) {
+          case 'countryProgrammes':
+            return this._handleCountryProgrammesResponse;
+          case 'dropdownsPmp':
+            return this._handleDropdownsPmpResponse;
+          case 'dropdownsStatic':
+            return this._handleDropdownsStaticResponse;
+          case 'locations':
+            return this._handleLocationsResponse;
+          case 'offices':
+            return this._handleOfficesResponse;
+          case 'sections':
+            return this._handleSectionsResponse;
+          case 'sectors':
+            return this._handleSectorsResponse;
+          case 'unicefUsers':
+            return this._handleUnicefUsersResponse;
+          case 'userCountryDetails':
+            return this._handleUserCountryDataResponse;
+          case 'addGetDisaggregations':
+            return this._handleDisaggregationsResponse;
+        }
+      }
+
+    });
+  </script>
+</dom-module>

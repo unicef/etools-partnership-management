@@ -38,9 +38,9 @@
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0",
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
-    "etools-ajax": "1.2.2",
+    "etools-ajax": "unicef-polymer/etools-ajax#e453c0e",
     "etools-app-selector": "1.0.6",
-    "etools-behaviors": "1.0.1",
+    "etools-behaviors": "1.0.2",
     "etools-checkable-input": "1.0.8",
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
@@ -48,11 +48,11 @@
     "etools-data-table": "1.0.5",
     "etools-datepicker": "1.0.14",
     "etools-dexiejs": "1.0.5",
-    "etools-dialog": "1.1.1",
+    "etools-dialog": "1.2.1",
     "etools-file": "1.2.4",
-    "etools-loading": "unicef-polymer/etools-loading#05b913b",
+    "etools-loading": "1.1.0",
     "etools-page-refresh": "1.1.2",
-    "etools-searchable-multiselection-menu": "2.2.2",
+    "etools-searchable-multiselection-menu": "2.2.5",
     "etools-profile-dropdown": "1.0.7",
     "etools-info-tooltip": "^1.0.1",
     "paper-checkbox": "1.4.2",
@@ -64,6 +64,8 @@
   },
   "resolutions": {
     "neon-animation": "1 - 2",
-    "moment-element": "^2.0.0"
+    "moment-element": "^2.0.0",
+    "etools-ajax": "e453c0e",
+    "webcomponentsjs": "0.7.24"
   }
 }

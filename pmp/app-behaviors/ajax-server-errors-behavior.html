@@ -1,15 +1,16 @@
+<link rel="import" href="ajax-errors-parser-behavior.html">
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxServerErrors */
-  EtoolsPmpApp.Behaviors.AjaxServerErrors = {
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxServerErrorsImpl */
+  EtoolsPmpApp.Behaviors.AjaxServerErrorsImpl = {
 
     properties: {
       serverErrors: {
         type: Array,
         notify: true
       },
-      ajaxEl: Object,
+      options: Object,
       useToastEvent: {
         type: Boolean,
         value: true
@@ -28,56 +29,28 @@
       }
     },
 
-    tryGetResponseErrorMsg: function(response) {
-      var errMsg = 'An error occured!';
-      try {
-        if (response.detail.request.detail.request.response) {
-          return response.detail.request.detail.request.response;
-        } else {
-          // response.detail.request.detail.request.response could be null for 500 server errors,
-          // we need to avoid returning null here
-          return errMsg;
-        }
-      } catch (ex) {
-        console.warn(ex);
+    tryGetResponseError: function(response) {
+      if (response.status >= 500) {
+        return this.globalMessage;
       }
-      return errMsg;
+      return response.response || this.globalMessage;
     },
 
-    handleErrorResponse: function(response) {
+    handleErrorResponse: function(response, ajaxMethod) {
       this.fire('global-loading', {
         active: false,
         loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
       });
-      var errors = response.detail.request.detail.request.response;
-      errors = errors || response.detail.request.detail.request.xhr.response;
-      var errorMessage = this.globalMessage;
-      if (['POST', 'PATCH', 'DELETE'].indexOf(this.ajaxEl.method) > -1) {
-        this.set('serverErrors', []);
-        if (errors) {
-          if (this.useToastEvent) {
-            this.push('serverErrors', 'Errors occurred:');
-          }
-          if (Array.isArray(errors) && errors.length > 0) {
-            for (var err in errors) {
-              this.push('serverErrors', errors[err]);
-            }
-          } else if (typeof errors === 'object' && Object.keys(errors).length > 0) {
-            for (var errField in errors) {
-              if (typeof errors[errField] === 'string') {
-                this.push('serverErrors', 'Field ' + errField + ' - ' + errors[errField]);
-              } else if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
-                for (var errF in errors[errField]) {
-                  this.push('serverErrors', 'Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
-                }
-              } else if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-                for (var key in errors[errField]) {
-                  this.push('serverErrors', errors[errField][key]);
-                }
-              }
-            }
-          }
-        }
+      let errors = this.tryGetResponseError(response);
+
+      let errorMessage = this.globalMessage;
+
+      if (!ajaxMethod) {
+        ajaxMethod = 'GET';
+      }
+
+      if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
+        this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];
       if (this.useToastEvent) {
@@ -111,5 +84,11 @@
     }
 
   };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxServerErrors */
+  EtoolsPmpApp.Behaviors.AjaxServerErrors = [
+    EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+    EtoolsPmpApp.Behaviors.AjaxServerErrorsImpl
+  ];
 
 </script>

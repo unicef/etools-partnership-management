@@ -19,13 +19,13 @@
     },
     user: {
       url: '/users/api/profile/',
-      exp: 30 * 60 * 1000, // 30min
+      exp: 10 * 60 * 1000, // 10min
       cachingKey: 'user'
     },
     agreements: {
       template: '/api/v2/agreements/',
       exp: 30 * 60 * 1000, // 30min
-      cachingKey: 'agreements'
+      cacheTableName: 'agreements'
     },
     agreementDetails: {
       template: '/api/v2/agreements/<%=id%>/',
@@ -42,9 +42,6 @@
     agreementAmendmentsTypeDelete:  {
       template: '/api/v2/agreements/amendments/types/<%=id%>/',
     },
-    lowerResultsDelete:  {
-      template: '/api/v2/reports/lower_results/<%=id%>/',
-    },
     myProfile:  {
       template: '/api/v2/users/myprofile/',
     },
@@ -56,7 +53,7 @@
     partners: {
       url: '/api/v2/partners/',
       exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'partners'
+      cacheTableName: 'partners',
     },
     partnerDetails: {
       template: '/api/v2/partners/<%=id%>/',
@@ -75,8 +72,8 @@
     },
     interventions: {
       url: '/api/v2/interventions/',
-      exp: 10 * 60 * 1000, // 5min
-      cachingKey: 'interventions'
+      exp: 10 * 60 * 1000,
+      cacheTableName: 'interventions'
     },
     interventionDetails: {
       template: '/api/v2/interventions/<%=id%>/',
@@ -135,6 +132,24 @@
     },
     userCountryDetails: {
       url: '/api/v2/users/country'
+    },
+    pdExpectedResults: {
+      template: '/api/v2/interventions/<%=pdId%>/result-links/'
+    },
+    pdExpectedResultDetails: {
+      template: '/api/v2/interventions/result-links/<%=resultId%>/'
+    },
+    pdLowerResults: {
+      template: '/api/v2/interventions/result-links/<%=resultId%>/lower-results/'
+    },
+    pdLowerResultDetails: {
+      template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
+    },
+    lowerResultsDelete: {
+      template: '/api/v2/reports/lower_results/<%=id%>/',
+    },
+    addGetDisaggregations: {
+      url: '/api/v2/reports/disaggregations/'
     }
   };
 
