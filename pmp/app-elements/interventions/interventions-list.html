@@ -38,7 +38,7 @@
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         width: 100%;
       }
     </style>
@@ -211,7 +211,7 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Section</span>
-              <span>[[getDisplayValue(intervention.sections)]]</span>
+              <span>[[getDisplayValue(intervention.section_names)]]</span>
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
@@ -520,7 +520,7 @@
                 selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Sections',
+                filterName: 'Section/Cluster',
                 selectedValue: _.map(this.selectedSections, 'id')
               },
               {
@@ -595,7 +595,7 @@
                 _.map(this.selectedDocumentTypes, 'value'),
                 this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
                 _.map(this.selectedStatuses, 'value'),
-                _.map(this.selectedSections, 'name'),
+                this._prepareQueryStrVal(this.selectedSections, 'id'),
                 this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
                 this._prepareQueryStrVal(this.selectedOffices, 'id'),
                 this.startDate,
@@ -705,6 +705,9 @@
             officesIdsArr = officesIdsArr.map(function(officeIdStr) {
               return parseInt(officeIdStr, 10);
             });
+            if (!this.offices || !this.offices.length) {
+              return [];
+            }
             return this.offices.filter(function(o) {
               return officesIdsArr.indexOf(parseInt(o.id, 10)) > -1;
             });
@@ -718,6 +721,9 @@
             focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
               return parseInt(fPtsIdStr, 10);
             });
+            if (!this.unicefUsersData || !this.unicefUsersData.length) {
+              return [];
+            }
             return this.unicefUsersData.filter(function(u) {
               return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
             });
@@ -726,6 +732,9 @@
         },
         _setSelectedSections: function(sections) {
           let sectionsArr = sections.split('|');
+          if (!this.sections || !this.sections.length) {
+            return [];
+          }
           if (sectionsArr && sectionsArr.length) {
             let selectedSections = this.sections.filter(function(s) {
               return sectionsArr.indexOf(s.id) > -1;
@@ -751,6 +760,9 @@
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
             });
+            if (!this.cpOutputs || !this.cpOutputs.length) {
+              return [];
+            }
             return this.cpOutputs.filter(function(cpo) {
               return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
@@ -759,6 +771,9 @@
         },
         _setSelectedDocTypes: function(types) {
           var typesStrArr = types.split('|');
+          if (!this.documentTypes || !this.documentTypes.length) {
+            return [];
+          }
           if (typesStrArr && typesStrArr.length) {
             return this.documentTypes.filter(function(t) {
               return typesStrArr.indexOf(t.value) > -1;

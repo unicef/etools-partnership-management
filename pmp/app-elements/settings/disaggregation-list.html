@@ -50,6 +50,14 @@
           </div>
         </etools-data-table-row>
       </template>
+
+      <etools-data-table-footer
+        page-size="[[pagination.pageSize]]"
+        page-number="[[pagination.pageNumber]]"
+        total-results="[[pagination.totalResults]]"
+        on-page-size-changed="_pageSizeChanged"
+        on-page-number-changed="_pageNumberChanged">
+      </etools-data-table-footer>
     </etools-content-panel>
 
 
@@ -70,21 +78,56 @@
       ],
 
       properties: {
-        dataItems: {
+        disaggregations: {
           type: Array,
-          statePath: 'disaggregations'
+          statePath: 'disaggregations',
+          observer: '_disagregationsChanged'
+        },
+        dataItems: {
+          type: Array
         },
         disaggregationModal: {
           type: Object
         },
+        pagination: {
+          type: Object,
+          value: {
+            pageSize: 10,
+            pageNumber: 1,
+            totalResults: null
+          }
+        }
       },
+      observers: [
+        'paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)'
+      ],
+
       ready: function() {
         this.editMode = true;
         this.disaggregationModal = document.createElement('add-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
       },
-
+      _disagregationsChanged: function(disaggregs) {
+        if (!disaggregs || !disaggregs.length) {
+          this.dataItems = [];
+          return;
+        }
+        this.set('pagination.totalResults', this.disaggregations.length);
+      },
+      _pageSizeChanged: function(ev) {
+        this.set('pagination.pageNumber', 1);
+        this.set('pagination.pageSize', parseInt(ev.detail.value));
+      },
+      _pageNumberChanged: function(ev) {
+        this.set('pagination.pageNumber', parseInt(ev.detail.value));
+      },
+      paginationChanged: function(pageNumber, pageSize) {
+        pageNumber = parseInt(pageNumber);
+        pageSize = parseInt(pageSize);
+        let startingIndex = (pageNumber - 1) * pageSize;
+        this.dataItems = this.disaggregations.slice(startingIndex, startingIndex + pageSize );
+      },
       detached: function() {
         if (this.disaggregationModal) {
           Polymer.dom(document.querySelector('body')).removeChild(this.disaggregationModal);

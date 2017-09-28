@@ -10,14 +10,10 @@
         type: Array,
         notify: true
       },
-      ajaxEl: Object,
+      options: Object,
       useToastEvent: {
         type: Boolean,
         value: true
-      },
-      globalMessage: {
-        type: String,
-        value: 'An error occurred on data save!'
       },
       errorEventName: {
         value: null,
@@ -30,21 +26,13 @@
     },
 
     tryGetResponseError: function(response) {
-      try {
-        let req = response.detail.request.detail.request;
-        let error = req.response || req.xhr.response;
-
-        // response.detail.request.detail.request.response could be null for 500 server errors,
-        // we need to avoid returning null here
-        return error || this.globalMessage;
-
-      } catch (ex) {
-        console.warn(ex);
+      if (response.status >= 500) {
+        return this.globalMessage;
       }
-      return this.globalMessage;
+      return response.response || this.globalMessage;
     },
 
-    handleErrorResponse: function(response) {
+    handleErrorResponse: function(response, ajaxMethod) {
       this.fire('global-loading', {
         active: false,
         loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
@@ -53,7 +41,11 @@
 
       let errorMessage = this.globalMessage;
 
-      if (['POST', 'PATCH', 'DELETE'].indexOf(this.ajaxEl.method) > -1) {
+      if (!ajaxMethod) {
+        ajaxMethod = 'GET';
+      }
+
+      if (['POST', 'PATCH', 'DELETE'].indexOf(ajaxMethod) > -1) {
         this.set('serverErrors', this._getErrorsArray(errors, this.useToastEvent));
       }
       this.serverErrors = this.serverErrors ? this.serverErrors : [];

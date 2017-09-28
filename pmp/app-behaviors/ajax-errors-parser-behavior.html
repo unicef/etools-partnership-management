@@ -3,6 +3,12 @@
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
   /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxErrorsParser */
   EtoolsPmpApp.Behaviors.AjaxErrorsParser = {
+    properties: {
+      globalMessage: {
+        type: String,
+        value: 'An error occurred on data save!'
+      }
+    },
 
     _getErrorsArray: function(errors, prepareForToastMsg) {
       let errorsArray = [];
@@ -77,9 +83,12 @@
       return errors;
     },
 
-    parseRequestErrorsAndShowAsToastMsgs: function(errorResponse, source) {
-      let errorsString = this.formatServerErrorAsText(errorResponse);
-      console.log('errorsString', errorsString);
+    parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
+      if (error.status >= 500) {
+        let errorsString = this.globalMessage;
+      } else {
+        let errorsString = this.formatServerErrorAsText(error.response);
+      }
       if (errorsString) {
         if (!source) {
           source = this;
