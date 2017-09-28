@@ -1,22 +1,10 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../../app-behaviors/list-data-behavior.html">
 <link rel="import" href="../../../../bower_components/moment-element/moment-import.html">
 
 <dom-module id="interventions-list-data">
-
-  <template>
-
-    <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="interventions"
-                 renew-data-on-expiry
-                 on-success="_handleResponse"></etools-ajax>
-
-  </template>
 
   <script>
     (function() {
@@ -27,7 +15,7 @@
         is: 'interventions-list-data',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.DataElement
+          EtoolsPmpApp.Behaviors.ListData
         ],
 
         properties: {
@@ -70,7 +58,7 @@
             this.currentQuery.abort();
           }
 
-          var _this = this;
+          let self = this;
 
           if (showQueryLoading) {
             this.fire('global-loading', {
@@ -80,10 +68,11 @@
             });
           }
 
-          this.db.transaction('r', this.db.interventions, function() {
-            this.currentQuery = Dexie.currentTransaction;
+          let interventionsDexieTable = EtoolsPmpApp.DexieDb.interventions;
+          EtoolsPmpApp.DexieDb.transaction('r', interventionsDexieTable, function() {
+            self.currentQuery = Dexie.currentTransaction;
 
-            var queryResult = _this.db.interventions;
+            let queryResult = interventionsDexieTable;
             if (field) {
               // note: null values don't appear in result set of sort
               queryResult = queryResult.orderBy(field);
@@ -95,7 +84,7 @@
             queryResult = queryResult.filter(function(intervention) {
 
               if (documentTypes.length) {
-                var matchType = documentTypes.filter(function(selectedType) {
+                let matchType = documentTypes.filter(function(selectedType) {
                   return selectedType === intervention.document_type;
                 })[0];
 
@@ -105,7 +94,7 @@
               }
 
               if (cpOutputs.length) {
-                var matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
+                let matchCpOut = intervention.cp_outputs.filter(function(cpOut) {
                   return cpOutputs.indexOf(cpOut + '') > -1;
                 });
                 if (matchCpOut && matchCpOut.length === 0) {
@@ -114,7 +103,7 @@
               }
 
               if (interventionStatuses.length) {
-                var matchStatus = interventionStatuses.filter(function(selectedStatus) {
+                let matchStatus = interventionStatuses.filter(function(selectedStatus) {
                   return selectedStatus === intervention.status;
                 })[0];
 
@@ -124,7 +113,7 @@
               }
 
               if (sectors.length) {
-                var matchSectors = intervention.sectors.filter(function(sector) {
+                let matchSectors = intervention.sectors.filter(function(sector) {
                   return sectors.indexOf(sector) > -1;
                 });
                 if (matchSectors && matchSectors.length === 0) {
@@ -132,7 +121,7 @@
                 }
               }
               if (unicefFocalPoints.length) {
-                var matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
+                let matchUnicefFocalPoints = intervention.unicef_focal_points.filter(function(fPt) {
                   return unicefFocalPoints.indexOf(fPt + '') > -1;
                 });
                 if (matchUnicefFocalPoints && matchUnicefFocalPoints.length === 0) {
@@ -141,7 +130,7 @@
               }
 
               if (offices.length) {
-                var matchOffices = intervention.offices.filter(function(officeId) {
+                let matchOffices = intervention.offices.filter(function(officeId) {
                   return offices.indexOf(officeId + '') > -1;
                 });
                 if (matchOffices && matchOffices.length === 0) {
@@ -174,7 +163,7 @@
             // instead of blocking the main query
             Dexie.ignoreTransaction(function() {
               queryResult.count(function(count) {
-                _this._setTotalResults(count);
+                self._setTotalResults(count);
               });
             });
 
@@ -184,11 +173,11 @@
                 .toArray();
 
           }).then(function(result) {
-            _this._setFilteredInterventions(result);
-            _this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+            self._setFilteredInterventions(result);
+            self.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
           }).catch(function(error) {
             console.error('Error querying interventions: ' + error);
-            _this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
+            self.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-list'});
           });
         }
 
