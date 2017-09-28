@@ -1,20 +1,12 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="partner-item-data">
-
-  <template>
-    <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="dexie"
-                 on-success="_handleSuccResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
-  </template>
 
   <script>
     (function() {
@@ -24,22 +16,26 @@
 
         is: 'partner-item-data',
         behaviors: [
+          EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsLogsBehavior,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
-
+          partnerEndpoints: {
+            type: Object,
+            value: {
+              DETAILS: 'partnerDetails',
+              CREATE: 'createPartner',
+              DELETE: 'deletePartner'
+            }
+          },
           partner: {
             type: Object,
             readOnly: true,
             notify: true
           },
-          endpoint: {
-            type: Object,
-            reflectToAttribute: true
-          },
-
           partnerId: {
             type: Number,
             notify: true,
@@ -48,12 +44,9 @@
           deletedPartnerId: {
             type: Number,
           },
-          withUpload: Boolean,
-          prepareMultipartData: Boolean,
-
           handleSuccResponseAdditionalCallback: Object,
           handleErrResponseAdditionalCallback: Object,
-          ajaxEl: Object,
+          _skipDefaultErrorHandler: Boolean,
           /**
            * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
            */
@@ -63,22 +56,14 @@
           }
         },
         actions: {
-           deletePartner: function(partnerId) {
+          deletePartner: function(partnerId) {
             return {
               type: 'DELETE_PARTNER',
               partnerId: partnerId
             };
           }
         },
-        attached: function() {
-          this.ajaxEl = this.$.ajax;
-        },
-        _prepareEndpoint: function(partnerId) {
-          if (partnerId > 0) {
-            // prepare request endpoint
-            this.set('endpoint', this.getEndpoint('partnerDetails', {id: partnerId}));
-          }
-        },
+
         _partnerIdChanged: function(newId) {
           if (newId) {
             // set an empty partner
@@ -89,65 +74,33 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this._prepareAndFireRequest();
-            this.$.ajax.set('endpoint', this.getEndpoint('partnerDetails', {id: newId}));
-          } else {
-            this._prepareAndFireRequest(null);
+            this._triggerPartnerRequest({endpoint: this.getEndpoint(this.partnerEndpoints.DETAILS, {id: newId})});
           }
-        },
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-          this.ajaxEl.setContentType(null);
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
-            this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
-          }
-          this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
-            if (multipart) {
-              this.ajaxEl.set('multiPart', true);
-            } else {
-              this.ajaxEl.set('multiPart', false);
-            }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
-            } else {
-              this.ajaxEl.set('prepareMultipartData', false);
-            }
-            this.ajaxEl.set('body', data);
-            this.ajaxEl.set('url', url);
-          }
-          // after body is set the request is automatically triggered
         },
 
-        _handleSuccResponse: function(response) {
-          this._setPartner(response.detail);
+        _triggerPartnerRequest: function(options) {
+          let self = this;
+          let ajaxMethod = options.method || 'GET';
+          this.sendRequest(options).then(function(resp) {
+            self._handleSuccResponse(resp, ajaxMethod);
+          }).catch(function(error) {
+            self._handleErrorResponse(error, ajaxMethod);
+          });
+        },
+
+        _handleSuccResponse: function(response, ajaxMethod) {
+          this._setPartner(response);
 
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
+            this.handleSuccResponseAdditionalCallback.bind(this, response)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
             this.set('handleErrResponseAdditionalCallback', null);
           }
-          let ajaxMethod = this.$.ajax.get('method');
           let self = this;
-          if (['GET','DELETE'].indexOf(ajaxMethod) === -1) {
+          if (['GET', 'DELETE'].indexOf(ajaxMethod) === -1) {
             // update the partners list in dexieDB
-            EtoolsPmpApp.DexieDb.table('partners').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('partners').put(response).then(function() {
               self.fire('reload-list');
             });
           }
@@ -158,16 +111,23 @@
             });
           }
         },
-        _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
+
+        _handleErrorResponse: function(response, ajaxMethod) {
+          if (this._skipDefaultErrorHandler) {
+            this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
+          } else {
+            this.handleErrorResponse(response, ajaxMethod);
+          }
+          this.set('_skipDefaultErrorHandler', false);
 
           if (typeof this.handleErrResponseAdditionalCallback === 'function') {
             this.handleErrResponseAdditionalCallback.bind(this,
-                  this.formatServerErrorAsText(this.tryGetResponseError(response)))();
+                this.formatServerErrorAsText(this.tryGetResponseError(response)))();
           }
           this.handleErrResponseAdditionalCallback = null;
           this.handleSuccResponseAdditionalCallback = null;
         },
+
         createPartner: function(vendorNoObj, successCallback, errorCallback) {
           if (!vendorNoObj && !vendorNoObj.vendor) {
             this.fire('toast', {text: 'Invalid Vendor Number for new partner!', showCloseBtn: true});
@@ -183,37 +143,30 @@
           this.handleSuccResponseAdditionalCallback = successCallback;
           this.handleErrResponseAdditionalCallback = errorCallback;
 
-          this.set('endpoint', this.getEndpoint('createPartner', vendorNoObj));
-          this.ajaxEl.set('method', 'POST');
-          this.ajaxEl.set('multiPart', false);
-          this.ajaxEl.set('prepareMultipartData', false);
-          this.ajaxEl.set('url', this.endpoint.url);
-          this.ajaxEl.set('body', {});
-
+          this.set('_skipDefaultErrorHandler', true);
+          let endpoint = this.getEndpoint(this.partnerEndpoints.CREATE, vendorNoObj);
+          this._triggerPartnerRequest({method: 'POST', endpoint: endpoint, body: {}});
         },
+
         deletePartner: function(partner, succCallback, errCallback) {
           if (!partner.id) {
             return;
           }
-          var endpoint = this.getEndpoint('deletePartner', {id: partner.id});
-          this.deletedPartnerId = partner.id;
 
+          this.deletedPartnerId = partner.id;
           this.handleSuccResponseAdditionalCallback = succCallback;
           this.handleErrResponseAdditionalCallback = errCallback;
 
-          this.ajaxEl.set('method', 'DELETE');
-          this.ajaxEl.set('multiPart', false);
-          this.ajaxEl.set('prepareMultipartData', false);
-          this.ajaxEl.set('url', endpoint.url);
-          this.ajaxEl.set('body', {});
+          let endpoint = this.getEndpoint(this.partnerEndpoints.DELETE, {id: partner.id});
+          this._triggerPartnerRequest({method: 'DELETE', endpoint: endpoint, body: {}});
         },
+
         savePartner: function(partner, callback) {
           if (typeof partner === 'object' && Object.keys(partner).length === 0) {
             this.fire('toast', {text: 'Invalid partner data!', showCloseBtn: true});
           } else {
-            var url = null;
-            var isNew = false;
-            var partnerId = partner.id;
+            let endpoint = null;
+            let partnerId = partner.id;
             // remove id from data
             if (partner.id) {
               delete partner.id;
@@ -221,26 +174,25 @@
             if (Object.keys(partner).length > 0) {
               if (partnerId) {
                 // prepare PATCH endpoint
-                this._prepareEndpoint(partnerId);
-                url = this.endpoint.url;
+                endpoint = this.getEndpoint(this.partnerEndpoints.DETAILS, {id: partnerId});
               } else {
-                // new partner, use POST method for the same endpoint
-                var partnersEndpoint = this.getEndpoint('partners');
-                url = partnersEndpoint.url;
-                isNew = true;
+                // no valid partner id, cannot update
+                this.fire('toast', {
+                  text: 'Update cannot be made. Invalid partner ID.',
+                  showCloseBtn: true
+                });
+                return;
               }
               // set additional callback if any
               if (callback) {
                 this.set('handleSuccResponseAdditionalCallback', callback);
               }
-              this.withUpload = false; // used to set multipart prop on etools-ajax
-              this.prepareMultipartData = false;
+              let withUpload = false; // used to set multipart prop on etools-ajax
               if (partner.hasOwnProperty('core_values_assessment')) {
                 if (partner.core_values_assessment instanceof File) {
-                  this.withUpload = true;
-                  this.prepareMultipartData = true;
+                  withUpload = true;
                 } else {
-                   delete partner.core_values_assessment;
+                  delete partner.core_values_assessment;
                 }
               }
               if (partner.hasOwnProperty('assessments')) {
@@ -248,13 +200,12 @@
                 if ((Array.isArray(partner.assessments)) && (partner.assessments.length > 0)) {
 
                   partner.assessments = partner.assessments.map(function(assessment) {
-                      if (assessment.report instanceof File) {
-                        this.withUpload = true;
-                        this.prepareMultipartData = true;
-                      } else {
-                        delete assessment.report;
-                      }
-                      return assessment;
+                    if (assessment.report instanceof File) {
+                      withUpload = true;
+                    } else {
+                      delete assessment.report;
+                    }
+                    return assessment;
                   }, this);
                 }
               }
@@ -264,8 +215,8 @@
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, partner, url, this.withUpload, this.prepareMultipartData);
+              this._triggerPartnerRequest({method: 'PATCH', endpoint: endpoint, body: partner,
+                multiPart: withUpload, prepareMultipartData: withUpload});
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this partner.',

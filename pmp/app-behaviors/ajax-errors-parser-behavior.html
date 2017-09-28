@@ -79,7 +79,6 @@
 
     parseRequestErrorsAndShowAsToastMsgs: function(errorResponse, source) {
       let errorsString = this.formatServerErrorAsText(errorResponse);
-      console.log('errorsString', errorsString);
       if (errorsString) {
         if (!source) {
           source = this;
