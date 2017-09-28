@@ -133,7 +133,7 @@
     _showErrorsWarning: function(validDetails, validReviewAndSign) {
       let msg = '';
       if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
-        msg = 'Status of the PD will change to signed once all required fields are completed ' +
+        msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
             '(check DETAILS and REVIEW & SIGN tabs).';
       } else {
         msg = 'Please review invalid fields data';
