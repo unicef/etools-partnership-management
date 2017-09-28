@@ -114,7 +114,7 @@
 
               if (sections.length) {
                 let matchSections = intervention.sections.filter(function(section) {
-                  return sections.indexOf(section) > -1;
+                  return sections.indexOf(section + '') > -1;
                 });
                 if (matchSections && matchSections.length === 0) {
                   return false;

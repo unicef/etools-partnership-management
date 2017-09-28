@@ -211,7 +211,7 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Section</span>
-              <span>[[getDisplayValue(intervention.sections)]]</span>
+              <span>[[getDisplayValue(intervention.section_names)]]</span>
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
@@ -595,7 +595,7 @@
                 _.map(this.selectedDocumentTypes, 'value'),
                 this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
                 _.map(this.selectedStatuses, 'value'),
-                _.map(this.selectedSections, 'name'),
+                this._prepareQueryStrVal(this.selectedSections, 'id'),
                 this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
                 this._prepareQueryStrVal(this.selectedOffices, 'id'),
                 this.startDate,

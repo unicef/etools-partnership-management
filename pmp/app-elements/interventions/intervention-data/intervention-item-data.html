@@ -70,7 +70,7 @@
           let self = this;
           let ajaxMethod = options.method || 'GET';
           this.sendRequest(options).then(function(resp) {
-            self._handleSuccResponse(resp, ajaxMethod);
+            self._handleResponse(resp, ajaxMethod);
           }).catch(function(error) {
             self._handleErrorResponse(error, ajaxMethod);
           });
