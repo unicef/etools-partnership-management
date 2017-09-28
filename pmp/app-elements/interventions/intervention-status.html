@@ -145,12 +145,14 @@
           switch (status) {
 
             case 'signed':
+              availableOptions.push('Terminate');
               availableOptions.push('Suspend');
               availableOptions.push('Save');
               break;
 
             case 'active':
               availableOptions.push('Terminate');
+              availableOptions.push('Suspend');
               availableOptions.push('Save');
               break;
 
