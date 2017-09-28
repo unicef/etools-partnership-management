@@ -146,10 +146,12 @@
 
             case 'signed':
               availableOptions.push('Suspend');
+              availableOptions.push('Terminate');
               availableOptions.push('Save');
               break;
 
-            case 'active':
+              case 'active':
+              availableOptions.push('Suspend');
               availableOptions.push('Terminate');
               availableOptions.push('Save');
               break;
