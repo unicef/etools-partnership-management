@@ -1,22 +1,14 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import"
+      href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="intervention-item-data">
-
-  <template>
-    <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="dexie"
-                 on-success="_handleResponse"
-                 on-fail="_handleErrorResponse"></etools-ajax>
-  </template>
 
   <script>
     (function() {
@@ -25,14 +17,21 @@
 
         is: 'intervention-item-data',
         behaviors: [
+          EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors,
           EtoolsLogsBehavior,
-          EtoolsAjaxRequestBehavior
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
-
+          pdEndpoints: {
+            type: Object,
+            value: {
+              DETAILS: 'interventionDetails',
+              CREATE: 'interventions',
+              AGREEMENT_DETAILS: 'agreementDetails'
+            }
+          },
           intervention: {
             type: Object,
             readOnly: true,
@@ -41,10 +40,6 @@
           originalIntervention: {
             type: Object
           },
-          endpoint: {
-            type: Object
-          },
-
           interventionId: {
             type: Number,
             notify: true,
@@ -52,7 +47,7 @@
           },
 
           handleResponseAdditionalCallback: Object,
-          ajaxEl: Object,
+
           offices: {
             type: Array,
             statePath: 'offices'
@@ -67,11 +62,17 @@
           ajaxLoadingMsgSource: {
             type: String,
             value: 'pd-ssfa-data'
-          }
+          },
         },
 
-        attached: function() {
-          this.ajaxEl = this.$.ajax;
+        _triggerInterventionRequest: function(options) {
+          let self = this;
+          let ajaxMethod = options.method || 'GET';
+          this.sendRequest(options).then(function(resp) {
+            self._handleSuccResponse(resp, ajaxMethod);
+          }).catch(function(error) {
+            self._handleErrorResponse(error, ajaxMethod);
+          });
         },
 
         _interventionIdChanged: function(newId) {
@@ -81,56 +82,56 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            this._prepareAndFireRequest();
-            this.set('endpoint', this.getEndpoint('interventionDetails', {id: newId}));
+            this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
           }
         },
-        _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
+
+        _handleErrorResponse: function(response, ajaxMethod) {
+          this.handleErrorResponse(response, ajaxMethod);
           this._restoreUnsuccessfullyDeletedFrs();
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
-           this.set('intervention.frs_details', this.originalIntervention.frs_details);
-           this.set('intervention.frs', this.originalIntervention.frs);
+          this.set('intervention.frs_details', this.originalIntervention.frs_details);
+          this.set('intervention.frs', this.originalIntervention.frs);
         },
         /**
          * Handle received data from request
          */
-        _handleResponse: function(response) {
-          response.detail.original_sectors = JSON.parse(JSON.stringify(response.detail.sector_locations));
-          this._setIntervention(response.detail);
+        _handleSuccResponse: function(response, ajaxMethod) {
+          response.original_sectors = JSON.parse(JSON.stringify(response.sector_locations));
+          this._setIntervention(response);
 
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
-            this.handleResponseAdditionalCallback.bind(this, response.detail)();
+            this.handleResponseAdditionalCallback.bind(this, response)();
             // reset callback
             this.set('handleResponseAdditionalCallback', null);
           }
 
-          var self = this;
-          if (this.$.ajax.get('method') !== 'GET') {
+          let self = this;
+          if (ajaxMethod !== 'GET') {
             // update the interventions list in dexieDB
-            var mappedResponse = this._formatResponseDataForDexie(response.detail);
+            let mappedResponse = this._formatResponseDataForDexie(response);
             EtoolsPmpApp.DexieDb.table('interventions').put(mappedResponse).then(function() {
               self.fire('reload-list');
             });
 
-            if (response.detail.document_type && response.detail.document_type === 'SSFA' &&
-                response.detail.status !== 'draft') {
+            if (response.document_type && response.document_type === 'SSFA' &&
+                response.status !== 'draft') {
               this.sendRequest({
-                endpoint: this.getEndpoint('agreementDetails', {id: response.detail.agreement})
-                }).then(function(resp) {
-                  self.updateAgreeementStatus.bind(self, resp)();
-                });
+                endpoint: this.getEndpoint(this.pdEndpoints.AGREEMENT_DETAILS, {id: response.agreement})
+              }).then(function(resp) {
+                self.updateAgreeementStatus.bind(self, resp)();
+              });
             }
           }
         },
         updateAgreeementStatus: function(agreement) {
-           var minimalAgreement = this._getMinimalAgreementData(agreement);
-           EtoolsPmpApp.DexieDb.table('agreements').put(minimalAgreement);
+          let minimalAgreement = this._getMinimalAgreementData(agreement);
+          EtoolsPmpApp.DexieDb.table('agreements').put(minimalAgreement);
         },
         _getMinimalAgreementData: function(detail) {
-          var minimalAgrData = {
+          let minimalAgrData = {
             agreement_number: '',
             agreement_type: '',
             end: null,
@@ -143,7 +144,8 @@
             start: null,
             status: ''
           };
-          for (var propName in minimalAgrData) {
+          let propName;
+          for (propName in minimalAgrData) {
             if (!detail.hasOwnProperty(propName)) {
               this.logWarn('Mapping property not found');
             } else {
@@ -152,65 +154,14 @@
           }
           return minimalAgrData;
         },
-        /**
-         * Set the method of the request and the body.
-         * Used for unsafe requests (PATCH/POST).
-         */
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-          this.ajaxEl.setContentType(null);
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
-            this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
-          }
-          this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && ['PATCH', 'POST'].indexOf(method) > -1) {
-
-            if (multipart) {
-              this.ajaxEl.set('multiPart', true);
-            } else {
-              this.ajaxEl.set('multiPart', false);
-            }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
-            } else {
-              this.ajaxEl.set('prepareMultipartData', false);
-            }
-
-            this.ajaxEl.set('body', data);
-            this.ajaxEl.set('url', url);
-          }
-          // after body is set the request is automatically triggered
-        },
-
-        _prepareEndpoint: function(interventionId) {
-          if (interventionId > 0) {
-            // check and prepare request URL
-            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
-              this.set('endpoint', this.getEndpoint('interventionDetails', {id: interventionId}));
-            }
-          }
-        },
 
         _hasFiles: function(list, property) {
           if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
             return false;
           }
-          var hasF = false;
-          for (var i = 0; i < list.length; i++) {
+          let hasF = false;
+          let i;
+          for (i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
             } else {
@@ -236,14 +187,19 @@
               if (callback) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
-              this._prepareEndpoint(data.interventionId);
               this.fire('global-loading', {
                 message: 'Changing intervention status...',
                 active: true,
                 loadingSource: this.ajaxLoadingMsgSource
               });
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
+              this._triggerInterventionRequest({
+                method: 'PATCH',
+                endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: data.interventionId}),
+                body: {
+                  status: data.status
+                }
+              });
             } else {
               this.fire('toast', {
                 text: 'Changing status to \'' + data.status + '\' is not allowed!',
@@ -260,17 +216,16 @@
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length === 0) {
             this.fire('toast', {text: 'Invalid intervention data!', showCloseBtn: true});
           } else {
-            var url = null;
-            var isNew = false;
+            let endpoint = null;
+            let isNew = false;
+            let prepareMultipartData = false;
 
             if (intervention.id) {
               // prepare PATCH endpoint
-              this._prepareEndpoint(intervention.id);
-              url = this.endpoint.url;
+              endpoint = this.getEndpoint(this.pdEndpoints.DETAILS, {id: intervention.id});
             } else {
               // new intervention, use POST method for the same endpoint
-              var interventionsEndpoint = this.getEndpoint('interventions');
-              url = interventionsEndpoint.url;
+              endpoint = this.getEndpoint(this.pdEndpoints.CREATE);
               isNew = true;
             }
             // remove id from data
@@ -282,29 +237,23 @@
               this.set('handleResponseAdditionalCallback', callback);
             }
 
-            var withUpload = false; // used to set multipart prop on etools-ajax
-            var prepareMultipartData = false;
             if (this._hasFiles(intervention.attachments, 'attachment')) {
-              withUpload = true;
               prepareMultipartData = true;
             }
             // check prc_review_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'prc_review_document')) {
-              withUpload = true;
               prepareMultipartData = true;
             } else {
               delete intervention.prc_review_document;
             }
             // check signed_pd_document doc, if no file delete the property from the object
             if (this._fileField(intervention, 'signed_pd_document')) {
-              withUpload = true;
               prepareMultipartData = true;
             } else {
               delete intervention.signed_pd_document;
             }
 
             if (this._hasFiles(intervention.amendments, 'signed_amendment')) {
-              withUpload = true;
               prepareMultipartData = true;
             }
             if (Array.isArray(intervention.sector_locations)) {
@@ -327,14 +276,15 @@
               active: true,
               loadingSource: this.ajaxLoadingMsgSource
             });
-            // fire in the hole
-            this._prepareAndFireRequest((isNew) ? 'POST' : 'PATCH',
-                intervention, url, withUpload, prepareMultipartData);
+
+            let method = (isNew) ? 'POST' : 'PATCH';
+            this._triggerInterventionRequest({method: method, endpoint: endpoint, body: intervention,
+              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData});
           }
         },
 
         _formatResponseDataForDexie: function(responseDetail) {
-          var dexieObject = {};
+          let dexieObject = {};
           dexieObject.sectors = [];
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
@@ -366,7 +316,7 @@
 
         _updatePlannedBudgetInfo: function(dexieObject, intervention) {
           dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
-            parseFloat(intervention.planned_budget.in_kind_amount);
+              parseFloat(intervention.planned_budget.in_kind_amount);
           dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution);
           dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
           dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash);
@@ -391,8 +341,8 @@
           dexieObject.offices_names = this._getSelectedOfficesNames(responseDetail);
         },
         _getSelectedOfficesNames: function(responseDetail) {
-          var selectedOffices = this.offices.filter(function(office) {
-             return responseDetail.offices.indexOf(office.id.toString()) > -1;
+          let selectedOffices = this.offices.filter(function(office) {
+            return responseDetail.offices.indexOf(office.id.toString()) > -1;
           });
           if (!selectedOffices) {
             return [];
@@ -409,12 +359,12 @@
           dexieObject.sectors = this._getSelectedSectorsNames(responseDetail);
         },
         _getSelectedSectorsNames: function(responseDetail) {
-           var selectedSectorIds = responseDetail.sector_locations.map(function(sl) {
+          let selectedSectorIds = responseDetail.sector_locations.map(function(sl) {
             return (sl.sector && typeof sl.sector === 'object')
-                    ? sl.sector.id.toString()
-                    : sl.sector.toString();
+                ? sl.sector.id.toString()
+                : sl.sector.toString();
           });
-          var selectedSectors = this.sectors.filter(function(sector) {
+          let selectedSectors = this.sectors.filter(function(sector) {
             return selectedSectorIds.indexOf(sector.id.toString()) > -1;
           });
           if (!selectedSectors) {
