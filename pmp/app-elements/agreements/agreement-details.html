@@ -510,6 +510,10 @@
           return this.agreement.status === 'draft' || this.agreement.status === '';
         },
 
+        _isNew: function() {
+          return !this.agreement.id;
+        },
+
         _allowEdit: function(agreementStatus, editMode) {
           editMode = editMode || this.editMode;
           if (!editMode) {
@@ -522,7 +526,7 @@
         },
 
         _showGeneratePcaBtn: function(type) {
-          return type === 'PCA' && this._isDraft();
+          return type === 'PCA' && this._isDraft() && !this._isNew();
         },
 
         _partnerChanged: function(currentPartnerId) {
