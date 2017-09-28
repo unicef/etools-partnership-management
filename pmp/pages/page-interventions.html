@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
@@ -18,11 +19,13 @@
 
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
 <link rel="import" href="../app-elements/interventions/reports/intervention-reports.html">
+<link rel="import" href="../app-elements/interventions/progress/intervention-progress.html">
 
 <link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
+
 <link rel="import" href="../../scripts/lodash/lodash.html">
 
 <dom-module id="page-interventions">
@@ -188,6 +191,11 @@
                                   name="reports"></intervention-reports>
           </template>
 
+          <template is="dom-if" if="[[_pageEquals(interventionPage, 'progress')]]">
+            <intervention-progress name="progress"
+                                   intervention="[[intervention]]"></intervention-progress>
+          </template>
+
         </iron-pages>
 
         <intervention-item-data id="interventionData"
@@ -228,6 +236,7 @@
 
       is: 'page-interventions',
       behaviors: [
+        EtoolsLogsBehavior,
         etoolsBehaviors.DynamicDialogBehavior,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
@@ -361,7 +370,7 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
-        var dialog = document.createElement('div');
+        let dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
         dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
         this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
@@ -485,8 +494,11 @@
             // return new intervention page tab name
             page = this.routeDataNewInterv.intTab;
           } else {
-            // return intervention details page tab name
+            // return intervention page tab name
             page = this.routeData.intTab;
+            if (['reports', 'progress'].indexOf(page) > -1) {
+              pageBaseUrl += page + '/';
+            }
           }
           pagePrefix = 'intervention-';
         }

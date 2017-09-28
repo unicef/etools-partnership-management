@@ -1,29 +1,46 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/page-common-styles.html">
 
 <dom-module id="intervention-progress">
 
   <template strip-whitespace>
 
-    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
+    <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
 
       }
     </style>
 
-    <paper-material id="progress-summary" elevation="1">
+    <paper-material id="progress-summary" class="content-section" elevation="1">
+      <div class="row-h">
+        <div class="col col-4">
+          <etools-form-element-wrapper label="PD Duration">
+            [[_getPdDuration(intervention.start, intervention.end)]]
+          </etools-form-element-wrapper>
+        </div>
+        <div class="col col-4">
 
+        </div>
+        <div class="col col-4">
+
+        </div>
+      </div>
     </paper-material>
 
-    <paper-material id="results" elevation="1">
+    <etools-content-panel class="content-section" panel-title="Cp output here">
 
-    </paper-material>
+    </etools-content-panel>
 
   </template>
 
@@ -34,6 +51,14 @@
       Polymer({
         is: 'intervention-progress',
 
+        behaviors: [
+          EtoolsPmpApp.Behaviors.Common
+        ],
+
+        properties: {
+          intervention: Object
+        },
+
         attached: function() {
           /**
            * Disable loading message for progress tab elements load,
@@ -42,6 +67,12 @@
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
         },
+
+        _getPdDuration: function(start, end) {
+          let startDate = this.getDateDisplayValue(start) || 'N/A';
+          let endDate = this.getDateDisplayValue(end) || 'N/A';
+          return startDate + ' - ' + endDate;
+        }
       });
 
     })();
