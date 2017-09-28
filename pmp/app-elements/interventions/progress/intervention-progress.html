@@ -1,0 +1,50 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+
+<dom-module id="intervention-progress">
+
+  <template strip-whitespace>
+
+    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
+      :host {
+
+      }
+    </style>
+
+    <paper-material id="progress-summary" elevation="1">
+
+    </paper-material>
+
+    <paper-material id="results" elevation="1">
+
+    </paper-material>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'intervention-progress',
+
+        attached: function() {
+          /**
+           * Disable loading message for progress tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
+        },
+      });
+
+    })();
+  </script>
+
+</dom-module>
