@@ -4,6 +4,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
@@ -49,11 +50,11 @@
         width: 100%;
       }
 
-      #generate-pca {
+      .generate-pca {
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
       }
-      #generate-pca[hidden] + .col {
+      .generate-pca[hidden] + .col {
         padding-left: 0;
       }
 
@@ -246,8 +247,8 @@
           </etools-form-element-wrapper>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
-          <div id="generate-pca" class="col col-3"
-               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
+          <div class="generate-pca col col-3"
+               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -258,6 +259,13 @@
                 GENERATE
               </paper-button>
             </paper-input-container>
+          </div>
+          <div class="generate-pca col col-3"
+               hidden="[[!_showGeneratePcaToolTip(agreement.agreement_type, isNewAgreement)]]">
+               <etools-info-tooltip theme="light" icon-first>
+                  <span slot="field"> You have to save the agreement before you can generate a PCA template </span>
+                  <span slot="message"> You have to save the agreement before you can generate a PCA template </span>
+                </etools-info-tooltip>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-single-file
@@ -510,10 +518,6 @@
           return this.agreement.status === 'draft' || this.agreement.status === '';
         },
 
-        _isNew: function() {
-          return !this.agreement.id;
-        },
-
         _allowEdit: function(agreementStatus, editMode) {
           editMode = editMode || this.editMode;
           if (!editMode) {
@@ -525,8 +529,12 @@
           return false;
         },
 
-        _showGeneratePcaBtn: function(type) {
-          return type === 'PCA' && this._isDraft() && !this._isNew();
+        _showGeneratePcaBtn: function(type, isNewAgreement) {
+          return type === 'PCA' && this._isDraft() && !isNewAgreement;
+        },
+
+        _showGeneratePcaToolTip: function(type, isNewAgreement) {
+          return type === 'PCA' && isNewAgreement;
         },
 
         _partnerChanged: function(currentPartnerId) {
