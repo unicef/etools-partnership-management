@@ -162,7 +162,7 @@
         <div class="row-h">
           <div class="col col-2"> Risk Rating</div>
           <div class="col col-2"> Current CP Cycle</div>
-          <div class="col col-2"> Current Year</div>
+          <div class="col col-2"> Cash Transfers (1 Oct - 30 Sep)</div>
           <div class="col col-2"> Planned / M.R. / Done</div>
           <div class="col col-2"> Done / M.R.</div>
           <div class="col col-2"> Done / M.R.</div>
@@ -174,10 +174,7 @@
             <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
           </div>
           <div class="col col-2 center-align"> $[[displayCurrencyAmount(partner.total_ct_cp, '0', 0)]]</div>
-          <div class="col col-2 center-align block"> $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]] <br>
-            <small>
-              out of $[[displayCurrencyAmount(partner.hact_values.planned_cash_transfer, '0', 0)]] planned
-            </small>
+          <div class="col col-2 center-align block"> $[[displayCurrencyAmount(partner.total_ct_cy, '0', 0)]]
           </div>
           <div class="col col-2 center-align">
             <strong>
