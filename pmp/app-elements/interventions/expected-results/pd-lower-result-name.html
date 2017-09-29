@@ -139,9 +139,17 @@
           lowerResult: response
         };
 
+        this._initializeToBeAbleToAddIndicator(data.lowerResult)
+
         this.fire('lower-result-saved', data);
         this.closeDialog();
+      },
+
+      _initializeToBeAbleToAddIndicator: function(lowerResult) {
+        if (!lowerResult.applied_indicators) {
+          lowerResult.applied_indicators = [];
       }
+    },
 
     });
   </script>
