@@ -45,7 +45,7 @@
         this.sendRequest(Object.assign({}, config, additionalConfig)).then(function(resp) {
           self._handleResponse(resp);
         }).catch(function(error) {
-          self.parseRequestErrorsAndShowAsToastMsgs(error);
+          self.parseRequestErrorsAndShowAsToastMsgs(error.response);
           self._hideProfileSaveLoadingMsg();
         });
       },

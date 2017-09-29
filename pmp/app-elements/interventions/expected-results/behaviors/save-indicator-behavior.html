@@ -75,7 +75,7 @@
         }).then(function(resp) {
           self._handleSaveIndicatorResponse(resp);
         }).catch(function(error) {
-          self._handleSaveIndicatorError(error.response);
+          self._handleSaveIndicatorError(error);
         });
       },
       validate: function() {
@@ -107,7 +107,7 @@
         this._stopSpinner();
         this.disableConfirmBtn = false;
 
-        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        this.parseRequestErrorsAndShowAsToastMsgs(error.response, this.toastEventSource);
       },
       _getIndicatorBody: function() {
           let body = this._getIndicatorModelForSave();

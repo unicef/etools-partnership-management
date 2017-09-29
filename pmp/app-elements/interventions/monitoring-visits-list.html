@@ -138,7 +138,7 @@
               self.set('showLoading', false);
             }).catch(function(error) {
               self.set('showLoading', false);
-              self.parseRequestErrorsAndShowAsToastMsgs(error);
+              self.parseRequestErrorsAndShowAsToastMsgs(error.response);
             });
           }
         },
