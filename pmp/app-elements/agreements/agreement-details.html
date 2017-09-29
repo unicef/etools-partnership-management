@@ -4,7 +4,6 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
@@ -43,6 +42,11 @@
         --esmm-list-wrapper: {
           max-height: 400px;
         }
+      }
+      .type-warning {
+        color: var(--warning-color);
+        @apply --layout-self-center;
+        @apply --layout-vertical;
       }
 
       paper-input,
@@ -262,10 +266,7 @@
           </div>
           <div class="generate-pca col col-3"
                hidden="[[!_showGeneratePcaToolTip(agreement.agreement_type, isNewAgreement)]]">
-               <etools-info-tooltip theme="light" icon-first>
-                  <span slot="field"> You have to save the agreement before you can generate a PCA template </span>
-                  <span slot="message"> You have to save the agreement before you can generate a PCA template </span>
-                </etools-info-tooltip>
+               <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-single-file
