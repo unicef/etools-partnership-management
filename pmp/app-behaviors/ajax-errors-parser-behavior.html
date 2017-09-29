@@ -87,7 +87,7 @@
       if (error.status >= 500) {
         errorsString = this.globalMessage;
       } else {
-        errorsString = this.formatServerErrorAsText(error);
+        errorsString = this.formatServerErrorAsText(error.response);
       }
       if (errorsString) {
         if (!source) {
