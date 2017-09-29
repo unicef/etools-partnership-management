@@ -188,7 +188,7 @@
             </span>
             <span class="col-data flex-c">
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[validateFrsVsInterventionDates(intervention.start, intervention.frs_earliest_start_date)]]"
+                                   hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]"
                                    important-warning>
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -196,7 +196,7 @@
             </span>
             <span class="col-data flex-c">
                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip$="[[validateFrsVsInterventionDates(intervention.end, intervention.frs_latest_end_date)]]"
+                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]"
                                     important-warning>
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
@@ -790,6 +790,10 @@
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
+        },
+
+        _hideFrsWarningTooltip: function(date1, date2, status) {
+          return status === 'draft' || this.validateFrsVsInterventionDates(date1, date2);
         }
 
       });
