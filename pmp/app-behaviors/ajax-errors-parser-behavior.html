@@ -88,8 +88,12 @@
       if (error.status >= 500) {
         errorsString = this.globalMessage;
       } else {
-        errorsString = this.formatServerErrorAsText(error);
+        errorsString = this.formatServerErrorAsText(error.response);
       }
+      this.showErrorAsToastMsg(errorsString, source);
+    },
+
+    showErrorAsToastMsg: function(errorsString, source) {
       if (errorsString) {
         if (!source) {
           source = this;

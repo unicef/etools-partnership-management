@@ -128,7 +128,7 @@
         }).catch(function(error) {
           dialog.stopSpinner();
           self.set('disableConfirmBtn', false);
-          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
         });
       },
 

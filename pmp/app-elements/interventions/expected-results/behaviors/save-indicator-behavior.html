@@ -107,7 +107,7 @@
         this._stopSpinner();
         this.disableConfirmBtn = false;
 
-        this.parseRequestErrorsAndShowAsToastMsgs(error.response, this.toastEventSource);
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
       },
       _getIndicatorBody: function() {
           let body = this._getIndicatorModelForSave();

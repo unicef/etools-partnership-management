@@ -291,7 +291,7 @@
           this.$.indicatorDialog.startSpinner();
         },
         _showToast: function(e) {
-          this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
+          this.showErrorAsToastMsg(e.detail.error, this.toastEventSource);
         },
 
         resetValidations: function() {

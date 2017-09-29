@@ -177,7 +177,7 @@
           self.close()
         }).catch(function(error) {
           self.stopSpinner();
-          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
         });
 
       },
