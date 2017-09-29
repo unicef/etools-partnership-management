@@ -83,11 +83,16 @@
     },
 
     parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
+      let errorsString;
       if (error.status >= 500) {
-        let errorsString = this.globalMessage;
+        errorsString = this.globalMessage;
       } else {
-        let errorsString = this.formatServerErrorAsText(error.response);
+        errorsString = this.formatServerErrorAsText(error.response);
       }
+      this.showErrorAsToastMsg(errorsString, source);
+    },
+
+    showErrorAsToastMsg: function(errorsString, source) {
       if (errorsString) {
         if (!source) {
           source = this;
