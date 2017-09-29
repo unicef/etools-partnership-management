@@ -12,7 +12,7 @@
     <style include="shared-styles">
       :host {
         width: 235px;
-        @apply(--etools-date-input);
+        @apply --etools-date-input;
       }
       /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
       then include it in shared-styles(do not use shared-styles here) */
@@ -29,7 +29,8 @@
                  required$="[[required]]"
                  invalid$="[[invalid]]"
                  auto-validate$="[[autoValidate]]"
-                 error-message="[[errorMessage]]" validator="[[validator]]">
+                 error-message="[[errorMessage]]"
+                 validator="[[validator]]">
       <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
       <etools-datepicker-button id="datePickerButton"
                                 prefix

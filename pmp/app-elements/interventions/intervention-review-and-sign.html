@@ -19,9 +19,10 @@
 <link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
+<link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="fr-numbers/intervention-fund-reservations.html">
 
@@ -218,6 +219,7 @@
 
         behaviors: [
           EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions
@@ -322,7 +324,7 @@
           let signedByPartnerDateField = this.$$('#signedByPartnerDateField');
           let signedByUnicefDateField = this.$$('#signedByUnicefDateField');
 
-          if (this._dateIsInTheFuture(signedByPartnerDateField.value)) {
+          if (this.isFutureDate(signedByPartnerDateField.value)) {
             signedByPartnerDateField.errorMessage = "Signed Date can not be in the future";
             signedByPartnerDateField.invalid = true;
             valid = false;
@@ -331,7 +333,7 @@
             fieldsToValidateSelectors.push('#signedByPartnerDateField');
           }
 
-          if (this._dateIsInTheFuture(signedByUnicefDateField.value)) {
+          if (this.isFutureDate(signedByUnicefDateField.value)) {
             signedByUnicefDateField.errorMessage = "Signed Date can not be in the future";
             signedByUnicefDateField.invalid = true;
             valid = false;
@@ -408,15 +410,6 @@
             }
           }
         },
-
-        _dateIsInTheFuture: function(dateString) {
-          var date = Date.parse(dateString);
-          if (date) {
-            return date > Date.now();
-          }
-          return false;
-        },
-
       });
 
     })();

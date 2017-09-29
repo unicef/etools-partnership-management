@@ -21,6 +21,7 @@
 <link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../app-behaviors/date-behavior.html">
 
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
@@ -41,7 +42,7 @@
 
         --paper-fab-keyboard-focus-background: var(--add-button-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
 
@@ -59,7 +60,7 @@
 
       /* amendment template download section styles start */
       #download-template-wrapper {
-        @apply(--layout-justified);
+        @apply --layout-justified;
       }
       #download-template-msg {
         max-width: calc(100% - 210px);
@@ -189,7 +190,8 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.Date
         ],
 
         properties: {
@@ -258,14 +260,6 @@
             }
           }.bind(this));
           return isValid;
-        },
-
-        _signedDateIsInTheFuture: function(signedDate) {
-          var signedDt = Date.parse(signedDate);
-          if (signedDt) {
-            return signedDt > Date.now();
-          }
-          return false;
         },
 
         /**
@@ -358,7 +352,7 @@
           }
         },
         _getSignedDateErrorMessage: function(signedDate) {
-          return this._signedDateIsInTheFuture(signedDate)
+          return this.isFutureDate(signedDate)
               ? 'Signed Date can not be in the future'
               : 'Please select Signed Date';
         },
