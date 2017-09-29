@@ -1,10 +1,14 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="../../common-elements/etools-progress-bar.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -20,22 +24,42 @@
       :host {
 
       }
+
+      #progress-summary etools-progress-bar {
+        margin-top: 16px;
+      }
+
+      #cash-progress etools-form-element-wrapper {
+        width: 140px;
+      }
+
+      #cash-progress etools-form-element-wrapper:first-child {
+        margin-right: 24px;
+      }
+
+      .ram-indicators-names {
+        font-weight: bold;
+      }
     </style>
 
     <paper-material id="progress-summary" class="content-section" elevation="1">
       <div class="row-h">
-        <div class="col col-4">
+        <div class="layout-vertical col-4">
           <etools-form-element-wrapper label="PD Duration">
             [[_getPdDuration(intervention.start, intervention.end)]]
           </etools-form-element-wrapper>
+          <etools-progress-bar value="[[pdDurationProgress]]"></etools-progress-bar>
         </div>
-        <div class="col col-4">
-          <etools-form-element-wrapper label="Cash Transfered">
-            $ 50000,000
-          </etools-form-element-wrapper>
-          <etools-form-element-wrapper label="Planned">
-            $ 1,50000,000
-          </etools-form-element-wrapper>
+        <div class="layout-vertical col-4">
+          <div class="layout-horizontal" id="cash-progress">
+            <etools-form-element-wrapper label="Cash Transfered">
+              $ [[displayCurrencyAmount(50000, '0.00')]]
+            </etools-form-element-wrapper>
+            <etools-form-element-wrapper label="Planned">
+              $ [[displayCurrencyAmount(34534543, '0.00')]]
+            </etools-form-element-wrapper>
+          </div>
+          <etools-progress-bar value="[[cashProgress]]"></etools-progress-bar>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
@@ -45,9 +69,52 @@
       </div>
     </paper-material>
 
-    <etools-content-panel class="content-section" panel-title="Cp output here">
+    <template is="dom-repeat" items="[[intervention.result_links]]">
 
-    </etools-content-panel>
+      <etools-content-panel class="content-section" panel-title="[[item.cp_output_name]]">
+
+        <div class="row-v row-second-bg ram-indicators-names">
+          <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+            <span>[[ramIndicatorName]]</span>
+          </template>
+        </div>
+
+        <div class="row-h" hidden$="[[!_emptyLowerResults(item)]]">
+          <p>There are no PD Output or SSFA Expected Results.</p>
+        </div>
+
+        <div class="lower-results-table" hidden$="[[_emptyLowerResults(item)]]">
+
+          <etools-data-table-header id="listHeader">
+            <etools-data-table-column class="col-9">
+              PD Outputs or SSFA Expected Results
+            </etools-data-table-column>
+            <etools-data-table-column class="col-3">
+              Current progress
+            </etools-data-table-column>
+          </etools-data-table-header>
+
+          <template is="dom-repeat" items="[[item.ll_results]]" as="lowerResult">
+            <etools-data-table-row>
+              <div slot="row-data">
+                <span class="col-9">
+                  [[lowerResult.name]]
+                </span>
+                <span class="col-3">
+                  On track (21 Aug 2017)
+                </span>
+              </div>
+              <div slot="row-data-details">
+                indicators will go here...
+              </div>
+            </etools-data-table-row>
+          </template>
+
+        </div>
+
+      </etools-content-panel>
+
+    </template>
 
   </template>
 
@@ -59,11 +126,23 @@
         is: 'intervention-progress',
 
         behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          EtoolsLogsBehavior,
           EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
-          intervention: Object
+          intervention: Object,
+          pdDurationProgress: {
+            type: Number,
+            readOnly: true,
+            computed: '_getTimeProgress(intervention.start, intervention.end)'
+          },
+          cashProgress: {
+            type: Number,
+            readOnly: true,
+            computed: ''
+          }
         },
 
         attached: function() {
@@ -79,6 +158,29 @@
           let startDate = this.getDateDisplayValue(start) || 'N/A';
           let endDate = this.getDateDisplayValue(end) || 'N/A';
           return startDate + ' - ' + endDate;
+        },
+
+        _getTimeProgress: function(start, end) {
+          let todayDateStr = this.getTodayDateStr();
+          try {
+            if (this.dateIsBetween(start, end, todayDateStr)) {
+              let intervalTotalDays = this.dateDiff(start, end);
+              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
+              return intervalDaysCompleted * 100 / intervalTotalDays;
+            }
+          } catch (err) {
+            this.logWarn('Time progress compute error', 'intervention-progress', err);
+          }
+          // if end date is valid and is past date or today's date, progress should be 100%
+          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
+              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+            return 100;
+          }
+          return 0;
+        },
+
+        _emptyLowerResults: function(result) {
+          return result.ll_results.length === 0;
         }
       });
 
