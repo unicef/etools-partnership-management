@@ -128,9 +128,16 @@
       if (!this._canUpdateResult()) {
         return;
       }
-      this.push('dataItems', e.detail.result);
-    },
+      let resultLink = e.detail.result;
+      this._initializeToBeAbleToAddLowerResult(resultLink);
 
+      this.push('dataItems', resultLink);
+    },
+    _initializeToBeAbleToAddLowerResult: function(resultLink) {
+      if (!resultLink.ll_results) {
+        resultLink.ll_results = [];
+      }
+    },
     _handleResultUpdated: function(e) {
       e.stopImmediatePropagation();
       if (!this._canUpdateResult()) {
