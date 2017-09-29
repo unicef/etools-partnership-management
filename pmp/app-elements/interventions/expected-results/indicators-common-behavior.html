@@ -6,7 +6,9 @@
   EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior = {
     _baselineChanged: function(baseline) {
       if (!baseline) {
-        this.indicator.baseline = null; //* Avoid empty string or undefined being sent to backend
+        if (this.indicator) {
+          this.indicator.baseline = null; //* Avoid empty string or undefined being sent to backend
+        }
         return;
       }
       if (this.indicator.indicator.unit === 'percentage') {
