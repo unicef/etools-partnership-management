@@ -265,7 +265,7 @@
             </paper-input-container>
           </div>
           <div class="generate-pca col col-3"
-               hidden="[[!_showGeneratePcaToolTip(agreement.agreement_type, isNewAgreement)]]">
+               hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
                <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
@@ -534,7 +534,7 @@
           return type === 'PCA' && this._isDraft() && !isNewAgreement;
         },
 
-        _showGeneratePcaToolTip: function(type, isNewAgreement) {
+        _showGeneratePcaWarning: function(type, isNewAgreement) {
           return type === 'PCA' && isNewAgreement;
         },
 
