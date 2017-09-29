@@ -160,7 +160,7 @@
               self._handleRamIndicatorsReqResponse(response);
             }).catch(function(error) {
               self.fire('global-loading', {active: false, loadingSource: self.ramIndicatorsLoadingMsgSource});
-              self.parseRequestErrorsAndShowAsToastMsgs(error);
+              self.parseRequestErrorsAndShowAsToastMsgs(error.response);
             });
           }
         },
