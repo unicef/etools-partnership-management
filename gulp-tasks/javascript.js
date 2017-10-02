@@ -15,7 +15,7 @@ const $ = require('gulp-load-plugins')();
 
 // Minify Javascript
 function minify() {
-  var uglifyOptions = {gi
+  var uglifyOptions = {
     preserveComments: false
   };
   //return uglify(uglifyOptions);
