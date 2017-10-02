@@ -341,27 +341,6 @@
             '#signedByPartnerDateField', '#signedByUnicefDateField', '#intervAmendments'];
           let valid = true;
 
-          // let signedByPartnerDateField = this.$$('#signedByPartnerDateField');
-          // let signedByUnicefDateField = this.$$('#signedByUnicefDateField');
-
-          // if (this.isFutureDate(signedByPartnerDateField.value)) {
-          //   signedByPartnerDateField.errorMessage = "Signed Date can not be in the future";
-          //   signedByPartnerDateField.invalid = true;
-          //   valid = false;
-          // } else {
-          //   signedByPartnerDateField.errorMessage = "Please select Signed by Partner Date";
-          //   fieldsToValidateSelectors.push('#signedByPartnerDateField');
-          // }
-
-          // if (this.isFutureDate(signedByUnicefDateField.value)) {
-          //   signedByUnicefDateField.errorMessage = "Signed Date can not be in the future";
-          //   signedByUnicefDateField.invalid = true;
-          //   valid = false;
-          // } else {
-          //   signedByUnicefDateField.errorMessage = "Please select Signed by Unicef Date";
-          //   fieldsToValidateSelectors.push('#signedByUnicefDateField');
-          // }
-
           fieldsToValidateSelectors.forEach(function(selector) {
             let field = this.$$(selector);
             if (field && !field.validate()) {
