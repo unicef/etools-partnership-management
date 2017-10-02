@@ -1,12 +1,13 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../../common-elements/etools-progress-bar.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
@@ -15,6 +16,9 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../../styles/page-common-styles.html">
+
+<!-- TODO: remove this mockup data behavior after API is ready to be used  -->
+<link rel="import" href="progress-tab-data-mockup.html">
 
 <dom-module id="intervention-progress">
 
@@ -46,20 +50,24 @@
       <div class="row-h">
         <div class="layout-vertical col-4">
           <etools-form-element-wrapper label="PD Duration">
-            [[_getPdDuration(intervention.start, intervention.end)]]
+            [[progress.reporting_period]]
           </etools-form-element-wrapper>
-          <etools-progress-bar value="[[pdDurationProgress]]"></etools-progress-bar>
+          <!-- TODO: progress.pd_progress is unknown, missing -->
+          <etools-progress-bar value="[[progress.pd_progress]]"></etools-progress-bar>
         </div>
         <div class="layout-vertical col-4">
           <div class="layout-horizontal" id="cash-progress">
             <etools-form-element-wrapper label="Cash Transfered">
-              $ [[displayCurrencyAmount(50000, '0.00')]]
+              <!-- TODO: progress.amount_transfered is unknown, missing -->
+              $ [[displayCurrencyAmount(progress.amount_transfered, '0.00')]]
             </etools-form-element-wrapper>
             <etools-form-element-wrapper label="Planned">
-              $ [[displayCurrencyAmount(34534543, '0.00')]]
+              <!-- TODO: progress.amount_planned is unknown, missing -->
+              $ [[displayCurrencyAmount(progress.amount_planned, '0.00')]]
             </etools-form-element-wrapper>
           </div>
-          <etools-progress-bar value="[[cashProgress]]"></etools-progress-bar>
+          <!-- TODO: progress.amount_progress is unknown, missing -->
+          <etools-progress-bar value="[[progress.amount_progress]]"></etools-progress-bar>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
@@ -128,11 +136,21 @@
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
           EtoolsLogsBehavior,
-          EtoolsPmpApp.Behaviors.Common
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.ProgressTabDataMockup
         ],
 
         properties: {
-          intervention: Object,
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
+          progress: {
+            type: Object
+          },
+
           pdDurationProgress: {
             type: Number,
             readOnly: true,
@@ -152,6 +170,24 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
+        },
+
+        _interventionIdChanged: function(id) {
+          if (id) {
+            let self = this;
+            // TODO: endpoint parameter reportId id unknown
+            let endpoint = this.getEndpoint('interventionProgress', {pdId: id, reportId: 109});
+            this.sendRequest({endpoint: endpoint}).then(function(response) {
+              self.set('progress', response);
+            }).catch(function(error) {
+              let errMsg = 'PD/SSFA progress request failed!';
+              self.logError(errMsg, 'intervention-progress', error);
+              self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+              // TODO: remove mockup data use
+              self.set('progress', self.progressTabDataMokup);
+            });
+          }
         },
 
         _getPdDuration: function(start, end) {

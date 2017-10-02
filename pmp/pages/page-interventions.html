@@ -116,13 +116,16 @@
                 <span class="tab-content">Attachments</span>
               </paper-tab>
 
-              <paper-tab name="reports" link>
-                <span class="tab-content">Reports</span>
-              </paper-tab>
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="reports" link>
+                  <span class="tab-content">Reports</span>
+                </paper-tab>
 
-              <paper-tab name="progress" link>
-                <span class="tab-content">Progress</span>
-              </paper-tab>
+                <paper-tab name="progress" link>
+                  <span class="tab-content">Progress</span>
+                </paper-tab>
+              </template>
+
             </paper-tabs>
           </div>
         </template>
@@ -150,7 +153,7 @@
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
@@ -186,14 +189,14 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'reports')]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
                                   name="reports"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'progress')]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive))]]">
             <intervention-progress name="progress"
-                                   intervention="[[intervention]]"></intervention-progress>
+                                   intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
 
         </iron-pages>
@@ -591,8 +594,8 @@
         return newInterventionActive === true;
       },
 
-      _showInterventionOverview: function(interventionPage, newInterventionActive) {
-        return interventionPage === 'overview' && !this._newIntervention(newInterventionActive);
+      _vizibleTab: function(interventionPage, expectedPage, newInterventionActive) {
+        return this._pageEquals(interventionPage, expectedPage) && !this._newIntervention(newInterventionActive);
       },
 
       /**

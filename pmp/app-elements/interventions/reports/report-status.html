@@ -1,0 +1,68 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/iron-icons/av-icons.html>
+
+<dom-module id="report-status">
+  <template>
+    <style>
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      iron-icon {
+        --iron-icon-width: 16px;
+        --iron-icon-height: 16px;
+        padding: 4px;
+      }
+      .rejected {
+        color: var(--rejected-color);
+      }
+      .submitted {
+        color: var(--success-color);
+      }
+      .accepted {
+        color: var(--primary-color);
+      }
+      .constrained {
+        color: var(--warning-color);
+      }
+    </style>
+    <iron-icon icon="av:fiber-manual-record"></iron-icon>
+    <span>[[_status]]</span>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'report-status',
+      properties: {
+        statusCode: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_statusCodeChanged'
+        },
+        _status: {
+          type: String,
+          value: '-'
+        }
+      },
+
+      _statusCodeChanged: function(code) {
+        if (code) {
+          let availableStatuses = {
+            'Due': '',
+            'Acc': '',
+            'Sub': '',
+            'Sen': '',
+            'Active': '',
+            'Rejected': '',
+            'Implemented': '',
+            'Draft': '',
+          };
+          this.set('_status', '-');
+        } else {
+          this.set('_status', '-');
+        }
+      }
+    });
+  </script>
+</dom-module>
