@@ -196,7 +196,7 @@
 
         _editLowerResult: function(e) {
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
-          if (!(index >= 0)) {
+          if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'lower-results');
             return;
           }

@@ -24,7 +24,7 @@
         errorsArray.push(errors);
         return errorsArray;
       }
-      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string' ) {
+      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string') {
         errorsArray.push(errors.error);
         return errorsArray;
       }
@@ -66,7 +66,7 @@
     _isArrayOfStrings: function(arr) {
       let allStrings = true;
       let i;
-      for(i = 0; i < arr.length; i++) {
+      for (i = 0; i < arr.length; i++) {
         if (typeof arr[i] !== 'string') {
           allStrings = false;
           break;
