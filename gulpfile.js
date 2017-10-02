@@ -101,6 +101,7 @@ function source() {
     // lint CSS not working correctly. Not seeing temporary css files
     // .pipe(gulpif('**/*.{css,html}', css.lint()))              .on('end', log('Linted CSS'))
     .pipe(gulpif('**/*.{html,css}', css.minify())).on('end', log('Minified CSS'))
+    .pipe(gulpif('**/*.{js,html}', javascript.babelify())).on('end', log('Transpiled JS'))
 
     .pipe(gulpif('**/*.js', javascript.lint())).on('end', log('Linted Javascript'))
     .pipe(gulpif('**/*.js', javascript.minify())).on('end', log('Minified Javascript'))

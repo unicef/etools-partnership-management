@@ -11,10 +11,11 @@ const jshintStylish = require('jshint-stylish');
 const jscs = require('gulp-jscs');
 const jscsStylish = require('gulp-jscs-stylish');
 const lazypipe = require('lazypipe'); // Lazy pipe creates a reusable pipe stream
+const $ = require('gulp-load-plugins')();
 
 // Minify Javascript
 function minify() {
-  var uglifyOptions = {
+  var uglifyOptions = {gi
     preserveComments: false
   };
   //return uglify(uglifyOptions);
@@ -31,7 +32,13 @@ var lint = lazypipe()
   // .pipe(jshint.reporter, 'fail');
   .pipe(jshint.reporter);
 
+//babel transpile JS
+const babelify = lazypipe()
+  .pipe(()=> ($.if('*.html', $.crisper({scriptInHead:false}))))
+  .pipe(()=> ($.if('*.js', $.babel())));
+
 module.exports = {
   minify: minify,
-  lint: lint
+  lint: lint,
+  babelify: babelify
 };
