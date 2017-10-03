@@ -241,6 +241,7 @@
 
         openIndicatorDialog: function() {
           this.activeTab = 'details';
+          this.disableConfirmBtn = false;
           this.$.indicatorDialog.opened = true;
         },
 
@@ -268,8 +269,10 @@
           if (!disaggregations) {
             return [];
           }
-          //* disaggregId and not simply id to avoid repeatable-behavior from trying to make an endpoint request on Delete
-          return {disaggregId: id};
+          return disaggregations.map(function(id) {
+            //* disaggregId and not simply id to avoid repeatable-behavior from trying to make an endpoint request on Delete
+            return {disaggregId: id};
+          });
         },
         _cleanUp: function() {
           this._stopSpinner();
