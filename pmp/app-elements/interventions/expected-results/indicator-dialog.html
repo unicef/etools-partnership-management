@@ -8,7 +8,8 @@
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
@@ -33,6 +34,7 @@
       [hidden] {
         display: none !important;
       }
+
       paper-input,
       paper-textarea,
       paper-material {
@@ -42,38 +44,45 @@
       .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
-        border : solid 1px var(--dark-divider-color);
+        border: solid 1px var(--dark-divider-color);
         overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
+
       .createDisaggreg {
         color: var(--secondary-text-color);
         padding: 8px 8px;
         font-weight: 500;
         font-size: 16px !important;
       }
+
       a {
         color: var(--primary-color);
       }
+
       etools-dialog {
-        --paper-dialog: {
-          overflow-y: auto;
+        /*--paper-dialog: {*/
+          /*overflow-y: auto;*/
+        /*}*/
+
+        --etools-dialog-scrollable: {
+          max-height: calc(90vh - 152px) !important;
+          margin-top: -20px
         }
       }
 
     </style>
 
     <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
-     on-close="_cleanUp" no-padding
-     on-confirm-btn-clicked="_validateAndSaveIndicator"
-     ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
-     spinner-text="[[spinnerText]]">
-     <div>
+                   on-close="_cleanUp" no-padding
+                   on-confirm-btn-clicked="_validateAndSaveIndicator"
+                   ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
+                   spinner-text="[[spinnerText]]">
         <div class="page-top-content in-modal">
           <div class="top-content-row">
             <paper-tabs id="indicatorTabs"
-                selected="{{activeTab}}"
-                attr-for-selected="name"
-                noink bottom-item>
+                        selected="{{activeTab}}"
+                        attr-for-selected="name"
+                        noink bottom-item>
               <paper-tab name="details" link>
                 <span class="tab-content">DETAILS</span>
               </paper-tab>
@@ -86,11 +95,11 @@
         </div>
 
         <iron-pages id="indicatorPages"
-                      selected="{{activeTab}}"
-                      attr-for-selected="name"
-                      fallback-selection="details">
+                    selected="{{activeTab}}"
+                    attr-for-selected="name"
+                    fallback-selection="details">
           <div name="details">
-            <div class="row-h flex-c" >
+            <div class="row-h flex-c">
               <div class="col col-4">
                 <etools-single-selection-menu id$="sectionDropdw"
                                               label="Section"
@@ -102,23 +111,28 @@
                 </etools-single-selection-menu>
               </div>
             </div>
-            <div class="row-h" >
-              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]" checked="{{isCluster}}"></paper-toggle-button> Cluster Indicator
+            <div class="row-h">
+              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
+                                   checked="{{isCluster}}"></paper-toggle-button>
+              Cluster Indicator
             </div>
             <div class="indicator-content">
-              <div id="newLayout" >
-                <template is="dom-if" if="[[!isCluster]]" >
-                  <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"> </non-cluster-indicator>
+              <div id="newLayout">
+                <template is="dom-if" if="[[!isCluster]]">
+                  <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
                 </template>
-                <template is="dom-if" if="[[isCluster]]" >
-                  <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}" prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
+                <template is="dom-if" if="[[isCluster]]">
+                  <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
+                                     prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
                 </template>
               </div>
             </div>
           </div>
           <div class="row-padding" name="disaggregations">
-              <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not pre-defined yet, you can create them <a href="/pmp/settings" target="_blank" >here</a>.</div>
-              <div>
+            <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
+              pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
+            </div>
+            <div>
               <template is="dom-if" if="[[!isCluster]]" restamp>
                 <indicator-dissaggregations data-items="{{disaggregations}}">
                 </indicator-dissaggregations>
@@ -130,7 +144,6 @@
             </div>
           </div>
         </iron-pages>
-      </div>
 
     </etools-dialog>
 
@@ -263,7 +276,7 @@
           this.set('indicator', data);
           this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
         },
-         //* For dom-repeat to work ok
+        //* For dom-repeat to work ok
         _convertToArrayOfObj: function(disaggregations) {
           if (!disaggregations) {
             return [];
@@ -297,7 +310,7 @@
         },
 
         resetValidations: function() {
-           if (this.isCluster) {
+          if (this.isCluster) {
             this.$$('#clusterIndicatorEl').resetValidations();
           } else {
             this.$$('#nonClusterIndicatorEl').resetValidations();
