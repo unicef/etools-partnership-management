@@ -123,12 +123,12 @@
         }
         let i;
         for (i = 0; i < this.disaggregations.length; i++) {
-          if (this.disaggregations[i].id === null) {
+          if (this.disaggregations[i].disaggregId === null) {
             this.disaggregations.splice(i, 1);
           }
         }
         body.disaggregation = this.disaggregations.map(function(item) {
-          return item.id;
+          return item.disaggregId;
         });
       },
       _getIndicatorModelForSave: function() {

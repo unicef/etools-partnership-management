@@ -94,14 +94,10 @@
             type: Array,
             statePath: 'disaggregations'
           },
-          // disaggregations: {
-          //   type: Array,
-          //   notify: true,
-          // }
         },
 
         ready: function() {
-          this.dataSetModel = {id: null};
+          this.dataSetModel = {disaggregId: null};
           this.editMode = true;
         },
 
@@ -118,8 +114,8 @@
             return;
           }
           let selectedDisagreg = event.detail.item.item;
-          var splitElId =  Polymer.dom(event).localTarget.id.split('_');
-          var index = splitElId[splitElId.length - 1];
+          let splitElId =  Polymer.dom(event).localTarget.id.split('_');
+          let index = splitElId[splitElId.length - 1];
 
           if (this._isAlreadySelected(selectedDisagreg)) {
             event.model.set('item', null);
@@ -132,13 +128,13 @@
         },
         _isAlreadySelected: function(disagreg) {
           let justSelectedOne = this.dataItems.filter(function(d) {
-            return !d.id;
+            return !d.disaggregId;
           }).length;
           if (!justSelectedOne) {//we're on page load
             return;
           }
           let duplicateItems = this.dataItems.filter(function(item) {
-            return parseInt(item.id) === parseInt(disagreg.id);
+            return parseInt(item.disaggregId) === parseInt(disagreg.id);
           });
           if (duplicateItems && duplicateItems.length) {
             return true;

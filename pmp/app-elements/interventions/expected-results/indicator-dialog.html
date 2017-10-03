@@ -50,7 +50,7 @@
 
       .createDisaggreg {
         color: var(--secondary-text-color);
-        padding: 8px 8px;
+        padding: 8px 24px;
         font-weight: 500;
         font-size: 16px !important;
       }
@@ -106,22 +106,19 @@
               Cluster Indicator
             </div>
             <div class="indicator-content">
-              <div id="newLayout">
-                <template is="dom-if" if="[[!isCluster]]">
-                  <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
-                </template>
-                <template is="dom-if" if="[[isCluster]]">
-                  <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
-                                     prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
-                </template>
-              </div>
+              <template is="dom-if" if="[[!isCluster]]">
+                <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
+              </template>
+              <template is="dom-if" if="[[isCluster]]">
+                <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
+                                    prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
+              </template>
             </div>
           </div>
           <div class="row-padding" name="disaggregations">
             <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
               pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
             </div>
-            <div>
               <template is="dom-if" if="[[!isCluster]]" restamp>
                 <indicator-dissaggregations data-items="{{disaggregations}}">
                 </indicator-dissaggregations>
@@ -130,7 +127,6 @@
                 <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
                 </cluster-indicator-disaggregations>
               </template>
-            </div>
           </div>
         </iron-pages>
 
@@ -263,16 +259,17 @@
 
           this.isCluster = !!data.cluster_indicator_id;
           this.set('indicator', data);
-          this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
+          if (!this.isCluster) {
+            this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
+          }
         },
         //* For dom-repeat to work ok
         _convertToArrayOfObj: function(disaggregations) {
           if (!disaggregations) {
             return [];
           }
-          return disaggregations.map(function(id) {
-            return {id: id};
-          });
+          //* disaggregId and not simply id to avoid repeatable-behavior from trying to make an endpoint request on Delete
+          return {disaggregId: id};
         },
         _cleanUp: function() {
           this._stopSpinner();
