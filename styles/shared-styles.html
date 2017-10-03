@@ -201,6 +201,15 @@
         padding-top: 8px;
       }
 
+      .input-label {
+        min-height: 24px;
+        padding-top: 4px;
+        min-width: 0px;
+      }
+      .input-label[empty]::after {
+        content: "—";
+      }
+
       paper-checkbox[checked], paper-radio-button[checked] {
         --paper-checkbox-unchecked-color:  #4a90e2;
         --paper-radio-button-unchecked-color: #4a90e2;

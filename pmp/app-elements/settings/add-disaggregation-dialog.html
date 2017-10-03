@@ -126,6 +126,12 @@
         };
         this.editMode = true;
       },
+
+      broadcastAddDisaggregToOtherTabs: function(disaggregation) {
+        localStorage.setItem('update-redux',
+          JSON.stringify(this.actions.addDisaggregation(disaggregation)));
+        localStorage.removeItem('update-redux');
+      },
       initializeDisaggregation: function() {
         this.disaggregation = JSON.parse(JSON.stringify(this.disaggregationModel));
       },
@@ -166,17 +172,18 @@
         this.sendRequest(requestParams).then(function(response) {
           self.disaggregation = response;
           self.dispatch('addDisaggregation', response);
+          self.broadcastAddDisaggregToOtherTabs(response);
           self.stopSpinner();
-          self.close()
+          self.close();
         }).catch(function(error) {
           self.stopSpinner();
-          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
         });
 
       },
       _getBody: function() {
         this.disaggregation.disaggregation_values = this.dataItems;
-        this._cleanUpDisaggregations( this.disaggregation.disaggregation_values);
+        this._cleanUpDisaggregations(this.disaggregation.disaggregation_values);
         return this.disaggregation;
       },
       _cleanUpDisaggregations: function(disaggregs) {
@@ -184,7 +191,7 @@
           return;
         }
         let i;
-        for(i = 0; i < disaggregs.length; i++) {
+        for (i = 0; i < disaggregs.length; i++) {
           if (disaggregs[i] !== undefined && this._isEmpty(disaggregs[i].value)) {
             disaggregs.splice(i, 1);
           }

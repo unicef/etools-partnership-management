@@ -128,7 +128,7 @@
         }).catch(function(error) {
           dialog.stopSpinner();
           self.set('disableConfirmBtn', false);
-          self.parseRequestErrorsAndShowAsToastMsgs(error.response, self.toastEventSource);
+          self.parseRequestErrorsAndShowAsToastMsgs(error, self.toastEventSource);
         });
       },
 
@@ -139,9 +139,17 @@
           lowerResult: response
         };
 
+        this._initializeToBeAbleToAddIndicator(data.lowerResult);
+
         this.fire('lower-result-saved', data);
         this.closeDialog();
+      },
+
+      _initializeToBeAbleToAddIndicator: function(lowerResult) {
+        if (!lowerResult.applied_indicators) {
+          lowerResult.applied_indicators = [];
       }
+    },
 
     });
   </script>

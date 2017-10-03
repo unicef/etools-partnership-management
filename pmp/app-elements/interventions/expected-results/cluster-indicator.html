@@ -3,65 +3,91 @@
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
+
+<link rel="import" href="indicators-common-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
 <dom-module id="cluster-indicator">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       paper-input,
       paper-textarea,
       paper-material {
         width: 100%;
       }
-      .input-label {
-        min-height: 24px;
-        padding-top: 4px;
-        min-width: 0px;
-      }
-      .input-label[empty]::after {
-        content: "—";
-      }
-    </style>
 
-    <div class="row-h flex-c">
-      <div class="col col-5">
-        <etools-single-selection-menu id$="responsePlanDropdw"
-                                   label="Response Plan"
-                                   placeholder="&#8212;"
-                                   selected-values="{{indicator.responsePlan}}"
-                                   options="[[hrps]]"
-                                   option-label="name"
-                                   option-value="id"
-                                   error-message="Please select Response Plan">
-         </etools-single-selection-menu>
+    </style>
+    <template is="dom-if" if="[[!isNewIndicator]]">
+      <div class="row-h flex-c">
+        <div class="col col-5">
+          <div class="layout-vertical">
+            <label class="paper-label">Response Plan</label>
+            <label class="input-label" empty$="[[!prpClusterIndicator.responsePlan.name]]">[[prpClusterIndicator.responsePlan.name]]</label>
+          </div>
+        </div>
+        <div class="col col-5">
+          <div class="layout-vertical">
+            <label class="paper-label">Cluster</label>
+            <label class="input-label" empty$="[[!prpClusterIndicator.cluster.name]]">[[prpClusterIndicator.cluster.name]]</label>
+          </div>
+        </div>
       </div>
-      <div class="col col-5">
-        <etools-single-selection-menu id$="clusterDropdw"
-                                   label="Cluster"
-                                   placeholder="&#8212;"
-                                   selected-values="{{indicator.clusterId}}"
-                                   options="[[clusters]]"
-                                   option-label="name"
-                                   option-value="id"
-                                   error-message="Please select Cluster"
-                                   on-iron-activate="selectedClusterIndicatorChanged">
+      <div class="row-h flex-c">
+        <etools-form-element-wrapper no-label-float label="Indicator" required>
+          [[prpClusterIndicator.title]]
+        </etools-form-element-wrapper>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[isNewIndicator]]">
+      <div class="row-h flex-c">
+        <div class="col col-5">
+          <etools-single-selection-menu id$="responsePlanDropdw"
+                                    label="Response Plan"
+                                    placeholder="&#8212;"
+                                    selected-values="{{responsePlanId}}"
+                                    options="[[responsePlans]]"
+                                    option-label="name"
+                                    option-value="id"
+                                    error-message="Please select Response Plan">
+          </etools-single-selection-menu>
+        </div>
+        <div class="col col-5">
+          <etools-single-selection-menu id$="clusterDropdw"
+                                    label="Cluster"
+                                    placeholder="&#8212;"
+                                    selected-values="{{clusterId}}"
+                                    options="[[clusters]]"
+                                    option-label="name"
+                                    option-value="id"
+                                    error-message="Please select Cluster"
+                                    on-iron-activate="_onClusterChange">
+          </etools-single-selection-menu>
+        </div>
+      </div>
+      <div class="row-h flex-c">
+        <etools-single-selection-menu id="clusterIndicatorEl"
+                                    label="Indicator"
+                                    placeholder="&#8212;"
+                                    selected-values="{{indicator.cluster_indicator_id}}"
+                                    selected-item="{{prpClusterIndicator}}"
+                                    options="[[prpClusterIndicators]]"
+                                    option-label="name"
+                                    option-value="id"
+                                    required
+                                    auto-validate
+                                    error-message="Please select Indicator">
         </etools-single-selection-menu>
       </div>
-    </div>
-    <div class="row-h flex-c">
-      <etools-single-selection-menu id$="clusterIndicatorsDropdw"
-                                   label="Indicator"
-                                   placeholder="&#8212;"
-                                   selected-values="{{indicator.clusterIndicatorId}}"
-                                   options="[[clusterIndicators]]"
-                                   option-label="name"
-                                   option-value="id"
-                                   error-message="Please select Indicator">
-      </etools-single-selection-menu>
-    </div>
+    </template>
     <div class="row-h flex-c">
       <div class="col col-2">
         <div class="layout-vertical">
@@ -83,18 +109,18 @@
     <div class="row-h flex-c">
       <div class="layout-vertical">
         <label class="paper-label">Means of Verification</label>
-        <label class="input-label" empty$="[[!indicator.means_of_verification]]">[[indicator.means_of_verification]]</label>
+        <label class="input-label" empty$="[[!prpClusterIndicator.means_of_verification]]">[[prpClusterIndicator.means_of_verification]]</label>
       </div>
     </div>
     <div class="row-h flex-c">
       <etools-multi-selection-menu id$="locationsDropdw"
                                    label="Locations"
                                    placeholder="&#8212;"
-                                   selected-values="{{indicator.locationIds}}"
+                                   selected-values="{{indicator.locations}}"
                                    options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
-                                   error-message="Please select sector locations">
+                                   error-message="Please select locations">
       </etools-multi-selection-menu>
     </div>
 
@@ -108,12 +134,19 @@
         is: 'cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints
         ],
 
         properties: {
           indicator: {
-            type: Object
+            type: Object,
+            observer: 'indicatorChanged'
+          },
+          isNewIndicator: {
+            type: Boolean
           },
           clusters: {
             type: Array
@@ -122,28 +155,138 @@
             type: Array,
             statePath: 'locations'
           },
-          clusterIndicators: {
-            type: Array,
-            //statePath: 'clusterIndicators'
+          responsePlanId: {
+            type: String,
+            observer: '_responsePlanIdChanged'
           },
-          hrps: {
+          clusterId: {
+            type: String,
+            observer: '_clusterIdChanged'
+          },
+          prpClusterIndicators: {
             type: Array,
-            //statePath: "hrps"
+            value: function() {
+              return [
+                {
+                  id: 1,
+                  name: 'Test PRP indicator',
+                  means_of_verification: 'means of verif 1',
+                  locationIds: [1524, 2412],
+                  disaggregations: [{
+                    id: 1,
+                    name: 'Age C',
+                    groups: ['1-20', '21-30']
+                  }]
+                }
+              ];
+            }
+          },
+          responsePlans: {
+            type: Array,
+          },
+          prpClusterIndicator: {
+            type: Object,
+            observer: '_selectedPrpClusterIndicatorChanged'
+          },
+          prpDisaggregations: {
+            type: Array,
+            notify: true
           }
         },
 
-        _selectedClusterIndicatorChanged: function(event) {
+        observers: [
+          '_baselineChanged(indicator.baseline)',
+          '_targetChanged(indicator.target)',
+          '_populatePrpClusterIndicators(responsePlanId, clusterId)'
+        ],
+        indicatorChanged: function(indicator) {
+          if (!indicator || !indicator.id) { // on new
+            this.set('isNewIndicator', true);
+          } else { // on edit
+            this.set('isNewIndicator', false);
+            this._getPrpClusterIndicator(indicator.cluster_indicator_id);
+
+          }
+        },
+        _responsePlanIdChanged: function(responsePlanId) {
+          this._populateClusters(responsePlanId);
+        },
+        _populateClusters: function(responsePlanId) {
+          if (!responsePlanId) {
+            return;
+          }
+          this.fire('start-spinner', {spinnerText: 'Loading PRP clusters..'});
+          let self = this;
+          this.sendRequest({
+            method: 'GET',
+            endpoint: this.getEndpoint('getPrpClusters', {id: responsePlanId})
+          }).then(function(response) {
+            self.clusters = response;
+            self.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error.response});
+          });
+        },
+        _onClusterChange: function(event) {
           if (!event.detail.item.item) {
             return;
           }
-          var clusterIndDetails = event.detail.item.item;
-          this._fillInFields(clusterIndDetails);
+          this.indicator.cluster_name = event.detail.item.item.name;
         },
-        _fillInFields: function(clusterIndDetails) {
-          this.indicator.means_of_verification = clusterIndDetails.means_of_verification;
-          this.indicator.lodationIds = clusterIndDetails.locationIds;
+        _clusterIdChanged: function(clusterId) {
+          this._populatePrpClusterIndicators(clusterId);
+        },
+        _populatePrpClusterIndicators: function(clusterId) {
+          if (!clusterId) {
+            return;
+          }
+          this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
+          let self = this;
+          this.sendRequest({
+            method: 'GET',
+            endpoint: this.getEndpoint('getPrpClusterIndicators', {id: clusterId})
+          }).then(function(response) {
+            self.prpClusterIndicators = response;
+            self.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error.response});
+          });
+        },
+        _getPrpClusterIndicator: function(clusterIndicId) {
+          this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
+          let self = this;
+          this.sendRequest({
+            endpoint: this.getEndpoint('getPrpClusterIndicator', {id: clusterIndicId}),
+            method: 'GET'
+          }).then(function(response) {
+            self.prpClusterIndicator = response;
+            self.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error.response});
+          });
+        },
+        _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
+          if (!prpClusterIndic) {
+            this.set('prpDisaggregations', []);
+            return;
+          }
+
+          this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
+          if (this.isNewIndicator) {
+            this.set('indicator.locations', prpClusterIndic.locationIds);
+          }
+          this.set('prpDisaggregations', prpClusterIndic.disaggregations);
         },
 
+        validate: function() {
+          return this.$$('#clusterIndicatorEl').validate();
+        },
+        resetValidations: function() {
+          this.$$('#clusterIndicatorEl').invalid = false;
+        }
     });
   })();
   </script>

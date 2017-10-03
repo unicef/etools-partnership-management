@@ -167,7 +167,7 @@
 
         _editCpOutputAndRamIndicators: function(e) {
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
-          if (!(index >= 0)) {
+          if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'expected-results');
             return;
           }
@@ -199,9 +199,9 @@
                     JSON.parse(JSON.stringify(indicator)));
               } else {
                 // new indicator added
-                this.push(indicatorPaths, indicator);
+                this.push(['dataItems', i, 'll_results', actionParams.llResultIndex, 'applied_indicators'], indicator);
               }
-              break; // stop exp res search, already found
+              break;
             }
           }
         },
@@ -212,16 +212,13 @@
           let actionParams = event.detail;
 
           if (actionParams.appliedIndicatorsIndex === null) {
-            this.indicatorDialog.setAddLabel();
             this.indicatorDialog.setTitle('Add Indicator');
           } else {
-            this.indicatorDialog.setEditLabel();
             this.indicatorDialog.setTitle('Edit Indicator');
           }
-
-          this.indicatorDialog.resetData();
-
+          this.indicatorDialog.toastEventSource = this;
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
+          this.indicatorDialog.resetValidations();
           this.indicatorDialog.openIndicatorDialog();
         }
 

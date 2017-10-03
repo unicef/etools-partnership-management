@@ -3,6 +3,8 @@
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -10,6 +12,7 @@
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="indicator-dissaggregations">
   <template strip-whitespace>
@@ -31,9 +34,8 @@
       }
 
     </style>
-
-    <div hidden$="[[_emptyList(dataItems.length)]]">
-      <template is="dom-repeat" items="{{dataItems}}">
+    <div hidden$="[[_emptyList(dataItems, dataItems.length)]]">
+      <template is="dom-repeat" items="{{dataItems}}" >
         <div class="row-h item-container no-h-margin">
           <div class="item-actions-container">
             <div class="actions">
@@ -46,10 +48,16 @@
           <div class="item-content">
             <div class="row-h">
               <div class="col col-4">
-                <paper-input label="Disaggregate By" value="{{item.disaggregate_by}}"></paper-input>
+                <etools-single-selection-menu id="disaggregate_by_[[index]]" label="Disaggregate By"
+                                              options="{{preDefinedDisaggregtions}}"
+                                              selected="{{item.id}}"
+                                              option-value="id"
+                                              option-label="name"
+                                              on-iron-select="_onDisaggregationSelected">
+                </etools-single-selection-menu>
               </div>
               <div class="col col-8">
-                <paper-input label="Disaggregation Groups" value="{{item.disaggregation_groups}}"></paper-input>
+                <paper-input id="disaggregationGroups_[[index]]" readonly label="Disaggregation Groups" placeholder="&#8212;"></paper-input>
               </div>
             </div>
           </div>
@@ -57,11 +65,12 @@
       </template>
     </div>
 
-    <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
+
+    <div class="row-h" hidden$="[[!_emptyList(dataItems, dataItems.length)]]">
       <p>There are no disaggregations added.</p>
     </div>
 
-    <div class="row-h" hidden$="[[!editMode]]">
+    <div class="row-h">
       <paper-button class="secondary-btn" on-tap="_addNewDisaggregation"
                  title="Add Disaggregation">ADD DISAGGREGATION</paper-button>
     </div>
@@ -76,27 +85,70 @@
         is: 'indicator-dissaggregations',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.RepeatableDataSets
+          EtoolsPmpApp.Behaviors.RepeatableDataSets,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         ],
 
         properties: {
-
+          preDefinedDisaggregtions: {
+            type: Array,
+            statePath: 'disaggregations'
+          },
+          // disaggregations: {
+          //   type: Array,
+          //   notify: true,
+          // }
         },
 
         ready: function() {
-          this.dataSetModel = {
-            disaggregate_by: null,
-            disaggregation_groups: null
-          };
-          this.set('editMode', true);
+          this.dataSetModel = {id: null};
+          this.editMode = true;
         },
 
-        /**
-         * Validate last amendment type; if valid add a new one.
-         */
+        _emptyList: function(disaggregations, disaggregLength) {
+          return (!disaggregations || !disaggregLength) ;
+        },
+
         _addNewDisaggregation: function() {
           this._addElement();
-          this.fire('disaggregation-change');
+        },
+
+        _onDisaggregationSelected: function(event) {
+          if (!event.detail.item.item) {
+            return;
+          }
+          let selectedDisagreg = event.detail.item.item;
+          var splitElId =  Polymer.dom(event).localTarget.id.split('_');
+          var index = splitElId[splitElId.length - 1];
+
+          if (this._isAlreadySelected(selectedDisagreg)) {
+            event.model.set('item', null);
+            event.model.set('item', {id: null});
+            this.fire('show-toast', {error: 'Disaggregation already selected'});
+            return;
+          }
+          this._displayDisaggregationGroups(selectedDisagreg, index);
+
+        },
+        _isAlreadySelected: function(disagreg) {
+          let justSelectedOne = this.dataItems.filter(function(d) {
+            return !d.id;
+          }).length;
+          if (!justSelectedOne) {//we're on page load
+            return;
+          }
+          let duplicateItems = this.dataItems.filter(function(item) {
+            return parseInt(item.id) === parseInt(disagreg.id);
+          });
+          if (duplicateItems && duplicateItems.length) {
+            return true;
+          }
+          return false;
+        },
+        _displayDisaggregationGroups: function(selectedDisagreg, index) {
+          this.$$('#disaggregationGroups_' + index).value = selectedDisagreg.disaggregation_values.map(function(d) {
+            return d.value;
+          }).join('; ');
         }
 
       });

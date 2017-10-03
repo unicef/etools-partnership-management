@@ -1,0 +1,39 @@
+
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior */
+  EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior = {
+    _baselineChanged: function(baseline) {
+      if (!baseline) {
+        if (this.indicator) {
+          this.indicator.baseline = null; //* Avoid empty string or undefined being sent to backend
+        }
+        return;
+      }
+      if (this.indicator.indicator.unit === 'percentage') {
+        let val = this._getValidPercentageValue(baseline);
+        this.set('indicator.baseline', val);
+      }
+     },
+    _targetChanged: function(target) {
+      if (!target) {
+        return;
+      }
+      if (this.indicator.indicator.unit === 'percentage') {
+        let val = this._getValidPercentageValue(target);
+        this.set('indicator.target', val);
+      }
+    },
+    _getValidPercentageValue: function(val) {
+      val = parseInt(val, 10);
+      if (isNaN(val) || val < 0) {
+        val = 0;
+      }
+      if (val > 100) {
+        val = 100;
+      }
+      return val;
+    },
+    };
+</script>
