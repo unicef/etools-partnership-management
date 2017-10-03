@@ -32,9 +32,7 @@
 <link rel="import" href="generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
-
   <template strip-whitespace>
-
     <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
@@ -43,20 +41,24 @@
           max-height: 400px;
         }
       }
+      .type-warning {
+        color: var(--warning-color);
+        @apply --layout-self-center;
+        @apply --layout-vertical;
+      }
 
       paper-input,
       etools-date-input {
         width: 100%;
       }
 
-      #generate-pca {
+      .generate-pca {
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
       }
-      #generate-pca[hidden] + .col {
+      .generate-pca[hidden] + .col {
         padding-left: 0;
       }
-
     </style>
 
       <etools-content-panel class="content-section" panel-title="Agreement Details">
@@ -246,8 +248,8 @@
           </etools-form-element-wrapper>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
-          <div id="generate-pca" class="col col-3"
-               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
+          <div class="generate-pca col col-3"
+               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -258,6 +260,10 @@
                 GENERATE
               </paper-button>
             </paper-input-container>
+          </div>
+          <div class="generate-pca col col-3"
+               hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
+               <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-single-file
@@ -521,8 +527,12 @@
           return false;
         },
 
-        _showGeneratePcaBtn: function(type) {
-          return type === 'PCA' && this._isDraft();
+        _showGeneratePcaBtn: function(type, isNewAgreement) {
+          return type === 'PCA' && this._isDraft() && !isNewAgreement;
+        },
+
+        _showGeneratePcaWarning: function(type, isNewAgreement) {
+          return type === 'PCA' && isNewAgreement;
         },
 
         _partnerChanged: function(currentPartnerId) {
