@@ -792,8 +792,8 @@
           this.set('pageNumber', 1);
         },
 
-        _hideFrsWarningTooltip: function(date1, date2, status) {
-          return status === 'draft' || this.validateFrsVsInterventionDates(date1, date2);
+        _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
+          return status === 'draft' || this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });
