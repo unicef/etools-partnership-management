@@ -133,6 +133,21 @@
     userCountryDetails: {
       url: '/api/v2/users/country'
     },
+    createIndicator: {
+      template: '/api/v2/interventions/lower-results/<%=id%>/indicators/',
+    },
+    getEditDeleteIndicator: {
+      template: '/api/v2/interventions/applied-indicators/<%=id%>/'
+    },
+    getPrpClusterIndicators: { //by repsonse plan and cluster id
+      template: ''
+    },
+    getPrpClusterIndicator: { //by id
+      template: ''
+    },
+    getPrpClusters: {// by respsonse plan id
+      template: ''
+    },
     pdExpectedResults: {
       template: '/api/v2/interventions/<%=pdId%>/result-links/'
     },

@@ -182,6 +182,14 @@
 
     }
   });
+
+  window.addEventListener('storage', function(ev) {
+    if (ev.key !== 'update-redux' || !ev.newValue) {
+      return;
+    }
+    commonStaticDataStore.dispatch(JSON.parse(ev.newValue));
+  });
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 

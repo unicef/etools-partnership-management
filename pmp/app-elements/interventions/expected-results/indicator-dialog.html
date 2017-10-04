@@ -8,19 +8,23 @@
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import"
+      href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
+<link rel="import" href="cluster-indicator-disaggregations.html">
 <link rel="import" href="cluster-indicator.html">
 <link rel="import" href="non-cluster-indicator.html">
+<link rel="import" href="behaviors/save-indicator-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -31,18 +35,6 @@
         display: none !important;
       }
 
-      :host {
-        --etools-checkable-input-label: {
-          font-size: 14px;
-        };
-        --etools-dialog-scrollable: {
-          margin-top: 10px !important;
-        };
-      }
-
-      etools-checkable-input:not(:last-of-type) {
-        margin-right: 30px;
-      }
       paper-input,
       paper-textarea,
       paper-material {
@@ -52,25 +44,34 @@
       .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
-        border : solid 1px var(--dark-divider-color);
-        overflow-x: auto;
+        border: solid 1px var(--dark-divider-color);
+        overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
-      etools-dialog {
-        --paper-dialog: {
-          overflow-y: auto;
-        }
+
+      .createDisaggreg {
+        color: var(--secondary-text-color);
+        padding: 8px 0;
+        font-weight: 500;
+        font-size: 16px !important;
+      }
+
+      a {
+        color: var(--primary-color);
       }
 
     </style>
 
-    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog" no-padding>
-     <div>
+    <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
+                   on-close="_cleanUp" no-padding
+                   on-confirm-btn-clicked="_validateAndSaveIndicator"
+                   ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
+                   spinner-text="[[spinnerText]]">
         <div class="page-top-content in-modal">
           <div class="top-content-row">
             <paper-tabs id="indicatorTabs"
-                selected="{{activeTab}}"
-                attr-for-selected="name"
-                noink bottom-item>
+                        selected="{{activeTab}}"
+                        attr-for-selected="name"
+                        noink bottom-item>
               <paper-tab name="details" link>
                 <span class="tab-content">DETAILS</span>
               </paper-tab>
@@ -83,134 +84,51 @@
         </div>
 
         <iron-pages id="indicatorPages"
-                      selected="{{activeTab}}"
-                      attr-for-selected="name"
-                      fallback-selection="details">
+                    selected="{{activeTab}}"
+                    attr-for-selected="name"
+                    fallback-selection="details">
           <div name="details">
-            <div class="row-h flex-c" hidden>
+            <div class="row-h flex-c">
               <div class="col col-4">
                 <etools-single-selection-menu id$="sectionDropdw"
                                               label="Section"
-                                              selected="{{indicator.sectionId}}"
+                                              selected="{{indicator.section}}"
                                               placeholder="&#8212;"
-                                              options="[[sectors]]"
+                                              options="[[sections]]"
                                               option-label="name"
                                               option-value="id">
                 </etools-single-selection-menu>
               </div>
             </div>
-            <div class="row-h" hidden>
-              <paper-toggle-button checked="{{indicator.isCluster}}"></paper-toggle-button> Cluster Indicator
+            <div class="row-h">
+              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
+                                   checked="{{isCluster}}"></paper-toggle-button>
+              Cluster Indicator
             </div>
             <div class="indicator-content">
-              <div id="oldLayout">
-                <div class="row-v flex-c">
-                  <label class="paper-label">Type </label>
-                  <div class="layout-horizontal">
-                    <etools-checkable-input type="radio" label="#" label-alignment="right"
-                                            checked="{{unit.numeric}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="yesno,percentage"></etools-checkable-input>
-                    <etools-checkable-input type="radio" label="%" label-alignment="right"
-                                            checked="{{unit.percentage}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="numeric,yesno"></etools-checkable-input>
-                    <etools-checkable-input type="radio" label="Yes / No" label-alignment="right"
-                                            checked="{{unit.yesno}}"
-                                            on-tap="_unitChanged"
-                                            data-unit-to-reset="numeric,percentage"></etools-checkable-input>
-                  </div>
-                </div>
-                <div class="row-h flex-c">
-                  <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
-                </div>
-
-                <div class="row-h flex-c">
-                  <div class="col col-3">
-                    <template is="dom-if" if="[[unit.numeric]]">
-                      <paper-input label="Baseline"
-                                  value="{{indicator.baseline}}"
-                                  type="number"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.percentage]]">
-                      <paper-input label="Baseline"
-                                  value="{{indicator.baseline}}"
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  allowed-pattern="[0-9\.]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.yesno]]">
-                      <paper-dropdown-menu label="Baseline" noink always-float-label>
-                        <paper-menu class="dropdown-content"
-                                    attr-for-selected="name"
-                                    selected="{{indicator.baseline}}">
-                          <paper-item name="yes">Yes</paper-item>
-                          <paper-item name="no">No</paper-item>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-                    </template>
-                  </div>
-                  <div class="col col-3">
-                    <template is="dom-if" if="[[unit.numeric]]">
-                      <paper-input label="Target"
-                                  value="{{indicator.target}}"
-                                  type="number"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.percentage]]">
-                      <paper-input label="Target"
-                                  value="{{indicator.target}}"
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  allowed-pattern="[0-9\.]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </template>
-                    <template is="dom-if" if="[[unit.yesno]]">
-                      <paper-dropdown-menu label="Target" noink always-float-label>
-                        <paper-menu class="dropdown-content"
-                                    attr-for-selected="name"
-                                    selected="{{indicator.target}}">
-                          <paper-item name="yes">Yes</paper-item>
-                          <paper-item name="no">No</paper-item>
-                        </paper-menu>
-                      </paper-dropdown-menu>
-                    </template>
-                  </div>
-                </div>
-                <div class="row-h flex-c">
-                    <paper-textarea label="Means of Verification"
-                                    value="{{indicator.means_of_verification}}"
-                                    placeholder="&#8212;">
-                    </paper-textarea>
-                </div>
-              </div>
-              <div id="newLayout" hidden>
-                <template is="dom-if" if="[[!indicator.isCluster]]">
-                  <non-cluster-indicator indicator="{{indicator}}"> </non-cluster-indicator>
-                </template>
-                <template is="dom-if" if="[[indicator.isCluster]]">
-                <cluster-indicator indicator="{{indicator}}"></cluster-indicator>
-                </template>
-              </div>
+              <template is="dom-if" if="[[!isCluster]]">
+                <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
+              </template>
+              <template is="dom-if" if="[[isCluster]]">
+                <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
+                                    prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
+              </template>
             </div>
           </div>
-          <div class="row-h flex-c" name="disaggregations">
-              <div hidden>If disaggregation groups that you need are not pre-defined yet, you can create them here.</div>
-
-              <indicator-dissaggregations data-items="{{disaggregations}}"
-                                          on-disaggregation-change="_centerDialog">
-              </indicator-dissaggregations>
+          <div class="row-padding" name="disaggregations">
+            <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
+              pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
+            </div>
+              <template is="dom-if" if="[[!isCluster]]" restamp>
+                <indicator-dissaggregations data-items="{{disaggregations}}">
+                </indicator-dissaggregations>
+              </template>
+              <template is="dom-if" if="[[isCluster]]" restamp>
+                <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
+                </cluster-indicator-disaggregations>
+              </template>
           </div>
         </iron-pages>
-      </div>
 
     </etools-dialog>
 
@@ -224,7 +142,8 @@
         is: 'indicator-dialog',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.SaveIndicator
         ],
 
         properties: {
@@ -233,40 +152,34 @@
           },
           activeTab: {
             type: String,
-            valus: 'details',
+            value: 'details',
           },
           indicatorModel: {
             type: Object,
             value: {
               id: null,
-              name: null,
+              indicator: {
+                id: null,
+                title: null,
+                unit: 'number',
+                display_type: 'percentage'
+              },
+              section: null,
               baseline: null,
               target: null,
               means_of_verification: null,
-              unit: 'numeric',
-              displayUnit: 'percentage',
-              disaggregation_logic: null,
-              sectionId: null,
-              isCluster: false,
-              baselineIsUnknown: false,
-              clusterIndicatorId: null,
-              clusterId: null,
-              responsePlanId: null,
-              locationIds: null
+              locations: [],
+              disaggregation: []
             }
           },
           actionParams: {
             type: Object
           },
-          unit: {
-            type: Object,
-            value: {
-              numeric: true,
-              percentage: false,
-              yesno: false
-            }
-          },
           disaggregations: {
+            type: Array,
+            value: []
+          },
+          prpDisaggregations: {
             type: Array,
             value: []
           },
@@ -274,184 +187,128 @@
             type: Number,
             value: 0
           },
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
+          isCluster: {
+            type: Boolean,
+            value: false
+          },
+          toastEventSource: Object,
+          disableConfirmBtn: {
+            type: Boolean,
+            value: false
+          },
+          spinnerText: {
+            type: String,
+            value: 'Saving indicator..'
+          }
+        },
+        listeners: {
+          'start-spinner': '_startSpinner',
+          'stop-spinner': '_stopSpinner',
+          'show-toast': '_showToast'
         },
         observers: [
-          '_indicatorDataChange(indicator.*)',
-          '_updateIndicatorValsAtUnitChange(unit.*)',
-          '_setDisaggregationsCount(disaggregations.length)'
+          '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
+          '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
         ],
-        _setDisaggregationsCount: function(length) {
-          this.disaggregationsCount = length;
+
+        _indicatorIsNew: function(indicator) {
+          return (!indicator || !indicator.id);
         },
+
+        _setDisaggregationsCount1: function(disaggregs, prpDisaggregs) {
+          if (!this.indicator || !disaggregs || !prpDisaggregs) {
+            this.disaggregationsCount = 0;
+            return;
+          }
+          this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
+
+        },
+        _setDisaggregationsCount2: function(disaggregsLength, prpDisaggregsLength) {
+          if (this.isCluster) {
+            this.disaggregationsCount = prpDisaggregsLength;
+          } else {
+            this.disaggregationsCount = disaggregsLength;
+          }
+        },
+
         _getDisaggregationsTabTitle: function(disaggregationsCount) {
           return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
-        },
-        _indicatorDataChange: function(data) {
-          if (data.path === 'indicator.baseline' || data.path === 'indicator.target') {
-            if (this.unit.percentage && data.value !== '') {
-              var val = parseInt(data.value, 10);
-              if (isNaN(val) || val < 0) {
-                val = 0;
-              }
-              if (val > 100) {
-                val = 100;
-              }
-              this.set(data.path, val);
-            }
-          }
-        },
-
-        _updateIndicatorValsAtUnitChange: function(data) {
-          this.debounce('indicatorUnitChanged', function() {
-            if (!this.indicator) {
-              return;
-            }
-            var activeUnit = this._getActiveUnit();
-            var resetFields = false;
-            var baseline = parseFloat(this.indicator.baseline);
-            var target = parseFloat(this.indicator.target);
-
-            switch (activeUnit) {
-              case 'numeric':
-                if (isNaN(baseline)) {
-                  this.set('indicator.baseline', '');
-                }
-                if (isNaN(target)) {
-                  this.set('indicator.target', '');
-                }
-                break;
-              case 'percentage':
-                if (baseline < 0 || baseline > 100 || isNaN(baseline)) {
-                  this.set('indicator.baseline', '');
-                }
-                if (target < 0 || target > 100 || isNaN(target)) {
-                  this.set('indicator.target', '');
-                }
-                break;
-              case 'yesno':
-                if (this.indicator.baseline !== 'yes' && this.indicator.baseline !== 'no') {
-                  this.set('indicator.baseline', '');
-                }
-                if (this.indicator.target !== 'yes' && this.indicator.target !== 'no') {
-                  this.set('indicator.target', '');
-                }
-
-                break;
-            }
-          }.bind(this), 50);
-        },
-
-        _unitChanged: function(event) {
-          Polymer.dom(event).localTarget.setAttribute('checked', true);//*Prevent no radio btn selected
-          var unitKeysToReset = Polymer.dom(event).localTarget.getAttribute('data-unit-to-reset');
-          if (typeof unitKeysToReset === 'string' && unitKeysToReset !== '') {
-            var unitKeys = unitKeysToReset.split(',');
-            unitKeys.forEach(function(key) {
-              this.set('unit.' + key, false);
-            }.bind(this));
-          }
-        },
-
-        _getActiveUnit: function() {
-          var unit = 'numeric';
-          for (var k in this.unit) {
-            if (this.unit[k] === true) {
-              unit = k;
-            }
-          }
-          return unit;
         },
 
         openIndicatorDialog: function() {
           this.activeTab = 'details';
+          this.disableConfirmBtn = false;
           this.$.indicatorDialog.opened = true;
         },
 
-        // change ok btn label to some edit label or add label texts
-        setEditLabel: function() {
-          this.$.indicatorDialog.okBtnText = 'Edit Indicator';
-        },
-        setAddLabel: function() {
-          this.$.indicatorDialog.okBtnText = 'Add Indicator';
-        },
         setTitle: function(title) {
           this.$.indicatorDialog.dialogTitle = title;
         },
 
         setIndicatorData: function(data, actionParams) {
-          if (!data) {
-            data = JSON.parse(JSON.stringify(this.indicatorModel));
-          }
           this.set('actionParams', actionParams);
 
-          // set unit
-          for (var k in this.unit) {
-            if (k !== data.unit) {
-              this.set('unit.' + k, false);
-            } else {
-              this.set('unit.' + k, true);
-            }
+          if (!data) { //new indicator
+            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
+            this.isCluster = false;
+            return;
           }
-          // set disaggregations
-          if (data.disaggregation_logic && typeof data.disaggregation_logic === 'object') {
-            var disaggregationsKeys = Object.keys(data.disaggregation_logic);
-            this.set('disaggregations', []);
-            if (disaggregationsKeys.length) {
-              disaggregationsKeys.forEach(function(key) {
-                this.push('disaggregations', {
-                  disaggregate_by: key,
-                  disaggregation_groups: data.disaggregation_logic[key].join(';')
-                });
-              }.bind(this));
-            }
-          }
+
+          this.isCluster = !!data.cluster_indicator_id;
           this.set('indicator', data);
-        },
-
-        _centerDialog: function() {
-          var d = Polymer.dom(this.$.indicatorDialog.root).querySelector('paper-dialog');
-          if (d) {
-            d.center();
+          if (!this.isCluster) {
+            this.set('disaggregations', this._convertToArrayOfObj(this.indicator.disaggregation));
           }
         },
-
-        _closeIndicatorDialog: function(event) {
-          if (event.detail.confirmed) {
-            // get indicator data
-            this.indicator.unit = this._getActiveUnit();
-            this.indicator.disaggregation_logic = this._prepareDisaggregations();
-            // fire it up :)
-            this.fire('indicator-dialog-close', {
-              indicatorData: this.indicator,
-              actionParams: this.actionParams
-            });
-          } // else, just close
-        },
-
-        _prepareDisaggregations: function() {
-          if (Array.isArray(this.disaggregations) && this.disaggregations.length > 0) {
-            var disaggregationsObj = {};
-            this.disaggregations.forEach(function(d) {
-              var groups = d.disaggregation_groups.split(';').map(function(g) {
-                return g.trim();
-              });
-              disaggregationsObj[d.disaggregate_by] = groups;
-            });
-            return disaggregationsObj;
+        //* For dom-repeat to work ok
+        _convertToArrayOfObj: function(disaggregations) {
+          if (!disaggregations) {
+            return [];
           }
-          return null;
+          return disaggregations.map(function(id) {
+            //* disaggregId and not simply id to avoid repeatable-behavior from trying to make an endpoint request on Delete
+            return {disaggregId: id};
+          });
+        },
+        _cleanUp: function() {
+          this._stopSpinner();
+          this.disableConfirmBtn = false;
+          this.resetFields();
+          //Anything else?
+        },
+        _stopSpinner: function(e) {
+          if (e) {
+            e.stopImmediatePropagation();
+          }
+          this.$.indicatorDialog.stopSpinner();
+          this.spinnerText = 'Saving indicator..';
+        },
+        _startSpinner: function(e) {
+          if (e) {
+            e.stopImmediatePropagation();
+            this.set('spinnerText', e.detail.spinnerText);
+          }
+          this.$.indicatorDialog.startSpinner();
+        },
+        _showToast: function(e) {
+          this.showErrorAsToastMsg(e.detail.error, this.toastEventSource);
         },
 
-        resetData: function() {
-          this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
-          this.set('unit.numeric', true);
-          this.set('unit.percentage', false);
-          this.set('unit.yesno', false);
-          this.set('disaggregations', []);
+        resetValidations: function() {
+          if (this.isCluster) {
+            this.$$('#clusterIndicatorEl').resetValidations();
+          } else {
+            this.$$('#nonClusterIndicatorEl').resetValidations();
+          }
+        },
+        resetFields: function() {
+          this.indicator = null;
+          this.disaggregations = [];
+          this.prpDisaggregations = [];
         }
 
       });

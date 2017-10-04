@@ -126,7 +126,7 @@
         pageNumber = parseInt(pageNumber);
         pageSize = parseInt(pageSize);
         let startingIndex = (pageNumber - 1) * pageSize;
-        this.dataItems = this.disaggregations.slice(startingIndex, startingIndex + pageSize );
+        this.dataItems = this.disaggregations.slice(startingIndex, startingIndex + pageSize);
       },
       detached: function() {
         if (this.disaggregationModal) {
@@ -142,7 +142,7 @@
         if (!groups || !groups.length) {
           return '-';
         }
-        return groups.map(function(g){
+        return groups.map(function(g) {
           return g.value;
         }).join('; ');
       },

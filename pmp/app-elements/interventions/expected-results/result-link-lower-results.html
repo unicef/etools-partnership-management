@@ -127,7 +127,7 @@
                   <div class="indicator-col flex-c">
                     <span class="heading">Indicator</span>
                     <span class="content">
-                      [[_getIndicatorType(indicator.unit)]][[_displayIndicatorValue(indicator.name)]]
+                      [[_getIndicatorType(indicator.unit)]][[_getIndicatorTitle(indicator)]]
                     </span>
                   </div>
                 </div>
@@ -138,6 +138,7 @@
               <paper-button class="secondary-btn"
                             on-tap="_addNewIndicator"
                             title="Add Indicator"
+                            data-ll-result-id$="[[item.id]]"
                             disabled$="[[!editMode]]"
                             hidden$="[[!editMode]]">
                 Add Indicator
@@ -195,7 +196,7 @@
 
         _editLowerResult: function(e) {
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
-          if (!(index >= 0)) {
+          if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'lower-results');
             return;
           }
@@ -221,6 +222,16 @@
             return '-';
           }
         },
+        _getIndicatorTitle: function(indicator) {
+          if (!indicator) {
+            return '-';
+          }
+          if (indicator.cluster_indicator_id) {
+            return indicator.cluster_indicator_title;
+          } else {
+            return indicator.indicator ? indicator.indicator.title : '-';
+          }
+        },
 
         _getIndicatorType: function(unit) {
           if (!unit) {
@@ -231,8 +242,8 @@
               return '# - ';
             case 'percentage':
               return '% - ';
-            case 'yesno':
-              return 'Yes/No - ';
+            // case 'yesno':
+            //   return 'Yes/No - ';
           }
         },
 
@@ -245,6 +256,7 @@
           var resultMap = {
             cpOutputId: this.cpOutputId,
             llResultIndex: event.model.index,
+            llResultId: parseInt(Polymer.dom(event).localTarget.getAttribute('data-ll-result-id'), 10),
             indicatorData: null,
             appliedIndicatorsIndex: null
           };
@@ -259,6 +271,7 @@
           var resultMap = {
             cpOutputId: this.cpOutputId,
             llResultIndex: llResultIndex,
+            llResultId: indicator.lower_result,
             indicatorData: indicator,
             appliedIndicatorsIndex: indicatorIndex
           };

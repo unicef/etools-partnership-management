@@ -201,13 +201,22 @@
         padding-top: 8px;
       }
 
+      .input-label {
+        min-height: 24px;
+        padding-top: 4px;
+        min-width: 0;
+      }
+      .input-label[empty]::after {
+        content: "—";
+      }
+
       paper-checkbox[checked], paper-radio-button[checked] {
-        --paper-checkbox-unchecked-color:  #4a90e2;
-        --paper-radio-button-unchecked-color: #4a90e2;
+        --paper-checkbox-unchecked-color:  var(--primary-color);
+        --paper-radio-button-unchecked-color: var(--primary-color);
       }
       paper-checkbox, paper-radio-button {
-        --paper-checkbox-unchecked-color:  #737373;
-        --paper-radio-button-unchecked-color:  #737373;
+        --paper-checkbox-unchecked-color:  var(--secondary-text-color);
+        --paper-radio-button-unchecked-color:  var(--secondary-text-color);
       }
 
       /* responsive css rules */
