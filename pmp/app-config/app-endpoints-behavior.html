@@ -139,14 +139,14 @@
     getEditDeleteIndicator: {
       template: '/api/v2/interventions/applied-indicators/<%=id%>/'
     },
-    getPrpClusterIndicators: { //by repsonse plan and cluster id
+    getPrpClusterIndicators: { //by cluster id
       template: ''
     },
     getPrpClusterIndicator: { //by id
       template: ''
     },
-    getPrpClusters: {// by respsonse plan id
-      template: ''
+    getResponsePlans: {
+      template: '/api/core/workspace/<%=id%>/response-plan/'
     },
     pdExpectedResults: {
       template: '/api/v2/interventions/<%=pdId%>/result-links/'

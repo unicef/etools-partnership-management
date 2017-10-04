@@ -6,6 +6,7 @@
 <link rel="import" href="../../app-config/app-user-permissions-behavior.html">
 
 <link rel="import" href="../../app-behaviors/list-data-behavior.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="user-data">
   <script>
@@ -18,7 +19,8 @@
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior
+          EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         ],
 
         properties: {
@@ -41,6 +43,14 @@
             notify: true,
           }
         },
+        actions: {
+          setCurrentUser: function(user) {
+            return {
+              type: 'SET_CURRENT_USER',
+              user: user
+            };
+          }
+        },
 
         ready: function() {
           let self = this;
@@ -48,7 +58,9 @@
             endpoint: self.getEndpoint(self.endpointName)
           }).then(function(res) {
             // TODO: check response to make sure it contains a valid user
+            console.log('user', res);
             self._setUserData(res);
+            self.dispatch('setCurrentUser', res);
           }).catch(function(error) {
             self._resetUserAndPermissions();
             self.logError('Error occurred on logged user data request', 'user request', error);

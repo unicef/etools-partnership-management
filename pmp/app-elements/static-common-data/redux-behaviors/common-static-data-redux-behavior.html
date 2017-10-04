@@ -32,7 +32,8 @@
     agreementStatuses: [],
     csoPartners: [],
     countryData: {},
-    disaggregations: []
+    disaggregations: [],
+    currentUser: {}
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -179,7 +180,8 @@
         let disaggregsCopy = state.disaggregations.slice(0);
         disaggregsCopy.push(action.disaggregation);
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
-
+      case 'SET_CURRENT_USER':
+        return Object.assign({}, state, {currentUser: action.user});
     }
   });
 
