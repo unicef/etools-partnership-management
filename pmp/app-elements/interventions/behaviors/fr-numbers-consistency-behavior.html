@@ -70,7 +70,8 @@
       return false;
     },
     validateFrsVsInterventionDates: function(intervDateStr, frsDateStr) {
-      if (!frsDateStr) {// *No Fr added
+      if (!frsDateStr || !intervDateStr) {
+        // No Fr added or interv dates not set yet
         return true;
       }
       if (intervDateStr !== frsDateStr) {
