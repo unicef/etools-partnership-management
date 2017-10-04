@@ -7,6 +7,8 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../../common-elements/etools-progress-bar.html">
@@ -40,10 +42,6 @@
       #cash-progress etools-form-element-wrapper:first-child {
         margin-right: 24px;
       }
-
-      .ram-indicators-names {
-        font-weight: bold;
-      }
     </style>
 
     <paper-material id="progress-summary" class="content-section" elevation="1">
@@ -58,12 +56,10 @@
         <div class="layout-vertical col-4">
           <div class="layout-horizontal" id="cash-progress">
             <etools-form-element-wrapper label="Cash Transfered">
-              <!-- TODO: progress.amount_transfered is unknown, missing -->
-              $ [[displayCurrencyAmount(progress.amount_transfered, '0.00')]]
+              $ [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]
             </etools-form-element-wrapper>
             <etools-form-element-wrapper label="Planned">
-              <!-- TODO: progress.amount_planned is unknown, missing -->
-              $ [[displayCurrencyAmount(progress.amount_planned, '0.00')]]
+              $ [[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]]
             </etools-form-element-wrapper>
           </div>
           <!-- TODO: progress.amount_progress is unknown, missing -->
@@ -77,23 +73,22 @@
       </div>
     </paper-material>
 
-    <template is="dom-repeat" items="[[intervention.result_links]]">
-
-      <etools-content-panel class="content-section" panel-title="[[item.cp_output_name]]">
-
-        <div class="row-v row-second-bg ram-indicators-names">
-          <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
-            <span>[[ramIndicatorName]]</span>
-          </template>
+    <etools-content-panel class="content-section" panel-title="Results">
+      <div class="row-h" hidden$="[[!_emptyList(results)]]">
+        <p>There are no results to show.</p>
+      </div>
+      <template is="dom-repeat" items="[[results]]">
+        <div class="row-v row-second-bg">
+          <strong>[[item.title]]</strong>
         </div>
 
-        <div class="row-h" hidden$="[[!_emptyLowerResults(item)]]">
-          <p>There are no PD Output or SSFA Expected Results.</p>
+        <div class="row-h" hidden$="[[!_emptyList(item.ll_outputs)]]">
+          <p>There are no PD Outputs or SSFA Expected Results.</p>
         </div>
 
-        <div class="lower-results-table" hidden$="[[_emptyLowerResults(item)]]">
+        <div class="lower-results-table" hidden$="[[_emptyList(item.ll_outputs)]]">
 
-          <etools-data-table-header id="listHeader">
+          <etools-data-table-header id="listHeader" no-title>
             <etools-data-table-column class="col-9">
               PD Outputs or SSFA Expected Results
             </etools-data-table-column>
@@ -102,27 +97,34 @@
             </etools-data-table-column>
           </etools-data-table-header>
 
-          <template is="dom-repeat" items="[[item.ll_results]]" as="lowerResult">
+          <template is="dom-repeat" items="[[item.ll_outputs]]" as="lowerResult">
             <etools-data-table-row>
               <div slot="row-data">
                 <span class="col-9">
-                  [[lowerResult.name]]
+                  [[lowerResult.title]]
                 </span>
                 <span class="col-3">
+                  <!-- TODO: update this status -->
                   On track (21 Aug 2017)
                 </span>
               </div>
               <div slot="row-data-details">
-                indicators will go here...
+                <div class="row-details-content">
+                  <p hidden$="[[_countIndicatorReports(lowerResult.id)]]">
+                    No indicators on this PD Output or SSFA Expected Result
+                  </p>
+                  <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
+
+                  </template>
+                </div>
               </div>
             </etools-data-table-row>
           </template>
 
         </div>
 
-      </etools-content-panel>
-
-    </template>
+      </template>
+    </etools-content-panel>
 
   </template>
 
@@ -147,19 +149,25 @@
             type: Number,
             observer: '_interventionIdChanged'
           },
+          frsDetails: {
+            type: Object,
+            value: {
+              // TODO: These might not be the right data for Cash Transfered and Planned
+              total_actual_amt: 0,
+              total_frs_amt: 0
+            }
+          },
           progress: {
-            type: Object
+            type: Object,
+            observer: '_progressDataObjChanged'
           },
-
-          pdDurationProgress: {
-            type: Number,
-            readOnly: true,
-            computed: '_getTimeProgress(intervention.start, intervention.end)'
+          indicatorReports: {
+            type: Array,
+            value: []
           },
-          cashProgress: {
-            type: Number,
-            readOnly: true,
-            computed: ''
+          results: {
+            type: Array,
+            value: []
           }
         },
 
@@ -190,34 +198,83 @@
           }
         },
 
-        _getPdDuration: function(start, end) {
-          let startDate = this.getDateDisplayValue(start) || 'N/A';
-          let endDate = this.getDateDisplayValue(end) || 'N/A';
-          return startDate + ' - ' + endDate;
+        _emptyList: function(dataSet) {
+          return _.isEmpty(dataSet);
         },
 
-        _getTimeProgress: function(start, end) {
-          let todayDateStr = this.getTodayDateStr();
-          try {
-            if (this.dateIsBetween(start, end, todayDateStr)) {
-              let intervalTotalDays = this.dateDiff(start, end);
-              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
-              return intervalDaysCompleted * 100 / intervalTotalDays;
-            }
-          } catch (err) {
-            this.logWarn('Time progress compute error', 'intervention-progress', err);
+        _progressDataObjChanged: function(progress) {
+          if (!progress) {
+            this.set('indicatorReports', []);
+            this.set('results', []);
+            return;
           }
-          // if end date is valid and is past date or today's date, progress should be 100%
-          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
-              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
-            return 100;
+          let self = this;
+          if (!this._emptyList(progress.programme_document.cp_outputs)) {
+            progress.programme_document.cp_outputs.forEach(function(result) {
+              if (!self._emptyList(result.ll_outputs)) {
+                result.ll_outputs.forEach(function(lowerResult) {
+                  self.prepareindicatorReportsData(lowerResult.id, progress.indicator_reports);
+                });
+              }
+            });
+            this.set('results', progress.programme_document.cp_outputs);
           }
-          return 0;
         },
 
-        _emptyLowerResults: function(result) {
-          return result.ll_results.length === 0;
+        prepareindicatorReportsData: function(lowerResultId, progressIndicatorReports) {
+          let indicatorReportData = {
+            lowerResultId: lowerResultId,
+            reports: []
+          };
+          if (this._emptyList(progressIndicatorReports)) {
+            return;
+          }
+          indicatorReportData.reports = progressIndicatorReports.filter(function(report) {
+            return report.reportable_object_id === lowerResultId;
+          });
+          this.push('indicatorReports', indicatorReportData);
+        },
+
+        _countIndicatorReports: function(lowerResultId) {
+          return !this._emptyList(this.indicatorReports) &&
+              this.indicatorReports.find(function(report) {
+                return report.lowerResultId === lowerResultId;
+              });
+        },
+
+        _getIndicatorsReports: function(lowerResultId) {
+          if (this._emptyList(this.indicatorReports)) {
+            return [];
+          }
+          let indicatorsReports = this.indicatorReports.filter(function(report) {
+            return report.lowerResultId === lowerResultId;
+          });
         }
+
+//        _getPdDuration: function(start, end) {
+//          let startDate = this.getDateDisplayValue(start) || 'N/A';
+//          let endDate = this.getDateDisplayValue(end) || 'N/A';
+//          return startDate + ' - ' + endDate;
+//        },
+//
+//        _getTimeProgress: function(start, end) {
+//          let todayDateStr = this.getTodayDateStr();
+//          try {
+//            if (this.dateIsBetween(start, end, todayDateStr)) {
+//              let intervalTotalDays = this.dateDiff(start, end);
+//              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
+//              return intervalDaysCompleted * 100 / intervalTotalDays;
+//            }
+//          } catch (err) {
+//            this.logWarn('Time progress compute error', 'intervention-progress', err);
+//          }
+//          // if end date is valid and is past date or today's date, progress should be 100%
+//          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
+//              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+//            return 100;
+//          }
+//          return 0;
+//        },
       });
 
     })();
