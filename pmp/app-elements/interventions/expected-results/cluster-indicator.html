@@ -109,7 +109,7 @@
     <div class="row-h flex-c">
       <div class="layout-vertical">
         <label class="paper-label">Means of Verification</label>
-        <label class="input-label" empty$="[[!prpClusterIndicator.means_of_verification]]">[[prpClusterIndicator.means_of_verification]]</label>
+        <label class="input-label" empty$="[[!indicator.means_of_verification]]">[[indicator.means_of_verification]]</label>
       </div>
     </div>
     <div class="row-h flex-c">
@@ -275,9 +275,6 @@
           }
 
           this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
-          if (this.isNewIndicator) {
-            this.set('indicator.locations', prpClusterIndic.locationIds);
-          }
           this.set('prpDisaggregations', prpClusterIndic.disaggregations);
         },
 
