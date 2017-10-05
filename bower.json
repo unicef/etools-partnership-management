@@ -60,7 +60,7 @@
     "paper-radio-group": "^2.0.0"
   },
   "devDependencies": {
-    "web-component-tester": "^4.0.0"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   },
   "resolutions": {
     "neon-animation": "1 - 2",
