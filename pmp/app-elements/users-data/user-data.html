@@ -53,7 +53,7 @@
             self._resetUserAndPermissions();
             self.logError('Error occurred on logged user data request', 'user request', error);
             if (error.status === 403) {
-              this.fire('forbidden');
+              self.fire('forbidden');
             }
           });
         },

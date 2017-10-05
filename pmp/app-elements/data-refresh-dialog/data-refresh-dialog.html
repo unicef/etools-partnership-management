@@ -171,15 +171,15 @@
                 function() {
               if (self.partnersSelected) {
                 EtoolsPmpApp.DexieDb.partners.clear();
-                EtoolsPmpApp.DexieDb.collectionsList.delete('partners');
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
               }
               if (self.agreementsSelected) {
                 EtoolsPmpApp.DexieDb.agreements.clear();
-                EtoolsPmpApp.DexieDb.collectionsList.delete('agreements');
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
               }
               if (self.interventionsSelected) {
                 EtoolsPmpApp.DexieDb.interventions.clear();
-                EtoolsPmpApp.DexieDb.collectionsList.delete('interventions');
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
               }
             }).then(function(result) {
               // transaction succeeded
