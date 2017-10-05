@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
@@ -41,6 +42,33 @@
 
       #cash-progress etools-form-element-wrapper:first-child {
         margin-right: 24px;
+      }
+      etools-data-table-row {
+        --list-row-collapse-wrapper: {
+          padding: 0;
+        };
+      }
+      .indicator-report {
+        padding-left: 72px;
+      }
+      .indicator-report + .indicator-report {
+        border-top: 1px solid var(--list-divider-color);
+      }
+      .progress-details-row {
+        @apply --layout-self-end;
+      }
+      div.progress-details-row {
+        color: var(--secondary-text-color);
+      }
+      div.progress-details-row {
+        padding-right: 72px;
+        width: 100%;
+        text-align: right;
+      }
+      div.progress-details-row span:last-child {
+        display: inline-block;
+        width: 50px;
+        margin-left: 24px;
       }
     </style>
 
@@ -109,12 +137,31 @@
                 </span>
               </div>
               <div slot="row-data-details">
-                <div class="row-details-content">
-                  <p hidden$="[[_countIndicatorReports(lowerResult.id)]]">
+                <div class="row-details-content flex-c">
+                  <div class="row-h" hidden$="[[_countIndicatorReports(lowerResult.id)]]">
                     No indicators on this PD Output or SSFA Expected Result
-                  </p>
+                  </div>
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
-
+                    <div class="row-h indicator-report">
+                      <div class="col col-7">
+                        <!-- TODO: find indicator_report title to display, right now is missing or unknown! -->
+                        Some indicator title for [[indicatorReport.reportable.content_object_title]]
+                      </div>
+                      <div class="layout-vertical col-5">
+                        <etools-progress-bar class="progress-details-row"
+                            value="[[indicatorReport.reportable.progress_percentage]]">
+                        </etools-progress-bar>
+                        <div class="progress-details-row">
+                          <span>Target:</span><span>100</span>
+                        </div>
+                        <div class="progress-details-row">
+                          <span>Cumulative progress in all locations:</span><span>100</span>
+                        </div>
+                        <div class="progress-details-row">
+                          <span>Achivement in last reporting period in all locations:</span><span>100</span>
+                        </div>
+                      </div>
+                    </div>
                   </template>
                 </div>
               </div>
@@ -213,7 +260,7 @@
             progress.programme_document.cp_outputs.forEach(function(result) {
               if (!self._emptyList(result.ll_outputs)) {
                 result.ll_outputs.forEach(function(lowerResult) {
-                  self.prepareindicatorReportsData(lowerResult.id, progress.indicator_reports);
+                  self._prepareindicatorReportsData(lowerResult.id, progress.indicator_reports);
                 });
               }
             });
@@ -221,7 +268,7 @@
           }
         },
 
-        prepareindicatorReportsData: function(lowerResultId, progressIndicatorReports) {
+        _prepareindicatorReportsData: function(lowerResultId, progressIndicatorReports) {
           let indicatorReportData = {
             lowerResultId: lowerResultId,
             reports: []
@@ -237,8 +284,8 @@
 
         _countIndicatorReports: function(lowerResultId) {
           return !this._emptyList(this.indicatorReports) &&
-              this.indicatorReports.find(function(report) {
-                return report.lowerResultId === lowerResultId;
+              !!this.indicatorReports.find(function(indReports) {
+                return indReports.lowerResultId === lowerResultId;
               });
         },
 
@@ -246,10 +293,11 @@
           if (this._emptyList(this.indicatorReports)) {
             return [];
           }
-          let indicatorsReports = this.indicatorReports.filter(function(report) {
-            return report.lowerResultId === lowerResultId;
+          let indicatorsReports = this.indicatorReports.filter(function(indReports) {
+            return indReports.lowerResultId === lowerResultId;
           });
-        }
+          return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
+        },
 
 //        _getPdDuration: function(start, end) {
 //          let startDate = this.getDateDisplayValue(start) || 'N/A';

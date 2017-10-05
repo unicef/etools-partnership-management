@@ -15,11 +15,12 @@
       }
       #progress-percent {
         margin-left: 24px;
+        min-width: 48px;
       }
     </style>
     <paper-progress value="[[progressValue]]"
                     secondary-progress="[[_getSecondaryProgress(progressValue)]]"></paper-progress>
-    <span id="progress-percent">[[progressValue]] %</span>
+    <span id="progress-percent">[[_prepareDisplayedValue(progressValue)]] %</span>
   </template>
 
   <script>
@@ -38,7 +39,7 @@
       },
 
       _getProgress: function(value) {
-        value = parseInt(value, 10);
+        value = parseFloat(parseFloat(value).toFixed(2));
         if (Number.isNaN(value)) {
           return 0;
         }
@@ -53,6 +54,10 @@
        */
       _getSecondaryProgress: function(value) {
         return (value > 0 && value < 100) ? (value + 1) : 0;
+      },
+
+      _prepareDisplayedValue: function(value) {
+        return parseFloat(value).toFixed(2);
       }
     });
   </script>
