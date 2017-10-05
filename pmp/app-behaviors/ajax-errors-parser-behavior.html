@@ -24,16 +24,18 @@
         errorsArray.push(errors);
         return errorsArray;
       }
-      if (typeof errors === 'object' && typeof errors.error === 'string' && errors.error) {
+      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string' ) {
         errorsArray.push(errors.error);
         return errorsArray;
       }
 
+      if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
+        Array.prototype.push.apply(errorsArray, errors.errors);
+        return errorsArray;
+      }
+
       if (Array.isArray(errors) && errors.length > 0 && this._isArrayOfStrings(errors)) {
-        let err;
-        for (err in errors) {
-          errorsArray.push(errors[err]);
-        }
+        Array.prototype.push.apply(errorsArray, errors);
         return errorsArray;
       }
 
@@ -47,10 +49,7 @@
           if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
             errorsArray.push('Field ' + errField + ':');
             let nestedErrs =  this._getErrorsArray(errors[errField]);
-            let j;
-            for (j = 0; j < nestedErrs.length; j++) {
-              errorsArray.push(nestedErrs[j]);
-            }
+            Array.prototype.push.apply(errorsArray, nestedErrs);
             continue;
           }
           if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
@@ -84,11 +83,16 @@
     },
 
     parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
+      let errorsString;
       if (error.status >= 500) {
-        let errorsString = this.globalMessage;
+        errorsString = this.globalMessage;
       } else {
-        let errorsString = this.formatServerErrorAsText(error.response);
+        errorsString = this.formatServerErrorAsText(error.response);
       }
+      this.showErrorAsToastMsg(errorsString, source);
+    },
+
+    showErrorAsToastMsg: function(errorsString, source) {
       if (errorsString) {
         if (!source) {
           source = this;

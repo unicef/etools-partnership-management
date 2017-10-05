@@ -62,7 +62,7 @@
                                               on-iron-activate="_sectorSelected"
                                               required$="[[_getFieldRequired(required, item.locations.length)]]"
                                               auto-validate
-                                              error-message="Please select a sector"
+                                              error-message="Please select a section"
                                               readonly$="[[!editMode]]">
                 </etools-single-selection-menu>
               </div>
@@ -76,7 +76,7 @@
                                              option-value="id"
                                              required$="[[_getFieldRequired(required, item.sector)]]"
                                              auto-validate
-                                             error-message="Please select sector locations"
+                                             error-message="Please select section locations"
                                              readonly$="[[!editMode]]">
                 </etools-multi-selection-menu>
               </div>
@@ -86,7 +86,7 @@
       </template>
     </div>
 
-    <p hidden$="[[!_emptyList(dataItems.length)]]">There are no sector locations added.</p>
+    <p hidden$="[[!_emptyList(dataItems.length)]]">There are no section locations added.</p>
 
     <div id="bottom-actions" hidden$="[[!editMode]]">
       <paper-fab icon="add"
@@ -156,7 +156,7 @@
             return;
           }
           if (this._sectorAlreadySelected(sectorSelected.id, event.model.index)) {
-            this.fire('toast', {text: 'Sector already selected.', showCloseBtn: true});
+            this.fire('toast', {text: 'Section already selected.', showCloseBtn: true});
 
             var sectorDropdown = this.$$('#sector_' + event.model.index);
             if (sectorDropdown) {
@@ -200,7 +200,7 @@
         validate: function() {
           var valid = true;
           if (this.dataItems.length === 0 && this.required) {
-            this.fire('toast', {text: 'Please add sector location data.', showCloseBtn: true});
+            this.fire('toast', {text: 'Please add section location data.', showCloseBtn: true});
             valid = false;
           } else {
             this.dataItems.forEach(function(item, index) {
