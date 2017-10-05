@@ -124,7 +124,7 @@
       // if prc_review_document is null we need to delete the property otherwise the
       // file gets deleted from the backend
       if (this.intervention.hasOwnProperty('prc_review_document') &&
-          !(this.intervention.prc_review_document instanceof Blob)) {
+          !(this.intervention.prc_review_document instanceof File)) {
         delete interventionData.prc_review_document;
       }
 
