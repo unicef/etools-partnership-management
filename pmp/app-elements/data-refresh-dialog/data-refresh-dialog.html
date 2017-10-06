@@ -33,18 +33,22 @@
       .row-indent {
         padding-left: 40px;
       }
+      .title-indent {
+        padding: 0 24px;
+      }
 
     </style>
     <etools-dialog
         id="dataRefreshDialog"
         size="sm"
+        no-padding
         ok-btn-text="Refresh data"
         cancel-btn-text="Cancel"
         dialog-title="Refresh data"
         disable-confirm-btn="[[!anySelected]]"
         on-close="_handleDialogClosed">
       <div id="content-box">
-          <div>Select the data you want to refresh:</div>
+          <div class="title-indent">Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
               <etools-checkable-input checked="{{partnersSelected}}"
