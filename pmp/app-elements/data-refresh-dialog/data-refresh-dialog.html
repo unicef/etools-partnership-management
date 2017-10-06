@@ -167,7 +167,7 @@
                 (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
             var self = this;
-            EtoolsPmpApp.DexieDb.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions',
+            EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
                 function() {
               if (self.partnersSelected) {
                 EtoolsPmpApp.DexieDb.partners.clear();
