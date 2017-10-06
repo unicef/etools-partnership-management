@@ -34,6 +34,7 @@
         <etools-single-selection-menu id="cpOutput"
                                       label="CP Output"
                                       placeholder="&#8212;"
+                                      avoid-header-overlapping-dropdown
                                       options="{{cpOutputsOptions}}"
                                       option-value="id"
                                       option-label="name"
@@ -53,6 +54,7 @@
                                      options="[[cpIndicators]]"
                                      option-value="id"
                                      option-label="name"
+                                     avoid-header-overlapping-dropdown
                                      selected-values="{{selectedCpIndicatorsIds}}"
                                      required$="[[_getFieldRequired(required, cpOutputId)]]"
                                      error-message="Please select CP Indicators"
