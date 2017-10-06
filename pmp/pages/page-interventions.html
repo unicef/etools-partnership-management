@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
@@ -224,6 +225,7 @@
 
       is: 'page-interventions',
       behaviors: [
+        EtoolsLogsBehavior,
         etoolsBehaviors.DynamicDialogBehavior,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
@@ -502,8 +504,8 @@
             }
           })
           .catch(function(err) {
-            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
-            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+            self.logError('Intervention page import error occurred', '[intervention(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'interv-page'});
             self._triggerPageNotFound();
           });
         }
