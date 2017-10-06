@@ -6,19 +6,22 @@
   EtoolsPmpApp.Behaviors.MissingDropdownOptionsImpl = {
 
     setDropdownMissingOptionsAjaxDetails: function(dropdownEl, endpointName, params) {
-      try {
-        if (dropdownEl) {
-          var endpointUrl = this.getMissingOptionsEndpointUrl(endpointName);
-          params = (params) ? params : {};
+      let self = this;
+      this.async(function() {
+        try {
+          if (dropdownEl) {
+            let endpointUrl = self.getMissingOptionsEndpointUrl(endpointName);
+            params = (params) ? params : {};
 
-          dropdownEl.set('ajaxParams', params);
-          dropdownEl.set('url', endpointUrl);
-        } else {
-          console.warn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+            dropdownEl.set('ajaxParams', params);
+            dropdownEl.set('url', endpointUrl);
+          } else {
+            console.warn('Esmm element is null and the endpoint ' + endpointName + ' url can not be assigned to it!');
+          }
+        } catch (err) {
+          console.warn('An error occurred at ghost data esmm setup.', err);
         }
-      } catch (err) {
-        console.warn('An error occurred at ghost data esmm setup.', err);
-      }
+      }.bind(this));
     },
 
     getMissingOptionsEndpointUrl: function(endpointName) {

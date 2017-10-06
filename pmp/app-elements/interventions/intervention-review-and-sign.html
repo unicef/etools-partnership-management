@@ -251,9 +251,6 @@
           '_signedPdDocHasChanged(intervention.signed_pd_document)'
         ],
 
-        ready: function() {
-          this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
-        },
         attached: function() {
           /**
            * Disable loading message for review and sign tab elements load,
@@ -261,6 +258,7 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
+          this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
         _isDraft: function(status) {
           return status === 'draft' || status === '';

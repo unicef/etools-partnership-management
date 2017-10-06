@@ -140,7 +140,7 @@
           '_computeCpOutputsOptions(alreadySelectedCpo, cpOutputs.length, selectedCpStructure)'
         ],
 
-        ready: function() {
+        attached: function() {
           this.setDropdownMissingOptionsAjaxDetails(this.$.cpOutput, 'cpOutputsByIdsAsValues', {dropdown: true});
         },
 
