@@ -13,6 +13,7 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../../common-elements/etools-progress-bar.html">
+<link rel="import" href="../../../app-behaviors/date-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -22,6 +23,7 @@
 
 <!-- TODO: remove this mockup data behavior after API is ready to be used  -->
 <link rel="import" href="progress-tab-data-mockup.html">
+<link rel="import" href="../reports/report-status.html">
 
 <dom-module id="intervention-progress">
 
@@ -95,7 +97,8 @@
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
-            On track (21 Aug 2017)
+            <report-status status="[[progress.status]]"></report-status>
+            ([[prettyDate(progress.due_date)]])
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -133,7 +136,8 @@
                 </span>
                 <span class="col-3">
                   <!-- TODO: update this status -->
-                  On track (21 Aug 2017)
+                  <report-status status="[[_getLowerResultOverallStatus(lowerResult.id)]]"></report-status>
+                  [[_getLowerResultOverallStatusDate(lowerResult.id)]]
                 </span>
               </div>
               <div slot="row-data-details">
@@ -187,6 +191,7 @@
           EtoolsLogsBehavior,
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ProgressTabDataMockup
         ],
@@ -298,6 +303,39 @@
           });
           return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
         },
+
+        /**
+         * Assuming all indicators reports are allready sort by date desc
+         */
+        _getLatestIndicatorReport: function(lowerResultId) {
+          if (!this._emptyList(this.indicatorReports)) {
+            let indReports = this.indicatorReports.find(function(indReports) {
+              return indReports.lowerResultId === lowerResultId;
+            });
+            if (indReports && indReports.reports[0]) {
+              return indReports.reports[0];
+            }
+          }
+          return null;
+        },
+
+        _getLowerResultOverallStatus: function(lowerResultId) {
+          let status = null;
+          let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+          if (latestIndReport) {
+            status = latestIndReport.overall_status;
+          }
+          return status;
+        },
+
+        _getLowerResultOverallStatusDate: function(lowerResultId) {
+          let prettyDate = '';
+          let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+          if (latestIndReport) {
+            prettyDate = this.prettyDate(latestIndReport.due_date);
+          }
+          return '(' + prettyDate + ')';
+        }
 
 //        _getPdDuration: function(start, end) {
 //          let startDate = this.getDateDisplayValue(start) || 'N/A';
