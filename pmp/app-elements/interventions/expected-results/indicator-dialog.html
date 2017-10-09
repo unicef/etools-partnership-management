@@ -50,7 +50,7 @@
 
       .createDisaggreg {
         color: var(--secondary-text-color);
-        padding: 8px 24px;
+        padding: 8px 0;
         font-weight: 500;
         font-size: 16px !important;
       }
@@ -66,69 +66,69 @@
                    on-confirm-btn-clicked="_validateAndSaveIndicator"
                    ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
                    spinner-text="[[spinnerText]]">
-        <div class="page-top-content in-modal">
-          <div class="top-content-row">
-            <paper-tabs id="indicatorTabs"
-                        selected="{{activeTab}}"
-                        attr-for-selected="name"
-                        noink bottom-item>
-              <paper-tab name="details" link>
-                <span class="tab-content">DETAILS</span>
-              </paper-tab>
+      <div class="page-top-content in-modal">
+        <div class="top-content-row">
+          <paper-tabs id="indicatorTabs"
+                      selected="{{activeTab}}"
+                      attr-for-selected="name"
+                      noink bottom-item>
+            <paper-tab name="details" link>
+              <span class="tab-content">DETAILS</span>
+            </paper-tab>
 
-              <paper-tab name="disaggregations" link>
-                <span class="tab-content">[[_getDisaggregationsTabTitle(disaggregationsCount) ]]</span>
-              </paper-tab>
-            </paper-tabs>
+            <paper-tab name="disaggregations" link>
+              <span class="tab-content">[[_getDisaggregationsTabTitle(disaggregationsCount) ]]</span>
+            </paper-tab>
+          </paper-tabs>
+        </div>
+      </div>
+
+      <iron-pages id="indicatorPages"
+                  selected="{{activeTab}}"
+                  attr-for-selected="name"
+                  fallback-selection="details">
+        <div name="details">
+          <div class="row-h flex-c">
+            <div class="col col-4">
+              <etools-single-selection-menu id$="sectionDropdw"
+                                            label="Section"
+                                            selected="{{indicator.section}}"
+                                            placeholder="&#8212;"
+                                            options="[[sections]]"
+                                            option-label="name"
+                                            option-value="id">
+              </etools-single-selection-menu>
+            </div>
+          </div>
+          <div class="row-h">
+            <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
+                                 checked="{{isCluster}}"></paper-toggle-button>
+            Cluster Indicator
+          </div>
+          <div class="indicator-content">
+            <template is="dom-if" if="[[!isCluster]]">
+              <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
+            </template>
+            <template is="dom-if" if="[[isCluster]]">
+              <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
+                                 prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
+            </template>
           </div>
         </div>
-
-        <iron-pages id="indicatorPages"
-                    selected="{{activeTab}}"
-                    attr-for-selected="name"
-                    fallback-selection="details">
-          <div name="details">
-            <div class="row-h flex-c">
-              <div class="col col-4">
-                <etools-single-selection-menu id$="sectionDropdw"
-                                              label="Section"
-                                              selected="{{indicator.section}}"
-                                              placeholder="&#8212;"
-                                              options="[[sections]]"
-                                              option-label="name"
-                                              option-value="id">
-                </etools-single-selection-menu>
-              </div>
-            </div>
-            <div class="row-h">
-              <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
-                                   checked="{{isCluster}}"></paper-toggle-button>
-              Cluster Indicator
-            </div>
-            <div class="indicator-content">
-              <template is="dom-if" if="[[!isCluster]]">
-                <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
-              </template>
-              <template is="dom-if" if="[[isCluster]]">
-                <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
-                                    prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
-              </template>
-            </div>
+        <div class="row-padding" name="disaggregations">
+          <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
+            pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
           </div>
-          <div class="row-padding" name="disaggregations">
-            <div hidden$="[[isCluster]]" class="createDisaggreg">If disaggregation groups that you need are not
-              pre-defined yet, you can create them <a href="/pmp/settings" target="_blank">here</a>.
-            </div>
-              <template is="dom-if" if="[[!isCluster]]" restamp>
-                <indicator-dissaggregations data-items="{{disaggregations}}">
-                </indicator-dissaggregations>
-              </template>
-              <template is="dom-if" if="[[isCluster]]" restamp>
-                <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
-                </cluster-indicator-disaggregations>
-              </template>
-          </div>
-        </iron-pages>
+          <template is="dom-if" if="[[!isCluster]]" restamp>
+            <indicator-dissaggregations data-items="{{disaggregations}}">
+            </indicator-dissaggregations>
+          </template>
+          <template is="dom-if" if="[[isCluster]]" restamp>
+            <cluster-indicator-disaggregations disaggregations="[[prpDisaggregations]]">
+            </cluster-indicator-disaggregations>
+          </template>
+        </div>
+      </iron-pages>
 
     </etools-dialog>
 
@@ -270,7 +270,10 @@
             return [];
           }
           return disaggregations.map(function(id) {
-            //* disaggregId and not simply id to avoid repeatable-behavior from trying to make an endpoint request on Delete
+            /**
+             * disaggregId and not simply id to avoid repeatable-behavior
+             * from trying to make an endpoint request on Delete
+             */
             return {disaggregId: id};
           });
         },

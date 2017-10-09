@@ -93,18 +93,18 @@
         </template>
       </div>
       <div class="col col-3">
-        <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
-          <paper-input label="Target" id="targetEl"
+        <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]" restamp>
+          <paper-input label="Target" id="targetElForNumericUnit"
                       value="{{indicator.target}}"
                       type="number"
                       placeholder="&#8212;"
                       required
                       auto-validate
-                      error-message="Please add a target">
+                      error-message="Please add a valid target">
           </paper-input>
         </template>
-        <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
-          <paper-input label="Target" id="targetEl"
+        <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]" restamp>
+          <paper-input label="Target" id="targetElForNonNumericUnit"
                       value="{{indicator.target}}"
                       type="number"
                       min="0"
@@ -113,7 +113,7 @@
                       placeholder="&#8212;"
                       required
                       auto-validate
-                      error-message="Please add a target">
+                      error-message="Please add a valid target">
           </paper-input>
         </template>
       </div>
@@ -208,7 +208,7 @@
         },
         validate: function() {
           let valid = true;
-          let elemIds = ['titleEl', 'locationsDropdw', 'targetEl'];
+          let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.$$('#' + elemIds[i]);
@@ -223,7 +223,7 @@
           return valid;
         },
         resetValidations: function() {
-          let elemIds = ['titleEl', 'locationsDropdw', 'targetEl'];
+          let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.$$('#' + elemIds[i]);
@@ -233,6 +233,12 @@
               this.logWarn('Elem ' + elemIds[i] + ' not found');
             }
           }
+        },
+
+        _getIndicatorTargetElId: function() {
+          let elId = 'targetElForNumericUnit';
+          return (this._unitIsNumeric(this.indicator.indicator.unit))
+              ? 'targetElForNumericUnit' : 'targetElForNonNumericUnit';
         }
 
     });
