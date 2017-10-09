@@ -398,9 +398,6 @@
           '_contingencyPDChanged(intervention.contingency_pd)'
         ],
 
-        ready: function() {
-          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
-        },
         attached: function() {
           /**
            * Disable loading message for details tab elements load,
@@ -408,6 +405,7 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
+          this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
          },
          _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {

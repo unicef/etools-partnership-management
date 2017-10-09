@@ -44,16 +44,18 @@
         return;
       }
       let expectedResultIndex = this._getDataIndex(e.detail.expectedResultId, this.dataItems);
-      if (!(expectedResultIndex >= 0)) {
+      let validExpectedResultsIndex = expectedResultIndex >= 0;
+      if (!validExpectedResultsIndex) {
         this.logError('Result with ID: ' + e.detail.expectedResultId + ' not found.', 'lower-results-behavior');
         return;
       }
       if (!e.detail.lowerResultId) {
         this.push(['dataItems', expectedResultIndex, 'll_results'], e.detail.lowerResult);
       } else {
-        let lrIndex= this._getDataIndex(e.detail.lowerResultId, this.get(['dataItems', expectedResultIndex,
+        let lrIndex = this._getDataIndex(e.detail.lowerResultId, this.get(['dataItems', expectedResultIndex,
           'll_results']));
-        if (!(lrIndex >= 0)) {
+        let validIndex = lrIndex >= 0;
+        if (!validIndex) {
           this.logError('Lower result with ID: ' + e.detail.lowerResultId + ' not found.', 'lower-results-behavior');
           return;
         }
@@ -82,12 +84,12 @@
         }
         this.lowerResultNameEditElem.openDialog();
       }
-    },
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.LowerResults */
   EtoolsPmpApp.Behaviors.LowerResults = [
     EtoolsLogsBehavior,
     EtoolsPmpApp.Behaviors.LowerResultsImpl
-  ]
+  ];
 </script>
