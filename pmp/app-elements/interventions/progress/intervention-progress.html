@@ -78,27 +78,25 @@
       <div class="row-h">
         <div class="layout-vertical col-4">
           <etools-form-element-wrapper label="PD Duration">
-            [[progress.reporting_period]]
+            [[_getPdDuration(start, end)]]
           </etools-form-element-wrapper>
-          <!-- TODO: progress.pd_progress is unknown, missing -->
-          <etools-progress-bar value="[[progress.pd_progress]]"></etools-progress-bar>
+          <etools-progress-bar value="[[pdProgress]]"></etools-progress-bar>
         </div>
         <div class="layout-vertical col-4">
           <div class="layout-horizontal" id="cash-progress">
             <etools-form-element-wrapper label="Cash Transfered">
-              $ [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]
+              $ [[displayCurrencyAmount(progress.actual_fr, '0.00')]]
             </etools-form-element-wrapper>
             <etools-form-element-wrapper label="Planned">
-              $ [[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]]
+              $ [[displayCurrencyAmount(progress.total_fr, '0.00')]]
             </etools-form-element-wrapper>
           </div>
-          <!-- TODO: progress.amount_progress is unknown, missing -->
-          <etools-progress-bar value="[[progress.amount_progress]]"></etools-progress-bar>
+          <etools-progress-bar value="[[cashProgress]]"></etools-progress-bar>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
-            <report-status status="[[progress.status]]"></report-status>
-            ([[prettyDate(progress.due_date)]])
+            <report-status status="[[progress.overall_unicef_rating]]"></report-status>
+            ([[prettyDate(progress.sumission_date)]])
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -201,13 +199,21 @@
             type: Number,
             observer: '_interventionIdChanged'
           },
-          frsDetails: {
-            type: Object,
-            value: {
-              // TODO: These might not be the right data for Cash Transfered and Planned
-              total_actual_amt: 0,
-              total_frs_amt: 0
-            }
+          start: {
+            type: String,
+            value: ''
+          },
+          end: {
+            type: String,
+            value: ''
+          },
+          pdProgress: {
+            type: Number,
+            computed: '_getTimeProgress(start, end)'
+          },
+          cashProgress: {
+            type: Number,
+            computed: '_getCashProgress(progress.actual_fr, progress.total_fr)'
           },
           progress: {
             type: Object,
@@ -335,32 +341,37 @@
             prettyDate = this.prettyDate(latestIndReport.due_date);
           }
           return '(' + prettyDate + ')';
+        },
+
+        _getPdDuration: function(start, end) {
+          let startDate = this.getDateDisplayValue(start) || 'N/A';
+          let endDate = this.getDateDisplayValue(end) || 'N/A';
+          return startDate + ' - ' + endDate;
+        },
+
+        _getTimeProgress: function(start, end) {
+          let todayDateStr = this.getTodayDateStr();
+          try {
+            if (this.dateIsBetween(start, end, todayDateStr)) {
+              let intervalTotalDays = this.dateDiff(start, end);
+              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
+              return intervalDaysCompleted * 100 / intervalTotalDays;
+            }
+          } catch (err) {
+            this.logWarn('Time progress compute error', 'intervention-progress', err);
+          }
+          // if end date is valid and is past date or today's date, progress should be 100%
+          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
+              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+            return 100;
+          }
+          return 0;
+        },
+
+        _getCashProgress: function(actual, total) {
+          return parseFloat(actual) * 100 / parseFloat(total);
         }
 
-//        _getPdDuration: function(start, end) {
-//          let startDate = this.getDateDisplayValue(start) || 'N/A';
-//          let endDate = this.getDateDisplayValue(end) || 'N/A';
-//          return startDate + ' - ' + endDate;
-//        },
-//
-//        _getTimeProgress: function(start, end) {
-//          let todayDateStr = this.getTodayDateStr();
-//          try {
-//            if (this.dateIsBetween(start, end, todayDateStr)) {
-//              let intervalTotalDays = this.dateDiff(start, end);
-//              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
-//              return intervalDaysCompleted * 100 / intervalTotalDays;
-//            }
-//          } catch (err) {
-//            this.logWarn('Time progress compute error', 'intervention-progress', err);
-//          }
-//          // if end date is valid and is past date or today's date, progress should be 100%
-//          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
-//              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
-//            return 100;
-//          }
-//          return 0;
-//        },
       });
 
     })();

@@ -197,7 +197,8 @@
           <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive))]]">
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"
-                                   frs-details="[[intervention.frs_details]]"></intervention-progress>
+                                   start="[[intervention.start]]"
+                                   end="[[intervention.end]]"></intervention-progress>
           </template>
 
         </iron-pages>
