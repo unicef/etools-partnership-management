@@ -24,8 +24,6 @@
     ready: function() {
       if (!this.validatorName) {
         throw new Error('[EtoolsPmpApp.Behaviors.EtoolsIronValidator] Validator name property can not be empty!');
-      } else {
-        console.log('validator name:', this.validatorName);
       }
       new Polymer.IronMeta({type: 'validator', key: this.validatorName, value: this});
     },
