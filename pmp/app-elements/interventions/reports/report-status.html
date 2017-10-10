@@ -38,7 +38,7 @@
       }
     </style>
     <template is="dom-if" if="[[!noIcon]]">
-      <iron-icon icon="[[icon]]"></iron-icon>
+      <iron-icon icon$="[[icon]]"></iron-icon>
     </template>
     <template is="dom-if" if="[[!noLabel]]">
       <span>[[label]]</span>
@@ -96,6 +96,7 @@
           case 'Pla':
             return 'warning';
           case 'NoS':
+          case null:
             return 'no-status';
         }
       },
@@ -128,12 +129,13 @@
             return 'Planned';
           case 'Com':
             return 'Completed';
-          case 'NoS':
-            return 'No Status';
           case 'Sen':
             return 'Sent Back';
           case 'Acc':
             return 'Accepted';
+          case 'NoS':
+          case null:
+            return 'No Status';
         }
       },
 

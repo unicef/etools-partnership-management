@@ -111,8 +111,8 @@
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
-            <report-status status="[[latestAcceptedPr.status]]"></report-status>
-            ([[prettyDate(latestAcceptedPr.submission_date)]])
+            <report-status status="[[latestAcceptedPr.review_overall_status]]"></report-status>
+            <span>[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -179,14 +179,10 @@
                         </div>
                         <div class="progress-details-row">
                           <span>Cumulative progress in all locations:</span>
-                          <!-- TODO:  indicatorReport.total.d might not be the right property to use.
-                          What data type is this? -->
-                          <span>[[indicatorReport.total.d]]</span>
+                          <span>[[indicatorReport.reportable.achieved.c]]</span>
                         </div>
                         <div class="progress-details-row">
                           <span>Achivement in last reporting period in all locations:</span>
-                          <!-- TODO:  indicatorReport.total.c might not be the right property to use.
-                          What data type is this? -->
                           <span>[[indicatorReport.total.c]]</span>
                         </div>
                       </div>
@@ -360,8 +356,7 @@
           let status = null;
           let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
           if (latestIndReport) {
-            // TODO: is report_status the right data to use? or it should be overall_status?
-            status = latestIndReport.report_status;
+            status = latestIndReport.overall_status;
           }
           return status;
         },
@@ -370,7 +365,7 @@
           let prettyDate = '';
           let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
           if (latestIndReport) {
-            prettyDate = this.prettyDate(latestIndReport.due_date); // TODO: is due_date the right data to use?
+            prettyDate = this.prettyDate(latestIndReport.submission_date);
           }
           return '(' + prettyDate + ')';
         },
@@ -402,6 +397,10 @@
 
         _getCashProgress: function(actual, total) {
           return parseFloat(actual) * 100 / parseFloat(total);
+        },
+
+        _getOverallPdStatusDate: function(date) {
+          return date ? ('(' + this.prettyDate(date) + ')') : '';
         }
 
       });
