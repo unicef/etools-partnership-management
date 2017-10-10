@@ -162,8 +162,7 @@
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                     <div class="row-h indicator-report">
                       <div class="col col-9">
-                        <!-- TODO: find indicator_report title to display, right now is missing or unknown! -->
-                        Some indicator title for [[indicatorReport.reportable.content_object_title]]
+                        [[_getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]
                       </div>
                       <div class="col col-3">
                         <etools-progress-bar class="report-progress-bar"
@@ -401,6 +400,16 @@
 
         _getOverallPdStatusDate: function(date) {
           return date ? ('(' + this.prettyDate(date) + ')') : '';
+        },
+
+        _getUnitValue: function(unit) {
+          switch (unit) {
+            case 'number':
+              return '# ';
+            case 'percentage':
+              return '% ';
+          }
+          return null;
         }
 
       });
