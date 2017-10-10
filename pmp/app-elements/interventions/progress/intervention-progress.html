@@ -30,9 +30,7 @@
   <template strip-whitespace>
 
     <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles">
-      :host {
-
-      }
+      :host {}
 
       #progress-summary etools-progress-bar {
         margin-top: 16px;
@@ -50,24 +48,40 @@
           padding: 0;
         };
       }
+      .lower-result-status-date {
+        margin-left: 4px;
+      }
       .indicator-report {
+        padding-bottom: 0;
+      }
+      .indicator-report,
+      .progress-details {
         padding-left: 72px;
       }
-      .indicator-report + .indicator-report {
+      .progress-details + .indicator-report {
         border-top: 1px solid var(--list-divider-color);
+      }
+      .report-progress-bar {
+        @apply --layout-flex;
+        --etools-progress-bar: {
+          width: 100%
+        };
+      }
+      .progress-details {
+        @apply --layout-end-justified;
+        padding-top: 0;
       }
       .progress-details-row {
         @apply --layout-self-end;
+        box-sizing: border-box;
       }
-      div.progress-details-row {
+      .progress-details-row {
         color: var(--secondary-text-color);
-      }
-      div.progress-details-row {
         padding-right: 72px;
         width: 100%;
         text-align: right;
       }
-      div.progress-details-row span:last-child {
+      .progress-details-row span:last-child {
         display: inline-block;
         width: 50px;
         margin-left: 24px;
@@ -78,35 +92,37 @@
       <div class="row-h">
         <div class="layout-vertical col-4">
           <etools-form-element-wrapper label="PD Duration">
-            [[_getPdDuration(start, end)]]
+            [[_getPdDuration(progress.start_date, progress.end_date)]]
           </etools-form-element-wrapper>
           <etools-progress-bar value="[[pdProgress]]"></etools-progress-bar>
         </div>
         <div class="layout-vertical col-4">
           <div class="layout-horizontal" id="cash-progress">
             <etools-form-element-wrapper label="Cash Transfered">
-              $ [[displayCurrencyAmount(progress.actual_fr, '0.00')]]
+              [[latestAcceptedPr.programme_document.funds_received_to_date_currency]]
+              [[displayCurrencyAmount(latestAcceptedPr.programme_document.funds_received_to_date, '0.00')]]
             </etools-form-element-wrapper>
             <etools-form-element-wrapper label="Planned">
-              $ [[displayCurrencyAmount(progress.total_fr, '0.00')]]
+              [[latestAcceptedPr.programme_document.total_unicef_cash_currency]]
+              [[displayCurrencyAmount(latestAcceptedPr.programme_document.total_unicef_cash, '0.00')]]
             </etools-form-element-wrapper>
           </div>
           <etools-progress-bar value="[[cashProgress]]"></etools-progress-bar>
         </div>
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
-            <report-status status="[[progress.overall_unicef_rating]]"></report-status>
-            ([[prettyDate(progress.sumission_date)]])
+            <report-status status="[[latestAcceptedPr.status]]"></report-status>
+            ([[prettyDate(latestAcceptedPr.submission_date)]])
           </etools-form-element-wrapper>
         </div>
       </div>
     </paper-material>
 
     <etools-content-panel class="content-section" panel-title="Results">
-      <div class="row-h" hidden$="[[!_emptyList(results)]]">
+      <div class="row-h" hidden$="[[!_emptyList(progress.details.cp_outputs)]]">
         <p>There are no results to show.</p>
       </div>
-      <template is="dom-repeat" items="[[results]]">
+      <template is="dom-repeat" items="[[progress.details.cp_outputs]]">
         <div class="row-v row-second-bg">
           <strong>[[item.title]]</strong>
         </div>
@@ -118,10 +134,10 @@
         <div class="lower-results-table" hidden$="[[_emptyList(item.ll_outputs)]]">
 
           <etools-data-table-header id="listHeader" no-title>
-            <etools-data-table-column class="col-9">
+            <etools-data-table-column class="col col-9">
               PD Outputs or SSFA Expected Results
             </etools-data-table-column>
-            <etools-data-table-column class="col-3">
+            <etools-data-table-column class="col col-3">
               Current progress
             </etools-data-table-column>
           </etools-data-table-header>
@@ -129,13 +145,13 @@
           <template is="dom-repeat" items="[[item.ll_outputs]]" as="lowerResult">
             <etools-data-table-row>
               <div slot="row-data">
-                <span class="col-9">
+                <span class="col col-9">
                   [[lowerResult.title]]
                 </span>
-                <span class="col-3">
+                <span class="col col-3">
                   <!-- TODO: update this status -->
-                  <report-status status="[[_getLowerResultOverallStatus(lowerResult.id)]]"></report-status>
-                  [[_getLowerResultOverallStatusDate(lowerResult.id)]]
+                  <report-status status="[[_getLowerResultStatus(lowerResult.id)]]"></report-status>
+                  <span class="lower-result-status-date">[[_getLowerResultStatusDate(lowerResult.id)]]</span>
                 </span>
               </div>
               <div slot="row-data-details">
@@ -145,22 +161,33 @@
                   </div>
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                     <div class="row-h indicator-report">
-                      <div class="col col-7">
+                      <div class="col col-9">
                         <!-- TODO: find indicator_report title to display, right now is missing or unknown! -->
                         Some indicator title for [[indicatorReport.reportable.content_object_title]]
                       </div>
-                      <div class="layout-vertical col-5">
-                        <etools-progress-bar class="progress-details-row"
+                      <div class="col col-3">
+                        <etools-progress-bar class="report-progress-bar"
                             value="[[indicatorReport.reportable.progress_percentage]]">
                         </etools-progress-bar>
+                      </div>
+                    </div>
+                    <div class="row-h progress-details">
+                      <div class="layout-vertical col-5">
                         <div class="progress-details-row">
-                          <span>Target:</span><span>100</span>
+                          <span>Target:</span>
+                          <span>[[indicatorReport.reportable.target]]</span>
                         </div>
                         <div class="progress-details-row">
-                          <span>Cumulative progress in all locations:</span><span>100</span>
+                          <span>Cumulative progress in all locations:</span>
+                          <!-- TODO:  indicatorReport.total.d might not be the right property to use.
+                          What data type is this? -->
+                          <span>[[indicatorReport.total.d]]</span>
                         </div>
                         <div class="progress-details-row">
-                          <span>Achivement in last reporting period in all locations:</span><span>100</span>
+                          <span>Achivement in last reporting period in all locations:</span>
+                          <!-- TODO:  indicatorReport.total.c might not be the right property to use.
+                          What data type is this? -->
+                          <span>[[indicatorReport.total.c]]</span>
                         </div>
                       </div>
                     </div>
@@ -191,43 +218,44 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.ProgressTabDataMockup
         ],
 
         properties: {
+          currentUser: {
+            type: Object,
+            statePath: 'currentUser',
+          },
           interventionId: {
-            type: Number,
-            observer: '_interventionIdChanged'
-          },
-          start: {
-            type: String,
-            value: ''
-          },
-          end: {
-            type: String,
-            value: ''
+            type: Number
           },
           pdProgress: {
             type: Number,
-            computed: '_getTimeProgress(start, end)'
+            computed: '_getTimeProgress(progress.start_date, progress.end_date)'
           },
           cashProgress: {
             type: Number,
-            computed: '_getCashProgress(progress.actual_fr, progress.total_fr)'
+            computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
+              'latestAcceptedPr.programme_document.total_unicef_cash)'
           },
           progress: {
             type: Object,
             observer: '_progressDataObjChanged'
           },
-          indicatorReports: {
-            type: Array,
-            value: []
+          latestAcceptedPr: {
+            type: Object,
+            computed: '_computeLatestAcceptedPr(progress)'
           },
-          results: {
+          indicatorReports: {
             type: Array,
             value: []
           }
         },
+
+        observers: [
+          '_requestProgressData(interventionId, currentUser)'
+        ],
 
         attached: function() {
           /**
@@ -238,44 +266,47 @@
           this.fire('intervention-page-attached');
         },
 
-        _interventionIdChanged: function(id) {
-          if (id) {
-            let self = this;
-            // TODO: endpoint parameter reportId id unknown
-            let endpoint = this.getEndpoint('interventionProgress', {pdId: id, reportId: 109});
-            this.sendRequest({endpoint: endpoint}).then(function(response) {
-              self.set('progress', response);
-            }).catch(function(error) {
-              let errMsg = 'PD/SSFA progress request failed!';
-              self.logError(errMsg, 'intervention-progress', error);
-              self.fire('toast', {text: errMsg, showCloseBtn: true});
-
-              // TODO: remove mockup data use
-              self.set('progress', self.progressTabDataMokup);
-            });
+        _requestProgressData: function(id, currentUser) {
+          if (!id || _.isEmpty(currentUser)) {
+            return;
           }
+          let self = this;
+          let endpoint = this.getEndpoint('interventionProgress',
+              {countryId: this.currentUser.profile.country, pdId: id});
+          this.sendRequest({endpoint: endpoint}).then(function(response) {
+            self.set('progress', response);
+          }).catch(function(error) {
+            let errMsg = 'PD/SSFA progress request failed!';
+            self.logError(errMsg, 'intervention-progress', error);
+            self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+            // TODO: remove mockup data use
+            self.set('progress', self.progressTabDataMokup);
+          });
         },
 
         _emptyList: function(dataSet) {
           return _.isEmpty(dataSet);
         },
 
+        _computeLatestAcceptedPr: function(progress) {
+          return (progress && progress.latest_accepted_pr) ? progress.latest_accepted_pr : null;
+        },
+
         _progressDataObjChanged: function(progress) {
           if (!progress) {
             this.set('indicatorReports', []);
-            this.set('results', []);
             return;
           }
           let self = this;
-          if (!this._emptyList(progress.programme_document.cp_outputs)) {
-            progress.programme_document.cp_outputs.forEach(function(result) {
+          if (!this._emptyList(progress.details.cp_outputs)) {
+            progress.details.cp_outputs.forEach(function(result) {
               if (!self._emptyList(result.ll_outputs)) {
                 result.ll_outputs.forEach(function(lowerResult) {
-                  self._prepareindicatorReportsData(lowerResult.id, progress.indicator_reports);
+                  self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
                 });
               }
             });
-            this.set('results', progress.programme_document.cp_outputs);
           }
         },
 
@@ -325,20 +356,21 @@
           return null;
         },
 
-        _getLowerResultOverallStatus: function(lowerResultId) {
+        _getLowerResultStatus: function(lowerResultId) {
           let status = null;
           let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
           if (latestIndReport) {
-            status = latestIndReport.overall_status;
+            // TODO: is report_status the right data to use? or it should be overall_status?
+            status = latestIndReport.report_status;
           }
           return status;
         },
 
-        _getLowerResultOverallStatusDate: function(lowerResultId) {
+        _getLowerResultStatusDate: function(lowerResultId) {
           let prettyDate = '';
           let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
           if (latestIndReport) {
-            prettyDate = this.prettyDate(latestIndReport.due_date);
+            prettyDate = this.prettyDate(latestIndReport.due_date); // TODO: is due_date the right data to use?
           }
           return '(' + prettyDate + ')';
         },

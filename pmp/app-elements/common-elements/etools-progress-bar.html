@@ -17,6 +17,9 @@
         margin-left: 24px;
         min-width: 48px;
       }
+      paper-progress {
+        @apply --etools-progress-bar;
+      }
     </style>
     <paper-progress value="[[progressValue]]"
                     secondary-progress="[[_getSecondaryProgress(progressValue)]]"></paper-progress>
