@@ -23,6 +23,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
+<link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <dom-module id="assessments-items">
   <template strip-whitespace>
@@ -128,12 +129,18 @@
                       </template>
                     </div>
                     <div class="col col-4">
+                      <required-and-not-future-date-validator validator-name="dateSubmited_[[index]]_validator"
+                                                              required
+                                                              error-message="{{item.dateErrorMessage}}">
+                      </required-and-not-future-date-validator>
                       <!-- Date submitted -->
                       <etools-date-input id$="dateSubmited_[[index]]"
                                          label="Date of Assessment"
                                          value="{{item.completed_date}}"
                                          readonly$="[[!editMode]]"
-                                         error-message="[[dateSubmitedErrorMessages.missing]]"
+                                         auto-validate
+                                         validator="dateSubmited_[[index]]_validator"
+                                         error-message="[[item.dateErrorMessage]]"
                                          no-init show-clear-btn>
                       </etools-date-input>
                     </div>
@@ -295,14 +302,6 @@
                   reportFileLength > 0 || reportFile instanceof File)) {
                 valid = false;
               }
-
-              if (this.isFutureDate(completedDate)) {
-                valid = false;
-                element.errorMessage = this.dateSubmitedErrorMessages.futureDate;
-              } else {
-                element.errorMessage = this.dateSubmitedErrorMessages.missing;
-              }
-
               break;
             case 'report':
               if (!this._hasReport(reportFile, reportFileLength) && (this._notEmpty(assessmentType) ||

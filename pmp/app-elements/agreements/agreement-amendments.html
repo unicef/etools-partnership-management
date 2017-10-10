@@ -76,9 +76,6 @@
       /* amendment template download section styles end */
     </style>
 
-    <!-- include required and not future date validator -->
-    <required-and-not-future-date-validator></required-and-not-future-date-validator>
-
     <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
       <!-- Amendments template download -->
       <div id="download-template-msg">
@@ -109,15 +106,18 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Signed Date -->
+                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"                                                        
+                                                        error-message="{{item.errorMessage}}">
+                </required-and-not-future-date-validator>
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed Date"
                                    value="{{item.signed_date}}"
                                    error-message="Please select signed date"
                                    no-init show-clear-btn
                                    readonly$="[[_showReadonlyDetails(item.id)]]"
-                                   validator="required-and-not-future-date-validator"
+                                   validator="signedDate_[[index]]_validator"
                                    auto-validate$="[[!_showReadonlyDetails(item.id)]]"
-                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]">
+                                   error-message$="[[item.errorMessage]]">
                 </etools-date-input>
               </div>
               <div class="col col-8 file-container">
@@ -245,7 +245,6 @@
             }
             let signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl) {
-              signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendm.signed_date);
               if (!signedDateEl.validate()) {
                 isValid = false;
               }
@@ -351,12 +350,6 @@
             this._triggerAuthorizedOfficersLock();
           }
         },
-        _getSignedDateErrorMessage: function(signedDate) {
-          return this.isFutureDate(signedDate)
-              ? 'Signed Date can not be in the future'
-              : 'Please select Signed Date';
-        },
-
         _onAmendmentTypesSelected: function(e) {
           e.stopImmediatePropagation();
           if (!_.isEmpty(this.dataItems) && this.dataItems[e.model.index] &&
