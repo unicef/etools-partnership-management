@@ -61,6 +61,10 @@
         }
       }
 
+      #oldLayout {
+        overflow-x: hidden; 
+      }
+
     </style>
 
     <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator" on-close="_closeIndicatorDialog" no-padding>
@@ -70,6 +74,7 @@
             <paper-tabs id="indicatorTabs"
                 selected="{{activeTab}}"
                 attr-for-selected="name"
+                on-selected-changed="_centerDialog"
                 noink bottom-item>
               <paper-tab name="details" link>
                 <span class="tab-content">DETAILS</span>
@@ -413,10 +418,7 @@
         },
 
         _centerDialog: function() {
-          var d = Polymer.dom(this.$.indicatorDialog.root).querySelector('paper-dialog');
-          if (d) {
-            d.center();
-          }
+          this.$.indicatorDialog.notifyResize();
         },
 
         _closeIndicatorDialog: function(event) {
