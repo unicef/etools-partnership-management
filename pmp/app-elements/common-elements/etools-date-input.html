@@ -60,7 +60,8 @@
           label: String,
           value: {
             value: null,
-            notify: true
+            notify: true,
+            observer: '_valueChanged'
           },
           jsonValue: {
             value: null,
@@ -124,6 +125,12 @@
 
         _disabledDatepicker: function(readonly, disabled) {
           return readonly || disabled;
+        },
+        
+        _valueChanged: function(value) {
+          if (this.autoValidate && value !== undefined) {
+            this.validate();
+          }
         },
 
         validate: function() {
