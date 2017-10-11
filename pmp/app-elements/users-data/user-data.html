@@ -20,7 +20,7 @@
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
         properties: {
@@ -52,6 +52,15 @@
           }
         },
 
+        actions: {
+          setCurrentUser: function(user) {
+            return {
+              type: 'SET_CURRENT_USER',
+              user: user
+            };
+          }
+        },
+
         ready: function() {
           let self = this;
           self.sendRequest({
@@ -72,7 +81,7 @@
 
         _findGroup: function(groupName) {
           return _.find(this.userGroups, function(grp) {
-             return grp.name === groupName;
+            return grp.name === groupName;
           });
         },
         _resetUserAndPermissions: function() {

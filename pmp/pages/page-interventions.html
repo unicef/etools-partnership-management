@@ -18,12 +18,14 @@
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-status.html">
-<link rel="import" href="../app-elements/interventions/intervention-reports.html">
+<link rel="import" href="../app-elements/interventions/reports/intervention-reports.html">
+<link rel="import" href="../app-elements/interventions/progress/intervention-progress.html">
 
 <link rel="import" href="../../styles/app-mixins.html">
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
+
 <link rel="import" href="../../scripts/lodash/lodash.html">
 
 <dom-module id="page-interventions">
@@ -114,9 +116,16 @@
                 <span class="tab-content">Attachments</span>
               </paper-tab>
 
-              <paper-tab name="reports" link>
-                <span class="tab-content">Reports</span>
-              </paper-tab>
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="reports" link>
+                  <span class="tab-content">Reports</span>
+                </paper-tab>
+
+                <paper-tab name="progress" link>
+                  <span class="tab-content">Progress</span>
+                </paper-tab>
+              </template>
+
             </paper-tabs>
           </div>
         </template>
@@ -144,7 +153,7 @@
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
@@ -180,9 +189,14 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'reports')]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
                                   name="reports"></intervention-reports>
+          </template>
+
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive))]]">
+            <intervention-progress name="progress"
+                                   intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
 
         </iron-pages>
@@ -359,7 +373,7 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
-        var dialog = document.createElement('div');
+        let dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
         dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
         this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
@@ -483,8 +497,11 @@
             // return new intervention page tab name
             page = this.routeDataNewInterv.intTab;
           } else {
-            // return intervention details page tab name
+            // return intervention page tab name
             page = this.routeData.intTab;
+            if (['reports', 'progress'].indexOf(page) > -1) {
+              pageBaseUrl += page + '/';
+            }
           }
           pagePrefix = 'intervention-';
         }
@@ -577,8 +594,8 @@
         return newInterventionActive === true;
       },
 
-      _showInterventionOverview: function(interventionPage, newInterventionActive) {
-        return interventionPage === 'overview' && !this._newIntervention(newInterventionActive);
+      _vizibleTab: function(interventionPage, expectedPage, newInterventionActive) {
+        return this._pageEquals(interventionPage, expectedPage) && !this._newIntervention(newInterventionActive);
       },
 
       /**

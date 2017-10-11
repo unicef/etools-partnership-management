@@ -13,8 +13,8 @@
         format = 'D MMM YYYY';
       }
       if (typeof dateString === 'string' && dateString !== '') {
-        var date = new Date(dateString);
-        if (date.toString() !== 'Invalid Date') {
+        let date = new Date(dateString);
+        if (this.isValidDate(date)) {
           // using moment.utc() ensures that the date will not be changed no matter timezone the user has set
           return moment.utc(date).format(format);
         }
@@ -27,8 +27,8 @@
      */
     prepareDate: function(dateString) {
       if (typeof dateString === 'string' && dateString !== '') {
-        var date = new Date(dateString);
-        if (date.toString() === 'Invalid Date') {
+        let date = new Date(dateString);
+        if (!this.isValidDate(date)) {
           date = new Date();
         }
         return date;
@@ -42,10 +42,9 @@
      * Make sure you also have the data-selector attribute set on the input field.
      */
     openDatePicker: function(event) {
-      var id = Polymer.dom(event).localTarget.getAttribute('data-selector');
+      let id = Polymer.dom(event).localTarget.getAttribute('data-selector');
       if (id) {
-        var datepickerId = '#' + id;
-        var datePicker = this.$$(datepickerId);
+        let datePicker = this.$$('#' + id);
         if (datePicker) {
           datePicker.open = true;
         }
@@ -61,12 +60,12 @@
       }
       if (typeof firstDateString === 'string' && firstDateString !== '' &&
           typeof secondDateString === 'string' && secondDateString !== '') {
-        var firstDate = new Date(firstDateString);
-        var secondDate = new Date(secondDateString);
+        let firstDate = new Date(firstDateString);
+        let secondDate = new Date(secondDateString);
 
-        if (firstDate.toString() !== 'Invalid Date' && secondDate.toString() !== 'Invalid Date') {
-          var mFirstDate = moment.utc(firstDate);
-          var mSecondDate = moment.utc(secondDate);
+        if (this.isValidDate(firstDate) && this.isValidDate(secondDate)) {
+          let mFirstDate = moment.utc(firstDate);
+          let mSecondDate = moment.utc(secondDate);
           return mSecondDate.diff(mFirstDate, unit);
         }
       }
@@ -75,25 +74,52 @@
 
     getMaxDateStr: function(d1Str, d2Str) {
       // TODO: optimize this
-      var d1 = new Date(d1Str);
-      var d2 = new Date(d2Str);
-      if (d1.toString() === 'Invalid Date' && d2.toString() !== 'Invalid Date') {
+      let d1 = new Date(d1Str);
+      let d2 = new Date(d2Str);
+      if (!this.isValidDate(d1) && this.isValidDate(d2)) {
         return d2Str;
-      } else if (d1.toString() !== 'Invalid Date' && d2.toString() === 'Invalid Date') {
+      } else if (this.isValidDate(d1) && !this.isValidDate(d2)) {
         return d1Str;
-      } else if (d1.toString() === 'Invalid Date' && d2.toString() === 'Invalid Date') {
-         return null;
+      } else if (!this.isValidDate(d1) && !this.isValidDate(d2)) {
+        return null;
       } else {
-         if (moment.utc(d1).isSameOrBefore(d2)) {
-           return d2Str;
-         } else {
-           return d1Str;
-         }
+        if (moment.utc(d1).isSameOrBefore(d2)) {
+          return d2Str;
+        } else {
+          return d1Str;
+        }
       }
     },
 
     isFutureDate: function(dateStr) {
       return moment.utc().isBefore(moment.utc(new Date(dateStr)));
+    },
+
+    dateIsBetween: function(start, end, current) {
+      let startDate = new Date(start);
+      let endDate = new Date(end);
+      if (!this.isValidDate(startDate) || !this.isValidDate(endDate)) {
+        throw new Error('Both start and end dates must valid.');
+      }
+      let date = new Date(current);
+      let currentDate = this.isValidDate(date) ? moment() : moment(date);
+      return currentDate.isBetween(moment(startDate), moment(endDate), null, '[]');
+    },
+
+    isValidDate(date) {
+      return (date instanceof Date === false) ? false : (date.toString() !== 'Invalid Date');
+    },
+
+    getTodayDateStr: function() {
+      return moment().format('YYYY-MM-DD');
+    },
+
+    dateIsBefore(dateToCheckStr, dateStr) {
+      return moment(dateToCheckStr).isBefore(dateStr);
+    },
+
+    dateIsAfter(dateToCheckStr, dateStr) {
+      return moment(dateToCheckStr).isAfter(dateStr);
     }
 
   };
