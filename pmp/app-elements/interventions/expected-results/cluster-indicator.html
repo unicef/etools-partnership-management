@@ -71,12 +71,12 @@
                                     option-label="type"
                                     option-value="id"
                                     error-message="Please select Cluster"
-                                    on-iron-activate="_onClusterChange">
+                                    on-iron-select="_onClusterChange">
           </etools-single-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-single-selection-menu id="clusterIndicatorEl"
+        <etools-single-selection-menu id="clusterIndicatorDropdw"
                                     label="Indicator"
                                     placeholder="&#8212;"
                                     selected="{{indicator.cluster_indicator_id}}"
@@ -101,9 +101,13 @@
         </div>
       </div>
       <div class="col col-3">
-         <paper-input label="Target"
+         <paper-input id="targetEl"
+                      label="Target"
                       value="{{indicator.target}}"
                       type="number"
+                      required
+                      auto-validate
+                      error-message="Please add a valid target"
                       placeholder="&#8212;">
           </paper-input>
       </div>
@@ -115,13 +119,15 @@
       </div>
     </div>
     <div class="row-h flex-c">
-      <etools-multi-selection-menu id$="locationsDropdw"
+      <etools-multi-selection-menu id="locationsDropdw"
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
                                    options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
+                                   required
+                                   auto-validate
                                    error-message="Please select locations">
       </etools-multi-selection-menu>
     </div>
@@ -233,14 +239,19 @@
           })[0].clusters;
         },
         _onClusterChange: function(event) {
+          console.log('onclusterchange');
           if (!event.detail.item.item) {
             return;
           }
-          this.indicator.cluster_name = event.detail.item.item.name;
+          this.indicator.cluster_name = event.detail.item.item.type;
         },
         _clusterIdChanged: function(clusterId) {
+          if (!clusterId) {
+            return;
+          }
           console.log('Cluster id changed ', clusterId);
           this._populatePrpClusterIndicators(clusterId);
+          this.set('indicator.cluster_indicator_id', undefined);
         },
         _populatePrpClusterIndicators: function(clusterId) {
           if (!clusterId) {
@@ -294,10 +305,15 @@
         },
 
         validate: function() {
-          return this.$$('#clusterIndicatorEl').validate();
+          let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw', 'targetEl'];
+          return this.validateComponents(elemIds);
+
         },
         resetValidations: function() {
-          this.$$('#clusterIndicatorEl').invalid = false;
+          this.$$('#clusterIndicatorDropdw').invalid = false;
+          this.$$('#locationsDropdw').invalid = false;
+          this.$$('#targetEl').invalid = false;
+
         }
     });
   })();
