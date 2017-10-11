@@ -25,12 +25,11 @@
         queryEntered: {
           type: Boolean,
           value: false
-        }
+        },
       },
 
       // tracks exports and filtering
       trackEvent: function(e) {
-        // debugger
         switch (e.detail.sourceEvent.currentTarget.innerText) {
           case 'EXPORT':
             _paq.push([
@@ -72,7 +71,8 @@
             'trackEvent',
             document.title,
             'search bar used',
-            event.srcElement.__data__.user.groups.map(g => g.name)])
+            event.srcElement.__data__.user.groups.map(g => g.name)
+          ])
           this.set('queryEntered', true)
         }
       },
@@ -89,15 +89,22 @@
         _paq.push(['trackEvent', 'error', 'javascript error', message])
       },
 
+      // validationError: function() {
+      //   debugger
+        // event.detail.text
+        // event.path[0].attributes[1].value
+        // event.path[0].__data__.endpoint.url
+      // },
+
       // tracks internal pageviews that aren't picked up with trackPageView
       pageView: function() {
-        // debugger
         if (event && event.srcElement.__data__.route) {
           _paq.push([
             'trackEvent',
             event.srcElement.__data__.route.path,
             'tap',
-            'in-app navigation'])
+            'in-app navigation'
+          ])
         }
       },
     });
