@@ -139,7 +139,7 @@
         */
         validate: function() {
           let hasValidator = this.hasValidator();
-          let valid;
+          let valid = true;
           if (this.required && !hasValidator && this.value === '') {
             valid = false;
           } else if (hasValidator) {
