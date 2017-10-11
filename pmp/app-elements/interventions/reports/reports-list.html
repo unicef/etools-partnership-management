@@ -32,6 +32,7 @@
         text-decoration: none;
         color: var(--primary-color);
       }
+
       .pd-ref:focus {
         outline: inherit;
       }
@@ -81,6 +82,7 @@
 
         <template is="dom-repeat" items="[[reports]]" as="report">
           <etools-data-table-row no-collapse="[[noCollapse]]">
+
             <div slot="row-data">
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                 <span class="col-data col-2">
@@ -110,12 +112,16 @@
                 <a href="#" class="bloated"> view report </a>
               </span>
             </div>
-            <div slot="row-data-details">
-              <div class="row-details-content col-2">
-                <span class="rdc-title">Location</span>
-                <span> Narnia </span>
+
+            <template is="dom-if" if="[[!noCollapse]]">
+              <div slot="row-data-details">
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">Location</span>
+                  <span> Narnia </span>
+                </div>
               </div>
-            </div>
+            </template>
+
           </etools-data-table-row>
         </template>
         <etools-data-table-footer
