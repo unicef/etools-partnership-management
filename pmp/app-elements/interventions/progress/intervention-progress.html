@@ -149,7 +149,6 @@
                   [[lowerResult.title]]
                 </span>
                 <span class="col col-3">
-                  <!-- TODO: update this status -->
                   <report-status status="[[_getLowerResultStatus(lowerResult.id)]]"></report-status>
                   <span class="lower-result-status-date">[[_getLowerResultStatusDate(lowerResult.id)]]</span>
                 </span>
@@ -275,7 +274,7 @@
             self.logError(errMsg, 'intervention-progress', error);
             self.fire('toast', {text: errMsg, showCloseBtn: true});
 
-            // TODO: remove mockup data use
+            // TODO: remove mockup data use, make sure API request is correct
             self.set('progress', self.progressTabDataMokup);
           });
         },
