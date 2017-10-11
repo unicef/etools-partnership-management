@@ -140,10 +140,10 @@
       template: '/api/v2/interventions/applied-indicators/<%=id%>/'
     },
     getPrpClusterIndicators: { //by cluster id
-      template: ''
+      template: '/api/indicator/ca/?clusters=<%=id%>'
     },
     getPrpClusterIndicator: { //by id
-      template: ''
+      template: 'api/indicator/<%=id%>/'
     },
     getResponsePlans: {
       template: '/api/core/workspace/<%=id%>/response-plan/'
