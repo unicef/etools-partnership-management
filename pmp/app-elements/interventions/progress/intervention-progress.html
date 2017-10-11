@@ -1,0 +1,419 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="../../common-elements/etools-progress-bar.html">
+<link rel="import" href="../../../app-behaviors/date-behavior.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
+
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/page-common-styles.html">
+
+<!-- TODO: remove this mockup data behavior after API is ready to be used  -->
+<link rel="import" href="progress-tab-data-mockup.html">
+<link rel="import" href="../reports/report-status.html">
+
+<dom-module id="intervention-progress">
+
+  <template strip-whitespace>
+
+    <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles">
+      :host {}
+
+      #progress-summary etools-progress-bar {
+        margin-top: 16px;
+      }
+
+      #cash-progress etools-form-element-wrapper {
+        width: 140px;
+      }
+
+      #cash-progress etools-form-element-wrapper:first-child {
+        margin-right: 24px;
+      }
+      etools-data-table-row {
+        --list-row-collapse-wrapper: {
+          padding: 0;
+        };
+      }
+      .lower-result-status-date {
+        margin-left: 4px;
+      }
+      .indicator-report {
+        padding-bottom: 0;
+      }
+      .indicator-report,
+      .progress-details {
+        padding-left: 72px;
+      }
+      .progress-details + .indicator-report {
+        border-top: 1px solid var(--list-divider-color);
+      }
+      .report-progress-bar {
+        @apply --layout-flex;
+        --etools-progress-bar: {
+          width: 100%
+        };
+      }
+      .progress-details {
+        @apply --layout-end-justified;
+        padding-top: 0;
+      }
+      .progress-details-row {
+        @apply --layout-self-end;
+        box-sizing: border-box;
+      }
+      .progress-details-row {
+        color: var(--secondary-text-color);
+        padding-right: 72px;
+        width: 100%;
+        text-align: right;
+      }
+      .progress-details-row span:last-child {
+        display: inline-block;
+        width: 50px;
+        margin-left: 24px;
+      }
+    </style>
+
+    <paper-material id="progress-summary" class="content-section" elevation="1">
+      <div class="row-h">
+        <div class="layout-vertical col-4">
+          <etools-form-element-wrapper label="PD Duration">
+            [[_getPdDuration(progress.start_date, progress.end_date)]]
+          </etools-form-element-wrapper>
+          <etools-progress-bar value="[[pdProgress]]"></etools-progress-bar>
+        </div>
+        <div class="layout-vertical col-4">
+          <div class="layout-horizontal" id="cash-progress">
+            <etools-form-element-wrapper label="Cash Transfered">
+              [[latestAcceptedPr.programme_document.funds_received_to_date_currency]]
+              [[displayCurrencyAmount(latestAcceptedPr.programme_document.funds_received_to_date, '0.00')]]
+            </etools-form-element-wrapper>
+            <etools-form-element-wrapper label="Planned">
+              [[latestAcceptedPr.programme_document.total_unicef_cash_currency]]
+              [[displayCurrencyAmount(latestAcceptedPr.programme_document.total_unicef_cash, '0.00')]]
+            </etools-form-element-wrapper>
+          </div>
+          <etools-progress-bar value="[[cashProgress]]"></etools-progress-bar>
+        </div>
+        <div class="col col-4">
+          <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
+            <report-status status="[[latestAcceptedPr.review_overall_status]]"></report-status>
+            <span>[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
+          </etools-form-element-wrapper>
+        </div>
+      </div>
+    </paper-material>
+
+    <etools-content-panel class="content-section" panel-title="Results">
+      <div class="row-h" hidden$="[[!_emptyList(progress.details.cp_outputs)]]">
+        <p>There are no results to show.</p>
+      </div>
+      <template is="dom-repeat" items="[[progress.details.cp_outputs]]">
+        <div class="row-v row-second-bg">
+          <strong>[[item.title]]</strong>
+        </div>
+
+        <div class="row-h" hidden$="[[!_emptyList(item.ll_outputs)]]">
+          <p>There are no PD Outputs or SSFA Expected Results.</p>
+        </div>
+
+        <div class="lower-results-table" hidden$="[[_emptyList(item.ll_outputs)]]">
+
+          <etools-data-table-header id="listHeader" no-title>
+            <etools-data-table-column class="col col-9">
+              PD Outputs or SSFA Expected Results
+            </etools-data-table-column>
+            <etools-data-table-column class="col col-3">
+              Current progress
+            </etools-data-table-column>
+          </etools-data-table-header>
+
+          <template is="dom-repeat" items="[[item.ll_outputs]]" as="lowerResult">
+            <etools-data-table-row>
+              <div slot="row-data">
+                <span class="col col-9">
+                  [[lowerResult.title]]
+                </span>
+                <span class="col col-3">
+                  <report-status status="[[_getLowerResultStatus(lowerResult.id)]]"></report-status>
+                  <span class="lower-result-status-date">[[_getLowerResultStatusDate(lowerResult.id)]]</span>
+                </span>
+              </div>
+              <div slot="row-data-details">
+                <div class="row-details-content flex-c">
+                  <div class="row-h" hidden$="[[_countIndicatorReports(lowerResult.id)]]">
+                    No indicators on this PD Output or SSFA Expected Result
+                  </div>
+                  <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
+                    <div class="row-h indicator-report">
+                      <div class="col col-9">
+                        [[_getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]
+                      </div>
+                      <div class="col col-3">
+                        <etools-progress-bar class="report-progress-bar"
+                            value="[[indicatorReport.reportable.progress_percentage]]">
+                        </etools-progress-bar>
+                      </div>
+                    </div>
+                    <div class="row-h progress-details">
+                      <div class="layout-vertical col-5">
+                        <div class="progress-details-row">
+                          <span>Target:</span>
+                          <span>[[indicatorReport.reportable.target]]</span>
+                        </div>
+                        <div class="progress-details-row">
+                          <span>Cumulative progress in all locations:</span>
+                          <span>[[indicatorReport.reportable.achieved.c]]</span>
+                        </div>
+                        <div class="progress-details-row">
+                          <span>Achivement in last reporting period in all locations:</span>
+                          <span>[[indicatorReport.total.c]]</span>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </etools-data-table-row>
+          </template>
+
+        </div>
+
+      </template>
+    </etools-content-panel>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'intervention-progress',
+
+        behaviors: [
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Date,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.ProgressTabDataMockup
+        ],
+
+        properties: {
+          currentUser: {
+            type: Object,
+            statePath: 'currentUser',
+          },
+          interventionId: {
+            type: Number
+          },
+          pdProgress: {
+            type: Number,
+            computed: '_getTimeProgress(progress.start_date, progress.end_date)'
+          },
+          cashProgress: {
+            type: Number,
+            computed: '_getCashProgress(latestAcceptedPr.programme_document.funds_received_to_date, ' +
+              'latestAcceptedPr.programme_document.total_unicef_cash)'
+          },
+          progress: {
+            type: Object,
+            observer: '_progressDataObjChanged'
+          },
+          latestAcceptedPr: {
+            type: Object,
+            computed: '_computeLatestAcceptedPr(progress)'
+          },
+          indicatorReports: {
+            type: Array,
+            value: []
+          }
+        },
+
+        observers: [
+          '_requestProgressData(interventionId, currentUser)'
+        ],
+
+        attached: function() {
+          /**
+           * Disable loading message for progress tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
+        },
+
+        _requestProgressData: function(id, currentUser) {
+          if (!id || _.isEmpty(currentUser)) {
+            return;
+          }
+          let self = this;
+          let endpoint = this.getEndpoint('interventionProgress',
+              {countryId: this.currentUser.profile.country, pdId: id});
+          this.sendRequest({endpoint: endpoint}).then(function(response) {
+            self.set('progress', response);
+          }).catch(function(error) {
+            let errMsg = 'PD/SSFA progress request failed!';
+            self.logError(errMsg, 'intervention-progress', error);
+            self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+            // TODO: remove mockup data use, make sure API request is correct
+            self.set('progress', self.progressTabDataMokup);
+          });
+        },
+
+        _emptyList: function(dataSet) {
+          return _.isEmpty(dataSet);
+        },
+
+        _computeLatestAcceptedPr: function(progress) {
+          return (progress && progress.latest_accepted_pr) ? progress.latest_accepted_pr : null;
+        },
+
+        _progressDataObjChanged: function(progress) {
+          if (!progress) {
+            this.set('indicatorReports', []);
+            return;
+          }
+          let self = this;
+          if (!this._emptyList(progress.details.cp_outputs)) {
+            progress.details.cp_outputs.forEach(function(result) {
+              if (!self._emptyList(result.ll_outputs)) {
+                result.ll_outputs.forEach(function(lowerResult) {
+                  self._prepareindicatorReportsData(lowerResult.id, progress.latest_accepted_pr_indicator_reports);
+                });
+              }
+            });
+          }
+        },
+
+        _prepareindicatorReportsData: function(lowerResultId, progressIndicatorReports) {
+          let indicatorReportData = {
+            lowerResultId: lowerResultId,
+            reports: []
+          };
+          if (this._emptyList(progressIndicatorReports)) {
+            return;
+          }
+          indicatorReportData.reports = progressIndicatorReports.filter(function(report) {
+            return report.reportable_object_id === lowerResultId;
+          });
+          this.push('indicatorReports', indicatorReportData);
+        },
+
+        _countIndicatorReports: function(lowerResultId) {
+          return !this._emptyList(this.indicatorReports) &&
+              !!this.indicatorReports.find(function(indReports) {
+                return indReports.lowerResultId === lowerResultId;
+              });
+        },
+
+        _getIndicatorsReports: function(lowerResultId) {
+          if (this._emptyList(this.indicatorReports)) {
+            return [];
+          }
+          let indicatorsReports = this.indicatorReports.filter(function(indReports) {
+            return indReports.lowerResultId === lowerResultId;
+          });
+          return indicatorsReports.length === 0 ? [] : indicatorsReports[0].reports;
+        },
+
+        /**
+         * Assuming all indicators reports are allready sort by date desc
+         */
+        _getLatestIndicatorReport: function(lowerResultId) {
+          if (!this._emptyList(this.indicatorReports)) {
+            let indReports = this.indicatorReports.find(function(indReports) {
+              return indReports.lowerResultId === lowerResultId;
+            });
+            if (indReports && indReports.reports[0]) {
+              return indReports.reports[0];
+            }
+          }
+          return null;
+        },
+
+        _getLowerResultStatus: function(lowerResultId) {
+          let status = null;
+          let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+          if (latestIndReport) {
+            status = latestIndReport.overall_status;
+          }
+          return status;
+        },
+
+        _getLowerResultStatusDate: function(lowerResultId) {
+          let prettyDate = '';
+          let latestIndReport = this._getLatestIndicatorReport(lowerResultId);
+          if (latestIndReport) {
+            prettyDate = this.prettyDate(latestIndReport.submission_date);
+          }
+          return '(' + prettyDate + ')';
+        },
+
+        _getPdDuration: function(start, end) {
+          let startDate = this.getDateDisplayValue(start) || 'N/A';
+          let endDate = this.getDateDisplayValue(end) || 'N/A';
+          return startDate + ' - ' + endDate;
+        },
+
+        _getTimeProgress: function(start, end) {
+          let todayDateStr = this.getTodayDateStr();
+          try {
+            if (this.dateIsBetween(start, end, todayDateStr)) {
+              let intervalTotalDays = this.dateDiff(start, end);
+              let intervalDaysCompleted = this.dateDiff(start, todayDateStr);
+              return intervalDaysCompleted * 100 / intervalTotalDays;
+            }
+          } catch (err) {
+            this.logWarn('Time progress compute error', 'intervention-progress', err);
+          }
+          // if end date is valid and is past date or today's date, progress should be 100%
+          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
+              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+            return 100;
+          }
+          return 0;
+        },
+
+        _getCashProgress: function(actual, total) {
+          return parseFloat(actual) * 100 / parseFloat(total);
+        },
+
+        _getOverallPdStatusDate: function(date) {
+          return date ? ('(' + this.prettyDate(date) + ')') : '';
+        },
+
+        _getUnitValue: function(unit) {
+          switch (unit) {
+            case 'number':
+              return '# ';
+            case 'percentage':
+              return '% ';
+          }
+          return null;
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>
