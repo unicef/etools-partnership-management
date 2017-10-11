@@ -168,7 +168,11 @@
     },
     interventionProgress: {
       template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
-    }
+    },
+    reports: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/'
+    },
+    reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
