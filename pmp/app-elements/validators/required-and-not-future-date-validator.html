@@ -1,26 +1,59 @@
-<link rel="import" href="../../../bower_components/iron-validator-behavior/iron-validator-behavior.html">
+<link rel="import" href="etools-iron-validator-behavior.html">
+<dom-module id="required-and-not-future-date-validator">
+
 <script>
   Polymer({
 
     is: 'required-and-not-future-date-validator',
 
     behaviors: [
-      Polymer.IronValidatorBehavior
+      EtoolsPmpApp.Behaviors.EtoolsIronValidator
     ],
 
+    properties: {
+      errorMessage: {
+        type: String,
+        notify: true
+      },
+      required: {
+        type: Boolean,
+        value: true
+      },
+      requiredErrorMessage: {
+        type: String,
+        value: "This field is required!"
+      },
+      noFutureDateErrorMessage: {
+        type: String,
+        value: "Date cannot be in the future!"
+      }
+    },
+
     validate: function(dateValueStr) {
-      if (!dateValueStr) {
+      if (!dateValueStr && this.required) {
+        this._setRequiredErrorMessage();
         return false;
       }
-      var d = Date.parse(dateValueStr);
-      if (isNaN(d)) {
+
+      let d = Date.parse(dateValueStr);
+      if (isNaN(d) && this.required) {
         // invalid date string
+        this._setRequiredErrorMessage();
         return false;
       }
       // date ca not be in the future
-      return d <= Date.now();
+      this._setNoFutureDateErrorMessageErrorMessage();
+      return (!this.required && dateValueStr === '') ||  d <= Date.now();
+    },
+
+    _setRequiredErrorMessage: function() {
+      this.set('errorMessage', this.requiredErrorMessage);
+    },
+
+    _setNoFutureDateErrorMessageErrorMessage: function() {
+      this.set('errorMessage', this.noFutureDateErrorMessage);
     }
 
   });
-
 </script>
+</dom-module>
