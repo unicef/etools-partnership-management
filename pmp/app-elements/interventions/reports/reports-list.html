@@ -9,6 +9,7 @@
 <link rel="import"
       href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../../app-behaviors/pagination-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="report-status.html">
 
@@ -53,7 +54,8 @@
 
       <template is="dom-if" if="[[reports.length]]">
         <etools-data-table-header id="listHeader"
-                                  label="1-10 of 341 results to show"
+                                  label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
+                                    of [[paginator.count]] results to show"
                                   no-collapse="[[noCollapse]]">
 
           <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
@@ -125,9 +127,12 @@
           </etools-data-table-row>
         </template>
         <etools-data-table-footer
-            page-size="10"
-            page-number="1"
-            total-results="10">
+            page-size="[[paginator.page_size]]"
+            page-number="[[paginator.page]]"
+            total-results="[[paginator.count]]"
+            visible-range="{{paginator.visible_range}}"
+            on-page-size-changed="pageSizeChanged"
+            on-page-number-changed="pageNumberChanged">
         </etools-data-table-footer>
 
       </template>
@@ -148,6 +153,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.Pagination,
           EtoolsPmpApp.Behaviors.ReportsListDataMockup // TODO: remove this once prp endpoint is ready
         ],
 
@@ -175,7 +181,7 @@
         },
 
         observers: [
-          '_loadReportsData(interventionId, currentUser)'
+          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page)'
         ],
 
         _loadReportsData: function(interventionId, currentUser) {
@@ -190,8 +196,10 @@
             if (interventionId > 0) {
               params.programme_document = interventionId;
             }
+            params = Object.assign({}, params, self.getRequestPaginationParams());
             self.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
               self.set('reports', response.results);
+              self.updatePaginatorTotalResults(response);
             }).catch(function(error) {
               let errMsg = 'Reports list data request failed!';
               self.logError(errMsg, 'reports-list', error);
@@ -200,6 +208,7 @@
 
               // TODO: remove mockup data use, make sure API request is correct
               self.set('reports', self.reportsDataMockup.results);
+              self.updatePaginatorTotalResults(self.reportsDataMockup);
             });
           }, 200);
         }
