@@ -191,10 +191,11 @@
 
           <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
-                                  name="reports"></intervention-reports>
+                                  name="reports"
+                                  intervention-id="[[intervention.id]]"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive))]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive)]]">
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
@@ -214,7 +215,7 @@
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[_showSidebarStatus(intervListActive, _subPageOrTabAttached)]]">
+      <template is="dom-if" if="[[_showInterventionSidebarStatus(intervListActive, _subPageOrTabAttached, interventionPage)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                active="[[!intervListActive]]"
@@ -663,6 +664,13 @@
         // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
       },
+
+      _showInterventionSidebarStatus: function(intervListActive, _subPageOrTabAttached, interventionPage) {
+        return (['reports', 'progress'].indexOf(interventionPage) > -1)
+            ? false
+            : this._showSidebarStatus(intervListActive, _subPageOrTabAttached);
+
+      }
     });
 
   </script>
