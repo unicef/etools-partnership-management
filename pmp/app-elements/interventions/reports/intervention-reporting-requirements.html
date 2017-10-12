@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../intervention-data/reporting-requirements-data.html">
 
 
 <dom-module id="intervention-reporting-requirements">
@@ -31,7 +32,10 @@
 
     </style>
 
-
+    <reporting-requirements-data id="reportingData"
+                                 intervention-id="[[interventionId]]"
+                                 reporting-requirements="{{reportingRequirements}}">
+    </reporting-requirements-data>
     <etools-content-panel panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="add-box"
@@ -51,96 +55,21 @@
             Report Due Date
           </etools-data-table-column>
         </etools-data-table-header>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3">
-              25 Jun 2017
-            </span>
-            <span class="col-data col-3">
-              24 Jul 2017
-            </span>
-            <span class="col-data col-6">
-              27 Aug 2017
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-footer
-            page-size="10"
-            page-number="1"
-            total-results="10">
-        </etools-data-table-footer>
+        <template is="dom-repeat" items="[[reportingRequirements]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-3">
+                [[item.start_date]]
+              </span>
+              <span class="col-data col-3">
+                [[item.end_date]]
+              </span>
+              <span class="col-data col-6">
+                [[item.due_date]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
       </div>
     </etools-content-panel>
   </template>
@@ -148,11 +77,14 @@
   <script>
     (function() {
       'use strict';
-
       var _interventionsLastNavigated = null;
 
       Polymer({
         is: 'intervention-reporting-requirements',
+        properties: {
+          interventionId: Number,
+          reportingRequirements: Array
+        }
       });
 
     })();

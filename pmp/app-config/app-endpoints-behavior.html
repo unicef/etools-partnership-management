@@ -172,7 +172,10 @@
     reports: {
       template: '/api/unicef/<%=countryId%>/progress-reports/'
     },
-    reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
+    reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>',
+    reportRequirements: {
+      template: '/api/v2/interventions/<%=reportId%>/reporting-periods/'
+    },
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
