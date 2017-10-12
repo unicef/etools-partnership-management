@@ -167,7 +167,6 @@
          */
         let loadingMsg = 'Loading ' + (this.listActive ? 'reports list' :
             (this._removeStrDash(this.activeTab) + ' page')) + ' elements...';
-        console.log(loadingMsg);
         this.fire('global-loading', {
           message: loadingMsg,
           active: true,
@@ -176,11 +175,6 @@
       },
 
       _setActivePage: function(listActive, tab) {
-//        if (listActive) {
-//          return 'list';
-//        } else {
-//          return tab;
-//        }
         let page = 'list';
         let pagePrefix = 'reports-';
         let pageBaseUrl = '../app-elements/reports/';
@@ -192,15 +186,13 @@
         }
         if (page) {
           let self = this;
-          console.log(page, pagePrefix, pageBaseUrl);
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             self.set('reportPage', page);
-          })
-              .catch(function(err) {
-                self.logError('Report page import error occurred', '[report(s) ' + page + ']', err);
-                self.fire('global-loading', {active: false, loadingSource: 'reports-page'});
-                self._triggerPageNotFound();
-              });
+          }).catch(function(err) {
+            self.logError('Report page import error occurred', '[report(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'reports-page'});
+            self._triggerPageNotFound();
+          });
         }
       },
 

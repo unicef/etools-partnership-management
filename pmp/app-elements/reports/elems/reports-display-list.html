@@ -7,7 +7,7 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import"
-      href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+      href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/pagination-behavior.html">
@@ -20,7 +20,7 @@
 <!-- TODO: remove reports mockup data -->
 <link rel="import" href="reports-list-data-mockup.html">
 
-<dom-module id="reports-list">
+<dom-module id="reports-display-list">
 
   <template strip-whitespace>
 
@@ -83,7 +83,7 @@
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                 <span class="col-data col-2">
                   <a class="pd-ref truncate"
-                     href$="reports/[[report.id]]/details"
+                     href$="interventions/[[report.programme_document.id]]/details"
                      title$="[[getDisplayValue(report.programme_document.reference_number)]]">
                     [[getDisplayValue(report.programme_document.reference_number)]]
                   </a>
@@ -105,7 +105,10 @@
                 [[getDisplayValue(report.reporting_period)]]
               </span>
               <span class="col-data flex-c">
-                <a href$="reports/[[report.id]]/details" class="view-report">View Report</a>
+                <a class="view-report"
+                   href$="reports/[[report.id]]/details" hidden$="[[!_canViewReport(report.status)]]">
+                  View Report
+                </a>
               </span>
             </div>
 
@@ -113,7 +116,8 @@
               <div slot="row-data-details">
                 <div class="row-details-content col-2">
                   <span class="rdc-title">Location</span>
-                  <span> Narnia </span>
+                  <!-- TODO: are locations gonna come from PRP? -->
+                  <span>Temporary unavailable</span>
                 </div>
               </div>
             </template>
@@ -139,7 +143,7 @@
       'use strict';
 
       Polymer({
-        is: 'reports-list',
+        is: 'reports-display-list',
 
         behaviors: [
           EtoolsLogsBehavior,
@@ -220,6 +224,10 @@
               self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
           }, 200);
+        },
+
+        _canViewReport: function(status) {
+          return ['Acc', 'Sen', 'Sub'].indexOf(status) > -1;
         }
 
       });

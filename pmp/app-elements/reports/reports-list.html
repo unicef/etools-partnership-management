@@ -1,62 +1,26 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
-+<link rel="import" href="../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
-<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
-<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/lists-common-behavior.html">
-<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 
+<link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
+
+<link rel="import" href="elems/reports-display-list.html">
 
 <dom-module id="reports-list">
 
   <template strip-whitespace>
 
-    <style
-        include="shared-styles data-table-styles iron-flex iron-flex-factors list-filter-styles">
+    <style include="shared-styles list-filter-styles">
       :host {
-        /* TODO: paper-toggle-button style could be global, recheck this when app-theme colors are defined */
-        --paper-toggle-button-checked-bar-color: var(--accent-color);
-        --paper-toggle-button-checked-button-color: var(--primary-color);
+
       }
 
-      .sm-status-wrapper {
-        padding-left: 10px;
-      }
-      .col-data iron-icon {
-        --iron-icon-width: 16px;
-        --iron-icon-height: 16px;
-        padding: 4px;
-      }
-      .rejected {
-        color: var(--rejected-color);
-      }
-      .submitted {
-        color: var(--success-color);
-      }
-      .accepted {
-        color: var(--primary-color);
-      }
-      .bloated {
-        text-transform: uppercase;
-        font-weight: 500;
-      }
     </style>
 
     <paper-material id="listControls" elevation="1">
@@ -121,105 +85,7 @@
 
     </paper-material>
 
-    <paper-material id="list" elevation="1">
-
-      <etools-data-table-header id="listHeader"
-                                label="1-10 of 10 results to show">
-
-        <etools-data-table-column class="flex-2" field="intervention_number" sortable>
-          PD/SSFA ToR ref.#
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-2" field="status" sortable>
-          Report Status
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-2" field="date_submission">
-          Date of Submission
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-2" field="date_acceptance">
-          Date of Acceptance
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-2" field="reporting_period">
-          Reporting period
-        </etools-data-table-column>
-        <etools-data-table-column class="flex-2" field="reporting_period">
-        </etools-data-table-column>
-      </etools-data-table-header>
-
-
-        <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col-data flex-2 truncate">
-              <a href$="#"
-                  title$="LEBA/PCA201722/PD201734">
-                LEBA/PCA201722/PD201734
-              </a>
-              </span>
-            <span class="col-data flex-2">
-              <iron-icon icon="av:fiber-manual-record" class="submitted"></iron-icon>
-              Submitted
-              </span>
-            <span class="col-data flex-2">
-                14 Jun 2017
-              </span>
-            <span class="col-data flex-2">
-                17 Jun 2017
-              </span>
-            <span class="col-data flex-2">
-                14 May 2017 - 13 Jun 2017
-              </span>
-            <span class="col-data flex-2">
-                <a href="/pmp/reports/1/summary/" class="bloated"> view report </a>
-              </span>
-          </div>
-          <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Location</span>
-              <span> Narnia </span>
-            </div>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col-data flex-2 truncate">
-              <a href$="#"
-                  title$="LEBA/SSFA201734">
-                LEBA/SSFA201734
-              </a>
-              </span>
-            <span class="col-data flex-2">
-              <iron-icon icon="av:fiber-manual-record" class="rejected"></iron-icon>
-              Sent Back
-              </span>
-            <span class="col-data flex-2">
-                14 May 2017
-              </span>
-            <span class="col-data flex-2">
-                -
-              </span>
-            <span class="col-data flex-2">
-                14 Apr 2017 - 13 May 2017
-              </span>
-            <span class="col-data flex-2">
-                <a href="/pmp/reports/1/summary/" class="bloated"> view report </a>
-              </span>
-          </div>
-          <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Location</span>
-              <span> Narnia </span>
-            </div>
-          </div>
-        </etools-data-table-row>
-
-
-      <etools-data-table-footer
-          page-size="10"
-          page-number="1"
-          total-results="10">
-      </etools-data-table-footer>
-
-    </paper-material>
+    <reports-display-list no-collapse></reports-display-list>
 
   </template>
 
@@ -227,7 +93,7 @@
     (function() {
       'use strict';
 
-      var _reportsLastNavigated = null;
+      let _reportsLastNavigated = null;
 
       Polymer({
 
@@ -236,16 +102,10 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.ListFilters,
-          EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.ListsCommon
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
         properties: {
-          showHidden: {
-            type: Boolean
-          },
-
           urlParams: {
             type: Object,
           },
@@ -257,11 +117,11 @@
           csvDownloadUrl: {
             type: String,
             notify: true
-          },
-          currentPage: String
+          }
         },
 
         observers: [
+
         ],
 
         ready: function() {
@@ -274,11 +134,6 @@
            * triggered by parent element on stamp
            */
           this.fire('global-loading', {active: false, loadingSource: 'reports-page'});
-          // this.listAttachedCallback(this.active, 'Loading reports list data...', 'reports-list');
-        },
-
-        reloadListData: function() {
-          this.$$('#reports').reloadData();
         },
 
         setMockFilters: function() {
