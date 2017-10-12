@@ -8,6 +8,7 @@
 
 <link rel="import"
       href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/pagination-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
@@ -143,6 +144,7 @@
         behaviors: [
           EtoolsLogsBehavior,
           EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common,
@@ -190,18 +192,32 @@
               params.programme_document = interventionId;
             }
             params = Object.assign({}, params, self.getRequestPaginationParams());
+
+            self.fire('global-loading', {
+              message: 'Loading reports data...',
+              active: true,
+              loadingSource: 'reports-list'
+            });
+
             self.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
               self.set('reports', response.results);
               self.updatePaginatorTotalResults(response);
+              self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             }).catch(function(error) {
               let errMsg = 'Reports list data request failed!';
               self.logError(errMsg, 'reports-list', error);
+
+              // TODO: remove this toast, after API request can be made
               self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+              self.parseRequestErrorsAndShowAsToastMsgs(error, self);
               self.set('reports', []);
 
               // TODO: remove mockup data use, make sure API request is correct
               self.set('reports', self.reportsDataMockup.results);
               self.updatePaginatorTotalResults(self.reportsDataMockup);
+
+              self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
           }, 200);
         }

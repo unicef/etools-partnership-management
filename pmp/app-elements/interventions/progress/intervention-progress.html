@@ -13,6 +13,7 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="../../common-elements/etools-progress-bar.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/date-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 
@@ -209,6 +210,7 @@
           etoolsBehaviors.EtoolsCurrencyBehavior,
           EtoolsLogsBehavior,
           EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
@@ -267,15 +269,29 @@
           let self = this;
           let endpoint = this.getEndpoint('interventionProgress',
               {countryId: this.currentUser.profile.country, pdId: id});
+
+          self.fire('global-loading', {
+            message: 'Loading PD/SSFA progress...',
+            active: true,
+            loadingSource: 'pd-progress'
+          });
+
           this.sendRequest({endpoint: endpoint}).then(function(response) {
             self.set('progress', response);
+            self.fire('global-loading', {active: false, loadingSource: 'pd-progress'});
           }).catch(function(error) {
             let errMsg = 'PD/SSFA progress request failed!';
             self.logError(errMsg, 'intervention-progress', error);
+
+            // TODO: remove this toast, after API request can be made
             self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+            self.parseRequestErrorsAndShowAsToastMsgs(error, self);
 
             // TODO: remove mockup data use, make sure API request is correct
             self.set('progress', self.progressTabDataMokup);
+
+            self.fire('global-loading', {active: false, loadingSource: 'pd-progress'});
           });
         },
 
