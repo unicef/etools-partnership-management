@@ -41,7 +41,7 @@
 
         --paper-fab-keyboard-focus-background: var(--add-button-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
 
@@ -59,7 +59,7 @@
 
       /* amendment template download section styles start */
       #download-template-wrapper {
-        @apply(--layout-justified);
+        @apply --layout-justified;
       }
       #download-template-msg {
         max-width: calc(100% - 210px);
@@ -74,9 +74,6 @@
       }
       /* amendment template download section styles end */
     </style>
-
-    <!-- include required and not future date validator -->
-    <required-and-not-future-date-validator></required-and-not-future-date-validator>
 
     <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
       <!-- Amendments template download -->
@@ -108,15 +105,18 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Signed Date -->
+                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"                                                        
+                                                        error-message="{{item.errorMessage}}">
+                </required-and-not-future-date-validator>
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed Date"
                                    value="{{item.signed_date}}"
                                    error-message="Please select signed date"
                                    no-init show-clear-btn
                                    readonly$="[[_showReadonlyDetails(item.id)]]"
-                                   validator="required-and-not-future-date-validator"
+                                   validator="signedDate_[[index]]_validator"
                                    auto-validate$="[[!_showReadonlyDetails(item.id)]]"
-                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]">
+                                   error-message$="[[item.errorMessage]]">
                 </etools-date-input>
               </div>
               <div class="col col-8 file-container">
@@ -243,7 +243,6 @@
             }
             let signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl) {
-              signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendm.signed_date);
               if (!signedDateEl.validate()) {
                 isValid = false;
               }
@@ -258,14 +257,6 @@
             }
           }.bind(this));
           return isValid;
-        },
-
-        _signedDateIsInTheFuture: function(signedDate) {
-          var signedDt = Date.parse(signedDate);
-          if (signedDt) {
-            return signedDt > Date.now();
-          }
-          return false;
         },
 
         /**
@@ -357,12 +348,6 @@
             this._triggerAuthorizedOfficersLock();
           }
         },
-        _getSignedDateErrorMessage: function(signedDate) {
-          return this._signedDateIsInTheFuture(signedDate)
-              ? 'Signed Date can not be in the future'
-              : 'Please select Signed Date';
-        },
-
         _onAmendmentTypesSelected: function(e) {
           e.stopImmediatePropagation();
           if (!_.isEmpty(this.dataItems) && this.dataItems[e.model.index] &&
