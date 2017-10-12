@@ -1,152 +1,17 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
-
-<link rel="import" href="../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="reports-list.html">
 
 <dom-module id="intervention-reports">
-
   <template strip-whitespace>
 
-    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
+    <style>
       :host {
         @apply --layout-flex;
         width: 100%;
       }
-      .col-data iron-icon {
-        --iron-icon-width: 16px;
-        --iron-icon-height: 16px;
-        padding: 4px;
-      }
-      .rejected {
-        color: var(--rejected-color);
-      }
-      .submitted {
-        color: var(--success-color);
-      }
-      .accepted {
-        color: var(--primary-color);
-      }
-      .bloated {
-        text-transform: uppercase;
-        font-weight: 500;
-      }
     </style>
-    <paper-material id="list" elevation="1">
 
-      <etools-data-table-header id="listHeader"
-                                label="1-10 of 341 results to show">
-
-          <etools-data-table-column class="col-2">
-            Report Status
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Date of Submission
-          </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Date of acceptance
-          </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-            Reporting period
-          </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-          </etools-data-table-column>
-        </etools-data-table-header>
-
-        <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col-data col-2">
-              <iron-icon icon="av:fiber-manual-record" class="rejected">
-              </iron-icon>
-              Sent Back
-            </span>
-            <span class="col-data col-2">
-              14 Jun 2017
-            </span>
-            <span class="col-data col-2">
-               -
-            </span>
-            <span class="col-data col-3">
-               14 May 2017 - 13 Jun 2017
-            </span>
-            <span class="col-data col-3">
-               <a href="#" class="bloated"> view report </a>
-            </span>
-          </div>
-          <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Location</span>
-              <span> Narnia </span>
-            </div>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col-data col-2">
-              <iron-icon icon="av:fiber-manual-record" class="submitted">
-              </iron-icon>
-              Submitted
-            </span>
-            <span class="col-data col-2">
-              14 Jun 2017
-            </span>
-            <span class="col-data col-2">
-              14 Jun 2017
-            </span>
-            <span class="col-data col-3">
-               14 May 2017 - 13 Jun 2017
-            </span>
-            <span class="col-data col-3">
-               <a href="#" class="bloated"> view report </a>
-            </span>
-          </div>
-          <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Location</span>
-              <span> Narnia </span>
-            </div>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row>
-          <div slot="row-data">
-            <span class="col-data col-2">
-              <iron-icon icon="av:fiber-manual-record" class="accepted">
-              </iron-icon>
-              Accepted
-            </span>
-            <span class="col-data col-2">
-              14 Jun 2017
-            </span>
-            <span class="col-data col-2">
-              14 Jun 2017
-            </span>
-            <span class="col-data col-3">
-               14 May 2017 - 13 Jun 2017
-            </span>
-            <span class="col-data col-3">
-               <a href="#" class="bloated"> view report </a>
-            </span>
-          </div>
-          <div slot="row-data-details">
-            <div class="row-details-content col-2">
-              <span class="rdc-title">Location</span>
-              <span> Narnia </span>
-            </div>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-footer
-            page-size="10"
-            page-number="1"
-            total-results="10">
-        </etools-data-table-footer>
-    </paper-material>
+    <reports-list intervention-id="[[interventionId]]" no-pd-ssfa-ref></reports-list>
 
   </template>
 
@@ -157,6 +22,10 @@
       Polymer({
         is: 'intervention-reports',
 
+        properties: {
+          interventionId: Number,
+        },
+
         attached: function() {
           /**
            * Disable loading message for reports tab elements load,
@@ -164,7 +33,7 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
-        },
+        }
       });
 
     })();

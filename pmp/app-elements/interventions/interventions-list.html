@@ -28,6 +28,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -40,6 +41,10 @@
       :host {
         @apply --layout-flex;
         width: 100%;
+      }
+      .pd-ref {
+        @apply --text-btn-style;
+        text-transform: none;
       }
     </style>
 
@@ -168,7 +173,7 @@
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <span class="col-data col-2">
-              <a class="truncate"
+              <a class="pd-ref truncate"
                  href="interventions/[[intervention.id]]/details"
                  title="[[getDisplayValue(intervention.number)]]">
                 [[getDisplayValue(intervention.number)]]
