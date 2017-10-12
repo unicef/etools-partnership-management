@@ -1,9 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
+<link rel="import" href="action-icons-btns-styles.html">
+
 <dom-module id="repeatable-data-sets-styles">
   <template>
-    <style>
+    <style include="action-icons-btns-styles">
       .item-container {
         background: var(--ecp-content-bg-color, --primary-background-color);
       }
@@ -32,21 +34,6 @@
         padding: 0 0 16px 24px;
       }
 
-      .action {
-        width: 36px;
-        height: 36px;
-      }
-
-      .action.delete {
-        color: var(--icon-delete-color);
-      }
-      .action.delete[disabled] {
-        visibility: hidden;
-      }
-      .action.delete-activity {
-        color: var(--dark-disabled-icon-color);
-      }
-
       #bottom-actions {
         @apply(--layout-horizontal);
         @apply(--layout-end-justified);
@@ -68,7 +55,7 @@
       .item-actions-container {
         position: relative;
         padding-right: 10px;
-        border-right: 2px solid var(--secondary-color);
+        border-right: 2px solid var(--primary-color);
         margin-top: 25px;
       }
 
@@ -78,7 +65,7 @@
         position: absolute;
         top: -32px;
         right: -12px;
-        background-color: var(--secondary-color);
+        background-color: var(--primary-color);
         color: var(--light-primary-text-color);
         content: attr(data-item-nr);
         text-align: center;
@@ -130,9 +117,6 @@
         margin-bottom: 0;
       }
 
-      .action.delete:not(:hover) {
-        color: var(--medium-icon-color);
-      }
       .add-btn-wrapper {
         padding-top: 15px;
         padding-bottom: 15px;

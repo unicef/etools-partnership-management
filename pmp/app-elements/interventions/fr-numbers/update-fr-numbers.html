@@ -55,7 +55,8 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 icon="cancel">
+                                 icon="cancel"
+                                 disabled$="[[!_showDeleteFrBtn(interventionStatus, dataItems.length)]]">
               </paper-icon-button>
             </div>
           </div>
@@ -116,12 +117,18 @@
           disableConfirmBtn: {
             type: Boolean,
             value: true
+          },
+          interventionStatus: {
+            type: String
           }
         },
         observers: ['_itemsLengthChanged(dataItems.length)'],
 
         ready: function() {
           this.dataSetModel = {fr_number: null};
+        },
+        _showDeleteFrBtn: function(interventionStatus, dataItemsLength) {
+          return !(interventionStatus === 'active' && dataItemsLength === 1);
         },
         _delConfirmationDialogChange: function() {
           // update delete confirmation dialog size

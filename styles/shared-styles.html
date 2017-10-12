@@ -45,7 +45,7 @@
       }
 
       paper-tabs > * {
-        --paper-tab-ink: var(--accent-color);
+        --paper-tab-ink: var(--primary-color);
         --paper-tab-content-unselected: {
           color: var(--light-secondary-text-color);
         };
@@ -201,13 +201,13 @@
         padding-top: 8px;
       }
 
-      paper-checkbox[checked], paper-radio-button[checked] {
-        --paper-checkbox-unchecked-color:  #4a90e2;
-        --paper-radio-button-unchecked-color: #4a90e2;
+      .input-label {
+        min-height: 24px;
+        padding-top: 4px;
+        min-width: 0;
       }
-      paper-checkbox, paper-radio-button {
-        --paper-checkbox-unchecked-color:  #737373;
-        --paper-radio-button-unchecked-color:  #737373;
+      .input-label[empty]::after {
+        content: "—";
       }
 
       /* responsive css rules */

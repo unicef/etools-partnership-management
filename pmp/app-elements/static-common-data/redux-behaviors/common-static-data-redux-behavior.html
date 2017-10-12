@@ -31,7 +31,9 @@
     agreementTypes: [],
     agreementStatuses: [],
     csoPartners: [],
-    countryData: {}
+    countryData: {},
+    disaggregations: [],
+    currentUser: {}
   };
 
   var commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -92,9 +94,40 @@
         //console.log('set partners data...', action.partners);
         return Object.assign({}, state, {agreementsList: action.agreementsList});
 
+      case 'ADD_EDIT_AGREEMENT':
+        let agreementsCopy = state.agreementsList.slice(0);
+        let index = agreementsCopy.findIndex(function(agr) {
+          return agr.id === action.agreement.id;
+        });
+
+        if (index > -1) {
+          agreementsCopy[index] = action.agreement;
+        } else {
+          agreementsCopy.push(action.agreement);
+        }
+        return Object.assign({}, state, {agreementsList: agreementsCopy});
+
       case 'SET_PARTNERS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
         return Object.assign({}, state, {partnersDropdownData: action.partnersDropdownData});
+      case 'DELETE_PARTNER':
+        let csoPartnerCopy = state.csoPartners.slice(0);
+        let partnersDdDataCopy = state.partnersDropdownData.slice(0);
+
+        let indexP = csoPartnerCopy.findIndex(function(partner) {
+          return partner.id === action.partnerId;
+        });
+        if (indexP > -1) {
+          csoPartnerCopy.splice(indexP, 1);
+        }
+        indexP = partnersDdDataCopy.findIndex(function(partner) {
+          return partner.value === action.partnerId;
+        });
+        if (indexP > -1) {
+          partnersDdDataCopy.splice(indexP, 1);
+        }
+        return Object.assign({}, state, {partnersDropdownData: partnersDdDataCopy,
+                                         csoPartners: csoPartnerCopy});
 
       case 'SET_AGREEMENTS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
@@ -141,10 +174,28 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+      case 'SET_DISAGGREGATIONS_DATA':
+        return Object.assign({}, state, {disaggregations: action.disaggregations});
+      case 'ADD_DISAGGREGATION':
+        let disaggregsCopy = state.disaggregations.slice(0);
+        disaggregsCopy.push(action.disaggregation);
+        return Object.assign({}, state, {disaggregations: disaggregsCopy});
+      case 'SET_CURRENT_USER':
+        return Object.assign({}, state, {currentUser: action.user});
     }
   });
+
+  window.addEventListener('storage', function(ev) {
+    if (ev.key !== 'update-redux' || !ev.newValue) {
+      return;
+    }
+    commonStaticDataStore.dispatch(JSON.parse(ev.newValue));
+  });
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsDataReduxStore */
-  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore);
+  EtoolsPmpApp.Behaviors.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore) || {};
+  // the || {} at the end is there to make the linting script happy
 </script>

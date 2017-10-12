@@ -38,7 +38,7 @@
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         width: 100%;
       }
     </style>
@@ -188,7 +188,7 @@
             </span>
             <span class="col-data flex-c">
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[validateFrsVsInterventionDates(intervention.start, intervention.frs_earliest_start_date)]]"
+                                   hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]"
                                    important-warning>
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
@@ -196,7 +196,7 @@
             </span>
             <span class="col-data flex-c">
                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip$="[[validateFrsVsInterventionDates(intervention.end, intervention.frs_latest_end_date)]]"
+                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]"
                                     important-warning>
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
@@ -211,7 +211,7 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">Section</span>
-              <span>[[getDisplayValue(intervention.sectors)]]</span>
+              <span>[[getDisplayValue(intervention.section_names)]]</span>
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
@@ -330,12 +330,12 @@
             observer: '_filtersChanged'
           },
 
-          sectors: {
+          sections: {
             type: Array,
-            statePath: 'sectors'
+            statePath: 'sections'
           },
 
-          selectedSectors: {
+          selectedSections: {
             type: Array,
             observer: '_filtersChanged'
           },
@@ -374,8 +374,8 @@
         },
 
         observers: [
-          '_initListFilters(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData)',
-          '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
+          '_initListFilters(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData)',
+          '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSections, ' +
           'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
           'requiredDataLoaded, initComplete)',
           '_init(active)'
@@ -394,7 +394,7 @@
 
           this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
         },
-        _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
+        _initListFilters: function(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {
             // init list filter options
             // IMPORTANT!!!
@@ -424,9 +424,9 @@
                 type: 'esmm', // etools-multi-selection-menu
                 optionValue: 'id',
                 optionLabel: 'name',
-                selectionOptions: this.sectors,
+                selectionOptions: this.sections,
                 alreadySelected: [],
-                path: 'selectedSectors'
+                path: 'selectedSections'
               },
               {
                 filterName: 'Status',
@@ -486,7 +486,8 @@
           this.set('selectedStatuses', urlQueryParams.status ? this._setSelectedStatuses(urlQueryParams.status) : []);
           this.set('selectedCpOutputs',
               urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
-          this.set('selectedSectors', urlQueryParams.sector ? this._setSelectedSectors(urlQueryParams.sector) : []);
+          this.set('selectedSections',
+              urlQueryParams.sections ? this._setSelectedSections(urlQueryParams.sections) : []);
           this.set('selectedUnicefFocalPoints',
               urlQueryParams.unicef_focal_points ?
                   this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
@@ -520,8 +521,8 @@
                 selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Sectors',
-                selectedValue: _.map(this.selectedSectors, 'id')
+                filterName: 'Section/Cluster',
+                selectedValue: _.map(this.selectedSections, 'id')
               },
               {
                 filterName: 'UNICEF focal point',
@@ -595,7 +596,7 @@
                 _.map(this.selectedDocumentTypes, 'value'),
                 this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
                 _.map(this.selectedStatuses, 'value'),
-                _.map(this.selectedSectors, 'name'),
+                this._prepareQueryStrVal(this.selectedSections, 'id'),
                 this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
                 this._prepareQueryStrVal(this.selectedOffices, 'id'),
                 this.startDate,
@@ -632,8 +633,8 @@
             out.push('status=' + _.map(this.selectedStatuses, 'value').join('|'));
           }
 
-          if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + _.map(this.selectedSectors, 'id').join('|'));
+          if (this.selectedSections && this.selectedSections.length) {
+            out.push('sections=' + _.map(this.selectedSections, 'id').join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
@@ -668,8 +669,8 @@
           // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
           //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
           // }
-          if (this.selectedSectors && this.selectedSectors.length) {
-            params.push('sector=' + this.selectedSectors[0].id);
+          if (this.selectedSections && this.selectedSections.length) {
+            params.push('sections=' + this.selectedSections[0].id);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
             params.push('status=' + this.selectedStatuses[0].value);
@@ -705,6 +706,9 @@
             officesIdsArr = officesIdsArr.map(function(officeIdStr) {
               return parseInt(officeIdStr, 10);
             });
+            if (!this.offices || !this.offices.length) {
+              return [];
+            }
             return this.offices.filter(function(o) {
               return officesIdsArr.indexOf(parseInt(o.id, 10)) > -1;
             });
@@ -718,19 +722,25 @@
             focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
               return parseInt(fPtsIdStr, 10);
             });
+            if (!this.unicefUsersData || !this.unicefUsersData.length) {
+              return [];
+            }
             return this.unicefUsersData.filter(function(u) {
               return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
             });
           }
           return [];
         },
-        _setSelectedSectors: function(sectors) {
-          var sectorsArr = sectors.split('|');
-          if (sectorsArr && sectorsArr.length) {
-            var selectedSectors = this.sectors.filter(function(s) {
-              return sectorsArr.indexOf(s.id) > -1;
+        _setSelectedSections: function(sections) {
+          let sectionsArr = sections.split('|');
+          if (!this.sections || !this.sections.length) {
+            return [];
+          }
+          if (sectionsArr && sectionsArr.length) {
+            let selectedSections = this.sections.filter(function(s) {
+              return sectionsArr.indexOf(s.id) > -1;
             });
-            return selectedSectors;
+            return selectedSections;
           }
           return [];
         },
@@ -751,6 +761,9 @@
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
             });
+            if (!this.cpOutputs || !this.cpOutputs.length) {
+              return [];
+            }
             return this.cpOutputs.filter(function(cpo) {
               return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
@@ -759,6 +772,9 @@
         },
         _setSelectedDocTypes: function(types) {
           var typesStrArr = types.split('|');
+          if (!this.documentTypes || !this.documentTypes.length) {
+            return [];
+          }
           if (typesStrArr && typesStrArr.length) {
             return this.documentTypes.filter(function(t) {
               return typesStrArr.indexOf(t.value) > -1;
@@ -775,6 +791,10 @@
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
+        },
+
+        _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
+          return status === 'draft' || this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });

@@ -7,7 +7,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
@@ -16,7 +16,7 @@
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles file-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles file-styles">
       :host {
         @apply(--layout-vertical);
         width: 100%;
@@ -96,6 +96,9 @@
 
         properties: {
           active: {
+            type: Boolean
+          },
+          editMode: {
             type: Boolean
           },
           intervention: {

@@ -18,14 +18,12 @@
       cachingKey: 'unicefUsers'
     },
     user: {
-      url: '/users/api/profile/',
-      exp: 30 * 60 * 1000, // 30min
-      cachingKey: 'user'
+      url: '/users/api/profile/'
     },
     agreements: {
       template: '/api/v2/agreements/',
       exp: 30 * 60 * 1000, // 30min
-      cachingKey: 'agreements'
+      cacheTableName: 'agreements'
     },
     agreementDetails: {
       template: '/api/v2/agreements/<%=id%>/',
@@ -34,16 +32,13 @@
       template: '/api/v2/partners/assessments/<%=id%>/',
     },
     interventionResultLinkDelete: {
-      template: '/api/v2/interventions/results/<%=id%>/',
+      template: '/api/v2/interventions/result-links/<%=id%>/',
     },
     agreementAmendmentsDelete: {
       template: '/api/v2/agreements/amendments/<%=id%>/',
     },
     agreementAmendmentsTypeDelete:  {
       template: '/api/v2/agreements/amendments/types/<%=id%>/',
-    },
-    lowerResultsDelete:  {
-      template: '/api/v2/reports/lower_results/<%=id%>/',
     },
     myProfile:  {
       template: '/api/v2/users/myprofile/',
@@ -56,7 +51,7 @@
     partners: {
       url: '/api/v2/partners/',
       exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'partners'
+      cacheTableName: 'partners',
     },
     partnerDetails: {
       template: '/api/v2/partners/<%=id%>/',
@@ -75,8 +70,8 @@
     },
     interventions: {
       url: '/api/v2/interventions/',
-      exp: 10 * 60 * 1000, // 5min
-      cachingKey: 'interventions'
+      exp: 10 * 60 * 1000,
+      cacheTableName: 'interventions'
     },
     interventionDetails: {
       template: '/api/v2/interventions/<%=id%>/',
@@ -135,6 +130,42 @@
     },
     userCountryDetails: {
       url: '/api/v2/users/country'
+    },
+    createIndicator: {
+      template: '/api/v2/interventions/lower-results/<%=id%>/indicators/',
+    },
+    getEditDeleteIndicator: {
+      template: '/api/v2/interventions/applied-indicators/<%=id%>/'
+    },
+    getPrpClusterIndicators: { //by repsonse plan and cluster id
+      template: ''
+    },
+    getPrpClusterIndicator: { //by id
+      template: ''
+    },
+    getPrpClusters: {// by respsonse plan id
+      template: ''
+    },
+    pdExpectedResults: {
+      template: '/api/v2/interventions/<%=pdId%>/result-links/'
+    },
+    pdExpectedResultDetails: {
+      template: '/api/v2/interventions/result-links/<%=resultId%>/'
+    },
+    pdLowerResults: {
+      template: '/api/v2/interventions/result-links/<%=resultId%>/lower-results/'
+    },
+    pdLowerResultDetails: {
+      template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
+    },
+    lowerResultsDelete: {
+      template: '/api/v2/reports/lower_results/<%=id%>/'
+    },
+    addGetDisaggregations: {
+      url: '/api/v2/reports/disaggregations/'
+    },
+    interventionProgress: {
+      template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
     }
   };
 

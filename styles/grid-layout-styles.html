@@ -6,11 +6,26 @@
 <dom-module id="grid-layout-styles">
   <template>
     <style>
+      .layout-horizontal,
+      .layout-vertical {
+        box-sizing: border-box;
+      }
       .layout-horizontal {
          @apply(--layout-horizontal);
       }
       .layout-vertical {
          @apply(--layout-vertical);
+      }
+      .row-padding {
+        padding: 16px 24px;
+      }
+      .row-padding-h {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .row-padding-v {
+        padding-top: 16px;
+        padding-bottom: 16px;
       }
       .row-h {
         @apply(--layout-horizontal);
@@ -96,6 +111,11 @@
       .col-6 {
         flex: 0 0 50%;
         max-width: 50%;
+      }
+
+      .col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
       }
 
       .col-8 {

@@ -9,7 +9,7 @@
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -23,9 +23,9 @@
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -50,6 +50,7 @@
       }
 
       .sector-label {
+        display: inline-block;
         white-space: nowrap;
         height: 19px;
         text-align: center;
@@ -58,12 +59,6 @@
         text-transform: capitalize;
         font-weight: bold;
         color: var(--light-primary-text-color, #FFFFFF);
-      }
-
-      #monitoring-visits-panel {
-        --ecp-content: {
-          padding: 10px 0 24px;
-        }
       }
 
       #top-container {
@@ -79,8 +74,8 @@
           </iron-label>
           <br/>
           <div class="content" id="cp_outputs_list">
-            <template is="dom-repeat" items="[[cpOutputs]]" as="cpOut">
-              <strong> [[ cpOut ]] </strong> <br/>
+            <template is="dom-repeat" items="[[interventionCpOutputs]]" as="cpOut">
+              <strong>[[ cpOut ]]</strong><br/>
             </template>
           </div>
         </div>
@@ -106,19 +101,6 @@
       </div>
 
       <div class="row-h flex-c">
-        <div class="col col-12 block">
-          <iron-label for="intervention_locations">
-            Locations
-          </iron-label>
-          <br/>
-          <div class="content" id="intervention_locations">
-            <iron-icon icon="maps:place"></iron-icon>
-            [[ getDisplayValue(locations) ]]
-          </div>
-        </div>
-      </div>
-
-      <div class="row-h flex-c">
         <div class="col col-6 block">
           <iron-label for="interventions_timeline">
             Timeline
@@ -129,21 +111,20 @@
           </div>
         </div>
         <div class="col col-6 block">
-          <iron-label for="interventions_sectors">
-            Sectors
+          <iron-label for="intervention-sections">
+            Sections
           </iron-label>
           <br/>
-          <div class="content" id="interventions_sectors">
-            <template is="dom-repeat" items="[[sectors]]" as="sector">
-              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
-            </template>
+          <div class="content" id="intervention-sections">
+            [[getDisplayValue(inteventionSections)]]
           </div>
         </div>
       </div>
     </paper-material>
 
     <etools-content-panel id="fund-reservation-display" class="content-section" panel-title="Implementation Status">
-      <fund-reservations-display intervention="[[intervention]]" frs-details="[[intervention.frs_details]]"></fund-reservations-display>
+      <fund-reservations-display intervention="[[intervention]]"
+                                 frs-details="[[intervention.frs_details]]"></fund-reservations-display>
     </etools-content-panel>
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Visits">
@@ -166,8 +147,7 @@
 
         properties: {
           intervention: {
-            type: Object,
-            observer: '_interventionChanged'
+            type: Object
           },
           interventionAgreement: {
             type: Object,
@@ -175,24 +155,28 @@
           monitoringVisit: {
             type: Array,
           },
-          allCpOutputs: {
+          cpOutputs: {
             type: Array,
             statePath: 'cpOutputs'
           },
-          cpOutputs: {
-            type: Array
-          },
-          locations: {
-            type: Array
-          },
-          allSectors: {
+          interventionCpOutputs: {
             type: Array,
-            statePath: 'sectors'
+            value: []
           },
-          sectors: {
-            type: Array
+          sections: {
+            type: Array,
+            statePath: 'sections'
           },
+          inteventionSections: {
+            type: Array,
+            value: []
+          }
         },
+
+        observers: [
+          '_parseSections(sections.length, intervention.sections.length)',
+          '_parseCpOutputs(cpOutputs.length, intervention.result_links.length)'
+        ],
 
         attached: function() {
           /**
@@ -203,63 +187,51 @@
           this.fire('intervention-page-attached');
         },
 
-        _interventionChanged: function(intervention) {
-          if (intervention && typeof intervention === 'object' && parseInt(intervention.id, 10) > 0) {
-            this._parseCpOutputs();
-            this._parseLocationsAndSectors();
+        _parseCpOutputs: function(cpOutputsLength, resultsLength) {
+          if (!cpOutputsLength || !resultsLength) {
+            this.set('interventionCpOutputs', []);
+            return;
           }
-        },
-
-        _parseCpOutputs: function() {
-          var resultLinks = this.intervention.result_links;
-          var ids = {};
-          var uniqueIds = [];
-          var cpOutputs = [];
+          let resultLinks = this.intervention.result_links;
+          let ids = {};
+          let uniqueIds = [];
+          let interventionCpOutputs = [];
 
           resultLinks.forEach(function(res) {
             ids[res.cp_output] = true;
           });
 
-          for (var id in ids) {
+          let id;
+          for (id in ids) {
             uniqueIds.push(parseInt(id));
           }
-          if (Array.isArray(this.allCpOutputs) && this.allCpOutputs.length > 0) {
-            this.allCpOutputs.forEach(function(cpo) {
+          if (Array.isArray(this.cpOutputs) && this.cpOutputs.length > 0) {
+            this.cpOutputs.forEach(function(cpo) {
               if (uniqueIds.indexOf(cpo.id) > -1) {
-                cpOutputs.push(cpo.name);
+                interventionCpOutputs.push(cpo.name);
               }
             });
 
-            this.set('cpOutputs', cpOutputs);
+            this.set('interventionCpOutputs', interventionCpOutputs);
           }
         },
 
-        _parseLocationsAndSectors: function() {
-          var sectorLocations = [];
-          var sectorIds = [];
-          var sectors = [];
-
-          this.intervention.sector_locations.forEach(function(locLvl1) {
-            locLvl1.locations.forEach(function(locLvl2) {
-              sectorLocations.push(locLvl2.name);
-            });
-            sectorIds.push(parseInt(locLvl1.sector.id));
+        _parseSections: function(sectionsLength, intSectionsLength) {
+          if (!sectionsLength || !intSectionsLength) {
+            this.set('inteventionSections', []);
+            return;
+          }
+          let sections = [];
+          let interventionSections = _.map(this.intervention.sections, function(sectionId) {
+            return parseInt(sectionId, 10);
           });
-
-          sectors = [];
-          if (Array.isArray(this.allSectors) && this.allSectors.length > 0) {
-            sectors = this.allSectors.filter(function(elem) {
-              return (sectorIds.indexOf(parseInt(elem.id)) > -1);
-            });
-          }
-
-          this.set('sectors', sectors);
-          this.set('locations', sectorLocations);
-        },
-
-        _getBackgroundStyleFromColor: function(color) {
-          return 'background-color: ' + color;
-        },
+          this.sections.forEach(function(section) {
+            if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
+              sections.push(section.name);
+            }
+          });
+          this.set('inteventionSections', sections);
+        }
 
       });
 

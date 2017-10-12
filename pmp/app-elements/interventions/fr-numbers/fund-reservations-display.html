@@ -20,13 +20,13 @@
         <div class="col col-3 right-align"> FR Posting Date</div>
         <div class="col col-2 right-align"> FR Amount $</div>
         <div class="col col-2 right-align"> Actual $</div>
-        <div class="col col-2 right-align"> Outstanding $</div>
+        <div class="col col-2 right-align"> Outstanding DCT $</div>
       </div>
       <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
         <div class="row-h">
           <div class="col col-3">[[fr.fr_number]]</div>
           <div class="col col-3 right-align">[[prettyDate(fr.start_date)]]</div>
-          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.total_amt, '0.00')]] </div>
+          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </div>
           <div class="col col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</div>
           <div class="col col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</div>
         </div>
@@ -39,7 +39,7 @@
                             hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
                             important-warning
                             icon-first right-aligned>
-            <span slot="field">[[displayCurrencyAmount(frsDetails.total_frs_amt, '0.00')]]</span>
+            <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
             <span slot="message">[[_frsTotalAmountWarning]]</span>
           </etools-info-tooltip>
         </div>
