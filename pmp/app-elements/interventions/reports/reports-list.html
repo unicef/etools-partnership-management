@@ -13,8 +13,8 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="report-status.html">
 
+<link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../../styles/list-filter-styles.html">
 
 <!-- TODO: remove reports mockup data -->
 <link rel="import" href="reports-list-data-mockup.html">
@@ -23,24 +23,17 @@
 
   <template strip-whitespace>
 
-    <style include="data-table-styles grid-layout-styles list-filter-styles">
+    <style include="data-table-styles grid-layout-styles">
       :host {
         @apply --layout-flex;
         width: 100%;
       }
-
+      .pd-ref,
+      .view-report {
+        @apply --text-btn-style;
+      }
       .pd-ref {
-        text-decoration: none;
-        color: var(--primary-color);
-      }
-
-      .pd-ref:focus {
-        outline: inherit;
-      }
-
-      .bloated {
-        text-transform: uppercase;
-        font-weight: 500;
+        text-transform: none;
       }
     </style>
 
@@ -89,8 +82,8 @@
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
                 <span class="col-data col-2">
                   <a class="pd-ref truncate"
-                     href="reports/[[report.id]]/details"
-                     title="[[getDisplayValue(report.programme_document.reference_number)]]">
+                     href$="reports/[[report.id]]/details"
+                     title$="[[getDisplayValue(report.programme_document.reference_number)]]">
                     [[getDisplayValue(report.programme_document.reference_number)]]
                   </a>
                 </span>
@@ -111,7 +104,7 @@
                 [[getDisplayValue(report.reporting_period)]]
               </span>
               <span class="col-data flex-c">
-                <a href="#" class="bloated"> view report </a>
+                <a href$="reports/[[report.id]]/details" class="view-report">View Report</a>
               </span>
             </div>
 

@@ -24,6 +24,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../styles/partner-status-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="partners-data/partners-list-data.html">
 <link rel="import" href="partner-item.html">
@@ -42,6 +43,10 @@
 
       .sm-status-wrapper {
         padding-left: 10px;
+      }
+      .vendor-nr {
+        @apply --text-btn-style;
+        text-transform: none;
       }
     </style>
 
@@ -149,7 +154,7 @@
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
               <span class="col-data flex">
-                <a class="truncate"
+                <a class="vendor-nr truncate"
                    href$="[[currentPage]]/[[partner.id]]/details"
                    title$="[[getDisplayValue(partner.vendor_number)]]">
                   [[getDisplayValue(partner.vendor_number)]]
