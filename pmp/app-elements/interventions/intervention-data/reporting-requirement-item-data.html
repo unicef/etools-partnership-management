@@ -1,0 +1,74 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+
+<dom-module id="reporting-requirement-item-data">
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+
+        is: 'reporting-requirement-item-data',
+        behaviors: [
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+        ],
+        properties: {
+          endpointName: {
+            type: String,
+            value: 'reportRequirementsItem'
+          }
+        },
+
+        _triggerRequest: function(options) {
+          let self = this;
+          this.sendRequest(options).then(function(resp) {
+            self._handleResponse(resp);
+          }).catch(function(error) {
+            self._handleErrorResponse(error);
+          });
+        },
+
+        _handleErrorResponse: function(response) {
+          this.handleErrorResponse(response);
+          this._restoreUnsuccessfullyDeletedFrs();
+        },
+
+        _handleResponse: function(response) {
+          if (this.ajaxMethod === 'PATCH') {
+            console.log('PATCH worked', response);
+          }
+          if (this.ajaxMethod === 'DELETE') {
+            console.log('DELETE worked', response);
+          }
+        },
+
+        _handleErrorResponse: function(error) {
+          console.log(error);
+          // TO BE CONTINUED
+        },
+
+        deleteRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
+          this.ajaxMethod = 'DELETE';
+
+          this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint});
+        },
+
+        updateRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
+          this.ajaxMethod = 'PATCH';
+
+          this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

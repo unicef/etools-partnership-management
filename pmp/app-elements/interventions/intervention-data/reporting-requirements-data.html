@@ -24,7 +24,7 @@
         properties: {
           endpointName: {
             type: String,
-            value: 'reportRequirements'
+            value: 'reportRequirementsList'
           },
           interventionId: {
             type: Number,
@@ -56,14 +56,13 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            // this.fire('global-loading', {
-            //   message: 'Loading Reporting Requirements data...',
-            //   active: true,
-            //   loadingSource: this.ajaxLoadingMsgSource
-            // });
-            this.ajaxMethod = 'GET';
-            this._triggerRequest({endpoint: this.getEndpoint(this.endpointName, {reportId: newId})});
+            this.fetchRequirements();
           }
+        },
+
+        fetchRequirements: function() {
+          this.ajaxMethod = 'GET';
+          this._triggerRequest({endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId})});
         },
 
         _handleErrorResponse: function(response) {
@@ -87,7 +86,7 @@
         },
 
         addRequirement: function(requirement) {
-          let endpoint = this.getEndpoint(this.endpointName, {reportId: this.interventionId});
+          let endpoint = this.getEndpoint(this.endpointName, {intervId: this.interventionId});
           this.ajaxMethod = 'POST';
 
           requirement.intervention = this.interventionId;

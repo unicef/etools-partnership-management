@@ -173,8 +173,11 @@
       template: '/api/unicef/<%=countryId%>/progress-reports/'
     },
     reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>',
-    reportRequirements: {
-      template: '/api/v2/interventions/<%=reportId%>/reporting-periods/'
+    reportRequirementsList: {
+      template: '/api/v2/interventions/<%=intervId%>/reporting-periods/'
+    },
+    reportRequirementsItem: {
+      template: '/api/v2/interventions/reporting-periods/<%=reportId%>/'
     },
   };
 

@@ -78,11 +78,11 @@
         requirement: Object
       },
       _handleEdit: function() {
-        this.fire('requiremenet-edit', this.requirement);
+        this.fire('requiremenet-edit', JSON.parse(JSON.stringify(this.requirement)));
         this.$.requirementActions.close();
       },
       _handleDelete: function() {
-        this.fire('requiremenet-delete', this.requirement);
+        this.fire('requiremenet-delete', JSON.parse(JSON.stringify(this.requirement)));
         this.$.requirementActions.close();
       },
       _handleTap: function(e) {

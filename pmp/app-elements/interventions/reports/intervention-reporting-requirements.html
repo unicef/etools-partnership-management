@@ -6,6 +6,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../intervention-data/reporting-requirements-data.html">
+<link rel="import" href="../intervention-data/reporting-requirement-item-data.html">
 <link rel="import" href="reporting-requirements-dialog.html">
 <link rel="import" href="reporting-requirements-actions.html">
 
@@ -39,7 +40,7 @@
                                  intervention-id="[[interventionId]]"
                                  reporting-requirements="{{reportingRequirements}}">
     </reporting-requirements-data>
-
+    <reporting-requirement-item-data id="reportData"></reporting-requirement-item-data>
     <etools-content-panel panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="add-box"
@@ -102,10 +103,26 @@
           'requiremenet-delete': '_handleRequirementDelete'
         },
 
-        handleRequirementSave: function(event) {
-          let newRequirement = event.detail;
-          if (newRequirement.start_date && newRequirement.end_date && newRequirement.due_date) {
-            this.$.reportingData.addRequirement(newRequirement);
+        handleDialogConfirm: function(event) {
+          let newReq = event.detail;
+          let self = this;
+
+          if (!newReq.id && newReq.start_date && newReq.end_date && newReq.due_date) {
+            this.$.reportingData.addRequirement(newReq);
+          } else if (newReq.id && newReq.start_date && newReq.end_date && newReq.due_date) {
+
+            this.$.reportData.updateRequirement(newReq);
+
+            // TEMP. api should confirm operation first.
+            this.reportingRequirements.forEach(function(elem, index) {
+              if (elem.id === newReq.id) {
+                self.set(['reportingRequirements', index], newReq);
+              }
+            });
+
+          } else {
+            console.log('all three dates are needed');
+            // TODO: proper validation.
           }
         },
 
@@ -115,17 +132,27 @@
         },
 
         _handleRequirementEdit: function(event) {
-          console.log('requirement edit triggered', event.detail);
+          this.requirementsDialog.requirement = event.detail;
+          this.requirementsDialog.open();
         },
 
         _handleRequirementDelete: function(event) {
-          console.log('requirement delete triggered', event.detail);
+          let self = this;
+
+          this.$.reportData.deleteRequirement(event.detail);
+
+          // TEMP. api should confirm operation first.
+         this.reportingRequirements.forEach(function(elem, index) {
+            if (elem.id !== event.detail.id) {
+              self.splice('reportingRequirements', index, 1);
+            }
+          });
         },
 
         ready: function() {
           this.requirementsDialog = document.createElement('reporting-requirements-dialog');
           this.requirementsDialog.setAttribute('id', 'requirementsDialog');
-          this.requirementsDialog.addEventListener('save-requirement', this.handleRequirementSave.bind(this));
+          this.requirementsDialog.addEventListener('save-requirement', this.handleDialogConfirm.bind(this));
           Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
         },
 
