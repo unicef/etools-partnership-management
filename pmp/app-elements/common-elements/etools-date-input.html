@@ -1,6 +1,8 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
+
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
@@ -28,8 +30,7 @@
                  readonly$="[[readonly]]"
                  required$="[[required]]"
                  invalid$="[[invalid]]"
-                 auto-validate$="[[autoValidate]]"
-                 error-message="[[errorMessage]]" validator="[[validator]]">
+                 error-message="[[errorMessage]]">
       <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
       <etools-datepicker-button id="datePickerButton"
                                 prefix
@@ -54,13 +55,15 @@
 
         is: 'etools-date-input',
         behaviors: [
-          EtoolsPmpApp.Behaviors.Date
+          EtoolsPmpApp.Behaviors.Date,
+          Polymer.IronValidatableBehavior
         ],
         properties: {
           label: String,
           value: {
             value: null,
-            notify: true
+            notify: true,
+            observer: '_valueChanged'
           },
           jsonValue: {
             value: null,
@@ -131,8 +134,26 @@
           return readonly || disabled;
         },
 
+        _valueChanged: function(value) {
+          if (this.autoValidate && value !== undefined) {
+            this.validate();
+          }
+        },
+
+        /**
+        * overwrites default functionality from iron-input
+        */
         validate: function() {
-          return this.$.dateInput.validate();
+          let hasValidator = this.hasValidator();
+          let valid = true;
+          if (this.required && !hasValidator && this.value === '') {
+            valid = false;
+          } else if (hasValidator) {
+            valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
+          }
+
+          this.set('invalid', !valid);
+          return valid;
         },
 
         makeValid: function() {
@@ -141,7 +162,6 @@
           // so to make sure, we have to set it manually
           this.$.dateInput.set('invalid', false);
         }
-
       });
     })();
   </script>
