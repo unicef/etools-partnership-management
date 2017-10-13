@@ -55,6 +55,7 @@
       .generate-pca {
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
+        margin-right: 24px;
       }
       .generate-pca[hidden] + .col {
         padding-left: 0;
@@ -627,6 +628,9 @@
         },
 
         _openGeneratePCADialog: function() {
+          if (!this.generatePCADialog.agreementId) {
+            this.generatePCADialog.set('agreementId', this.agreement.id);
+          }
           this.generatePCADialog.open();
         },
 
