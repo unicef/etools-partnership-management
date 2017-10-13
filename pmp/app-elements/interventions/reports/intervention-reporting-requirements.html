@@ -1,11 +1,13 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../intervention-data/reporting-requirements-data.html">
 <link rel="import" href="reporting-requirements-dialog.html">
+<link rel="import" href="reporting-requirements-actions.html">
 
 <dom-module id="intervention-reporting-requirements">
 
@@ -25,6 +27,10 @@
       }
       .list-container {
         position: relative;
+      }
+      .actions-button-container {
+        color: var(--medium-icon-color);
+        flex-direction: row-reverse;
       }
 
     </style>
@@ -50,8 +56,11 @@
           <etools-data-table-column class="col-3">
             Reporting Period End Date
           </etools-data-table-column>
-          <etools-data-table-column class="col-6">
+          <etools-data-table-column class="col-5">
             Report Due Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
+            <!-- Actions -->
           </etools-data-table-column>
         </etools-data-table-header>
         <template is="dom-repeat" items="[[reportingRequirements]]">
@@ -63,8 +72,11 @@
               <span class="col-data col-3">
                 [[item.end_date]]
               </span>
-              <span class="col-data col-6">
+              <span class="col-data col-5">
                 [[item.due_date]]
+              </span>
+              <span class="col-data col-1 actions-button-container">
+                <reporting-requirements-actions requirement="[[item]]"></reporting-requirements-actions>
               </span>
             </div>
           </etools-data-table-row>
@@ -85,6 +97,11 @@
           requirementsDialog: Object
         },
 
+        listeners: {
+          'requiremenet-edit': '_handleRequirementEdit',
+          'requiremenet-delete': '_handleRequirementDelete'
+        },
+
         handleRequirementSave: function(event) {
           let newRequirement = event.detail;
           if (newRequirement.start_date && newRequirement.end_date && newRequirement.due_date) {
@@ -95,6 +112,14 @@
         openNewRequirementDialog: function() {
           this.requirementsDialog.requirement = {};
           this.requirementsDialog.open();
+        },
+
+        _handleRequirementEdit: function(event) {
+          console.log('requirement edit triggered', event.detail);
+        },
+
+        _handleRequirementDelete: function(event) {
+          console.log('requirement delete triggered', event.detail);
         },
 
         ready: function() {

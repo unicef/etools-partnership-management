@@ -11,10 +11,10 @@
         box-sizing: border-box;
       }
       .layout-horizontal {
-         @apply(--layout-horizontal);
+         @apply --layout-horizontal;
       }
       .layout-vertical {
-         @apply(--layout-vertical);
+         @apply --layout-vertical;
       }
       .row-padding {
         padding: 16px 24px;
@@ -28,14 +28,14 @@
         padding-bottom: 16px;
       }
       .row-h {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       .row-v {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
       .flex-c {
         /* flex container */
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
       .row-h, .row-v {
         padding: 16px 24px;
@@ -81,11 +81,17 @@
         overflow: hidden;
       }
       .col {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         box-sizing: border-box;
       }
+
       .col:not(:first-of-type) {
         padding-left: 24px;
+      }
+
+      .col-1 {
+        flex: 0 0 8.333333333%;
+        max-width: 8.333333333%;
       }
 
       .col-2 {
