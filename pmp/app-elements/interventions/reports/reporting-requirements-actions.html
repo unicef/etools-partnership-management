@@ -72,10 +72,13 @@
       properties: {
         opened: {
           type: Boolean,
-          value: false,
           reflectToAttribute: true
         },
         requirement: Object
+      },
+      attached: function() {
+        // by default this dropdown is open, so we need to close it
+        this.$.requirementActions.close();
       },
       _handleEdit: function() {
         this.fire('requiremenet-edit', JSON.parse(JSON.stringify(this.requirement)));

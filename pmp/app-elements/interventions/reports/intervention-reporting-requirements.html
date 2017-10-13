@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -33,14 +34,17 @@
         color: var(--medium-icon-color);
         flex-direction: row-reverse;
       }
-
     </style>
 
     <reporting-requirements-data id="reportingData"
                                  intervention-id="[[interventionId]]"
                                  reporting-requirements="{{reportingRequirements}}">
     </reporting-requirements-data>
-    <reporting-requirement-item-data id="reportData"></reporting-requirement-item-data>
+
+    <reporting-requirement-item-data id="reportData">
+    </reporting-requirement-item-data>
+
+
     <etools-content-panel panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="add-box"
@@ -92,10 +96,19 @@
 
       Polymer({
         is: 'intervention-reporting-requirements',
+        behaviors: [
+          etoolsBehaviors.DynamicDialogBehavior
+        ],
         properties: {
           interventionId: Number,
           reportingRequirements: Array,
-          requirementsDialog: Object
+          requirementsDialog: Object,
+          deletedItem: Object,
+          deleteDialog: Object,
+          deleteConfirmationMessage: {
+            type: 'String',
+            value: 'Are you sure you want to remove this reporting requirement?'
+          }
         },
 
         listeners: {
@@ -137,30 +150,53 @@
         },
 
         _handleRequirementDelete: function(event) {
+          this.deletedItem = event.detail;
+          this.deleteDialog.set('opened', true);
+        },
+
+        _onDeleteConfirmation: function(event) {
           let self = this;
 
-          this.$.reportData.deleteRequirement(event.detail);
+          if (!event.detail.confirmed) {
+            return;
+          }
+
+          this.$.reportData.deleteRequirement(this.deletedItem);
 
           // TEMP. api should confirm operation first.
-         this.reportingRequirements.forEach(function(elem, index) {
-            if (elem.id !== event.detail.id) {
+          this.reportingRequirements.forEach(function(elem, index) {
+            if (elem.id === self.deletedItem.id) {
               self.splice('reportingRequirements', index, 1);
             }
           });
         },
-
         ready: function() {
-          this.requirementsDialog = document.createElement('reporting-requirements-dialog');
-          this.requirementsDialog.setAttribute('id', 'requirementsDialog');
-          this.requirementsDialog.addEventListener('save-requirement', this.handleDialogConfirm.bind(this));
-          Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
+          this._createRequirementsDialog();
+          this._createDeleteConfirmationDialog();
         },
 
         detached: function() {
           if (this.requirementsDialog) {
             Polymer.dom(document.querySelector('body')).removeChild(this.requirementsDialog);
           }
+          this.removeDialog(this.deleteDialog);
         },
+
+        _createRequirementsDialog: function() {
+          this.requirementsDialog = document.createElement('reporting-requirements-dialog');
+          this.requirementsDialog.setAttribute('id', 'requirementsDialog');
+          this.requirementsDialog.addEventListener('save-requirement', this.handleDialogConfirm.bind(this));
+          Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
+        },
+
+        _createDeleteConfirmationDialog: function() {
+          let deleteConfirmationContent = document.createElement('div');
+          deleteConfirmationContent.innerHTML = this.deleteConfirmationMessage;
+          this.deleteDialog = this.createDialog(this.deleteConfirmationTitle, 'md', 'Yes',
+              'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
+        },
+
+
       });
 
     })();
