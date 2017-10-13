@@ -1,0 +1,230 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+
+<link rel="import"
+      href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../../app-behaviors/pagination-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="report-status.html">
+
+<link rel="import" href="../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+
+<!-- TODO: remove reports mockup data -->
+<link rel="import" href="reports-list-data-mockup.html">
+
+<dom-module id="reports-list">
+
+  <template strip-whitespace>
+
+    <style include="data-table-styles grid-layout-styles">
+      :host {
+        @apply --layout-flex;
+        width: 100%;
+      }
+      .pd-ref,
+      .view-report {
+        @apply --text-btn-style;
+      }
+      .pd-ref {
+        text-transform: none;
+      }
+    </style>
+
+    <paper-material id="list" elevation="1">
+
+      <template is="dom-if" if="[[!reports.length]]">
+        <div class="row-h">
+          <p>There are no reports yet.</p>
+        </div>
+      </template>
+
+      <template is="dom-if" if="[[reports.length]]">
+        <etools-data-table-header id="listHeader"
+                                  label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
+                                    of [[paginator.count]] results to show"
+                                  no-collapse="[[noCollapse]]">
+
+          <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
+            <etools-data-table-column class="col-2">
+              PD/SSFA ref.#
+            </etools-data-table-column>
+          </template>
+          <etools-data-table-column class="flex-c">
+            Report Status
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            Due Date
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            Date of Submission
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            Date of Acceptance
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+            Reporting Period
+          </etools-data-table-column>
+          <etools-data-table-column class="flex-c">
+          </etools-data-table-column>
+        </etools-data-table-header>
+
+        <template is="dom-repeat" items="[[reports]]" as="report">
+          <etools-data-table-row no-collapse="[[noCollapse]]">
+
+            <div slot="row-data">
+              <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
+                <span class="col-data col-2">
+                  <a class="pd-ref truncate"
+                     href$="reports/[[report.id]]/details"
+                     title$="[[getDisplayValue(report.programme_document.reference_number)]]">
+                    [[getDisplayValue(report.programme_document.reference_number)]]
+                  </a>
+                </span>
+              </template>
+              <span class="col-data flex-c">
+                <report-status status="[[report.status]]"></report-status>
+              </span>
+              <span class="col-data flex-c">
+                [[getDateDisplayValue(report.due_date)]]
+              </span>
+              <span class="col-data flex-c">
+               [[getDateDisplayValue(report.submission_date)]]
+              </span>
+              <span class="col-data flex-c">
+                [[getDateDisplayValue(report.review_date)]]
+              </span>
+              <span class="col-data flex-c">
+                [[getDisplayValue(report.reporting_period)]]
+              </span>
+              <span class="col-data flex-c">
+                <a href$="reports/[[report.id]]/details" class="view-report">View Report</a>
+              </span>
+            </div>
+
+            <template is="dom-if" if="[[!noCollapse]]">
+              <div slot="row-data-details">
+                <div class="row-details-content col-2">
+                  <span class="rdc-title">Location</span>
+                  <span> Narnia </span>
+                </div>
+              </div>
+            </template>
+
+          </etools-data-table-row>
+        </template>
+        <etools-data-table-footer
+            page-size="[[paginator.page_size]]"
+            page-number="[[paginator.page]]"
+            total-results="[[paginator.count]]"
+            visible-range="{{paginator.visible_range}}"
+            on-page-size-changed="pageSizeChanged"
+            on-page-number-changed="pageNumberChanged">
+        </etools-data-table-footer>
+
+      </template>
+    </paper-material>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'reports-list',
+
+        behaviors: [
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.Pagination,
+          EtoolsPmpApp.Behaviors.ReportsListDataMockup // TODO: remove this once prp endpoint is ready
+        ],
+
+        properties: {
+          currentUser: {
+            type: Object,
+            statePath: 'currentUser',
+          },
+          interventionId: {
+            type: Number,
+            value: 0
+          },
+          reports: {
+            type: Array,
+            value: []
+          },
+          noPdSsfaRef: {
+            type: Boolean,
+            value: false
+          },
+          noCollapse: {
+            type: Boolean,
+            value: false
+          }
+        },
+
+        observers: [
+          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page)'
+        ],
+
+        _loadReportsData: function(interventionId, currentUser) {
+          if (_.isEmpty(currentUser)) {
+            return;
+          }
+          let self = this;
+          this.debounce('load-reports-data', function() {
+            let endpoint = self.getEndpoint('reports',
+                {countryId: currentUser.profile.country});
+            let params = {};
+            if (interventionId > 0) {
+              params.programme_document = interventionId;
+            }
+            params = Object.assign({}, params, self.getRequestPaginationParams());
+
+            self.fire('global-loading', {
+              message: 'Loading reports data...',
+              active: true,
+              loadingSource: 'reports-list'
+            });
+
+            self.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
+              self.set('reports', response.results);
+              self.updatePaginatorTotalResults(response);
+              self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+            }).catch(function(error) {
+              let errMsg = 'Reports list data request failed!';
+              self.logError(errMsg, 'reports-list', error);
+
+              // TODO: remove this toast, after API request can be made
+              self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+              self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+              self.set('reports', []);
+
+              // TODO: remove mockup data use, make sure API request is correct
+              self.set('reports', self.reportsDataMockup.results);
+              self.updatePaginatorTotalResults(self.reportsDataMockup);
+
+              self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+            });
+          }, 200);
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

@@ -71,6 +71,7 @@
           <paper-tabs id="indicatorTabs"
                       selected="{{activeTab}}"
                       attr-for-selected="name"
+                      on-selected-changed="_centerDialog"
                       noink bottom-item>
             <paper-tab name="details" link>
               <span class="tab-content">DETAILS</span>
@@ -312,7 +313,11 @@
           this.indicator = null;
           this.disaggregations = [];
           this.prpDisaggregations = [];
-        }
+        },
+
+        _centerDialog: function() {
+          this.$.indicatorDialog.notifyResize();
+        },
 
       });
     })();
