@@ -4,6 +4,8 @@
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 
+
+<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../intervention-data/reporting-requirements-data.html">
@@ -97,7 +99,8 @@
       Polymer({
         is: 'intervention-reporting-requirements',
         behaviors: [
-          etoolsBehaviors.DynamicDialogBehavior
+          etoolsBehaviors.DynamicDialogBehavior,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
           interventionId: Number,
@@ -106,8 +109,17 @@
           deletedItem: Object,
           deleteDialog: Object,
           deleteConfirmationMessage: {
-            type: 'String',
+            type: String,
             value: 'Are you sure you want to remove this reporting requirement?'
+          },
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'intervention-reporting-requirements'
+          },
+          // remove this and errors show up as toast messages
+          errorEventName: {
+            type: String,
+            value: 'intervention-save-error'
           }
         },
 
@@ -127,13 +139,22 @@
             });
           }
 
-          // LOADING START
+          self.fire('global-loading', {
+            message: 'Adding reporting requirement',
+            active: true,
+            loadingSource: self.ajaxLoadingMsgSource
+          });
 
           if (!newReq.id) {
             this.$.reportingData.addRequirement(newReq)
               .then(function() {
-                // LOADING STOP
+                self.fire('global-loading', {
+                  active: false,
+                  loadingSource: self.ajaxLoadingMsgSource
+                });
                 self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
               });
           } else {
             this.$.reportData.updateRequirement(newReq)
@@ -144,8 +165,13 @@
                   }
                 });
 
-                // LOADING STOP
+                self.fire('global-loading', {
+                  active: false,
+                  loadingSource: self.ajaxLoadingMsgSource
+                });
                 self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
               });
 
           }
@@ -172,7 +198,13 @@
           if (!event.detail.confirmed) {
             return;
           }
-          // LOADING START
+
+          self.fire('global-loading', {
+            message: 'Removing reporting requirement',
+            active: true,
+            loadingSource: self.ajaxLoadingMsgSource
+          });
+
           this.$.reportData.deleteRequirement(this.deletedItem)
             .then(function() {
               self.reportingRequirements.forEach(function(elem, index) {
@@ -180,8 +212,15 @@
                   self.splice('reportingRequirements', index, 1);
                 }
               });
-              // LOADING STOP
+
+              self.fire('global-loading', {
+                active: false,
+                loadingSource: self.ajaxLoadingMsgSource
+              });
+
               self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
+            }).catch(function(error) {
+              self._handleErrorResponse(error);
             });
         },
         ready: function() {
@@ -210,6 +249,13 @@
               'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
         },
 
+        _handleErrorResponse: function(error) {
+          this.fire('global-loading', {
+            active: false,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
+          this.handleErrorResponse(error);
+        },
 
       });
 

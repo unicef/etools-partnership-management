@@ -5,7 +5,6 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 
 <dom-module id="reporting-requirements-data">
 
@@ -17,8 +16,7 @@
         is: 'reporting-requirements-data',
         behaviors: [
           EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.Endpoints
         ],
         properties: {
           endpointName: {
@@ -34,13 +32,6 @@
             notify: true
           },
           ajaxMethod: String,
-          /**
-           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
-           */
-          ajaxLoadingMsgSource: {
-            type: String,
-            value: 'reporting-requirements-data'
-          }
         },
 
 
@@ -56,8 +47,6 @@
           let ajaxMethod = options.method || 'GET';
           return this.sendRequest(options).then(function(resp) {
             self._handleResponse(resp, ajaxMethod);
-          }).catch(function(error) {
-            self.handleErrorResponse(error, ajaxMethod);
           });
         },
 

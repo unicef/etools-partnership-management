@@ -5,7 +5,6 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 
 <dom-module id="reporting-requirement-item-data">
 
@@ -17,8 +16,7 @@
         is: 'reporting-requirement-item-data',
         behaviors: [
           EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.Endpoints
         ],
         properties: {
           endpointName: {
@@ -27,36 +25,16 @@
           }
         },
 
-        _triggerRequest: function(options) {
-          let self = this;
-          return this.sendRequest(options).then(function(resp) {
-            self._handleResponse(resp);
-          }).catch(function(error) {
-            self.handleErrorResponse(error);
-          });
-        },
-
-        _handleResponse: function(response) {
-          if (this.ajaxMethod === 'PATCH') {
-            console.log('PATCH worked', response);
-          }
-          if (this.ajaxMethod === 'DELETE') {
-            console.log('DELETE worked', response);
-          }
-        },
-
         deleteRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
-          this.ajaxMethod = 'DELETE';
 
-          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint});
+          return this.sendRequest({method: 'DELETE', endpoint: endpoint});
         },
 
         updateRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
-          this.ajaxMethod = 'PATCH';
 
-          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
+          return this.sendRequest({method: 'PATCH', endpoint: endpoint, body: requirement});
         }
       });
     })();
