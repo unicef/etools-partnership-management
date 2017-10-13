@@ -134,8 +134,7 @@
             });
 
           } else {
-            console.log('all three dates are needed');
-            // TODO: proper validation.
+            this.fire('toast', {text: 'Can\'t save reporting requirement, please fill in all the dates and try again', showCloseBtn: true});
           }
         },
 
