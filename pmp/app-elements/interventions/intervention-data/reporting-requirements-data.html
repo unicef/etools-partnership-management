@@ -18,8 +18,7 @@
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
-          // EtoolsLogsBehavior,
-          // EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
           endpointName: {
@@ -44,34 +43,24 @@
           }
         },
 
-        _triggerRequest: function(options) {
-          let self = this;
-          let ajaxMethod = options.method || 'GET';
-          this.sendRequest(options).then(function(resp) {
-            self._handleResponse(resp, ajaxMethod);
-          }).catch(function(error) {
-            self._handleErrorResponse(error, ajaxMethod);
-          });
-        },
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fetchRequirements();
+            this.ajaxMethod = 'GET';
+            this._triggerRequest({endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId})});
           }
         },
 
-        fetchRequirements: function() {
-          this.ajaxMethod = 'GET';
-          this._triggerRequest({endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId})});
+        _triggerRequest: function(options) {
+          let self = this;
+          let ajaxMethod = options.method || 'GET';
+          return this.sendRequest(options).then(function(resp) {
+            self._handleResponse(resp, ajaxMethod);
+          }).catch(function(error) {
+            self.handleErrorResponse(error, ajaxMethod);
+          });
         },
 
-        _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response, ajaxMethod);
-          this._restoreUnsuccessfullyDeletedFrs();
-        },
-        /**
-         * Handle received data from request
-         */
         _handleResponse: function(response) {
           if (this.ajaxMethod === 'GET') {
             this.set('reportingRequirements', response);
@@ -80,10 +69,7 @@
             this.push('reportingRequirements', response);
           }
         },
-        _handleErrorResponse: function(error) {
-          console.log(error);
-          // TO BE CONTINUED
-        },
+
 
         addRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {intervId: this.interventionId});
@@ -91,7 +77,7 @@
 
           requirement.intervention = this.interventionId;
 
-          this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
+          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
         },
 
 

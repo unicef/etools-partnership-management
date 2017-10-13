@@ -18,6 +18,7 @@
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
           endpointName: {
@@ -28,16 +29,11 @@
 
         _triggerRequest: function(options) {
           let self = this;
-          this.sendRequest(options).then(function(resp) {
+          return this.sendRequest(options).then(function(resp) {
             self._handleResponse(resp);
           }).catch(function(error) {
-            self._handleErrorResponse(error);
+            self.handleErrorResponse(error);
           });
-        },
-
-        _handleErrorResponse: function(response) {
-          this.handleErrorResponse(response);
-          this._restoreUnsuccessfullyDeletedFrs();
         },
 
         _handleResponse: function(response) {
@@ -49,23 +45,18 @@
           }
         },
 
-        _handleErrorResponse: function(error) {
-          console.log(error);
-          // TO BE CONTINUED
-        },
-
         deleteRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
           this.ajaxMethod = 'DELETE';
 
-          this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint});
+          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint});
         },
 
         updateRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {reportId: requirement.id});
           this.ajaxMethod = 'PATCH';
 
-          this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
+          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
         }
       });
     })();

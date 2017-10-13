@@ -12,7 +12,7 @@
     <style include="shared-styles">
       :host {
         width: 235px;
-        @apply(--etools-date-input);
+        @apply --etools-date-input;
       }
       /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
       then include it in shared-styles(do not use shared-styles here) */
@@ -133,6 +133,13 @@
 
         validate: function() {
           return this.$.dateInput.validate();
+        },
+
+        makeValid: function() {
+          this.set('invalid', false);
+          // because `invalid` has one-way binding, the paper-input doesn't always follow the invalid flag
+          // so to make sure, we have to set it manually
+          this.$.dateInput.set('invalid', false);
         }
 
       });

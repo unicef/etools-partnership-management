@@ -119,22 +119,35 @@
         handleDialogConfirm: function(event) {
           let newReq = event.detail;
           let self = this;
+          if (!newReq.start_date || !newReq.end_date || !newReq.due_date) {
 
-          if (!newReq.id && newReq.start_date && newReq.end_date && newReq.due_date) {
-            this.$.reportingData.addRequirement(newReq);
-          } else if (newReq.id && newReq.start_date && newReq.end_date && newReq.due_date) {
-
-            this.$.reportData.updateRequirement(newReq);
-
-            // TEMP. api should confirm operation first.
-            this.reportingRequirements.forEach(function(elem, index) {
-              if (elem.id === newReq.id) {
-                self.set(['reportingRequirements', index], newReq);
-              }
+            this.fire('toast', {
+              text: 'Can\'t save reporting requirement, please fill in all the dates and try again',
+              showCloseBtn: true
             });
+          }
 
+          // LOADING START
+
+          if (!newReq.id) {
+            this.$.reportingData.addRequirement(newReq)
+              .then(function() {
+                // LOADING STOP
+                self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
+              });
           } else {
-            this.fire('toast', {text: 'Can\'t save reporting requirement, please fill in all the dates and try again', showCloseBtn: true});
+            this.$.reportData.updateRequirement(newReq)
+              .then(function() {
+                self.reportingRequirements.forEach(function(elem, index) {
+                  if (elem.id === newReq.id) {
+                    self.set(['reportingRequirements', index], newReq);
+                  }
+                });
+
+                // LOADING STOP
+                self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
+              });
+
           }
         },
 
@@ -159,15 +172,17 @@
           if (!event.detail.confirmed) {
             return;
           }
-
-          this.$.reportData.deleteRequirement(this.deletedItem);
-
-          // TEMP. api should confirm operation first.
-          this.reportingRequirements.forEach(function(elem, index) {
-            if (elem.id === self.deletedItem.id) {
-              self.splice('reportingRequirements', index, 1);
-            }
-          });
+          // LOADING START
+          this.$.reportData.deleteRequirement(this.deletedItem)
+            .then(function() {
+              self.reportingRequirements.forEach(function(elem, index) {
+                if (elem.id === self.deletedItem.id) {
+                  self.splice('reportingRequirements', index, 1);
+                }
+              });
+              // LOADING STOP
+              self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
+            });
         },
         ready: function() {
           this._createRequirementsDialog();

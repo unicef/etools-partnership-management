@@ -35,7 +35,6 @@
                                value="{{requirement.start_date}}"
                                open="{{startDateOpen}}"
                                required
-                               auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -45,7 +44,6 @@
                                value="{{requirement.end_date}}"
                                open="{{endDateOpen}}"
                                required
-                               auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -55,7 +53,6 @@
                                value="{{requirement.due_date}}"
                                open="{{dueDateOpen}}"
                                required
-                               auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -88,27 +85,29 @@
           dueDateOpen: {
             type: Boolean,
             value: false
+          },
+          fieldsToValidate: {
+            type: Array,
+            value: [
+              '#reportingPeriodStartDate',
+              '#reportingPeriodEndDate',
+              '#reportingPeriodDueDate'
+            ]
           }
         },
-        observers: [
-        ],
 
         open: function() {
           if (!this.$.reportingRequirementsDialog.opened) {
             this.$.reportingRequirementsDialog.opened = true;
+            this._resetValidations();
           }
         },
 
         _saveChanges: function(event) {
           let valid = true;
           let self = this;
-          let selectors = [
-            '#reportingPeriodStartDate',
-            '#reportingPeriodEndDate',
-            '#reportingPeriodDueDate'
-          ];
 
-          selectors.forEach(function(selector) {
+          this.fieldsToValidate.forEach(function(selector) {
             valid = self.$$(selector).validate() && valid;
           });
 
@@ -117,7 +116,15 @@
           }
 
           this.fire('save-requirement', this.requirement);
+          this.$.reportingRequirementsDialog.set('opened', false);
           return true;
+        },
+
+        _resetValidations: function() {
+          let self = this;
+          this.fieldsToValidate.forEach(function(selector) {
+            self.$$(selector).makeValid();
+          });
         },
 
         _isDatePickerOpen: function(startDateOpen, endDateOpen, dueDateOpen) {
