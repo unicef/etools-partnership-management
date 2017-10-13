@@ -36,37 +36,25 @@
 
 
         _interventionIdChanged: function(newId) {
-          if (newId) {
-            this.ajaxMethod = 'GET';
-            this._triggerRequest({endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId})});
-          }
-        },
-
-        _triggerRequest: function(options) {
           let self = this;
-          let ajaxMethod = options.method || 'GET';
-          return this.sendRequest(options).then(function(resp) {
-            self._handleResponse(resp, ajaxMethod);
-          });
-        },
-
-        _handleResponse: function(response) {
-          if (this.ajaxMethod === 'GET') {
-            this.set('reportingRequirements', response);
-          }
-          if (this.ajaxMethod === 'POST') {
-            this.push('reportingRequirements', response);
+          if (newId) {
+            this.sendRequest({method:'GET', endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId})})
+              .then(function(resp) {
+                self.set('reportingRequirements', response);
+              });;
           }
         },
-
 
         addRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {intervId: this.interventionId});
-          this.ajaxMethod = 'POST';
+          let self = this;
 
           requirement.intervention = this.interventionId;
 
-          return this._triggerRequest({method: this.ajaxMethod, endpoint: endpoint, body: requirement});
+          return this.sendRequest({method: 'POST', endpoint: endpoint, body: requirement})
+                   .then(function(response) {
+                     self.push('reportingRequirements', response);
+                   });
         },
 
 
