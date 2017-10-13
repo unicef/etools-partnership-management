@@ -40,6 +40,7 @@
                                 is-disabled$="[[_disabledDatepicker(readonly, disabled)]]"
                                 hidden$="[[readonly]]"
                                 no-init="[[noInit]]"
+                                open="{{open}}"
                                 show-clear-btn="[[showClearBtn]]">
       </etools-datepicker-button>
     </paper-input>
@@ -97,6 +98,11 @@
             type: Boolean,
             value: false,
             reflectToAttribute: true
+          },
+          open: {
+            type: Boolean,
+            value: false,
+            notify: true
           },
           errorMessage: {
             type: String,
