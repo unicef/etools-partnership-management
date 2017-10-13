@@ -85,8 +85,7 @@
           // TO BE CONTINUED
         },
 
-        saveRequirement: function(requirement) {
-          let isNew = false;
+        addRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpointName, {reportId: this.interventionId});
           this.ajaxMethod = 'POST';
 

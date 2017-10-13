@@ -1,0 +1,89 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
+
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../common-elements/etools-date-input.html">
+
+<dom-module id="reporting-requirements-dialog">
+  <template>
+    <style include="shared-styles grid-layout-styles">
+      [hidden] {
+        display: none !important;
+      }
+      #content-box {
+        margin-bottom: 20px;
+      }
+    </style>
+    <etools-dialog
+        id="reportingRequirementsDialog"
+        size="md"
+        no-padding
+        ok-btn-text="Save"
+        cancel-btn-text="Cancel"
+        dialog-title="Add/Edit Reporting Requirements"
+        on-close="_handleDialogClosed">
+      <div id="content-box">
+        <div class="row-h">
+          <div class="col col-4">
+            <etools-date-input id="reportingPeriodStartDate"
+                                label="Reporting Period Start Date"
+                                value="{{requirement.start_date}}"
+                                no-init show-clear-btn>
+            </etools-date-input>
+          </div>
+          <div class="col col-4">
+            <etools-date-input id="reportingPeriodEndDate"
+                                label="Reporting Period End Date"
+                                value="{{requirement.end_date}}"
+                                no-init show-clear-btn>
+            </etools-date-input>
+          </div>
+          <div class="col col-4">
+            <etools-date-input id="reportingPeriodDueDate"
+                                label="Reporting Period Due Date"
+                                value="{{requirement.due_date}}"
+                                no-init show-clear-btn>
+            </etools-date-input>
+          </div>
+        </div>
+      </div>
+    </etools-dialog>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'reporting-requirements-dialog',
+        behaviors: [
+        ],
+        properties: {
+          requirement: {
+            type: Object,
+          },
+        },
+        observers: [
+        ],
+
+        open: function() {
+          if (!this.$.reportingRequirementsDialog.opened) {
+            this.$.reportingRequirementsDialog.opened = true;
+          }
+        },
+
+        _handleDialogClosed: function(closingReason) {
+          if (closingReason.detail.confirmed) {
+            this.fire('save-requirement', this.requirement);
+          }
+        },
+
+      });
+    })();
+  </script>
+</dom-module>
+

@@ -5,7 +5,7 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../intervention-data/reporting-requirements-data.html">
-
+<link rel="import" href="reporting-requirements-dialog.html">
 
 <dom-module id="intervention-reporting-requirements">
 
@@ -33,10 +33,12 @@
                                  intervention-id="[[interventionId]]"
                                  reporting-requirements="{{reportingRequirements}}">
     </reporting-requirements-data>
+
     <etools-content-panel panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="add-box"
-                           title="Add Reporting Requirement">
+                           title="Add Reporting Requirement"
+                           on-tap="openNewRequirementDialog">
         </paper-icon-button>
       </div>
 
@@ -79,8 +81,34 @@
         is: 'intervention-reporting-requirements',
         properties: {
           interventionId: Number,
-          reportingRequirements: Array
-        }
+          reportingRequirements: Array,
+          requirementsDialog: Object
+        },
+
+        handleRequirementSave: function(event) {
+          let newRequirement = event.detail;
+          if (newRequirement.start_date && newRequirement.end_date && newRequirement.due_date) {
+            this.$.reportingData.addRequirement(newRequirement);
+          }
+        },
+
+        openNewRequirementDialog: function() {
+          this.requirementsDialog.requirement = {};
+          this.requirementsDialog.open();
+        },
+
+        ready: function() {
+          this.requirementsDialog = document.createElement('reporting-requirements-dialog');
+          this.requirementsDialog.setAttribute('id', 'requirementsDialog');
+          this.requirementsDialog.addEventListener('save-requirement', this.handleRequirementSave.bind(this));
+          Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
+        },
+
+        detached: function() {
+          if (this.requirementsDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.requirementsDialog);
+          }
+        },
       });
 
     })();
