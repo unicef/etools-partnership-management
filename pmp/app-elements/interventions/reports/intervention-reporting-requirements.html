@@ -3,8 +3,9 @@
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
-
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -37,15 +38,6 @@
         flex-direction: row-reverse;
       }
     </style>
-
-    <reporting-requirements-data id="reportingData"
-                                 intervention-id="[[interventionId]]"
-                                 reporting-requirements="{{reportingRequirements}}">
-    </reporting-requirements-data>
-
-    <reporting-requirement-item-data id="reportData">
-    </reporting-requirement-item-data>
-
 
     <etools-content-panel panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
@@ -99,15 +91,27 @@
       Polymer({
         is: 'intervention-reporting-requirements',
         behaviors: [
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
           etoolsBehaviors.DynamicDialogBehavior,
           EtoolsPmpApp.Behaviors.AjaxServerErrors
         ],
         properties: {
-          interventionId: Number,
           reportingRequirements: Array,
           requirementsDialog: Object,
           deletedItem: Object,
           deleteDialog: Object,
+          endpoints: {
+            type: Object,
+            value: {
+              LIST: 'reportRequirementsList',
+              ITEM: 'reportRequirementsItem'
+            }
+          },
+          interventionId: {
+            type: Number,
+            observer: '_interventionIdChanged'
+          },
           deleteConfirmationMessage: {
             type: String,
             value: 'Are you sure you want to remove this reporting requirement?'
@@ -128,101 +132,6 @@
           'requiremenet-delete': '_handleRequirementDelete'
         },
 
-        handleDialogConfirm: function(event) {
-          let newReq = event.detail;
-          let self = this;
-          if (!newReq.start_date || !newReq.end_date || !newReq.due_date) {
-
-            this.fire('toast', {
-              text: 'Can\'t save reporting requirement, please fill in all the dates and try again',
-              showCloseBtn: true
-            });
-          }
-
-          self.fire('global-loading', {
-            message: 'Adding reporting requirement',
-            active: true,
-            loadingSource: self.ajaxLoadingMsgSource
-          });
-
-          if (!newReq.id) {
-            this.$.reportingData.addRequirement(newReq)
-              .then(function() {
-                self.fire('global-loading', {
-                  active: false,
-                  loadingSource: self.ajaxLoadingMsgSource
-                });
-                self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
-          } else {
-            this.$.reportData.updateRequirement(newReq)
-              .then(function() {
-                self.reportingRequirements.forEach(function(elem, index) {
-                  if (elem.id === newReq.id) {
-                    self.set(['reportingRequirements', index], newReq);
-                  }
-                });
-
-                self.fire('global-loading', {
-                  active: false,
-                  loadingSource: self.ajaxLoadingMsgSource
-                });
-                self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
-
-          }
-        },
-
-        openNewRequirementDialog: function() {
-          this.requirementsDialog.requirement = {};
-          this.requirementsDialog.open();
-        },
-
-        _handleRequirementEdit: function(event) {
-          this.requirementsDialog.requirement = event.detail;
-          this.requirementsDialog.open();
-        },
-
-        _handleRequirementDelete: function(event) {
-          this.deletedItem = event.detail;
-          this.deleteDialog.set('opened', true);
-        },
-
-        _onDeleteConfirmation: function(event) {
-          let self = this;
-
-          if (!event.detail.confirmed) {
-            return;
-          }
-
-          self.fire('global-loading', {
-            message: 'Removing reporting requirement',
-            active: true,
-            loadingSource: self.ajaxLoadingMsgSource
-          });
-
-          this.$.reportData.deleteRequirement(this.deletedItem)
-            .then(function() {
-              self.reportingRequirements.forEach(function(elem, index) {
-                if (elem.id === self.deletedItem.id) {
-                  self.splice('reportingRequirements', index, 1);
-                }
-              });
-
-              self.fire('global-loading', {
-                active: false,
-                loadingSource: self.ajaxLoadingMsgSource
-              });
-
-              self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
-            }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
-        },
         ready: function() {
           this._createRequirementsDialog();
           this._createDeleteConfirmationDialog();
@@ -249,6 +158,102 @@
               'No', this._onDeleteConfirmation.bind(this), deleteConfirmationContent);
         },
 
+        openNewRequirementDialog: function() {
+          this.requirementsDialog.requirement = {};
+          this.requirementsDialog.open();
+        },
+
+        handleDialogConfirm: function(event) {
+          let newReq = event.detail;
+          let self = this;
+          if (!newReq.start_date || !newReq.end_date || !newReq.due_date) {
+
+            this.fire('toast', {
+              text: 'Can\'t save reporting requirement, please fill in all the dates and try again',
+              showCloseBtn: true
+            });
+          }
+
+          self.fire('global-loading', {
+            message: 'Adding reporting requirement',
+            active: true,
+            loadingSource: self.ajaxLoadingMsgSource
+          });
+
+          if (!newReq.id) {
+            this.addRequirement(newReq)
+              .then(function() {
+                self.fire('global-loading', {
+                  active: false,
+                  loadingSource: self.ajaxLoadingMsgSource
+                });
+                self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
+          } else {
+            this.updateRequirement(newReq)
+              .then(function() {
+                self.reportingRequirements.forEach(function(elem, index) {
+                  if (elem.id === newReq.id) {
+                    self.set(['reportingRequirements', index], newReq);
+                  }
+                });
+
+                self.fire('global-loading', {
+                  active: false,
+                  loadingSource: self.ajaxLoadingMsgSource
+                });
+                self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
+
+          }
+        },
+
+        _handleRequirementEdit: function(event) {
+          this.requirementsDialog.requirement = event.detail;
+          this.requirementsDialog.open();
+        },
+
+        _handleRequirementDelete: function(event) {
+          this.deletedItem = event.detail;
+          this.deleteDialog.set('opened', true);
+        },
+
+        _onDeleteConfirmation: function(event) {
+          let self = this;
+
+          if (!event.detail.confirmed) {
+            return;
+          }
+
+          self.fire('global-loading', {
+            message: 'Removing reporting requirement',
+            active: true,
+            loadingSource: self.ajaxLoadingMsgSource
+          });
+
+          this.deleteRequirement(this.deletedItem)
+            .then(function() {
+              self.reportingRequirements.forEach(function(elem, index) {
+                if (elem.id === self.deletedItem.id) {
+                  self.splice('reportingRequirements', index, 1);
+                }
+              });
+
+              self.fire('global-loading', {
+                active: false,
+                loadingSource: self.ajaxLoadingMsgSource
+              });
+
+              self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
+            }).catch(function(error) {
+              self._handleErrorResponse(error);
+            });
+        },
+
         _handleErrorResponse: function(error) {
           this.fire('global-loading', {
             active: false,
@@ -257,6 +262,41 @@
           this.handleErrorResponse(error);
         },
 
+        deleteRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
+
+          return this.sendRequest({method: 'DELETE', endpoint: endpoint});
+        },
+
+        updateRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
+
+          return this.sendRequest({method: 'PATCH', endpoint: endpoint, body: requirement});
+        },
+
+        addRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: this.interventionId});
+          let self = this;
+
+          requirement.intervention = this.interventionId;
+
+          return this.sendRequest({method: 'POST', endpoint: endpoint, body: requirement})
+            .then(function(response) {
+              self.push('reportingRequirements', response);
+            });
+        },
+
+        _interventionIdChanged: function(newId) {
+          let self = this;
+
+          if (newId) {
+            let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: newId});
+            this.sendRequest({method:'GET', endpoint: endpoint})
+              .then(function(response) {
+                self.set('reportingRequirements', response);
+              });;
+          }
+        },
       });
 
     })();
