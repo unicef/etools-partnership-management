@@ -26,7 +26,7 @@
     <app-route
         route="{{route}}"
         pattern="reports/list"
-        query-params="{{queryParams}}"
+        query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
@@ -84,9 +84,8 @@
           <template is="dom-if" if="[[_pageEquals(reportPage, 'list')]]">
             <reports-list id="list"
                           name="list"
-                          current-page="reports"
                           active="[[listActive]]"
-                          url-params="[[queryParams]]"></reports-list>
+                          url-params="[[listQueryParams]]"></reports-list>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(reportPage, 'summary')]]">

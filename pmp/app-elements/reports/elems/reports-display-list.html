@@ -176,11 +176,16 @@
           noCollapse: {
             type: Boolean,
             value: false
+          },
+          queryParams: {
+            type: Object,
+            value: null,
+            notify: true
           }
         },
 
         observers: [
-          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page)'
+          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
         ],
 
         _loadReportsData: function(interventionId, currentUser) {
@@ -191,11 +196,8 @@
           this.debounce('load-reports-data', function() {
             let endpoint = self.getEndpoint('reports',
                 {countryId: currentUser.profile.country});
-            let params = {};
-            if (interventionId > 0) {
-              params.programme_document = interventionId;
-            }
-            params = Object.assign({}, params, self.getRequestPaginationParams());
+
+            let params = self._prepareReqParamsObj(interventionId);
 
             self.fire('global-loading', {
               message: 'Loading reports data...',
@@ -223,7 +225,23 @@
 
               self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
-          }, 200);
+          }, 300);
+        },
+
+        _prepareReqParamsObj: function(interventionId) {
+          let params = {};
+          if (interventionId > 0) {
+            params.programme_document = interventionId;
+          }
+          if (!_.isEmpty(this.queryParams)) {
+            Object.keys(this.queryParams).forEach(function(k) {
+              if (this.queryParams[k]) {
+                params[k] = this.queryParams[k];
+              }
+            }.bind(this));
+          }
+          params = Object.assign({}, params, this.getRequestPaginationParams());
+          return params;
         },
 
         _canViewReport: function(status) {
