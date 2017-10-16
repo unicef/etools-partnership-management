@@ -32,6 +32,7 @@
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="reports/intervention-reporting-requirements.html">
+<link rel="import" href="grouped-locations-dialog.html">
 
 <dom-module id="intervention-details">
 
@@ -258,9 +259,15 @@
           TODO [[intervention.clusterNames]]
         </etools-form-element-wrapper>
       </div>
-      <div class="row-h flex-c" hidden$="[[!intervention.locationNames.length]]">
+      <div class="row-h flex-c" >
+          <!-- hidden$="[[!intervention.locationNames.length]]" -->
         <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          TODO [[intervention.locationNames]] + see all btn
+          TODO [[intervention.locationNames]]
+          <paper-button class="secondary-btn"
+            on-tap="_openLocationsDialog"
+            title="See all locations">
+            + see all btn
+          </paper-button>
         </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
@@ -397,7 +404,15 @@
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
           '_contingencyPDChanged(intervention.contingency_pd)'
         ],
-
+        ready: function() {
+          this.locationsDialog = document.createElement('grouped-locations-dialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.locationsDialog);
+        },
+        detached: function() {
+          if (this.locationsDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.locationsDialog);
+          }
+        },
         attached: function() {
           /**
            * Disable loading message for details tab elements load,
@@ -415,6 +430,9 @@
             return false;
           }
           return true;
+        },
+        _openLocationsDialog: function() {
+          this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
