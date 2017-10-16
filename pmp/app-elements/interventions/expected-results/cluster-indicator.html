@@ -66,12 +66,11 @@
           <etools-single-selection-menu id$="clusterDropdw"
                                     label="Cluster"
                                     placeholder="&#8212;"
-                                    selected="{{clusterId}}"
+                                    selected-item="{{cluster}}"
                                     options="[[clusters]]"
                                     option-label="type"
                                     option-value="id"
-                                    error-message="Please select Cluster"
-                                    on-iron-select="_onClusterChange">
+                                    error-message="Please select Cluster">
           </etools-single-selection-menu>
         </div>
       </div>
@@ -169,9 +168,9 @@
             type: String,
             observer: '_responsePlanIdChanged'
           },
-          clusterId: {
+          cluster: {
             type: String,
-            observer: '_clusterIdChanged'
+            observer: '_clusterChanged'
           },
           prpClusterIndicators: {
             type: Array
@@ -197,7 +196,7 @@
         observers: [
           '_baselineChanged(indicator.baseline)',
           '_targetChanged(indicator.target)',
-          '_populatePrpClusterIndicators(responsePlanId, clusterId)'
+          '_populatePrpClusterIndicators(responsePlanId, cluster)'
         ],
         ready: function() {
           if (!this.currentUser.profile.country) {
@@ -211,7 +210,6 @@
           }).then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
-            console.log(error);
             self.fire('show-toast', {error: error.response});
           });
           //todo-remove
@@ -238,19 +236,13 @@
             return parseInt(r.id) === parseInt(selectedRespPlanId);
           })[0].clusters;
         },
-        _onClusterChange: function(event) {
-          console.log('onclusterchange');
-          if (!event.detail.item.item) {
+        _clusterChanged: function(cluster) {
+          if (!cluster) {
             return;
           }
-          this.indicator.cluster_name = event.detail.item.item.type;
-        },
-        _clusterIdChanged: function(clusterId) {
-          if (!clusterId) {
-            return;
-          }
-          console.log('Cluster id changed ', clusterId);
-          this._populatePrpClusterIndicators(clusterId);
+          console.log('Cluster changed ', cluster);
+          this._populatePrpClusterIndicators(cluster.id);
+          this.indicator.cluster_name = cluster.type;
           this.set('indicator.cluster_indicator_id', undefined);
         },
         _populatePrpClusterIndicators: function(clusterId) {
