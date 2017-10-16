@@ -1,0 +1,167 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
+
+<link rel="import"
+href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
+<dom-module id="grouped-locations-dialog">
+    <template>
+      <style>
+        [hidden] {
+          display: none !important;
+        }
+        etools-dialog {
+        --etools-dialog-scrollable: {
+            min-height: 300px;
+          }
+        }
+        .adminLevelLoc {
+          color: blue;
+        }
+        .left-padding {
+          padding-left: 16px;
+        }
+        .top-padding {
+          padding-top: 10px;
+        }
+      </style>
+      <etools-dialog id="groupedLocDialog" size="md" dialog-title="Locations PD/SSFA Covers">
+        <etools-single-selection-menu id="adminLevelsDropdw" label="Group Locations By"
+          selected="{{adminLevel}}"
+          placeholder="&#8212;"
+          options="[[adminLevels]]"
+          option-label="name"
+          option-value="name">
+        </etools-single-selection-menu>
+        <div hidden="[[adminLevel]]">
+          <template is="dom-repeat" items="[[interventionLocations]]">
+              <div class="top-padding">- [[item.name]]</d>
+          </template>
+        </div>
+        <div hidden="[[!adminLevel]]">
+          <template is="dom-repeat" items="[[groupedLocations]]">
+            <div class="adminLevelLoc">[[item.adminLevelLocation.name]]</div>
+            <div class="left-padding">
+                <template is="dom-repeat" items="[[item.subordinateLocations]]" as="subordinateLoc">
+                   <div class="top-padding"> - [[subordinateLoc.name]]</div>
+                </template>
+            </div>
+          </template>
+        </div>
+      </etools-dialog>
+    </template>
+  </dom-module>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'grouped-locations-dialog',
+        behaviors: [
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+        ],
+        properties: {
+          adminLevels: {//location types
+            type: Array,
+            //statePath: 'adminLevels'
+            value: [{name:'Country'},{name:'District'}, {name:'Governorate'}, {name:'Localities'},{name:'Sub-districts'}]
+          },
+          adminLevel: {
+            type: String,
+            observer: 'adminLevelChanged'
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          interventionLocations: {
+            type: Array,
+            value: [
+            {id:"2027", name:"Abu Alandah [Localities - JOR005004001002]", parent: '1468'},
+            {id:"2270", name: "3nbah [Localities - JOR007003001012]", parent: '1464'},
+            {id:"2646", name: "Ad Dabbusah [Localities - JOR010002001035]", parent: '1471'},
+            {id:"1296", name: "Aghwar Janoobiyah [District - JOR004001]", parent: '1281'},
+            {id:"2243", name: "Abu Al Qayn [Localities - JOR007002001030]", parent: '1508'},
+            {id:"1907", name: "Abu Ash Shahm [Localities - JOR004007001010]", parent: '1448'}]
+          },
+
+          groupedLocations: {
+            type: Array
+           // value: [ {adminLevelLocation: '', subordinateLocations: [{id:'', name:''}] }]
+          }
+
+        },
+
+        adminLevelChanged: function(adminLevel) {
+          let groupedLocations = [];
+
+          let i;
+
+          for (i = 0; i < this.interventionLocations.length; i++) {
+
+            let grouping = {
+              adminLevelLocation: null,
+              subordinateLocations: []
+            };
+            if (this.interventionLocations[i].location_type === adminLevel) {
+              grouping.adminLevelLocation = this.interventionLocations[i];
+              groupedLocations.push(grouping);
+              continue;
+            }
+            //TODO handle case when selected admin level is lower than the selected location type
+            //............
+
+            //find admin level parent
+            let adminLevelLocation = this._findAdminLevelParent(this.interventionLocations[i], adminLevel);
+
+            //parentLocation is already a parent to another intervention location and it's already in the groupedLocations array
+            let existingGroup = this._findInGroupedLocations(adminLevelLocation)
+            if (!existingGroup) {
+              groupedLocations.push({
+                adminLevelLocation: adminLevelLocation,
+                subordinateLocations: [this.interventionLocations[i]]
+              });
+            } else {
+              existingGroup.subordinateLocations.push(this.interventionLocations[i]);
+            }
+          }
+          this.groupedLocations = [];
+          this.groupedLocations = groupedLocations;
+        },
+        _findInGroupedLocations: function(groupedLocations, adminLevelLocation) {
+          if (!groupedLocations || !groupedLocations.length) {
+            return null;
+          }
+          let existingGroups = groupedLocations.filter(function(g) {
+            return parseInt(g.adminLevelLocation.id) === parseInt(adminLevelLocation.id);
+          });
+
+          if (!existingGroups || !existingGroups.length) {
+            return null;
+          }
+          return existingGroups[0];
+        },
+        _findAdminLevelParent: function(location, adminLevel) {
+          if (!location.parent) {
+            return 'No can do , location has no parents';
+          }
+          let parentArr = this.locations.filter(function(loc) {
+            return parseInt(loc.id) === parseInt(location.parent);
+          });
+          if (!parentArr || !parentArr.length) {
+            return 'No parent found';
+          }
+          if (parentArr[0].location_type === adminLevel) {
+            return parentArr[0];
+          }
+          return this._findAdminLevelParent(parentArr[0], adminLevel);
+        },
+
+        open: function() {
+          this.$.groupedLocDialog.opened = true;
+        },
+      });
+  })();
+</script>
