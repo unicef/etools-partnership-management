@@ -31,7 +31,7 @@
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
-<link rel="import" href="reports/intervention-reporting-requirements.html">
+<link rel="import" href="reports/reporting-requirements.html">
 
 <dom-module id="intervention-details">
 
@@ -49,9 +49,9 @@
       }
 
       .expiry-warning {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
         padding-bottom: 12px;
         color: var(--error-color);
       }
@@ -61,7 +61,7 @@
 
       etools-info-tooltip {
         --etools-tooltip-trigger-icon: {
-          @apply(--pmp-form-field-frs-inconsistency-icon);
+          @apply --pmp-form-field-frs-inconsistency-icon;
         };
       }
 
@@ -292,7 +292,7 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <intervention-reporting-requirements intervention-id="[[intervention.id]]" class="content-section"></intervention-reporting-requirements>
+    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section"></intervention-reporting-requirements>
 
   </template>
 

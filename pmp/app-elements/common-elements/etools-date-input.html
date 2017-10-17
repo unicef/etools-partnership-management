@@ -156,7 +156,7 @@
           return valid;
         },
 
-        makeValid: function() {
+        resetInvalidState: function() {
           this.set('invalid', false);
           // because `invalid` has one-way binding, the paper-input doesn't always follow the invalid flag
           // so to make sure, we have to set it manually

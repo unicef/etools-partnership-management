@@ -9,25 +9,18 @@
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../intervention-data/reporting-requirements-data.html">
-<link rel="import" href="../intervention-data/reporting-requirement-item-data.html">
 <link rel="import" href="reporting-requirements-dialog.html">
 <link rel="import" href="reporting-requirements-actions.html">
 
-<dom-module id="intervention-reporting-requirements">
+<dom-module id="reporting-requirements">
 
   <template strip-whitespace>
 
     <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply --layout-flex;
-      }
-      etools-data-table-header {
-        --header-title: {
-          display: none;
-        };
-        --data-table-header: {
-          height: 56px;
+        --list-row-no-collapse: {
+          padding-right: 16px;
         };
       }
       .list-container {
@@ -48,7 +41,7 @@
       </div>
 
       <div class="list-container">
-        <etools-data-table-header id="listHeader" no-collapse>
+        <etools-data-table-header id="listHeader" no-collapse no-title>
           <etools-data-table-column class="col-3">
             Reporting Period Start Date
           </etools-data-table-column>
@@ -89,7 +82,7 @@
       'use strict';
 
       Polymer({
-        is: 'intervention-reporting-requirements',
+        is: 'reporting-requirements',
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
@@ -118,7 +111,7 @@
           },
           ajaxLoadingMsgSource: {
             type: String,
-            value: 'intervention-reporting-requirements'
+            value: 'reporting-requirements'
           },
           // remove this and errors show up as toast messages
           errorEventName: {
@@ -138,10 +131,8 @@
         },
 
         detached: function() {
-          if (this.requirementsDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.requirementsDialog);
-          }
           this.removeDialog(this.deleteDialog);
+          this.removeDialog(this.requirementsDialog);
         },
 
         _createRequirementsDialog: function() {
@@ -294,7 +285,7 @@
             this.sendRequest({method:'GET', endpoint: endpoint})
               .then(function(response) {
                 self.set('reportingRequirements', response);
-              });;
+              });
           }
         },
       });

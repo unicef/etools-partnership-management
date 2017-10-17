@@ -123,7 +123,7 @@
         _resetValidations: function() {
           let self = this;
           this.fieldsToValidate.forEach(function(selector) {
-            self.$$(selector).makeValid();
+            self.$$(selector).resetInvalidState();
           });
         },
 
