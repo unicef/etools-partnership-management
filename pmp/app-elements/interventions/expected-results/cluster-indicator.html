@@ -210,7 +210,7 @@
           }).then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
-            self.fire('show-toast', {error: error.response});
+            self.fire('show-toast', {error: error});
           });
           //todo-remove
           this.responsePlans = this.responsePlansMockup;
@@ -259,7 +259,7 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error.response});
+            self.fire('show-toast', {error: error});
           });
          //todo-remove
           this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
@@ -283,7 +283,7 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error.response});
+            self.fire('show-toast', {error: error});
           });
         },
         _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
