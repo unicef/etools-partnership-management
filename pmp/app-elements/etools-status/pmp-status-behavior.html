@@ -98,7 +98,8 @@
 
     _isStatusHorizontal: function() {
       // the styling to make it horizontal at this resolution is in page-layout-styles
-      return window.innerWidth <= 1366;
+      // HD res: 1360/1366 x 768
+      return window.innerWidth < 1360;
     },
 
     _setNotStickyStyles: function() {

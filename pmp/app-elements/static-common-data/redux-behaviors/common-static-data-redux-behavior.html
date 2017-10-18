@@ -5,7 +5,7 @@
   var Redux = Redux || {};
   var PolymerRedux = PolymerRedux || {};
 
-  var initialDropdownPmpData = {
+  let initialDropdownPmpData = {
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -33,10 +33,24 @@
     csoPartners: [],
     countryData: {},
     disaggregations: [],
-    currentUser: {}
+    currentUser: {},
+    reportStatuses: [
+      {value: 'Met', label: 'Met'},
+      {value: 'OnT', label: 'On Track'},
+      {value: 'NoP', label: 'No Progress'},
+      {value: 'Con', label: 'Constrained'},
+      {value: 'Acc', label: 'Accepted'},
+      {value: 'Sub', label: 'Submitted'},
+      {value: 'Sen', label: 'Sent Back'},
+      {value: 'Due', label: 'Due'},
+      {value: 'Pla', label: 'Planned'},
+      {value: 'Ong', label: 'Ongoing'},
+      {value: 'Rej', label: 'Rejected'},
+      {value: 'Ove', label: 'Overdue'}
+    ]
   };
 
-  var commonStaticDataStore = Redux.createStore(function(state, action) {
+  let commonStaticDataStore = Redux.createStore(function(state, action) {
     if (!state) {
       return initialDropdownPmpData;
     }

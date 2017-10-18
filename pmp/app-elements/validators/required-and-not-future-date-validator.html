@@ -43,7 +43,7 @@
       }
       // date ca not be in the future
       this._setNoFutureDateErrorMessageErrorMessage();
-      return (!this.required && dateValueStr === '') ||  d <= Date.now();
+      return (!this.required && !dateValueStr) ||  d <= Date.now();
     },
 
     _setRequiredErrorMessage: function() {
