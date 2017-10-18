@@ -120,7 +120,6 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
             type: String,
             value: null
           }
-
         },
         adminLevelsChanged: function(adminLevels) {
           if (!adminLevels || !adminLevels.length) {
@@ -144,6 +143,9 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
             this.interventionLocations = [];
             return
           }
+          this._setInterventionLocationsDetails(locationIds);
+        },
+        _setInterventionLocationsDetails: function(locationIds) {
           locationIds = locationIds.map(function(loc) {
             return parseInt(loc);
           })
@@ -163,6 +165,7 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
             return;
           }
           let i;
+          // Build grouped locations structure
           for (i = 0; i < this.interventionLocations.length; i++) {
             let grouping = {
               adminLevelLocation: null,
@@ -174,13 +177,13 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
               continue;
             }
 
-            // find admin level parent
+            // Find admin level parent location
             let adminLevelLocation = this._findAdminLevelParent(this.interventionLocations[i], adminLevel);
             if (!adminLevelLocation) {
               locationsUnableToGroup.push(this.interventionLocations[i].name);
               continue;
             }
-            // check if parentLocation is already a parent to another intervention location
+            // Check if admin level parent Location is already a parent to another intervention location
             let existingGroup = this._findInGroupedLocations(adminLevelLocation)
             if (!existingGroup) {
               groupedLocations.push({
