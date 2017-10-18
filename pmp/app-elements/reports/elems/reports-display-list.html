@@ -233,6 +233,16 @@
           if (interventionId > 0) {
             params.programme_document = interventionId;
           }
+          params = Object.assign({}, params, this._preserveExistingQueryParams(), this.getRequestPaginationParams());
+          return params;
+        },
+
+        _canViewReport: function(status) {
+          return ['Acc', 'Sen', 'Sub'].indexOf(status) > -1;
+        },
+
+        _preserveExistingQueryParams: function() {
+          let params = {};
           if (!_.isEmpty(this.queryParams)) {
             Object.keys(this.queryParams).forEach(function(k) {
               if (this.queryParams[k]) {
@@ -240,12 +250,7 @@
               }
             }.bind(this));
           }
-          params = Object.assign({}, params, this.getRequestPaginationParams());
           return params;
-        },
-
-        _canViewReport: function(status) {
-          return ['Acc', 'Sen', 'Sub'].indexOf(status) > -1;
         }
 
       });
