@@ -158,27 +158,20 @@
           let newReq = event.detail;
           let self = this;
           if (!newReq.start_date || !newReq.end_date || !newReq.due_date) {
-
             this.fire('toast', {
               text: 'Can\'t save reporting requirement, please fill in all the dates and try again',
               showCloseBtn: true
             });
           }
 
-          self.fire('global-loading', {
-            message: 'Adding reporting requirement',
-            active: true,
-            loadingSource: self.ajaxLoadingMsgSource
-          });
+          this.requirementsDialog.startSpinner();
+
 
           if (!newReq.id) {
             this.addRequirement(newReq)
               .then(function() {
-                self.fire('global-loading', {
-                  active: false,
-                  loadingSource: self.ajaxLoadingMsgSource
-                });
                 self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
+                self.requirementsDialog.close();
               }).catch(function(error) {
                 self._handleErrorResponse(error);
               });
@@ -191,10 +184,7 @@
                   }
                 });
 
-                self.fire('global-loading', {
-                  active: false,
-                  loadingSource: self.ajaxLoadingMsgSource
-                });
+                self.requirementsDialog.close();
                 self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
               }).catch(function(error) {
                 self._handleErrorResponse(error);
@@ -250,6 +240,7 @@
             active: false,
             loadingSource: this.ajaxLoadingMsgSource
           });
+          this.requirementsDialog.stopSpinner();
           this.parseRequestErrorsAndShowAsToastMsgs(error);
         },
 

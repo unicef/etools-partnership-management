@@ -22,6 +22,7 @@
         size="md"
         no-padding
         keep-dialog-open
+        spinner-text="Saving reporting requirement..."
         ok-btn-text="Save"
         cancel-btn-text="Cancel"
         dialog-title="Add/Edit Reporting Requirements"
@@ -103,6 +104,19 @@
           }
         },
 
+        close: function() {
+          this.stopSpinner();
+          this.$.reportingRequirementsDialog.set('opened', false);
+        },
+
+        startSpinner: function() {
+          this.$.reportingRequirementsDialog.startSpinner();
+        },
+
+        stopSpinner: function() {
+          this.$.reportingRequirementsDialog.stopSpinner();
+        },
+
         _saveChanges: function(event) {
           let valid = true;
           let self = this;
@@ -116,7 +130,6 @@
           }
 
           this.fire('save-requirement', this.requirement);
-          this.$.reportingRequirementsDialog.set('opened', false);
           return true;
         },
 
