@@ -440,6 +440,8 @@
           return true;
         },
         _openLocationsDialog: function() {
+          this.locationsDialog.adminLevel = null;
+          this.locationsDialog.iterventionLocationIds = this.intervention.locations;
           this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {

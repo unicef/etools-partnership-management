@@ -55,8 +55,8 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
           option-value="name">
         </etools-single-selection-menu>
 
-        <div class="bordered-div" hidden$="[[!messages]]">
-          [[messages]]
+        <div class="bordered-div" hidden$="[[!message]]">
+          [[message]]
         </div>
 
         <div class="row-padding-v" hidden$="[[adminLevel]]">
@@ -93,6 +93,7 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
           adminLevels: {//location types
             type: Array,
             //statePath: 'adminLevels'
+            observer: 'adminLevelsChanged',
             value: [{name:'Country'},{name:'District'}, {name:'Governorate'}, {name:'Localities'},{name:'Sub-districts'}]
           },
           adminLevel: {
@@ -106,34 +107,63 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
           },
           interventionLocations: {
             type: Array,
-            value: [
-            {id:"2027", name:"Abu Alandah [Localities - JOR005004001002]", parent: '1468', location_type: 'Localities'},
-            {id:"2270", name: "3nbah [Localities - JOR007003001012]", parent: '1464', location_type: 'Localities'},
-            {id:"2646", name: "Ad Dabbusah [Localities - JOR010002001035]", parent: '1471', location_type: 'Localities'},
-            {id:"1296", name: "Aghwar Janoobiyah [District - JOR004001]", parent: '1281', location_type: 'District'},
-            {id:"2243", name: "Abu Al Qayn [Localities - JOR007002001030]", parent: '1508', location_type: 'Localities'},
-            {id:"1907", name: "Abu Ash Shahm [Localities - JOR004007001010]", parent: '1448', location_type: 'Localities'}]
           },
-
+          iterventionLocationIds: {
+            type: Array,
+            observer: 'iterventionLocationIdsChanged',
+            notify: true
+          },
           groupedLocations: {
             type: Array
-           // value: [ {adminLevelLocation: '', subordinateLocations: [{id:'', name:''}] }]
           },
-          messages: {
+          message: {
             type: String,
             value: null
           }
 
         },
+        adminLevelsChanged: function(adminLevels) {
+          if (!adminLevels || !adminLevels.length) {
+            return;
+          }
+          this._removeCountry(adminLevels);
+        },
+        _removeCountry: function(adminLevels) {
+          let index = adminLevels.findIndex(function(al) {
+            return al.name === 'Country';
+          });
+          if (index > -1) {
+            adminLevels.splice(index, 1);
+            let aux = JSON.parse(JSON.stringify(adminLevels));
+            this.adminLevels = [];
+            this.adminLevels = aux;
+          }
+        },
+        iterventionLocationIdsChanged: function(locationIds)  {
+          if (!locationIds || !locationIds.length || !this.locations) {
+            this.interventionLocations = [];
+            return
+          }
+          locationIds = locationIds.map(function(loc) {
+            return parseInt(loc);
+          })
+          let interventionLocations = this.locations.filter(function(loc) {
+            return locationIds.indexOf(parseInt(loc.id)) > -1;
+          });
 
+          this.interventionLocations = [];
+          this.interventionLocations = interventionLocations;
+        },
         adminLevelChanged: function(adminLevel) {
-          this.messages = '';
+          this.message = '';
           let groupedLocations = [];
           let locationsUnableToGroup = [];
+          if (!adminLevel) {
+            this.groupedLocations = null;
+            return;
+          }
           let i;
-
           for (i = 0; i < this.interventionLocations.length; i++) {
-
             let grouping = {
               adminLevelLocation: null,
               subordinateLocations: []
@@ -161,12 +191,14 @@ href="../../../bower_components/etools-searchable-multiselection-menu/etools-sin
               existingGroup.subordinateLocations.push(this.interventionLocations[i]);
             }
           }
+
           if (locationsUnableToGroup && locationsUnableToGroup.length) {
-            this.messages = 'Locations unable to group: ' + locationsUnableToGroup.join(', ');
+            this.message = 'Locations unable to group: ' + locationsUnableToGroup.join(', ');
           }
 
           this.groupedLocations = [];
           this.groupedLocations = groupedLocations;
+          this.$.groupedLocDialog.notifyResize();
         },
         _findInGroupedLocations: function(groupedLocations, adminLevelLocation) {
           if (!groupedLocations || !groupedLocations.length) {
