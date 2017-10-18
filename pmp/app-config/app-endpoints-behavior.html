@@ -170,7 +170,9 @@
     reports: {
       template: '/api/unicef/<%=countryId%>/progress-reports/'
     },
-    reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
+    reportDetails: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */

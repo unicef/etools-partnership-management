@@ -3,22 +3,26 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../common-elements/etools-error-messages-box.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="elems/report-status.html">
 
-<link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="elems/indicator-details.html">
+
+<!-- TODO: remove reports mockup data -->
+<link rel="import" href="elems/reports-list-data-mockup.html">
 
 <dom-module id="report-progress">
 
   <template>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles iron-flex iron-flex-factors">
+    <style include="page-common-styles grid-layout-styles shared-styles iron-flex iron-flex-factors">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -122,29 +126,36 @@
     </style>
 
       <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
-        <div class="row-h flex-c">
+        <div class="row-h">
           <div class="col col-5">
-            <paper-textarea label="Result Statement"
-                         value="Increased country capacity for evidence based policy dialogue and advanced something"
-                         placeholder="&#8212;"
-                         readonly></paper-textarea>
+            <etools-form-element-wrapper label="Result Statement">
+              <span class="placeholder" hidden>&#8212;</span>
+              <span>
+                Some Result Statement text...
+              </span>
+            </etools-form-element-wrapper>
           </div>
           <div class="col col-2">
-            <paper-input value="On track" always-float-label label="Overall Status" readonly>
-                <iron-icon icon="av:fiber-manual-record" class="submitted" prefix></iron-icon>
-            </paper-input>
+            <etools-form-element-wrapper label="Overall Status">
+              <report-status status="[[report.review_overall_status]]"></report-status>
+            </etools-form-element-wrapper>
           </div>
           <div class="col col-5">
-            <paper-textarea label="Narative Assessment"
-                         value="ILorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alterum necessitatibus mel. Possit probatus expetenda, te alterum necessitatibus mel."
-                         placeholder="&#8212;"
-                         readonly></paper-textarea>
+            <etools-form-element-wrapper label="Narative Assessment">
+              <span class="placeholder" hidden>&#8212;</span>
+              <span>
+                ILorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alterum necessitatibus mel.
+                Possit probatus expetenda, te alterum necessitatibus mel.
+              </span>
+            </etools-form-element-wrapper>
           </div>
         </div>
+
+
         <template is="dom-repeat" items="[[dummyArr]]" as="item">
           <div class="indicator">
-            <div class="layout horizontal">
-              <div class$="indicator-toggle flex-none layout horizontal center-center [[_getIndicatorClass(index)]]"
+            <div class="layout-horizontal">
+              <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
                   on-tap="_toggle"
                   toggles$="[[index]]"
                   role="button"
@@ -216,6 +227,8 @@
         behaviors: [
         ],
         properties: {
+          report: Object,
+
           expanded: {
             type: Boolean,
             value: false
