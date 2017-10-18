@@ -16,6 +16,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
@@ -38,7 +39,7 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -267,7 +268,7 @@
           <paper-button class="secondary-btn"
             on-tap="_openLocationsDialog"
             title="See all locations">
-            + see all btn
+            + See all
           </paper-button>
         </etools-form-element-wrapper>
       </div>
