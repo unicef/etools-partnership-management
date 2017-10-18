@@ -129,6 +129,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </page-interventions>
         </template>
 
+        <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+          <page-reports id="reports" class="main-page"
+                              route="[[subroute]]"
+                              permissions="[[permissions]]">
+          </page-reports>
+        </template>
+
         <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
           <page-not-found class="main-page"></page-not-found>
         </template>

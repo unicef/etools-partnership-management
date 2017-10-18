@@ -22,7 +22,7 @@
       }
 
       :host([status-type="error"]) iron-icon {
-        color: var(--rejected-color);
+        color: var(--dark-error-color);
       }
 
       :host([status-type="neutral"]) iron-icon {
@@ -102,6 +102,7 @@
       },
 
       _computeLabel: function(status) {
+        // TODO: refactor status label get method to use redux store statuses
         switch (status) {
           case 1:
             return 'Nothing due';
