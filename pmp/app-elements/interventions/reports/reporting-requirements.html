@@ -6,7 +6,7 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="reporting-requirements-dialog.html">
@@ -42,13 +42,13 @@
 
       <div class="list-container">
         <etools-data-table-header id="listHeader" no-collapse no-title>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-4">
             Reporting Period Start Date
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-4">
             Reporting Period End Date
           </etools-data-table-column>
-          <etools-data-table-column class="col-5">
+          <etools-data-table-column class="col-3">
             Report Due Date
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -58,13 +58,13 @@
         <template is="dom-repeat" items="[[reportingRequirements]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
-              <span class="col-data col-3">
+              <span class="col-data col-4">
                 [[item.start_date]]
               </span>
-              <span class="col-data col-3">
+              <span class="col-data col-4">
                 [[item.end_date]]
               </span>
-              <span class="col-data col-5">
+              <span class="col-data col-3">
                 [[item.due_date]]
               </span>
               <span class="col-data col-1 actions-button-container">
@@ -87,7 +87,7 @@
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
           etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsPmpApp.Behaviors.AjaxServerErrors
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser
         ],
         properties: {
           reportingRequirements: Array,
@@ -250,7 +250,7 @@
             active: false,
             loadingSource: this.ajaxLoadingMsgSource
           });
-          this.handleErrorResponse(error);
+          this.parseRequestErrorsAndShowAsToastMsgs(error);
         },
 
         deleteRequirement: function(requirement) {
