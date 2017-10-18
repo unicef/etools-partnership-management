@@ -41,7 +41,10 @@
       </div>
 
       <div class="list-container">
-        <etools-data-table-header id="listHeader" no-collapse no-title>
+        <etools-data-table-header id="listHeader"
+                                  no-collapse
+                                  no-title
+                                  hidden$="[[!reportingRequirements.length]]">
           <etools-data-table-column class="col-4">
             Reporting Period Start Date
           </etools-data-table-column>
@@ -69,6 +72,15 @@
               </span>
               <span class="col-data col-1 actions-button-container">
                 <reporting-requirements-actions requirement="[[item]]"></reporting-requirements-actions>
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
+        <template is="dom-if" if="[[!reportingRequirements.length]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-12">
+                There are no reporting requirements.
               </span>
             </div>
           </etools-data-table-row>
@@ -113,11 +125,6 @@
             type: String,
             value: 'reporting-requirements'
           },
-          // remove this and errors show up as toast messages
-          errorEventName: {
-            type: String,
-            value: 'intervention-save-error'
-          }
         },
 
         listeners: {
