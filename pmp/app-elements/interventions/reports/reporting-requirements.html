@@ -170,7 +170,6 @@
           if (!newReq.id) {
             this.addRequirement(newReq)
               .then(function() {
-                self.fire('toast', {text: 'Reporting requirement successfully added', showCloseBtn: true});
                 self.requirementsDialog.close();
               }).catch(function(error) {
                 self._handleErrorResponse(error);
