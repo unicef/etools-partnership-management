@@ -7,12 +7,15 @@
     properties: {
       paginator: {
         type: Object,
-        value: {
-          page: 1,
-          page_size: 10,
-          count: 0,
-          visible_range: []
-        }
+        value: function() {
+          return {
+            page: 1,
+            page_size: 10,
+            count: 0,
+            visible_range: []
+          };
+        },
+        notify: true
       }
     },
 

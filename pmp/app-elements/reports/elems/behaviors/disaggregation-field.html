@@ -1,0 +1,19 @@
+<script>
+  (function () {
+    'use strict';
+
+    window.App = App || {};
+    window.App.Behaviors = App.Behaviors || {};
+
+    window.App.Behaviors.DisaggregationFieldBehavior = {
+      _toNumericValues: function (obj) {
+        return Object.keys(obj).reduce(function (prev, curr) {
+          prev[curr] = Number(obj[curr]);
+
+          return prev;
+        }, {});
+      },
+    };
+
+}());
+</script>
