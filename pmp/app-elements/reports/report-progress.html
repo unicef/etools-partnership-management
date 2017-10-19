@@ -1,10 +1,5 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
@@ -12,24 +7,19 @@
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="elems/report-status.html">
 <link rel="import" href="elems/indicator-report-target.html">
+<link rel="import" href="elems/indicator-details.html">
 
 <link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="elems/indicator-details.html">
 
 <!-- TODO: remove reports mockup data -->
 <link rel="import" href="elems/reports-list-data-mockup.html">
 
 <dom-module id="report-progress">
 
-  <template>
+  <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles">
-      :host {
-
-      }
-
+    <style include="page-common-styles grid-layout-styles">
       .indicator + .indicator {
         border-top: 1px solid var(--primary-background-color);
       }
@@ -72,129 +62,85 @@
       .indicator-header-title h3 {
         margin: 0;
       }
-
-
-
-      .rejected {
-        color: var(--dark-error-color) !important;
-      }
-      .submitted {
-        color: var(--success-color) !important;
-      }
-      .accepted {
-        color: var(--primary-color) !important;
-      }
-
-      paper-input {
-        width: 100%;
-      }
-
-
-
-      .header {
-        padding: 25px;
-      }
-
-      .header labelled-item {
-        font-size: 16px;
-      }
-
-      .header labelled-item:not(:last-child) {
-        margin-bottom: 25px;
-      }
-
-
-
-
-      .indicator-header__target dl {
-        margin: 0;
-        text-align: right;
-        font-size: 11px;
-      }
-
-      .indicator-header__target dt {
-        color: var(--secondary-text-color, grey);
-      }
-
-      .indicator-header__target dd {
-        margin: 0;
-        font-weight: bold;
-      }
-
-      paper-radio-group {
-        margin-left: -12px;
-      }
     </style>
 
-      <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
-        <div class="row-h">
-          <div class="col col-5">
-            <etools-form-element-wrapper label="Result Statement">
-              <span class="placeholder" hidden>&#8212;</span>
-              <span>
+    <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
+
+      <div class="row-h" hidden$="[[report]]">
+        <p>There is no progress data to display.</p>
+      </div>
+
+      <div class="row-h" hidden$="[[!report]]">
+        <div class="col col-5">
+          <etools-form-element-wrapper label="Result Statement">
+            <span class="placeholder" hidden>&#8212;</span>
+            <span>
+                <!-- TODO: What field shoul I bind here? -->
                 What's the PRP API response property to use here?
               </span>
-            </etools-form-element-wrapper>
-          </div>
-          <div class="col col-2">
-            <etools-form-element-wrapper label="Overall Status">
-              <report-status status="[[report.review_overall_status]]"></report-status>
-            </etools-form-element-wrapper>
-          </div>
-          <div class="col col-5">
-            <etools-form-element-wrapper label="Narative Assessment">
-              <span class="placeholder" hidden>&#8212;</span>
-              <span>
-                What's the PRP API response property to use here?
-              </span>
-            </etools-form-element-wrapper>
-          </div>
+          </etools-form-element-wrapper>
         </div>
+        <div class="col col-2">
+          <etools-form-element-wrapper label="Overall Status">
+            <!-- TODO: What field shoul I bind here? -->
+            <report-status status="[[report.review_overall_status]]"></report-status>
+          </etools-form-element-wrapper>
+        </div>
+        <div class="col col-5">
+          <etools-form-element-wrapper label="Narative Assessment">
+            <span class="placeholder" hidden>&#8212;</span>
+            <span>
+                <!-- TODO: What field shoul I bind here? -->
+                What's the PRP API response property to use here?
+              </span>
+          </etools-form-element-wrapper>
+        </div>
+      </div>
 
 
-        <template is="dom-repeat" items="[[dummyArr]]" as="item">
-          <div class="indicator">
-            <div class="layout-horizontal">
-              <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
-                  aria-expanded$="[[item.expanded]]"
-                  aria-controls$="collapse-[[index]]"
-                  tabindex="-1">
-                <paper-icon-button on-tap="_toggle"
-                                   toggles$="[[index]]"
-                                   icon$="[[_computeIcon(item.expanded)]]">
-                </paper-icon-button>
-              </div>
-
-              <div class="indicator-header layout-horizontal flex-c">
-                <div class="col col-8 indicator-header-title">
-                  <h3># or % + Indicator Name</h3>
-                </div>
-                <div class="col col-4 indicator-header-target">
-                  <indicator-report-target target="123"
-                                           cumulative-progress="64356"
-                                           achivement="5645645"></indicator-report-target>
-                </div>
-              </div>
+      <template is="dom-repeat" items="[[dummyArr]]" as="item">
+        <div class="indicator">
+          <div class="layout-horizontal">
+            <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
+                 aria-expanded$="[[item.expanded]]"
+                 aria-controls$="collapse-[[index]]"
+                 tabindex="-1">
+              <paper-icon-button on-tap="_toggle"
+                                 toggles$="[[index]]"
+                                 icon$="[[_computeIcon(item.expanded)]]">
+              </paper-icon-button>
             </div>
 
-            <iron-collapse
-                id="collapse-[[index]]"
-                opened="{{item.expanded}}"
-                no-animation>
-                <!--on-opened-changed="_handleOpenedChanged"-->
-              <indicator-details
-                  id="indicatorDetails"
-                  reportable-id="[[index]]"
-                  indicator-name="Indicator-name"
-                  indicator-id="1"
-                  reporting-period="yesterday - the day after tomorrow"
-                  override-mode="view"
-                  disaggregations="[[disaggregations]]">
-              </indicator-details>
-            </iron-collapse>
+            <div class="indicator-header layout-horizontal flex-c">
+              <div class="col col-8 indicator-header-title">
+                <h3># or % + Indicator Name</h3>
+              </div>
+              <div class="col col-4 indicator-header-target">
+                <indicator-report-target target="123"
+                                         cumulative-progress="64356"
+                                         achivement="5645645"
+                                         bold></indicator-report-target>
+              </div>
+            </div>
           </div>
-        </template>
-      </etools-content-panel>
+
+          <iron-collapse
+              id="collapse-[[index]]"
+              opened="{{item.expanded}}">
+            <!--on-opened-changed="_handleOpenedChanged"-->
+            <indicator-details
+                id="indicatorDetails"
+                reportable-id="[[index]]"
+                indicator-name="Indicator-name"
+                indicator-id="1"
+                reporting-period="yesterday - the day after tomorrow"
+                override-mode="view"
+                disaggregations="[[disaggregations]]">
+            </indicator-details>
+          </iron-collapse>
+        </div>
+      </template>
+    </etools-content-panel>
 
   </template>
 
@@ -204,8 +150,7 @@
 
       Polymer({
         is: 'report-progress',
-        behaviors: [
-        ],
+        behaviors: [],
         properties: {
           report: Object,
 
@@ -249,163 +194,163 @@
           this.$$('#collapse-' + e.model.index).toggle();
         },
         _getIndicatorClass: function(index) {
-          return (index % 2)? 'odd' : 'even';
+          return (index % 2) ? 'odd' : 'even';
         },
         _setMockData: function() {
           this.disaggregations = {
-              "id": 2560,
-              "title": "ratio_indicator_report_19",
-              "indicator_location_data": [{
-                  "id": 16844,
-                  "indicator_report": 2560,
-                  "location": {
-                    "id": 1,
-                    "title": "location_0",
-                    "latitude": null,
-                    "longitude": null,
-                    "p_code": null
-                  },
-                  "display_type": "percentage",
-                  "disaggregation": {
-                    "()": {
-                      "c": 0.11339062933185473,
-                      "d": 3607,
-                      "v": 409
-                    }
-                  },
-                  "num_disaggregation": 1,
-                  "level_reported": 0,
-                  "disaggregation_reported_on": [],
-                  "location_progress": {
-                    "c": 0.11339062933185473,
-                    "d": 3607,
-                    "v": 409
-                  },
-                  "previous_location_progress": {
-                    "c": 0,
-                    "d": 0,
-                    "v": 0
-                  },
-                  "is_complete": true
-                }, {
-                  "id": 16845,
-                  "indicator_report": 2560,
-                  "location": {
-                    "id": 2,
-                    "title": "location_1",
-                    "latitude": null,
-                    "longitude": null,
-                    "p_code": null
-                  },
-                  "display_type": "percentage",
-                  "disaggregation": {
-                    "(16614,)": {
-                      "c": 0.21887461231723526,
-                      "d": 2257,
-                      "v": 494
-                    },
-                    "(16613,)": {
-                      "c": 0.03417343015805212,
-                      "d": 2341,
-                      "v": 80
-                    },
-                    "(16612,)": {
-                      "c": 0.021045485403937542,
-                      "d": 2946,
-                      "v": 62
-                    },
-                    "()": {
-                      "c": 0.08430540827147402,
-                      "d": 7544,
-                      "v": 636
-                    }
-                  },
-                  "num_disaggregation": 1,
-                  "level_reported": 1,
-                  "disaggregation_reported_on": [3834],
-                  "location_progress": {
-                    "c": 0.08430540827147402,
-                    "d": 7544,
-                    "v": 636
-                  },
-                  "previous_location_progress": {
-                    "c": 0,
-                    "d": 0,
-                    "v": 0
-                  },
-                  "is_complete": true
-                }],
-              "time_period_start": "2017-01-31",
-              "time_period_end": "2017-01-31",
+            "id": 2560,
+            "title": "ratio_indicator_report_19",
+            "indicator_location_data": [{
+              "id": 16844,
+              "indicator_report": 2560,
+              "location": {
+                "id": 1,
+                "title": "location_0",
+                "latitude": null,
+                "longitude": null,
+                "p_code": null
+              },
               "display_type": "percentage",
+              "disaggregation": {
+                "()": {
+                  "c": 0.11339062933185473,
+                  "d": 3607,
+                  "v": 409
+                }
+              },
+              "num_disaggregation": 1,
+              "level_reported": 0,
+              "disaggregation_reported_on": [],
+              "location_progress": {
+                "c": 0.11339062933185473,
+                "d": 3607,
+                "v": 409
+              },
+              "previous_location_progress": {
+                "c": 0,
+                "d": 0,
+                "v": 0
+              },
+              "is_complete": true
+            }, {
+              "id": 16845,
+              "indicator_report": 2560,
+              "location": {
+                "id": 2,
+                "title": "location_1",
+                "latitude": null,
+                "longitude": null,
+                "p_code": null
+              },
+              "display_type": "percentage",
+              "disaggregation": {
+                "(16614,)": {
+                  "c": 0.21887461231723526,
+                  "d": 2257,
+                  "v": 494
+                },
+                "(16613,)": {
+                  "c": 0.03417343015805212,
+                  "d": 2341,
+                  "v": 80
+                },
+                "(16612,)": {
+                  "c": 0.021045485403937542,
+                  "d": 2946,
+                  "v": 62
+                },
+                "()": {
+                  "c": 0.08430540827147402,
+                  "d": 7544,
+                  "v": 636
+                }
+              },
+              "num_disaggregation": 1,
+              "level_reported": 1,
+              "disaggregation_reported_on": [3834],
+              "location_progress": {
+                "c": 0.08430540827147402,
+                "d": 7544,
+                "v": 636
+              },
+              "previous_location_progress": {
+                "c": 0,
+                "d": 0,
+                "v": 0
+              },
+              "is_complete": true
+            }],
+            "time_period_start": "2017-01-31",
+            "time_period_end": "2017-01-31",
+            "display_type": "percentage",
+            "total": {
+              "c": 0.09371356828983948,
+              "d": 11151,
+              "v": 1045
+            },
+            "remarks": null,
+            "report_status": "Sub",
+            "disagg_lookup_map": [{
+              "id": 3834,
+              "name": "gender",
+              "active": true,
+              "choices": [{
+                "id": 16614,
+                "value": "other",
+                "active": true
+              }, {
+                "id": 16613,
+                "value": "female",
+                "active": true
+              }, {
+                "id": 16612,
+                "value": "male",
+                "active": true
+              }]
+            }],
+            "disagg_choice_lookup_map": [
+              [
+                [16612, "male"],
+                [16613, "female"],
+                [16614, "other"]
+              ]
+            ]
+          };
+
+
+          this.data = {
+            "id": 2560,
+            "name": "ratio_indicator_19",
+            "llo_id": 40,
+            "status": {
+              "remarks": null,
+              "report_status": "Sub"
+            },
+            "overall_status": "Con",
+            "narrative_assessment": "",
+            "indicator_reports": [{
+              "id": 2560,
+              "indicator_name": "ratio_indicator_19",
+              "target": "5000",
+              "achieved": {
+                "c": 0.09371356828983948,
+                "d": 11151,
+                "v": 1045
+              },
               "total": {
                 "c": 0.09371356828983948,
                 "d": 11151,
                 "v": 1045
               },
-              "remarks": null,
-              "report_status": "Sub",
-              "disagg_lookup_map": [{
-                "id": 3834,
-                "name": "gender",
-                "active": true,
-                "choices": [{
-                  "id": 16614,
-                  "value": "other",
-                  "active": true
-                }, {
-                  "id": 16613,
-                  "value": "female",
-                  "active": true
-                }, {
-                  "id": 16612,
-                  "value": "male",
-                  "active": true
-                }]
-              }],
-              "disagg_choice_lookup_map": [
-                [
-                  [16612, "male"],
-                  [16613, "female"],
-                  [16614, "other"]
-                ]
-              ]
-            };
-
-
-            this.data = {
-                    "id": 2560,
-                    "name": "ratio_indicator_19",
-                    "llo_id": 40,
-                    "status": {
-                        "remarks": null,
-                        "report_status": "Sub"
-                    },
-                    "overall_status": "Con",
-                    "narrative_assessment": "",
-                    "indicator_reports": [{
-                        "id": 2560,
-                        "indicator_name": "ratio_indicator_19",
-                        "target": "5000",
-                        "achieved": {
-                            "c": 0.09371356828983948,
-                            "d": 11151,
-                            "v": 1045
-                        },
-                        "total": {
-                            "c": 0.09371356828983948,
-                            "d": 11151,
-                            "v": 1045
-                        },
-                        "report_status": "Sub"
-                    }],
-                    "display_type": "percentage",
-                    "total": {
-                        "c": 0.09371356828983948,
-                        "d": 11151,
-                        "v": 1045
-                    }
-                };
+              "report_status": "Sub"
+            }],
+            "display_type": "percentage",
+            "total": {
+              "c": 0.09371356828983948,
+              "d": 11151,
+              "v": 1045
+            }
+          };
         }
 
       });
