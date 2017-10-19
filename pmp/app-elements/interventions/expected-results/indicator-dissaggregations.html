@@ -120,7 +120,7 @@
           if (this._isAlreadySelected(selectedDisagreg)) {
             event.model.set('item', null);
             event.model.set('item', {id: null});
-            this.fire('show-toast', {error: 'Disaggregation already selected'});
+            this.fire('show-toast', {error: {response: 'Disaggregation already selected'}});
             return;
           }
           this._displayDisaggregationGroups(selectedDisagreg, index);

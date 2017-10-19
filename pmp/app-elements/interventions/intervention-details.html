@@ -16,6 +16,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
@@ -32,12 +33,13 @@
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
 <link rel="import" href="reports/intervention-reporting-requirements.html">
+<link rel="import" href="grouped-locations-dialog.html">
 
 <dom-module id="intervention-details">
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -72,6 +74,16 @@
       }
       div[no-left-padding] {
         padding-left: 0px !important;
+      }
+
+      .location-name {
+        padding-right: 15px;
+      }
+
+      .see-locations iron-icon {
+        margin-right: 0;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
       }
     </style>
 
@@ -255,12 +267,23 @@
       </div>
       <div class="row-h flex-c" hidden$="[[!intervention.clusterNames.length]]">
         <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-          TODO [[intervention.clusterNames]]
+          TODO [[intervention.cluster_names]]
         </etools-form-element-wrapper>
       </div>
-      <div class="row-h flex-c" hidden$="[[!intervention.locationNames.length]]">
+      <div class="row-h flex-c">
         <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          TODO [[intervention.locationNames]] + see all btn
+          <span class="placeholder" hidden$="[[_showLocations(intervention.location_names.length)]]">&#8212;</span>
+          <div class="layout-horizontal" hidden$="[[!_showLocations(intervention.location_names.length)]]">
+            <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
+              <span class="location-name">[[item]]</span>
+            </template>
+            <paper-button class="secondary-btn see-locations"
+                          on-tap="_openLocationsDialog"
+                          title="See all locations">
+              <iron-icon icon="add"></iron-icon>
+              See all
+            </paper-button>
+          </div>
         </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
@@ -398,7 +421,15 @@
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
           '_contingencyPDChanged(intervention.contingency_pd)'
         ],
-
+        ready: function() {
+          this.locationsDialog = document.createElement('grouped-locations-dialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.locationsDialog);
+        },
+        detached: function() {
+          if (this.locationsDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.locationsDialog);
+          }
+        },
         attached: function() {
           /**
            * Disable loading message for details tab elements load,
@@ -407,7 +438,13 @@
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
-         },
+        },
+        getFirst3Locations: function(locNames) {
+          if (!locNames || !locNames.length) {
+            return '';
+          }
+          return locNames.slice(0, Math.min(locNames.length, 3));
+        },
          _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
             return true;
@@ -416,6 +453,11 @@
             return false;
           }
           return true;
+        },
+        _openLocationsDialog: function() {
+          this.locationsDialog.adminLevel = null;
+          this.locationsDialog.iterventionLocationIds = this.intervention.locations;
+          this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
@@ -668,11 +710,14 @@
 
 
             })
-          })
+          });
+        },
+
+        _showLocations: function(locationsLength) {
+          return !!locationsLength;
         }
 
       });
-
     })();
   </script>
 
