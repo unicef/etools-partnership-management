@@ -52,15 +52,6 @@
           }
         },
 
-        actions: {
-          setCurrentUser: function(user) {
-            return {
-              type: 'SET_CURRENT_USER',
-              user: user
-            };
-          }
-        },
-
         ready: function() {
           let self = this;
           self.sendRequest({
