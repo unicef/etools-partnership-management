@@ -1,5 +1,7 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
@@ -9,6 +11,7 @@
 
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="elems/report-status.html">
+<link rel="import" href="elems/indicator-report-target.html">
 
 <link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -22,15 +25,56 @@
 
   <template>
 
-    <style include="page-common-styles grid-layout-styles shared-styles iron-flex iron-flex-factors">
+    <style include="page-common-styles grid-layout-styles shared-styles">
       :host {
-        @apply --layout-vertical;
-        width: 100%;
 
-        --etools-checkable-input-label: {
-          padding-bottom: 2px;
-        }
       }
+
+      .indicator + .indicator {
+        border-top: 1px solid var(--primary-background-color);
+      }
+
+      .indicator-toggle,
+      .indicator-header-title,
+      .indicator-header-target {
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+      }
+
+      .indicator-toggle {
+        position: relative;
+        z-index: 1;
+        color: white;
+        cursor: pointer;
+        padding: 0 4px;
+        border-right: 1px solid var(--primary-background-color);
+      }
+
+      .indicator-toggle paper-icon-button {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+      }
+
+      .indicator-toggle.odd {
+        background-color: var(--ternary-color);
+      }
+
+      .indicator-toggle.even {
+        background-color: var(--primary-color);
+      }
+
+      .indicator-header {
+        padding: 8px 24px 8px 16px;
+        background: var(--medium-theme-background-color);
+      }
+
+      .indicator-header-title h3 {
+        margin: 0;
+      }
+
+
+
       .rejected {
         color: var(--dark-error-color) !important;
       }
@@ -45,18 +89,7 @@
         width: 100%;
       }
 
-      :host {
-        display: block;
-        margin-bottom: 25px;
 
-        --ecp-content: {
-          padding: 0;
-        };
-
-        --paper-icon-button: {
-          color: var(--text-color, black);
-        };
-      }
 
       .header {
         padding: 25px;
@@ -70,40 +103,8 @@
         margin-bottom: 25px;
       }
 
-      .indicator {
-        margin-bottom: 1px;
-      }
-      .indicator:last-child {
-        margin-bottom: 25px;
-      }
-      .indicator-toggle {
-        width: 25px;
-        position: relative;
-        z-index: 1;
-        color: white;
-        cursor: pointer;
-      }
-      .indicator-toggle.odd {
-        background-color: green;
-      }
-      .indicator-toggle.even {
-        background-color: var(--primary-color);
-      }
 
-      .indicator-header {
-        padding: 6px 25px 6px 10px;
-        background: var(--paper-grey-300);
-      }
 
-      .indicator-header__title h3 {
-        margin: 0;
-        font-size: 14px;
-      }
-
-      .indicator-header__target {
-        width: 250px;
-        padding-left: 10px;
-      }
 
       .indicator-header__target dl {
         margin: 0;
@@ -131,7 +132,7 @@
             <etools-form-element-wrapper label="Result Statement">
               <span class="placeholder" hidden>&#8212;</span>
               <span>
-                Some Result Statement text...
+                What's the PRP API response property to use here?
               </span>
             </etools-form-element-wrapper>
           </div>
@@ -144,8 +145,7 @@
             <etools-form-element-wrapper label="Narative Assessment">
               <span class="placeholder" hidden>&#8212;</span>
               <span>
-                ILorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alterum necessitatibus mel.
-                Possit probatus expetenda, te alterum necessitatibus mel.
+                What's the PRP API response property to use here?
               </span>
             </etools-form-element-wrapper>
           </div>
@@ -156,43 +156,23 @@
           <div class="indicator">
             <div class="layout-horizontal">
               <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
-                  on-tap="_toggle"
-                  toggles$="[[index]]"
-                  role="button"
                   aria-expanded$="[[item.expanded]]"
                   aria-controls$="collapse-[[index]]"
                   tabindex="-1">
-                <iron-icon
-                    icon$="[[_computeIcon(item.expanded)]]">
-                </iron-icon>
+                <paper-icon-button on-tap="_toggle"
+                                   toggles$="[[index]]"
+                                   icon$="[[_computeIcon(item.expanded)]]">
+                </paper-icon-button>
               </div>
 
-              <div class="indicator-header flex layout horizontal">
-                <div class="indicator-header__title flex-3 layout vertical center-justified">
-                  <div class="layout horizontal">
-                    <div class="layout vertical center-justified">
-                      <report-status
-                          status="1"
-                          no-label>
-                      </report-status>
-                    </div>
-                    <h3>Indicator Name</h3>
-                  </div>
+              <div class="indicator-header layout-horizontal flex-c">
+                <div class="col col-8 indicator-header-title">
+                  <h3># or % + Indicator Name</h3>
                 </div>
-                <div class="indicator-header__target flex-none layout vertical center-justified">
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Target:</dt>
-                    <dd class="flex">..target</dd>
-                  </dl>
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Total cumulative progress:</dt>
-                      <dd class="flex"> 0.tcp</dd>
-
-                  </dl>
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Achievement in reporting period:</dt>
-                    <dd class="flex">0.arp</dd>
-                  </dl>
+                <div class="col col-4 indicator-header-target">
+                  <indicator-report-target target="123"
+                                           cumulative-progress="64356"
+                                           achivement="5645645"></indicator-report-target>
                 </div>
               </div>
             </div>
