@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
@@ -64,83 +65,88 @@
       }
     </style>
 
-    <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
-
-      <div class="row-h" hidden$="[[report]]">
-        <p>There is no progress data to display.</p>
+    <paper-material class="content-section" elevation="1" hidden$="[[!_noReportDataToShow(report)]]">
+      <div class="row-h">
+        <p>There is no report data to display.</p>
       </div>
+    </paper-material>
 
-      <div class="row-h" hidden$="[[!report]]">
-        <div class="col col-5">
-          <etools-form-element-wrapper label="Result Statement">
-            <span class="placeholder" hidden>&#8212;</span>
-            <span>
-                <!-- TODO: What field shoul I bind here? -->
+    <template is="dom-repeat" items="[[report.programme_document.cp_outputs]]">
+      <etools-content-panel class="content-section" panel-title="[[item.title]]">
+
+        <!--new element here to show panel top data-->
+        <div class="row-h">
+          <div class="col col-5">
+            <etools-form-element-wrapper label="Result Statement">
+              <span class="placeholder" hidden>&#8212;</span>
+              <span>
+                <!-- TODO: What field should I bind here? -->
                 What's the PRP API response property to use here?
               </span>
-          </etools-form-element-wrapper>
-        </div>
-        <div class="col col-2">
-          <etools-form-element-wrapper label="Overall Status">
-            <!-- TODO: What field shoul I bind here? -->
-            <report-status status="[[report.review_overall_status]]"></report-status>
-          </etools-form-element-wrapper>
-        </div>
-        <div class="col col-5">
-          <etools-form-element-wrapper label="Narative Assessment">
-            <span class="placeholder" hidden>&#8212;</span>
-            <span>
-                <!-- TODO: What field shoul I bind here? -->
-                What's the PRP API response property to use here?
-              </span>
-          </etools-form-element-wrapper>
-        </div>
-      </div>
-
-
-      <template is="dom-repeat" items="[[dummyArr]]" as="item">
-        <div class="indicator">
-          <div class="layout-horizontal">
-            <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
-                 aria-expanded$="[[item.expanded]]"
-                 aria-controls$="collapse-[[index]]"
-                 tabindex="-1">
-              <paper-icon-button on-tap="_toggle"
-                                 toggles$="[[index]]"
-                                 icon$="[[_computeIcon(item.expanded)]]">
-              </paper-icon-button>
-            </div>
-
-            <div class="indicator-header layout-horizontal flex-c">
-              <div class="col col-8 indicator-header-title">
-                <h3># or % + Indicator Name</h3>
-              </div>
-              <div class="col col-4 indicator-header-target">
-                <indicator-report-target target="123"
-                                         cumulative-progress="64356"
-                                         achivement="5645645"
-                                         bold></indicator-report-target>
-              </div>
-            </div>
+            </etools-form-element-wrapper>
           </div>
-
-          <iron-collapse
-              id="collapse-[[index]]"
-              opened="{{item.expanded}}">
-            <!--on-opened-changed="_handleOpenedChanged"-->
-            <indicator-details
-                id="indicatorDetails"
-                reportable-id="[[index]]"
-                indicator-name="Indicator-name"
-                indicator-id="1"
-                reporting-period="yesterday - the day after tomorrow"
-                override-mode="view"
-                disaggregations="[[disaggregations]]">
-            </indicator-details>
-          </iron-collapse>
+          <div class="col col-2">
+            <etools-form-element-wrapper label="Overall Status">
+              <!-- TODO: What field should I bind here? -->
+              <report-status status="[[report.review_overall_status]]"></report-status>
+            </etools-form-element-wrapper>
+          </div>
+          <div class="col col-5">
+            <etools-form-element-wrapper label="Narative Assessment">
+              <span class="placeholder" hidden>&#8212;</span>
+              <span>
+                <!-- TODO: What field should I bind here? -->
+                What's the PRP API response property to use here?
+              </span>
+            </etools-form-element-wrapper>
+          </div>
         </div>
-      </template>
-    </etools-content-panel>
+
+
+        <template is="dom-repeat" items="[[dummyArr]]" as="item">
+          <div class="indicator">
+            <div class="layout-horizontal">
+              <div class$="indicator-toggle [[_getIndicatorClass(index)]]"
+                   aria-expanded$="[[item.expanded]]"
+                   aria-controls$="collapse-[[index]]"
+                   tabindex="-1">
+                <paper-icon-button on-tap="_toggle"
+                                   toggles$="[[index]]"
+                                   icon$="[[_computeIcon(item.expanded)]]">
+                </paper-icon-button>
+              </div>
+
+              <div class="indicator-header layout-horizontal flex-c">
+                <div class="col col-8 indicator-header-title">
+                  <h3># or % + Indicator Name</h3>
+                </div>
+                <div class="col col-4 indicator-header-target">
+                  <indicator-report-target target="123"
+                                           cumulative-progress="64356"
+                                           achivement="5645645"
+                                           bold></indicator-report-target>
+                </div>
+              </div>
+            </div>
+
+            <iron-collapse
+                id="collapse-[[index]]"
+                opened="{{item.expanded}}">
+              <!--on-opened-changed="_handleOpenedChanged"-->
+              <indicator-details
+                  id="indicatorDetails"
+                  reportable-id="[[index]]"
+                  indicator-name="Indicator-name"
+                  indicator-id="1"
+                  reporting-period="yesterday - the day after tomorrow"
+                  override-mode="view"
+                  disaggregations="[[disaggregations]]">
+              </indicator-details>
+            </iron-collapse>
+          </div>
+        </template>
+      </etools-content-panel>
+    </template>
 
   </template>
 
@@ -196,6 +202,12 @@
         _getIndicatorClass: function(index) {
           return (index % 2) ? 'odd' : 'even';
         },
+
+        _noReportDataToShow: function(report) {
+          return !!report && report.programme_document && _.isEmpty(report.programme_document.cp_outputs);
+        },
+
+
         _setMockData: function() {
           this.disaggregations = {
             "id": 2560,
