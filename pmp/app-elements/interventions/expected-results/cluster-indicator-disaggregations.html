@@ -36,7 +36,7 @@
             <div class="col col-8">
               <div class="layout-vertical">
                 <label class="paper-label">Disaggregation Groups</label>
-                <label class="input-label" empty$="[[!item.groups]]">[[_getGroupNames(item.groups)]]</label>
+                <label class="input-label" empty$="[[!item.choices]]">[[_getGroupNames(item.choices)]]</label>
               </div>
             </div>
         </div>
@@ -65,9 +65,13 @@
         },
         _getGroupNames: function(groups) {
           if (!groups) {
-            return;
+            return '';
           }
-          return groups.join(';');
+          let groupNames = '';
+          groups.forEach(function(g) {
+            groupNames += g.value + '; ';
+          });
+          return groupNames;
         }
       });
     })();

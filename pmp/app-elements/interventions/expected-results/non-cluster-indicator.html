@@ -207,20 +207,8 @@
           }
         },
         validate: function() {
-          let valid = true;
           let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
-          let i;
-          for (i = 0; i < elemIds.length; i++) {
-            let elem = this.$$('#' + elemIds[i]);
-            if (elem) {
-              if (!elem.validate()) {
-                valid = false;
-              }
-            } else {
-              this.logWarn('Elem ' + elemIds[i] + ' not found');
-            }
-          }
-          return valid;
+          return this.validateComponents(elemIds);
         },
         resetValidations: function() {
           let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
