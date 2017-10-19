@@ -26,8 +26,20 @@
         position: relative;
       }
       .actions-button-container {
-        color: var(--medium-icon-color);
+        color: var(--primary-text-color);
         flex-direction: row-reverse;
+      }
+      .actions-button-container paper-icon-button {
+        width: 35px;
+        height: 35px;
+        padding: 6px;
+        opacity: 0;
+      }
+      etools-data-table-row:hover .actions-button-container paper-icon-button {
+        opacity: 0.5;
+      }
+      etools-data-table-row .actions-button-container paper-icon-button:hover {
+        opacity: 1;
       }
     </style>
 
@@ -70,7 +82,14 @@
                 [[item.due_date]]
               </span>
               <span class="col-data col-1 actions-button-container">
-                <reporting-requirements-actions requirement="[[item]]"></reporting-requirements-actions>
+                <paper-icon-button icon="delete"
+                                   role="button"
+                                   on-tap="_handleRequirementDelete">
+                </paper-icon-button>
+                  <paper-icon-button icon="create"
+                                     role="button"
+                                     on-tap="_handleRequirementEdit">
+                  </paper-icon-button>
               </span>
             </div>
           </etools-data-table-row>
@@ -126,11 +145,6 @@
           },
         },
 
-        listeners: {
-          'requiremenet-edit': '_handleRequirementEdit',
-          'requiremenet-delete': '_handleRequirementDelete'
-        },
-
         ready: function() {
           this._createRequirementsDialog();
           this._createDeleteConfirmationDialog();
@@ -168,14 +182,13 @@
           this.requirementsDialog.open();
         },
 
-
         _handleRequirementEdit: function(event) {
-          this.requirementsDialog.requirement = event.detail;
+          this.requirementsDialog.requirement = event.model.item;
           this.requirementsDialog.open();
         },
 
         _handleRequirementDelete: function(event) {
-          this.deletedItem = event.detail;
+          this.deletedItem = event.model.item;
           this.deleteDialog.set('opened', true);
         },
 
