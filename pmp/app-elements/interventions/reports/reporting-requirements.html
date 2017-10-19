@@ -4,7 +4,6 @@
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
@@ -145,7 +144,15 @@
         _createRequirementsDialog: function() {
           this.requirementsDialog = document.createElement('reporting-requirements-dialog');
           this.requirementsDialog.setAttribute('id', 'requirementsDialog');
-          this.requirementsDialog.addEventListener('save-requirement', this.handleDialogConfirm.bind(this));
+          this.requirementsDialog.set('endpoints', this.endpoints);
+          this.requirementsDialog.set('toastEventSource', this);
+          this.requirementsDialog.set('interventionId', this.interventionId);
+
+          this.requirementsDialog.addEventListener('add-reporting-requirement',
+                                                   this.addReportingRequirement.bind(this));
+          this.requirementsDialog.addEventListener('update-reporting-requirement',
+                                                   this.updateReportingRequirement.bind(this));
+
           Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
         },
 
@@ -161,43 +168,6 @@
           this.requirementsDialog.open();
         },
 
-        handleDialogConfirm: function(event) {
-          let newReq = event.detail;
-          let self = this;
-          if (!newReq.start_date || !newReq.end_date || !newReq.due_date) {
-            this.fire('toast', {
-              text: 'Can\'t save reporting requirement, please fill in all the dates and try again',
-              showCloseBtn: true
-            });
-          }
-
-          this.requirementsDialog.startSpinner();
-
-
-          if (!newReq.id) {
-            this.addRequirement(newReq)
-              .then(function() {
-                self.requirementsDialog.close();
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
-          } else {
-            this.updateRequirement(newReq)
-              .then(function() {
-                self.reportingRequirements.forEach(function(elem, index) {
-                  if (elem.id === newReq.id) {
-                    self.set(['reportingRequirements', index], newReq);
-                  }
-                });
-
-                self.requirementsDialog.close();
-                self.fire('toast', {text: 'Reporting requirement successfully updated', showCloseBtn: true});
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
-
-          }
-        },
 
         _handleRequirementEdit: function(event) {
           this.requirementsDialog.requirement = event.detail;
@@ -246,7 +216,6 @@
             active: false,
             loadingSource: this.ajaxLoadingMsgSource
           });
-          this.requirementsDialog.stopSpinner();
           this.parseRequestErrorsAndShowAsToastMsgs(error);
         },
 
@@ -254,24 +223,6 @@
           let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
 
           return this.sendRequest({method: 'DELETE', endpoint: endpoint});
-        },
-
-        updateRequirement: function(requirement) {
-          let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
-
-          return this.sendRequest({method: 'PATCH', endpoint: endpoint, body: requirement});
-        },
-
-        addRequirement: function(requirement) {
-          let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: this.interventionId});
-          let self = this;
-
-          requirement.intervention = this.interventionId;
-
-          return this.sendRequest({method: 'POST', endpoint: endpoint, body: requirement})
-            .then(function(response) {
-              self.push('reportingRequirements', response);
-            });
         },
 
         _interventionIdChanged: function(newId) {
@@ -284,6 +235,19 @@
                 self.set('reportingRequirements', response);
               });
           }
+        },
+
+        addReportingRequirement: function(event) {
+          this.push('reportingRequirements', event.detail);
+        },
+
+        updateReportingRequirement: function(event) {
+          let self = this;
+          this.reportingRequirements.forEach(function(elem, index) {
+            if (elem.id === event.detail.id) {
+              self.set(['reportingRequirements', index], event.detail);
+            }
+          });
         },
       });
 

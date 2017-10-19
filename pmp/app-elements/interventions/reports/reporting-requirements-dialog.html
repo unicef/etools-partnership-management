@@ -7,6 +7,10 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../common-elements/etools-date-input.html">
 
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+
 <dom-module id="reporting-requirements-dialog">
   <template>
     <style include="shared-styles grid-layout-styles">
@@ -70,10 +74,22 @@
       Polymer({
         is: 'reporting-requirements-dialog',
         behaviors: [
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser
         ],
         properties: {
           requirement: {
             type: Object,
+          },
+          endpoints: {
+            type: Object,
+          },
+          toastEventSource: {
+            type: Object,
+          },
+          interventionId: {
+            type: Number,
           },
           startDateOpen: {
             type: Boolean,
@@ -120,6 +136,7 @@
         _saveChanges: function(event) {
           let valid = true;
           let self = this;
+          let newReq = this.requirement;
 
           this.fieldsToValidate.forEach(function(selector) {
             valid = self.$$(selector).validate() && valid;
@@ -129,10 +146,24 @@
             return false;
           }
 
-          this.fire('save-requirement', this.requirement);
-          return true;
-        },
+          this.startSpinner();
 
+          if (!newReq.id) {
+            this.addRequirement(newReq)
+              .then(function() {
+                self.close();
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
+          } else {
+            this.updateRequirement(newReq)
+              .then(function() {
+                self.close();
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
+          }
+        },
         _resetValidations: function() {
           let self = this;
           this.fieldsToValidate.forEach(function(selector) {
@@ -142,7 +173,34 @@
 
         _isDatePickerOpen: function(startDateOpen, endDateOpen, dueDateOpen) {
           return startDateOpen || endDateOpen || dueDateOpen;
-        }
+        },
+
+        updateRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
+          let self = this;
+
+          return this.sendRequest({method: 'PATCH', endpoint: endpoint, body: requirement})
+            .then(function(response) {
+              self.fire('update-reporting-requirement', response);
+            });
+        },
+
+        addRequirement: function(requirement) {
+          let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: this.interventionId});
+          let self = this;
+
+          requirement.intervention = this.interventionId;
+
+          return this.sendRequest({method: 'POST', endpoint: endpoint, body: requirement})
+            .then(function(response) {
+              self.fire('add-reporting-requirement', response);
+            });
+        },
+
+        _handleErrorResponse: function(error) {
+          this.stopSpinner();
+          this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
+        },
       });
     })();
   </script>
