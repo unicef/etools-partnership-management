@@ -270,7 +270,8 @@
                                      data-items="{{intervention.result_links}}"
                                      selected-cp-structure="[[intervention.country_programme]]"
                                      intervention-id="[[intervention.id]]"
-                                     edit-mode$="[[intervention.permissions.edit.result_links]]">
+                                     edit-mode$="[[intervention.permissions.edit.result_links]]"
+                                     on-indicators-changed="_updateInteventionLocAndClusters">
       </intervention-expected-results>
     </etools-content-panel>
 
@@ -647,6 +648,27 @@
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
+        },
+        _updateInteventionLocAndClusters: function() {
+          let locAndClusters = this._extractLocAndClustersFromIndicators();
+
+        },
+        _extractLocAndClustersFromIndicators: function() {
+          if (_.isEmpty(this.intervetion.result_links)) {
+            return;
+          }
+          this.intervetion.result_links.forEach(function(rl) {
+            if (_.isEmpty(rl.ll_results)) {
+              return;
+            }
+            rl.ll_results.forEach(function(llResult) {
+              if (_.isEmpty(llResult.appliedIndicators)) {
+                return;
+              }
+
+
+            })
+          })
         }
 
       });
