@@ -4,12 +4,14 @@
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="behaviors/indicators-common-behavior.html">
+<link rel="import" href="behaviors/indicators-mockups.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -53,9 +55,9 @@
           <etools-single-selection-menu id$="responsePlanDropdw"
                                     label="Response Plan"
                                     placeholder="&#8212;"
-                                    selected-values="{{responsePlanId}}"
+                                    selected="{{responsePlanId}}"
                                     options="[[responsePlans]]"
-                                    option-label="name"
+                                    option-label="title"
                                     option-value="id"
                                     error-message="Please select Response Plan">
           </etools-single-selection-menu>
@@ -64,23 +66,22 @@
           <etools-single-selection-menu id$="clusterDropdw"
                                     label="Cluster"
                                     placeholder="&#8212;"
-                                    selected-values="{{clusterId}}"
+                                    selected-item="{{cluster}}"
                                     options="[[clusters]]"
-                                    option-label="name"
+                                    option-label="type"
                                     option-value="id"
-                                    error-message="Please select Cluster"
-                                    on-iron-activate="_onClusterChange">
+                                    error-message="Please select Cluster">
           </etools-single-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-single-selection-menu id="clusterIndicatorEl"
+        <etools-single-selection-menu id="clusterIndicatorDropdw"
                                     label="Indicator"
                                     placeholder="&#8212;"
-                                    selected-values="{{indicator.cluster_indicator_id}}"
+                                    selected="{{indicator.cluster_indicator_id}}"
                                     selected-item="{{prpClusterIndicator}}"
                                     options="[[prpClusterIndicators]]"
-                                    option-label="name"
+                                    option-label="title"
                                     option-value="id"
                                     required
                                     auto-validate
@@ -99,9 +100,13 @@
         </div>
       </div>
       <div class="col col-3">
-         <paper-input label="Target"
+         <paper-input id="targetEl"
+                      label="Target"
                       value="{{indicator.target}}"
                       type="number"
+                      required
+                      auto-validate
+                      error-message="Please add a valid target"
                       placeholder="&#8212;">
           </paper-input>
       </div>
@@ -113,13 +118,15 @@
       </div>
     </div>
     <div class="row-h flex-c">
-      <etools-multi-selection-menu id$="locationsDropdw"
+      <etools-multi-selection-menu id="locationsDropdw"
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
                                    options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
+                                   required
+                                   auto-validate
                                    error-message="Please select locations">
       </etools-multi-selection-menu>
     </div>
@@ -137,7 +144,9 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.Endpoints
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.IndicatorsMockups
         ],
 
         properties: {
@@ -159,30 +168,16 @@
             type: String,
             observer: '_responsePlanIdChanged'
           },
-          clusterId: {
+          cluster: {
             type: String,
-            observer: '_clusterIdChanged'
+            observer: '_clusterChanged'
           },
           prpClusterIndicators: {
-            type: Array,
-            value: function() {
-              return [
-                {
-                  id: 1,
-                  name: 'Test PRP indicator',
-                  means_of_verification: 'means of verif 1',
-                  locationIds: [1524, 2412],
-                  disaggregations: [{
-                    id: 1,
-                    name: 'Age C',
-                    groups: ['1-20', '21-30']
-                  }]
-                }
-              ];
-            }
+            type: Array
           },
           responsePlans: {
             type: Array,
+
           },
           prpClusterIndicator: {
             type: Object,
@@ -191,51 +186,64 @@
           prpDisaggregations: {
             type: Array,
             notify: true
+          },
+          currentUser: {
+            type: Object,
+            statePath: 'currentUser',
           }
         },
 
         observers: [
           '_baselineChanged(indicator.baseline)',
           '_targetChanged(indicator.target)',
-          '_populatePrpClusterIndicators(responsePlanId, clusterId)'
+          '_populatePrpClusterIndicators(responsePlanId, cluster)'
         ],
+        ready: function() {
+          if (!this.currentUser.profile.country) {
+            this.logWarn('User.profile.country is empty');
+            return;
+          }
+          let self = this;
+          this.sendRequest({
+            method: 'GET',
+            endpoint: this.getEndpoint('getResponsePlans', {id: this.currentUser.profile.country})
+          }).then(function(response) {
+            self.responsePlans = response;
+          }).catch(function(error) {
+            self.fire('show-toast', {error: error});
+          });
+          //todo-remove
+          this.responsePlans = this.responsePlansMockup;
+        },
         indicatorChanged: function(indicator) {
           if (!indicator || !indicator.id) { // on new
             this.set('isNewIndicator', true);
           } else { // on edit
             this.set('isNewIndicator', false);
             this._getPrpClusterIndicator(indicator.cluster_indicator_id);
-
           }
         },
         _responsePlanIdChanged: function(responsePlanId) {
+          console.log('_responsePlanIdChanged', responsePlanId);
           this._populateClusters(responsePlanId);
         },
-        _populateClusters: function(responsePlanId) {
-          if (!responsePlanId) {
+        _populateClusters: function(selectedRespPlanId) {
+          if (!selectedRespPlanId) {
+            this.clusters = [];
             return;
           }
-          this.fire('start-spinner', {spinnerText: 'Loading PRP clusters..'});
-          let self = this;
-          this.sendRequest({
-            method: 'GET',
-            endpoint: this.getEndpoint('getPrpClusters', {id: responsePlanId})
-          }).then(function(response) {
-            self.clusters = response;
-            self.fire('stop-spinner');
-          }).catch(function(error) {
-            self.fire('stop-spinner');
-            self.fire('show-toast', {error: error.response});
-          });
+          this.clusters = this.responsePlans.filter(function(r){
+            return parseInt(r.id) === parseInt(selectedRespPlanId);
+          })[0].clusters;
         },
-        _onClusterChange: function(event) {
-          if (!event.detail.item.item) {
+        _clusterChanged: function(cluster) {
+          if (!cluster) {
             return;
           }
-          this.indicator.cluster_name = event.detail.item.item.name;
-        },
-        _clusterIdChanged: function(clusterId) {
-          this._populatePrpClusterIndicators(clusterId);
+          console.log('Cluster changed ', cluster);
+          this._populatePrpClusterIndicators(cluster.id);
+          this.indicator.cluster_name = cluster.type;
+          this.set('indicator.cluster_indicator_id', undefined);
         },
         _populatePrpClusterIndicators: function(clusterId) {
           if (!clusterId) {
@@ -247,12 +255,22 @@
             method: 'GET',
             endpoint: this.getEndpoint('getPrpClusterIndicators', {id: clusterId})
           }).then(function(response) {
-            self.prpClusterIndicators = response;
+            self.prpClusterIndicators = this._unnestIndicatorTitle(response.results);
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error.response});
+            self.fire('show-toast', {error: error});
           });
+         //todo-remove
+          this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
+        },
+        /* ESM dropdown can't process a nested property as option-label
+         and it was decided to not add that functionality to the dopdown yet */
+        _unnestIndicatorTitle: function(indicators) {
+          indicators.forEach(function(indic) {
+            indic.title = indic.blueprint.title;
+          });
+          return indicators;
         },
         _getPrpClusterIndicator: function(clusterIndicId) {
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
@@ -265,7 +283,7 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error.response});
+            self.fire('show-toast', {error: error});
           });
         },
         _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
@@ -275,19 +293,22 @@
           }
 
           this.set('indicator.cluster_indicator_title', prpClusterIndic.title);
-          if (this.isNewIndicator) {
-            this.set('indicator.locations', prpClusterIndic.locationIds);
-          }
           this.set('prpDisaggregations', prpClusterIndic.disaggregations);
         },
 
         validate: function() {
-          return this.$$('#clusterIndicatorEl').validate();
+          let elemIds = ['clusterIndicatorDropdw', 'locationsDropdw', 'targetEl'];
+          return this.validateComponents(elemIds);
+
         },
         resetValidations: function() {
-          this.$$('#clusterIndicatorEl').invalid = false;
+          this.$$('#clusterIndicatorDropdw').invalid = false;
+          this.$$('#locationsDropdw').invalid = false;
+          this.$$('#targetEl').invalid = false;
+
         }
     });
   })();
   </script>
 </dom-module>
+

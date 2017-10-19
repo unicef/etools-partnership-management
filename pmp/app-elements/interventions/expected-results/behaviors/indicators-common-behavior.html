@@ -35,5 +35,17 @@
       }
       return val;
     },
-    };
+    validateComponents: function(elemIds) {
+      let valid = true;
+      elemIds.forEach(function(elemId) {
+        let elem = this.$$('#' + elemId);
+        if (elem) {
+          valid = elem.validate() && valid;
+        } else {
+          this.logWarn('Elem ' + elemId + ' not found');
+        }
+      }, this);
+      return valid;
+    }
+  };
 </script>

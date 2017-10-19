@@ -169,7 +169,7 @@
               baseline: null,
               target: null,
               means_of_verification: null,
-              locations: [],
+              locations: undefined,
               disaggregation: []
             }
           },
@@ -282,6 +282,7 @@
           this._stopSpinner();
           this.disableConfirmBtn = false;
           this.resetFields();
+          this.resetValidations();
           //Anything else?
         },
         _stopSpinner: function(e) {
@@ -299,7 +300,7 @@
           this.$.indicatorDialog.startSpinner();
         },
         _showToast: function(e) {
-          this.showErrorAsToastMsg(e.detail.error, this.toastEventSource);
+          this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
         },
 
         resetValidations: function() {
