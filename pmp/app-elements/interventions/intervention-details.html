@@ -79,6 +79,12 @@
       .location-name {
         padding-right: 15px;
       }
+
+      .see-locations iron-icon {
+        margin-right: 0;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -271,7 +277,7 @@
             <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
               <span class="location-name">[[item]]</span>
             </template>
-            <paper-button class="secondary-btn"
+            <paper-button class="secondary-btn see-locations"
                           on-tap="_openLocationsDialog"
                           title="See all locations">
               <iron-icon icon="add"></iron-icon>
