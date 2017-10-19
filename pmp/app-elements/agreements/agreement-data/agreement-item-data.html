@@ -1,18 +1,13 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
+<link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
-<link rel="import" href="../../../app-config/etools-app-config.html">
+<link rel="import" href="../../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="agreement-item-data">
-
-  <template>
-    <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="dexie"
-                 on-success="_handleResponse"
-                 on-fail="handleErrorResponse"></etools-ajax>
-  </template>
 
   <script>
     (function() {
@@ -22,21 +17,25 @@
 
         is: 'agreement-item-data',
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AjaxServerErrorsBehavior
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsLogsBehavior,
+          EtoolsPmpApp.Behaviors.AjaxServerErrors,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
         properties: {
-
+          agreementEndpoints: {
+            type: Object,
+            value: {
+              DETAILS: 'agreementDetails',
+              CREATE: 'agreements'
+            }
+          },
           agreement: {
             type: Object,
             readOnly: true,
             notify: true
           },
-
-          endpoint: {
-            type: Object
-          },
-
           _partners: {
             type: Object
           },
@@ -46,97 +45,92 @@
             notify: true,
             observer: '_agreementIdChanged'
           },
-          withUpload: Boolean,
-          prepareMultipartData: Boolean,
 
           handleSuccResponseAdditionalCallback: Object,
-          ajaxEl: Object
+          /**
+           * ajaxLoadingMsgSource use is required for request errors handling in AjaxServerErrorsBehavior
+           */
+          ajaxLoadingMsgSource: {
+            type: String,
+            value: 'ag-data'
+          }
+        },
+        actions: {
+          addEditAgreement: function(agreement) {
+            return {
+              type: 'ADD_EDIT_AGREEMENT',
+              agreement: agreement
+            };
+          }
         },
 
-        attached: function() {
-          this.ajaxEl = this.$.ajax;
+        _triggerAgreementRequest: function(options) {
+          let self = this;
+          let ajaxMethod = options.method || 'GET';
+          this.sendRequest(options).then(function(resp) {
+            self._handleSuccResponse(resp, ajaxMethod);
+          }).catch(function(error) {
+            self.handleErrorResponse(error, ajaxMethod);
+          });
         },
 
         _agreementIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {message: 'Loading agreement data...', active: true});
-            this._prepareAndFireRequest();
-            this.set('endpoint', this.getEndpoint('agreementDetails', {id: newId}));
+            this.fire('global-loading', {
+              message: 'Loading agreement data...',
+              active: true,
+              loadingSource: this.ajaxLoadingMsgSource
+            });
+            this._triggerAgreementRequest({endpoint: this.getEndpoint(this.agreementEndpoints.DETAILS, {id: newId})});
           }
         },
-
         /**
          * Handle received data from request
          */
-        _handleResponse: function(response) {
-          this._setAgreement(response.detail);
+        _handleSuccResponse: function(response, ajaxMethod) {
+          this._setAgreement(response);
 
           // call additional callback, if any
           if (typeof this.handleSuccResponseAdditionalCallback === 'function') {
-            this.handleSuccResponseAdditionalCallback.bind(this, response.detail)();
+            this.handleSuccResponseAdditionalCallback.bind(this, response)();
             // reset callback
             this.set('handleSuccResponseAdditionalCallback', null);
           }
-          if (this.$.ajax.get('method') !== 'GET') {
-            var self = this;
+          if (ajaxMethod !== 'GET') {
+            this.dispatch('addEditAgreement', this._getMinimalAgreementData(response));
+
+            let self = this;
             // update the agreement list in dexieDB
-            etoolsAppConfig.db.table('agreements').put(response.detail).then(function() {
+            EtoolsPmpApp.DexieDb.table('agreements').put(response).then(function() {
               self.fire('reload-list');
             });
           }
-          this.fire('global-loading', {active: false});
+          this.fire('global-loading', {active: false, loadingSource: this.ajaxLoadingMsgSource});
         },
 
-        /**
-         * Set the method of the request and the body.
-         * Used for unsafe requests (PATCH/POST).
-         */
-        _prepareAndFireRequest: function(method, data, url, multipart, prepareMultipartData) {
-          if (!multipart) {
-            multipart = false;
-          }
-          if (!prepareMultipartData) {
-            prepareMultipartData = false;
-          }
-          if (!this.ajaxEl) {
-            this.ajaxEl = this.$.ajax;
-          }
-          this.ajaxEl.setContentType(null);
-          if (!method) {
-            method = 'GET';
-            // reset ajax for GET request
-            this.ajaxEl.set('params', null);
-            this.ajaxEl.set('body', null);
-            this.ajaxEl.set('url', null);
-            this.ajaxEl.set('multiPart', false);
-            this.ajaxEl.set('prepareMultipartData', false);
-          }
-          this.ajaxEl.set('method', method);
-          if (typeof data === 'object' && Object.keys(data).length > 0
-              && ['PATCH', 'POST'].indexOf(method) > -1) {
-            if (multipart) {
-              this.ajaxEl.set('multiPart', true);
+        _getMinimalAgreementData: function(detail) {
+          let minimalAgrData = {
+            agreement_number: '',
+            agreement_type: '',
+            end: null,
+            id: null,
+            partner: null,
+            partner_name: null,
+            signed_by: null,
+            signed_by_partner_date: null,
+            signed_by_unicef_date: null,
+            start: null,
+            status: ''
+          };
+          let propName;
+          for (propName in minimalAgrData) {
+            if (!detail.hasOwnProperty(propName)) {
+              this.logWarn('Mapping property not found');
             } else {
-              this.ajaxEl.set('multiPart', false);
-            }
-            if (prepareMultipartData) {
-              this.ajaxEl.set('prepareMultipartData', true);
-            } else {
-              this.ajaxEl.set('prepareMultipartData', false);
-            }
-            this.ajaxEl.set('body', data);
-            this.ajaxEl.set('url', url);
-          }
-          // after body is set the request is automatically triggered
-        },
-
-        _prepareEndpoint: function(agreementId) {
-          if (agreementId > 0) {
-            // check and prepare request URL
-            if (!this.endpoint || (this.endpoint && !this.endpoint.url)) {
-              this.set('endpoint', this.getEndpoint('agreementDetails', {id: agreementId}));
+              minimalAgrData[propName] = detail[propName];
             }
           }
+          return minimalAgrData;
         },
 
         /**
@@ -146,16 +140,26 @@
           if (!data.agreementId) {
             this.fire('toast', {text: 'Invalid agreement ID', showCloseBtn: true});
           } else {
-            if (['draft', 'cancelled', 'active', 'suspended', 'terminated'].indexOf(data.status) > -1) {
+            if (['signed', 'suspended', 'terminated'].indexOf(data.status) > -1) {
               // status change is allowed
               // set additional callback if any
               if (callback) {
                 this.set('handleResponseAdditionalCallback', callback);
               }
-              this._prepareEndpoint(data.agreementId);
-              this.fire('global-loading', {message: 'Changing agreement status...', active: true});
+              this.fire('global-loading', {
+                message: 'Changing agreement status...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
+              let endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: data.agreementId});
               // fire in the hole
-              this._prepareAndFireRequest('PATCH', {status: data.status}, this.endpoint.url);
+              this._triggerAgreementRequest({
+                method: 'PATCH',
+                endpoint: endpoint,
+                body: {
+                  status: data.status
+                }
+              });
             } else {
               this.fire('toast',
                   {text: 'Changing status to \'' + data.status + '\' is not allowed!', showCloseBtn: true});
@@ -167,8 +171,9 @@
           if (!Array.isArray(list) || (Array.isArray(list) && list.length === 0)) {
             return false;
           }
-          var hasF = false;
-          for (var i = 0; i < list.length; i++) {
+          let hasF = false;
+          let i;
+          for (i = 0; i < list.length; i++) {
             if (list[i][property] instanceof File) {
               hasF = true;
             } else {
@@ -185,17 +190,15 @@
           if (typeof agreement === 'object' && Object.keys(agreement).length === 0) {
             this.fire('toast', {text: 'Invalid agreement data!', showCloseBtn: true});
           } else {
-            var url = null;
-            var isNew = false;
+            let endpoint = null;
+            let isNew = false;
 
             if (agreement.id) {
               // prepare PATCH endpoint
-              this._prepareEndpoint(agreement.id);
-              url = this.endpoint.url;
+              endpoint = this.getEndpoint(this.agreementEndpoints.DETAILS, {id: agreement.id});
             } else {
               // new agreement, use POST method for the same endpoint
-              var agreementsEndpoint = this.getEndpoint('agreements');
-              url = agreementsEndpoint.url;
+              endpoint = this.getEndpoint(this.agreementEndpoints.CREATE);
               isNew = true;
             }
             // remove id from data
@@ -207,24 +210,26 @@
               if (succCallback) {
                 this.set('handleSuccResponseAdditionalCallback', succCallback);
               }
-              this.withUpload = false; // used to set multipart prop on etools-ajax
-              this.prepareMultipartData = false;
+              let withUpload = false; // used to set multipart prop on etools-ajax
               if (agreement.hasOwnProperty('attached_agreement')) {
                 if (agreement.attached_agreement instanceof File) {
-                  this.withUpload = true;
-                  this.prepareMultipartData = true;
+                  withUpload = true;
                 } else {
                   delete agreement.attached_agreement;
                 }
               }
               if (this._hasFiles(agreement.amendments, 'signed_amendment')) {
-                this.withUpload = true;
-                this.prepareMultipartData = true;
+                withUpload = true;
               }
-              this.fire('global-loading', {message: 'Saving agreement data...', active: true});
+              this.fire('global-loading', {
+                message: 'Saving agreement data...',
+                active: true,
+                loadingSource: this.ajaxLoadingMsgSource
+              });
               // fire in the hole
-              var action = (isNew) ? 'POST' : 'PATCH';
-              this._prepareAndFireRequest(action, agreement, url, this.withUpload, this.prepareMultipartData);
+              let method = (isNew) ? 'POST' : 'PATCH';
+              this._triggerAgreementRequest({method: method, endpoint: endpoint, body: agreement,
+                multiPart: withUpload, prepareMultipartData: withUpload});
             } else {
               this.fire('toast', {
                 text: 'There is nothing to save. No change detected on this agreement.',

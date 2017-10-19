@@ -1,42 +1,30 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../scripts/lodash/lodash.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-config/app-user-permissions-behavior.html">
 
-<link rel="import" href="../../app-behaviors/data-element-behavior.html">
+<link rel="import" href="../../app-behaviors/list-data-behavior.html">
 
 <dom-module id="user-data">
-
-  <template>
-
-    <etools-ajax id="ajax"
-                 endpoint="[[endpoint]]"
-                 caching-storage="custom"
-                 dexie-db-collection="user"
-                 on-success="_handleResponse"
-                 on-fail="_handleError"></etools-ajax>
-  </template>
-
   <script>
     (function() {
       'use strict';
 
       Polymer({
-
         is: 'user-data',
 
         behaviors: [
-          pmpBehaviors.DataElementBehavior,
-          etoolsAppConfig.globals
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior
         ],
 
         properties: {
           endpointName: {
             type: String,
             value: 'user'
-          },
-          endpoint: {
-            type: Object
           },
           user: {
             type: Object,
@@ -52,12 +40,22 @@
             readOnly: true,
             notify: true,
           }
-
         },
 
-        _handleResponse: function(res) {
-          // TODO: check response to make sure it contains a valid user
-          this._setUserData(res.detail);
+        ready: function() {
+          let self = this;
+          self.sendRequest({
+            endpoint: self.getEndpoint(self.endpointName)
+          }).then(function(res) {
+            // TODO: check response to make sure it contains a valid user
+            self._setUserData(res);
+          }).catch(function(error) {
+            self._resetUserAndPermissions();
+            self.logError('Error occurred on logged user data request', 'user request', error);
+            if (error.status === 403) {
+              self.fire('forbidden');
+            }
+          });
         },
 
         _findGroup: function(groupName) {
@@ -65,17 +63,17 @@
              return grp.name === groupName;
           });
         },
-        _handleError: function(rsp, err) {
+        _resetUserAndPermissions: function() {
           this._setUser(null);
           this._setPermissions(null);
         },
 
         _setUserData: function(data) {
-          var _user = data;
-          var _permissions = {};
+          let _user = data;
+          let _permissions = {};
 
           this._setUser(_user);
-          var permissionsList = this.getAllPermissions();
+          let permissionsList = this.getAllPermissions();
 
           if (!_.isEmpty(data)) {
             this._setUserGroups(_user.groups);

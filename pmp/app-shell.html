@@ -19,58 +19,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
-<link rel="import" href="../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="app-config/etools-app-config.html">
+<link rel="import" href="app-config/app-dexie-db-config.html">
+<link rel="import" href="app-config/app-config-behavior.html">
+
+<link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
+<link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
+<link rel="import" href="app-menu/styles/app-drawer-styles.html">
 
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
-<link rel="import" href="app-behaviors/notification-toasts-behavior.html">
-<link rel="import" href="app-behaviors/global-loading-behavior.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
 
-<link rel="import" href="app-elements/static-common-data/dropdowns-pmp-data.html">
-<link rel="import" href="app-elements/static-common-data/dropdowns-static-data.html">
-<link rel="import" href="app-elements/static-common-data/sectors-data.html">
-<link rel="import" href="app-elements/static-common-data/sections-data.html">
-<link rel="import" href="app-elements/static-common-data/unicef-users-data.html">
-<link rel="import" href="app-elements/static-common-data/offices-data.html">
-<link rel="import" href="app-elements/static-common-data/locations-data.html">
-<link rel="import" href="app-elements/static-common-data/country-programmes-data.html">
-
-
-<!--
-<link rel="import" href="pages/page-agreements.html">
-<link rel="import" href="pages/page-interventions.html">
-<link rel="import" href="pages/page-partners.html">
-<link rel="import" href="pages/page-not-found.html">
--->
+<link rel="import" href="app-elements/static-common-data/static-common-data.html">
+<link rel="import" href="app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles shared-styles">
+    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style">
 
       :host {
         display: block;
-      }
-
-      app-drawer {
-        z-index: 100;
-        --app-drawer-width: 220px;
-        --app-drawer-content-container: {
-          background-color: var(--light-theme-content-color);
-        };
       }
 
       app-header-layout {
@@ -79,16 +62,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       app-header {
         background-color: var(--header-bg-color);
-      }
-
-      .warning-toast-dismiss-btn {
-        text-transform: none;
-        color: var(--ternary-color);
-      }
-
-      .global-warn-msg-toast {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
       }
 
       .main-page {
@@ -110,18 +83,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
-    <!-- get static data -->
-    <dropdowns-pmp-data></dropdowns-pmp-data>
-    <dropdowns-static-data></dropdowns-static-data>
-    <sectors-data></sectors-data>
-    <sections-data></sections-data>
-    <unicef-users-data></unicef-users-data>
-    <offices-data></offices-data>
-    <locations-data></locations-data>
-    <partners-list-data></partners-list-data>
-    <agreement-list-data></agreement-list-data>
-    <country-programmes-data></country-programmes-data>
-
     <app-location route="{{route}}"></app-location>
 
     <app-route
@@ -132,10 +93,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer id="drawer" transition-duration="350">
+      <app-drawer id="drawer" transition-duration="350" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
-        <app-sidebar-menu base-url="[[baseUrl]]" page="[[page]]" permissions="[[permissions]]"></app-sidebar-menu>
-
+        <app-sidebar-menu base-url="[[baseUrl]]"
+                          page="[[page]]"
+                          small-menu$="[[smallMenu]]"></app-sidebar-menu>
       </app-drawer>
 
       <!-- Main content -->
@@ -146,8 +108,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
           <page-partners id="partners" class="main-page"
-                         show-only-government-type="[[_showOnlyGovernmentPartners(page)]]"
-                         current-page="[[page]]"
+                         show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
+                         current-page="[[_lastActivePartnerPage]]"
                          route="[[subroute]]"
                          permissions="[[permissions]]">
           </page-partners>
@@ -171,16 +133,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-not-found class="main-page"></page-not-found>
         </template>
 
-        <etools-loading id="pageLoading"
-                        loading-text="Loading data..."
-                        active$="[[showLoading]]"
-                        absolute></etools-loading>
-
         <page-footer></page-footer>
 
       </app-header-layout>
     </app-drawer-layout>
     <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
+
+    <!-- get static data -->
+    <partners-list-data></partners-list-data>
+    <agreement-list-data></agreement-list-data>
+    <static-common-data></static-common-data>
 
   </template>
 
@@ -191,10 +153,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
-        etoolsAppConfig.globals,
-        EtoolsLogsBehavior,
-        pmpBehaviors.NotificationToastsBehavior,
-        pmpBehaviors.globalLoadingBehavior
+        EtoolsPmpApp.Behaviors.AppConfig,
+        EtoolsPmpApp.Behaviors.IE11,
+        EtoolsPmpApp.Behaviors.AppMenu,
+        EtoolsPmpApp.Behaviors.NotificationToasts,
+        etoolsBehaviors.LoadingBehavior,
+        EtoolsPmpApp.Behaviors.ScrollControl
       ],
 
       properties: {
@@ -204,7 +168,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged'
         },
         route: {
-          type: Object
+          type: Object,
+          observer: '_routeChanged'
         },
         narrow: {
           type: Boolean,
@@ -221,15 +186,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         routeData: {
           type: Object
         },
-        lazyLoadPages: {
-          type: Object,
-          value: {
-            partners: false,
-            agreements: false,
-            interventions: false
-          }
-        },
-        isIE: Boolean
+        _lastActivePartnerPage: String
       },
 
       observers: [
@@ -249,15 +206,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       created: function() {
-        this.isIE = this.isIEBrowser();
+        this.checkIE11Browser();
       },
-
+      _routeChanged: function() {
+        this._setContentScrollPosition(0);
+      },
       ready: function() {
         // for some reason the "$=" will make basePath undefined, we need to use a local property
         this.baseUrl = this.basePath;
 
-        if (this.isIE) {
-          this._addIEBrowserStylesAdjustments();
+        this.addIE11StyleTweaks();
+
+        if (this.page !== 'not-found') {
+          /*
+           * Activate the global loading with default message.
+           * This will be triggered once at page load or, after page load, on menu option tap event.
+           * The loading message is disabled by page-* elements ready callback (in both cases)
+           */
+          this.fire('global-loading', {
+            active: true,
+            loadingSource: 'main-page'
+          });
         }
       },
 
@@ -272,133 +241,81 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateMainPath: function(event) {
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this.set('route.path', this.baseUrl + event.detail.path);
           this.set('route.__queryParams', null);
+          this.set('route.path', this.baseUrl + event.detail.path);
         }
         event.stopImmediatePropagation();
       },
 
-      _setDefaultPage: function() {
-        if (!!!this.page) {
-          this.fire('global-loading', {message: 'Loading page...', active: true});
-          this.async(function() {
-            this.set('page', 'partners');
-            this.set('loadingCounterDecrementAdjustment', 1);
-            this.set('skipDecrementAdjustment', true);
-          }, 10);
+      _pageChanged: function(page) {
+        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
+          this.set('_lastActivePartnerPage', page);
         }
       },
 
       _routePageChanged: function(routePage) {
-        if (!!!routePage) {
-          var self = this;
-          this.debounce('routePageChange', function() {
-            self._setDefaultPage();
-          }, 10);
-          return;
-        }
-        if (this.route && this.baseUrl) {
-          var subroute = JSON.parse(JSON.stringify(this.route));
-          subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-          this.set('subroute', subroute);
-        }
-        this.set('page', routePage);
+        this.debounce('routePageChanges', function() {
+          if (!routePage) {
+            this.fire('update-main-path', {path: 'partners/list'});
+            return;
+          }
+
+          this._importMainPage(routePage);
+
+          if (this.route && this.baseUrl && this.page !== 'not-found') {
+            let subroute = JSON.parse(JSON.stringify(this.route));
+            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
+            this.set('subroute', subroute);
+          }
+          this.set('page', routePage);
+        }.bind(this), 10);
       },
 
-      _pageChanged: function(page) {
+      _importMainPage: function(page) {
         if (!page) {
           return;
         }
-        var displayedPageCat = this._getDisplayedPageCategory(page);
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + displayedPageCat + '.html');
+        var mainPageName = this._getMainPageName(page);
+        var resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(displayedPageCat);
-        if (!Polymer.isInstance(pageEl) && this.lazyLoadPages[displayedPageCat] === false) {
-          // activate the global loading with a propper message
-          this.fire('global-loading', {message: 'Loading ' + page + ' pages elements...', active: true});
+        var pageEl = this._getPageElement(mainPageName);
+        if (!Polymer.isInstance(pageEl)) {
           // make the import
-          this.importHref(resolvedPageUrl, this._firstPageElLoadedCallback.bind(this, displayedPageCat, pageEl),
+          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
               this._pageNotFound, false);
         }
       },
 
-      _getDisplayedPageCategory: function(page) {
+      // load all the other main pages after first page is loaded
+      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
+        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+        // make sure to redirect to list page if necessary
+        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
+      },
+
+      _getMainPageName: function(page) {
         return page === 'government-partners' ? 'partners' : page;
       },
 
       _pageNotFound: function() {
-        this.page = 'not-found';
-        this.fire('toast', {text: 'Oops you hit a 404!'});
+        this.set('route.path', this.baseUrl + 'not-found');
+        this.set('route.__queryParams', null);
+        this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
       _getPageElement: function(pageId) {
         return this.$$('#' + pageId);
       },
 
-      // load all the other main pages after first page is loaded
-      _firstPageElLoadedCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        this.lazyLoadPages[currentLoadingPage] = true; // map first page as loaded
-        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
-        // load the rest of the pages after current page render is complete
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl,
-                                             this._firstPageRenderCallback.bind(this, currentLoadingPage));
-      },
-      _firstPageRenderCallback: function(currentLoadedPage) {
-        this.fire('global-loading', {active: false}); // deactivate first page loading msg
-        this._redirectToProperListPage();
-        this._lazyLoadPages(currentLoadedPage);
-      },
-      // load all the other main pages except the one just rendered
-      _lazyLoadPages: function(currentLoadedPage) {
-        try {
-          for (let page in this.lazyLoadPages) {
-            if (page !== currentLoadedPage && this.lazyLoadPages[page] === false) {
-              // make the import
-              let pageUrl = this.resolveUrl('pages/page-' + page + '.html');
-              // do not use optAsync=true of importHref, it will generate behaviors not found warnings
-              this.importHref(pageUrl, this._setPageLoaded.bind(this, page) , null, false);
-            }
-          }
-        } catch (err) {
-          this.logError('An error occurred during pages lazy load', null, err);
-        }
-      },
-      _setPageLoaded: function(page) {
-        this.lazyLoadPages[page] = true;
-      },
       _activePageIs: function(activePage, expectedPages) {
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
       },
 
-      isIEBrowser: function() {
-        var userAgent = window.navigator.userAgent;
-        var ieBrowser = false;
-        if (userAgent.indexOf('Trident/') > -1) {
-          // IE 11
-          ieBrowser = true;
-        }
-        return ieBrowser;
-      },
-
-      /**
-       * In IE11 we must NOT use fullbleed and hasScrollingRegion and we have to make some
-       */
-      _addIEBrowserStylesAdjustments: function() {
-        this.classList.add('ie');
-        var appHeaderLayout = this.$.appHeadLayout;
-        appHeaderLayout.removeAttribute('fullbleed');
-        appHeaderLayout.set('hasScrollingRegion', false);
-        appHeaderLayout.style.minHeight = '100%';
-        var contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
-        if (contentContainer) {
-          contentContainer.style.minHeight = '100vh';
-          contentContainer.style.boxSizing = 'border-box';
-          contentContainer.style.paddingBottom = '90px';
-        }
-      },
-
       _redirectToProperListPage: function() {
+        if (this.route.path.indexOf('not-found') > -1) {
+          return;
+        }
         if (this.route.path === this.baseUrl || this.route.path === '/') {
           // setting the default path when user enters the app
           // redirect from /pmp/ to /pmp/partners/list
@@ -411,9 +328,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
         if (currentPath === this.baseUrl + this.routeData.page) {
-          this.fire('global-loading', {message: 'Loading ' + this.routeData.page + ' pages elements...', active: true});
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-          this.set('loadingCounterDecrementAdjustment', 1);
           return;
         }
       },

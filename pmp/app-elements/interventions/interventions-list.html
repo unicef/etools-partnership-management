@@ -8,18 +8,22 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-searchable-multiselection-menu.html">
+<link rel="import"
+      href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
+<link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -34,18 +38,18 @@
 
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         width: 100%;
       }
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
       <interventions-list-data id="interventions"
-                           filtered-interventions="{{filteredInterventions}}"
-                           total-results="{{totalResults}}"
-                           on-interventions-loaded="_requiredDataHasBeenLoaded"
-                           list-data-path="filteredInterventions"
-                           fire-data-loaded>
+                               filtered-interventions="{{filteredInterventions}}"
+                               total-results="{{totalResults}}"
+                               on-interventions-loaded="_requiredDataHasBeenLoaded"
+                               list-data-path="filteredInterventions"
+                               fire-data-loaded>
       </interventions-list-data>
     </template>
 
@@ -65,18 +69,18 @@
 
           <template is="dom-if" if="[[filterTypeIs('esmm', filter.type)]]">
             <div class="filter esmm">
-              <etools-searchable-multiselection-menu
+              <etools-multi-selection-menu
                   label="[[filter.filterName]]"
                   placeholder="&#8212;"
                   disabled$="[[!filter.selectionOptions.length]"
                   options="[[filter.selectionOptions]]"
-                  value="[[filter.alreadySelected]]"
-                  multi="[[filter.multiple]]"
                   option-value="[[filter.optionValue]]"
                   option-label="[[filter.optionLabel]]"
-                  on-value-change="esmmValueChanged"
-                  data-filter-path$="[[filter.path]]"
-                  custom-object-options></etools-searchable-multiselection-menu>
+                  selected-values="[[filter.alreadySelected]]"
+                  trigger-value-change-event
+                  on-etools-selected-items-changed="esmmValueChanged"
+                  data-filter-path$="[[filter.path]]">
+              </etools-multi-selection-menu>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
                                  data-filter-name$="[[filter.filterName]]"
@@ -87,7 +91,8 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
-              <paper-input label="[[filter.filterName]]"
+              <paper-input id$="datepicker_parent_[[filter.path]]"
+                           label="[[filter.filterName]]"
                            value="[[prettyDate(filter.dateSelected)]]"
                            on-down="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
@@ -95,11 +100,11 @@
                                           id$="datepicker_[[filter.path]]"
                                           date="[[prepareDate(filter.dateSelected)]]"
                                           format="D MMM YYYY"
+                                          parent-id$="datepicker_parent_[[filter.path]]"
                                           data-filter-path$="[[filter.path]]"
                                           on-date-has-changed="_filterDateHasChanged"
                                           no-init show-clear-btn fire-date-has-changed>
                 </etools-datepicker-button>
-                </paper-icon-button>
               </paper-input>
               <paper-icon-button suffix class="remove-field remove" icon="cancel"
                                  on-tap="removeFilter"
@@ -114,24 +119,27 @@
 
       <div class="fixed-controls">
 
-        <div class="filters-divider"></div>
-
-        <paper-menu-button id="filterMenu" dynamic-align>
-          <paper-button class="button dropdown-trigger">
-            <iron-icon icon="filter-list"></iron-icon>add filter</paper-button>
-          <paper-menu class="dropdown-content">
-            <template is="dom-repeat" items="[[availableListFilterOptions]]">
-              <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
-            </template>
-          </paper-menu>
-        </paper-menu-button>
+        <div class="filter-bar-action-wrapper menu-btn-wrapper">
+          <paper-menu-button id="filterMenu" dynamic-align>
+            <paper-button class="button dropdown-trigger">
+              <iron-icon icon="filter-list"></iron-icon>
+              add filter
+            </paper-button>
+            <paper-menu class="dropdown-content">
+              <template is="dom-repeat" items="[[availableListFilterOptions]]">
+                <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
+              </template>
+            </paper-menu>
+          </paper-menu-button>
+        </div>
 
       </div>
     </paper-material>
 
     <paper-material id="list" elevation="1">
 
-      <etools-data-table-header id="listHeader" label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
+      <etools-data-table-header id="listHeader"
+                                label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
         <etools-data-table-column class="col-2" field="number" sortable>
           Reference #
         </etools-data-table-column>
@@ -161,8 +169,8 @@
           <div slot="row-data">
             <span class="col-data col-2">
               <a class="truncate"
-                href="interventions/[[intervention.id]]/details"
-                title="[[getDisplayValue(intervention.number)]]">
+                 href="interventions/[[intervention.id]]/details"
+                 title="[[getDisplayValue(intervention.number)]]">
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
@@ -179,29 +187,47 @@
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.start)]]
+              <etools-info-tooltip icon="report" icon-first
+                                   hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]"
+                                   important-warning>
+                <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
+                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+              </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
-                [[_checkAndShowInterventionDate(intervention.end)]]
+               <etools-info-tooltip icon="report" icon-first
+                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]"
+                                    important-warning>
+                 <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
+                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+              </etools-info-tooltip>
             </span>
           </div>
           <div slot="row-data-details">
 
             <div class="row-details-content col-2">
-              <span class="rdc-title">In response to HRP?</span>
-              <span>[[_getHrpValue(intervention.hrp)]]</span>
+              <span class="rdc-title">Offices</span>
+              <span>[[getDisplayValue(intervention.offices_names)]]</span>
             </div>
             <div class="row-details-content col-2">
-              <span class="rdc-title">Sectors</span>
+              <span class="rdc-title">Section</span>
               <span>[[getDisplayValue(intervention.sectors)]]</span>
             </div>
             <div class="row-details-content col-2">
-              <span class="rdc-title">Total CSO Contribution</span>
-              <span>$ [[getDisplayValue(intervention.cso_contribution)]]</span>
+              <span class="rdc-title">UNICEF Cash Contribution</span>
+              <etools-info-tooltip icon="report" icon-first
+                                   hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
+                                   important-warning>
+                <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
+                <span slot="message">
+                  [[getFrsTotalAmountInconsistencyMsg()]]
+                </span>
+              </etools-info-tooltip>
+
             </div>
             <div class="row-details-content col-2">
-              <span class="rdc-title">Total UNICEF Budget</span>
-              <span>$ [[getDisplayValue(intervention.unicef_budget)]]</span>
+              <span class="rdc-title">Total Budget</span>
+              <span>$ [[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
             </div>
 
           </div>
@@ -231,13 +257,15 @@
         is: 'interventions-list',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.AppNavigationHelperBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.DropdownBehavior,
-          pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.ListsCommonBehavior
+          etoolsBehaviors.EtoolsCurrencyBehavior,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AppNavigationHelper,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.Dropdown,
+          EtoolsPmpApp.Behaviors.ListFilters,
+          EtoolsPmpApp.Behaviors.ListsCommon,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -293,12 +321,6 @@
             type: Boolean,
             value: false
           },
-
-          // hrps will be populated with global data from EtoolsDropdownPmpDataReduxBehavior store
-          hrps: {
-            type: Array,
-            statePath:  'hrps' //function(state) { console.log(state); return state.hrps; }
-          },
           cpOutputs: {
             type: Array,
             statePath: 'cpOutputs'
@@ -341,6 +363,10 @@
             type: String,
             notify: true
           },
+          _sortableFieldNames: {
+            type: Array,
+            value: ['number', 'partner_name', 'start', 'end']
+          }
         },
 
         listeners: {
@@ -348,126 +374,129 @@
         },
 
         observers: [
+          '_initListFilters(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData)',
           '_updateURL(q, selectedDocumentTypes, selectedCpOutputs, selectedStatuses, selectedSectors, ' +
-            'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
-            'requiredDataLoaded, initComplete)',
+          'selectedUnicefFocalPoints, selectedOffices, startDate, endDate, pageNumber, pageSize, sortOrder, ' +
+          'requiredDataLoaded, initComplete)',
           '_init(active)'
         ],
 
         ready: function() {
           this.$.list.classList.add('hidden');
-
-          // init list filter options
-          // IMPORTANT!!!
-          // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
-          // IMPORTANT!!!
-          this.initListFiltersData([
-            {
-              filterName: 'PD/SSFA Type',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'value',
-              optionLabel: 'label',
-              selectionOptions: this.documentTypes,
-              alreadySelected: [],
-              path: 'selectedDocumentTypes'
-            },
-            {
-              filterName: 'Country Programme Output',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'id',
-              optionLabel: 'name',
-              selectionOptions: this.cpOutputs,
-              alreadySelected: [],
-              path: 'selectedCpOutputs'
-            },
-            {
-              filterName: 'Sectors',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'id',
-              optionLabel: 'name',
-              selectionOptions: this.sectors,
-              alreadySelected: [],
-              path: 'selectedSectors'
-            },
-            {
-              filterName: 'Status',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'value',
-              optionLabel: 'label',
-              selectionOptions: this.interventionStatuses,
-              alreadySelected: [],
-              path: 'selectedStatuses'
-            },
-            {
-              filterName: 'UNICEF focal point',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'user_id',
-              optionLabel: 'full_name',
-              selectionOptions: this.unicefUsersData,
-              alreadySelected: [],
-              path: 'selectedUnicefFocalPoints'
-            },
-            {
-              filterName: 'Offices',
-              type: 'esmm', // etools-searchable-multiselection-menu
-              multiple: true,
-              optionValue: 'id',
-              optionLabel: 'name',
-              selectionOptions: this.offices,
-              alreadySelected: [],
-              path: 'selectedOffices'
-            },
-            {
-              filterName: 'Starts After',
-              type: 'datepicker', // etools-datepicker
-              path: 'startDate',
-              dateSelected: ''
-            },
-            {
-              filterName: 'Ends Before',
-              type: 'datepicker', // etools-datepicker
-              path: 'endDate',
-              dateSelected: ''
-            }
-          ]);
         },
 
         attached: function() {
-          this.listAttachedCallback(this.active, 'Loading PD/SSFA ToR list data...');
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+
+          this.listAttachedCallback(this.active, 'Loading PD/SSFA list data...', 'pd-ssfa-list');
+        },
+        _initListFilters: function(documentTypes, sectors, interventionStatuses, offices, cpOutputs, unicefUsersData) {
+          this.debounce('init-intervention-filters', function() {
+            // init list filter options
+            // IMPORTANT!!!
+            // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
+            // IMPORTANT!!!
+            this.initListFiltersData([
+              {
+                filterName: 'PD/SSFA Type',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: this.documentTypes,
+                alreadySelected: [],
+                path: 'selectedDocumentTypes'
+              },
+              {
+                filterName: 'Country Programme Output',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: this.cpOutputs,
+                alreadySelected: [],
+                path: 'selectedCpOutputs'
+              },
+              {
+                filterName: 'Section/Cluster',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: this.sectors,
+                alreadySelected: [],
+                path: 'selectedSectors'
+              },
+              {
+                filterName: 'Status',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'value',
+                optionLabel: 'label',
+                selectionOptions: this.interventionStatuses,
+                alreadySelected: [],
+                path: 'selectedStatuses'
+              },
+              {
+                filterName: 'UNICEF focal point',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'user_id',
+                optionLabel: 'full_name',
+                selectionOptions: this.unicefUsersData,
+                alreadySelected: [],
+                path: 'selectedUnicefFocalPoints'
+              },
+              {
+                filterName: 'Offices',
+                type: 'esmm', // etools-multi-selection-menu
+                optionValue: 'id',
+                optionLabel: 'name',
+                selectionOptions: this.offices,
+                alreadySelected: [],
+                path: 'selectedOffices'
+              },
+              {
+                filterName: 'Starts After',
+                type: 'datepicker', // etools-datepicker
+                path: 'startDate',
+                dateSelected: ''
+              },
+              {
+                filterName: 'Ends Before',
+                type: 'datepicker', // etools-datepicker
+                path: 'endDate',
+                dateSelected: ''
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          }.bind(this), 100);
         },
 
         // Input: URL query params
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          var parms = this.urlParams;
-          if (!active || !parms) {
+          let urlQueryParams = this.urlParams;
+          if (!active || !urlQueryParams) {
             return;
           }
           this.set('initComplete', false);
-          this.set('q', parms.q ? parms.q : '');
-          this.set('selectedDocumentTypes', parms.type ? this._setSelectedDocTypes(parms.type) : []);
-          this.set('selectedStatuses', parms.status ? this._setSelectedStatuses(parms.status) : []);
-          this.set('selectedCpOutputs', parms.cp_outputs ? this._setSelectedCpOutputs(parms.cp_outputs) : []);
-          this.set('selectedSectors', parms.sector ? this._setSelectedSectors(parms.sector) : []);
+          this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+          this.set('selectedDocumentTypes', urlQueryParams.type ? this._setSelectedDocTypes(urlQueryParams.type) : []);
+          this.set('selectedStatuses', urlQueryParams.status ? this._setSelectedStatuses(urlQueryParams.status) : []);
+          this.set('selectedCpOutputs',
+              urlQueryParams.cp_outputs ? this._setSelectedCpOutputs(urlQueryParams.cp_outputs) : []);
+          this.set('selectedSectors', urlQueryParams.sector ? this._setSelectedSectors(urlQueryParams.sector) : []);
           this.set('selectedUnicefFocalPoints',
-              parms.unicef_focal_points ? this._setSelectedUnicefFocalPoints(parms.unicef_focal_points) : []);
-          this.set('selectedOffices', parms.offices ? this._setSelectedOffices(parms.offices) : []);
-          this.set('startDate', parms.start ? parms.start : '');
-          this.set('endDate', parms.end ? parms.end : '');
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
-          // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'partner_name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
+              urlQueryParams.unicef_focal_points ?
+                  this._setSelectedUnicefFocalPoints(urlQueryParams.unicef_focal_points) : []);
+          this.set('selectedOffices', urlQueryParams.offices ? this._setSelectedOffices(urlQueryParams.offices) : []);
+          this.set('startDate', urlQueryParams.start ? urlQueryParams.start : '');
+          this.set('endDate', urlQueryParams.end ? urlQueryParams.end : '');
+          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+          // format of sort param is sort=field.order ex: sort=partner_name.asc
+          let result = this.initSortFieldsValues({field: 'partner_name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
 
@@ -480,27 +509,27 @@
             var filtersValues = [
               {
                 filterName: 'PD/SSFA Type',
-                selectedValue: this.selectedDocumentTypes
+                selectedValue: _.map(this.selectedDocumentTypes, 'value')
               },
               {
                 filterName: 'Status',
-                selectedValue: this.selectedStatuses
+                selectedValue: _.map(this.selectedStatuses, 'value')
               },
               {
                 filterName: 'Country Programme Output',
-                selectedValue: this.selectedCpOutputs
+                selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Sectors',
-                selectedValue: this.selectedSectors
+                filterName: 'Section/Cluster',
+                selectedValue: _.map(this.selectedSectors, 'id')
               },
               {
                 filterName: 'UNICEF focal point',
-                selectedValue: this.selectedUnicefFocalPoints
+                selectedValue: _.map(this.selectedUnicefFocalPoints, 'user_id')
               },
               {
                 filterName: 'Offices',
-                selectedValue: this.selectedOffices
+                selectedValue: _.map(this.selectedOffices, 'id')
               },
               {
                 filterName: 'Starts After',
@@ -512,7 +541,7 @@
               }
             ];
             this.updateShownFilters(filtersValues);
-          }.bind(this), 100);
+          }.bind(this), 200);
         },
 
         // Updates URL state with new query string, and launches query
@@ -546,6 +575,11 @@
           }
         },
 
+        _prepareQueryStrVal: function(arr, prop) {
+          return _.map(arr, function(obj) {
+            return obj[prop] + '';
+          });
+        },
         _filterInterventionsData: function(forceNoLoading) {
           // Query is debounced with a debounce time
           // set depending on what action the user takes
@@ -555,45 +589,20 @@
               return;
             }
             interventions.query(
-              this.sortOrder.field,
-              this.sortOrder.direction,
-              this.q.toLowerCase(),
-
-              (this.selectedDocumentTypes && this.selectedDocumentTypes.length)
-                  ? this.selectedDocumentTypes.map(function(type) {
-                return type.value;
-              }) : [],
-
-              (this.selectedCpOutputs && this.selectedCpOutputs.length)
-                  ? this.selectedCpOutputs.map(function(cpOutput) {
-                return cpOutput.id;
-              }) : [],
-
-              (this.selectedStatuses && this.selectedStatuses.length)
-                  ? this.selectedStatuses.map(function(status) {
-                return status.label.toLowerCase();
-              }) : [],
-
-              (this.selectedSectors && this.selectedSectors.length)
-                  ? this.selectedSectors.map(function(sector) {
-                return sector.name;
-              }) : [],
-
-              (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length)
-                  ? this.selectedUnicefFocalPoints.map(function(fPt) {
-                return parseInt(fPt.user_id);
-              }) : [],
-
-              (this.selectedOffices && this.selectedOffices.length)
-                  ? this.selectedOffices.map(function(office) {
-                return office.id;
-              }) : [],
-
-              this.startDate,
-              this.endDate,
-              this.pageNumber,
-              this.pageSize,
-              forceNoLoading ? false : this.showQueryLoading
+                this.sortOrder.field,
+                this.sortOrder.direction,
+                this.q.toLowerCase(),
+                _.map(this.selectedDocumentTypes, 'value'),
+                this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
+                _.map(this.selectedStatuses, 'value'),
+                _.map(this.selectedSectors, 'name'),
+                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
+                this._prepareQueryStrVal(this.selectedOffices, 'id'),
+                this.startDate,
+                this.endDate,
+                this.pageNumber,
+                this.pageSize,
+                forceNoLoading ? false : this.showQueryLoading
             );
           }, this.debounceTime);
         },
@@ -612,39 +621,27 @@
           }
 
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
-            out.push('type=' + this.selectedDocumentTypes.map(function(type) {
-              return type.value;
-            }).join('|'));
+            out.push('type=' + _.map(this.selectedDocumentTypes, 'value').join('|'));
           }
 
           if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-            out.push('cp_outputs=' + this.selectedCpOutputs.map(function(cpOutput) {
-              return cpOutput.id;
-            }).join('|'));
+            out.push('cp_outputs=' + _.map(this.selectedCpOutputs, 'id').join('|'));
           }
 
           if (this.selectedStatuses && this.selectedStatuses.length) {
-            out.push('status=' + this.selectedStatuses.map(function(status) {
-              return status.label;
-            }).join('|'));
+            out.push('status=' + _.map(this.selectedStatuses, 'value').join('|'));
           }
 
           if (this.selectedSectors && this.selectedSectors.length) {
-            out.push('sector=' + this.selectedSectors.map(function(sector) {
-              return sector.name;
-            }).join('|'));
+            out.push('sector=' + _.map(this.selectedSectors, 'id').join('|'));
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            out.push('unicef_focal_points=' + this.selectedUnicefFocalPoints.map(function(focalPt) {
-              return focalPt.user_id;
-            }).join('|'));
+            out.push('unicef_focal_points=' + _.map(this.selectedUnicefFocalPoints, 'user_id').join('|'));
           }
 
           if (this.selectedOffices && this.selectedOffices.length) {
-            out.push('offices=' + this.selectedOffices.map(function(office) {
-              return office.id;
-            }).join('|'));
+            out.push('offices=' + _.map(this.selectedOffices, 'id').join('|'));
           }
 
           if (this.startDate && this.startDate.length) {
@@ -678,9 +675,7 @@
             params.push('status=' + this.selectedStatuses[0].value);
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            var serializedFocalPoints = this.selectedUnicefFocalPoints.map(function(focalPt) {
-              return focalPt.user_id;
-            });
+            var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
             serializedFocalPoints = encodeURIComponent(serializedFocalPoints);
             params.push('unicef_focal_points=' + serializedFocalPoints);
           }
@@ -710,6 +705,9 @@
             officesIdsArr = officesIdsArr.map(function(officeIdStr) {
               return parseInt(officeIdStr, 10);
             });
+            if (!this.offices || !this.offices.length) {
+              return [];
+            }
             return this.offices.filter(function(o) {
               return officesIdsArr.indexOf(parseInt(o.id, 10)) > -1;
             });
@@ -723,6 +721,9 @@
             focalPtsStrArr = focalPtsStrArr.map(function(fPtsIdStr) {
               return parseInt(fPtsIdStr, 10);
             });
+            if (!this.unicefUsersData || !this.unicefUsersData.length) {
+              return [];
+            }
             return this.unicefUsersData.filter(function(u) {
               return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
             });
@@ -731,9 +732,12 @@
         },
         _setSelectedSectors: function(sectors) {
           var sectorsArr = sectors.split('|');
+          if (!this.sectors || !this.sectors.length) {
+            return [];
+          }
           if (sectorsArr && sectorsArr.length) {
             var selectedSectors = this.sectors.filter(function(s) {
-              return sectorsArr.indexOf(s.name) > -1;
+              return sectorsArr.indexOf(s.id) > -1;
             });
             return selectedSectors;
           }
@@ -742,8 +746,11 @@
 
         _setSelectedStatuses: function(statuses) {
           var statusesStrArr = statuses.split('|');
+          if (!this.interventionStatuses || !this.interventionStatuses.length) {
+            return [];
+          }
           return this.interventionStatuses.filter(function(status) {
-            return statusesStrArr.indexOf(status.label) > -1;
+            return statusesStrArr.indexOf(status.value) > -1;
           });
         },
 
@@ -753,6 +760,9 @@
             cpOut = cpOut.map(function(cpOutStrValue) {
               return parseInt(cpOutStrValue, 10);
             });
+            if (!this.cpOutputs || !this.cpOutputs.length) {
+              return [];
+            }
             return this.cpOutputs.filter(function(cpo) {
               return cpOut.indexOf(parseInt(cpo.id, 10)) > -1;
             });
@@ -761,6 +771,9 @@
         },
         _setSelectedDocTypes: function(types) {
           var typesStrArr = types.split('|');
+          if (!this.documentTypes || !this.documentTypes.length) {
+            return [];
+          }
           if (typesStrArr && typesStrArr.length) {
             return this.documentTypes.filter(function(t) {
               return typesStrArr.indexOf(t.value) > -1;
@@ -774,28 +787,13 @@
           this.set('pageNumber', 1);
         },
 
-        // verify date and prettify or not
-        _checkAndShowInterventionDate: function(dateString) {
-          return this.getDisplayValue(dateString, true);
-        },
-
-        /**
-         * Get HRP name to be shown in the intervention details(collapsible content) row
-         */
-        _getHrpValue: function(hrpId) {
-          var hrpData = this.hrps.filter(function(hrp) {
-            return parseInt(hrp.id, 10) === parseInt(hrpId, 10);
-          })[0];
-          if (hrpData) {
-            return this.getDisplayValue(hrpData.name);
-          } else {
-            return '-';
-          }
-        },
-
         _filtersChanged: function() {
           this.set('debounceTime', 200);
           this.set('pageNumber', 1);
+        },
+
+        _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
+          return status === 'draft' || this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });

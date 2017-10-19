@@ -1,18 +1,19 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 
 <dom-module id="indicator-dissaggregations">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles">
+    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -23,11 +24,6 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply(--paper-fab-btn-green);
-        };
       }
 
       paper-input {
@@ -65,10 +61,9 @@
       <p>There are no disaggregations added.</p>
     </div>
 
-    <div id="bottom-actions" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewDisaggregation"
-                 title="Add"></paper-fab>
+    <div class="row-h" hidden$="[[!editMode]]">
+      <paper-button class="secondary-btn" on-tap="_addNewDisaggregation"
+                 title="Add Disaggregation">ADD DISAGGREGATION</paper-button>
     </div>
 
   </template>
@@ -81,7 +76,7 @@
         is: 'indicator-dissaggregations',
 
         behaviors: [
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {

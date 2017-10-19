@@ -4,7 +4,8 @@
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
 <link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
+
+<link rel="import" href="../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 
@@ -32,21 +33,23 @@
       .row-indent {
         padding-left: 40px;
       }
-      .horizontal-padding {
-        padding: 0px 24px;
+      .title-indent {
+        padding: 0 24px;
+        font-size: 16px;
       }
 
     </style>
     <etools-dialog
         id="dataRefreshDialog"
         size="sm"
+        no-padding
         ok-btn-text="Refresh data"
         cancel-btn-text="Cancel"
         dialog-title="Refresh data"
         disable-confirm-btn="[[!anySelected]]"
         on-close="_handleDialogClosed">
       <div id="content-box">
-          <div class="horizontal-padding">Select the data you want to refresh:</div>
+          <div class="title-indent">Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
               <etools-checkable-input checked="{{partnersSelected}}"
@@ -56,7 +59,7 @@
             </div>
             <div class="col col-6">
               <etools-checkable-input checked="{{interventionsSelected}}"
-                                      label="PD/SSFA ToR data"
+                                      label="PD/SSFA data"
                                       label-alignment="right">
               </etools-checkable-input>
             </div>
@@ -88,7 +91,6 @@
       Polymer({
         is: 'data-refresh-dialog',
         behaviors: [
-          etoolsAppConfig,
           EtoolsLogsBehavior,
           etoolsBehaviors.EtoolsRefreshBehavior
         ],
@@ -166,21 +168,23 @@
 
             // clear only data sets
             var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-            var restampLandingPage = this.page === afterDataRefreshLandingPage;
+            var restampLandingPage = this.page === afterDataRefreshLandingPage ||
+                (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
 
             var self = this;
-            this.db.transaction('rw', 'collectionsList', 'partners', 'agreements', 'interventions', function() {
+            EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
+                function() {
               if (self.partnersSelected) {
-                self.db.partners.clear();
-                self.db.collectionsList.delete('partners');
+                EtoolsPmpApp.DexieDb.partners.clear();
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
               }
               if (self.agreementsSelected) {
-                self.db.agreements.clear();
-                self.db.collectionsList.delete('agreements');
+                EtoolsPmpApp.DexieDb.agreements.clear();
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
               }
               if (self.interventionsSelected) {
-                self.db.interventions.clear();
-                self.db.collectionsList.delete('interventions');
+                EtoolsPmpApp.DexieDb.interventions.clear();
+                EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
               }
             }).then(function(result) {
               // transaction succeeded

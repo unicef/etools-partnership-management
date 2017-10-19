@@ -1,8 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
+
 <link rel="import" href="../../../bower_components/etools-datepicker/etools-datepicker-button.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../../app-behaviors/date-behavior.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
@@ -13,7 +14,7 @@
     <style include="shared-styles">
       :host {
         width: 235px;
-        @apply(--etools-date-input);
+        @apply --etools-date-input;
       }
       /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
       then include it in shared-styles(do not use shared-styles here) */
@@ -29,7 +30,6 @@
                  readonly$="[[readonly]]"
                  required$="[[required]]"
                  invalid$="[[invalid]]"
-                 auto-validate$="[[autoValidate]]"
                  error-message="[[errorMessage]]">
       <iron-icon prefix icon="date-range" hidden$="[[!readonly]]"></iron-icon>
       <etools-datepicker-button id="datePickerButton"
@@ -54,13 +54,15 @@
 
         is: 'etools-date-input',
         behaviors: [
-          pmpBehaviors.DateBehavior
+          EtoolsPmpApp.Behaviors.Date,
+          Polymer.IronValidatableBehavior
         ],
         properties: {
           label: String,
           value: {
             value: null,
-            notify: true
+            notify: true,
+            observer: '_valueChanged'
           },
           jsonValue: {
             value: null,
@@ -86,7 +88,8 @@
           required: {
             type: Boolean,
             value: false,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            observer: '_requiredChange'
           },
           autoValidate: {
             type: Boolean,
@@ -105,11 +108,18 @@
           format: {
             type: String,
             value: 'YYYY-MM-DD'
-          }
+          },
+          validator: String
         },
 
         _readonlyStateChange: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
+          this._refreshStyles(newValue, oldValue);
+        },
+        _requiredChange: function(newValue, oldValue) {
+          this._refreshStyles(newValue, oldValue);
+        },
+        _refreshStyles: function(newVal, oldVal) {
+          if (newVal !== oldVal) {
             this.updateStyles();
           }
         },
@@ -118,10 +128,27 @@
           return readonly || disabled;
         },
 
-        validate: function() {
-          return this.$.dateInput.validate();
-        }
+        _valueChanged: function(value) {
+          if (this.autoValidate && value !== undefined) {
+            this.validate();
+          }
+        },
 
+        /**
+        * overwrites default functionality from iron-input
+        */
+        validate: function() {
+          let hasValidator = this.hasValidator();
+          let valid = true;
+          if (this.required && !hasValidator && this.value === '') {
+            valid = false;
+          } else if (hasValidator) {
+            valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
+          }
+
+          this.set('invalid', !valid);
+          return valid;
+        },
       });
     })();
   </script>

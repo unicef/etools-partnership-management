@@ -14,9 +14,10 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="monitoring-visits-list.html">
+<link rel="import" href="fr-numbers/fund-reservations-display.html">
 
 <dom-module id="intervention-overview">
 
@@ -24,7 +25,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -49,6 +50,7 @@
       }
 
       .sector-label {
+        display: inline-block;
         white-space: nowrap;
         height: 19px;
         text-align: center;
@@ -59,14 +61,8 @@
         color: var(--light-primary-text-color, #FFFFFF);
       }
 
-      #monitoring-visits-panel {
-        --ecp-content: {
-          padding: 10px 0 25px;
-        }
-      }
-
       #top-container {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
     </style>
 
@@ -96,7 +92,10 @@
           </div>
 
           <div class="secondary">
-            Under <strong class="blue">[[interventionAgreement.agreement_type]]</strong> with <strong class="blue">[[intervention.partner]]</strong>
+            Under <strong class="blue">[[interventionAgreement.agreement_type]]</strong> with
+            <a href$="/pmp/partners/[[intervention.partner_id]]/details">
+              <strong class="blue">[[intervention.partner]]</strong>
+            </a>
           </div>
         </div>
       </div>
@@ -126,17 +125,21 @@
         </div>
         <div class="col col-6 block">
           <iron-label for="interventions_sectors">
-            Sectors
+            Sections
           </iron-label>
           <br/>
           <div class="content" id="interventions_sectors">
             <template is="dom-repeat" items="[[sectors]]" as="sector">
-              <span class="sector-label" style="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
+              <span class="sector-label" style$="[[_getBackgroundStyleFromColor(sector.color)]]">[[sector.name]]</span>
             </template>
           </div>
         </div>
       </div>
     </paper-material>
+
+    <etools-content-panel id="fund-reservation-display" class="content-section" panel-title="Implementation Status">
+      <fund-reservations-display intervention="[[intervention]]" frs-details="[[intervention.frs_details]]"></fund-reservations-display>
+    </etools-content-panel>
 
     <etools-content-panel id="monitoring-visits-panel" class="content-section" panel-title="Monitoring Visits">
       <monitoring-visits-list intervention-id="[[intervention.id]]"></monitoring-visits-list>
@@ -152,8 +155,8 @@
         is: 'intervention-overview',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -184,6 +187,21 @@
           sectors: {
             type: Array
           },
+        },
+
+        observers: [
+          // TODO: make sure sector_location is removed after PRP integration changes are merged
+          '_parseLocationsAndSectors(allSectors.length, intervention.original_sectors.length)',
+          '_parseCpOutputs(allCpOutputs.length, intervention.result_links.length)'
+        ],
+
+        attached: function() {
+          /**
+           * Disable loading message for overview tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
         },
 
         _interventionChanged: function(intervention) {
@@ -222,7 +240,7 @@
           var sectorIds = [];
           var sectors = [];
 
-          this.intervention.sector_locations.forEach(function(locLvl1) {
+          this.intervention.original_sectors.forEach(function(locLvl1) {
             locLvl1.locations.forEach(function(locLvl2) {
               sectorLocations.push(locLvl2.name);
             });
