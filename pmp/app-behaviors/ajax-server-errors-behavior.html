@@ -22,14 +22,7 @@
       ajaxLoadingMsgSource: {
         type: String,
         value: ''
-      }
-    },
-
-    tryGetResponseError: function(response) {
-      if (response.status >= 500) {
-        return this.globalMessage;
-      }
-      return response.response || this.globalMessage;
+      },
     },
 
     handleErrorResponse: function(response, ajaxMethod) {
