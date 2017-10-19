@@ -76,7 +76,7 @@
         padding-left: 0px !important;
       }
 
-      .location-name {
+      .names-padding {
         padding-right: 15px;
       }
 
@@ -265,17 +265,20 @@
                                      error-message="Please select a section">
           </etools-multi-selection-menu>
       </div>
-      <div class="row-h flex-c" hidden$="[[!intervention.clusterNames.length]]">
+      <div class="row-h flex-c">
         <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-          TODO [[intervention.cluster_names]]
+          <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
+          <template is="dom-repeat" items="[[intervention.cluster_names]]">
+              <span class="names-padding">[[item]]</span>
+            </template>
         </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
         <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          <span class="placeholder" hidden$="[[_showLocations(intervention.location_names.length)]]">&#8212;</span>
-          <div class="layout-horizontal" hidden$="[[!_showLocations(intervention.location_names.length)]]">
+          <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
+          <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
             <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
-              <span class="location-name">[[item]]</span>
+              <span class="names-padding">[[item]]</span>
             </template>
             <paper-button class="secondary-btn see-locations"
                           on-tap="_openLocationsDialog"
@@ -408,7 +411,11 @@
           _frsEndConsistencyWarning: {
             type: String,
             value: ''
-          }
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
         },
 
         observers: [
@@ -692,29 +699,63 @@
           this.$.intEnd.updateStyles();
         },
         _updateInteventionLocAndClusters: function() {
-          let locAndClusters = this._extractLocAndClustersFromIndicators();
-
-        },
-        _extractLocAndClustersFromIndicators: function() {
-          if (_.isEmpty(this.intervetion.result_links)) {
+          if (!this.intervention) {
             return;
           }
-          this.intervetion.result_links.forEach(function(rl) {
+          let locAndClusters = this._extractLocAndClustersFromIndicators();
+          this.set('intervention.locations', locAndClusters.locationIds);
+          this.set('intervention.location_names', locAndClusters.locationNames);
+          this.set('intervention.cluster_names', locAndClusters.clusterNames);
+        },
+        _extractLocAndClustersFromIndicators: function() {
+          var locAndClusters = {
+            locationIds: [],
+            clusterNames: [],
+            locationNames: [],
+          }
+
+          this.intervention.result_links.forEach(function(rl) {
             if (_.isEmpty(rl.ll_results)) {
               return;
             }
             rl.ll_results.forEach(function(llResult) {
-              if (_.isEmpty(llResult.appliedIndicators)) {
+              if (_.isEmpty(llResult.applied_indicators)) {
                 return;
               }
+              llResult.applied_indicators.forEach(function(indicator) {
+                if (!_.isEmpty(indicator.locations)) {
+                  let uniqueLocIds = indicator.locations.filter(function(indicLoc) {
+                    return locAndClusters.locationIds.indexOf(indicLoc) < 0;
+                  });
 
+                  [].push.apply(locAndClusters.locationIds, uniqueLocIds);
+                }
 
-            })
-          });
+                if (indicator.cluster_name) {
+                  locAndClusters.push(indicator.cluster_name);
+                }
+              }, this);
+
+            }, this);
+          }, this);
+
+          if(!_.isEmpty(locAndClusters.locationIds)) {
+            let selectedLocations = this.locations.filter(function(loc) {
+              return locAndClusters.locationIds.indexOf(parseInt(loc.id)) > -1;
+            });
+            let locNames = selectedLocations.map(function(l) {
+              return l.name;
+            });
+            [].push.apply(locAndClusters.locationNames, locNames);
+          }
+          return locAndClusters;
         },
 
-        _showLocations: function(locationsLength) {
-          return !!locationsLength;
+        _isEmpty: function(length) {
+          return !!!length;
+        },
+        _onlyUnique: function(value, index, self) {
+          return self.indexOf(value) === index;
         }
 
       });
