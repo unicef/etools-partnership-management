@@ -75,6 +75,10 @@
       div[no-left-padding] {
         padding-left: 0px !important;
       }
+
+      .location-name {
+        padding-right: 15px;
+      }
     </style>
 
     <etools-content-panel class="content-section" panel-title="Partnership Information">
@@ -260,16 +264,20 @@
           TODO [[intervention.cluster_names]]
         </etools-form-element-wrapper>
       </div>
-      <div class="row-h flex-c" hidden$="[[!intervention.location_names.length]]">
+      <div class="row-h flex-c">
         <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
-            <span style="padding-right:15px;">[[item]]</div>
-          </template>
-          <paper-button class="secondary-btn"
-            on-tap="_openLocationsDialog"
-            title="See all locations">
-            + See all
-          </paper-button>
+          <span class="placeholder" hidden$="[[_showLocations(intervention.location_names.length)]]">&#8212;</span>
+          <div class="layout-horizontal" hidden$="[[!_showLocations(intervention.location_names.length)]]">
+            <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
+              <span class="location-name">[[item]]</span>
+            </template>
+            <paper-button class="secondary-btn"
+                          on-tap="_openLocationsDialog"
+                          title="See all locations">
+              <iron-icon icon="add"></iron-icon>
+              See all
+            </paper-button>
+          </div>
         </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
@@ -675,6 +683,10 @@
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
+        },
+
+        _showLocations: function(locationsLength) {
+          return !!locationsLength;
         }
 
       });
