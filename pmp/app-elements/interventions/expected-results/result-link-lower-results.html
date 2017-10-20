@@ -189,7 +189,12 @@
           },
           expectedResultId: Number,
         },
-
+        listeners: {
+            'delete-confirm' : '_updateInterventionLocAndClusters'
+        },
+        _updateInterventionLocAndClusters: function() {
+          this.fire('indicators-changed');
+        },
         _addNewLowerResult: function() {
           this.fire('add-new-lower-result', {expectedResultId: this.expectedResultId});
         },

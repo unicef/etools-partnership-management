@@ -167,10 +167,11 @@
               },
               section: null,
               baseline: null,
-              target: null,
+              target: undefined,
               means_of_verification: null,
               locations: undefined,
-              disaggregation: []
+              disaggregation: [],
+              cluster_indicator_id: undefined
             }
           },
           actionParams: {
@@ -281,8 +282,7 @@
         _cleanUp: function() {
           this._stopSpinner();
           this.disableConfirmBtn = false;
-          this.resetFields();
-          this.resetValidations();
+          this.resetFieldValues();
           //Anything else?
         },
         _stopSpinner: function(e) {
@@ -310,10 +310,31 @@
             this.$$('#nonClusterIndicatorEl').resetValidations();
           }
         },
-        resetFields: function() {
-          this.indicator = null;
+        resetFieldValues: function() {
+          let resetModel = {
+              id: null,
+              indicator: {
+                id: null,
+                title: null,
+                unit: 'number',
+                display_type: 'percentage'
+              },
+              section: null,
+              baseline: null,
+              target: null,
+              means_of_verification: null,
+              locations: [],
+              disaggregation: [],
+              cluster_indicator_title: null,
+              cluster_indicator_id: null,
+              cluster_name: null
+            };
+          this.indicator = JSON.parse(JSON.stringify(resetModel));
           this.disaggregations = [];
           this.prpDisaggregations = [];
+          if (this.isCluster) {
+            this.$$('#clusterIndicatorEl').resetFieldValues();
+          }
         },
 
         _centerDialog: function() {
