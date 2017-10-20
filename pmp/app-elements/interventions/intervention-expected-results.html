@@ -204,6 +204,7 @@
               break;
             }
           }
+          this._updateInterventionLocAndClusters();
         },
 
         // open indicator dialog to add or edit indicator
@@ -220,6 +221,9 @@
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.resetValidations();
           this.indicatorDialog.openIndicatorDialog();
+        },
+        _updateInterventionLocAndClusters: function() {
+          this.fire('indicators-changed');
         }
 
       });
