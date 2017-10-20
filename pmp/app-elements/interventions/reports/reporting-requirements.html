@@ -9,7 +9,6 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="reporting-requirements-dialog.html">
-<link rel="import" href="reporting-requirements-actions.html">
 
 <dom-module id="reporting-requirements">
 
@@ -22,22 +21,26 @@
           padding-right: 16px;
         };
       }
+
       .list-container {
         position: relative;
       }
+
       .actions-button-container {
         color: var(--primary-text-color);
-        flex-direction: row-reverse;
+        @apply --layout-end-justified;
+        margin-top: -8px;
+        margin-bottom: -8px;
       }
+
       .actions-button-container paper-icon-button {
-        width: 35px;
-        height: 35px;
-        padding: 6px;
         opacity: 0;
       }
+
       etools-data-table-row:hover .actions-button-container paper-icon-button {
         opacity: 0.5;
       }
+
       etools-data-table-row .actions-button-container paper-icon-button:hover {
         opacity: 1;
       }
@@ -82,26 +85,22 @@
                 [[item.due_date]]
               </span>
               <span class="col-data col-1 actions-button-container">
+                <paper-icon-button icon="create"
+                                   role="button"
+                                   on-tap="_handleRequirementEdit">
+                </paper-icon-button>
                 <paper-icon-button icon="delete"
                                    role="button"
                                    on-tap="_handleRequirementDelete">
                 </paper-icon-button>
-                  <paper-icon-button icon="create"
-                                     role="button"
-                                     on-tap="_handleRequirementEdit">
-                  </paper-icon-button>
               </span>
             </div>
           </etools-data-table-row>
         </template>
         <template is="dom-if" if="[[!reportingRequirements.length]]">
-          <etools-data-table-row no-collapse>
-            <div slot="row-data">
-              <span class="col-data col-12">
-                There are no reporting requirements.
-              </span>
-            </div>
-          </etools-data-table-row>
+          <div class="row-h">
+            <p>There are no reporting requirements.</p>
+          </div>
         </template>
       </div>
     </etools-content-panel>
@@ -163,9 +162,9 @@
           this.requirementsDialog.set('interventionId', this.interventionId);
 
           this.requirementsDialog.addEventListener('add-reporting-requirement',
-                                                   this.addReportingRequirement.bind(this));
+              this.addReportingRequirement.bind(this));
           this.requirementsDialog.addEventListener('update-reporting-requirement',
-                                                   this.updateReportingRequirement.bind(this));
+              this.updateReportingRequirement.bind(this));
 
           Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
         },
@@ -206,22 +205,22 @@
           });
 
           this.deleteRequirement(this.deletedItem)
-            .then(function() {
-              self.reportingRequirements.forEach(function(elem, index) {
-                if (elem.id === self.deletedItem.id) {
-                  self.splice('reportingRequirements', index, 1);
-                }
-              });
+              .then(function() {
+                self.reportingRequirements.forEach(function(elem, index) {
+                  if (elem.id === self.deletedItem.id) {
+                    self.splice('reportingRequirements', index, 1);
+                  }
+                });
 
-              self.fire('global-loading', {
-                active: false,
-                loadingSource: self.ajaxLoadingMsgSource
-              });
+                self.fire('global-loading', {
+                  active: false,
+                  loadingSource: self.ajaxLoadingMsgSource
+                });
 
-              self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
-            }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+                self.fire('toast', {text: 'Reporting requirement successfully removed', showCloseBtn: true});
+              }).catch(function(error) {
+            self._handleErrorResponse(error);
+          });
         },
 
         _handleErrorResponse: function(error) {
@@ -234,7 +233,6 @@
 
         deleteRequirement: function(requirement) {
           let endpoint = this.getEndpoint(this.endpoints.ITEM, {reportId: requirement.id});
-
           return this.sendRequest({method: 'DELETE', endpoint: endpoint});
         },
 
@@ -243,10 +241,10 @@
 
           if (newId) {
             let endpoint = this.getEndpoint(this.endpoints.LIST, {intervId: newId});
-            this.sendRequest({method:'GET', endpoint: endpoint})
-              .then(function(response) {
-                self.set('reportingRequirements', response);
-              });
+            this.sendRequest({method: 'GET', endpoint: endpoint})
+                .then(function(response) {
+                  self.set('reportingRequirements', response);
+                });
           }
         },
 

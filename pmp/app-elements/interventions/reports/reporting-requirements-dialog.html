@@ -1,14 +1,14 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../common-elements/etools-date-input.html">
 
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../common-elements/etools-date-input.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <dom-module id="reporting-requirements-dialog">
@@ -17,6 +17,7 @@
       [hidden] {
         display: none !important;
       }
+
       #content-box {
         margin-bottom: 20px;
       }
@@ -39,7 +40,8 @@
                                label="Reporting Period Start Date"
                                value="{{requirement.start_date}}"
                                open="{{startDateOpen}}"
-                               required
+                               required auto-validate
+                               error-message="Start Date is required"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -48,7 +50,8 @@
                                label="Reporting Period End Date"
                                value="{{requirement.end_date}}"
                                open="{{endDateOpen}}"
-                               required
+                               required auto-validate
+                               error-message="End Date is required"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -57,7 +60,8 @@
                                label="Reporting Period Due Date"
                                value="{{requirement.due_date}}"
                                open="{{dueDateOpen}}"
-                               required
+                               required auto-validate
+                               error-message="Due Date is required"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
@@ -150,18 +154,18 @@
 
           if (!newReq.id) {
             this.addRequirement(newReq)
-              .then(function() {
-                self.close();
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
+                .then(function() {
+                  self.close();
+                }).catch(function(error) {
+              self._handleErrorResponse(error);
+            });
           } else {
             this.updateRequirement(newReq)
-              .then(function() {
-                self.close();
-              }).catch(function(error) {
-                self._handleErrorResponse(error);
-              });
+                .then(function() {
+                  self.close();
+                }).catch(function(error) {
+              self._handleErrorResponse(error);
+            });
           }
         },
         _resetValidations: function() {
@@ -180,9 +184,9 @@
           let self = this;
 
           return this.sendRequest({method: 'PATCH', endpoint: endpoint, body: requirement})
-            .then(function(response) {
-              self.fire('update-reporting-requirement', response);
-            });
+              .then(function(response) {
+                self.fire('update-reporting-requirement', response);
+              });
         },
 
         addRequirement: function(requirement) {
@@ -192,9 +196,9 @@
           requirement.intervention = this.interventionId;
 
           return this.sendRequest({method: 'POST', endpoint: endpoint, body: requirement})
-            .then(function(response) {
-              self.fire('add-reporting-requirement', response);
-            });
+              .then(function(response) {
+                self.fire('add-reporting-requirement', response);
+              });
         },
 
         _handleErrorResponse: function(error) {

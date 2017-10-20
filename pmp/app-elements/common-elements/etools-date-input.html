@@ -16,6 +16,7 @@
         width: 235px;
         @apply --etools-date-input;
       }
+
       /* TODO: Find a way to separate readonly CSS from shared-styles, and use it here,
       then include it in shared-styles(do not use shared-styles here) */
     </style>
@@ -141,15 +142,18 @@
         },
 
         /**
-        * overwrites default functionality from iron-input
-        */
+         * overwrites default functionality from iron-input
+         */
         validate: function() {
           let hasValidator = this.hasValidator();
           let valid = true;
-          if (this.required && !hasValidator && this.value === '') {
-            valid = false;
-          } else if (hasValidator) {
+
+          if (hasValidator) {
+            // custom validator provided, use it to validate this field
             valid = Polymer.IronValidatableBehavior.validate.call(this, this.value);
+          } else {
+            // let paper-input use it's default validator
+            valid = this.$.dateInput.validate();
           }
 
           this.set('invalid', !valid);
