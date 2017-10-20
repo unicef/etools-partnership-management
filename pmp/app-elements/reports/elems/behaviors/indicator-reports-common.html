@@ -1,0 +1,18 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorReportsCommon */
+  EtoolsPmpApp.Behaviors.IndicatorReportsCommon = {
+
+    getUnitValue: function(unit) {
+      switch (unit) {
+        case 'number':
+          return '# ';
+        case 'percentage':
+          return '% ';
+      }
+      return null;
+    }
+
+  };
+</script>

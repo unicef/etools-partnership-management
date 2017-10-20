@@ -22,6 +22,8 @@
         display: inline-block;
         width: 50px;
         margin-left: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         @apply --indicator-report-row-value;
       }
 
@@ -35,15 +37,15 @@
 
     <div class="target-row">
       <span>Target:</span>
-      <span>[[_prepareValue(target)]]</span>
+      <span title$="[[_prepareValue(target)]]">[[_prepareValue(target)]]</span>
     </div>
     <div class="target-row">
       <span>Cumulative progress in all locations:</span>
-      <span>[[_prepareValue(cumulativeProgress)]]</span>
+      <span title$="[[_prepareValue(cumulativeProgress)]]">[[_prepareValue(cumulativeProgress)]]</span>
     </div>
     <div class="target-row">
       <span>Achivement in last reporting period in all locations:</span>
-      <span>[[_prepareValue(achivement)]]</span>
+      <span title$="[[_prepareValue(achivement)]]">[[_prepareValue(achivement)]]</span>
     </div>
   </template>
 

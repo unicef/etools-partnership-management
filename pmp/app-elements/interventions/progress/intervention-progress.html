@@ -25,6 +25,7 @@
 <!-- TODO: remove this mockup data behavior after API is ready to be used  -->
 <link rel="import" href="progress-tab-data-mockup.html">
 
+<link rel="import" href="../../reports/elems/behaviors/indicator-reports-common.html">
 <link rel="import" href="../../reports/elems/report-status.html">
 <link rel="import" href="../../reports/elems/indicator-report-target.html">
 
@@ -154,7 +155,7 @@
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                     <div class="row-h indicator-report">
                       <div class="col-data col-9">
-                        [[_getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]
+                        [[getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]
                       </div>
                       <div class="col-data col-3">
                         <etools-progress-bar class="report-progress-bar"
@@ -198,6 +199,7 @@
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorReportsCommon,
           EtoolsPmpApp.Behaviors.ProgressTabDataMockup
         ],
 
@@ -398,16 +400,6 @@
 
         _getOverallPdStatusDate: function(date) {
           return date ? ('(' + this.prettyDate(date) + ')') : '';
-        },
-
-        _getUnitValue: function(unit) {
-          switch (unit) {
-            case 'number':
-              return '# ';
-            case 'percentage':
-              return '% ';
-          }
-          return null;
         }
 
       });

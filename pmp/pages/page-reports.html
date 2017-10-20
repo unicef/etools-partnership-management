@@ -206,8 +206,11 @@
       },
 
       _observeRouteDataId: function(reportId) {
+        let id = parseInt(reportId, 10);
+        if (this.report && this.report.id === id) {
+          return;
+        }
         this.async(function() {
-          let id = parseInt(reportId, 10);
           if (Number.isNaN(id)) {
             this.fire('toast', {text: 'Invalid report ID!', showCloseBtn: true});
             this.set('report', null);
