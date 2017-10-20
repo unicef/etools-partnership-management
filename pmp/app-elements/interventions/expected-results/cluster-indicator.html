@@ -305,7 +305,10 @@
           this.$$('#clusterIndicatorDropdw').invalid = false;
           this.$$('#locationsDropdw').invalid = false;
           this.$$('#targetEl').invalid = false;
-
+        },
+        resetFieldValues: function() {
+          this.responsePlanId = null;
+          this.cluster = null;
         }
     });
   })();

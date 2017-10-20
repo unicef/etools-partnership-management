@@ -724,15 +724,13 @@
               }
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
-                  let uniqueLocIds = indicator.locations.filter(function(indicLoc) {
-                    return locAndClusters.locationIds.indexOf(indicLoc) < 0;
-                  });
-
-                  [].push.apply(locAndClusters.locationIds, uniqueLocIds);
+                  [].push.apply(locAndClusters.locationIds,
+                    this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
                 }
 
                 if (indicator.cluster_name) {
-                  locAndClusters.push(indicator.cluster_name);
+                  [].push.apply(locAndClusters.clusterNames,
+                    this._getUniqueClusterNames(inidcator.cluster_name, locAndClusters.clusterNames));
                 }
               }, this);
 
@@ -740,15 +738,31 @@
           }, this);
 
           if(!_.isEmpty(locAndClusters.locationIds)) {
-            let selectedLocations = this.locations.filter(function(loc) {
-              return locAndClusters.locationIds.indexOf(parseInt(loc.id)) > -1;
-            });
-            let locNames = selectedLocations.map(function(l) {
-              return l.name;
-            });
-            [].push.apply(locAndClusters.locationNames, locNames);
+            [].push.apply(locAndClusters.locationNames,
+              this._extractLocationNames(locAndClusters.locationIds));
           }
           return locAndClusters;
+        },
+        _extractLocationNames: function(locationIds) {
+          let selectedLocations = this.locations.filter(function(loc) {
+            return locationIds.indexOf(parseInt(loc.id)) > -1;
+          });
+          let locNames = selectedLocations.map(function(l) {
+            return l.name;
+          });
+          return locNames;
+        },
+        _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
+          let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
+                    return interventionLocIds.indexOf(indicLoc) < 0;
+          });
+          return uniqueLocIds;
+        },
+        _getUniqueClusterNames: function(indicatorClusterName, intervetionClusterNames) {
+          if (intervetionClusterNames.indexOf(indicatorClusterName) > -1) {
+            return [];
+          }
+          return [indicatorClusterName];
         },
         _isEmpty: function(length) {
           return !!!length;
