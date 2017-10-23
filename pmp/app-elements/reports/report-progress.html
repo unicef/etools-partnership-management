@@ -126,7 +126,9 @@
                   opened="{{indicatorReport.expanded}}">
                 <!--on-opened-changed="_handleOpenedChanged"-->
                 <indicator-details
-                    id="indicatorDetails"
+                    id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                    indicator-id="1"
+
                     reportable-id="[[index]]"
                     indicator-name="Indicator-name"
                     indicator-id="1"
@@ -155,23 +157,6 @@
         ],
         properties: {
           report: Object,
-
-          expanded: {
-            type: Boolean,
-            value: false
-          },
-          dummyArr: {
-            type: Array,
-            value: [
-              {expanded: false},
-              {expanded: false},
-              {expanded: false},
-              {expanded: false},
-            ]
-          },
-          data: {
-            type: Object,
-          },
           disaggregations: {
             type: Object,
           },
@@ -192,11 +177,19 @@
         _computeIcon: function(opened) {
           return opened ? 'icons:expand-less' : 'icons:expand-more';
         },
+
         _toggle: function(e) {
           let toggles = Polymer.dom(e).localTarget.getAttribute('toggles');
-          console.log(toggles);
-          this.$$('#collapse-' + toggles).toggle();
+          let indicatorCollapsibleContent = this.$$('#collapse-' + toggles);
+          let indicatorDetails = this.$$('#indicator-details-' + toggles);
+
+          if (indicatorCollapsibleContent) {
+            indicatorCollapsibleContent.toggle();
+            // trigger indicator details request
+            indicatorDetails.getIndicatorDetails();
+          }
         },
+
         _getClusterIndicatorClass: function(indicatorReport) {
           return (indicatorReport && indicatorReport.isClusterIndicator) ? 'cluster-indicator' : '';
         },

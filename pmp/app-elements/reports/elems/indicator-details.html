@@ -7,6 +7,17 @@
 <link rel="import" href="../../../../bower_components/app-layout/app-grid/app-grid-style.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-loading/etools-loading.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+
+<!-- TODO: remove this mockup data -->
+<link rel="import" href="../elems/reports-list-data-mockup.html">
+
 <link rel="import" href="status-badge.html">
 <link rel="import" href="disaggregations/disaggregation-table.html">
 <link rel="import" href="../styles/buttons.html">
@@ -166,6 +177,8 @@
       </iron-pages>
     </template>
 
+    <etools-loading active="[[loading]]">Loading indicator details...</etools-loading>
+
   </template>
 
   <script>
@@ -173,11 +186,24 @@
       id: 'indicator-details',
 
       behaviors: [
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.ReportsListDataMockup,
         window.App.Behaviors.UtilsBehavior
       ],
 
       properties: {
         indicatorId: Number,
+        indicator: {
+          type: Object,
+          value: {}
+        },
+        loading: {
+          type: Boolean,
+          value: false
+        },
 
         indicatorName: String,
 
@@ -195,11 +221,6 @@
         initialized: {
           type: Boolean,
           value: true,
-        },
-
-        loading: {
-          type: Boolean,
-          value: false,
         },
 
         hasPD: {
@@ -241,16 +262,43 @@
       listeners: {
         'location-updated': '_onLocationUpdated',
       },
-      ready: function() {
-//        console.log(
-//          'indicator-details',
-//          this.reportableId,
-//          this.indicatorName,
-//          this.indicatorId,
-//          this.reportingPeriod,
-//          this.overrideMode,
-//          this.disaggregations
-//        );
+
+      getIndicatorDetails: function() {
+        if (!_.isEmpty(this.indicator)) {
+          // indicator details already loaded
+          return;
+        }
+        if (this.indicatorId && this.indicatorId !== this.indicator.id) {
+          let endpoint = this.getEndpoint('getPrpClusterIndicator',  {id: this.indicatorId});
+          this._showLoading();
+          let self = this;
+          this.sendRequest({endpoint: endpoint}).then(function(response) {
+            self.set('indicator', response);
+            self._hideLoading();
+          }).catch(function(error) {
+            let errMsg = 'Indicator details data request failed!';
+            self.logError(errMsg, 'reports-indicator-details', error);
+
+            // TODO: remove this toast, after API request can be made
+            self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+            self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+            self.set('indicator', {});
+
+            // TODO: remove mockup data use, make sure API request is correct
+            self.set('indicator', self.indicatorDetailsMockup);
+
+            self._hideLoading();
+          });
+        } // else, no need for getting indicator details
+      },
+
+      _showLoading: function() {
+        this.set('loading', true);
+      },
+
+      _hideLoading: function() {
+        this.set('loading', false);
       },
 
       _computeParams: function (indicatorId) {
