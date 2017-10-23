@@ -46,7 +46,7 @@
       </etools-data-table-header>
 
       <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
-        <etools-data-table-row no-collapse dark-bg-on-hover>
+        <etools-data-table-row no-collapse secondary-bg-on-hover>
           <div slot="row-data">
               <span class="col-data col-3">[[fr.fr_number]]</span>
               <span class="col-data col-3 right-align">[[prettyDate(fr.start_date)]]</span>
