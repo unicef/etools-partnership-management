@@ -47,7 +47,8 @@
       {value: 'Ong', label: 'Ongoing'},
       {value: 'Rej', label: 'Rejected'},
       {value: 'Ove', label: 'Overdue'}
-    ]
+    ],
+    locationTypes: []
   };
 
   let commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -196,6 +197,9 @@
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
       case 'SET_CURRENT_USER':
         return Object.assign({}, state, {currentUser: action.user});
+      case 'SET_LOCATION_TYPES':
+      console.log(action.locationTypes);
+        return Object.assign({}, state, {locationTypes: action.locationTypes});
     }
   });
 

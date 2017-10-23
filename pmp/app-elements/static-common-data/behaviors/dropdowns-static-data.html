@@ -75,10 +75,17 @@
             type: 'SET_AGREEMENT_STATUSES',
             statuses: agreementStatusesData
           };
+        },
+        setLocationTypes: function(locTypes) {
+          return {
+            type: 'SET_LOCATION_TYPES',
+            locationTypes: locTypes
+          };
         }
       },
 
       _handleDropdownsStaticResponse: function(response) {
+        console.log(response);
         if (!_.isEmpty(response)) {
           // set intervention_doc_type values
           if (!_.isEmpty(response.intervention_doc_type)) {
@@ -123,6 +130,10 @@
           // set intervention ammendment data
           if (!_.isEmpty(response.intervention_amendment_types)) {
             this.dispatch('setInterventionAmendmentTypes', response.intervention_amendment_types);
+          }
+           // set admin level/location types
+          if (!_.isEmpty(response.location_types)) {
+            this.dispatch('setLocationTypes', response.location_types);
           }
         }
       }
