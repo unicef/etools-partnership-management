@@ -1,6 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../app-behaviors/date-behavior.html">
 <link rel="import" href="../behaviors/fr-numbers-consistency-behavior.html">
@@ -9,48 +10,83 @@
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
-    <style include="grid-layout-styles">
+
+    <style include="data-table-styles grid-layout-styles">
+      :host {
+        --list-column-label: {
+          margin-right: 0;
+        };
+      }
       [hidden] {
         display: none !important;
       }
+      #totalsRow {
+        --list-row-no-collapse: {
+          background-color: var(--light-theme-background-color);
+        }
+      }
     </style>
-    <div class="table" hidden$="[[_noFrs(frsDetails)]]">
-      <div class="row-h header-row">
-        <div class="col col-3"> FR#</div>
-        <div class="col col-3 right-align"> FR Posting Date</div>
-        <div class="col col-2 right-align"> FR Amount $</div>
-        <div class="col col-2 right-align"> Actual $</div>
-        <div class="col col-2 right-align"> Outstanding DCT $</div>
-      </div>
-      <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
+
+    <template is="dom-if" if="[[!frsDetails.frs.length]]">
         <div class="row-h">
-          <div class="col col-3">[[fr.fr_number]]</div>
-          <div class="col col-3 right-align">[[prettyDate(fr.start_date)]]</div>
-          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </div>
-          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</div>
-          <div class="col col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</div>
+          <p>There are no fund reservations added for this intervention.</p>
         </div>
+    </template>
+
+    <div class="list-container" hidden$="[[_noFrs(frsDetails)]]">
+      <etools-data-table-header id="listHeader"
+              no-collapse
+              no-title
+              hidden$="[[!reportingRequirements.length]]">
+        <etools-data-table-column class="col-3">
+          FR#
+        </etools-data-table-column>
+        <etools-data-table-column class="col-3 right-align">
+          FR Posting Date
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2 right-align">
+          FR Amount $
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2 right-align">
+          Actual $
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2 right-align">
+          Outstanding DCT $
+        </etools-data-table-column>
+      </etools-data-table-header>
+
+      <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
+        <etools-data-table-row no-collapse>
+          <div slot="row-data">
+            <span class="col-data col-3">[[fr.fr_number]]</span>
+            <span class="col-data col-3 right-align">[[prettyDate(fr.start_date)]]</span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</span>
+            <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</span>
+          </div>
+        </etools-data-table-row>
       </template>
-      <div class="row-h row-second-bg">
-        <div class="col col-3"></div>
-        <div class="col col-3 right-align"><strong>TOTAL</strong></div>
-        <div class="col col-2 right-align">
-          <etools-info-tooltip icon="report"
-                            hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
-                            important-warning
-                            icon-first right-aligned>
-            <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
-            <span slot="message">[[_frsTotalAmountWarning]]</span>
-          </etools-info-tooltip>
+
+      <etools-data-table-row no-collapse id="totalsRow">
+        <div slot="row-data">
+          <span class="col-data col-3"></span>
+          <span class="col-data col-3 right-align"><strong>TOTAL</strong></span>
+          <span class="col-data col-2 right-align">
+            <etools-info-tooltip icon="report"
+                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                              important-warning
+                              icon-first right-aligned>
+              <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
+              <span slot="message">[[_frsTotalAmountWarning]]</span>
+            </etools-info-tooltip>
+          </span>
+          <span class="col-data col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
+          <span class="col-data col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</span>
         </div>
-        <div class="col col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</div>
-        <div class="col col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</div>
-      </div>
-    </div>
-    <div class="row-h" hidden$="[[!_noFrs(frsDetails)]]">
-      <p>There are no fund reservations added for this intervention.</p>
+      </etools-data-table-row>
     </div>
   </template>
+
   <script>
     (function() {
       'use strict';

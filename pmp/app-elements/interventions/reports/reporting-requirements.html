@@ -34,11 +34,12 @@
       }
 
       .actions-button-container paper-icon-button {
-        opacity: 0;
+        display: none;
       }
 
       etools-data-table-row:hover .actions-button-container paper-icon-button {
         opacity: 0.5;
+        display: flex;
       }
 
       etools-data-table-row .actions-button-container paper-icon-button:hover {
@@ -73,7 +74,7 @@
           </etools-data-table-column>
         </etools-data-table-header>
         <template is="dom-repeat" items="[[reportingRequirements]]">
-          <etools-data-table-row no-collapse>
+          <etools-data-table-row no-collapse secondary-bg-on-hover>
             <div slot="row-data">
               <span class="col-data col-4">
                 [[item.start_date]]
