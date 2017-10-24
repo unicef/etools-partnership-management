@@ -133,7 +133,7 @@
       observers: [
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, activeTab)',
-        '_observeRouteDataId(routeData.id)',
+        '_observeRouteDataId(routeData.id, listActive)',
       ],
 
       ready: function() {
@@ -205,7 +205,10 @@
         this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
       },
 
-      _observeRouteDataId: function(reportId) {
+      _observeRouteDataId: function(reportId, listActive) {
+        if (listActive) {
+          return;
+        }
         let id = parseInt(reportId, 10);
         if (this.report && this.report.id === id) {
           return;
@@ -216,7 +219,7 @@
             this.set('report', null);
             return;
           }
-          this.requestReportDetails(id);
+          this.debounce('loading-report-data', this.requestReportDetails.bind(this, id), 50);
         }.bind(this));
       }
 

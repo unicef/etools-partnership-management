@@ -1,10 +1,9 @@
 <link rel="import" href="../../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../styles/disaggregation-table-styles.html">
-<link rel="import" href="../behaviors/utils.html">
 <link rel="import" href="disaggregation-table-cell.html">
 <link rel="import" href="disaggregation-table-multi-cell.html">
-<link rel="import" href="../behaviors/utils.html">
+<link rel="import" href="../../../../app-behaviors/utils-behavior.html">
 
 <dom-module id="disaggregation-table-row">
   <template>
@@ -77,7 +76,7 @@
       is: 'disaggregation-table-row',
 
       behaviors: [
-        window.App.Behaviors.UtilsBehavior
+        EtoolsPmpApp.Behaviors.Utils
       ],
 
       properties: {

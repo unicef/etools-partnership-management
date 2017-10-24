@@ -1,7 +1,7 @@
 <link rel="import" href="../../behaviors/disaggregations.html">
 <link rel="import" href="../../../styles/disaggregation-table-styles.html">
 <link rel="import" href="../disaggregation-table-row.html">
-<link rel="import" href="../../behaviors/utils.html">
+<link rel="import" href="../../../../../app-behaviors/utils-behavior.html">
 
 <dom-module id="two-disaggregations">
   <template>
@@ -47,6 +47,7 @@
       is: 'two-disaggregations',
 
       behaviors: [
+        EtoolsPmpApp.Behaviors.Utils,
         App.Behaviors.DisaggregationBehavior,
       ],
 
