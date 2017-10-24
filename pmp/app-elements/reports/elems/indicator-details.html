@@ -1,7 +1,7 @@
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/app-layout/app-grid/app-grid-style.html">
 
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
@@ -20,7 +20,7 @@
 
 <dom-module id="indicator-details">
   <template>
-    <style include="iron-flex iron-flex-alignment app-grid-style">
+    <style include="app-grid-style">
       :host {
         display: block;
         min-height: 150px;
@@ -39,6 +39,8 @@
       }
 
       .tab-header {
+        @apply --layout-horizontal;
+        @apply --layout-justified;
         padding: 10px 24px;
         border-bottom: 1px solid var(--dark-divider-color);
         background-color: var(--light-theme-background-color);
@@ -98,7 +100,7 @@
       <iron-pages attr-for-selected="name" selected="{{selected}}">
         <template is="dom-repeat" items="[[indicatorReport.indicator_location_data]]" as="location">
           <div name="location-[[location.location.id]]">
-            <div class="tab-header layout horizontal justified">
+            <div class="tab-header">
               <dl>
                 <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
                   <dt>Location progress:</dt>
