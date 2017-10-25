@@ -301,9 +301,8 @@
       </intervention-expected-results>
     </etools-content-panel>
 
-    <etools-content-panel panel-title="Planned Budget">          
+    <etools-content-panel panel-title="Planned Budget" class="content-section">          
       <intervention-planned-budget id="plannedBudget"
-                                   class="content-section"
                                    planned-budget="{{intervention.planned_budget}}"
                                    intervention-id="[[intervention.id]]"
                                    intervention="[[intervention]]"
@@ -320,8 +319,18 @@
                                    years="[[years]]">
       </intervention-planned-visits>
     </etools-content-panel>
-
-    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section"></intervention-reporting-requirements>
+    
+    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">      
+      <div slot="panel-btns" id="edit-btns">
+        <paper-icon-button icon="add-box"
+                            title="Add Reporting Requirement"
+                            on-tap="openNewRequirementDialog">
+        </paper-icon-button>
+      </div>
+      <reporting-requirements id="reportingRequirements"
+                              intervention-id="[[intervention.id]]" 
+                              class="content-section"></intervention-reporting-requirements>
+    </etools-content-panel>
 
   </template>
 
@@ -769,6 +778,9 @@
         _isEmpty: function(length) {
           return !!!length;
         },
+        openNewRequirementDialog: function() {
+          this.$.reportingRequirements.openNewRequirementDialog();
+        }
       });
     })();
   </script>
