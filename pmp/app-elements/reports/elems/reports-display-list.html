@@ -106,7 +106,9 @@
               </span>
               <span class="col-data flex-c">
                 <a class="view-report"
-                   href$="reports/[[report.id]]/progress" hidden$="[[!_canViewReport(report.status)]]">
+                   href$="reports/[[report.id]]/progress" hidden$="[[!_canViewReport(report.status)]]"
+                   report-pd-ref$="[[report.programme_document.reference_number]]"
+                   on-tap="_updateLastSelectedReportPdRef">
                   View Report
                 </a>
               </span>
@@ -251,6 +253,11 @@
             }.bind(this));
           }
           return params;
+        },
+
+        _updateLastSelectedReportPdRef: function(e) {
+          let ref = Polymer.dom(e).localTarget.getAttribute('report-pd-ref');
+          this.fire('update-last-selected-report-pd-ref', {pdRef: ref});
         }
 
       });

@@ -5,8 +5,9 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-behaviors/utils-behavior.html">
+
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
-<link rel="import" href="elems/behaviors/indicator-reports-common.html">
 <link rel="import" href="elems/report-overall.html">
 <link rel="import" href="elems/report-status.html">
 <link rel="import" href="elems/indicator-report-target.html">
@@ -111,7 +112,10 @@
 
                 <div class="indicator-header layout-horizontal flex-c">
                   <div class="col col-8 indicator-header-title">
-                    <h3>[[getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]</h3>
+                    <h3>
+                      [[_conditionalDisplay(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                      [[indicatorReport.reportable.blueprint.title]]
+                    </h3>
                   </div>
                   <div class="col col-4 indicator-header-target">
                     <indicator-report-target target="[[indicatorReport.reportable.target]]"
@@ -145,7 +149,7 @@
       Polymer({
         is: 'report-progress',
         behaviors: [
-          EtoolsPmpApp.Behaviors.IndicatorReportsCommon
+          EtoolsPmpApp.Behaviors.Utils
         ],
         properties: {
           report: Object

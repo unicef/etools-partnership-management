@@ -15,10 +15,38 @@
 
     properties: {
       report: Object,
+      lastReportPdRef: String,
       currentUser: {
         type: Object,
         statePath: 'currentUser'
+      },
+      reportActions: {
+        type: Array,
+        value: [
+          {
+            label: 'Accept',
+            primary: true,
+            event: 'accept-report'
+          },
+          {
+            label: 'Send back to partner',
+            event: 'send-back-to-partner'
+          },
+          {
+            label: 'Download',
+            event: 'download-report'
+          }
+        ]
       }
+    },
+
+    listeners: {
+      'update-last-selected-report-pd-ref': '_updateLastReportPdRef'
+    },
+
+    _updateLastReportPdRef: function(e) {
+      e.stopImmediatePropagation();
+      this.set('lastReportPdRef', e.detail.pdRef);
     },
 
     requestReportDetails: function(id) {

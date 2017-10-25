@@ -16,6 +16,7 @@
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/date-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../../app-behaviors/utils-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -25,7 +26,6 @@
 <!-- TODO: remove this mockup data behavior after API is ready to be used  -->
 <link rel="import" href="progress-tab-data-mockup.html">
 
-<link rel="import" href="../../reports/elems/behaviors/indicator-reports-common.html">
 <link rel="import" href="../../reports/elems/report-status.html">
 <link rel="import" href="../../reports/elems/indicator-report-target.html">
 
@@ -155,7 +155,8 @@
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                     <div class="row-h indicator-report">
                       <div class="col-data col-9">
-                        [[getUnitValue(indicatorReport.reportable.blueprint.unit)]] [[indicatorReport.reportable.blueprint.title]]
+                        [[_conditionalDisplay(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                        [[indicatorReport.reportable.blueprint.title]]
                       </div>
                       <div class="col-data col-3">
                         <etools-progress-bar class="report-progress-bar"
@@ -199,7 +200,7 @@
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.IndicatorReportsCommon,
+          EtoolsPmpApp.Behaviors.Utils,
           EtoolsPmpApp.Behaviors.ProgressTabDataMockup
         ],
 

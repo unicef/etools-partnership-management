@@ -50,6 +50,10 @@
         });
 
         return valid;
+      },
+
+      _conditionalDisplay: function(value, expected, value1, value2) {
+        return (value === expected) ? value1 : value2;
       }
     };
   }());

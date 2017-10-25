@@ -7,7 +7,9 @@
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="../app-elements/etools-status/etools-action-button.html">
 <link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
+<link rel="import" href="../app-elements/reports/elems/report-status.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -20,6 +22,12 @@
     <style include="page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
+      }
+      .main-title sup {
+        font-size: 14px;
+      }
+      etools-action-button {
+        min-width: 160px;
       }
     </style>
 
@@ -44,9 +52,19 @@
               Partner Reports
             </template>
             <template is="dom-if" if="[[tabsActive]]">
-              <span>Report name</span>
+              <!-- TODO: replace lastReportPdRef with report.programme_document.reference_number when available -->
+              <span>[[lastReportPdRef]]: [[report.reporting_period]]</span>
+              <sup><report-status status="[[report.status]]"></report-status></sup>
             </template>
           </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!tabsActive]]">
+              <etools-action-button actions="[[reportActions]]"
+                                    on-accept-report="_accept"
+                                    on-send-back-to-partner="_sendBackToPartner"
+                                    on-download-report="_download"></etools-action-button>
+            </div>
+          </div>
         </div>
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
@@ -221,6 +239,18 @@
           }
           this.debounce('loading-report-data', this.requestReportDetails.bind(this, id), 50);
         }.bind(this));
+      },
+
+      _accept: function(e) {
+        console.log('accept report action here...');
+      },
+
+      _sendBackToPartner: function(e) {
+        console.log('send report back to partner action here...');
+      },
+
+      _download: function(e) {
+        console.log('download report action here...');
       }
 
     });
