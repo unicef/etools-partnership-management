@@ -301,15 +301,17 @@
       </intervention-expected-results>
     </etools-content-panel>
 
-    <intervention-planned-budget id="plannedBudget"
-                                 class="content-section"
-                                 planned-budget="{{intervention.planned_budget}}"
-                                 intervention-id="[[intervention.id]]"
-                                 intervention="[[intervention]]"
-                                 edit-mode="[[intervention.permissions.edit.planned_budget]]"
-                                 unicef-cash-edit-mode="[[intervention.permissions.edit.planned_budget_unicef_cash]]"
-                                 required="[[intervention.permissions.required.planned_budget]]">
-    </intervention-planned-budget>
+    <etools-content-panel panel-title="Planned Budget">          
+      <intervention-planned-budget id="plannedBudget"
+                                   class="content-section"
+                                   planned-budget="{{intervention.planned_budget}}"
+                                   intervention-id="[[intervention.id]]"
+                                   intervention="[[intervention]]"
+                                   edit-mode="[[intervention.permissions.edit.planned_budget]]"
+                                   unicef-cash-edit-mode="[[intervention.permissions.edit.planned_budget_unicef_cash]]"
+                                   required="[[intervention.permissions.required.planned_budget]]">
+      </intervention-planned-budget>
+    </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
