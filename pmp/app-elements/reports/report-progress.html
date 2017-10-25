@@ -193,7 +193,7 @@
           return _.isEmpty(cpOutputs);
         },
 
-        _getLowerResultLatestIndicator(lowerResultId) {
+        _getLowerResultLatestIndicator: function(lowerResultId) {
           if (!lowerResultId || _.isEmpty(this.report.indicator_reports)) {
             return {};
           }
