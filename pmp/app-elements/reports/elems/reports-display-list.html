@@ -183,6 +183,10 @@
             type: Object,
             value: null,
             notify: true
+          },
+          debounce: {
+            type: Number,
+            value: 300
           }
         },
 
@@ -195,7 +199,9 @@
             return;
           }
           let self = this;
+          let a = arguments;
           this.debounce('load-reports-data', function() {
+            console.log('loadList', interventionId, currentUser, a[2], a[3], a[4]);
             let endpoint = self.getEndpoint('reports',
                 {countryId: currentUser.profile.country});
 
@@ -227,7 +233,7 @@
 
               self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
-          }, 300);
+          }, this.debounce);
         },
 
         _prepareReqParamsObj: function(interventionId) {
