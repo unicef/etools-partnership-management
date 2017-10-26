@@ -405,8 +405,8 @@
         observers: [
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
-          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
-          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start, intervention.status)',
+          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
@@ -676,8 +676,9 @@
           }
         },
 
-        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {
-          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart, interventionStatus) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)
+            || interventionStatus === 'closed') {
             this.set('_frsStartConsistencyWarning', null);
             this.$.intStart.updateStyles();
             return;
@@ -687,8 +688,9 @@
           this.$.intStart.updateStyles();
         },
 
-        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd) {
-          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd, interventionStatus) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)
+            || interventionStatus === 'closed') {
             this.set('_frsEndConsistencyWarning', '');
             this.$.intEnd.updateStyles();
             return;
