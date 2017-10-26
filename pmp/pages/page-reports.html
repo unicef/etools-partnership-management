@@ -52,8 +52,7 @@
               Partner Reports
             </template>
             <template is="dom-if" if="[[tabsActive]]">
-              <!-- TODO: replace lastReportPdRef with report.programme_document.reference_number when available -->
-              <span>[[lastReportPdRef]]: [[report.reporting_period]]</span>
+              <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
               <sup><report-status status="[[report.status]]"></report-status></sup>
             </template>
           </h1>

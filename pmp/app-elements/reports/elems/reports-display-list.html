@@ -106,9 +106,8 @@
               </span>
               <span class="col-data flex-c">
                 <a class="view-report"
-                   href$="reports/[[report.id]]/progress" hidden$="[[!_canViewReport(report.status)]]"
-                   report-pd-ref$="[[report.programme_document.reference_number]]"
-                   on-tap="_updateLastSelectedReportPdRef">
+                   href$="reports/[[report.id]]/progress"
+                   hidden$="[[!_canViewReport(report.status)]]">
                   View Report
                 </a>
               </span>
@@ -184,24 +183,23 @@
             value: null,
             notify: true
           },
-          debounce: {
+          debounceInterval: {
             type: Number,
             value: 300
-          }
+          },
+          waitQueryParamsInit: Boolean
         },
 
         observers: [
           '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
         ],
 
-        _loadReportsData: function(interventionId, currentUser) {
-          if (_.isEmpty(currentUser)) {
+        _loadReportsData: function(interventionId, currentUser, pageSize, page, qParamsData) {
+          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData)) {
             return;
           }
           let self = this;
-          let a = arguments;
           this.debounce('load-reports-data', function() {
-            console.log('loadList', interventionId, currentUser, a[2], a[3], a[4]);
             let endpoint = self.getEndpoint('reports',
                 {countryId: currentUser.profile.country});
 
@@ -212,7 +210,10 @@
               active: true,
               loadingSource: 'reports-list'
             });
-
+            if (self.lastAjaxRequest) {
+              // abort previous req and then fire a new one with updated params
+              self.lastAjaxRequest.abort();
+            }
             self.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
               self.set('reports', response.results);
               self.updatePaginatorTotalResults(response);
@@ -233,7 +234,7 @@
 
               self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
-          }, this.debounce);
+          }, this.debounceInterval);
         },
 
         _prepareReqParamsObj: function(interventionId) {
@@ -261,9 +262,8 @@
           return params;
         },
 
-        _updateLastSelectedReportPdRef: function(e) {
-          let ref = Polymer.dom(e).localTarget.getAttribute('report-pd-ref');
-          this.fire('update-last-selected-report-pd-ref', {pdRef: ref});
+        _queryParamsNotInitialized: function(qParamsData) {
+          return this.waitQueryParamsInit && !qParamsData.value;
         }
 
       });

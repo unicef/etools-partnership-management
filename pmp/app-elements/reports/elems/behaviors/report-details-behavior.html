@@ -15,7 +15,6 @@
 
     properties: {
       report: Object,
-      lastReportPdRef: String,
       currentUser: {
         type: Object,
         statePath: 'currentUser'
@@ -38,15 +37,6 @@
           }
         ]
       }
-    },
-
-    listeners: {
-      'update-last-selected-report-pd-ref': '_updateLastReportPdRef'
-    },
-
-    _updateLastReportPdRef: function(e) {
-      e.stopImmediatePropagation();
-      this.set('lastReportPdRef', e.detail.pdRef);
     },
 
     requestReportDetails: function(id) {
