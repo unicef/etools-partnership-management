@@ -45,7 +45,7 @@
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
     "etools-currency-amount-input": "1.0.10",
-    "etools-data-table": "1.0.10",
+    "etools-data-table": "#2764dd9de9f6990ba8e2aee90483586196ae81a3",
     "etools-datepicker": "1.0.14",
     "etools-dexiejs": "1.0.5",
     "etools-dialog": "1.2.6",
