@@ -45,7 +45,7 @@
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
     "etools-currency-amount-input": "1.0.10",
-    "etools-data-table": "1.0.10",
+    "etools-data-table": "1.0.12",
     "etools-datepicker": "1.0.14",
     "etools-dexiejs": "1.0.5",
     "etools-dialog": "1.2.6",
@@ -65,7 +65,6 @@
   },
   "resolutions": {
     "neon-animation": "1 - 2",
-    "moment-element": "^2.0.0",
-    "webcomponentsjs": "0.7.24"
+    "moment-element": "^2.0.0"
   }
 }
