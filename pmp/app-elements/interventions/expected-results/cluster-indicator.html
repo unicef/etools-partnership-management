@@ -53,39 +53,39 @@
       <div class="row-h flex-c">
         <div class="col col-5">
           <etools-single-selection-menu id$="responsePlanDropdw"
-                                    label="Response Plan"
-                                    placeholder="&#8212;"
-                                    selected="{{responsePlanId}}"
-                                    options="[[responsePlans]]"
-                                    option-label="title"
-                                    option-value="id"
-                                    error-message="Please select Response Plan">
+                                        label="Response Plan"
+                                        placeholder="&#8212;"
+                                        selected="{{responsePlanId}}"
+                                        options="[[responsePlans]]"
+                                        option-label="title"
+                                        option-value="id"
+                                        error-message="Please select Response Plan">
           </etools-single-selection-menu>
         </div>
         <div class="col col-5">
           <etools-single-selection-menu id$="clusterDropdw"
-                                    label="Cluster"
-                                    placeholder="&#8212;"
-                                    selected-item="{{cluster}}"
-                                    options="[[clusters]]"
-                                    option-label="type"
-                                    option-value="id"
-                                    error-message="Please select Cluster">
+                                        label="Cluster"
+                                        placeholder="&#8212;"
+                                        selected-item="{{cluster}}"
+                                        options="[[clusters]]"
+                                        option-label="type"
+                                        option-value="id"
+                                        error-message="Please select Cluster">
           </etools-single-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
         <etools-single-selection-menu id="clusterIndicatorDropdw"
-                                    label="Indicator"
-                                    placeholder="&#8212;"
-                                    selected="{{indicator.cluster_indicator_id}}"
-                                    selected-item="{{prpClusterIndicator}}"
-                                    options="[[prpClusterIndicators]]"
-                                    option-label="title"
-                                    option-value="id"
-                                    required
-                                    auto-validate
-                                    error-message="Please select Indicator">
+                                      label="Indicator"
+                                      placeholder="&#8212;"
+                                      selected="{{indicator.cluster_indicator_id}}"
+                                      selected-item="{{prpClusterIndicator}}"
+                                      options="[[prpClusterIndicators]]"
+                                      option-label="title"
+                                      option-value="id"
+                                      required
+                                      auto-validate
+                                      error-message="Please select Indicator">
         </etools-single-selection-menu>
       </div>
     </template>
@@ -93,22 +93,22 @@
       <div class="col col-2">
         <div class="layout-vertical">
           <paper-input label="Baseline"
-                      value="{{indicator.baseline}}"
-                      type="number"
-                      placeholder="&#8212;">
+                       value="{{indicator.baseline}}"
+                       type="number"
+                       placeholder="&#8212;">
           </paper-input>
         </div>
       </div>
       <div class="col col-3">
-         <paper-input id="targetEl"
-                      label="Target"
-                      value="{{indicator.target}}"
-                      type="number"
-                      required
-                      auto-validate
-                      error-message="Please add a valid target"
-                      placeholder="&#8212;">
-          </paper-input>
+        <paper-input id="targetEl"
+                     label="Target"
+                     value="{{indicator.target}}"
+                     type="number"
+                     required
+                     auto-validate
+                     error-message="Please add a valid target"
+                     placeholder="&#8212;">
+        </paper-input>
       </div>
     </div>
     <div class="row-h flex-c">
@@ -232,7 +232,7 @@
             this.clusters = [];
             return;
           }
-          this.clusters = this.responsePlans.filter(function(r){
+          this.clusters = this.responsePlans.filter(function(r) {
             return parseInt(r.id) === parseInt(selectedRespPlanId);
           })[0].clusters;
         },
@@ -261,7 +261,7 @@
             self.fire('stop-spinner');
             self.fire('show-toast', {error: error});
           });
-         //todo-remove
+          //todo-remove
           this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
         },
         /* ESM dropdown can't process a nested property as option-label
@@ -310,8 +310,8 @@
           this.responsePlanId = null;
           this.cluster = null;
         }
-    });
-  })();
+      });
+    })();
   </script>
 </dom-module>
 

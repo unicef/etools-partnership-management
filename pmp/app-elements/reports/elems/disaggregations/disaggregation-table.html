@@ -136,27 +136,27 @@
         '_resetFields(formattedData.disaggregation_reported_on)',
       ],
 
-      _resetFields: function () {
+      _resetFields: function() {
         this.set('fields', []);
       },
 
-      _computeEditableBool: function (editable) {
+      _computeEditableBool: function(editable) {
         return editable === 1;
       },
 
-      _computeMapping: function (editableBool, formattedData, mapping) {
+      _computeMapping: function(editableBool, formattedData, mapping) {
         let reportedOn = formattedData.disaggregation_reported_on;
 
-        return editableBool ? mapping.filter(function (disagg) {
+        return editableBool ? mapping.filter(function(disagg) {
           return reportedOn.indexOf(disagg.id) !== -1;
         }) : mapping;
       },
 
-      _computeIndicatorType: function (data) {
+      _computeIndicatorType: function(data) {
         return data.display_type;
       },
 
-      _cloneData: function (data) {
+      _cloneData: function(data) {
         this.set('formattedData', JSON.parse(JSON.stringify(data)));
       }
 

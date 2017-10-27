@@ -33,12 +33,12 @@
       </disaggregation-table-row>
     </template>
 
-   <disaggregation-table-row
-      data="[[totalsForDisplay]]"
-      level-reported="[[data.level_reported]]"
-      indicator-type="[[data.display_type]]"
-      row-type="totalsRow">
-  </disaggregation-table-row>
+    <disaggregation-table-row
+        data="[[totalsForDisplay]]"
+        level-reported="[[data.level_reported]]"
+        indicator-type="[[data.display_type]]"
+        row-type="totalsRow">
+    </disaggregation-table-row>
 
   </template>
 
@@ -80,11 +80,11 @@
 
       },
 
-      _getColumns: function (mapping) {
+      _getColumns: function(mapping) {
         return (mapping[0] || []).choices;
       },
 
-      _getRows: function (mapping) {
+      _getRows: function(mapping) {
         return (mapping[1] || []).choices;
       },
 
