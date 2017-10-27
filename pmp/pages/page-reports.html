@@ -10,6 +10,7 @@
 <link rel="import" href="../app-elements/etools-status/etools-action-button.html">
 <link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
 <link rel="import" href="../app-elements/reports/elems/report-status.html">
+<link rel="import" href="../app-elements/reports/elems/report-rating-dialog.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -115,7 +116,8 @@
       </div> <!-- page content end -->
       <!-- No sidebar here -->
     </div> <!-- main container end -->
-
+    <report-rating-dialog id="reportRatingDialog">
+    </report-rating-dialog>
   </template>
 
   <script>
@@ -241,6 +243,7 @@
       },
 
       _accept: function(e) {
+        this.$.reportRatingDialog.open();
         console.log('accept report action here...');
       },
 
