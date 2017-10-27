@@ -115,9 +115,7 @@
 
       </div> <!-- page content end -->
       <!-- No sidebar here -->
-    </div> <!-- main container end -->
-    <report-rating-dialog id="reportRatingDialog">
-    </report-rating-dialog>
+    </div> <!-- main container end -->    
   </template>
 
   <script>
@@ -142,6 +140,9 @@
         routeData: {
           type: Object
         },
+        reportRatingDialog: {
+          type: Object
+        },
         activeTab: {
           type: String,
           value: '',
@@ -153,12 +154,13 @@
         '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, activeTab)',
         '_observeRouteDataId(routeData.id, listActive, tabsActive)',
+        '_reportChanged(report)'
       ],
 
       ready: function() {
         this.debounce('mockup-list-loaded', function() {
           this.fire('global-loading', {active: false});
-        }.bind(this), 500)
+        }.bind(this), 500);
       },
 
       attached: function() {
@@ -174,6 +176,8 @@
           active: true,
           loadingSource: 'reports-page'
         });
+    
+        this._createReportRatingDialog();
       },
 
       _setActivePage: function(listActive, tab) {
@@ -243,7 +247,7 @@
       },
 
       _accept: function(e) {
-        this.$.reportRatingDialog.open();
+        this.reportRatingDialog.open();
         console.log('accept report action here...');
       },
 
@@ -253,6 +257,24 @@
 
       _download: function(e) {
         console.log('download report action here...');
+      },
+
+      detached: function() {
+        if (this.reportRatingDialog) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.reportRatingDialog);
+        }
+      },
+
+      _createReportRatingDialog: function() {
+        this.reportRatingDialog = document.createElement('report-rating-dialog');
+        this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
+
+        Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
+      },
+
+      _reportChanged: function(reprot) {
+        this.reportRatingDialog.set('pdRefNumber', this.report.programme_document.reference_number);
+        this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);        
       }
 
     });
