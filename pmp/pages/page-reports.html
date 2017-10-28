@@ -248,7 +248,6 @@
 
       _accept: function(e) {
         this.reportRatingDialog.open();
-        console.log('accept report action here...');
       },
 
       _sendBackToPartner: function(e) {
@@ -268,13 +267,19 @@
       _createReportRatingDialog: function() {
         this.reportRatingDialog = document.createElement('report-rating-dialog');
         this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
+        this.reportRatingDialog.set('toastEventSource', this);
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
       },
 
       _reportChanged: function(reprot) {
+        let endpoint = this.getEndpoint('reportReview', {
+          countryId: this.currentUser.profile.country,
+          reportId: this.report.id
+        });
         this.reportRatingDialog.set('pdRefNumber', this.report.programme_document.reference_number);
-        this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);        
+        this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);  
+        this.reportRatingDialog.set('endpoint', endpoint);
       }
 
     });

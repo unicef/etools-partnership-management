@@ -154,18 +154,18 @@
 
           if (!newReq.id) {
             this.addRequirement(newReq)
-                .then(function() {
-                  self.close();
-                }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+              .then(function() {
+                self.close();
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
           } else {
             this.updateRequirement(newReq)
-                .then(function() {
-                  self.close();
-                }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+              .then(function() {
+                self.close();
+              }).catch(function(error) {
+                self._handleErrorResponse(error);
+              });
           }
         },
         _resetValidations: function() {
