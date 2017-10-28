@@ -11,6 +11,7 @@
 <link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
 <link rel="import" href="../app-elements/reports/elems/report-status.html">
 <link rel="import" href="../app-elements/reports/elems/report-rating-dialog.html">
+<link rel="import" href="../app-elements/reports/elems/report-reject-dialog.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -143,6 +144,9 @@
         reportRatingDialog: {
           type: Object
         },
+        reportRejectDialog: {
+          type: Object
+        },
         activeTab: {
           type: String,
           value: '',
@@ -252,6 +256,7 @@
 
       _sendBackToPartner: function(e) {
         console.log('send report back to partner action here...');
+        this.reportRejectDialog.open();
       },
 
       _download: function(e) {
@@ -262,6 +267,9 @@
         if (this.reportRatingDialog) {
           Polymer.dom(document.querySelector('body')).removeChild(this.reportRatingDialog);
         }
+        if (this.reportRejectDialog) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.reportRejectDialog);
+        }
       },
 
       _createReportRatingDialog: function() {
@@ -270,6 +278,12 @@
         this.reportRatingDialog.set('toastEventSource', this);
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
+        
+        this.reportRejectDialog = document.createElement('report-reject-dialog');
+        this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
+        this.reportRejectDialog.set('toastEventSource', this);
+
+        Polymer.dom(document.querySelector('body')).appendChild(this.reportRejectDialog);
       },
 
       _reportChanged: function(reprot) {
@@ -277,9 +291,14 @@
           countryId: this.currentUser.profile.country,
           reportId: this.report.id
         });
+
         this.reportRatingDialog.set('pdRefNumber', this.report.programme_document.reference_number);
         this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);  
         this.reportRatingDialog.set('endpoint', endpoint);
+        
+        this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
+        this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);  
+        this.reportRejectDialog.set('endpoint', endpoint);
       }
 
     });

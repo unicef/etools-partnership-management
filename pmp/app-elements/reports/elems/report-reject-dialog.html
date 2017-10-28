@@ -1,15 +1,15 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../../bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 
-<dom-module id="report-rating-dialog">
+<dom-module id="report-reject-dialog">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles required-field-starred-styles">
       [hidden] {
         display: none !important;
       }
@@ -19,23 +19,17 @@
       }
     </style>
     <etools-dialog
-        id="reportRatingDialog"
+        id="reportRejectDialog"
         size="md"
         keep-dialog-open
         spinner-text="Sending rating..."
-        disable-confirm-btn="[[!selectedOverallStatus.length]]"        
-        ok-btn-text="Rate & Accept Report"
+        disable-confirm-btn="[[!comment.length]]"        
+        ok-btn-text="Send Back to Partner"
         cancel-btn-text="Cancel"
         dialog-title="Report for [[pdRefNumber]]: [[reportingPeriod]]"
         on-confirm-btn-clicked="saveStatus">
       <div id="content-box">
-          <p> Rate the overall progress of this PD/SSFA in light of this report and monitoring visits. </p>
-          <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
-            <paper-radio-button name="Met"> Met </paper-radio-button>
-            <paper-radio-button name="OnT"> On track </paper-radio-button>
-            <paper-radio-button name="NoP"> No progress </paper-radio-button>
-            <paper-radio-button name="Con"> Constrained </paper-radio-button>
-          </paper-radio-group>            
+        <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>        
       </div>
     </etools-dialog>
   </template>
@@ -49,7 +43,7 @@
         comment: required when sending a report back
       */
       Polymer({
-        is: 'report-rating-dialog',
+        is: 'report-reject-dialog',
         behaviors: [
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.AjaxErrorsParser
@@ -67,34 +61,34 @@
           reportingPeriod: {
             type: String
           },
-          selectedOverallStatus: {
+          comment: {
             type: String,
             value: ''
           }
         },
 
         open: function() { 
-          this.set('selectedOverallStatus', '');
-          this.$.reportRatingDialog.set('opened', true);
+          this.set('comment', '');
+          this.$.reportRejectDialog.set('opened', true);
         },
 
         close: function() {
-          this.$.reportRatingDialog.set('opened', false);   
+          this.$.reportRejectDialog.set('opened', false);   
         },
 
         startSpinner: function() {
-          this.$.reportRatingDialog.startSpinner();
+          this.$.reportRejectDialog.startSpinner();
         },
 
         stopSpinner: function() {
-          this.$.reportRatingDialog.stopSpinner();
+          this.$.reportRejectDialog.stopSpinner();
         },
 
         saveStatus: function() {
           let self = this;
           let requestBody = {
-            status: 'accepted',
-            overall_status: this.selectedOverallStatus
+            status: 'sent back',
+            comment: this.comment
           }
 
           this.startSpinner();
