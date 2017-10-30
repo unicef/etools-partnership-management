@@ -1,35 +1,40 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Partners Page</title>
+  <title>Partners Page</title>
 
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
-    <!-- Import the element to test -->
-    <link rel="import" href="../pmp/pages/page-partners.html">
-  </head>
-  <body>
-    <test-fixture id="basic">
-      <template>
-        <page-partners></page-partners>
-      </template>
-    </test-fixture>
+  <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
+  <!-- Import the element to test -->
+  <link rel="import" href="../pmp/pages/page-partners.html">
+</head>
+<body>
+  <test-fixture id="partners">
+    <template>
+      <page-partners></page-partners>
+    </template>
+  </test-fixture>
 
-    <script>
-      suite('page-partners tests', function() {
-        var home;
-        setup(function() {
-          home = fixture('basic');
-        });
-        test('Page Header should be Partners', function() {
-          assert.equal(home.is, 'page-partners');
-        })
+  <script>
+    suite('page-partners tests', function() {
+      let partners;
+      setup(function() {
+        partners = fixture('partners');
+
       });
-    </script>
-  </body>
+      test('Main partners element: page-partners', function() {
+        assert.equal(partners.is, 'page-partners');
+      });
+      test('Main partners element: page-partners', function() {
+        assert.equal(partners.is, 'page-partners');
+        console.log(partners.user, partners.permissions);
+      });
+    });
+  </script>
+</body>
 </html>

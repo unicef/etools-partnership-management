@@ -61,10 +61,12 @@
     "paper-progress": "PolymerElements/paper-progress#^2.0.1"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0"
   },
   "resolutions": {
     "neon-animation": "1 - 2",
-    "moment-element": "^2.0.0"
+    "moment-element": "^2.0.0",
+    "iron-test-helpers": "^2.0.0"
   }
 }
