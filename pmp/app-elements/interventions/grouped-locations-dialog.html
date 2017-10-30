@@ -88,83 +88,76 @@
   </template>
 </dom-module>
 
-<script>
-  (function() {
-    'use strict';
-    Polymer({
-      is: 'grouped-locations-dialog',
-      behaviors: [
-        EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-      ],
-      properties: {
-        adminLevels: {//location types
-          type: Array,
-          //statePath: 'adminLevels'
-          observer: 'adminLevelsChanged',
-          value: [
-            {name: 'Country'},
-            {name: 'District'},
-            {name: 'Governorate'},
-            {name: 'Localities'},
-            {name: 'Sub-districts'}
-          ]
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'grouped-locations-dialog',
+        behaviors: [
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+        ],
+        properties: {
+          adminLevels: {//location types
+            type: Array,
+            statePath: 'locationTypes',
+            observer: 'adminLevelsChanged',
+          },
+          adminLevel: {
+            type: String,
+            adminLevel: null,
+            observer: 'adminLevelChanged'
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          interventionLocations: {
+            type: Array,
+          },
+          iterventionLocationIds: {
+            type: Array,
+            observer: 'iterventionLocationIdsChanged',
+            notify: true
+          },
+          groupedLocations: {
+            type: Array
+          },
+          message: {
+            type: String,
+            value: null
+          }
         },
-        adminLevel: {
-          type: String,
-          adminLevel: null,
-          observer: 'adminLevelChanged'
+        adminLevelsChanged: function(adminLevels) {
+          if (!adminLevels || !adminLevels.length) {
+            return;
+          }
+          this._removeCountry(adminLevels);
         },
-        locations: {
-          type: Array,
-          statePath: 'locations'
+        _removeCountry: function(adminLevels) {
+          let index = adminLevels.findIndex(function(al) {
+            return al.name === 'Country';
+          });
+          if (index > -1) {
+            adminLevels.splice(index, 1);
+            let aux = JSON.parse(JSON.stringify(adminLevels));
+            this.adminLevels = [];
+            this.adminLevels = aux;
+          }
         },
-        interventionLocations: {
-          type: Array,
+        iterventionLocationIdsChanged: function(locationIds) {
+          if (!locationIds || !locationIds.length || !this.locations) {
+            this.interventionLocations = [];
+            return;
+          }
+          this._setInterventionLocationsDetails(locationIds);
         },
-        iterventionLocationIds: {
-          type: Array,
-          observer: 'iterventionLocationIdsChanged',
-          notify: true
-        },
-        groupedLocations: {
-          type: Array
-        },
-        message: {
-          type: String,
-          value: null
-        }
-      },
-      adminLevelsChanged: function(adminLevels) {
-        if (!adminLevels || !adminLevels.length) {
-          return;
-        }
-        this._removeCountry(adminLevels);
-      },
-      _removeCountry: function(adminLevels) {
-        let index = adminLevels.findIndex(function(al) {
-          return al.name === 'Country';
-        });
-        if (index > -1) {
-          adminLevels.splice(index, 1);
-          let aux = JSON.parse(JSON.stringify(adminLevels));
-          this.adminLevels = [];
-          this.adminLevels = aux;
-        }
-      },
-      iterventionLocationIdsChanged: function(locationIds) {
-        if (!locationIds || !locationIds.length || !this.locations) {
-          this.interventionLocations = [];
-          return;
-        }
-        this._setInterventionLocationsDetails(locationIds);
-      },
-      _setInterventionLocationsDetails: function(locationIds) {
-        locationIds = locationIds.map(function(loc) {
-          return parseInt(loc);
-        });
-        let interventionLocations = this.locations.filter(function(loc) {
-          return locationIds.indexOf(parseInt(loc.id)) > -1;
-        });
+        _setInterventionLocationsDetails: function(locationIds) {
+          locationIds = locationIds.map(function(loc) {
+            return parseInt(loc);
+          });
+          let interventionLocations = this.locations.filter(function(loc) {
+            return locationIds.indexOf(parseInt(loc.id)) > -1;
+          });
 
         this.interventionLocations = [];
         this.interventionLocations = interventionLocations;
