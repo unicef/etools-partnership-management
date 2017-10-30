@@ -712,7 +712,7 @@
             locationIds: [],
             clusterNames: [],
             locationNames: [],
-          }
+          };
 
           this.intervention.result_links.forEach(function(rl) {
             if (_.isEmpty(rl.ll_results)) {
@@ -730,14 +730,14 @@
 
                 if (indicator.cluster_name) {
                   [].push.apply(locAndClusters.clusterNames,
-                    this._getUniqueClusterNames(inidcator.cluster_name, locAndClusters.clusterNames));
+                    this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
                 }
               }, this);
 
             }, this);
           }, this);
 
-          if(!_.isEmpty(locAndClusters.locationIds)) {
+          if (!_.isEmpty(locAndClusters.locationIds)) {
             [].push.apply(locAndClusters.locationNames,
               this._extractLocationNames(locAndClusters.locationIds));
           }

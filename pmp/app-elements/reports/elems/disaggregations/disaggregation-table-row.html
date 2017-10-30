@@ -104,16 +104,16 @@
         '_setTotalEditable(data.total.key, levelReported, editable)',
       ],
 
-      _computeClass: function (rowType) {
+      _computeClass: function(rowType) {
         return rowType;
       },
 
-      _setTotalEditable: function (coords, levelReported, editable) {
+      _setTotalEditable: function(coords, levelReported, editable) {
         this.set(
-          'totalEditable',
-          (coords === '()' && levelReported === 0) ? editable : 0
+            'totalEditable',
+            (coords === '()' && levelReported === 0) ? editable : 0
         );
       },
     });
   </script>
-  </dom-module>
+</dom-module>
