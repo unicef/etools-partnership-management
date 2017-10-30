@@ -95,7 +95,7 @@
           let requestBody = {
             status: 'accepted',
             overall_status: this.selectedOverallStatus
-          }
+          };
 
           this.startSpinner();
           this.sendRequest({method: 'POST', endpoint: this.endpoint, body: requestBody})
