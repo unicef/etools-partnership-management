@@ -22,6 +22,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
+<link rel="import" href="../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
 <link rel="import" href="app-config/app-dexie-db-config.html">
 <link rel="import" href="app-config/app-config-behavior.html">
 
@@ -106,6 +108,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
+        <paper-button raised on-tap="_testAPITokenRequest"
+                      style="padding: 16px; margin: 24px; color: #fff; background-color: #0099ff">
+          Get API tokens
+        </paper-button>
+        <paper-button raised on-tap="_prpAPIRequestUsingToken"
+                      style="padding: 16px; margin: 24px; color: #fff; background-color: #0099ff">
+          Make PRP request using token
+        </paper-button>
+
         <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
           <page-partners id="partners" class="main-page"
                          show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
@@ -169,7 +180,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
         etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl
+        EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsAjaxRequestBehavior
       ],
 
       properties: {
@@ -197,7 +209,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         routeData: {
           type: Object
         },
-        _lastActivePartnerPage: String
+        _lastActivePartnerPage: String,
+        apiToken: String
       },
 
       observers: [
@@ -349,6 +362,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
+      },
+
+      /**
+       * ---------------------------------------------------------------------------------------
+       * TESTING API TOKENS
+       * ---------------------------------------------------------------------------------------
+       */
+      _testAPITokenRequest: function() {
+        let endpoint = {
+          url: '/api/jwt/get'
+        };
+        let self = this;
+        this.sendRequest({endpoint: endpoint}).then(function(response) {
+          console.log('Token received: ', response);
+          self.set('apiToken', response);
+        }).catch(function(error) {
+          console.error('Error getting API token', error);
+        });
+      },
+
+      _prpAPIRequestUsingToken: function() {
+        if (!this.apiToken || !this.apiToken.token) {
+          alert('Use previous button to get a valid token');
+          return;
+        }
+        let requestOptions = {
+          endpoint: {
+            url: '/api/unicef/9/progress-reports/'
+          },
+          headers: {
+            'Authorization': 'JWT ' + this.apiToken.token
+          }
+        };
+        this.sendRequest(requestOptions).then(function(response) {
+          console.log('PRP reports data received: ', response);
+        }).catch(function(error) {
+          console.error('Error getting PRP data', error);
+        });
       }
 
     });
