@@ -84,9 +84,9 @@
               if (parseInt(response[0].data.id) !== parseInt(user.profile.country)) {
 
                 self.fire('global-loading', {
-                message: 'Please wait while data is refreshed...',
-                active: true,
-                loadingSource: 'country-update'
+                  message: 'Please wait while data is refreshed...',
+                  active: true,
+                  loadingSource: 'country-update'
                 });
 
                self.refresh();
@@ -101,7 +101,7 @@
           let dataToCache = {
             cacheKey: 'currentCountry',
             data: country,
-          }
+          };
           EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
         },
         _findGroup: function(groupName) {

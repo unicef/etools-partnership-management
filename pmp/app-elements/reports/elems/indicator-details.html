@@ -1,51 +1,55 @@
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/app-layout/app-grid/app-grid-style.html">
-<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="status-badge.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-loading/etools-loading.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+
+<!-- TODO: remove this mockup data -->
+<link rel="import" href="../elems/reports-list-data-mockup.html">
+
 <link rel="import" href="disaggregations/disaggregation-table.html">
-<link rel="import" href="../styles/buttons.html">
-<link rel="import" href="behaviors/utils.html">
+<link rel="import" href="../../../app-behaviors/utils-behavior.html">
 
 <dom-module id="indicator-details">
   <template>
-    <style include="button-styles iron-flex iron-flex-alignment app-grid-style">
+    <style include="app-grid-style">
       :host {
         display: block;
         min-height: 150px;
         position: relative;
 
         --app-grid-columns: 2;
-        --app-grid-gutter: 25px;
+        --app-grid-gutter: 24px;
         --app-grid-item-height: auto;
         --paper-tab-ink: var(--primary-color);
         --paper-tabs-selection-bar-color: var(--primary-color);
 
         --paper-tabs: {
           padding-left: 13px;
-          border-bottom: 1px solid var(--paper-grey-300);
+          border-bottom: 1px solid var(--dark-divider-color);
         };
       }
 
       .tab-header {
-        padding: 10px 25px;
-        border-bottom: 1px solid var(--paper-grey-300);
-        background: var(--paper-grey-100);
-      }
-
-      .tab-header paper-button {
-        margin: 0;
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        padding: 10px 24px;
+        border-bottom: 1px solid var(--dark-divider-color);
+        background-color: var(--light-theme-background-color);
       }
 
       .tab-header dl {
         margin: 0;
         font-size: 12px;
-        color: var(--theme-primary-text-color-medium);
+        color: var(--primary-text-color);
       }
 
       .tab-header dt,
@@ -56,8 +60,13 @@
 
       .tab-header dt:first-of-type,
       .tab-header dd:first-of-type {
+        font-weight: bold;
         font-size: 13px;
-        color: var(--theme-primary-text-color-dark);
+      }
+
+      .tab-header dt:last-of-type,
+      .tab-header dd:last-of-type {
+        color: var(--secondary-text-color);
       }
 
       .tab-header dd::after {
@@ -70,95 +79,48 @@
         overflow: auto;
       }
 
-      .location {
-        margin: 0;
-        font-weight: bold;
-      }
-
-      .location iron-icon {
-        margin-left: -3px;
-        color: var(--theme-primary-color);
-      }
-
-      .current-pd {
-        margin: 0;
-        font-size: 12px;
-        color: var(--theme-primary-text-color-medium);
-      }
-      disaggregation-table {
-        margin-top: 1em;
-      }
     </style>
+
+    <etools-loading active="[[loading]]">Loading indicator details...</etools-loading>
 
     <template is="dom-if" if="[[!loading]]">
       <paper-tabs
           selected="{{selected}}"
-          fallback-selection="location-[[disaggregations.indicator_location_data.0.location.id]]"
+          fallback-selection="location-[[indicatorReport.indicator_location_data.0.location.id]]"
           attr-for-selected="name"
           scrollable
           hide-scroll-buttons>
-        <template
-            is="dom-repeat"
-            items="[[disaggregations.indicator_location_data]]"
-            as="location">
+        <template is="dom-repeat" items="[[indicatorReport.indicator_location_data]]" as="location">
           <paper-tab name="location-[[location.location.id]]">
-            <status-badge type="[[_computeLocationStatus(location)]]"></status-badge>
             [[location.location.title]]
           </paper-tab>
         </template>
       </paper-tabs>
 
-      <iron-pages
-          attr-for-selected="name"
-          selected="{{selected}}">
-        <template
-            is="dom-repeat"
-            items="[[disaggregations.indicator_location_data]]"
-            as="location">
+      <iron-pages attr-for-selected="name" selected="{{selected}}">
+        <template is="dom-repeat" items="[[indicatorReport.indicator_location_data]]" as="location">
           <div name="location-[[location.location.id]]">
-            <div class="tab-header layout horizontal justified">
+            <div class="tab-header">
               <dl>
-                <template
-                    is="dom-if"
-                    if="[[_equals(location.display_type, 'number')]]"
-                    restamp="true">
+                <template is="dom-if" if="[[_equals(location.display_type, 'number')]]" restamp="true">
                   <dt>Location progress:</dt>
                   <dd>[[location.location_progress.v]]</dd>
                   <dt>Previous location progress:</dt>
                   <dd>[[location.previous_location_progress.v]]</dd>
                 </template>
-                <template
-                    is="dom-if"
-                    if="[[_equals(location.display_type, 'percentage')]]"
-                    restamp="true">
+                <template is="dom-if" if="[[_equals(location.display_type, 'percentage')]]" restamp="true">
                   <dt>Location progress:</dt>
                   <dd>[[_toPercentage(location.location_progress.c)]]</dd>
                   <dt>Previous location progress:</dt>
                   <dd>[[_toPercentage(location.previous_location_progress.c)]]</dd>
                 </template>
               </dl>
-              <div>
-                <template
-                    is="dom-if"
-                    if="[[!_equals(computedMode, 'view')]]">
-                  <paper-button
-                      class="btn-primary"
-                      modal-index="[[index]]"
-                      on-tap="_openModal"
-                      raised>
-                    Enter data
-                  </paper-button>
-                </template>
-              </div>
             </div>
 
             <div class="table-container app-grid">
               <div class="item">
-                <disaggregation-table
-                    data="[[location]]"
-                    mapping="[[disaggregations.disagg_lookup_map]]">
+                <disaggregation-table data="[[location]]" mapping="[[indicatorReport.disagg_lookup_map]]">
                 </disaggregation-table>
-
               </div>
             </div>
           </div>
@@ -173,149 +135,76 @@
       id: 'indicator-details',
 
       behaviors: [
-        window.App.Behaviors.UtilsBehavior
+        EtoolsLogsBehavior,
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+        EtoolsPmpApp.Behaviors.Endpoints,
+        EtoolsPmpApp.Behaviors.Utils,
+        EtoolsPmpApp.Behaviors.ReportsListDataMockup // TODO: remove mockup data use
       ],
 
       properties: {
-        indicatorId: Number,
-
-        indicatorName: String,
-
-        reportableId: Number,
-
-        reportingPeriod: String,
-
-        opened: Object,
-
-        selected: {
-          type: Number,
-          value: 0,
+        indicatorReportId: Number,
+        indicatorReport: {
+          type: Object,
+          value: {}
         },
-
-        initialized: {
-          type: Boolean,
-          value: true,
-        },
-
         loading: {
           type: Boolean,
-          value: false,
+          value: false
         },
-
-        hasPD: {
-          type: Boolean,
-          computed: '_computeHasPD(currentPD)',
-        },
-
-        params: {
-          type: Object,
-          computed: '_computeParams(indicatorId)',
-        },
-
-        data: {
-          type: Object,
-          statePath: 'disaggregations.byIndicator',
-        },
-
-        disaggregations: {
-          type: Object,
-        },
-
-        mode: {
+        selected: {
           type: String,
-          value: '',
-          statePath: 'programmeDocumentReports.current.mode',
-        },
-
-        overrideMode: {
-          type: String,
-          value: '',
-        },
-
-        computedMode: {
-          type: String,
-          computed: '_computeMode(mode, overrideMode)',
-        },
+          value: ''
+        }
       },
 
-      listeners: {
-        'location-updated': '_onLocationUpdated',
-      },
-      ready: function() {
-        console.log(
-          'indicator-details',
-          this.reportableId,
-          this.indicatorName,
-          this.indicatorId,
-          this.reportingPeriod,
-          this.overrideMode,
-          this.disaggregations
-        );
+      getIndicatorDetails: function() {
+        if (!_.isEmpty(this.indicatorReport)) {
+          // indicator details already loaded
+          return;
+        }
+        if (this.indicatorReportId && this.indicatorReportId !== this.indicatorReport.id) {
+          let endpoint = this.getEndpoint('reportIndicatorsDetails');
+          let params = this._computeParams(this.indicatorReportId);
+          this._showLoading();
+          let self = this;
+          this.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
+            self.set('indicatorReport', (response && response[0]) ? response[0] : {});
+            self._hideLoading();
+          }).catch(function(error) {
+            let errMsg = 'Indicator details data request failed!';
+            self.logError(errMsg, 'reports-indicator-details', error);
+
+            // TODO: remove this toast, after API request can be made
+            self.fire('toast', {text: errMsg, showCloseBtn: true});
+
+            self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+            self.set('indicator', {});
+
+            // TODO: remove mockup data use, make sure API request is correct
+            self.set('indicatorReport', self.indicatorDetailsMockup[0]);
+
+            self._hideLoading();
+          });
+        } // else, no need for getting indicator details
       },
 
-      _computeParams: function (indicatorId) {
+      _showLoading: function() {
+        this.set('loading', true);
+      },
+
+      _hideLoading: function() {
+        this.set('loading', false);
+      },
+
+      _computeParams: function(indicatorReportId) {
         return {
-          pks: indicatorId,
+          pks: indicatorReportId,
           limit: 1,
         };
-      },
+      }
 
-      _computeMode: function (mode, overrideMode) {
-        return overrideMode || mode;
-      },
-
-      _openModal: function (e) {
-        this.$$('#modal-' + e.target.modalIndex).open();
-      },
-
-      _updateModals: function (e, data) {
-        var id = e.target.id;
-        var change;
-
-        if (!id) {
-          return;
-        }
-
-        change = {};
-
-        change[id] = data.value;
-
-        this.set('opened', Object.assign({}, this.opened, change));
-      },
-
-      _computeTableVisibility: function (opened, index) {
-        return !!opened['modal-' + index];
-      },
-
-      _computeLocationStatus: function (location) {
-        return location.is_complete ? 'success' : 'error';
-      },
-
-      _computeHasPD: function (currentPD) {
-        return !!Object.keys(currentPD).length;
-      },
-
-      _onLocationUpdated: function (e) {
-        e.stopPropagation();
-
-        var allComplete = this.disaggregations.indicator_location_data
-            .every(function (location) {
-              return location.is_complete;
-            });
-
-        if (!allComplete) {
-          return;
-        }
-
-        this.fire('report-complete', {
-          indicatorId: this.indicatorId,
-          reportableId: this.reportableId,
-        });
-      },
-
-      attached: function () {
-        this.set('opened', {});
-      },
     });
   </script>
 </dom-module>

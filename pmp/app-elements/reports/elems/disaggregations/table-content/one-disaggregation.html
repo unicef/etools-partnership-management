@@ -67,7 +67,7 @@
         return (mapping[0] || []).choices;
       },
 
-      _determineTotalRow: function (data) {
+      _determineTotalRow: function(data) {
         return {
           title: 'total',
           total: {
@@ -78,7 +78,7 @@
       },
 
       _determineRows: function(columns, data) {
-        return columns.map(function (z) {
+        return columns.map(function(z) {
           var formatted = this._formatDisaggregationIds([z.id]);
 
           return {

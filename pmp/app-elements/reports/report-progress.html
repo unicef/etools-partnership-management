@@ -1,209 +1,144 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
+
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
-<link rel="import" href="../common-elements/etools-error-messages-box.html">
+<link rel="import" href="../../app-behaviors/utils-behavior.html">
 
-<link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../../styles/page-layout-styles.html">
-<link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
+<link rel="import" href="elems/report-overall.html">
+<link rel="import" href="elems/report-status.html">
+<link rel="import" href="elems/indicator-report-target.html">
 <link rel="import" href="elems/indicator-details.html">
+
+<link rel="import" href="../../../styles/page-common-styles.html">
+<link rel="import" href="../../../styles/grid-layout-styles.html">
+
+<!-- TODO: remove reports mockup data -->
+<link rel="import" href="elems/reports-list-data-mockup.html">
 
 <dom-module id="report-progress">
 
-  <template>
+  <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles iron-flex iron-flex-factors">
-      :host {
+    <style include="page-common-styles grid-layout-styles">
+      *[hidden] {
+        display: none !important;
+      }
+
+      .indicator + .indicator {
+        border-top: 1px solid var(--primary-background-color);
+      }
+
+      .indicator-toggle,
+      .indicator-header-title,
+      .indicator-header-target {
         @apply --layout-vertical;
-        width: 100%;
-
-        --etools-checkable-input-label: {
-          padding-bottom: 2px;
-        }
-      }
-      .rejected {
-        color: var(--dark-error-color) !important;
-      }
-      .submitted {
-        color: var(--success-color) !important;
-      }
-      .accepted {
-        color: var(--primary-color) !important;
+        @apply --layout-center-justified;
       }
 
-      paper-input {
-        width: 100%;
-      }
-
-      :host {
-        display: block;
-        margin-bottom: 25px;
-
-        --ecp-content: {
-          padding: 0;
-        };
-
-        --paper-icon-button: {
-          color: var(--text-color, black);
-        };
-      }
-
-      .header {
-        padding: 25px;
-      }
-
-      .header labelled-item {
-        font-size: 16px;
-      }
-
-      .header labelled-item:not(:last-child) {
-        margin-bottom: 25px;
-      }
-
-      .indicator {
-        margin-bottom: 1px;
-      }
-      .indicator:last-child {
-        margin-bottom: 25px;
-      }
       .indicator-toggle {
-        width: 25px;
         position: relative;
         z-index: 1;
         color: white;
-        cursor: pointer;
+        padding: 0 4px;
+        border-right: 1px solid var(--primary-background-color);
       }
-      .indicator-toggle.odd {
-        background-color: green;
+
+      .indicator-toggle paper-icon-button {
+        width: 24px;
+        height: 24px;
+        padding: 0;
       }
-      .indicator-toggle.even {
+
+      .indicator-toggle {
         background-color: var(--primary-color);
       }
 
+      .indicator-toggle.cluster-indicator {
+        background-color: var(--ternary-color);
+      }
+
       .indicator-header {
-        padding: 6px 25px 6px 10px;
-        background: var(--paper-grey-300);
+        padding: 8px 24px 8px 16px;
+        background: var(--medium-theme-background-color);
       }
 
-      .indicator-header__title h3 {
+      .indicator-header-title h3 {
         margin: 0;
-        font-size: 14px;
       }
 
-      .indicator-header__target {
-        width: 250px;
-        padding-left: 10px;
-      }
-
-      .indicator-header__target dl {
-        margin: 0;
-        text-align: right;
-        font-size: 11px;
-      }
-
-      .indicator-header__target dt {
-        color: var(--secondary-text-color, grey);
-      }
-
-      .indicator-header__target dd {
-        margin: 0;
-        font-weight: bold;
-      }
-
-      paper-radio-group {
-        margin-left: -12px;
+      #no-report-data {
+        background-color: var(--primary-background-color);
       }
     </style>
 
-      <etools-content-panel class="content-section" panel-title="PD Output of SSFA Expected Result 1">
-        <div class="row-h flex-c">
-          <div class="col col-5">
-            <paper-textarea label="Result Statement"
-                         value="Increased country capacity for evidence based policy dialogue and advanced something"
-                         placeholder="&#8212;"
-                         readonly></paper-textarea>
-          </div>
-          <div class="col col-2">
-            <paper-input value="On track" always-float-label label="Overall Status" readonly>
-                <iron-icon icon="av:fiber-manual-record" class="submitted" prefix></iron-icon>
-            </paper-input>
-          </div>
-          <div class="col col-5">
-            <paper-textarea label="Narative Assessment"
-                         value="ILorem ipsum dolor sit amet, qui ea possit probatus expetenda, te alterum necessitatibus mel. Possit probatus expetenda, te alterum necessitatibus mel."
-                         placeholder="&#8212;"
-                         readonly></paper-textarea>
-          </div>
-        </div>
-        <template is="dom-repeat" items="[[dummyArr]]" as="item">
-          <div class="indicator">
-            <div class="layout horizontal">
-              <div class$="indicator-toggle flex-none layout horizontal center-center [[_getIndicatorClass(index)]]"
-                  on-tap="_toggle"
-                  toggles$="[[index]]"
-                  role="button"
-                  aria-expanded$="[[item.expanded]]"
-                  aria-controls$="collapse-[[index]]"
-                  tabindex="-1">
-                <iron-icon
-                    icon$="[[_computeIcon(item.expanded)]]">
-                </iron-icon>
-              </div>
+    <paper-material id="no-report-data" elevation="1"
+                    hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]">
+      <div class="row-h">
+        <p>There is no report data to display.</p>
+      </div>
+    </paper-material>
 
-              <div class="indicator-header flex layout horizontal">
-                <div class="indicator-header__title flex-3 layout vertical center-justified">
-                  <div class="layout horizontal">
-                    <div class="layout vertical center-justified">
-                      <report-status
-                          status="1"
-                          no-label>
-                      </report-status>
-                    </div>
-                    <h3>Indicator Name</h3>
+    <template is="dom-repeat"
+              items="[[report.programme_document.cp_outputs]]"
+              as="result"
+              index-as="resultIndex">
+      <etools-content-panel class="content-section" panel-title="[[result.title]]">
+
+        <template is="dom-repeat"
+                  items="[[result.ll_outputs]]"
+                  as="lowerResult"
+                  index-as="lowerResultIndex">
+
+          <report-overall lower-result-title="[[lowerResult.title]]"
+                          latest-indicator="[[_getLowerResultLatestIndicator(lowerResult.id)]]"></report-overall>
+
+          <template is="dom-repeat"
+                    items="[[_getLowerResultIndicatorReports(lowerResult.id)]]"
+                    as="indicatorReport"
+                    index-as="indicatorReportIndex">
+
+            <div class="indicator">
+              <div class="layout-horizontal">
+                <div class$="indicator-toggle [[_getClusterIndicatorClass(indicatorReport)]]">
+                  <paper-icon-button on-tap="_toggle"
+                                     toggles$="[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                                     icon$="[[_computeIcon(indicatorReport.expanded)]]">
+                  </paper-icon-button>
+                </div>
+
+                <div class="indicator-header layout-horizontal flex-c">
+                  <div class="col col-8 indicator-header-title">
+                    <h3>
+                      [[_conditionalDisplay(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                      [[indicatorReport.reportable.blueprint.title]]
+                    </h3>
+                  </div>
+                  <div class="col col-4 indicator-header-target">
+                    <indicator-report-target target="[[indicatorReport.reportable.target]]"
+                                             cumulative-progress="[[indicatorReport.reportable.achieved.c]]"
+                                             achivement="[[indicatorReport.total.c]]"
+                                             bold></indicator-report-target>
                   </div>
                 </div>
-                <div class="indicator-header__target flex-none layout vertical center-justified">
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Target:</dt>
-                    <dd class="flex">..target</dd>
-                  </dl>
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Total cumulative progress:</dt>
-                      <dd class="flex"> 0.tcp</dd>
-
-                  </dl>
-                  <dl class="layout horizontal justified">
-                    <dt class="flex-3">Achievement in reporting period:</dt>
-                    <dd class="flex">0.arp</dd>
-                  </dl>
-                </div>
               </div>
-            </div>
 
-            <iron-collapse
-                id="collapse-[[index]]"
-                opened="{{item.expanded}}"
-                no-animation>
-                <!--on-opened-changed="_handleOpenedChanged"-->
-              <indicator-details
-                  id="indicatorDetails"
-                  reportable-id="[[index]]"
-                  indicator-name="Indicator-name"
-                  indicator-id="1"
-                  reporting-period="yesterday - the day after tomorrow"
-                  override-mode="view"
-                  disaggregations="[[disaggregations]]">
-              </indicator-details>
-            </iron-collapse>
-          </div>
+              <iron-collapse id="collapse-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                  opened="{{indicatorReport.expanded}}" on-transitioning-changed="_indicatorDetailsTransitioningComplete">
+                <indicator-details
+                    id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
+                    indicator-report-id="[[indicatorReport.id]]">
+                </indicator-details>
+              </iron-collapse>
+            </div>
+          </template>
+
         </template>
       </etools-content-panel>
+    </template>
 
   </template>
 
@@ -214,30 +149,10 @@
       Polymer({
         is: 'report-progress',
         behaviors: [
+          EtoolsPmpApp.Behaviors.Utils
         ],
         properties: {
-          expanded: {
-            type: Boolean,
-            value: false
-          },
-          dummyArr: {
-            type: Array,
-            value: [
-              {expanded: false},
-              {expanded: false},
-              {expanded: false},
-              {expanded: false},
-            ]
-          },
-          data: {
-            type: Object,
-          },
-          disaggregations: {
-            type: Object,
-          },
-        },
-        ready: function() {
-          this._setMockData();
+          report: Object
         },
 
         attached: function() {
@@ -252,167 +167,49 @@
         _computeIcon: function(opened) {
           return opened ? 'icons:expand-less' : 'icons:expand-more';
         },
+
         _toggle: function(e) {
-          this.$$('#collapse-' + e.model.index).toggle();
+          let toggles = Polymer.dom(e).localTarget.getAttribute('toggles');
+          let indicatorCollapsibleContent = this.$$('#collapse-' + toggles);
+          if (indicatorCollapsibleContent) {
+            indicatorCollapsibleContent.toggle();
+          }
         },
-        _getIndicatorClass: function(index) {
-          return (index % 2)? 'odd' : 'even';
+
+        _indicatorDetailsTransitioningComplete: function(e) {
+          let indicatorCollapsibleContent = Polymer.dom(e).localTarget;
+          let indicatorDetails = indicatorCollapsibleContent.querySelector('indicator-details');
+          if (indicatorDetails && !e.detail.value && indicatorCollapsibleContent.opened) {
+            // trigger indicator details request
+            indicatorDetails.getIndicatorDetails();
+          }
         },
-        _setMockData: function() {
-          this.disaggregations = {
-              "id": 2560,
-              "title": "ratio_indicator_report_19",
-              "indicator_location_data": [{
-                  "id": 16844,
-                  "indicator_report": 2560,
-                  "location": {
-                    "id": 1,
-                    "title": "location_0",
-                    "latitude": null,
-                    "longitude": null,
-                    "p_code": null
-                  },
-                  "display_type": "percentage",
-                  "disaggregation": {
-                    "()": {
-                      "c": 0.11339062933185473,
-                      "d": 3607,
-                      "v": 409
-                    }
-                  },
-                  "num_disaggregation": 1,
-                  "level_reported": 0,
-                  "disaggregation_reported_on": [],
-                  "location_progress": {
-                    "c": 0.11339062933185473,
-                    "d": 3607,
-                    "v": 409
-                  },
-                  "previous_location_progress": {
-                    "c": 0,
-                    "d": 0,
-                    "v": 0
-                  },
-                  "is_complete": true
-                }, {
-                  "id": 16845,
-                  "indicator_report": 2560,
-                  "location": {
-                    "id": 2,
-                    "title": "location_1",
-                    "latitude": null,
-                    "longitude": null,
-                    "p_code": null
-                  },
-                  "display_type": "percentage",
-                  "disaggregation": {
-                    "(16614,)": {
-                      "c": 0.21887461231723526,
-                      "d": 2257,
-                      "v": 494
-                    },
-                    "(16613,)": {
-                      "c": 0.03417343015805212,
-                      "d": 2341,
-                      "v": 80
-                    },
-                    "(16612,)": {
-                      "c": 0.021045485403937542,
-                      "d": 2946,
-                      "v": 62
-                    },
-                    "()": {
-                      "c": 0.08430540827147402,
-                      "d": 7544,
-                      "v": 636
-                    }
-                  },
-                  "num_disaggregation": 1,
-                  "level_reported": 1,
-                  "disaggregation_reported_on": [3834],
-                  "location_progress": {
-                    "c": 0.08430540827147402,
-                    "d": 7544,
-                    "v": 636
-                  },
-                  "previous_location_progress": {
-                    "c": 0,
-                    "d": 0,
-                    "v": 0
-                  },
-                  "is_complete": true
-                }],
-              "time_period_start": "2017-01-31",
-              "time_period_end": "2017-01-31",
-              "display_type": "percentage",
-              "total": {
-                "c": 0.09371356828983948,
-                "d": 11151,
-                "v": 1045
-              },
-              "remarks": null,
-              "report_status": "Sub",
-              "disagg_lookup_map": [{
-                "id": 3834,
-                "name": "gender",
-                "active": true,
-                "choices": [{
-                  "id": 16614,
-                  "value": "other",
-                  "active": true
-                }, {
-                  "id": 16613,
-                  "value": "female",
-                  "active": true
-                }, {
-                  "id": 16612,
-                  "value": "male",
-                  "active": true
-                }]
-              }],
-              "disagg_choice_lookup_map": [
-                [
-                  [16612, "male"],
-                  [16613, "female"],
-                  [16614, "other"]
-                ]
-              ]
-            };
 
+        _getClusterIndicatorClass: function(indicatorReport) {
+          return (indicatorReport && indicatorReport.isClusterIndicator) ? 'cluster-indicator' : '';
+        },
 
-            this.data = {
-                    "id": 2560,
-                    "name": "ratio_indicator_19",
-                    "llo_id": 40,
-                    "status": {
-                        "remarks": null,
-                        "report_status": "Sub"
-                    },
-                    "overall_status": "Con",
-                    "narrative_assessment": "",
-                    "indicator_reports": [{
-                        "id": 2560,
-                        "indicator_name": "ratio_indicator_19",
-                        "target": "5000",
-                        "achieved": {
-                            "c": 0.09371356828983948,
-                            "d": 11151,
-                            "v": 1045
-                        },
-                        "total": {
-                            "c": 0.09371356828983948,
-                            "d": 11151,
-                            "v": 1045
-                        },
-                        "report_status": "Sub"
-                    }],
-                    "display_type": "percentage",
-                    "total": {
-                        "c": 0.09371356828983948,
-                        "d": 11151,
-                        "v": 1045
-                    }
-                };
+        _noReportDataToShow: function(cpOutputs) {
+          return _.isEmpty(cpOutputs);
+        },
+
+        _getLowerResultLatestIndicator: function(lowerResultId) {
+          if (!lowerResultId || _.isEmpty(this.report.indicator_reports)) {
+            return {};
+          }
+          let latestIndicatorReport = this.report.indicator_reports.find(function(rep) {
+            return rep.reportable_object_id === lowerResultId;
+          });
+          return latestIndicatorReport ? latestIndicatorReport : {};
+        },
+
+        _getLowerResultIndicatorReports: function(lowerResultId) {
+          if (!lowerResultId || _.isEmpty(this.report.indicator_reports)) {
+            return [];
+          }
+          return this.report.indicator_reports.filter(function(rep) {
+            return rep.reportable_object_id === lowerResultId;
+          });
         }
 
       });

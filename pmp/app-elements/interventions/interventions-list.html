@@ -42,6 +42,7 @@
         @apply --layout-flex;
         width: 100%;
       }
+
       .pd-ref {
         @apply --text-btn-style;
         text-transform: none;
@@ -799,7 +800,7 @@
         },
 
         _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
-          return status === 'draft' || status === 'closed'|| this.validateFrsVsInterventionDates(pdDate, frsDate);
+          return status === 'draft' || status === 'closed' || this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });

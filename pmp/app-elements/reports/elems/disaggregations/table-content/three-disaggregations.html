@@ -1,7 +1,6 @@
 <link rel="import" href="../../behaviors/disaggregations.html">
 <link rel="import" href="../../../styles/disaggregation-table-styles.html">
 <link rel="import" href="../disaggregation-table-row.html">
-<link rel="import" href="../../behaviors/utils.html">
 
 <dom-module id="three-disaggregations">
   <template>
@@ -42,27 +41,27 @@
         </disaggregation-table-row>
       </template>
 
-   </template>
+    </template>
 
-   <!-- Totals row -->
-   <disaggregation-table-row
-      data="[[columnTotalRow]]"
-      level-reported="[[data.level_reported]]"
-      indicator-type="[[data.display_type]]"
-      row-type="totalsRow">
-   </disaggregation-table-row>
-
-   <!-- Bottom table -->
-   <template is="dom-repeat"
-             items="[[bottomRows]]"
-             as="bottomRow">
+    <!-- Totals row -->
     <disaggregation-table-row
-        data="[[bottomRow]]"
+        data="[[columnTotalRow]]"
         level-reported="[[data.level_reported]]"
         indicator-type="[[data.display_type]]"
-        row-type="bottomRow">
+        row-type="totalsRow">
     </disaggregation-table-row>
-  </template>
+
+    <!-- Bottom table -->
+    <template is="dom-repeat"
+              items="[[bottomRows]]"
+              as="bottomRow">
+      <disaggregation-table-row
+          data="[[bottomRow]]"
+          level-reported="[[data.level_reported]]"
+          indicator-type="[[data.display_type]]"
+          row-type="bottomRow">
+      </disaggregation-table-row>
+    </template>
 
   </template>
 
@@ -109,15 +108,15 @@
 
       },
 
-      _getColumns: function (mapping) {
+      _getColumns: function(mapping) {
         return (mapping[0] || []).choices;
       },
 
-      _getRows: function (mapping) {
+      _getRows: function(mapping) {
         return (mapping[1] || []).choices;
       },
 
-      _getMiddleRows: function (mapping) {
+      _getMiddleRows: function(mapping) {
         return (mapping[2] || []).choices;
       },
 
@@ -130,10 +129,10 @@
           return [];
         }
 
-        return middleRows.map(function (y) {
+        return middleRows.map(function(y) {
           var formatted;
 
-          var columnData = columns.map(function (z) {
+          var columnData = columns.map(function(z) {
             formatted = this._formatDisaggregationIds([outerRowID, y.id, z.id]);
 
             return {
@@ -157,7 +156,7 @@
       },
 
       _determineTotals: function(columns, middleRows, data) {
-        var columnData = columns.map(function (z) {
+        var columnData = columns.map(function(z) {
           var formatted = this._formatDisaggregationIds([z.id]);
 
           return {

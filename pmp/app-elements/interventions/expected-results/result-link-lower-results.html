@@ -16,7 +16,8 @@
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
+    <style
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -33,12 +34,14 @@
         margin-right: 10px;
         width: 100px;
       }
+
       .indicator-col .heading {
         display: inline-block;
         width: 100%;
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         margin-bottom: 10px;
       }
+
       .indicator-col .indicator-baseline,
       .indicator-col .indicator-target {
         padding: 10px;
@@ -47,24 +50,30 @@
         box-sizing: border-box;
         min-height: 41px;
       }
+
       .indicator-col .indicator-baseline {
         background-color: var(--light-info-color);
       }
+
       .indicator-col .indicator-target {
         background-color: var(--success-color);
       }
+
       .indicator-col .content {
         padding: 10px 0;
         display: block;
       }
+
       .indicator-nr {
         @apply --layout-horizontal;
         padding-top: 31px;
       }
+
       .indicator-nr strong {
         @apply --layout-self-center;
         min-width: 30px;
       }
+
       .edit-indicator {
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         width: 36px;
@@ -190,7 +199,7 @@
           expectedResultId: Number,
         },
         listeners: {
-            'delete-confirm' : '_updateInterventionLocAndClusters'
+          'delete-confirm': '_updateInterventionLocAndClusters'
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
@@ -247,8 +256,8 @@
               return '# - ';
             case 'percentage':
               return '% - ';
-            // case 'yesno':
-            //   return 'Yes/No - ';
+              // case 'yesno':
+              //   return 'Yes/No - ';
           }
         },
 

@@ -81,8 +81,10 @@
 
     </paper-material>
 
-    <reports-display-list query-params="{{queryParams}}" paginator="{{paginator}}" no-collapse></reports-display-list>
-
+    <reports-display-list query-params="[[queryParams]]"
+                          paginator="{{paginator}}"
+                          no-collapse
+                          wait-query-params-init></reports-display-list>
   </template>
 
   <script>
@@ -292,7 +294,6 @@
         _buildCsvDownloadUrl: function() {
           // TODO: build download reports csv
         },
-
 
       });
     })();
