@@ -799,7 +799,7 @@
         },
 
         _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
-          return status === 'draft' || this.validateFrsVsInterventionDates(pdDate, frsDate);
+          return status === 'draft' || status === 'closed'|| this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });

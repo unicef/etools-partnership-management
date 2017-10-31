@@ -16,6 +16,9 @@
      * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
      */
     checkFrsConsistency: function(frsDetails, intervention, skipEmptyListCheck) {
+      if (intervention.status === 'closed') {
+        return false;
+      }
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
@@ -51,7 +54,8 @@
      */
     validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention,
                                              interventionIsFromWhere, skipEmptyListCheck) {
-      if (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere)) {
+      if (intervention.status === 'closed'
+        || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
         return true;
       }
       let totalUnicefContribution = parseFloat(unicefCash);

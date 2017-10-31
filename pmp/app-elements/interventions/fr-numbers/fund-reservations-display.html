@@ -110,13 +110,13 @@
           _frsTotalAmountWarning: String
         },
         observers: [
-          '_checkFrsAmountConsistency(intervention, frsDetails)'
+          '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
         ],
         _noFrs: function(frsDetails) {
           return (!frsDetails || !frsDetails.frs || !frsDetails.frs.length);
         },
         _checkFrsAmountConsistency: function(intervention, frsDetails) {
-          if (this._noFrs(frsDetails) || !intervention) {
+          if (this._noFrs(frsDetails) || !intervention || intervention.status === 'closed') {
             this.set('_frsTotalAmountWarning', '');
             return;
           }

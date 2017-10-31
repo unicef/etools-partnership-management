@@ -53,39 +53,42 @@
       <div class="row-h flex-c">
         <div class="col col-5">
           <etools-single-selection-menu id$="responsePlanDropdw"
-                                        label="Response Plan"
-                                        placeholder="&#8212;"
-                                        selected="{{responsePlanId}}"
-                                        options="[[responsePlans]]"
-                                        option-label="title"
-                                        option-value="id"
-                                        error-message="Please select Response Plan">
+                                    label="Response Plan"
+                                    placeholder="&#8212;"
+                                    selected="{{responsePlanId}}"
+                                    options="[[responsePlans]]"
+                                    option-label="title"
+                                    option-value="id"
+                                    error-message="Please select Response Plan"
+                                    disable-on-focus-handling>
           </etools-single-selection-menu>
         </div>
         <div class="col col-5">
           <etools-single-selection-menu id$="clusterDropdw"
-                                        label="Cluster"
-                                        placeholder="&#8212;"
-                                        selected-item="{{cluster}}"
-                                        options="[[clusters]]"
-                                        option-label="type"
-                                        option-value="id"
-                                        error-message="Please select Cluster">
+                                    label="Cluster"
+                                    placeholder="&#8212;"
+                                    selected-item="{{cluster}}"
+                                    options="[[clusters]]"
+                                    option-label="type"
+                                    option-value="id"
+                                    error-message="Please select Cluster"
+                                    disable-on-focus-handling>
           </etools-single-selection-menu>
         </div>
       </div>
       <div class="row-h flex-c">
         <etools-single-selection-menu id="clusterIndicatorDropdw"
-                                      label="Indicator"
-                                      placeholder="&#8212;"
-                                      selected="{{indicator.cluster_indicator_id}}"
-                                      selected-item="{{prpClusterIndicator}}"
-                                      options="[[prpClusterIndicators]]"
-                                      option-label="title"
-                                      option-value="id"
-                                      required
-                                      auto-validate
-                                      error-message="Please select Indicator">
+                                    label="Indicator"
+                                    placeholder="&#8212;"
+                                    selected="{{indicator.cluster_indicator_id}}"
+                                    selected-item="{{prpClusterIndicator}}"
+                                    options="[[prpClusterIndicators]]"
+                                    option-label="title"
+                                    option-value="id"
+                                    required
+                                    auto-validate
+                                    error-message="Please select Indicator"
+                                    disable-on-focus-handling>
         </etools-single-selection-menu>
       </div>
     </template>
@@ -127,7 +130,8 @@
                                    option-value="id"
                                    required
                                    auto-validate
-                                   error-message="Please select locations">
+                                   error-message="Please select locations"
+                                   disable-on-focus-handling>
       </etools-multi-selection-menu>
     </div>
 
@@ -261,7 +265,7 @@
             self.fire('stop-spinner');
             self.fire('show-toast', {error: error});
           });
-          //todo-remove
+          // TODO: remove
           this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
         },
         /* ESM dropdown can't process a nested property as option-label
