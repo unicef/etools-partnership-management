@@ -364,7 +364,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // Test tokens requests
       _testAPIRequestWithToken: function() {
-        this.prepareRequestOptions('reportReview', {countryId: 9, reportId: 12312})
+        this.prepareRequestOptions('progressReports', {})
             .then(this._getSomeDataFromApi.bind(this))
             .catch(this._failedToPrepareRequestOptions.bind(this));
       },

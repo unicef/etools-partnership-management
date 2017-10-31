@@ -9,8 +9,8 @@
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
   EtoolsPmpApp.EndpointConfig = {
-      // prp: 'http://127.0.0.1:8080'
-      prp: 'https://etools-test.unicef.org'
+      prp: 'http://127.0.0.1:8080'
+      // prp: 'https://etools-test.unicef.org'
   };
   EtoolsPmpApp.Endpoints = {
     changeCountry: {
@@ -173,7 +173,8 @@
       template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
     },
     reports: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/'
+      template: '/api/unicef/<%=countryId%>/progress-reports/',
+      token: 'prp'
     },
     reportDetails: {
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
