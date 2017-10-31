@@ -144,7 +144,8 @@
       _handleResponse: function() {
         this.fire('update-main-path', {path: ''});
         // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
-        // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred by the refresh method
+        // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred
+        // by the refresh method
         this.refresh();
       },
       _countrySelectorUpdate: function(countries) {

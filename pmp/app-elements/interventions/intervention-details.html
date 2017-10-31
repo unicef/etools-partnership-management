@@ -57,6 +57,7 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
+
       paper-toggle-button {
         font-size: 16px;
       }
@@ -72,6 +73,7 @@
           color: var(--error-color);
         }
       }
+
       div[no-left-padding] {
         padding-left: 0px !important;
       }
@@ -189,9 +191,12 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
+          <paper-toggle-button checked="{{intervention.contingency_pd}}"
+                               disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD
+          </paper-toggle-button>
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
+             class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
@@ -211,7 +216,8 @@
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
+             class="col col-3">
           <etools-info-tooltip icon="report" icon-first
                                hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
                                important-warning>
@@ -229,7 +235,8 @@
             <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
-        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
+        <div class="col col-3"
+             hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -237,19 +244,19 @@
       </div>
       <div class="row-h flex-c">
         <etools-single-selection-menu id="cpStructure"
-                                        label="CP Structure"
-                                        placeholder="&#8212;"
-                                        options="[[cpStructureOptions]]"
-                                        option-value="id"
-                                        option-label="name"
-                                        selected="{{intervention.country_programme}}"
-                                        dynamic-align
-                                        hide-search
-                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
-                                        required$="[[intervention.permissions.required.country_programme]]"
-                                        auto-validate
-                                        error-message="Please select CP Structure">
-          </etools-single-selection-menu>
+                                      label="CP Structure"
+                                      placeholder="&#8212;"
+                                      options="[[cpStructureOptions]]"
+                                      option-value="id"
+                                      option-label="name"
+                                      selected="{{intervention.country_programme}}"
+                                      dynamic-align
+                                      hide-search
+                                      readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                      required$="[[intervention.permissions.required.country_programme]]"
+                                      auto-validate
+                                      error-message="Please select CP Structure">
+        </etools-single-selection-menu>
       </div>
       <div class="row-h flex-c">
         <etools-multi-selection-menu id="sections"
@@ -263,14 +270,14 @@
                                      required$="[[intervention.permissions.required.sections]]"
                                      auto-validate
                                      error-message="Please select a section">
-          </etools-multi-selection-menu>
+        </etools-multi-selection-menu>
       </div>
       <div class="row-h flex-c">
         <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
           <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
           <template is="dom-repeat" items="[[intervention.cluster_names]]">
-              <span class="names-padding">[[item]]</span>
-            </template>
+            <span class="names-padding">[[item]]</span>
+          </template>
         </etools-form-element-wrapper>
       </div>
       <div class="row-h flex-c">
@@ -421,7 +428,8 @@
         observers: [
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
-          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start, intervention.status)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
+            'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
@@ -452,7 +460,7 @@
           }
           return locNames.slice(0, Math.min(locNames.length, 3));
         },
-         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
+        _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
             return true;
           }
@@ -515,7 +523,7 @@
         },
         _contingencyPDChanged: function(newValue) {
           if (newValue && this.intervention.status === 'signed') {
-           this._updateDatesRequiredState(false);
+            this._updateDatesRequiredState(false);
           } else {
             if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
               this._updateDatesRequiredState(true);
@@ -525,8 +533,8 @@
           this.$.intEnd.updateStyles();
         },
         _updateDatesRequiredState: function(isRequired) {
-           this.set('intervention.permissions.required.start', isRequired);
-           this.set('intervention.permissions.required.end', isRequired);
+          this.set('intervention.permissions.required.start', isRequired);
+          this.set('intervention.permissions.required.end', isRequired);
         },
         _showContingencyPd: function(agreement) {
           if (!agreement) {
@@ -679,7 +687,7 @@
 
         _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart, interventionStatus) {
           if (this.newIntervention || this.emptyFrsList(this.intervention)
-            || interventionStatus === 'closed') {
+              || interventionStatus === 'closed') {
             this.set('_frsStartConsistencyWarning', null);
             this.$.intStart.updateStyles();
             return;
@@ -691,7 +699,7 @@
 
         _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd, interventionStatus) {
           if (this.newIntervention || this.emptyFrsList(this.intervention)
-            || interventionStatus === 'closed') {
+              || interventionStatus === 'closed') {
             this.set('_frsEndConsistencyWarning', '');
             this.$.intEnd.updateStyles();
             return;
@@ -727,12 +735,12 @@
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
                   [].push.apply(locAndClusters.locationIds,
-                    this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
+                      this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
                 }
 
                 if (indicator.cluster_name) {
                   [].push.apply(locAndClusters.clusterNames,
-                    this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                      this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
                 }
               }, this);
 
@@ -741,7 +749,7 @@
 
           if (!_.isEmpty(locAndClusters.locationIds)) {
             [].push.apply(locAndClusters.locationNames,
-              this._extractLocationNames(locAndClusters.locationIds));
+                this._extractLocationNames(locAndClusters.locationIds));
           }
           return locAndClusters;
         },
@@ -756,7 +764,7 @@
         },
         _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
           let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
-                    return interventionLocIds.indexOf(indicLoc) < 0;
+            return interventionLocIds.indexOf(indicLoc) < 0;
           });
           return uniqueLocIds;
         },

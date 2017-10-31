@@ -74,10 +74,12 @@
           @apply(--pmp-form-field-frs-inconsistency-icon);
         };
       }
+
       .totalLabel {
         font-size: 16px;
         margin-top: -3px;
       }
+
       .totalLabel,
       .totalLabelUsd {
         padding-right: 10px;
@@ -132,14 +134,14 @@
 
             <span class="col-data col-2 right-align">
               <etools-info-tooltip icon="report" icon-first
-                                  hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
-                                  important-warning>
+                                   hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                                   important-warning>
                 <div slot="field">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
                     <etools-form-element-wrapper no-label-float
-                                                id="unicef-cash"
-                                                class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]">
+                                                 id="unicef-cash"
+                                                 class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]">
                       [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
                     </etools-form-element-wrapper>
                   </template>
@@ -290,7 +292,8 @@
         },
 
         observers: [
-          '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash, intervention.status)',
+          '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, ' +
+            'plannedBudget.unicef_cash, intervention.status)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
@@ -410,7 +413,7 @@
           }
           this.set('_frsConsistencyWarning',
               this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
-              'interventionDetails', true));
+                  'interventionDetails', true));
           if (unicefCashField) {
             unicefCashField.updateStyles();
           }
