@@ -49,8 +49,12 @@
         max-width: 175px;
       }
 
-      #currency {
-        width: auto;
+      .total {
+        width: 200px;
+      }
+
+      #currencyDd {
+        width: 130px;
       }
 
       #unicef-cash.frs-inconsistent {
@@ -69,6 +73,14 @@
         --etools-tooltip-trigger-icon: {
           @apply(--pmp-form-field-frs-inconsistency-icon);
         };
+      }
+      .totalLabel {
+        font-size: 16px;
+        margin-top: -3px;
+      }
+      .totalLabel,
+      .totalLabelUsd {
+        padding-right: 10px;
       }
     </style>
     <etools-content-panel panel-title="Planned Budget">
@@ -102,7 +114,7 @@
           <div slot="row-data">
             <span class="col-data col-3 currency">
               <etools-form-element-wrapper no-label-float>
-                <span>USD</span>
+                <span class="totalLabelUsd">Total PD Budget</span><span>USD</span>
               </etools-form-element-wrapper>
             </span>
 
@@ -167,10 +179,12 @@
             </span>
           </div>
         </etools-data-table-row>
+
         <etools-data-table-row no-collapse>
           <div slot="row-data">
             <span class="col-data col-3 currency">
-              <etools-single-selection-menu id="currency" placeholder="&#8212;"
+              <span class="totalLabel">Total PD Budget</span>
+              <etools-single-selection-menu id="currencyDd" placeholder="&#8212;"
                                             options="[[currencies]]"
                                             selected="{{plannedBudget.currency}}"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
@@ -276,7 +290,7 @@
         },
 
         observers: [
-          '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash)',
+          '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, plannedBudget.unicef_cash, intervention.status)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
@@ -385,9 +399,9 @@
           }
         },
 
-        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash) {
+        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, iterventionStatus) {
           let unicefCashField = this.$$('#unicefCashUsd');
-          if (this.emptyFrsList(this.intervention, 'interventionDetails')) {
+          if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed') {
             this.set('_frsConsistencyWarning', '');
             if (unicefCashField) {
               unicefCashField.updateStyles();
