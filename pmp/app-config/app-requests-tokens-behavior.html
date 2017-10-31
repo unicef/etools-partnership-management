@@ -15,20 +15,15 @@
     },
 
     authorizationTokenMustBeAdded: function(endpoint) {
-      return endpoint && !!endpoint.token;
+      return endpoint && ('token' in endpoint);
     },
 
     getCurrentToken: function(tokenKey) {
-      switch (tokenKey) {
-        case 'prp':
-          return localStorage.getItem(this._requestTokenKeys.prp);
-      }
-      // other token key usage can be defined later if needed
-      return null;
+        return localStorage.getItem(this._requestTokenKeys[tokenKey]);
     },
 
-    storePrpToken: function(tokenBase64Encoded) {
-      localStorage.setItem(this._requestTokenKeys.prp, tokenBase64Encoded);
+    storeToken: function(tokenKey, tokenBase64Encoded) {
+      localStorage.setItem(this._requestTokenKeys[tokenKey], tokenBase64Encoded);
     },
 
     decodeBase64Token: function(encodedToken) {
