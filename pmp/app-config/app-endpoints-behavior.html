@@ -1,3 +1,4 @@
+<link rel="import" href="app-requests-tokens-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
 <link rel="import" href="app-config-behavior.html">
 <script>
@@ -183,7 +184,12 @@
       template: '/api/v2/interventions/reporting-periods/<%=reportId%>/'
     },
     reportReview: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/'
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/',
+      token: 'prp'
+    },
+
+    prpToken: {
+      url: '/api/jwt/get'
     }
   };
 
@@ -195,12 +201,54 @@
         endpoint.url = this.baseSite + _.template(endpoint.template)(data);
       }
       return endpoint;
-    }
+    },
+
+    prepareRequestOptions: function(endpointName, data) {
+      let options = {
+        endpoint: this.getEndpoint(endpointName, data)
+      };
+
+      // create defer object (utils behavior contains to many other unneeded methods to be used)
+      let defer = {};
+      defer.promise = new Promise(function(resolve, reject) {
+        defer.resolve = resolve;
+        defer.reject = reject;
+      });
+
+      if (this.authorizationTokenMustBeAdded(options.endpoint)) {
+        let token = this.getCurrentToken(options.endpoint.token);
+        // TODO: `tokenIsValid`, `getAuthorizationHeader`, `requestToken` must verify options.endpoint.token === 'prp'
+        // because we could have other tokens too
+        if (token && this.tokenIsValid(token)) {
+          // token exists and it's still valid
+          options.headers = this.getAuthorizationHeader(token);
+          delete options.endpoint.token; // cleanup token
+          defer.resolve(options);
+        } else {
+          // request new token
+          let self = this;
+          this.requestToken(this.getEndpoint('prpToken')).then(function(response) {
+            self.storePrpToken(response.token);
+            options.headers = self.getAuthorizationHeader(response.token);
+            delete options.endpoint.token;
+            defer.resolve(options);
+          }).catch(function(error) {
+            // request for getting a new token failed
+            defer.reject(error);
+          });
+        }
+      } else {
+        defer.resolve(options);
+      }
+
+      return defer.promise;
+    },
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.Endpoints */
   EtoolsPmpApp.Behaviors.Endpoints = [
     EtoolsPmpApp.Behaviors.AppConfig,
+    EtoolsPmpApp.Behaviors.AppRequestsTokens,
     EtoolsPmpApp.Behaviors.EndpointsImpl
   ];
 

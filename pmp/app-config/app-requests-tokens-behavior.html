@@ -1,0 +1,62 @@
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<script>
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AppRequestsTokensImpl */
+  EtoolsPmpApp.Behaviors.AppRequestsTokensImpl = {
+    properties: {
+      _requestTokenKeys: {
+        type: Object,
+        value: {
+          prp: 'etoolsPrpToken'
+        }
+      }
+    },
+
+    authorizationTokenMustBeAdded: function(endpoint) {
+      return endpoint && !!endpoint.token;
+    },
+
+    getCurrentToken: function(tokenKey) {
+      switch (tokenKey) {
+        case 'prp':
+          return localStorage.getItem(this._requestTokenKeys.prp);
+      }
+      // other token key usage can be defined later if needed
+      return null;
+    },
+
+    storePrpToken: function(tokenBase64Encoded) {
+      localStorage.setItem(this._requestTokenKeys.prp, tokenBase64Encoded);
+    },
+
+    decodeBase64Token: function(encodedToken) {
+      let base64Url = encodedToken.split('.')[1];
+      let base64 = base64Url.replace('-', '+').replace('_', '/');
+      return JSON.parse(window.atob(base64));
+    },
+
+    tokenIsValid: function(token) {
+      let decodedToken = this.decodeBase64Token(token);
+      return Date.now() < decodedToken.exp;
+    },
+
+    getAuthorizationHeader: function(token) {
+      return {'Authorization': 'JWT ' + token}
+    },
+
+    requestToken: function(endpoint) {
+      return this.sendRequest({
+        endpoint: endpoint
+      });
+    }
+
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AppRequestsTokens */
+  EtoolsPmpApp.Behaviors.AppRequestsTokens = [
+    EtoolsAjaxRequestBehavior,
+    EtoolsPmpApp.Behaviors.AppRequestsTokensImpl
+  ]
+</script>
