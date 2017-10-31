@@ -106,7 +106,7 @@
       return currentDate.isBetween(moment(startDate), moment(endDate), null, '[]');
     },
 
-    isValidDate(date) {
+    isValidDate: function(date) {
       return (date instanceof Date === false) ? false : (date.toString() !== 'Invalid Date');
     },
 
@@ -114,11 +114,11 @@
       return moment().format('YYYY-MM-DD');
     },
 
-    dateIsBefore(dateToCheckStr, dateStr) {
+    dateIsBefore: function(dateToCheckStr, dateStr) {
       return moment(dateToCheckStr).isBefore(dateStr);
     },
 
-    dateIsAfter(dateToCheckStr, dateStr) {
+    dateIsAfter: function(dateToCheckStr, dateStr) {
       return moment(dateToCheckStr).isAfter(dateStr);
     }
 
