@@ -12,6 +12,7 @@
 
   <!-- Import test helpers data -->
   <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
+  <link rel="import" href="test-helpers/partner-tests-mockup-data.html">
 
   <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
   <!-- Import the element to test -->
@@ -44,8 +45,8 @@
       });
 
       test('Default active page should be partners list', function(done) {
-        expect(partners.route.path).to.equal('partners/list');
         flush(function() {
+          expect(partners.route.path).to.equal('partners/list');
           expect(partners.get('partnerPage')).to.equal('list');
           expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
           expect(partners.listActive).to.equal(true);
@@ -55,32 +56,21 @@
           let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
           expect(titleText).to.equal('Partners');
 
-          let ironPages = Polymer.dom(partners.root).querySelector('iron-pages');
-//          console.log(Polymer.dom(ironPages).querySelector('#list'));
-          console.log(ironPages);
-          // expect(listElement.is).to.equal('partners-list');
-
           done();
         });
-
-//
-//        expect(listElement.is).to.equal('partners-list');
-
-
-//        console.log(listElement);
-//
-
-//        flush(function () {
-
-
-//          done();
-//        });
       });
 
-//      test('Match url params with filters shown above list', function() {
-//
-//      });
+      test('Test partners list element', function() {
 
+      });
+
+      test('Test partners overview element', function() {
+
+      });
+
+      test('Test partners details element', function() {
+
+      });
 
     });
   </script>
