@@ -181,7 +181,7 @@
           loadingSource: 'reports-page'
         });
     
-        this._createReportRatingDialog();
+        this._createReportStatusUpdateDialogs();
       },
 
       _setActivePage: function(listActive, tab) {
@@ -272,7 +272,7 @@
         }
       },
 
-      _createReportRatingDialog: function() {
+      _createReportStatusUpdateDialogs: function() {
         this.reportRatingDialog = document.createElement('report-rating-dialog');
         this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
         this.reportRatingDialog.set('toastEventSource', this);
