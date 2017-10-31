@@ -41,7 +41,8 @@
       {value: 'Sen', label: 'Sent Back'},
       {value: 'Sub', label: 'Submitted'},
       {value: 'Ove', label: 'Overdue'}
-    ]
+    ],
+    locationTypes: []
   };
 
   let commonStaticDataStore = Redux.createStore(function(state, action) {
@@ -190,6 +191,8 @@
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
       case 'SET_CURRENT_USER':
         return Object.assign({}, state, {currentUser: action.user});
+      case 'SET_LOCATION_TYPES':
+        return Object.assign({}, state, {locationTypes: action.locationTypes});
     }
   });
 

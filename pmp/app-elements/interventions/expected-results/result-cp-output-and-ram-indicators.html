@@ -111,7 +111,7 @@
           type: Boolean,
           value: false
         },
-        _preventRamIndicatorReset: Boolean,
+        preventRamIndicatorReset: Boolean,
         editIndex: {
           value: null
         },
@@ -150,14 +150,17 @@
       },
 
       _handleRamIndicatorsReqResponse: function(response) {
-        if (!this._preventRamIndicatorReset) {
+        if (this._thereAreSelectedIndicators() &&  //* to prevent triggering validation
+            !this.preventRamIndicatorReset) {
           this.set('selectedRamIndicatorsIds', []);
         }
-        this.set('_preventRamIndicatorReset', false);
+        this.set('preventRamIndicatorReset', false);
         this.set('cpOutputRamIndicators', response);
         this._showRamIndicatorsLoadingSpinner(false);
       },
-
+      _thereAreSelectedIndicators: function() {
+        return this.selectedRamIndicatorsIds && this.selectedRamIndicatorsIds.length;
+      },
       _showRamIndicatorsLoadingSpinner: function(show) {
         if (show) {
           this.$.cpOutputRamIndicatorsDialog.startSpinner();
@@ -184,6 +187,7 @@
         this.set('selectedCpOutputId', undefined);
         this.set('availableCpOutputs', []);
         this.set('cpOutputRamIndicators', []);
+        this.set('selectedRamIndicatorsIds', []);
         this.set('selectedRamIndicatorsIds', undefined);
 
         this.$.cpOutput.set('invalid', false);

@@ -311,6 +311,7 @@
                                  required="[[intervention.permissions.required.planned_budget]]">
     </intervention-planned-budget>
 
+
     <etools-content-panel class="content-section" panel-title="Planned Visits">
       <intervention-planned-visits id="plannedVisits"
                                    data-items="{{intervention.planned_visits}}"
@@ -318,9 +319,8 @@
                                    years="[[years]]">
       </intervention-planned-visits>
     </etools-content-panel>
-
-    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section"></intervention-reporting-requirements>
-
+      <reporting-requirements intervention-id="[[intervention.id]]" class="content-section">
+      </reporting-requirements>
   </template>
 
   <script>
@@ -766,7 +766,7 @@
         },
         _isEmpty: function(length) {
           return !!!length;
-        },
+        }
       });
     })();
   </script>

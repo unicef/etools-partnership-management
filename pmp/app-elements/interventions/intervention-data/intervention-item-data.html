@@ -273,14 +273,15 @@
             });
 
             let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerInterventionRequest({method: method, endpoint: endpoint, body: intervention,
-              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData});
+            this._triggerInterventionRequest({
+              method: method, endpoint: endpoint, body: intervention,
+              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
+            });
           }
         },
 
         _formatResponseDataForDexie: function(responseDetail) {
           let dexieObject = {};
-          dexieObject.sections = this._getSelectedSectionsNames(responseDetail);
           dexieObject.cp_outputs = [];
           dexieObject.unicef_budget = 0;
           dexieObject.cso_contribution = 0;
@@ -297,6 +298,7 @@
           dexieObject.document_type = responseDetail.document_type;
           dexieObject.unicef_focal_points = responseDetail.unicef_focal_points;
 
+          this._updateSections(dexieObject, responseDetail);
           this._updatePlannedBudgetInfo(dexieObject, responseDetail);
           this._updateOffices(dexieObject, responseDetail);
           this._updateFrInfo(dexieObject, responseDetail.frs_details);
@@ -307,7 +309,11 @@
 
           return dexieObject;
         },
-
+        _updateSections: function(dexieObject, intervention) {
+          let selectedSections = this._getSelectedSections(intervention);
+          dexieObject.sections = selectedSections.sectionIds;
+          dexieObject.section_names = selectedSections.section_names;
+        },
         _updatePlannedBudgetInfo: function(dexieObject, intervention) {
           dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
               parseFloat(intervention.planned_budget.in_kind_amount);
@@ -345,20 +351,27 @@
             return office.name;
           });
         },
-        _getSelectedSectionsNames: function(responseDetail) {
+        _getSelectedSections: function(responseDetail) {
+          let selectedSections = {
+            sectionIds: [],
+            section_names: []
+          };
+
           if (responseDetail.sections) {
-            let sections = [];
-            let interventionSections = _.map(responseDetail.sections, function(sectionId) {
+            let sectionNames = [];
+            let interventionSectionIds = _.map(responseDetail.sections, function(sectionId) {
               return parseInt(sectionId, 10);
             });
+            selectedSections.sectionIds = interventionSectionIds;
+
             this.sections.forEach(function(section) {
-              if (interventionSections.indexOf(parseInt(section.id, 10)) > -1) {
-                sections.push(section.name);
+              if (interventionSectionIds.indexOf(parseInt(section.id, 10)) > -1) {
+                sectionNames.push(section.name);
               }
             });
-            return sections;
+            selectedSections.section_names = sectionNames;
           }
-          return [];
+          return selectedSections;
         }
 
       });
