@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <title>Partners Page</title>
+  <title>Partners Pages Tests</title>
 
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../node_modules/redux/dist/redux.min.js"></script>
 
   <!-- Import test helpers data -->
   <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
@@ -25,28 +26,55 @@
 
   <script>
     suite('page-partners tests', function() {
-      let partners;
+      var partners;
       setup(function() {
         partners = fixture('partners');
         partners.set('route', {
           prefix: '',
           path: 'partners/list',
-          __queryParams: {size: 10, sort :'name.asc'}
+          '__queryParams': {size: 10, sort :'name.asc'}
         });
         partners.set('permissions', appUserPermissions);
+        partners.set('partnerPage', 'list');
+        partners.set('listActive', true);
       });
 
       test('Main partners element: page-partners', function() {
         assert.equal(partners.is, 'page-partners');
       });
 
-      test('Default active page should be partners list', function() {
+      test('Default active page should be partners list', function(done) {
         expect(partners.route.path).to.equal('partners/list');
-        expect(partners.partnerPage).to.equal('list');
-        expect(partners.listActive).to.equal(true);
-        expect(partners.tabsActive).to.equal(false);
-        let listElement = partners.querySelector('#list');
-        expect(listElement.is).to.equal('partners-list');
+        flush(function() {
+          expect(partners.get('partnerPage')).to.equal('list');
+          expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
+          expect(partners.listActive).to.equal(true);
+          expect(partners.tabsActive).to.equal(false);
+
+          let titleEl = Polymer.dom(partners.root).querySelector('h1[main-title]');
+          let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
+          expect(titleText).to.equal('Partners');
+
+          let ironPages = Polymer.dom(partners.root).querySelector('iron-pages');
+//          console.log(Polymer.dom(ironPages).querySelector('#list'));
+          console.log(ironPages);
+          // expect(listElement.is).to.equal('partners-list');
+
+          done();
+        });
+
+//
+//        expect(listElement.is).to.equal('partners-list');
+
+
+//        console.log(listElement);
+//
+
+//        flush(function () {
+
+
+//          done();
+//        });
       });
 
 //      test('Match url params with filters shown above list', function() {
