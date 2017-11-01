@@ -69,33 +69,44 @@
           server = sinon.fakeServer.create();
           server.respondWith(
             'GET',
-            'http://localhost:8081/api/v2/agreements/',
+             '/api/v2/agreements/',
+            //'http://localhost:8081/api/v2/agreements/',
             [
               200,
               responseHeaders.json,
               JSON.stringify(agrListMockup)
             ]
           );
-          server.respond();
+           server.autoRespond = true;
+           server.respondImmediately = true;
+        //   server.respond(function(err, res) {
+        //     console.log('err', err);
+        //     console.log('res', res);
+        //     expect(res).is.not.a('null');
+        //    // done();
+        // });
 
           agrListEl = fixture('agreementsListFixture');
           agrListEl.set('permissions', appUserPermissions);
-
         });
         teardown(function() {
           server.restore();
         });
+
         test('can instantiate agreements-list element', function() {
           assert.equal(agrListEl.is, 'agreements-list');
         });
         suite('when entering a search string', function() {
-          setup(function() {
+          setup(function(done) {
             agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
           });
 
-          test('the list is filtered by the search string', function() {
+          test('the list is filtered by the search string', function(done) {
+           flush(function() {
            console.log(agrListEl.filteredAgreements);
            assert.equal(agrListEl.filteredAgreements.length, 1);
+           done();
+           });
           });
         })
       });

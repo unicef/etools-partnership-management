@@ -54,9 +54,6 @@
     },
     _requestListData: function() {
       let self = this;
-      console.log('before send req');
-      console.log(this.id);
-      console.log(JSON.stringify(this.options));
       this.sendRequest(this.options)
         .then(function(resp) {
           console.log('S');
