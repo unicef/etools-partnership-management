@@ -8,40 +8,96 @@
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
+    <script src="../node_modules/redux/dist/redux.min.js"></script>
+
+    <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
+    <link rel="import" href="test-helpers/agreement-list-data-mockup.html">
 
     <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
     <!-- Import the element to test -->
     <link rel="import" href="../pmp/pages/page-agreements.html">
+    <link rel="import" href="../pmp/app-elements/agreements/agreements-list.html">
   </head>
   <body>
-    <test-fixture id="agreementsPages">
+    <test-fixture id="agreementsPageFixture">
       <template>
         <page-agreements></page-agreements>
       </template>
     </test-fixture>
 
+    <test-fixture id="agreementsListFixture">
+      <template>
+        <agreements-list></agreements-list>
+      </template>
+    </test-fixture>
+
     <script>
       suite('page-agreements tests', function() {
-        var agreementsPages;
+        var pageAgrementEl;
         setup(function() {
-          agreementsPages = fixture('agreementsPages');
+          pageAgrementEl = fixture('agreementsPageFixture');
+          pageAgrementEl.set('agreementListActive', true);
+          pageAgrementEl.set('permissions', appUserPermissions);
         });
 
-        test('Validate page-agreements element', function() {
-          assert.equal(agreementsPages.is, 'page-agreements');
+        test('can instantiate page-agreement element', function() {
+          assert.equal(pageAgrementEl.is, 'page-agreements');
         });
+        test('default selected tab is agreement list', function () {
+          assert.equal(pageAgrementEl.agreementListActive, true);
+        });
+        test('can access New agreement page', function(done) {
+          flush(function() {
+            pageAgrementEl.addEventListener('update-main-path', function(event) {
+            assert.equal(event.detail.path, 'agreements/new-agreement');
+            done();
+          });
+            let newAgrBtn = pageAgrementEl.$$('#newAgreementBtn');
+            newAgrBtn.click();
+          })
 
-//        test('Check new agreement page', function(done) {
-//          agreementsPages.set('agreementPage', 'new-agreement');
-//          agreementsPages.set('route.path', '/new-agreement');
-//          flush(function() {
-//            assert.equal(agreementsPages.agreementPage, 'new-agreement');
-//            done();
-//          });
-//        });
+        });
+      });
+      suite('agreements-list tests', function() {
+        var agrListEl;
+        var request;
+        var server;
+        var responseHeaders = {
+          json: { 'Content-Type': 'application/json' }
+        };
+        setup(function() {
+          server = sinon.fakeServer.create();
+          server.respondWith(
+            'GET',
+            'http://localhost:8081/api/v2/agreements/',
+            [
+              200,
+              responseHeaders.json,
+              JSON.stringify(agrListMockup)
+            ]
+          );
+          server.respond();
 
-        // TODO: more tests will be done later (after app functionality is completed)
+          agrListEl = fixture('agreementsListFixture');
+          agrListEl.set('permissions', appUserPermissions);
 
+        });
+        teardown(function() {
+          server.restore();
+        });
+        test('can instantiate agreements-list element', function() {
+          assert.equal(agrListEl.is, 'agreements-list');
+        });
+        suite('when entering a search string', function() {
+          setup(function() {
+            agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
+          });
+
+          test('the list is filtered by the search string', function() {
+           console.log(agrListEl.filteredAgreements);
+           assert.equal(agrListEl.filteredAgreements.length, 1);
+          });
+        })
       });
     </script>
   </body>
