@@ -137,11 +137,11 @@
     getEditDeleteIndicator: {
       template: '/api/v2/interventions/applied-indicators/<%=id%>/'
     },
-    getPrpClusterIndicators: { //by cluster id
+    getPrpClusterIndicators: { // by cluster id
       template: '/api/indicator/ca/?clusters=<%=id%>'
     },
-    getPrpClusterIndicator: { //by id
-      template: 'api/indicator/<%=id%>/'
+    getPrpClusterIndicator: { // by id
+      template: '/api/indicator/<%=id%>/'
     },
     getResponsePlans: {
       template: '/api/core/workspace/<%=id%>/response-plan/'
@@ -170,13 +170,21 @@
     reports: {
       template: '/api/unicef/<%=countryId%>/progress-reports/'
     },
-    reportDetails: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>',
+    reportDetails: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
+    },
+    reportIndicatorsDetails: {
+      url: '/api/indicator/indicator-reports/'
+    },
     reportRequirementsList: {
       template: '/api/v2/interventions/<%=intervId%>/reporting-periods/'
     },
     reportRequirementsItem: {
       template: '/api/v2/interventions/reporting-periods/<%=reportId%>/'
     },
+    reportReview: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/'
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */

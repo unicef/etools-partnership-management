@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
@@ -20,6 +21,7 @@
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppUserPermissionsBehavior,
+          etoolsBehaviors.EtoolsRefreshBehavior,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
         ],
 
@@ -60,6 +62,7 @@
             // TODO: check response to make sure it contains a valid user
             self._setUserData(res);
             self.dispatch('setCurrentUser', res);
+            self.checkDexieCountryIsUserCountry(res);
           }).catch(function(error) {
             self._resetUserAndPermissions();
             self.logError('Error occurred on logged user data request', 'user request', error);
@@ -68,7 +71,39 @@
             }
           });
         },
+        checkDexieCountryIsUserCountry: function(user) {
+          let self = this;
+          let country = {
+            id: user.profile.country,
+            name: user.profile.country_name
+          };
 
+          EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.where('cacheKey').equals('currentCountry').toArray()
+          .then(function(response) {
+            if (response.length > 0) {
+              if (parseInt(response[0].data.id) !== parseInt(user.profile.country)) {
+
+                self.fire('global-loading', {
+                  message: 'Please wait while data is refreshed...',
+                  active: true,
+                  loadingSource: 'country-update'
+                });
+
+               self.refresh();
+              }
+
+            } else {
+              self.addCountryInIndexedDb(country);
+            }
+          });
+        },
+        addCountryInIndexedDb: function(country) {
+          let dataToCache = {
+            cacheKey: 'currentCountry',
+            data: country,
+          };
+          EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
+        },
         _findGroup: function(groupName) {
           return _.find(this.userGroups, function(grp) {
             return grp.name === groupName;

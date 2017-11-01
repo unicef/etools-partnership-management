@@ -59,7 +59,8 @@
                                     options="[[responsePlans]]"
                                     option-label="title"
                                     option-value="id"
-                                    error-message="Please select Response Plan">
+                                    error-message="Please select Response Plan"
+                                    disable-on-focus-handling>
           </etools-single-selection-menu>
         </div>
         <div class="col col-5">
@@ -70,7 +71,8 @@
                                     options="[[clusters]]"
                                     option-label="type"
                                     option-value="id"
-                                    error-message="Please select Cluster">
+                                    error-message="Please select Cluster"
+                                    disable-on-focus-handling>
           </etools-single-selection-menu>
         </div>
       </div>
@@ -85,7 +87,8 @@
                                     option-value="id"
                                     required
                                     auto-validate
-                                    error-message="Please select Indicator">
+                                    error-message="Please select Indicator"
+                                    disable-on-focus-handling>
         </etools-single-selection-menu>
       </div>
     </template>
@@ -93,22 +96,22 @@
       <div class="col col-2">
         <div class="layout-vertical">
           <paper-input label="Baseline"
-                      value="{{indicator.baseline}}"
-                      type="number"
-                      placeholder="&#8212;">
+                       value="{{indicator.baseline}}"
+                       type="number"
+                       placeholder="&#8212;">
           </paper-input>
         </div>
       </div>
       <div class="col col-3">
-         <paper-input id="targetEl"
-                      label="Target"
-                      value="{{indicator.target}}"
-                      type="number"
-                      required
-                      auto-validate
-                      error-message="Please add a valid target"
-                      placeholder="&#8212;">
-          </paper-input>
+        <paper-input id="targetEl"
+                     label="Target"
+                     value="{{indicator.target}}"
+                     type="number"
+                     required
+                     auto-validate
+                     error-message="Please add a valid target"
+                     placeholder="&#8212;">
+        </paper-input>
       </div>
     </div>
     <div class="row-h flex-c">
@@ -127,7 +130,8 @@
                                    option-value="id"
                                    required
                                    auto-validate
-                                   error-message="Please select locations">
+                                   error-message="Please select locations"
+                                   disable-on-focus-handling>
       </etools-multi-selection-menu>
     </div>
 
@@ -232,7 +236,7 @@
             this.clusters = [];
             return;
           }
-          this.clusters = this.responsePlans.filter(function(r){
+          this.clusters = this.responsePlans.filter(function(r) {
             return parseInt(r.id) === parseInt(selectedRespPlanId);
           })[0].clusters;
         },
@@ -261,7 +265,7 @@
             self.fire('stop-spinner');
             self.fire('show-toast', {error: error});
           });
-         //todo-remove
+          // TODO: remove
           this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
         },
         /* ESM dropdown can't process a nested property as option-label
@@ -310,8 +314,8 @@
           this.responsePlanId = null;
           this.cluster = null;
         }
-    });
-  })();
+      });
+    })();
   </script>
 </dom-module>
 

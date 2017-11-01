@@ -106,7 +106,8 @@
               </span>
               <span class="col-data flex-c">
                 <a class="view-report"
-                   href$="reports/[[report.id]]/progress" hidden$="[[!_canViewReport(report.status)]]">
+                   href$="reports/[[report.id]]/progress"
+                   hidden$="[[!_canViewReport(report.status)]]">
                   View Report
                 </a>
               </span>
@@ -181,15 +182,20 @@
             type: Object,
             value: null,
             notify: true
-          }
+          },
+          debounceInterval: {
+            type: Number,
+            value: 300
+          },
+          waitQueryParamsInit: Boolean
         },
 
         observers: [
           '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
         ],
 
-        _loadReportsData: function(interventionId, currentUser) {
-          if (_.isEmpty(currentUser)) {
+        _loadReportsData: function(interventionId, currentUser, pageSize, page, qParamsData) {
+          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData)) {
             return;
           }
           let self = this;
@@ -204,7 +210,10 @@
               active: true,
               loadingSource: 'reports-list'
             });
-
+            if (self.lastAjaxRequest) {
+              // abort previous req and then fire a new one with updated params
+              self.lastAjaxRequest.abort();
+            }
             self.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
               self.set('reports', response.results);
               self.updatePaginatorTotalResults(response);
@@ -225,7 +234,7 @@
 
               self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
             });
-          }, 300);
+          }, this.debounceInterval);
         },
 
         _prepareReqParamsObj: function(interventionId) {
@@ -251,6 +260,10 @@
             }.bind(this));
           }
           return params;
+        },
+
+        _queryParamsNotInitialized: function(qParamsData) {
+          return this.waitQueryParamsInit && !qParamsData.value;
         }
 
       });

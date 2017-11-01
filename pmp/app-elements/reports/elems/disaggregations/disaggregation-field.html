@@ -67,7 +67,7 @@
         'field.input': '_handleInput',
       },
 
-      attached: function () {
+      attached: function() {
         this.fire('register-field', this);
       },
 
@@ -77,15 +77,15 @@
       //
       // detached: function () {}
 
-      validate: function () {
+      validate: function() {
         return this.$.field.validate();
       },
 
-      getField: function () {
+      getField: function() {
         return this.$.field;
       },
 
-      _handleInput: function (e) {
+      _handleInput: function(e) {
         var change = {};
 
         change[this.key] = e.target.value;

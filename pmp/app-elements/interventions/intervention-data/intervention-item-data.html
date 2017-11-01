@@ -273,8 +273,10 @@
             });
 
             let method = (isNew) ? 'POST' : 'PATCH';
-            this._triggerInterventionRequest({method: method, endpoint: endpoint, body: intervention,
-              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData});
+            this._triggerInterventionRequest({
+              method: method, endpoint: endpoint, body: intervention,
+              multiPart: prepareMultipartData, prepareMultipartData: prepareMultipartData
+            });
           }
         },
 
@@ -356,7 +358,7 @@
           };
 
           if (responseDetail.sections) {
-            let section_names = [];
+            let sectionNames = [];
             let interventionSectionIds = _.map(responseDetail.sections, function(sectionId) {
               return parseInt(sectionId, 10);
             });
@@ -364,10 +366,10 @@
 
             this.sections.forEach(function(section) {
               if (interventionSectionIds.indexOf(parseInt(section.id, 10)) > -1) {
-                section_names.push(section.name);
+                sectionNames.push(section.name);
               }
             });
-            selectedSections.section_names = section_names;
+            selectedSections.section_names = sectionNames;
           }
           return selectedSections;
         }

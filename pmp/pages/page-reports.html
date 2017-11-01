@@ -2,12 +2,16 @@
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="../app-elements/etools-status/etools-action-button.html">
+<link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
+<link rel="import" href="../app-elements/reports/elems/report-status.html">
+<link rel="import" href="../app-elements/reports/elems/report-rating-dialog.html">
+<link rel="import" href="../app-elements/reports/elems/report-reject-dialog.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -20,6 +24,12 @@
     <style include="page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
+      }
+      h1[main-title] sup {
+        font-size: 14px;
+      }
+      etools-action-button {
+        min-width: 160px;
       }
     </style>
 
@@ -44,9 +54,18 @@
               Partner Reports
             </template>
             <template is="dom-if" if="[[tabsActive]]">
-              <span>Report name</span>
+              <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
+              <sup><report-status status="[[report.status]]"></report-status></sup>
             </template>
           </h1>
+          <div class="top-content-actions-wrapper">
+            <div class="top-content-action" hidden$="[[!tabsActive]]">
+              <etools-action-button actions="[[reportActions]]"
+                                    on-accept-report="_accept"
+                                    on-send-back-to-partner="_sendBackToPartner"
+                                    on-download-report="_download"></etools-action-button>
+            </div>
+          </div>
         </div>
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
@@ -72,10 +91,6 @@
 
     <div id="main">
       <div id="pageContent">
-
-        <etools-error-messages-box id="errorsBox"
-                                   title="Errors Saving Report"
-                                   errors="{{serverErrors}}"></etools-error-messages-box>
         <iron-pages id="reportsPages"
                     selected="{{reportPage}}"
                     attr-for-selected="name"
@@ -100,15 +115,8 @@
         </iron-pages>
 
       </div> <!-- page content end -->
-
-      <!-- sidebar content start -->
-      <div id="sidebar" hidden$="[[listActive]]">
-        <report-status
-            report="[[report]]">
-        </report-status>
-      </div> <!-- sidebar content end -->
-    </div> <!-- main container end -->
-
+      <!-- No sidebar here -->
+    </div> <!-- main container end -->    
   </template>
 
   <script>
@@ -119,7 +127,8 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        EtoolsPmpApp.Behaviors.PageUtils
+        EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.ReportDetails
       ],
 
       properties: {
@@ -127,35 +136,35 @@
           type: Boolean
         },
         reportPage: {
-          type: String,
+          type: String
         },
         routeData: {
-          type: Object,
+          type: Object
+        },
+        reportRatingDialog: {
+          type: Object
+        },
+        reportRejectDialog: {
+          type: Object
         },
         activeTab: {
           type: String,
           value: '',
           observer: '_activeTabChanged'
-        },
-        report: {
-          type: Object,
-        },
-        serverErrors: {
-          type: Array,
-          value: []
-        },
-        currentPage: String,
+        }
       },
 
       observers: [
         '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, activeTab)'
+        '_pageChanged(listActive, activeTab)',
+        '_observeRouteDataId(routeData.id, listActive, tabsActive)',
+        '_reportChanged(report)'
       ],
 
       ready: function() {
         this.debounce('mockup-list-loaded', function() {
           this.fire('global-loading', {active: false});
-        }.bind(this), 500)
+        }.bind(this), 500);
       },
 
       attached: function() {
@@ -171,6 +180,8 @@
           active: true,
           loadingSource: 'reports-page'
         });
+    
+        this._createReportStatusUpdateDialogs();
       },
 
       _setActivePage: function(listActive, tab) {
@@ -180,8 +191,6 @@
         if (!listActive) {
           page = tab;
           pagePrefix = 'report-';
-        } else {
-          this.set('serverErrors', []);
         }
         if (page) {
           let self = this;
@@ -210,7 +219,7 @@
           return;
         }
         this.debounce('debounce-url-tab-update', function() {
-          var tabs = this.$$('#reportTabs');
+          let tabs = this.$$('#reportTabs');
           if (tabs) {
             tabs.notifyResize();
           }
@@ -221,6 +230,75 @@
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'reports-page', 'report-');
+      },
+
+      _observeRouteDataId: function(reportId, listActive) {
+        if (listActive) {
+          return;
+        }
+        let id = parseInt(reportId, 10);
+        if (this.report && this.report.id === id) {
+          return;
+        }
+        this.async(function() {
+          if (Number.isNaN(id)) {
+            this.fire('toast', {text: 'Invalid report ID!', showCloseBtn: true});
+            this.set('report', null);
+            return;
+          }
+          this.debounce('loading-report-data', this.requestReportDetails.bind(this, id), 50);
+        }.bind(this));
+      },
+
+      _accept: function(e) {
+        this.reportRatingDialog.open();
+      },
+
+      _sendBackToPartner: function(e) {
+        console.log('send report back to partner action here...');
+        this.reportRejectDialog.open();
+      },
+
+      _download: function(e) {
+        console.log('download report action here...');
+      },
+
+      detached: function() {
+        if (this.reportRatingDialog) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.reportRatingDialog);
+        }
+        if (this.reportRejectDialog) {
+          Polymer.dom(document.querySelector('body')).removeChild(this.reportRejectDialog);
+        }
+      },
+
+      _createReportStatusUpdateDialogs: function() {
+        this.reportRatingDialog = document.createElement('report-rating-dialog');
+        this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
+        this.reportRatingDialog.set('toastEventSource', this);
+
+        Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
+        
+        this.reportRejectDialog = document.createElement('report-reject-dialog');
+        this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
+        this.reportRejectDialog.set('toastEventSource', this);
+
+        Polymer.dom(document.querySelector('body')).appendChild(this.reportRejectDialog);
+      },
+
+      _reportChanged: function(reprot) {
+        let endpoint = this.getEndpoint('reportReview', {
+          countryId: this.currentUser.profile.country,
+          reportId: this.report.id
+        });
+
+        this.reportRatingDialog.set('pdRefNumber', this.report.programme_document.reference_number);
+        this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);  
+        this.reportRatingDialog.set('endpoint', endpoint);
+        
+        this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
+        this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);  
+        this.reportRejectDialog.set('endpoint', endpoint);
       }
 
     });
