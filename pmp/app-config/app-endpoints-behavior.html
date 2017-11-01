@@ -8,6 +8,10 @@
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
+  EtoolsPmpApp.EndpointConfig = {
+      prp: 'http://127.0.0.1:8080'
+      // prp: 'https://etools-test.unicef.org'
+  };
   EtoolsPmpApp.Endpoints = {
     changeCountry: {
       url: '/users/api/changecountry/'
@@ -169,7 +173,8 @@
       template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
     },
     reports: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/'
+      template: '/api/unicef/<%=countryId%>/progress-reports/',
+      token: 'prp'
     },
     reportDetails: {
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
@@ -187,6 +192,10 @@
       template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/',
       token: 'prp'
     },
+    progressReports: {
+      template: '/api/unicef/116/progress-reports/',
+      token: 'prp'
+    },
 
     prpToken: {
       url: '/api/jwt/get'
@@ -197,8 +206,9 @@
   EtoolsPmpApp.Behaviors.EndpointsImpl = {
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
+      let baseSite = ("token" in endpoint) ? EtoolsPmpApp.EndpointConfig[endpoint.token] : this.baseSite;
       if (endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '') {
-        endpoint.url = this.baseSite + _.template(endpoint.template)(data);
+        endpoint.url = baseSite + _.template(endpoint.template)(data);
       }
       return endpoint;
     },
@@ -228,7 +238,7 @@
           // request new token
           let self = this;
           this.requestToken(this.getEndpoint('prpToken')).then(function(response) {
-            self.storePrpToken(response.token);
+            self.storeToken(options.endpoint.token, response.token);
             options.headers = self.getAuthorizationHeader(response.token);
             delete options.endpoint.token;
             defer.resolve(options);
@@ -240,9 +250,8 @@
       } else {
         defer.resolve(options);
       }
-
       return defer.promise;
-    },
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.Endpoints */
