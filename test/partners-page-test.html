@@ -17,62 +17,117 @@
   <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
   <!-- Import the element to test -->
   <link rel="import" href="../pmp/pages/page-partners.html">
+  <link rel="import" href="../pmp/app-elements/partners/partners-list.html">
 </head>
 <body>
+
   <test-fixture id="partners">
     <template>
       <page-partners></page-partners>
     </template>
   </test-fixture>
 
+  <test-fixture id="partners-list">
+    <template>
+      <partners-list></partners-list>
+    </template>
+  </test-fixture>
+
   <script>
-    suite('page-partners tests', function() {
-      var partners;
+    let defaultRoute = {
+      prefix: '',
+      path: 'partners/list',
+      '__queryParams': {size: 10, sort :'name.asc'}
+    };
+
+    window.EtoolsRequestCacheDisabled = true;
+
+    // setup fake server to mock requests then test partners pages
+    suite('App partners pages tests', function() {
+      let server, partnersList;
+      let responseHeaders = {
+        json: { 'Content-Type': 'application/json' }
+      };
+
       setup(function() {
-        partners = fixture('partners');
-        partners.set('route', {
-          prefix: '',
-          path: 'partners/list',
-          '__queryParams': {size: 10, sort :'name.asc'}
+        server = sinon.fakeServer.create();
+        server.autoRespond = true;
+        server.respondImmediately = true;
+      });
+
+      teardown(function() {
+        server.restore();
+      });
+
+
+      suite('Main partners page tests', function() {
+        let partners;
+
+        setup(function() {
+          // setup main partners page test-fixture
+          partners = fixture('partners');
+          partners.set('route', defaultRoute);
+          partners.set('permissions', appUserPermissions);
+          partners.set('partnerPage', 'list');
+          partners.set('listActive', true);
         });
-        partners.set('permissions', appUserPermissions);
-        partners.set('partnerPage', 'list');
-        partners.set('listActive', true);
-      });
 
-      test('Main partners element: page-partners', function() {
-        assert.equal(partners.is, 'page-partners');
-      });
-
-      test('Default active page should be partners list', function(done) {
-        flush(function() {
-          expect(partners.route.path).to.equal('partners/list');
-          expect(partners.get('partnerPage')).to.equal('list');
-          expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
-          expect(partners.listActive).to.equal(true);
-          expect(partners.tabsActive).to.equal(false);
-
-          let titleEl = Polymer.dom(partners.root).querySelector('h1[main-title]');
-          let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
-          expect(titleText).to.equal('Partners');
-
-          done();
+        test('Main partners element: page-partners is registered', function() {
+          assert.equal(partners.is, 'page-partners');
         });
+
+        test('Default active page should be partners list', function(done) {
+          flush(function() {
+            expect(partners.route.path).to.equal('partners/list');
+            expect(partners.get('partnerPage')).to.equal('list');
+            expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
+            expect(partners.listActive).to.equal(true);
+            expect(partners.tabsActive).to.equal(false);
+
+            let titleEl = Polymer.dom(partners.root).querySelector('h1[main-title]');
+            let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
+            expect(titleText).to.equal('Partners');
+
+            let partnersListElement = partners.$$('#list');
+            expect(partnersListElement.is).to.equal('partners-list');
+            done();
+          });
+        });
+
       });
 
-      test('Test partners list element', function() {
+      // test partners list elements
+      suite('Partners list elements tests', function() {
+
+        setup(function() {
+          partnersList = fixture('partners-list');
+          partnersList.set('urlParams', defaultRoute.__queryParams);
+        });
+
+        test('Test partners list data', function(done) {
+          // activate partners list page
+          partnersList.set('active', true);
+
+          // fake partners request
+          server.respondWith('GET', '/api/v2/partners/', [
+            200, responseHeaders.json,
+            JSON.stringify(partnersListData)
+          ]);
+          server.respond();
+
+          flush(function() {
+            // Polymer.dom(partnersList.root).querySelector('partners-list-data'
+            let partnersListDataEl = partnersList.$$('#partners');
+            expect(partnersListDataEl.is).to.equal('partners-list-data');
+            // /api/v2/partners/ response should match partnersListData
+            expect(JSON.stringify(partnersListData)).to.equal(JSON.stringify(partnersListDataEl.data));
+            done();
+          });
+        });
 
       });
-
-      test('Test partners overview element', function() {
-
-      });
-
-      test('Test partners details element', function() {
-
-      });
-
     });
+
   </script>
 </body>
 </html>
