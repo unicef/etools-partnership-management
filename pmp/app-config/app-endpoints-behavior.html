@@ -278,6 +278,10 @@
     },
 
     fireRequest: function(endpoint, endpointTemplateData, requestAdditionalOptions) {
+      if (!endpoint) {
+        this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
+        return;
+      }
       let defer = this._getDeferrer();
       let self = this;
       this.prepareRequestOptions(endpoint, endpointTemplateData)
