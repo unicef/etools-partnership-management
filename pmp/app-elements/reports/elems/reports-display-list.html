@@ -213,8 +213,8 @@
               self.lastAjaxRequest.abort();
             }
 
-            /* TODO: currentUser.profile.Country has a different id from PRP... mapper needed */
-            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params})
+            /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
+            self.fireRequest('reports', {countryId: 81}, {params: params})
               .then(function(response) {
                 self.set('reports', response.results);
                 self.updatePaginatorTotalResults(response);
