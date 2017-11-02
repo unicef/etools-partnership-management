@@ -9,8 +9,8 @@
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
   EtoolsPmpApp.EndpointConfig = {
-      prp: 'http://127.0.0.1:8080'
-      // prp: 'https://etools-test.unicef.org'
+    prp: 'http://127.0.0.1:8080'
+    // prp: 'https://etools-test.unicef.org'
   };
   EtoolsPmpApp.Endpoints = {
     changeCountry: {
@@ -42,10 +42,10 @@
     agreementAmendmentsDelete: {
       template: '/api/v2/agreements/amendments/<%=id%>/',
     },
-    agreementAmendmentsTypeDelete:  {
+    agreementAmendmentsTypeDelete: {
       template: '/api/v2/agreements/amendments/types/<%=id%>/',
     },
-    myProfile:  {
+    myProfile: {
       template: '/api/v2/users/myprofile/',
     },
     countries: {
@@ -213,17 +213,23 @@
       return endpoint;
     },
 
-    prepareRequestOptions: function(endpointName, data) {
-      let options = {
-        endpoint: this.getEndpoint(endpointName, data)
-      };
-
+    _getDeferrer: function() {
       // create defer object (utils behavior contains to many other unneeded methods to be used)
       let defer = {};
       defer.promise = new Promise(function(resolve, reject) {
         defer.resolve = resolve;
         defer.reject = reject;
       });
+      return defer;
+    },
+
+    prepareRequestOptions: function(endpointName, data) {
+      let options = {
+        endpoint: this.getEndpoint(endpointName, data)
+      };
+
+      // create defer object (utils behavior contains to many other unneeded methods to be used)
+      let defer = this._getDeferrer();
 
       if (this.authorizationTokenMustBeAdded(options.endpoint)) {
         let token = this.getCurrentToken(options.endpoint.token);
@@ -250,6 +256,45 @@
       } else {
         defer.resolve(options);
       }
+      return defer.promise;
+    },
+
+    _addAdditionalRequestOptions: function(options, requestAdditionalOptions) {
+      if (!_.isEmpty(requestAdditionalOptions)) {
+        Object.keys(requestAdditionalOptions).forEach(function(key) {
+          switch (key) {
+            case 'endpoint':
+              break;
+            case 'headers':
+              // add additional headers
+              options.headers = Object.assign({}, options.headers, requestAdditionalOptions[key]);
+              break;
+            default:
+              options[key] = requestAdditionalOptions[key];
+          }
+        });
+      }
+      return options;
+    },
+
+    fireRequest: function(endpoint, endpointTemplateData, requestAdditionalOptions) {
+      if (!endpoint) {
+        this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
+        return;
+      }
+      let defer = this._getDeferrer();
+      let self = this;
+      this.prepareRequestOptions(endpoint, endpointTemplateData)
+        .then(function(requestOptions) {
+          let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
+          return self.sendRequest(options);
+        })
+        .then(function(endpointResponse) {
+          defer.resolve(endpointResponse);
+        })
+        .catch(function(error) {
+          defer.reject(error);
+        });
       return defer.promise;
     }
   };

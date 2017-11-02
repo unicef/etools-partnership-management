@@ -200,9 +200,6 @@
           }
           let self = this;
           this.debounce('load-reports-data', function() {
-            let endpoint = self.getEndpoint('reports',
-                {countryId: currentUser.profile.country});
-
             let params = self._prepareReqParamsObj(interventionId);
 
             self.fire('global-loading', {
@@ -210,36 +207,32 @@
               active: true,
               loadingSource: 'reports-list'
             });
+
             if (self.lastAjaxRequest) {
               // abort previous req and then fire a new one with updated params
               self.lastAjaxRequest.abort();
             }
+
             /* TODO: currentUser.profile.Country has a different id from PRP... mapper needed */
-            self.prepareRequestOptions('reports', {countryId: currentUser.profile.country}).then(function(requestOptions){
-                requestOptions.params = params;
-                self.sendRequest(requestOptions).then(function(response) {
-                  self.set('reports', response.results);
-                  self.updatePaginatorTotalResults(response);
-                  self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
-                }).catch(function(error) {
-                  let errMsg = 'Reports list data request failed!';
-                  self.logError(errMsg, 'reports-list', error);
+            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params})
+              .then(function(response) {
+                self.set('reports', response.results);
+                self.updatePaginatorTotalResults(response);
+                self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+              })
+              .catch(function(error) {
+                let errMsg = 'Reports list data request failed!';
+                self.logError(errMsg, 'reports-list', error);
 
-                  // TODO: remove this toast, after API request can be made
-                  self.fire('toast', {text: errMsg, showCloseBtn: true});
+                self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+                self.set('reports', []);
 
-                  self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-                  self.set('reports', []);
+                // TODO: remove mockup data use, make sure API request is correct
+                self.set('reports', self.reportsDataMockup.results);
+                self.updatePaginatorTotalResults(self.reportsDataMockup);
 
-                  // TODO: remove mockup data use, make sure API request is correct
-                  self.set('reports', self.reportsDataMockup.results);
-                  self.updatePaginatorTotalResults(self.reportsDataMockup);
-
-                  self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
-                })}
-            ).catch(function(error) {
-                console.error('Failed to prepare request options!', error);
-             })
+                self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+              });
           }, this.debounceInterval);
         },
 
