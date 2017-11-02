@@ -165,11 +165,10 @@
           return;
         }
         if (this.indicatorReportId && this.indicatorReportId !== this.indicatorReport.id) {
-          let endpoint = this.getEndpoint('reportIndicatorsDetails');
           let params = this._computeParams(this.indicatorReportId);
           this._showLoading();
           let self = this;
-          this.sendRequest({endpoint: endpoint, params: params}).then(function(response) {
+          this.fireRequest('reportIndicatorsDetails', {}, {params: params}).then(function(response) {
             self.set('indicatorReport', (response && response[0]) ? response[0] : {});
             self._hideLoading();
           }).catch(function(error) {
