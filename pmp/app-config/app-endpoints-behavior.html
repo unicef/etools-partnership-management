@@ -100,7 +100,7 @@
       return EtoolsPmpApp.EndpointConfig.getTokenEndpoints[tokenKey];
     },
 
-    prepareRequestOptions: function(endpointName, data) {
+    addTokenToRequestOptions: function(endpointName, data) {
       let options = {
         endpoint: this.getEndpoint(endpointName, data)
       };
@@ -160,7 +160,7 @@
       }
       let defer = this._getDeferrer();
       let self = this;
-      this.prepareRequestOptions(endpoint, endpointTemplateData)
+      this.addTokenToRequestOptions(endpoint, endpointTemplateData)
           .then(function(requestOptions) {
             let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
             return self.sendRequest(options);
