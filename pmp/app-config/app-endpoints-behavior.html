@@ -26,22 +26,22 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
   EtoolsPmpApp.Behaviors.EndpointsImpl = {
     properties: {
-        prpCountries: {
-            type: Array,
-            statePath: 'PRPCountryData'
-        },
-        currentUser: {
-            type: Object,
-            statePath: 'currentUser'
-        }
+      prpCountries: {
+        type: Array,
+        statePath: 'PRPCountryData'
+      },
+      currentUser: {
+        type: Object,
+        statePath: 'currentUser'
+      }
     },
     _getPrpCountryId: function() {
       let self = this;
-      let currentCountry = this.currentUser.profile.countries_available.find(function(country){
-          return country.id === self.currentUser.profile.country;
+      let currentCountry = this.currentUser.profile.countries_available.find(function(country) {
+        return country.id === self.currentUser.profile.country;
       });
-      let prpCountry = self.prpCountries.find(function(prpCountry){
-          return prpCountry.business_area_code === currentCountry.business_area_code;
+      let prpCountry = self.prpCountries.find(function(prpCountry) {
+        return prpCountry.business_area_code === currentCountry.business_area_code;
       });
       return prpCountry.id;
     },

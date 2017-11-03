@@ -136,8 +136,10 @@
         if (indexP > -1) {
           partnersDdDataCopy.splice(indexP, 1);
         }
-        return Object.assign({}, state, {partnersDropdownData: partnersDdDataCopy,
-                                         csoPartners: csoPartnerCopy});
+        return Object.assign({}, state, {
+          partnersDropdownData: partnersDdDataCopy,
+          csoPartners: csoPartnerCopy
+        });
 
       case 'SET_AGREEMENTS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
