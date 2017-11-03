@@ -33,6 +33,7 @@
     csoPartners: [],
     countryData: {},
     disaggregations: [],
+    PRPCountryData: [],
     currentUser: {},
     reportStatuses: [
       // TODO: reports list filter statuses? To be confirmed by unicef team.
@@ -193,6 +194,8 @@
         return Object.assign({}, state, {currentUser: action.user});
       case 'SET_LOCATION_TYPES':
         return Object.assign({}, state, {locationTypes: action.locationTypes});
+      case 'SET_PRP_COUNTRY_DATA':
+        return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
     }
   });
 

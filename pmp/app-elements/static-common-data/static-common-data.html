@@ -15,6 +15,7 @@
 <link rel="import" href="behaviors/unicef-users-data.html">
 <link rel="import" href="behaviors/user-country-data.html">
 <link rel="import" href="behaviors/disaggregations-data.html">
+<link rel="import" href="behaviors/prp-countries.html">
 
 <dom-module id="static-common-data">
   <script>
@@ -33,13 +34,14 @@
         EtoolsPmpApp.Behaviors.SectorsData,
         EtoolsPmpApp.Behaviors.UnicefUsersData,
         EtoolsPmpApp.Behaviors.UserCountryData,
-        EtoolsPmpApp.Behaviors.DisaggregationsData
+        EtoolsPmpApp.Behaviors.DisaggregationsData,
+        EtoolsPmpApp.Behaviors.PRPCountries
       ],
       properties: {
         dataEndpointNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations']
+            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations', 'getPRPCountries']
         }
       },
 
