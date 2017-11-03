@@ -21,7 +21,7 @@
       _handlePRPCountryDataResponse: function(response) {
         if (!_.isEmpty(response)) {
           // set user country data
-          this.dispatch('setPRPCountries', response[0]);
+          this.dispatch('setPRPCountries', response);
         }
       }
 
@@ -30,7 +30,7 @@
     /** @polymerBehavior EtoolsPmpApp.Behaviors.PRPCountries */
     EtoolsPmpApp.Behaviors.PRPCountries = [
       EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-      EtoolsPmpApp.Behaviors.UserCountryDataImpl
+      EtoolsPmpApp.Behaviors.PRPCountriesImpl
     ];
 
   })();

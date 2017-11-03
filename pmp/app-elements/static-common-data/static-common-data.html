@@ -49,16 +49,16 @@
         let currentEndpoint;
         let self = this;
         this.dataEndpointNames.forEach(function(endpointName) {
-          currentEndpoint = self.getEndpoint(endpointName);
-          self._makeRequest(currentEndpoint, self._getEndpointSuccessHandler(endpointName), self._errorHandler);
+
+          // currentEndpoint = self.getEndpoint(endpointName);
+          self._makeRequest(endpointName, self._getEndpointSuccessHandler(endpointName), self._errorHandler);
         });
       },
 
-      _makeRequest: function(endpoint, successHandler, errorHandler) {
+      _makeRequest: function(endpointName, successHandler, errorHandler) {
+
         let self = this;
-        this.sendRequest({
-          endpoint: endpoint
-        }).then(function(resp) {
+        this.fireRequest(endpointName, {}).then(function(resp) {
           successHandler.bind(self, resp)();
         }).catch(function(error) {
           errorHandler.bind(self, error)();
@@ -91,6 +91,8 @@
             return this._handleUserCountryDataResponse;
           case 'addGetDisaggregations':
             return this._handleDisaggregationsResponse;
+          case 'getPRPCountries':
+            return this._handlePRPCountryDataResponse;
         }
       }
 
