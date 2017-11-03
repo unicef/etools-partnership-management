@@ -294,15 +294,13 @@
         this.reportRatingDialog.set("currentUser", this.currentUser);
         this.reportRatingDialog.set("prpCountries", this.prpCountries);
 
-        // TODO: remove endpoint and update reject report modal in report rating modal way
-        let endpoint = this.getEndpoint('reportReview', {
-          countryId: this.currentUser.profile.country,
-          reportId: this.report.id
-        });
+        this.reportRejectDialog.set("report", this.report);
+        this.reportRejectDialog.set("currentUser", this.currentUser);
+        this.reportRejectDialog.set("prpCountries", this.prpCountries);
+
 
         this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
-        this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);  
-        this.reportRejectDialog.set('endpoint', endpoint);
+        this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);
       }
 
     });
