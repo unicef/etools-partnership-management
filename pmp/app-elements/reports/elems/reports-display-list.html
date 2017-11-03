@@ -185,7 +185,7 @@
           },
           debounceInterval: {
             type: Number,
-            value: 300
+            value: 0
           },
           waitQueryParamsInit: Boolean
         },
@@ -216,11 +216,17 @@
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
             self.fireRequest('reports', {countryId: 56}, {params: params})
               .then(function(response) {
-                self.set('reports', response.results);
-                self.updatePaginatorTotalResults(response);
+                if (response) {
+                  self.set('reports', response.results);
+                  self.updatePaginatorTotalResults(response);
+                }
                 self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
               })
               .catch(function(error) {
+                if (error.status === 0) {
+                  // req aborted
+                  return;
+                }
                 let errMsg = 'Reports list data request failed!';
                 self.logError(errMsg, 'reports-list', error);
 

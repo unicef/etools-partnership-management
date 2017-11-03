@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
-<link rel="import" href="app-config/app-config-behavior.html">
+<link rel="import" href="app-config/app-config.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -164,7 +164,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.AppConfig,
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
@@ -213,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _onForbidden: function(event) {
-        window.location.href = this.loginPath;
+        window.location.href = EtoolsPmpApp.Config.loginPath;
       },
 
       created: function() {
@@ -224,7 +223,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       ready: function() {
         // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = this.basePath;
+        this.baseUrl = EtoolsPmpApp.Config.basePath;
 
         this.addIE11StyleTweaks();
 
