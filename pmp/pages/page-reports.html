@@ -7,6 +7,8 @@
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="../app-config/app-endpoints-behavior.html">
+
 <link rel="import" href="../app-elements/etools-status/etools-action-button.html">
 <link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
 <link rel="import" href="../app-elements/reports/elems/report-status.html">
@@ -128,7 +130,8 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
-        EtoolsPmpApp.Behaviors.ReportDetails
+        EtoolsPmpApp.Behaviors.ReportDetails,
+        EtoolsPmpApp.Behaviors.Endpoints
       ],
 
       properties: {
@@ -289,6 +292,7 @@
       _reportChanged: function(report) {
         this.reportRatingDialog.set("report", this.report);
         this.reportRatingDialog.set("currentUser", this.currentUser);
+        this.reportRatingDialog.set("prpCountries", this.prpCountries);
 
         // TODO: remove endpoint and update reject report modal in report rating modal way
         let endpoint = this.getEndpoint('reportReview', {

@@ -92,9 +92,12 @@
           };
 
           this.startSpinner();
-          this.sendRequest({method: 'POST', endpoint: this.endpoint, body: requestBody})
+
+          this.fireRequest('reportReview',
+              {countryId: this.currentUser.profile.country, reportId: this.report.id},
+              {method: 'POST', body: requestBody})
             .then(function() {
-              self.close();               
+              self.close();
             }).catch(function(error) {
               self._handleErrorResponse(error);
             });
