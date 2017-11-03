@@ -47,7 +47,7 @@
         if (data && data.countryId && authorizationTokenMustBeAdded) {
           // we need to get corresponding PRP country ID
           // TODO: improve/remove this
-          data.countryId = this._getPrpCountryId(data.countryId);
+          data.id = this._getPrpCountryId(data.countryId);
         }
         endpoint.url = baseSite + _.template(endpoint.template)(data);
       } else {

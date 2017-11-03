@@ -132,13 +132,16 @@
       template: '/api/v2/interventions/applied-indicators/<%=id%>/'
     },
     getPrpClusterIndicators: { // by cluster id
-      template: '/api/indicator/ca/?clusters=<%=id%>'
+      template: '/api/indicator/ca/?cluster=<%=id%>',
+      token: 'prp'
     },
     getPrpClusterIndicator: { // by id
-      template: '/api/indicator/<%=id%>/'
+      template: '/api/indicator/<%=id%>/',
+      token: 'prp'
     },
     getResponsePlans: {
-      template: '/api/core/workspace/<%=id%>/response-plan/'
+      template: '/api/core/workspace/<%=id%>/response-plan/',
+      token: 'prp'
     },
     pdExpectedResults: {
       template: '/api/v2/interventions/<%=pdId%>/result-links/'
