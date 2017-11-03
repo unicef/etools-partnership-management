@@ -28,8 +28,7 @@
 
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
-      let needsAuthorizationTokenHeader = ('token' in endpoint);
-      let baseSite = needsAuthorizationTokenHeader
+      let baseSite = this.authorizationTokenMustBeAdded(endpoint)
           ? EtoolsPmpApp.EndpointConfig.tokenEndpointsHost[endpoint.token]
           : EtoolsPmpApp.Config.baseSite;
 
