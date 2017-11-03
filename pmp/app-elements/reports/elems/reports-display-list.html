@@ -185,9 +185,13 @@
           },
           debounceInterval: {
             type: Number,
-            value: 300
+            value: 100
           },
-          waitQueryParamsInit: Boolean
+          waitQueryParamsInit: Boolean,
+          _endpointName: {
+            type: String,
+            value: 'reports'
+          }
         },
 
         observers: [
@@ -210,17 +214,23 @@
 
             if (self.lastAjaxRequest) {
               // abort previous req and then fire a new one with updated params
-              self.lastAjaxRequest.abort();
+              self.abortRequest(this._endpointName);
             }
 
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
-            self.fireRequest('reports', {countryId: 116}, {params: params})
+            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params}, this._endpointName)
               .then(function(response) {
-                self.set('reports', response.results);
-                self.updatePaginatorTotalResults(response);
+                if (response) {
+                  self.set('reports', response.results);
+                  self.updatePaginatorTotalResults(response);
+                }
                 self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
               })
               .catch(function(error) {
+                if (error.status === 0) {
+                  // req aborted
+                  return;
+                }
                 let errMsg = 'Reports list data request failed!';
                 self.logError(errMsg, 'reports-list', error);
 

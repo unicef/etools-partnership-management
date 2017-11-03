@@ -287,13 +287,14 @@
       },
 
       _reportChanged: function(report) {
+        this.reportRatingDialog.set("report", this.report);
+        this.reportRatingDialog.set("currentUser", this.currentUser);
+
+        // TODO: remove endpoint and update reject report modal in report rating modal way
         let endpoint = this.getEndpoint('reportReview', {
           countryId: this.currentUser.profile.country,
           reportId: this.report.id
         });
-
-        this.reportRatingDialog.set("report", this.report);
-        this.reportRatingDialog.set("currentUser", this.currentUser);
 
         this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
         this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);  
