@@ -247,7 +247,6 @@
           let self = this;
           this.requestToken(this.getEndpoint('prpToken')).then(function(response) {
             let decodedToken = self.decodeBase64Token(response.token);
-            console.log(decodedToken.exp, Date(decodedToken.exp), Date.now(), Date());
             self.storeToken(options.endpoint.token, response.token);
             options.headers = self.getAuthorizationHeader(response.token);
             delete options.endpoint.token;
