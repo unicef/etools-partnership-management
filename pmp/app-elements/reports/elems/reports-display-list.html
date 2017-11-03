@@ -214,7 +214,7 @@
             }
 
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
-            self.fireRequest('reports', {countryId: 56}, {params: params})
+            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params})
               .then(function(response) {
                 if (response) {
                   self.set('reports', response.results);

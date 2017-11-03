@@ -20,19 +20,35 @@
     },
     getTokenEndpoints: {
       prp: 'prpToken'
-    }
+    },
+    // TODO: find a better way to fix countries ids
+    prpCountriesMap: {
+      '9': 5, // 9 for PMP, 5 for PRP, Lebanon
+      '18': 56 // 18 for PMP, 56 for PRP, Jordan
+    },
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
   EtoolsPmpApp.Behaviors.EndpointsImpl = {
 
+    // TODO: improve/remove this
+    _getPrpCountryId: function(pmpCountryId) {
+      return EtoolsPmpApp.EndpointConfig.prpCountriesMap[pmpCountryId];
+    },
+
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
-      let baseSite = this.authorizationTokenMustBeAdded(endpoint)
+      let authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
+      let baseSite = authorizationTokenMustBeAdded
           ? EtoolsPmpApp.EndpointConfig.tokenEndpointsHost[endpoint.token]
           : EtoolsPmpApp.Config.baseSite;
 
       if (this._hasUrlTemplate(endpoint)) {
+        if (data && data.countryId && authorizationTokenMustBeAdded) {
+          // we need to get corresponding PRP country ID
+          // TODO: improve/remove this
+          data.countryId = this._getPrpCountryId(data.countryId);
+        }
         endpoint.url = baseSite + _.template(endpoint.template)(data);
       } else {
         if (endpoint.url.indexOf(baseSite) === -1) {
