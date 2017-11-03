@@ -169,7 +169,7 @@
       return options;
     },
 
-    fireRequest: function(endpoint, endpointTemplateData, requestAdditionalOptions) {
+    fireRequest: function(endpoint, endpointTemplateData, requestAdditionalOptions, activeReqKey) {
       if (!endpoint) {
         this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
         return;
@@ -179,7 +179,7 @@
       this.addTokenToRequestOptions(endpoint, endpointTemplateData)
           .then(function(requestOptions) {
             let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
-            return self.sendRequest(options);
+            return self.sendRequest(options, activeReqKey);
           })
           .then(function(endpointResponse) {
             defer.resolve(endpointResponse);

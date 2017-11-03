@@ -185,9 +185,13 @@
           },
           debounceInterval: {
             type: Number,
-            value: 0
+            value: 100
           },
-          waitQueryParamsInit: Boolean
+          waitQueryParamsInit: Boolean,
+          _endpointName: {
+            type: String,
+            value: 'reports'
+          }
         },
 
         observers: [
@@ -210,11 +214,11 @@
 
             if (self.lastAjaxRequest) {
               // abort previous req and then fire a new one with updated params
-              self.lastAjaxRequest.abort();
+              self.abortRequest(this._endpointName);
             }
 
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
-            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params})
+            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params}, this._endpointName)
               .then(function(response) {
                 if (response) {
                   self.set('reports', response.results);
