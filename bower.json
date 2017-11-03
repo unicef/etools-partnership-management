@@ -38,7 +38,7 @@
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0",
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
-    "etools-ajax": "^2.0.0",
+    "etools-ajax": "^2.0.2",
     "etools-app-selector": "1.0.7",
     "etools-behaviors": "1.0.2",
     "etools-checkable-input": "1.0.8",
@@ -65,6 +65,7 @@
   },
   "resolutions": {
     "neon-animation": "1 - 2",
-    "moment-element": "^2.0.0"
+    "moment-element": "^2.0.0",
+    "iron-test-helpers": "^2.0.0"
   }
 }

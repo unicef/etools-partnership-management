@@ -286,16 +286,16 @@
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRejectDialog);
       },
 
-      _reportChanged: function(reprot) {
+      _reportChanged: function(report) {
+        this.reportRatingDialog.set("report", this.report);
+        this.reportRatingDialog.set("currentUser", this.currentUser);
+
+        // TODO: remove endpoint and update reject report modal in report rating modal way
         let endpoint = this.getEndpoint('reportReview', {
           countryId: this.currentUser.profile.country,
           reportId: this.report.id
         });
 
-        this.reportRatingDialog.set('pdRefNumber', this.report.programme_document.reference_number);
-        this.reportRatingDialog.set('reportingPeriod', this.report.reporting_period);  
-        this.reportRatingDialog.set('endpoint', endpoint);
-        
         this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
         this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);  
         this.reportRejectDialog.set('endpoint', endpoint);
