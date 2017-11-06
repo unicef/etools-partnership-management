@@ -1,7 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -23,13 +24,13 @@
         size="md"
         keep-dialog-open
         spinner-text="Sending rating..."
-        disable-confirm-btn="[[!comment.length]]"        
+        disable-confirm-btn="[[!comment.length]]"
         ok-btn-text="Send Back to Partner"
         cancel-btn-text="Cancel"
-        dialog-title="Report for [[pdRefNumber]]: [[reportingPeriod]]"
+        dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
         on-confirm-btn-clicked="saveStatus">
       <div id="content-box">
-        <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>        
+        <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>
       </div>
     </etools-dialog>
   </template>
@@ -45,21 +46,14 @@
       Polymer({
         is: 'report-reject-dialog',
         behaviors: [
-          EtoolsAjaxRequestBehavior,
-          EtoolsPmpApp.Behaviors.AjaxErrorsParser
-        ],        
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+          EtoolsPmpApp.Behaviors.Endpoints
+        ],
         properties: {
-          endpoint: {
-            type: Object,
-          },
+          currentUser: Object,
+          report: Object,
           toastEventSource: {
-            type: Object,
-          },
-          pdRefNumber: {
-            type: String
-          },
-          reportingPeriod: {
-            type: String
+            type: Object
           },
           comment: {
             type: String,
@@ -67,13 +61,13 @@
           }
         },
 
-        open: function() { 
+        open: function() {
           this.set('comment', '');
           this.$.reportRejectDialog.set('opened', true);
         },
 
         close: function() {
-          this.$.reportRejectDialog.set('opened', false);   
+          this.$.reportRejectDialog.set('opened', false);
         },
 
         startSpinner: function() {
@@ -87,23 +81,27 @@
         saveStatus: function() {
           let self = this;
           let requestBody = {
-            status: 'sent back',
+            status: 'Sen',
             comment: this.comment
           };
 
           this.startSpinner();
-          this.sendRequest({method: 'POST', endpoint: this.endpoint, body: requestBody})
-            .then(function() {
-              self.close();               
-            }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+
+          this.fireRequest('reportReview',
+              {countryId: this.currentUser.profile.country, reportId: this.report.id},
+              {method: 'POST', body: requestBody})
+              .then(function() {
+                self.close();
+              })
+              .catch(function(error) {
+                self._handleErrorResponse(error);
+              });
         },
 
         _handleErrorResponse: function(error) {
           this.stopSpinner();
           this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
-        },
+        }
       });
     })();
   </script>

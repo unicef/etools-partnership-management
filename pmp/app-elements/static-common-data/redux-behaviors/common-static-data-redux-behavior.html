@@ -33,6 +33,7 @@
     csoPartners: [],
     countryData: {},
     disaggregations: [],
+    PRPCountryData: [],
     currentUser: {},
     reportStatuses: [
       // TODO: reports list filter statuses? To be confirmed by unicef team.
@@ -135,8 +136,10 @@
         if (indexP > -1) {
           partnersDdDataCopy.splice(indexP, 1);
         }
-        return Object.assign({}, state, {partnersDropdownData: partnersDdDataCopy,
-                                         csoPartners: csoPartnerCopy});
+        return Object.assign({}, state, {
+          partnersDropdownData: partnersDdDataCopy,
+          csoPartners: csoPartnerCopy
+        });
 
       case 'SET_AGREEMENTS_DROPDOWN':
         // console.log('set offices data...', action.partnersDropdownData);
@@ -193,6 +196,8 @@
         return Object.assign({}, state, {currentUser: action.user});
       case 'SET_LOCATION_TYPES':
         return Object.assign({}, state, {locationTypes: action.locationTypes});
+      case 'SET_PRP_COUNTRY_DATA':
+        return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
     }
   });
 
