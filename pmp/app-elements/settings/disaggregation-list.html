@@ -18,8 +18,12 @@
       :host{
         --header-title: {
           height: 0px !important;
-        };
-        --data-table-header: {
+      };
+      [hidden] {
+        display: none !important;
+      }
+
+      --data-table-header: {
           height: 54px !important;
         };
       }
@@ -30,34 +34,39 @@
                          icon="add-box"
                          on-tap="_addDisaggregation">
       </paper-icon-button>
-      <etools-data-table-header no-collapse>
-        <etools-data-table-column class="col-4" field="name">
-           Name
-        </etools-data-table-column>
-        <etools-data-table-column class="col-8" field="disaggregation_values">
-           Disaggregation Groups
-        </etools-data-table-column>
-      </etools-data-table-header>
-      <template is="dom-repeat" items="[[dataItems]]">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-4">
-              [[item.name]]
-            </span>
-            <span class="col-data col-8">
-              [[_displayGroups(item.disaggregation_values)]]
-            </span>
-          </div>
-        </etools-data-table-row>
-      </template>
+      <div hidden$="[[_emptyList(disaggregations)]]">
+        <etools-data-table-header no-collapse>
+          <etools-data-table-column class="col-4" field="name">
+            Name
+          </etools-data-table-column>
+          <etools-data-table-column class="col-8" field="disaggregation_values">
+            Disaggregation Groups
+          </etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="[[dataItems]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-4">
+                [[item.name]]
+              </span>
+              <span class="col-data col-8">
+                [[_displayGroups(item.disaggregation_values)]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
 
-      <etools-data-table-footer
-        page-size="[[pagination.pageSize]]"
-        page-number="[[pagination.pageNumber]]"
-        total-results="[[pagination.totalResults]]"
-        on-page-size-changed="_pageSizeChanged"
-        on-page-number-changed="_pageNumberChanged">
-      </etools-data-table-footer>
+        <etools-data-table-footer
+          page-size="[[pagination.pageSize]]"
+          page-number="[[pagination.pageNumber]]"
+          total-results="[[pagination.totalResults]]"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged">
+        </etools-data-table-footer>
+      </div>
+      <div class="row-padding" hidden$="[[!_emptyList(disaggregations)]]">
+        <p>The are no disaggregations defined.</p>
+      </div>
     </etools-content-panel>
 
 
@@ -106,6 +115,9 @@
         this.disaggregationModal = document.createElement('add-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
+      },
+      _emptyList: function() {
+        return !this.disaggregations || !this.disaggregations.length;
       },
       _disagregationsChanged: function(disaggregs) {
         if (!disaggregs || !disaggregs.length) {
