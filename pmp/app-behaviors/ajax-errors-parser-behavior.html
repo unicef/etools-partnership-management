@@ -46,6 +46,11 @@
         return errorsArray;
       }
 
+      if (typeof errors === 'object' && errors.non_field_errors && Array.isArray(errors.non_field_errors)) {
+        [].push.apply(errorsArray, errors.non_field_errors);
+        return errorsArray;
+      }
+
       if (Array.isArray(errors) && errors.length > 0 && this._isArrayOfStrings(errors)) {
         Array.prototype.push.apply(errorsArray, errors);
         return errorsArray;
