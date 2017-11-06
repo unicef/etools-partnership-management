@@ -24,19 +24,19 @@
         size="md"
         keep-dialog-open
         spinner-text="Sending rating..."
-        disable-confirm-btn="[[!selectedOverallStatus.length]]"        
+        disable-confirm-btn="[[!selectedOverallStatus.length]]"
         ok-btn-text="Rate & Accept Report"
         cancel-btn-text="Cancel"
         dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
         on-confirm-btn-clicked="saveStatus">
       <div id="content-box">
-          <p> Rate the overall progress of this PD/SSFA in light of this report and monitoring visits. </p>
-          <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
-            <paper-radio-button name="Met"> Met </paper-radio-button>
-            <paper-radio-button name="OnT"> On track </paper-radio-button>
-            <paper-radio-button name="NoP"> No progress </paper-radio-button>
-            <paper-radio-button name="Con"> Constrained </paper-radio-button>
-          </paper-radio-group>            
+        <p> Rate the overall progress of this PD/SSFA in light of this report and monitoring visits. </p>
+        <paper-radio-group id="overallStatus" selected="{{selectedOverallStatus}}">
+          <paper-radio-button name="Met"> Met</paper-radio-button>
+          <paper-radio-button name="OnT"> On track</paper-radio-button>
+          <paper-radio-button name="NoP"> No progress</paper-radio-button>
+          <paper-radio-button name="Con"> Constrained</paper-radio-button>
+        </paper-radio-group>
       </div>
     </etools-dialog>
   </template>
@@ -57,7 +57,6 @@
         ],
         properties: {
           currentUser: Object,
-          prpCountries: Object,
           report: Object,
           toastEventSource: {
             type: Object
@@ -68,13 +67,13 @@
           }
         },
 
-        open: function() { 
+        open: function() {
           this.set('selectedOverallStatus', '');
           this.$.reportRatingDialog.set('opened', true);
         },
 
         close: function() {
-          this.$.reportRatingDialog.set('opened', false);   
+          this.$.reportRatingDialog.set('opened', false);
         },
 
         startSpinner: function() {
@@ -96,11 +95,12 @@
           this.fireRequest('reportReview',
               {countryId: this.currentUser.profile.country, reportId: this.report.id},
               {method: 'POST', body: requestBody})
-            .then(function() {
-              self.close();               
-            }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+              .then(function(response) {
+                self.fire('report-accepted', {report: response});
+                self.close();
+              }).catch(function(error) {
+            self._handleErrorResponse(error);
+          });
         },
 
         _handleErrorResponse: function(error) {

@@ -279,6 +279,7 @@
         this.reportRatingDialog = document.createElement('report-rating-dialog');
         this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
         this.reportRatingDialog.set('toastEventSource', this);
+        this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj);
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
         
@@ -290,17 +291,17 @@
       },
 
       _reportChanged: function(report) {
-        this.reportRatingDialog.set("report", this.report);
+        this.reportRatingDialog.set("report", report);
         this.reportRatingDialog.set("currentUser", this.currentUser);
-        this.reportRatingDialog.set("prpCountries", this.prpCountries);
 
-        this.reportRejectDialog.set("report", this.report);
+        this.reportRejectDialog.set("report", report);
         this.reportRejectDialog.set("currentUser", this.currentUser);
-        this.reportRejectDialog.set("prpCountries", this.prpCountries);
+      },
 
-
-        this.reportRejectDialog.set('pdRefNumber', this.report.programme_document.reference_number);
-        this.reportRejectDialog.set('reportingPeriod', this.report.reporting_period);
+      _updateReportDetailsObj: function(e) {
+        e.stopImmediatePropagation();
+        console.log(e.detail.report);
+        this.set('report', e.detail.report);
       }
 
     });
