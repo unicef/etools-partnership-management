@@ -220,7 +220,7 @@
             }
 
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
-            self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params}, this._endpointName)
+            self.fireRequest('reports', {}, {params: params}, this._endpointName)
                 .then(function(response) {
                   if (response) {
                     self.set('reports', response.results);
@@ -251,7 +251,7 @@
         _prepareReqParamsObj: function(interventionId) {
           let params = {};
           if (interventionId > 0) {
-            params.programme_document = interventionId;
+            params.programme_document_ext = interventionId;
           }
           params = Object.assign({}, params, this._preserveExistingQueryParams(), this.getRequestPaginationParams());
           return params;
