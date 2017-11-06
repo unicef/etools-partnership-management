@@ -102,7 +102,7 @@
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
             <report-status status="[[latestAcceptedPr.review_overall_status]]"></report-status>
-            <span>[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
+            <span> [[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -162,10 +162,13 @@
                     </div>
                     <div class="row-h progress-details">
                       <div class="layout-vertical col-5">
-                        <indicator-report-target values-type="[[indicatorReport.reportable.blueprint.display_type]]"
-                                                 target="[[indicatorReport.reportable.target]]"
-                                                 cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number', indicatorReport.reportable.achieved.c)]]"
-                                                 achivement="[[indicatorReport.total.c]]"></indicator-report-target>
+                        <indicator-report-target
+                            values-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                            target="[[indicatorReport.reportable.target]]"
+                            cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.achieved.v, indicator.reportable.achieved.c)]]"
+                            achivement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.total.v, indicatorReport.total.c)]]"></indicator-report-target>
                       </div>
                     </div>
                   </template>
@@ -370,8 +373,8 @@
             this.logWarn('Time progress compute error', 'intervention-progress', err);
           }
           // if end date is valid and is past date or today's date, progress should be 100%
-          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
-              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+          if (this.isValidDate(new Date(end)) &&
+              (this.dateIsAfter(todayDateStr, end) || todayDateStr === end)) {
             return 100;
           }
           return 0;
