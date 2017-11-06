@@ -53,6 +53,7 @@
       clusterIndicatorEditModel: {
         type: Object,
         value: {
+          id: null,
           section: null,
           baseline: null,
           target: null,
@@ -121,7 +122,7 @@
           if (body.hasOwnProperty('disaggregation')) {
             this._prepareDisaggregations(body);
           }
-          if (this.isCluster && !body.indicator.id) {
+          if (this.isCluster && !body.id) {
             body.indicator = null;
           }
           return body;
