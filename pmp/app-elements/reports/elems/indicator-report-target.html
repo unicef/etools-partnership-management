@@ -69,11 +69,19 @@
           type: Boolean,
           value: false,
           reflectToAttribute: true
+        },
+        progressDetails: {
+          type: Object,
+          observer: '_progressDetailsChanged'
         }
       },
 
       _prepareValue: function(value) {
         return value ? value : '-';
+      },
+
+      _progressDetailsChanged: function(progressDetails) {
+
       }
     });
   </script>

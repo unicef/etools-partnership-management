@@ -113,7 +113,7 @@
                 <div class="indicator-header layout-horizontal flex-c">
                   <div class="col col-8 indicator-header-title">
                     <h3>
-                      [[_conditionalDisplay(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                      [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
                       [[indicatorReport.reportable.blueprint.title]]
                     </h3>
                   </div>

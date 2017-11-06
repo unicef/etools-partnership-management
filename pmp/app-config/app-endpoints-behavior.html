@@ -54,6 +54,10 @@
       return prpCountry.id;
     },
 
+    _urlTemplateHasCountryId: function(template) {
+      return template.indexOf('<%=countryId%>') > -1;
+    },
+
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
       let authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
@@ -62,7 +66,7 @@
           : EtoolsPmpApp.Config.baseSite;
 
       if (this._hasUrlTemplate(endpoint)) {
-        if (data && data.countryId && authorizationTokenMustBeAdded) {
+        if (data && this._urlTemplateHasCountryId(endpoint.template) && authorizationTokenMustBeAdded) {
           // we need to get corresponding PRP country ID
           data.countryId = this._getPrpCountryId();
         }

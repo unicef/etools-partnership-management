@@ -300,8 +300,8 @@
 
       _updateReportDetailsObj: function(e) {
         e.stopImmediatePropagation();
-        console.log(e.detail.report);
         this.set('report', e.detail.report);
+        // TODO: update reports list object data without fireing a new request:)
       }
 
     });
