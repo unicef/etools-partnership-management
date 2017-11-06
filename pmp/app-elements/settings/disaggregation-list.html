@@ -3,18 +3,16 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
   <template strip-whitespace>
-    <style include="grid-layout-styles repeatable-data-sets-styles data-table-styles">
+    <style include="grid-layout-styles data-table-styles">
       :host{
         --header-title: {
           height: 0px !important;
@@ -79,7 +77,6 @@
       is: 'disaggregation-list',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.RepeatableDataSets,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         EtoolsAjaxRequestBehavior
