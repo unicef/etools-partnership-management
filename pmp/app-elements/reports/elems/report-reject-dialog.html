@@ -24,13 +24,13 @@
         size="md"
         keep-dialog-open
         spinner-text="Sending rating..."
-        disable-confirm-btn="[[!comment.length]]"        
+        disable-confirm-btn="[[!comment.length]]"
         ok-btn-text="Send Back to Partner"
         cancel-btn-text="Cancel"
         dialog-title="Report for [[report.programme_document.reference_number]]: [[report.reporting_period]]"
         on-confirm-btn-clicked="saveStatus">
       <div id="content-box">
-        <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>        
+        <paper-input required label="Feedback/Comments" placeholder="&#8212;" value="{{comment}}"></paper-input>
       </div>
     </etools-dialog>
   </template>
@@ -48,10 +48,9 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.Endpoints
-        ],        
+        ],
         properties: {
           currentUser: Object,
-          prpCountries: Object,
           report: Object,
           toastEventSource: {
             type: Object
@@ -62,13 +61,13 @@
           }
         },
 
-        open: function() { 
+        open: function() {
           this.set('comment', '');
           this.$.reportRejectDialog.set('opened', true);
         },
 
         close: function() {
-          this.$.reportRejectDialog.set('opened', false);   
+          this.$.reportRejectDialog.set('opened', false);
         },
 
         startSpinner: function() {
@@ -91,11 +90,12 @@
           this.fireRequest('reportReview',
               {countryId: this.currentUser.profile.country, reportId: this.report.id},
               {method: 'POST', body: requestBody})
-            .then(function() {
-              self.close();
-            }).catch(function(error) {
-              self._handleErrorResponse(error);
-            });
+              .then(function() {
+                self.close();
+              })
+              .catch(function(error) {
+                self._handleErrorResponse(error);
+              });
         },
 
         _handleErrorResponse: function(error) {

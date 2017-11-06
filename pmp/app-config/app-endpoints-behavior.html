@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
+<link rel="import" href="../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="app-config.html">
 <link rel="import" href="app-endpoints.html">
 
@@ -43,7 +44,18 @@
       let prpCountry = self.prpCountries.find(function(prpCountry) {
         return prpCountry.business_area_code === currentCountry.business_area_code;
       });
+
+      if (!prpCountry) {
+        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.profile.country_name + ' country data was ' +
+            'not found in the available PRP countries by business_area_code!';
+        this.fire('toast', {text: countryNotFoundInPrpWarning, showCloseBtn: true});
+      }
+
       return prpCountry.id;
+    },
+
+    _urlTemplateHasCountryId: function(template) {
+      return template.indexOf('<%=countryId%>') > -1;
     },
 
     getEndpoint: function(endpointName, data) {
@@ -54,7 +66,7 @@
           : EtoolsPmpApp.Config.baseSite;
 
       if (this._hasUrlTemplate(endpoint)) {
-        if (data && data.countryId && authorizationTokenMustBeAdded) {
+        if (data && this._urlTemplateHasCountryId(endpoint.template) && authorizationTokenMustBeAdded) {
           // we need to get corresponding PRP country ID
           data.countryId = this._getPrpCountryId();
         }
@@ -203,6 +215,7 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.Endpoints */
   EtoolsPmpApp.Behaviors.Endpoints = [
     EtoolsAjaxRequestBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
     EtoolsPmpApp.Behaviors.EndpointsImpl
   ];
 

@@ -5,7 +5,6 @@
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
@@ -22,9 +21,6 @@
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../../styles/page-common-styles.html">
-
-<!-- TODO: remove this mockup data behavior after API is ready to be used  -->
-<link rel="import" href="progress-tab-data-mockup.html">
 
 <link rel="import" href="../../reports/elems/report-status.html">
 <link rel="import" href="../../reports/elems/indicator-report-target.html">
@@ -106,7 +102,7 @@
         <div class="col col-4">
           <etools-form-element-wrapper label="Overall PD/SSFA Rating by UNICEF">
             <report-status status="[[latestAcceptedPr.review_overall_status]]"></report-status>
-            <span>[[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
+            <span> [[_getOverallPdStatusDate(latestAcceptedPr.review_date)]]</span>
           </etools-form-element-wrapper>
         </div>
       </div>
@@ -155,7 +151,7 @@
                   <template is="dom-repeat" items="[[_getIndicatorsReports(lowerResult.id)]]" as="indicatorReport">
                     <div class="row-h indicator-report">
                       <div class="col-data col-9">
-                        [[_conditionalDisplay(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
+                        [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
                         [[indicatorReport.reportable.blueprint.title]]
                       </div>
                       <div class="col-data col-3">
@@ -166,9 +162,13 @@
                     </div>
                     <div class="row-h progress-details">
                       <div class="layout-vertical col-5">
-                        <indicator-report-target target="[[indicatorReport.reportable.target]]"
-                                                 cumulative-progress="[[indicatorReport.reportable.achieved.c]]"
-                                                 achivement="[[indicatorReport.total.c]]"></indicator-report-target>
+                        <indicator-report-target
+                            values-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                            target="[[indicatorReport.reportable.target]]"
+                            cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.achieved.v, indicator.reportable.achieved.c)]]"
+                            achivement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.total.v, indicatorReport.total.c)]]"></indicator-report-target>
                       </div>
                     </div>
                   </template>
@@ -194,21 +194,15 @@
         behaviors: [
           etoolsBehaviors.EtoolsCurrencyBehavior,
           EtoolsLogsBehavior,
-          EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.AjaxErrorsParser,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.Utils,
-          EtoolsPmpApp.Behaviors.ProgressTabDataMockup
+          EtoolsPmpApp.Behaviors.Utils
         ],
 
         properties: {
-          currentUser: {
-            type: Object,
-            statePath: 'currentUser',
-          },
           interventionId: {
             type: Number
           },
@@ -236,7 +230,8 @@
         },
 
         observers: [
-          '_requestProgressData(interventionId, currentUser)'
+          // `prpCountries` and `currentUser` are defined in endpoint behavior
+          '_requestProgressData(interventionId, prpCountries, currentUser)'
         ],
 
         attached: function() {
@@ -248,13 +243,11 @@
           this.fire('intervention-page-attached');
         },
 
-        _requestProgressData: function(id, currentUser) {
-          if (!id || _.isEmpty(currentUser)) {
+        _requestProgressData: function(id, prpCountries, currentUser) {
+          if (!id || _.isEmpty(prpCountries) || _.isEmpty(currentUser)) {
             return;
           }
           let self = this;
-          let endpoint = this.getEndpoint('interventionProgress',
-              {countryId: this.currentUser.profile.country, pdId: id});
 
           self.fire('global-loading', {
             message: 'Loading PD/SSFA progress...',
@@ -262,21 +255,13 @@
             loadingSource: 'pd-progress'
           });
 
-          this.sendRequest({endpoint: endpoint}).then(function(response) {
+          this.fireRequest('interventionProgress', {pdId: id}).then(function(response) {
             self.set('progress', response);
             self.fire('global-loading', {active: false, loadingSource: 'pd-progress'});
           }).catch(function(error) {
             let errMsg = 'PD/SSFA progress request failed!';
             self.logError(errMsg, 'intervention-progress', error);
-
-            // TODO: remove this toast, after API request can be made
-            self.fire('toast', {text: errMsg, showCloseBtn: true});
-
             self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-
-            // TODO: remove mockup data use, make sure API request is correct
-            self.set('progress', self.progressTabDataMokup);
-
             self.fire('global-loading', {active: false, loadingSource: 'pd-progress'});
           });
         },
@@ -388,8 +373,8 @@
             this.logWarn('Time progress compute error', 'intervention-progress', err);
           }
           // if end date is valid and is past date or today's date, progress should be 100%
-          if (!this.isValidDate(new Date(start)) && this.isValidDate(new Date(end)) &&
-              (this.dateIsBefore(todayDateStr, end) || todayDateStr === end)) {
+          if (this.isValidDate(new Date(end)) &&
+              (this.dateIsAfter(todayDateStr, end) || todayDateStr === end)) {
             return 100;
           }
           return 0;

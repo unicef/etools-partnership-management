@@ -29,10 +29,12 @@
         @apply --layout-flex;
         width: 100%;
       }
+
       .pd-ref,
       .view-report {
         @apply --text-btn-style;
       }
+
       .pd-ref {
         text-transform: none;
       }
@@ -118,7 +120,7 @@
                 <div class="row-details-content col-2">
                   <span class="rdc-title">Location</span>
                   <!-- TODO: are locations gonna come from PRP? -->
-                  <span>Temporary unavailable</span>
+                  <span>Temporary unavailable. PRP locations are missing.</span>
                 </div>
               </div>
             </template>
@@ -219,30 +221,30 @@
 
             /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
             self.fireRequest('reports', {countryId: currentUser.profile.country}, {params: params}, this._endpointName)
-              .then(function(response) {
-                if (response) {
-                  self.set('reports', response.results);
-                  self.updatePaginatorTotalResults(response);
-                }
-                self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
-              })
-              .catch(function(error) {
-                if (error.status === 0) {
-                  // req aborted
-                  return;
-                }
-                let errMsg = 'Reports list data request failed!';
-                self.logError(errMsg, 'reports-list', error);
+                .then(function(response) {
+                  if (response) {
+                    self.set('reports', response.results);
+                    self.updatePaginatorTotalResults(response);
+                  }
+                  self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+                })
+                .catch(function(error) {
+                  if (error.status === 0) {
+                    // req aborted
+                    return;
+                  }
+                  let errMsg = 'Reports list data request failed!';
+                  self.logError(errMsg, 'reports-list', error);
 
-                self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-                self.set('reports', []);
+                  self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+                  self.set('reports', []);
 
-                // TODO: remove mockup data use, make sure API request is correct
-                self.set('reports', self.reportsDataMockup.results);
-                self.updatePaginatorTotalResults(self.reportsDataMockup);
+                  // TODO: remove mockup data use, make sure API request is correct
+                  self.set('reports', self.reportsDataMockup.results);
+                  self.updatePaginatorTotalResults(self.reportsDataMockup);
 
-                self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
-              });
+                  self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
+                });
           }, this.debounceInterval);
         },
 
