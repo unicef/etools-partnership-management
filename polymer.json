@@ -25,6 +25,7 @@
     "pmp/app-elements/reports/report-summary.html",
     "pmp/app-elements/reports/report-progress.html",
 
+    "pmp/pages/page-settings.html",
     "pmp/pages/page-not-found.html"
   ],
   "sourceGlobs": [
