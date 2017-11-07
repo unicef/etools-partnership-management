@@ -223,7 +223,9 @@
             this.set('isNewIndicator', true);
           } else {
             this.set('isNewIndicator', false);
-            this._getPrpClusterIndicator(indicator.cluster_indicator_id);
+            if (indicator.cluster_indicator_id) {
+              this._getPrpClusterIndicator(indicator.cluster_indicator_id);
+            }
           }
         },
         _getPrpClusterIndicator: function(clusterIndicId) {

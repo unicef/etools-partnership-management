@@ -262,8 +262,8 @@
           this.set('actionParams', actionParams);
 
           if (!data) { //new indicator
-            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
             this.isCluster = false;
+            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
             return;
           }
 
