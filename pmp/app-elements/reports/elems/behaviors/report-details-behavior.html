@@ -4,9 +4,6 @@
 <link rel="import" href="../../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
-<!-- TODO: remove reports mockup data -->
-<link rel="import" href="../reports-list-data-mockup.html">
-
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
@@ -55,23 +52,13 @@
 
       let self = this;
 
-      self.fireRequest('reportDetails',
-          {countryId: this.currentUser.profile.country, reportId: id}).then(function(response) {
+      self.fireRequest('reportDetails', {reportId: id}).then(function(response) {
         self.set('report', response);
         self.fire('global-loading', {active: false, loadingSource: loadingSource});
       }).catch(function(error) {
         let errMsg = 'Reports details data request failed!';
         self.logError(errMsg, logMsgPrefix, error);
-
-        // TODO: remove this toast, after API request can be made
-        self.fire('toast', {text: errMsg, showCloseBtn: true});
-
         self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-        // self.set('report', null);
-
-        // TODO: remove mockup data use, make sure API request is correct
-        self.set('report', self.reportDetailsMockup);
-
         self.fire('global-loading', {active: false, loadingSource: loadingSource});
       });
     }
@@ -84,7 +71,6 @@
     EtoolsPmpApp.Behaviors.Endpoints,
     EtoolsPmpApp.Behaviors.AjaxErrorsParser,
     EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-    EtoolsPmpApp.Behaviors.ReportsListDataMockup, // TODO: remove this mockup data use
     EtoolsPmpApp.Behaviors.ReportDetailsImpl
   ];
 </script>

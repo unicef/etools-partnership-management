@@ -17,9 +17,6 @@
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 
-<!-- TODO: remove reports mockup data -->
-<link rel="import" href="reports-list-data-mockup.html">
-
 <dom-module id="reports-display-list">
 
   <template strip-whitespace>
@@ -127,6 +124,7 @@
 
           </etools-data-table-row>
         </template>
+
         <etools-data-table-footer
             page-size="[[paginator.page_size]]"
             page-number="[[paginator.page]]"
@@ -155,8 +153,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.Pagination,
-          EtoolsPmpApp.Behaviors.ReportsListDataMockup // TODO: remove this once prp endpoint is ready
+          EtoolsPmpApp.Behaviors.Pagination
         ],
 
         properties: {
@@ -214,12 +211,12 @@
               loadingSource: 'reports-list'
             });
 
-            if (self.lastAjaxRequest) {
+            let activeReportsReq = self.getActiveRequestByKey(this._endpointName);
+            if (activeReportsReq) {
               // abort previous req and then fire a new one with updated params
-              self.abortRequest(this._endpointName);
+              self.abortActiveRequest(activeReportsReq);
             }
 
-            /* TODO: currentUser.profile.country has a different id from PRP... mapper needed */
             self.fireRequest('reports', {}, {params: params}, this._endpointName)
                 .then(function(response) {
                   if (response) {
@@ -237,12 +234,6 @@
                   self.logError(errMsg, 'reports-list', error);
 
                   self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-                  self.set('reports', []);
-
-                  // TODO: remove mockup data use, make sure API request is correct
-                  self.set('reports', self.reportsDataMockup.results);
-                  self.updatePaginatorTotalResults(self.reportsDataMockup);
-
                   self.fire('global-loading', {active: false, loadingSource: 'reports-list'});
                 });
           }, this.debounceInterval);
@@ -274,7 +265,7 @@
         },
 
         _queryParamsNotInitialized: function(qParamsData) {
-          return this.waitQueryParamsInit && !qParamsData.value;
+          return this.waitQueryParamsInit && !qParamsData.value && qParamsData.path === 'queryParams';
         }
 
       });

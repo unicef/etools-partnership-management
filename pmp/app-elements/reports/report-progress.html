@@ -5,6 +5,7 @@
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/utils-behavior.html">
 
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
@@ -15,9 +16,6 @@
 
 <link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-
-<!-- TODO: remove reports mockup data -->
-<link rel="import" href="elems/reports-list-data-mockup.html">
 
 <dom-module id="report-progress">
 
@@ -73,6 +71,13 @@
       #no-report-data {
         background-color: var(--primary-background-color);
       }
+
+      .calculation-formula {
+        color: var(--secondary-text-color);
+      }
+      .calculation-formula-delimiter {
+        margin: 0 16px;
+      }
     </style>
 
     <paper-material id="no-report-data" elevation="1"
@@ -116,12 +121,27 @@
                       [[_ternary(indicatorReport.reportable.blueprint.unit, 'number', '#', '%')]]
                       [[indicatorReport.reportable.blueprint.title]]
                     </h3>
+                    <div class="layout-horizontal calculation-formula">
+                      <span>
+                        calculation method accross locations:
+                        [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_locations)]]
+                      </span>
+                      <span class="calculation-formula-delimiter">|</span>
+                      <span>
+                        calculation across reporting periods:
+                        [[getDisplayValue(indicatorReport.reportable.blueprint.calculation_formula_across_periods)]]
+                      </span>
+                    </div>
                   </div>
                   <div class="col col-4 indicator-header-target">
-                    <indicator-report-target target="[[indicatorReport.reportable.target]]"
-                                             cumulative-progress="[[indicatorReport.reportable.achieved.c]]"
-                                             achivement="[[indicatorReport.total.c]]"
-                                             bold></indicator-report-target>
+                    <indicator-report-target
+                        values-type="[[indicatorReport.reportable.blueprint.display_type]]"
+                         target="[[indicatorReport.reportable.target]]"
+                         cumulative-progress="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.reportable.achieved.v, indicator.reportable.achieved.c)]]"
+                         achivement="[[_ternary(indicatorReport.reportable.blueprint.display_type, 'number',
+                              indicatorReport.total.v, indicatorReport.total.c)]]"
+                         bold></indicator-report-target>
                   </div>
                 </div>
               </div>
@@ -149,6 +169,7 @@
       Polymer({
         is: 'report-progress',
         behaviors: [
+          EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.Utils
         ],
         properties: {
