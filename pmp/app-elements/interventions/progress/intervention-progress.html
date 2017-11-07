@@ -30,8 +30,6 @@
   <template strip-whitespace>
 
     <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles">
-      :host {}
-
       #progress-summary etools-progress-bar {
         margin-top: 16px;
       }
@@ -323,7 +321,7 @@
         },
 
         /**
-         * Assuming all indicators reports are allready sort by date desc
+         * Assuming all indicators reports are already sort by date desc
          */
         _getLatestIndicatorReport: function(lowerResultId) {
           if (!this._emptyList(this.indicatorReports)) {
