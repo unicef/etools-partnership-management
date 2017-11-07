@@ -241,7 +241,6 @@
           });
         },
         _responsePlanChanged: function(responsePlan) {
-          console.log('_responsePlanChanged', responsePlan);
           this.clusterId = undefined;
 
           if (!responsePlan) {
@@ -260,7 +259,6 @@
           })[0].clusters;
         },
         _clusterChanged: function(cluster) {
-          console.log('cluster changed', cluster);
           this.prpClusterIndicators = [];
           this.set('indicator.cluster_indicator_id', undefined);
 
