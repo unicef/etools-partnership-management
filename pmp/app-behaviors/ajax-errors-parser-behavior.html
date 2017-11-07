@@ -42,7 +42,18 @@
       }
 
       if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
-        Array.prototype.push.apply(errorsArray, errors.errors);
+        errors.errors.forEach(function(err) {
+          if (typeof err === 'object') {
+            let errKeys = Object.keys(err);
+            if (errKeys.length > 0) {
+              errKeys.forEach(function(k) {
+                Array.prototype.push.apply(errorsArray, [err[k]]); // will work only for strings
+              });
+            }
+          } else {
+            Array.prototype.push.apply(errorsArray, [err]);
+          }
+        });
         return errorsArray;
       }
 

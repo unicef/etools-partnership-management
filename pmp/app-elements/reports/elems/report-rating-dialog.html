@@ -56,7 +56,6 @@
           EtoolsPmpApp.Behaviors.Endpoints
         ],
         properties: {
-          currentUser: Object,
           report: Object,
           toastEventSource: {
             type: Object
@@ -92,11 +91,10 @@
           };
 
           this.startSpinner();
-          this.fireRequest('reportReview',
-              {countryId: this.currentUser.profile.country, reportId: this.report.id},
-              {method: 'POST', body: requestBody})
+          this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
               .then(function(response) {
                 self.fire('report-accepted', {report: response});
+                self.stopSpinner();
                 self.close();
               }).catch(function(error) {
             self._handleErrorResponse(error);

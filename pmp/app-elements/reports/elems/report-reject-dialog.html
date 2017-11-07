@@ -87,10 +87,10 @@
 
           this.startSpinner();
 
-          this.fireRequest('reportReview',
-              {countryId: this.currentUser.profile.country, reportId: this.report.id},
-              {method: 'POST', body: requestBody})
-              .then(function() {
+          this.fireRequest('reportReview', {reportId: this.report.id}, {method: 'POST', body: requestBody})
+              .then(function(response) {
+                self.fire('report-rejected', {report: response});
+                self.stopSpinner();
                 self.close();
               })
               .catch(function(error) {
