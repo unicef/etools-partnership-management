@@ -158,14 +158,15 @@
       url: '/api/v2/reports/disaggregations/'
     },
     interventionProgress: {
-      template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
+      template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/?external=1',
+      token: 'prp'
     },
     reports: {
       template: '/api/unicef/<%=countryId%>/progress-reports/',
       token: 'prp'
     },
     reportDetails: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>',
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/',
       token: 'prp'
     },
     reportIndicatorsDetails: {
