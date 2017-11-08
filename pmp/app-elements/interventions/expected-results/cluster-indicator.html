@@ -211,7 +211,7 @@
             return;
           }
           let self = this;
-          this.fireRequest('getResponsePlans', {countryId: this.currentUser.profile.country}, {method: 'GET'})
+          this.fireRequest('getResponsePlans', {countryId: this.currentUser.profile.country})
           .then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
@@ -231,7 +231,7 @@
         _getPrpClusterIndicator: function(clusterIndicId) {
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
           let self = this;
-          this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId}, {method: 'GET'})
+          this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
           .then(function(response) {
             self.prpClusterIndicator = response;
             self.fire('stop-spinner');
@@ -274,7 +274,7 @@
           }
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
           let self = this;
-          this.fireRequest('getPrpClusterIndicators', {id: clusterId}, {method: 'GET'})
+          this.fireRequest('getPrpClusterIndicators', {id: clusterId})
           .then(function(response) {
             self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
             self.fire('stop-spinner');
