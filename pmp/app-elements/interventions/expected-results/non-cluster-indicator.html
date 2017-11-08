@@ -224,6 +224,9 @@
 
         _getIndicatorTargetElId: function() {
           let elId = 'targetElForNumericUnit';
+          if (!this.indicator || !this.indicator.indicator) {
+            return 'targetElForNumericUnit';
+          }
           return (this._unitIsNumeric(this.indicator.indicator.unit))
               ? 'targetElForNumericUnit' : 'targetElForNonNumericUnit';
         }
