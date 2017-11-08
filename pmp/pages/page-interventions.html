@@ -422,8 +422,6 @@
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
             this._setContentScrollPosition(0);
-            // adds appropriate mixins to fields that get changed to read-only
-            Polymer.updateStyles();
           }.bind(this), 1000);
         }
       },
