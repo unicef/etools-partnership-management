@@ -218,9 +218,10 @@
             this.indicatorDialog.setTitle('Edit Indicator');
           }
           this.indicatorDialog.toastEventSource = this;
+          this.indicatorDialog.resetFieldValues();
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
-          this.indicatorDialog.resetValidations();
           this.indicatorDialog.openIndicatorDialog();
+          this.indicatorDialog.resetValidations();
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
