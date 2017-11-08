@@ -255,17 +255,16 @@
         }.bind(this));
       },
 
-      _accept: function(e) {
+      _accept: function() {
         this.reportRatingDialog.open();
       },
 
-      _sendBackToPartner: function(e) {
-        console.log('send report back to partner action here...');
+      _sendBackToPartner: function() {
         this.reportRejectDialog.open();
       },
 
-      _download: function(e) {
-        console.log('download report action here...');
+      _download: function() {
+        this.fire('toast', {text: 'Temporary unavailable. PRP download report URL is unknown.', showCloseBtn: true});
       },
 
       detached: function() {
