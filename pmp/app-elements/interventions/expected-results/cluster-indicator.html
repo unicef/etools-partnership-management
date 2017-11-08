@@ -195,10 +195,6 @@
             type: Array,
             notify: true
           },
-          currentUser: {
-            type: Object,
-            statePath: 'currentUser',
-          }
         },
 
         observers: [
@@ -206,12 +202,8 @@
           '_targetChanged(indicator.target)',
         ],
         ready: function() {
-          if (!this.currentUser.profile.country) {
-            this.logWarn('User.profile.country is empty');
-            return;
-          }
           let self = this;
-          this.fireRequest('getResponsePlans', {countryId: this.currentUser.profile.country})
+          this.fireRequest('getResponsePlans')
           .then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
