@@ -17,12 +17,14 @@
     "dev": "polymer serve & npm run watch",
     "bundle": "node --max_old_space_size=4096 ./node_modules/gulp/bin/gulp",
     "test": "polymer test",
-    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' "
+    "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' ",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "devDependencies": {
     "browser-sync": "^2.18.7",
     "css-slam": "^1.1.0",
+    "cypress": "^1.0.2",
     "del": "^2.2.1",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-csslint": "^1.0.0",
