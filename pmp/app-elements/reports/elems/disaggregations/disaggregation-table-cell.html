@@ -1,3 +1,4 @@
+<link rel="import" href="../../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="disaggregation-field.html">
 <link rel="import" href="../../styles/disaggregation-table-styles.html">
 
@@ -22,13 +23,17 @@
     <template
         is="dom-if"
         if="[[!editableBool]]">
-      <span class="cellValue">[[data.v]]</span>
+      <span class="cellValue">[[displayCurrencyAmount(data.v, '-')]]</span>
     </template>
   </template>
 
   <script>
     Polymer({
       is: 'disaggregation-table-cell',
+
+      behaviors: [
+        etoolsBehaviors.EtoolsCurrencyBehavior
+      ],
 
       properties: {
         data: Object,
