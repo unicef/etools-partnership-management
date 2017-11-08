@@ -66,7 +66,7 @@
           : EtoolsPmpApp.Config.baseSite;
 
       if (this._hasUrlTemplate(endpoint)) {
-        if (data && this._urlTemplateHasCountryId(endpoint.template) && authorizationTokenMustBeAdded) {
+        if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
           // we need to get corresponding PRP country ID
           data.countryId = this._getPrpCountryId();
         }

@@ -203,7 +203,7 @@
         ],
         ready: function() {
           let self = this;
-          this.fireRequest('getResponsePlans')
+          this.fireRequest('getResponsePlans', {})
           .then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
