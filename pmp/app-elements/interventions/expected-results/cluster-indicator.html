@@ -32,20 +32,21 @@
         <div class="col col-5">
           <div class="layout-vertical">
             <label class="paper-label">Response Plan</label>
-            <label class="input-label" empty$="[[!prpClusterIndicator.responsePlan.name]]">[[prpClusterIndicator.responsePlan.name]]</label>
+            <label class="input-label" empty$="[[!indicator.response_plan_name]]">[[indicator.response_plan_name]]</label>
           </div>
         </div>
         <div class="col col-5">
           <div class="layout-vertical">
             <label class="paper-label">Cluster</label>
-            <label class="input-label" empty$="[[!prpClusterIndicator.cluster.name]]">[[prpClusterIndicator.cluster.name]]</label>
+            <label class="input-label" empty$="[[!indicator.cluster_name]]">[[indicator.cluster_name]]</label>
           </div>
         </div>
       </div>
       <div class="row-h flex-c">
-        <etools-form-element-wrapper no-label-float label="Indicator" required>
-          [[prpClusterIndicator.title]]
-        </etools-form-element-wrapper>
+        <div class="layout-vertical">
+          <label class="paper-label">Indicator</label>
+          <label class="input-label" empty$="[[!indicator.cluster_indicator_title]]">[[indicator.cluster_indicator_title]]</label>
+        </div>
       </div>
     </template>
 
@@ -55,6 +56,7 @@
           <etools-single-selection-menu id$="responsePlanDropdw"
                                     label="Response Plan"
                                     placeholder="&#8212;"
+                                    selected-item="{{responsePlan}}"
                                     selected="{{responsePlanId}}"
                                     options="[[responsePlans]]"
                                     option-label="title"
@@ -67,6 +69,7 @@
           <etools-single-selection-menu id$="clusterDropdw"
                                     label="Cluster"
                                     placeholder="&#8212;"
+                                    selected="{{clusterId}}"
                                     selected-item="{{cluster}}"
                                     options="[[clusters]]"
                                     option-label="type"
@@ -164,13 +167,15 @@
           clusters: {
             type: Array
           },
+          clusterId: {
+            type: String,
+          },
           locations: {
             type: Array,
             statePath: 'locations'
           },
           responsePlanId: {
             type: String,
-            observer: '_responsePlanIdChanged'
           },
           cluster: {
             type: String,
@@ -179,9 +184,12 @@
           prpClusterIndicators: {
             type: Array
           },
+          responsePlan: {
+            type: Object,
+            observer: '_responsePlanChanged'
+          },
           responsePlans: {
             type: Array,
-
           },
           prpClusterIndicator: {
             type: Object,
@@ -200,7 +208,6 @@
         observers: [
           '_baselineChanged(indicator.baseline)',
           '_targetChanged(indicator.target)',
-          '_populatePrpClusterIndicators(responsePlanId, cluster)'
         ],
         ready: function() {
           if (!this.currentUser.profile.country) {
@@ -220,16 +227,36 @@
           this.responsePlans = this.responsePlansMockup;
         },
         indicatorChanged: function(indicator) {
-          if (!indicator || !indicator.id) { // on new
+          if (!indicator || !indicator.id) {
             this.set('isNewIndicator', true);
-          } else { // on edit
+          } else {
             this.set('isNewIndicator', false);
             this._getPrpClusterIndicator(indicator.cluster_indicator_id);
           }
         },
-        _responsePlanIdChanged: function(responsePlanId) {
-          console.log('_responsePlanIdChanged', responsePlanId);
-          this._populateClusters(responsePlanId);
+        _getPrpClusterIndicator: function(clusterIndicId) {
+          this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
+          let self = this;
+          this.sendRequest({
+            endpoint: this.getEndpoint('getPrpClusterIndicator', {id: clusterIndicId}),
+            method: 'GET'
+          }).then(function(response) {
+            self.prpClusterIndicator = response;
+            self.fire('stop-spinner');
+          }).catch(function(error) {
+            self.fire('stop-spinner');
+            self.fire('show-toast', {error: error});
+          });
+        },
+        _responsePlanChanged: function(responsePlan) {
+          console.log('_responsePlanChanged', responsePlan);
+          this.clusterId = undefined;
+
+          if (!responsePlan) {
+            return;
+          }
+          this.indicator.response_plan_name = responsePlan.title;
+          this._populateClusters(responsePlan.id);
         },
         _populateClusters: function(selectedRespPlanId) {
           if (!selectedRespPlanId) {
@@ -241,13 +268,16 @@
           })[0].clusters;
         },
         _clusterChanged: function(cluster) {
+          console.log('cluster changed', cluster);
+          this.prpClusterIndicators = [];
+          this.set('indicator.cluster_indicator_id', undefined);
+
           if (!cluster) {
             return;
           }
           console.log('Cluster changed ', cluster);
           this._populatePrpClusterIndicators(cluster.id);
           this.indicator.cluster_name = cluster.type;
-          this.set('indicator.cluster_indicator_id', undefined);
         },
         _populatePrpClusterIndicators: function(clusterId) {
           if (!clusterId) {
@@ -276,20 +306,6 @@
           });
           return indicators;
         },
-        _getPrpClusterIndicator: function(clusterIndicId) {
-          this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
-          let self = this;
-          this.sendRequest({
-            endpoint: this.getEndpoint('getPrpClusterIndicator', {id: clusterIndicId}),
-            method: 'GET'
-          }).then(function(response) {
-            self.prpClusterIndicator = response;
-            self.fire('stop-spinner');
-          }).catch(function(error) {
-            self.fire('stop-spinner');
-            self.fire('show-toast', {error: error});
-          });
-        },
         _selectedPrpClusterIndicatorChanged: function(prpClusterIndic) {
           if (!prpClusterIndic) {
             this.set('prpDisaggregations', []);
@@ -311,8 +327,8 @@
           this.$$('#targetEl').invalid = false;
         },
         resetFieldValues: function() {
-          this.responsePlanId = null;
-          this.cluster = null;
+          this.responsePlanId = undefined;
+          this.clusterId = undefined;
         }
       });
     })();

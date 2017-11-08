@@ -1,5 +1,9 @@
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../scripts/lodash/lodash.html">
-<link rel="import" href="app-config-behavior.html">
+<link rel="import" href="../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="app-config.html">
+<link rel="import" href="app-endpoints.html">
+
 <script>
   /**
    * PMP app endpoints list.
@@ -7,200 +11,207 @@
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
-  EtoolsPmpApp.Endpoints = {
-    changeCountry: {
-      url: '/users/api/changecountry/'
+  EtoolsPmpApp.EndpointConfig = {
+    tokenEndpointsHost: {
+      prp: 'http://127.0.0.1:8080',
+      // prp: 'https://etools-test.unicef.org',
     },
-    // TODO: endpoint(might be changed) should return etools(List of Staff) WHERE Group = "Senior Management"
-    unicefUsers: {
-      url: '/users/api/',
-      exp: 60 * 60 * 1000, // 1h
-      cachingKey: 'unicefUsers'
+    tokenStorageKeys: {
+      prp: 'etoolsPrpToken'
     },
-    user: {
-      url: '/users/api/profile/'
-    },
-    agreements: {
-      template: '/api/v2/agreements/',
-      exp: 30 * 60 * 1000, // 30min
-      cacheTableName: 'agreements'
-    },
-    agreementDetails: {
-      template: '/api/v2/agreements/<%=id%>/',
-    },
-    partnerAssessmentDelete: {
-      template: '/api/v2/partners/assessments/<%=id%>/',
-    },
-    interventionResultLinkDelete: {
-      template: '/api/v2/interventions/result-links/<%=id%>/',
-    },
-    agreementAmendmentsDelete: {
-      template: '/api/v2/agreements/amendments/<%=id%>/',
-    },
-    agreementAmendmentsTypeDelete:  {
-      template: '/api/v2/agreements/amendments/types/<%=id%>/',
-    },
-    myProfile:  {
-      template: '/api/v2/users/myprofile/',
-    },
-    countries: {
-      url: '/api/countries/', // API request receives a 404 for now
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'countries'
-    },
-    partners: {
-      url: '/api/v2/partners/',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cacheTableName: 'partners',
-    },
-    partnerDetails: {
-      template: '/api/v2/partners/<%=id%>/',
-      // exp: 6 * 1000, // 6 sec
-      // if this caching key is missing then the data will be cached with the url as key
-      // cachingKey: 'partnerDetails'
-    },
-    createPartner: {
-      template: '/api/v2/partners/add/?vendor=<%=vendor%>',
-    },
-    deletePartner: {
-      template: '/api/v2/partners/delete/<%=id%>/',
-    },
-    partnerStaffMembers: {
-      template: '/api/v2/partners/<%=id%>/staff-members/',
-    },
-    interventions: {
-      url: '/api/v2/interventions/',
-      exp: 10 * 60 * 1000,
-      cacheTableName: 'interventions'
-    },
-    interventionDetails: {
-      template: '/api/v2/interventions/<%=id%>/',
-    },
-    dropdownsPmp: {
-      url: '/api/v2/dropdowns/pmp',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'dropdownsPmp'
-    },
-    dropdownsStatic: {
-      url: '/api/v2/dropdowns/static',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'dropdownsStatic'
-    },
-    sectors: {
-      url: '/api/reports/sectors',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'sectors'
-    },
-    locations: {
-      url: '/api/locations',
-      exp: 60 * 60 * 60 * 1000, // 60h
-      cachingKey: 'locations'
-    },
-    offices: {
-      url: '/api/offices',
-      exp: 6 * 60 * 60 * 1000, // 6h
-      cachingKey: 'offices'
-    },
-    // TODO: might not be needed, gov in simple removed
-    countryProgrammes: {
-      cachingKey: 'countryProgrammes',
-      exp: 5 * 60 * 1000, // 5min
-      url: '/api/v2/reports/countryprogramme/'
-    },
-    sections: {
-      url: '/api/sections',
-      exp: 6 * 60 * 60 * 1000,
-      cachingKey: 'sections'
-    },
-    ramIndicators: {
-      template: '/api/v2/reports/results/<%=id%>/indicators/',
-    },
-    monitoringVisits: {
-      template: '/api/t2f/travels/activities/partnership/<%=id%>/',
-    },
-    sectorLocationsDelete: {
-      template: '/api/v2/interventions/sector-locations/<%=id%>/'
-    },
-    cpOutputsByIdsAsValues: {
-      // it's gonna be used for getting old cp outputs for esmm dropdown
-      url: '/api/v2/reports/results'
-    },
-    frNumbersDetails: {
-      url: '/api/v2/funds/frs'
-    },
-    userCountryDetails: {
-      url: '/api/v2/users/country'
-    },
-    createIndicator: {
-      template: '/api/v2/interventions/lower-results/<%=id%>/indicators/',
-    },
-    getEditDeleteIndicator: {
-      template: '/api/v2/interventions/applied-indicators/<%=id%>/'
-    },
-    getPrpClusterIndicators: { // by cluster id
-      template: '/api/indicator/ca/?clusters=<%=id%>'
-    },
-    getPrpClusterIndicator: { // by id
-      template: '/api/indicator/<%=id%>/'
-    },
-    getResponsePlans: {
-      template: '/api/core/workspace/<%=id%>/response-plan/'
-    },
-    pdExpectedResults: {
-      template: '/api/v2/interventions/<%=pdId%>/result-links/'
-    },
-    pdExpectedResultDetails: {
-      template: '/api/v2/interventions/result-links/<%=resultId%>/'
-    },
-    pdLowerResults: {
-      template: '/api/v2/interventions/result-links/<%=resultId%>/lower-results/'
-    },
-    pdLowerResultDetails: {
-      template: '/api/v2/interventions/lower-results/<%=llResultId%>/'
-    },
-    lowerResultsDelete: {
-      template: '/api/v2/reports/lower_results/<%=id%>/'
-    },
-    addGetDisaggregations: {
-      url: '/api/v2/reports/disaggregations/'
-    },
-    interventionProgress: {
-      template: '/api/unicef/<%=countryId%>/programme-document/<%=pdId%>/progress/'
-    },
-    reports: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/'
-    },
-    reportDetails: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>'
-    },
-    reportIndicatorsDetails: {
-      url: '/api/indicator/indicator-reports/'
-    },
-    reportRequirementsList: {
-      template: '/api/v2/interventions/<%=intervId%>/reporting-periods/'
-    },
-    reportRequirementsItem: {
-      template: '/api/v2/interventions/reporting-periods/<%=reportId%>/'
-    },
-    reportReview: {
-      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/review/'
+    getTokenEndpoints: {
+      prp: 'prpToken'
     }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EndpointsImpl */
   EtoolsPmpApp.Behaviors.EndpointsImpl = {
+    properties: {
+      prpCountries: {
+        type: Array,
+        statePath: 'PRPCountryData'
+      },
+      currentUser: {
+        type: Object,
+        statePath: 'currentUser'
+      }
+    },
+    _getPrpCountryId: function() {
+      let self = this;
+      let currentCountry = this.currentUser.profile.countries_available.find(function(country) {
+        return country.id === self.currentUser.profile.country;
+      });
+      let prpCountry = self.prpCountries.find(function(prpCountry) {
+        return prpCountry.business_area_code === currentCountry.business_area_code;
+      });
+
+      if (!prpCountry) {
+        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.profile.country_name + ' country data was ' +
+            'not found in the available PRP countries by business_area_code!';
+        this.fire('toast', {text: countryNotFoundInPrpWarning, showCloseBtn: true});
+      }
+
+      return prpCountry.id;
+    },
+
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
-      if (endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '') {
-        endpoint.url = this.baseSite + _.template(endpoint.template)(data);
+      let authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
+      let baseSite = authorizationTokenMustBeAdded
+          ? EtoolsPmpApp.EndpointConfig.tokenEndpointsHost[endpoint.token]
+          : EtoolsPmpApp.Config.baseSite;
+
+      if (this._hasUrlTemplate(endpoint)) {
+        if (data && data.countryId && authorizationTokenMustBeAdded) {
+          // we need to get corresponding PRP country ID
+          data.countryId = this._getPrpCountryId();
+        }
+        endpoint.url = baseSite + _.template(endpoint.template)(data);
+      } else {
+        if (endpoint.url.indexOf(baseSite) === -1) {
+          endpoint.url = baseSite + endpoint.url;
+        }
       }
+
       return endpoint;
+    },
+
+    _hasUrlTemplate: function(endpoint) {
+      return endpoint && endpoint.hasOwnProperty('template') && endpoint.template !== '';
+    },
+
+    _getDeferrer: function() {
+      // create defer object (utils behavior contains to many other unneeded methods to be used)
+      let defer = {};
+      defer.promise = new Promise(function(resolve, reject) {
+        defer.resolve = resolve;
+        defer.reject = reject;
+      });
+      return defer;
+    },
+
+    authorizationTokenMustBeAdded: function(endpoint) {
+      return endpoint && ('token' in endpoint);
+    },
+
+    getCurrentToken: function(tokenKey) {
+      return localStorage.getItem(EtoolsPmpApp.EndpointConfig.tokenStorageKeys[tokenKey]);
+    },
+
+    storeToken: function(tokenKey, tokenBase64Encoded) {
+      localStorage.setItem(EtoolsPmpApp.EndpointConfig.tokenStorageKeys[tokenKey], tokenBase64Encoded);
+    },
+
+    decodeBase64Token: function(encodedToken) {
+      let base64Url = encodedToken.split('.')[1];
+      let base64 = base64Url.replace('-', '+').replace('_', '/');
+      return JSON.parse(window.atob(base64));
+    },
+
+    tokenIsValid: function(token) {
+      let decodedToken = this.decodeBase64Token(token);
+      return Date.now() < decodedToken.exp;
+    },
+
+    getAuthorizationHeader: function(token) {
+      return {'Authorization': 'JWT ' + token};
+    },
+
+    requestToken: function(endpoint) {
+      return this.sendRequest({
+        endpoint: endpoint
+      });
+    },
+
+    _buildOptionsWithTokenHeader: function(options, token) {
+      options.headers = this.getAuthorizationHeader(token);
+      delete options.endpoint.token; // cleanup token from endpoint object
+      return options;
+    },
+
+    getTokenEndpointName: function(tokenKey) {
+      return EtoolsPmpApp.EndpointConfig.getTokenEndpoints[tokenKey];
+    },
+
+    addTokenToRequestOptions: function(endpointName, data) {
+      let options = {
+        endpoint: this.getEndpoint(endpointName, data)
+      };
+
+      // create defer object (utils behavior contains to many other unneeded methods to be used)
+      let defer = this._getDeferrer();
+
+      if (this.authorizationTokenMustBeAdded(options.endpoint)) {
+        let tokenKey = options.endpoint.token;
+        let token = this.getCurrentToken(tokenKey);
+        // because we could have other tokens too
+        if (token && this.tokenIsValid(token)) {
+          // token exists and it's still valid
+          options = this._buildOptionsWithTokenHeader(options, token);
+          defer.resolve(options);
+        } else {
+          // request new token
+          let self = this;
+          let tokenEndpointName = this.getTokenEndpointName(tokenKey);
+          this.requestToken(this.getEndpoint(tokenEndpointName)).then(function(response) {
+            self.storeToken(options.endpoint.token, response.token);
+            options = self._buildOptionsWithTokenHeader(options, response.token);
+            defer.resolve(options);
+          }).catch(function(error) {
+            // request for getting a new token failed
+            defer.reject(error);
+          });
+        }
+      } else {
+        defer.resolve(options);
+      }
+      return defer.promise;
+    },
+
+    _addAdditionalRequestOptions: function(options, requestAdditionalOptions) {
+      if (!_.isEmpty(requestAdditionalOptions)) {
+        Object.keys(requestAdditionalOptions).forEach(function(key) {
+          switch (key) {
+            case 'endpoint':
+              break;
+            case 'headers':
+              // add additional headers
+              options.headers = Object.assign({}, options.headers, requestAdditionalOptions[key]);
+              break;
+            default:
+              options[key] = requestAdditionalOptions[key];
+          }
+        });
+      }
+      return options;
+    },
+
+    fireRequest: function(endpoint, endpointTemplateData, requestAdditionalOptions, activeReqKey) {
+      if (!endpoint) {
+        this.logError('Endpoint name is missing.', 'Endpoints:fireRequest');
+        return;
+      }
+      let defer = this._getDeferrer();
+      let self = this;
+      this.addTokenToRequestOptions(endpoint, endpointTemplateData)
+          .then(function(requestOptions) {
+            let options = self._addAdditionalRequestOptions(requestOptions, requestAdditionalOptions);
+            return self.sendRequest(options, activeReqKey);
+          })
+          .then(function(endpointResponse) {
+            defer.resolve(endpointResponse);
+          })
+          .catch(function(error) {
+            defer.reject(error);
+          });
+      return defer.promise;
     }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.Endpoints */
   EtoolsPmpApp.Behaviors.Endpoints = [
-    EtoolsPmpApp.Behaviors.AppConfig,
+    EtoolsAjaxRequestBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
     EtoolsPmpApp.Behaviors.EndpointsImpl
   ];
 

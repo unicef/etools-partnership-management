@@ -216,6 +216,7 @@
         observers: [
           '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
           '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
+          'resetValidations(isCluster)'
         ],
 
         _indicatorIsNew: function(indicator) {
@@ -305,11 +306,15 @@
         },
 
         resetValidations: function() {
+          let indicatorEl;
           if (this.isCluster) {
-            this.$$('#clusterIndicatorEl').resetValidations();
+            indicatorEl = this.$$('#clusterIndicatorEl');
           } else {
-            this.$$('#nonClusterIndicatorEl').resetValidations();
+            indicatorEl = this.$$('#nonClusterIndicatorEl');
           }
+          if (indicatorEl) {
+              indicatorEl.resetValidations();
+            }
         },
         resetFieldValues: function() {
           let resetModel = {
@@ -328,7 +333,8 @@
               disaggregation: [],
               cluster_indicator_title: null,
               cluster_indicator_id: null,
-              cluster_name: null
+              cluster_name: null,
+              response_plan_name: null
             };
           this.indicator = JSON.parse(JSON.stringify(resetModel));
           this.disaggregations = [];

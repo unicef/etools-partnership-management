@@ -111,17 +111,9 @@
             type: Boolean,
             value: false
           },
-          initComplete: {
-            type: Boolean,
-            value: false
-          },
           csvDownloadUrl: {
             type: String,
             notify: true
-          },
-          pdRefTitle: {
-            type: String,
-            value: ''
           },
           // filters options
           partners: {
@@ -215,32 +207,30 @@
               }
             ]);
             this._updateSelectedFiltersValues();
-          }.bind(this), 100);
+          }.bind(this), 10);
         },
 
         // update selected filters(prezent in URL) at page refresh
         _updateSelectedFiltersValues: function() {
-          this.debounce('updateShownFilters', function() {
-            let filtersValues = [
-              {
-                filterName: 'Partner',
-                selectedValue: this.queryParams.partner
-              },
-              {
-                filterName: 'CP Output',
-                selectedValue: this.queryParams.cp_output
-              },
-              {
-                filterName: 'Section',
-                selectedValue: this.queryParams.section
-              },
-              {
-                filterName: 'Report Status',
-                selectedValue: this.queryParams.status
-              }
-            ];
-            this.updateShownFilters(filtersValues);
-          }.bind(this), 200);
+          let filtersValues = [
+            {
+              filterName: 'Partner',
+              selectedValue: this.queryParams.partner
+            },
+            {
+              filterName: 'CP Output',
+              selectedValue: this.queryParams.cp_output
+            },
+            {
+              filterName: 'Section',
+              selectedValue: this.queryParams.section
+            },
+            {
+              filterName: 'Report Status',
+              selectedValue: this.queryParams.status
+            }
+          ];
+          this.updateShownFilters(filtersValues);
         },
 
         _init: function(active, urlQueryParams) {
@@ -253,21 +243,19 @@
           this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
           this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);
           if (urlQueryParams.page) {
-            this.set('paginator.page', parseInt(urlQueryParams.page, 10));
+            this.set('paginator.page', Number(urlQueryParams.page));
           }
           if (urlQueryParams.page_size) {
-            this.set('paginator.page_size', parseInt(urlQueryParams.page_size, 10));
+            this.set('paginator.page_size', Number(urlQueryParams.page_size));
           }
           this._updateSelectedFiltersValues();
         },
 
         _updateURL: function() {
           let self = this;
-          this.debounce('update-reports-list-url', function() {
-            let qs = self._buildQueryString();
-            // update URL
-            self.updateAppState('reports/list', qs, true);
-          }, 200);
+          let qs = self._buildQueryString();
+          // update URL
+          self.updateAppState('reports/list', qs, true);
         },
 
         // Outputs the query string for the list

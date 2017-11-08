@@ -22,10 +22,6 @@
     ajaxDefaultDataTable: '&cacheKey, data, expire',
   });
 
-  // this is needed by etools-ajax
-  // TODO: remove once etools-ajax v2 is released
-  var etoolsCustomDexieDb = EtoolsPmpApp.DexieDb;
-
   // configure app dexie db to be used for caching
   window.EtoolsRequestCacheDb = window.EtoolsRequestCacheDb || EtoolsPmpApp.DexieDb;
 </script>
