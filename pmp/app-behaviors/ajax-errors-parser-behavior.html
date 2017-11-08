@@ -47,11 +47,11 @@
             let errKeys = Object.keys(err);
             if (errKeys.length > 0) {
               errKeys.forEach(function(k) {
-                Array.prototype.push.apply(errorsArray, [err[k]]); // will work only for strings
+                errorsArray.push(err[k]); // will work only for strings
               });
             }
           } else {
-            Array.prototype.push.apply(errorsArray, [err]);
+            errorsArray.push(err);
           }
         });
         return errorsArray;
