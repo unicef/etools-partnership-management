@@ -137,7 +137,7 @@
             type: Object,
             value: {
               pd_ref_title: null,
-              partner: null,
+              external_partner_id: null,
               cp_output: null,
               section: null,
               status: null
@@ -176,7 +176,7 @@
                 optionLabel: 'label',
                 selectionOptions: partners,
                 alreadySelected: [],
-                path: 'queryParams.partner'
+                path: 'queryParams.external_partner_id'
               },
               {
                 filterName: 'CP Output',
@@ -215,7 +215,7 @@
           let filtersValues = [
             {
               filterName: 'Partner',
-              selectedValue: this.queryParams.partner
+              selectedValue: this.queryParams.external_partner_id
             },
             {
               filterName: 'CP Output',
@@ -238,7 +238,8 @@
             return;
           }
           this.set('queryParams.pd_ref_title', urlQueryParams.pd_ref_title ? urlQueryParams.pd_ref_title : '');
-          this.set('queryParams.partner', urlQueryParams.partner ? urlQueryParams.partner : null);
+          this.set('queryParams.external_partner_id',
+              urlQueryParams.external_partner_id ? urlQueryParams.external_partner_id : null);
           this.set('queryParams.cp_output', urlQueryParams.cp_output ? urlQueryParams.cp_output : null);
           this.set('queryParams.section', urlQueryParams.section ? urlQueryParams.section : null);
           this.set('queryParams.status', urlQueryParams.status ? urlQueryParams.status : null);

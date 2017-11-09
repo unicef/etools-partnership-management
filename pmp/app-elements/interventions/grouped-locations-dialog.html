@@ -214,29 +214,29 @@
         if (!groupedLocations || !groupedLocations.length) {
           return null;
         }
-        let existingGroups = groupedLocations.filter(function(g) {
+        let existingGroup = groupedLocations.find(function(g) {
           return parseInt(g.adminLevelLocation.id) === parseInt(adminLevelLocation.id);
         });
 
-        if (!existingGroups || !existingGroups.length) {
+        if (!existingGroup) {
           return null;
         }
-        return existingGroups[0];
+        return existingGroup;
       },
       _findAdminLevelParent: function(location, adminLevel) {
         if (!location.parent) {
           return null;
         }
-        let parentArr = this.locations.filter(function(loc) {
+        let parent = this.locations.find(function(loc) {
           return parseInt(loc.id) === parseInt(location.parent);
         });
-        if (!parentArr || !parentArr.length) {
+        if (!parent) {
           return null;
         }
-        if (parentArr[0].location_type === adminLevel) {
-          return parentArr[0];
+        if (parent.location_type === adminLevel) {
+          return parent;
         }
-        return this._findAdminLevelParent(parentArr[0], adminLevel);
+        return this._findAdminLevelParent(parent, adminLevel);
       },
 
       open: function() {

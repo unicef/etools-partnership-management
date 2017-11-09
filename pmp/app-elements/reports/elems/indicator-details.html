@@ -12,9 +12,6 @@
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 
-<!-- TODO: remove this mockup data -->
-<link rel="import" href="../elems/reports-list-data-mockup.html">
-
 <link rel="import" href="disaggregations/disaggregation-table.html">
 <link rel="import" href="../../../app-behaviors/utils-behavior.html">
 
@@ -139,8 +136,7 @@
         EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.AjaxErrorsParser,
         EtoolsPmpApp.Behaviors.Endpoints,
-        EtoolsPmpApp.Behaviors.Utils,
-        EtoolsPmpApp.Behaviors.ReportsListDataMockup // TODO: remove mockup data use
+        EtoolsPmpApp.Behaviors.Utils
       ],
 
       properties: {
@@ -174,16 +170,7 @@
           }).catch(function(error) {
             let errMsg = 'Indicator details data request failed!';
             self.logError(errMsg, 'reports-indicator-details', error);
-
-            // TODO: remove this toast, after API request can be made
-            self.fire('toast', {text: errMsg, showCloseBtn: true});
-
             self.parseRequestErrorsAndShowAsToastMsgs(error, self);
-            self.set('indicator', {});
-
-            // TODO: remove mockup data use, make sure API request is correct
-            self.set('indicatorReport', self.indicatorDetailsMockup[0]);
-
             self._hideLoading();
           });
         } // else, no need for getting indicator details

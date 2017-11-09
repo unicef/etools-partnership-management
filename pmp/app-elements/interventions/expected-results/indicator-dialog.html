@@ -58,7 +58,12 @@
       a {
         color: var(--primary-color);
       }
-
+      etools-dialog {
+        --etools-dialog-scrollable: {
+          min-height: 400px;
+          font-size: 16px;
+        };
+      }
     </style>
 
     <etools-dialog id="indicatorDialog" size="lg" dialog-title="Indicator"
@@ -257,8 +262,8 @@
           this.set('actionParams', actionParams);
 
           if (!data) { //new indicator
-            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
             this.isCluster = false;
+            this.set('indicator', JSON.parse(JSON.stringify(this.indicatorModel)));
             return;
           }
 
@@ -284,7 +289,6 @@
         _cleanUp: function() {
           this._stopSpinner();
           this.disableConfirmBtn = false;
-          this.resetFieldValues();
           //Anything else?
         },
         _stopSpinner: function(e) {

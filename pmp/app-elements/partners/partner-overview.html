@@ -221,18 +221,22 @@
               <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
               </div>
               <div class="col col-3 center-align timeline-col">
+                <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+                  hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]" -->
                 <etools-info-tooltip icon="report" icon-first
-                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]"
+                                     hide-tooltip
                                      important-warning>
                   <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
-                  <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                  <!--<span slot="message">[[getFrsStartDateValidationMsg()]]</span>-->
                 </etools-info-tooltip>
                 <span class="date-delimiter"> - </span>
+                <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+                  hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]" -->
                 <etools-info-tooltip icon="report" icon-first
-                                     hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]"
+                                     hide-tooltip
                                      important-warning>
                   <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
-                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                  <!--<span slot="message">[[getFrsEndDateValidationMsg()]]</span>-->
                 </etools-info-tooltip>
               </div>
             </div>
