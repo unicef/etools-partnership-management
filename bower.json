@@ -54,7 +54,8 @@
     "etools-page-refresh": "1.1.2",
     "etools-searchable-multiselection-menu": "2.2.2",
     "etools-profile-dropdown": "1.0.6",
-    "etools-info-tooltip": "^1.0.1"
+    "etools-info-tooltip": "^1.0.1",
+    "etools-piwik-analytics": "*"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
