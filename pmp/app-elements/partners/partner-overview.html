@@ -168,7 +168,7 @@
           <div class="col col-2"> Done / M.R.</div>
         </div>
       </div>
-      <div class="hact-body">
+      <div id="overviewDetails" class="hact-body">
         <div class="row-h">
           <div class="col col-2 center-align">
             <span class$="risk-rating-field [[getRiskRatingClass(partner.rating)]]"> [[getRiskRatingValue(partner.rating)]] </span>
@@ -206,14 +206,14 @@
             <div class="col col-3 left-align"> Timeline</div>
           </div>
         </div>
-        <div class="hact-body">
+        <div id="partnerInterventions" class="hact-body">
           <template is="dom-repeat" items="[[partner.interventions]]" as="partnership">
             <div class="row-h">
               <div class="col col-3 block word-break">
                 <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                 <span>
                 [[partnership.title]]
-              </span>
+                </span>
               </div>
               <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
               </div>

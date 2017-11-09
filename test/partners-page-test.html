@@ -19,6 +19,8 @@
   <!-- Import the element to test -->
   <link rel="import" href="../pmp/pages/page-partners.html">
   <link rel="import" href="../pmp/app-elements/partners/partners-list.html">
+  <link rel="import" href="../pmp/app-elements/partners/partner-overview.html">
+
 </head>
 <body>
 
@@ -31,6 +33,12 @@
   <test-fixture id="partners-list">
     <template>
       <partners-list></partners-list>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="partner-overview">
+    <template>
+      <partner-overview></partner-overview>
     </template>
   </test-fixture>
 
@@ -154,10 +162,67 @@
       suite('Partner overview elements tests', function() {
         let partnerOverview;
         setup(function() {
-          // partnerOverview = fixture('partner-overview');
+           partnerOverview = fixture('partner-overview');
         });
 
-        test('Overview', function() {
+        test('Overview', function(done) {
+          expect(partnerOverview.is).to.equal('partner-overview');
+          partnerOverview.set('partner', JSON.parse(JSON.stringify(partnerDetailsExample1)));
+
+          flush(function() {
+            expect(partnerOverview.partner.id).to.equal(71); // element partner property was set
+            // check number of interventions rendered, should equal partner.interventions.length
+            let interventionsList = Polymer.dom(partnerOverview.root).querySelectorAll('#partnerInterventions .row-h');
+            expect(interventionsList.length).to.equal(partnerDetailsExample1.interventions.length);
+
+            let firstPartnerInterv = partnerDetailsExample1.interventions[0];
+            // get first partner intervention and check data rendered
+            let partnershipCol = interventionsList[0].querySelectorAll('div')[0];
+            expect(partnershipCol.querySelector('a strong').innerHTML.trim()).to.equal(firstPartnerInterv.number);
+            expect(partnershipCol.querySelector('span').innerHTML.trim()).to.equal(firstPartnerInterv.title);
+
+            let totalPlannedBudgetCol = interventionsList[0].querySelectorAll('div')[1];
+            expect(totalPlannedBudgetCol.textContent.trim()).to.equal('$2,437,158');
+
+            let actualCol = interventionsList[0].querySelectorAll('div')[2];
+            expect(actualCol.textContent.trim()).to.equal('$1,423,562');
+
+            let statusCol = interventionsList[0].querySelectorAll('div')[3];
+            expect(statusCol.textContent.trim()).to.equal('active');
+
+            let timelineCol = interventionsList[0].querySelectorAll('div')[4];
+            let timelineColTextDisplayed = timelineCol.textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+            expect(timelineColTextDisplayed).to.equal('1 Jan 2017 - 31 Dec 2017');
+
+            // test overview top section
+            let riskRatingDisplayed = Polymer.dom(partnerOverview.root).querySelector('.risk-rating-field');
+            expect(riskRatingDisplayed.textContent.trim()).to.equal(partnerDetailsExample1.rating);
+
+            let cpCycleDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[1];
+            expect(cpCycleDisplay.textContent.trim()).to.equal('$1,423,562');
+
+            let cashTransferDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[2];
+            expect(cashTransferDisplay.textContent.trim()).to.equal('$2,049,934');
+
+            let progVisitsDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[3];
+            let progVisitsDisplayDisplayText = progVisitsDisplay.textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+            expect(progVisitsDisplayDisplayText).to.equal('12 / 2 / 47');
+
+            let spotChecksDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[4];
+            let spotChecksDisplayText = spotChecksDisplay.textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+            expect(spotChecksDisplayText).to.equal('2 / 1');
+
+            let auditDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[5];
+            let auditDisplayText = auditDisplay.textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+            expect(auditDisplayText).to.equal('2 / 1');
+
+            done();
+          });
 
         });
       });
