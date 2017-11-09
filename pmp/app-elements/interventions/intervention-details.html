@@ -198,12 +198,15 @@
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
              class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
+          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]" -->
           <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
+                               hide-tooltip
                                important-warning>
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]" -->
             <etools-date-input slot="field"
                                id="intStart"
-                               class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
                                label="Start date"
                                value="{{intervention.start}}"
                                readonly$="[[!intervention.permissions.edit.start]]"
@@ -212,18 +215,20 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <span slot="message">[[_frsStartConsistencyWarning]]</span>
+            <!--<span slot="message">[[_frsStartConsistencyWarning]]</span>-->
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
-             class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
+          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]" -->
           <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
+                               hide-tooltip
                                important-warning>
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]" -->
             <etools-date-input slot="field"
                                id="intEnd"
-                               class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
                                label="End date"
                                value="{{intervention.end}}"
                                readonly$="[[!intervention.permissions.edit.end]]"
@@ -232,7 +237,7 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <span slot="message">[[_frsEndConsistencyWarning]]</span>
+            <!--<span slot="message">[[_frsEndConsistencyWarning]]</span>-->
           </etools-info-tooltip>
         </div>
         <div class="col col-3"
@@ -297,7 +302,7 @@
         </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
-    
+
     <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
       <template is="dom-if" if="[[!newIntervention]]">
         <intervention-expected-results id="expectedResults"
@@ -309,10 +314,10 @@
         </intervention-expected-results>
       </template>
       <template is="dom-if" if="[[newIntervention]]">
-        <div class="row-h">        
+        <div class="row-h">
           <p> You must save this PD/SSFA before you can add expected results. </p>
         </div>
-        </template>          
+        </template>
       </etools-content-panel>
 
     <intervention-planned-budget id="plannedBudget"

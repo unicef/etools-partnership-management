@@ -72,12 +72,14 @@
           <span class="col-data col-3"></span>
           <span class="col-data col-3 right-align"><strong>TOTAL</strong></span>
           <span class="col-data col-2 right-align">
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]" -->
             <etools-info-tooltip icon="report"
-                              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                              hide-tooltip
                               important-warning
                               icon-first right-aligned>
               <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
-              <span slot="message">[[_frsTotalAmountWarning]]</span>
+              <!--<span slot="message">[[_frsTotalAmountWarning]]</span>-->
             </etools-info-tooltip>
           </span>
           <span class="col-data col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
