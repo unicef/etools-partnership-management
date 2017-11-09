@@ -47,13 +47,13 @@
       }
     </style>
 
-    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">      
+    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
       <div slot="panel-btns" id="edit-btns">
         <paper-icon-button icon="add-box"
                             title="Add Reporting Requirement"
                             on-tap="openNewRequirementDialog">
         </paper-icon-button>
-      </div>                              
+      </div>
 
       <div class="list-container">
         <etools-data-table-header id="listHeader"
@@ -104,7 +104,7 @@
           </div>
         </template>
       </div>
-    </etools-content-panel>    
+    </etools-content-panel>
   </template>
 
   <script>
@@ -160,7 +160,6 @@
           this.requirementsDialog.setAttribute('id', 'requirementsDialog');
           this.requirementsDialog.set('endpoints', this.endpoints);
           this.requirementsDialog.set('toastEventSource', this);
-          this.requirementsDialog.set('interventionId', this.interventionId);
 
           this.requirementsDialog.addEventListener('add-reporting-requirement',
               this.addReportingRequirement.bind(this));
@@ -179,11 +178,13 @@
 
         openNewRequirementDialog: function() {
           this.requirementsDialog.requirement = {};
+          this.requirementsDialog.set('interventionId', this.interventionId);
           this.requirementsDialog.open();
         },
 
         _handleRequirementEdit: function(event) {
           this.requirementsDialog.requirement = event.model.item;
+          this.requirementsDialog.set('interventionId', this.interventionId);
           this.requirementsDialog.open();
         },
 
