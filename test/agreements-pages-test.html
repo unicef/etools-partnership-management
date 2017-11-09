@@ -67,27 +67,13 @@
         };
         setup(function(done) {
           server = sinon.fakeServer.create();
-          server.respondWith(
-            'GET',
-             '/api/v2/agreements/',
-            //'http://localhost:8081/api/v2/agreements/',
-            [
-              200,
-              responseHeaders.json,
-              JSON.stringify(agrListMockup)
-            ]
-          );
-           server.autoRespond = true;
-           server.respondImmediately = true;
-        //   server.respond(function(err, res) {
-        //     console.log('err', err);
-        //     console.log('res', res);
-        //     expect(res).is.not.a('null');
-        //    // done();
-        // });
+          server.autoRespond = true;
+          server.respondImmediately = true;
+
 
           agrListEl = fixture('agreementsListFixture');
           agrListEl.set('permissions', appUserPermissions);
+
           done();
         });
         teardown(function() {
@@ -98,19 +84,33 @@
         //   assert.equal(agrListEl.is, 'agreements-list');
         // });
         suite('when entering a search string', function() {
+          var spy1,spy2;
           setup(function(done) {
-            agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
+            agrListEl.set('urlParams', {size: "10", sort: "partner_name.asc"});
+            agrListEl.set('active', true);
+            server.respondWith('GET', '/api/v2/agreements/',
+            [
+              200, responseHeaders.json, JSON.stringify(agrListMockup)
+            ]
+          );
+          server.respond();
+            console.log('setup');
+            spy1 = sinon.spy(agrListEl, "_updateURL");
+
             done();
+          });
+          teardown(function() {
+            agrListEl._updateURL.restore();
           });
 
           test('the list is filtered by the search string', function(done) {
            flush(function() {
-           sinon.spy(agrListEl, "_updateURL");
-           agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
-           console.log(this.agreementType, this.agreementStatus, this.selectedPartners);
-            //'startDate, endDate, pageNumber, pageSize, sortOrder, requir)
-           console.log(agrListEl._updateURL.called);
-           assert(agrListEl._updateURL.called);
+             var agreementListData = agrListEl.$$('#agreements');
+            var queryStub = sinon.stub(agreementListData, 'query');
+            queryStub.returns(JSON.stringify(agrListMockup));
+            agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
+
+           expect(spy1).called;
            done();
            });
           });

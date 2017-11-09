@@ -398,10 +398,15 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
+          console.log('_init');
           let urlQueryParams = this.urlParams;
           if (!active || !urlQueryParams) {
+            console.log('returned');
+            console.log(active);
+            console.log(urlQueryParams);
             return;
           }
+          console.log('here');
           this.set('initComplete', false);
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
           this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
@@ -452,6 +457,8 @@
         _updateURL: function() {
           console.log('updateurlrlrl');
           if (!this.requiredDataLoaded || !this.initComplete) {
+            console.log('returned 2');
+            console.log(this.initComplete);
             return;
           }
 
