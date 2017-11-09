@@ -13,8 +13,8 @@
 
   EtoolsPmpApp.EndpointConfig = {
     tokenEndpointsHost: {
-      // prp: 'http://127.0.0.1:8080',
-      prp: 'https://etools-test.unicef.org'
+      prp: window.location.port === '8082' ? 'http://127.0.0.1:8080' : 'https://etools-test.unicef.org'
+      // prp: 'https://etools-test.unicef.org',
     },
     tokenStorageKeys: {
       prp: 'etoolsPrpToken'
