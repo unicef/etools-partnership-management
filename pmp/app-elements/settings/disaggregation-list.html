@@ -13,18 +13,9 @@
 <dom-module id="disaggregation-list">
   <template strip-whitespace>
     <style include="grid-layout-styles data-table-styles">
-      :host{
-        --header-title: {
-          height: 0px !important;
-      };
-      [hidden] {
-        display: none !important;
-      }
-
-      --data-table-header: {
-          height: 54px !important;
-        };
-      }
+        [hidden] {
+          display: none !important;
+        }
     </style>
 
     <etools-content-panel panel-title="Disaggregations">
@@ -33,7 +24,7 @@
                          on-tap="_addDisaggregation">
       </paper-icon-button>
       <div hidden$="[[_emptyList(disaggregations)]]">
-        <etools-data-table-header no-collapse>
+        <etools-data-table-header no-collapse no-title>
           <etools-data-table-column class="col-4" field="name">
             Name
           </etools-data-table-column>
