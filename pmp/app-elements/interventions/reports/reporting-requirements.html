@@ -177,14 +177,14 @@
         },
 
         openNewRequirementDialog: function() {
-          this.requirementsDialog.requirement = {};
           this.requirementsDialog.set('interventionId', this.interventionId);
+          this.requirementsDialog.set('requirement', {});
           this.requirementsDialog.open();
         },
 
         _handleRequirementEdit: function(event) {
-          this.requirementsDialog.requirement = event.model.item;
           this.requirementsDialog.set('interventionId', this.interventionId);
+          this.requirementsDialog.set('requirement', event.model.item);
           this.requirementsDialog.open();
         },
 
