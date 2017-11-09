@@ -1,0 +1,115 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.AjaxErrorsParser */
+  EtoolsPmpApp.Behaviors.AjaxErrorsParser = {
+    properties: {
+      globalMessage: {
+        type: String,
+        value: 'An error occurred on data save!'
+      },
+      httpStatus413Msg: {
+        type: String,
+        value: 'The uploaded file is too large!'
+      }
+    },
+    tryGetResponseError: function(response) {
+      if (response.status >= 500) {
+        return this.globalMessage;
+      }
+      if (response.status === 413) {
+        return this.httpStatus413Msg;
+      }
+      return response.response || this.globalMessage;
+    },
+    _getErrorsArray: function(errors, prepareForToastMsg) {
+      let errorsArray = [];
+      if (!errors) {
+        return errorsArray;
+      }
+
+      if (prepareForToastMsg) {
+        errorsArray.push('Errors occurred:');
+      }
+
+      if (typeof errors === 'string') {
+        errorsArray.push(errors);
+        return errorsArray;
+      }
+      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string') {
+        errorsArray.push(errors.error);
+        return errorsArray;
+      }
+
+      if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
+        Array.prototype.push.apply(errorsArray, errors.errors);
+        return errorsArray;
+      }
+
+      if (Array.isArray(errors) && errors.length > 0 && this._isArrayOfStrings(errors)) {
+        Array.prototype.push.apply(errorsArray, errors);
+        return errorsArray;
+      }
+
+      if (typeof errors === 'object' && Object.keys(errors).length > 0) {
+        let errField;
+        for (errField in errors) {
+          if (typeof errors[errField] === 'string') {
+            errorsArray.push('Field ' + errField + ' - ' + errors[errField]);
+            continue;
+          }
+          if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
+            errorsArray.push('Field ' + errField + ':');
+            let nestedErrs =  this._getErrorsArray(errors[errField]);
+            Array.prototype.push.apply(errorsArray, nestedErrs);
+            continue;
+          }
+          if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
+            let errF;
+            for (errF in errors[errField]) {
+              errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
+            }
+          }
+        }
+      }
+
+      return errorsArray;
+    },
+    _isArrayOfStrings: function(arr) {
+      let allStrings = true;
+      let i;
+      for (i = 0; i < arr.length; i++) {
+        if (typeof arr[i] !== 'string') {
+          allStrings = false;
+          break;
+        }
+      }
+      return allStrings;
+    },
+    formatServerErrorAsText: function(errors) {
+      let errorsArray = this._getErrorsArray(errors, false);
+      if (errorsArray && errorsArray.length) {
+        return errorsArray.join('\n');
+      }
+      return errors;
+    },
+
+    parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
+      let errorResponse = this.tryGetResponseError(error);
+      let errorsString = this.formatServerErrorAsText(errorResponse);
+
+      this.showErrorAsToastMsg(errorsString, source);
+    },
+
+    showErrorAsToastMsg: function(errorsString, source) {
+      if (errorsString) {
+        if (!source) {
+          source = this;
+        }
+        source.fire('toast', {text: errorsString, showCloseBtn: true});
+      }
+    }
+
+  };
+
+</script>

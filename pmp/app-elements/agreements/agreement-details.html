@@ -20,22 +20,19 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
-<link rel="import" href="../partners/partners-data/partner-staff-members-data.html">
+<link rel="import" href="../partners/behaviors/partner-staff-members-data-behavior.html">
 
 <link rel="import" href="agreement-amendments.html">
 <link rel="import" href="agreement-status.html">
 <link rel="import" href="generate-PCA-dialog.html">
 
 <dom-module id="agreement-details">
-
   <template strip-whitespace>
-
     <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
@@ -44,20 +41,25 @@
           max-height: 400px;
         }
       }
+      .type-warning {
+        color: var(--warning-color);
+        @apply --layout-self-center;
+        @apply --layout-vertical;
+      }
 
       paper-input,
       etools-date-input {
         width: 100%;
       }
 
-      #generate-pca {
+      .generate-pca {
         /* TODO: change Generate PCA btn template - this should be applied on etools-form-element-wrapper with width auto */
         border-right: 1px solid var(--dark-divider-color);
+        margin-right: 24px;
       }
-      #generate-pca[hidden] + .col {
+      .generate-pca[hidden] + .col {
         padding-left: 0;
       }
-
     </style>
 
       <etools-content-panel class="content-section" panel-title="Agreement Details">
@@ -166,7 +168,7 @@
                   id="signedByPartner"
                   label="Signed By Partner"
                   placeholder="&#8212;"
-                  options="[[activeStaffMembers]]"
+                  options="[[staffMembers]]"
                   option-value="id"
                   option-label="name"
                   selected="{{agreement.partner_manager}}"
@@ -232,7 +234,7 @@
           <etools-multi-selection-menu id="officers"
                                        label="Authorized Officers"
                                        placeholder="&#8212;"
-                                       options="[[_getAvailableAuthOfficers(activeStaffMembers, agreement.authorized_officers)]]"
+                                       options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{authorizedOfficers}}"
@@ -247,8 +249,8 @@
           </etools-form-element-wrapper>
         </div>
         <div class$="row-h flex-c [[_getTBorderClassIfApplicable(agreement.agreement_type)]]">
-          <div id="generate-pca" class="col col-3"
-               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type)]]">
+          <div class="generate-pca col col-3"
+               hidden$="[[!_showGeneratePcaBtn(agreement.agreement_type, isNewAgreement)]]">
             <paper-input-container
                 class="form-field-wrapper secondary-btn-wrapper"
                 always-float-label>
@@ -259,6 +261,10 @@
                 GENERATE
               </paper-button>
             </paper-input-container>
+          </div>
+          <div class="generate-pca col col-3"
+               hidden="[[!_showGeneratePcaWarning(agreement.agreement_type, isNewAgreement)]]">
+               <span class="type-warning"> You have to save the agreement before you can generate a PCA template </span>
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-single-file
@@ -286,11 +292,6 @@
         </etools-content-panel>
       </template>
 
-
-      <partner-staff-members-data partner-id="[[agreement.partner]]"
-                                  prepared-staff-members-data="{{staffMembers}}">
-      </partner-staff-members-data>
-
   </template>
 
   <script>
@@ -301,10 +302,10 @@
         is: 'agreement-details',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.PartnerStaffMembersData
         ],
 
         properties: {
@@ -332,11 +333,6 @@
             statePath: 'agreementTypes'
           },
           staffMembers: {
-            type: Array,
-            value: [],
-            observer: '_staffMembersChanged'
-          },
-          activeStaffMembers: {
             type: Array,
             value: []
           },
@@ -382,10 +378,14 @@
           Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
         },
         attached: function() {
-          this.async(function() {
-              this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
-            }
-          );
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+          this.fire('agreements-page-attached');
+
+          this.setDropdownMissingOptionsAjaxDetails(this.$$('#signedByUnicef'), 'unicefUsers', {dropdown: true});
         },
         detached: function() {
           if (this.generatePCADialog) {
@@ -473,8 +473,7 @@
             this._resetDropdown('#agreementType');
             this.resetSignedByFields(agreement);
           }
-          this.fire('global-loading', {active: false});
-
+          this.fire('global-loading', {active: false, loadingSource: 'ag-data'});
         },
         resetAttachedAgreementElem: function(agreement) {
           // forces etools-single-file to redraw the element
@@ -527,20 +526,24 @@
           return false;
         },
 
-        _showGeneratePcaBtn: function(type) {
-          return type === 'PCA' && this._isDraft();
+        _showGeneratePcaBtn: function(type, isNewAgreement) {
+          return type === 'PCA' && this._isDraft() && !isNewAgreement;
+        },
+
+        _showGeneratePcaWarning: function(type, isNewAgreement) {
+          return type === 'PCA' && isNewAgreement;
         },
 
         _partnerChanged: function(currentPartnerId) {
+          this.set('staffMembers', []);
           if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
             // partner not set or changed, reset related fields
             this.set('agreement.partner_manager', null);
-            this.set('staffMembers', []);
-            this.set('activeStaffMembers', []);
             this.set('authorizedOfficers', []);
             this.set('agreement.authorized_officers', []);
             this.set('oldSelectedPartnerId', currentPartnerId);
           }
+          this.getPartnerStaffMembers(currentPartnerId);
         },
 
         /**
@@ -568,18 +571,9 @@
           }
 
         },
-        _staffMembersChanged: function(staffMembers) {
-          if (!staffMembers || !staffMembers.length) {
-            this.set('activeStaffMembers', []);
-          }
-          var activeStaffMembers = staffMembers.filter(function(member) {
-            return member.active;
-          });
-          this.set('activeStaffMembers', activeStaffMembers);
-        },
-        _getAvailableAuthOfficers: function(activeStaffMembers, agreementAuthorizedOfficers) {
-          if (activeStaffMembers instanceof Array && activeStaffMembers.length) {
-            return activeStaffMembers;
+        _getAvailableAuthOfficers: function(staffMembers, agreementAuthorizedOfficers) {
+          if (staffMembers instanceof Array && staffMembers.length) {
+            return staffMembers;
           }
           if (agreementAuthorizedOfficers instanceof Array && agreementAuthorizedOfficers.length) {
             return agreementAuthorizedOfficers.map(function(staffMember) {
@@ -634,6 +628,9 @@
         },
 
         _openGeneratePCADialog: function() {
+          if (!this.generatePCADialog.agreementId) {
+            this.generatePCADialog.set('agreementId', this.agreement.id);
+          }
           this.generatePCADialog.open();
         },
 

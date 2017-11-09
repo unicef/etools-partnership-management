@@ -38,9 +38,9 @@
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "iron-selector": "PolymerElements/iron-selector#^1.0.0",
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
-    "etools-ajax": "1.2.2",
-    "etools-app-selector": "1.0.6",
-    "etools-behaviors": "1.0.1",
+    "etools-ajax": "^2.0.0",
+    "etools-app-selector": "1.0.7",
+    "etools-behaviors": "1.0.2",
     "etools-checkable-input": "1.0.8",
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
@@ -48,20 +48,24 @@
     "etools-data-table": "1.0.5",
     "etools-datepicker": "1.0.14",
     "etools-dexiejs": "1.0.5",
-    "etools-dialog": "1.1.1",
+    "etools-dialog": "1.2.5",
     "etools-file": "1.2.4",
-    "etools-loading": "1.0.9",
+    "etools-loading": "1.1.0",
     "etools-page-refresh": "1.1.2",
-    "etools-searchable-multiselection-menu": "2.2.2",
-    "etools-profile-dropdown": "1.0.6",
+    "etools-piwik-analytics": "*",
+    "etools-searchable-multiselection-menu": "2.2.7",
+    "etools-profile-dropdown": "1.0.7",
     "etools-info-tooltip": "^1.0.1",
-    "etools-piwik-analytics": "*"
+    "paper-checkbox": "1.4.2",
+    "paper-radio-button": "1.4.0",
+    "paper-radio-group": "^2.0.0"
   },
   "devDependencies": {
-    "web-component-tester": "^4.0.0"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   },
   "resolutions": {
     "neon-animation": "1 - 2",
-    "moment-element": "^2.0.0"
+    "moment-element": "^2.0.0",
+    "webcomponentsjs": "0.7.24"
   }
 }

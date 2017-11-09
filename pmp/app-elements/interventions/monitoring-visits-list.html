@@ -2,16 +2,17 @@
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../bower_components/etools-loading/etools-loading.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-
-<link rel="import" href="intervention-data/monitoring-visits-data.html">
-
 
 <dom-module id="monitoring-visits-list">
 
@@ -20,9 +21,6 @@
     <style include="shared-styles data-table-styles grid-layout-styles">
       :host {
         @apply(--layout-flex);
-      }
-      .monitoring-visits-warning {
-        padding: 0 20px;
       }
       .monitoring-visits-container {
         position: relative;
@@ -34,13 +32,9 @@
 
     </style>
     <div class="monitoring-visits-container">
-      <etools-loading loading-text="Loading Monitoring visits"
+      <etools-loading loading-text="Loading monitoring visits"
                       active$="[[showLoading]]"></etools-loading>
 
-      <monitoring-visits-data monitoring-visits="{{monitoringVisits}}"
-                              intervention-id="[[interventionId]]"
-                              on-monitoring-visits-loading="_handleLoading">
-      </monitoring-visits-data>
       <div hidden$="[[_hideMonitoringVisits(monitoringVisits.length)]]">
         <etools-data-table-header id="listHeader" label="Showing [[monitoringVisits.length]] results" no-collapse>
           <etools-data-table-column class="col-2" field="reference_number">
@@ -93,7 +87,7 @@
           </etools-data-table-row>
         </template>
       </div>
-      <div class="monitoring-visits-warning" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
+      <div class="row-h" hidden$="[[!_hideMonitoringVisits(monitoringVisits.length)]]">
         <p>There are no monitoring visits for this intervention.</p>
       </div>
     </div>
@@ -103,13 +97,15 @@
     (function() {
       'use strict';
 
-      var _interventionsLastNavigated = null;
-
       Polymer({
         is: 'monitoring-visits-list',
 
         behaviors: [
-          pmpBehaviors.CommonGeneralBehavior,
+          EtoolsLogsBehavior,
+          EtoolsAjaxRequestBehavior,
+          EtoolsPmpApp.Behaviors.AjaxErrorsParser,
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -126,18 +122,31 @@
           },
           interventionId: {
             type: Number,
+            observer: '_interventionIdChanged'
           }
         },
+
+        _interventionIdChanged: function(newId) {
+          if (newId) {
+            this.set('showLoading', true);
+            let monitoringVisitsEndpoint = this.getEndpoint('monitoringVisits', {id: newId});
+            let self = this;
+            this.sendRequest({
+              endpoint: monitoringVisitsEndpoint
+            }).then(function(resp) {
+              self.set('monitoringVisits', resp);
+              self.set('showLoading', false);
+            }).catch(function(error) {
+              self.set('showLoading', false);
+              self.parseRequestErrorsAndShowAsToastMsgs(error);
+            });
+          }
+        },
+
         _hideMonitoringVisits: function(length) {
           return length === 0;
-        },
-        _handleLoading: function(event) {
-          if (event.detail.active === true) {
-            this.set('showLoading', true);
-          } else {
-            this.set('showLoading', false);
-          }
-        },
+        }
+
       });
 
     })();

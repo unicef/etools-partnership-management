@@ -1,0 +1,109 @@
+<link rel="import" href="../app-config/app-endpoints-behavior.html"/>
+<link rel="import" href="../app-behaviors/ajax-server-errors-behavior.html">
+<link rel="import" href="../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ListDataImpl */
+  EtoolsPmpApp.Behaviors.ListDataImpl = {
+
+    properties: {
+      options: {
+        type: Object,
+        value: {
+          endpoint: null,
+          csrf: true
+        },
+      },
+      data: {
+        type: Array,
+        readOnly: true,
+        notify: true
+      },
+      globalMessage: {
+        type: String,
+        value: 'An error occurred while trying to fetch the data!'
+      },
+      fireDataLoaded: {
+        type: Boolean,
+        value: false
+      },
+      _refreshInterval: {
+        type: Object,
+        value: null
+      }
+    },
+    observers: [
+      '_endpointChanged(options.endpoint)'
+    ],
+    detached: function() {
+      this._removeAutomaticDataRefreshLoop();
+    },
+
+    ready: function() {
+      this._elementReady();
+    },
+
+    _elementReady: function() {
+      if (!this.endpointName) {
+        console.warn('Please specify an endpointName property');
+      } else {
+        this.set('options.endpoint', this.getEndpoint(this.endpointName));
+        this._requestListData();
+      }
+    },
+    _requestListData: function() {
+      let self = this;
+      this.sendRequest(this.options)
+        .then(function(resp) {
+          self._handleMyResponse(resp);
+        }).catch(function(error) {
+          self.handleErrorResponse(error);
+        });
+    },
+    // some children overwrite this function for custom data processing
+    _handleMyResponse: function(res) {
+      this._handleResponse(res);
+    },
+
+    _handleResponse: function(res) {
+      this._setData(res);
+      if (this.fireDataLoaded) {
+        if (!this.dataLoadedEventName) {
+          console.warn('Please specify data loaded event name(dataLoadedEventName property)');
+        } else {
+          this.fire(this.dataLoadedEventName);
+        }
+      }
+    },
+
+    _endpointChanged: function(newEndpoint) {
+      if (newEndpoint && newEndpoint.hasOwnProperty('exp') && newEndpoint.exp > 0) {
+          this._removeAutomaticDataRefreshLoop();
+          this._setAutomaticDataRefreshLoop(newEndpoint);
+        }
+    },
+
+    _removeAutomaticDataRefreshLoop: function() {
+      if (this._refreshInterval !== null) {
+        clearInterval(this._refreshInterval);
+        this.set('_refreshInterval', null);
+      }
+    },
+
+    _setAutomaticDataRefreshLoop: function(newEndpoint) {
+      this._refreshInterval = setInterval(function() {
+        this._requestListData();
+      }.bind(this), newEndpoint.exp);
+    },
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.ListData */
+  EtoolsPmpApp.Behaviors.ListData = [
+    EtoolsAjaxRequestBehavior,
+    EtoolsPmpApp.Behaviors.Endpoints,
+    EtoolsPmpApp.Behaviors.AjaxServerErrors,
+    EtoolsPmpApp.Behaviors.ListDataImpl,
+  ];
+
+</script>

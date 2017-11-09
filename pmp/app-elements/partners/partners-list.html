@@ -13,13 +13,13 @@
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
+<link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../app-behaviors/lists-common-behavior.html">
-<link rel="import" href="../../app-config/etools-app-config.html">
 
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
@@ -34,11 +34,6 @@
 
     <style
         include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles">
-      :host {
-        /* TODO: paper-toggle-button style could be global, recheck this when app-theme colors are defined */
-        --paper-toggle-button-checked-bar-color: var(--accent-color);
-        --paper-toggle-button-checked-button-color: var(--primary-color);
-      }
 
       .sm-status-wrapper {
         padding-left: 10px;
@@ -125,7 +120,7 @@
 
     </paper-material>
 
-    <paper-material id="list" elevation="1">
+    <paper-material id="list" elevation="1" class="hidden">
 
       <etools-data-table-header id="listHeader"
                                 label="[[visibleRange.0]]-[[visibleRange.1]] of [[totalResults]] results to show">
@@ -227,13 +222,13 @@
         is: 'partners-list',
 
         behaviors: [
-          pmpBehaviors.AppNavigationHelperBehavior,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.DropdownBehavior,
-          pmpBehaviors.ListFiltersBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.ListsCommonBehavior
+          EtoolsPmpApp.Behaviors.Endpoints,
+          EtoolsPmpApp.Behaviors.AppNavigationHelper,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Dropdown,
+          EtoolsPmpApp.Behaviors.ListFilters,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.ListsCommon
         ],
 
         properties: {
@@ -283,56 +278,56 @@
             value: false,
             observer: '_showOnlyGovernmentTypeFlagChanged'
           },
-          currentPage: String
+          currentPage: String,
+          _sortableFieldNames: {
+            type: Array,
+            value: ['vendor_number', 'name']
+          }
         },
 
         observers: [
+          '_initListFilters(partnerTypes, csoTypes)',
           '_updateURL(q, partnerType, csoType, pageNumber, pageSize, sortOrder, showHidden, ' +
           'requiredDataLoaded, initComplete)',
-          '_init(active)',
-          '_mapDropdownOptions(partnerTypes.length, csoTypes.length)'
+          '_init(active)'
         ],
 
         listeners: {
           'sort-changed': '_sortOrderChanged',
         },
 
-        ready: function() {
-          this.$.list.classList.add('hidden');
-        },
-        reloadListData: function() {
-          this.$$('#partners').reloadData();
-        },
-        _mapDropdownOptions: function() {
-          if (!this.partnerTypes || !this.partnerTypes.length) {
-            return;
-          }
-          if (!this.csoTypes || !this.csoTypes.length) {
-            return;
-          }
-          // init list filter options
-          this.initListFiltersData([
-            {
-              filterName: 'Partner Type',
-              type: 'dropdown',
-              alreadySelected: null,
-              selectionOptions: _.map(this.partnerTypes, 'value'),
-              path: 'partnerType',
-              disabled: false
-            },
-            {
-              filterName: 'CSO Type',
-              alreadySelected: null,
-              type: 'dropdown',
-              selectionOptions: _.map(this.csoTypes, 'value'),
-              path: 'csoType',
-              disabled: false
-            }
-          ]);
+        _initListFilters: function(partnerTypes, csoTypes) {
+          this.debounce('init-p-filters', function() {
+            // init list filter options
+            this.initListFiltersData([
+              {
+                filterName: 'Partner Type',
+                type: 'dropdown',
+                alreadySelected: null,
+                selectionOptions: _.map(partnerTypes, 'value'),
+                path: 'partnerType',
+                disabled: false
+              },
+              {
+                filterName: 'CSO Type',
+                alreadySelected: null,
+                type: 'dropdown',
+                selectionOptions: _.map(csoTypes, 'value'),
+                path: 'csoType',
+                disabled: false
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          }, 100);
         },
 
         attached: function() {
-          this.listAttachedCallback(this.active, 'Loading partners list data...');
+          /**
+           * Disable loading message for main list elements load,
+           * triggered by parent element on stamp
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+          this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
         },
 
         _getPartnerType: function(partnerType) {
@@ -346,24 +341,19 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          var parms = this.urlParams;
-          if (!active || !parms) {
+          let urlQueryParams = this.urlParams;
+          if (!active || !urlQueryParams) {
             return;
           }
           this.set('initComplete', false);
-          this.set('q', parms.q ? parms.q : '');
-          this.set('partnerType', this._getPartnerType(parms.partner_type));
-          this.set('csoType', parms.cso_type ? parms.cso_type : '');
-          this.set('pageNumber', parms.page ? parseInt(parms.page) : 1);
-          this.set('pageSize', parms.size ? parseInt(parms.size) : this.defaultListsSize);
-          this.set('showHidden', parms.hidden ? true : false);
+          this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
+          this.set('partnerType', this._getPartnerType(urlQueryParams.partner_type));
+          this.set('csoType', urlQueryParams.cso_type ? urlQueryParams.cso_type : '');
+          this.set('pageNumber', urlQueryParams.page ? parseInt(urlQueryParams.page) : 1);
+          this.set('pageSize', urlQueryParams.size ? parseInt(urlQueryParams.size) : this.defaultListsSize);
+          this.set('showHidden', urlQueryParams.hidden ? true : false);
           // format of sort param is sort=field.order ex: sort=name.asc
-          var result = {field: 'name', direction: 'asc'};
-          if (parms.sort) {
-            var p = parms.sort.split('.');
-            result = {field: p[0], direction: p[1]};
-          }
-
+          let result = this.initSortFieldsValues({field: 'name', direction: 'asc'}, urlQueryParams.sort);
           this.set('sortOrder', result);
           this.set('initComplete', true);
 
@@ -521,7 +511,6 @@
           if (showOnlyGovernmentType) {
             // lock list to government partners only
             this.set('partnerType', 'Government');
-
           } else {
             // unlock list from government partners only
             this.removeFilterOption('Partner Type', 'partnerType');

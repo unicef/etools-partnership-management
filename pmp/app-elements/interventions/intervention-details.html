@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
@@ -19,7 +20,8 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -76,10 +78,7 @@
         padding-bottom: 12px;
         color: var(--error-color);
       }
-      .contingencyPD {
-        @apply(--layout-flex);
-        @apply(--layout-horizontal);
-        align-items: center;
+      paper-toggle-button {
         font-size: 16px;
       }
 
@@ -183,7 +182,7 @@
           <etools-multi-selection-menu id="partnerFocalPts"
                                        label="Partner Focal Point(s)"
                                        placeholder="&#8212;"
-                                       options="[[partnerStaffMembers]]"
+                                       options="[[staffMembers]]"
                                        option-value="id"
                                        option-label="name"
                                        selected-values="{{intervention.partner_focal_points}}"
@@ -200,17 +199,20 @@
 
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
-        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3 contingencyPD">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[intervention.permissions.required.contingency_pd]]"></paper-toggle-button> Contingency PD
+        <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
+          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
         </div>
-        <div class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
+          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]" -->
           <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]"
+                               hide-tooltip
                                important-warning>
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]" -->
             <etools-date-input slot="field"
                                id="intStart"
-                               class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]"
                                label="Start date"
                                value="{{intervention.start}}"
                                readonly$="[[!intervention.permissions.edit.start]]"
@@ -219,17 +221,20 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <span slot="message">[[_frsStartConsistencyWarning]]</span>
+            <!--<span slot="message">[[_frsStartConsistencyWarning]]</span>-->
           </etools-info-tooltip>
 
         </div>
-        <div class="col col-3">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
+          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]" -->
           <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]"
+                               hide-tooltip
                                important-warning>
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]" -->
             <etools-date-input slot="field"
                                id="intEnd"
-                               class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]"
                                label="End date"
                                value="{{intervention.end}}"
                                readonly$="[[!intervention.permissions.edit.end]]"
@@ -238,10 +243,10 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <span slot="message">[[_frsEndConsistencyWarning]]</span>
+            <!--<span slot="message">[[_frsEndConsistencyWarning]]</span>-->
           </etools-info-tooltip>
         </div>
-        <div class="col col-3">
+        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -316,10 +321,11 @@
         is: 'intervention-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior,
-          pmpBehaviors.FrNumbersConsistencyBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions,
+          EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
 
         properties: {
@@ -336,14 +342,9 @@
             notify: true,
             observer: '_selectedPartnerIdChanged'
           },
-          partnerStaffMembers: {
-            type: Array,
-            value: []
-          },
           documentTypes: {
             type: Array,
-            statePath: 'interventionDocTypes',
-            observer: '_initDocTypes'
+            statePath: 'interventionDocTypes'
           },
           pcaDocTypes: {
             type: Array,
@@ -374,8 +375,10 @@
             value: []
           },
           agreement: {
-            type: Object,
-            value: null
+            type: Object
+          },
+          originalIntervention: {
+            type: Object
           },
           interventionRequiredField: {
             type: Boolean,
@@ -408,8 +411,8 @@
         observers: [
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
-          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start)',
-          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start, intervention.status)',
+          '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
@@ -417,8 +420,23 @@
           '_contingencyPDChanged(intervention.contingency_pd)'
         ],
 
-        ready: function() {
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+         },
+         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
+          if (!this._showContingencyPd(agreement)) {
+            return true;
+          }
+          if (contingencyPd && intervention.status !== 'active') {
+            return false;
+          }
+          return true;
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
@@ -568,14 +586,15 @@
             //Prevent reset on changes caused by initialization of the fields
             this._resetDropdowns();
           }
+          this.getPartnerStaffMembers(id);
         },
         _resetDropdowns: function() {
           //Test case - go to existing intervention , then go to New intervention
 
           // reset partner focal points options and value
           this.set('intervention.partner_focal_points', []);
-          this.set('partnerStaffMembers', []);
-          var partnerFpDropDown = this.$.partnerFocalPts;
+          this.set('staffMembers', []);
+          let partnerFpDropDown = this.$.partnerFocalPts;
           if (partnerFpDropDown && (!partnerFpDropDown.options || !partnerFpDropDown.options.length)) {
             partnerFpDropDown.value = null;
             partnerFpDropDown.selected = null;
@@ -585,7 +604,8 @@
          * When an agreement is selected then check it's type and update document types dropdown
          */
         _getCurrentDocTypes: function(agreement, documentTypes) {
-          var options = documentTypes;
+          this._initDocTypes(documentTypes);
+          let options = documentTypes;
           if (agreement && agreement.agreement_type) {
             switch (agreement.agreement_type) {
               case 'PCA':
@@ -640,9 +660,7 @@
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
             '#partnerFocalPts', '#cpStructure', '#sectorLocations',
             '#plannedBudget', '#expectedResults', '#plannedVisits'];
-          if (!this.intervention.contingency_pd) {
-            fieldSelectors.push('#intStart', '#intEnd');
-          } else if (this.intervention.status === 'active') {
+          if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
           fieldSelectors.forEach(function(selector) {
@@ -664,8 +682,9 @@
           }
         },
 
-        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart) {
-          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+        _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart, interventionStatus) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)
+            || interventionStatus === 'closed') {
             this.set('_frsStartConsistencyWarning', null);
             this.$.intStart.updateStyles();
             return;
@@ -675,8 +694,9 @@
           this.$.intStart.updateStyles();
         },
 
-        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd) {
-          if (this.newIntervention || this.emptyFrsList(this.intervention)) {
+        _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd, interventionStatus) {
+          if (this.newIntervention || this.emptyFrsList(this.intervention)
+            || interventionStatus === 'closed') {
             this.set('_frsEndConsistencyWarning', '');
             this.$.intEnd.updateStyles();
             return;

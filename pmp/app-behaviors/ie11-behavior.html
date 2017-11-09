@@ -1,0 +1,54 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.IE11 */
+  EtoolsPmpApp.Behaviors.IE11 = {
+
+    properties: {
+      isIE: Boolean
+    },
+
+    checkIE11Browser: function() {
+      this.isIE = this.isIEBrowser();
+      window.isIE = this.isIE;
+    },
+
+    addIE11StyleTweaks: function() {
+      if (this.isIE) {
+        this.addIEBrowserStylesAdjustments();
+      }
+    },
+
+    isIEBrowser: function() {
+      let userAgent = window.navigator.userAgent;
+      let ieBrowser = false;
+      if (userAgent.indexOf('Trident/') > -1) {
+        // IE 11
+        ieBrowser = true;
+      }
+      return ieBrowser;
+    },
+
+    /**
+     * In IE11 we must NOT use fullbleed and hasScrollingRegion and we have to make some
+     */
+    addIEBrowserStylesAdjustments: function() {
+      this.classList.add('ie');
+      let appHeaderLayout = this.$.appHeadLayout;
+      appHeaderLayout.removeAttribute('fullbleed');
+      appHeaderLayout.set('hasScrollingRegion', false);
+      appHeaderLayout.style.minHeight = '100%';
+      let contentContainer = Polymer.dom(appHeaderLayout.root).querySelector('#contentContainer');
+      if (contentContainer) {
+        contentContainer.style.minHeight = '100vh';
+        contentContainer.style.boxSizing = 'border-box';
+        contentContainer.style.paddingBottom = '90px';
+      }
+      if (this.globalLoadingElement) {
+        this.globalLoadingElement.style.position = 'fixed';
+      }
+    }
+
+  };
+</script>

@@ -1,7 +1,8 @@
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.FrNumbersConsistencyBehavior */
-  pmpBehaviors.FrNumbersConsistencyBehavior = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.FrNumbersConsistency */
+  EtoolsPmpApp.Behaviors.FrNumbersConsistency = {
     properties: {
       _frsConsistencyWarnings: {
         type: Object,
@@ -14,7 +15,10 @@
     /**
      * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
      */
-    checkFrsConsistency: function(frsDetails, intervention) {
+    checkFrsConsistency: function(frsDetails, intervention, skipEmptyListCheck) {
+      if (intervention.status === 'closed') {
+        return false;
+      }
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
@@ -26,7 +30,7 @@
         warnIntervFields.push('end date');
       }
       if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
-              frsDetails.total_frs_amt, intervention, 'interventionDetails')) {
+              frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
         warnFrsFields.push('Total FR amount');
         warnIntervFields.push('UNICEF $ contribution');
       }
@@ -38,14 +42,20 @@
     },
 
     checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention,
-      interventionIsFromWhere, returnMsg) {
-      if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere)) {
+                                                      interventionIsFromWhere, returnMsg, skipEmptyListCheck) {
+      if (!this.validateFrsVsUnicefCashAmounts(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere,
+              skipEmptyListCheck)) {
         return returnMsg ? this.getFrsTotalAmountInconsistencyMsg() : true;
       }
       return false;
     },
-    validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention, interventionIsFromWhere) {
-      if (this.emptyFrsList(intervention, interventionIsFromWhere)) {
+    /**
+     * skipEmptyListCheck - skip required when in the process of adding a new FR number
+     */
+    validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention,
+                                             interventionIsFromWhere, skipEmptyListCheck) {
+      if (intervention.status === 'closed'
+        || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
         return true;
       }
       let totalUnicefContribution = parseFloat(unicefCash);
@@ -64,7 +74,8 @@
       return false;
     },
     validateFrsVsInterventionDates: function(intervDateStr, frsDateStr) {
-      if (!frsDateStr) {// *No Fr added
+      if (!frsDateStr || !intervDateStr) {
+        // No Fr added or interv dates not set yet
         return true;
       }
       if (intervDateStr !== frsDateStr) {
@@ -80,11 +91,11 @@
     },
     getFrsStartDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-       '<<field_name>>', 'start date');
+          '<<field_name>>', 'start date');
     },
     getFrsEndDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-       '<<field_name>>', 'end date');
+          '<<field_name>>', 'end date');
     },
     frsConsistencyWarningIsActive: function(warnMsg) {
       return !!warnMsg;
@@ -100,7 +111,7 @@
       if (interventionIsFromWhere === 'interventionDetails') {
         return !intervention || !intervention.frs_details || intervention.frs_details.frs.length === 0;
       } else if (interventionIsFromWhere === 'interventionsList') {
-         return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
+        return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
       }
     }
 

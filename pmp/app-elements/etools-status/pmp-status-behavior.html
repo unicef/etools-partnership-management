@@ -1,8 +1,11 @@
 <link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-behaviors/scroll-control-behavior.html">
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  pmpBehaviors.statusBehaviorImpl = { // eslint-disable-line no-undef
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl = { // eslint-disable-line no-undef
     properties: {
       status: {
         type: String,
@@ -12,15 +15,21 @@
         type: String,
         value: ''
       },
+      warningMessage: {
+        type: String,
+        value: ''
+      },
       editMode: {
         type: Boolean,
         value: true
+      },
+      active: {
+        type: Boolean
       },
       minimumDistanceFromWindowTop: {
         type: Number,
         value: 76
       },
-      contentContainer: Object,
       sectionName: String, // PD/SSFA, Partners, Agreements
       possibleStatuses: Array,
       possibleActions: Array,
@@ -29,7 +38,8 @@
     },
 
     observers: [
-        '_handleStatusChange(status)'
+        '_handleStatusChange(status)',
+        '_activeFlagChanged(active)'
     ],
 
     detached: function() {
@@ -40,21 +50,13 @@
       this._resetResizeHandler();
     },
 
-    _getContentContainer: function() {
-      if (window.isIE) {
-        return window;
+    _activeFlagChanged: function(active) {
+      if (active) {
+        this.debounce('etools-status-active-changed', this._forceScollPositionRecalculation.bind(this), 20);
       }
-      if (!document.querySelector('app-shell')) {
-        return null;
-      }
-      if (!document.querySelector('app-shell').$$('#appHeadLayout')) {
-        return null;
-      }
-      return document.querySelector('app-shell').$$('#appHeadLayout').$$('#contentContainer');
     },
 
     _handleStickyScroll: function() {
-      this.set('contentContainer', this._getContentContainer());
       if (!this.contentContainer) {
         return;
       }
@@ -96,7 +98,8 @@
 
     _isStatusHorizontal: function() {
       // the styling to make it horizontal at this resolution is in page-layout-styles
-      return window.innerWidth <= 1366;
+      // HD res: 1360/1366 x 768
+      return window.innerWidth < 1360;
     },
 
     _setNotStickyStyles: function() {
@@ -131,11 +134,8 @@
 
     _showStatusChangeConfirmationDialog: function() {
       if (this.warningDialog) {
-        var warningMessage = 'Are you sure you want to change status from: <strong>\''
-            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong> ?';
-
         if (this.statusChangeWarningDialogContent) {
-          this.statusChangeWarningDialogContent.innerHTML = warningMessage;
+          this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
           this.warningDialog.opened = true;
         } else {
           this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
@@ -147,21 +147,17 @@
 
     _setAllActionsToHidden: function() {
       var possibleActions = this.possibleActions;
-      possibleActions.forEach(function(elem) {
-        elem.hidden = true;
-      });
-
-      this.set('possibleActions', possibleActions);
+      possibleActions.forEach(function(elem, index) {
+        this.set(['possibleActions', index, 'hidden'], true);
+      }.bind(this));
     },
 
     _setAllStatusesToHidden: function() {
       var possibleStatuses = this.possibleStatuses;
-      possibleStatuses.forEach(function(elem) {
-        elem.hidden = true;
-        elem.completed = false;
-      });
-
-      this.set('possibleStatuses', possibleStatuses);
+      possibleStatuses.forEach(function(elem, index) {
+        this.set(['possibleStatuses', index, 'hidden'], true);
+        this.set(['possibleStatuses', index, 'completed'], false);
+      }.bind(this));
     },
 
     _updateStatus: function(newStatus) {
@@ -170,6 +166,7 @@
       }
 
       this.set('newStatus', newStatus);
+      this._computeWarningMessage(newStatus);
       this._showStatusChangeConfirmationDialog();
     },
 
@@ -177,7 +174,6 @@
       this.debounce('reset-status-actions', function() {
         this._computeAvailableStatuses(status);
         this._computeAvailableActions(status);
-        this._forceScollPositionRecalculation();
       }.bind(this), 50);
     },
 
@@ -196,13 +192,21 @@
     _computeAvailableStatuses: function(status) {
       // children should overwrite this
     },
+    _computeWarningMessage: function(newStatus) {
+      // children might want to overwrite this
+      this.set('warningMessage', this._getDefaultWarningMessage());
+    },
+    _getDefaultWarningMessage: function() {
+      return 'You are changing the status from <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+    }
   };
 
-  /** @polymerBehavior pmpBehaviors.statusBehavior */
-
-  pmpBehaviors.statusBehavior = [
-    etoolsBehaviors.DynamicDialogBehavior,
-    pmpBehaviors.statusBehaviorImpl,
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommon = [
     EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.ScrollControl,
+    etoolsBehaviors.DynamicDialogBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl
   ];
 </script>

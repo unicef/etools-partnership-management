@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
@@ -12,7 +13,7 @@
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/risk-rating-behavior.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
@@ -24,8 +25,6 @@
 <link rel="import" href="assessments-items.html">
 <link rel="import" href="staff-members.html">
 <link rel="import" href="bank-information.html">
-<link rel="import" href="partner-status.html">
-<link rel="import" href="partner-status.html">
 
 <dom-module id="partner-details">
 
@@ -224,9 +223,9 @@
         is: 'partner-details',
 
         behaviors: [
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.RiskRatingBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.RiskRating
         ],
 
         properties: {
@@ -255,16 +254,26 @@
           showCoreValuesAssessmentAttachment: {
             type: Boolean,
             value: false
-          },
+          }
         },
+
+        attached: function() {
+          /**
+           * Disable loading message for details tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+          this.fire('partners-page-attached');
+        },
+
         _hideDeleteBtn: function() {
-          if (!this.partner.core_values_assessment_file) {
+          if (!this.partner || !this.partner.core_values_assessment_file) {
             return false;
           }
           return true;
         },
         _partnerChanged: function(partner) {
-          if (typeof partner === 'object' && Object.keys(partner).length > 0) {
+          if (!_.isEmpty(partner)) {
             // decide if we should show core values assessment attachment
             this.set('showCoreValuesAssessmentAttachment',
                 this._showCoreValueAssessment(partner.partner_type, partner.cso_type));

@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
@@ -55,7 +56,7 @@
         </a>
 
         <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list" on-tap="_firePageChangeLoading">
-          <iron-icon id="agreements-icon" icon="pmp-icons:agreements"></iron-icon>
+          <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
           <paper-tooltip for="agreements-icon" position="right">
             Agreements
           </paper-tooltip>
@@ -155,9 +156,13 @@
             this.fire('global-loading', {
               message: 'Loading ' + newPageName + ' pages elements...',
               active: true,
-              resetCounter: true,
-              newUrl: menuOptionEl.getAttribute('href').replace(this.baseUrl, '')
+              loadingSource: 'main-page'
             });
+            /**
+             * update-main-path is used here to prevent going from a list page to another with the same queryString
+             */
+            let newPageUrl = menuOptionEl.getAttribute('href').replace(this.baseUrl, '');
+            this.fire('update-main-path', {path: newPageUrl});
           }
         },
 

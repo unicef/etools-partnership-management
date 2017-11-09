@@ -92,6 +92,7 @@
                              label="Phone number"
                              value="{{item.phone}}"
                              placeholder="&#8212;"
+                             allowed-pattern="[0-9\ \.\+\-\(\)]"
                              readonly$="[[!editMode]]"
                              invalid$="[[!_isValid('phone', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
                              error-message="Phone number is required">
@@ -146,7 +147,7 @@
       is: 'staff-members',
 
       behaviors: [
-        pmpBehaviors.RepeatableDataSetsBehavior
+        EtoolsPmpApp.Behaviors.RepeatableDataSets
       ],
       properties: {},
 
@@ -163,10 +164,7 @@
       },
 
       _canBeRemoved: function(id) {
-        if (!this.editMode) {
-          return false;
-        }
-        if (id) {
+        if (!this.editMode || id) {
           return false;
         }
         return true;
@@ -262,7 +260,7 @@
               break;
             }
             var fields = ['#firstName_' + j, '#lastName_' + j,
-              '#phone_' + j, '#email_' + j];
+              '#phone_' + j, '#email_' + j, '#title_' + j];
             for (var i = 0; i < fields.length; i++) {
               var fieldEl = this.$$(fields[i]);
               if (fieldEl && fieldEl.invalid) {

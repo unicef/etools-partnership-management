@@ -2,110 +2,164 @@
 <link rel="import" href="../../../app-behaviors/array-helper-behavior.html">
 
 <script>
-  window.pmpBehaviors = window.pmpBehaviors || {};
-  /** @polymerBehavior pmpBehaviors.SaveInterventionBehaviorImpl */
-  pmpBehaviors.SaveInterventionBehaviorImpl = {
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SaveInterventionImpl */
+  EtoolsPmpApp.Behaviors.SaveInterventionImpl = {
 
-     _validateAndSaveIntervention: function(event) {
-        if (event) {
-          event.stopImmediatePropagation();
+    _validateAndSaveIntervention: function(event) {
+      if (event) {
+        event.stopImmediatePropagation();
+      }
+      this.saved.justSaved = true;
+      this.set('serverErrors', []);
+      this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
+      if (!this._hasEditPermissions(this.permissions, this.intervention)) {
+        return;
+      }
+
+      var interventionDetailsEl = this.$$('#interventionDetails');
+      var interventionDetailsAreValid = false;
+      if (interventionDetailsEl && typeof interventionDetailsEl.validate === 'function') {
+        interventionDetailsAreValid = interventionDetailsEl.validate();
+      } else {
+        // details element not stamped...
+        // validate current data that belongs to details tab against permissions
+        let detailsPrimitiveFields = ['agreement', 'document_type', 'title', 'country_programme'];
+        let detailsObjFields = ['unicef_focal_points', 'partner_focal_points', 'sector_locations', 'offices'];
+        if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
+          detailsPrimitiveFields.push('start', 'end');
         }
-        this.saved.justSaved = true;
-        this.set('serverErrors', []);
-        this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
-        if (!this._hasEditPermissions(this.permissions, this.intervention)) {
-          return;
+        interventionDetailsAreValid = this._validateInterventionPrimitiveFields(detailsPrimitiveFields) &&
+            this._validateInterventionObjectFields(detailsObjFields);
+
+        this.set('_forceDetUiValidationOnAttach', true);
+      }
+
+      var reviewAndSignEl = this.$$('#interventionReviewAndSign');
+      var reviewAndSignIsValid = false;
+      if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
+        reviewAndSignIsValid = reviewAndSignEl.validate();
+      } else {
+        // review and signed element not stamped...
+        // validate current data that belongs to this tab against permissions
+        let reviewAndSignPrimitiveFields = ['partner_authorized_officer_signatory', 'signed_by_partner_date',
+          'unicef_signatory', 'signed_by_unicef_date'];
+        let reviewAndSignObjFields = ['signed_pd_document'];
+        reviewAndSignIsValid = this._validateInterventionPrimitiveFields(reviewAndSignPrimitiveFields) &&
+          this._validateInterventionObjectFields(reviewAndSignObjFields);
+        this.set('_forceReviewUiValidationOnAttach', true);
+      }
+
+      if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
+        this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
+        return;
+      }
+
+      var interventionData;
+      if (this._isNewIntervention()) {
+        interventionData = Object.assign({}, this.intervention);
+        interventionData.status = 'draft';
+      } else {
+        var modifiedDetails = this._getModifiedInterventionDetails();
+        var modifiedReviewAndSign = this._getModifiedReviewAndSign();
+        interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+      }
+
+      if (event && !_.isEmpty(interventionData.amendments)) {
+        //* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
+        this._showFinalizeAmendmentDialog();
+        return;
+      }
+
+      this._prepareDataForSave(interventionData, interventionDetailsEl);
+
+      this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
+    },
+
+    _validateInterventionObjectFields: function(interventionFields) {
+      return this._validateInterventionFields(interventionFields, _.isEmpty);
+    },
+    _validateInterventionPrimitiveFields:  function(interventionFields) {
+      return this._validateInterventionFields(interventionFields, this._primtiveFieldIsEmpty);
+    },
+    _validateInterventionFields: function(interventionFields, isEmptyPredicate) {
+      let valid = true;
+      let i;
+      let fieldRequired;
+      let fieldVal;
+      for (i = 0; i < interventionFields.length; i++) {
+        fieldRequired = this.intervention.permissions.required[interventionFields[i]];
+        fieldVal = this.intervention[interventionFields[i]];
+        if (fieldRequired && isEmptyPredicate(fieldVal)) {
+          valid = false;
+          break;
         }
+      }
+      return valid;
+    },
+    _primtiveFieldIsEmpty: function(fieldVal) {
+      return fieldVal === null || fieldVal === undefined || fieldVal === '';
+    },
 
-        var interventionDetailsEl = this.$.interventionDetails;
-        var interventionDetailsAreValid = interventionDetailsEl.validate();
+    _prepareDataForSave: function(interventionData, interventionDetailsEl) {
+      // prepare fr numbers
+      if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
+        interventionData.frs = this.intervention.frs;
+      }
+      // frs_details are readonly, we do not have to send them to backend
+      delete interventionData.frs_details;
 
-        var reviewAndSignEl = this.$.interventionReviewAndSign;
-        var reviewAndSignIsValid = reviewAndSignEl.validate();
+      //no need to send planned_budget.total to backend
+      if (interventionData.planned_budget) {
+        delete interventionData.planned_budget.total;
+      }
 
-        if (!interventionDetailsAreValid || !reviewAndSignIsValid) {
-          this._showErrorsWarning(interventionDetailsAreValid, reviewAndSignIsValid);
-          return;
+      // prepare attachments
+      interventionData.attachments = this._prepareAttachments();
+      if (_.isEmpty(interventionData.attachments)) {
+        delete interventionData.attachments;
+      }
+
+      // if prc_review_document is null we need to delete the property otherwise the
+      // file gets deleted from the backend
+      if (this.intervention.hasOwnProperty('prc_review_document') &&
+          !(this.intervention.prc_review_document instanceof File)) {
+        delete interventionData.prc_review_document;
+      }
+
+    },
+
+    _showErrorsWarning: function(validDetails, validReviewAndSign) {
+      let msg = '';
+      if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
+        msg = 'Status of the PD/SSFA will change to signed once all required fields are completed ' +
+            '(check DETAILS and REVIEW & SIGN tabs).';
+      } else {
+        msg = 'Please review invalid fields data';
+        let tabs = [];
+        if (validDetails === false) {
+          tabs.push('DETAILS');
         }
-
-        var interventionData;
-        if (this._isNewIntervention()) {
-          interventionData = Object.assign({}, this.intervention);
-          interventionData.status = 'draft';
-        } else {
-          var modifiedDetails = this._getModifiedInterventionDetails();
-          var modifiedReviewAndSign = this._getModifiedReviewAndSign();
-          interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
+        if (validReviewAndSign === false) {
+          tabs.push('REVIEW & SIGN');
         }
+        msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
+      }
 
-        if (event && !_.isEmpty(interventionData.amendments)) {
-          //* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
-          this._showFinalizeAmendmentDialog();
-          return;
-        }
+      this.fire('toast', {text: msg, showCloseBtn: true});
+    },
 
-        this._prepareDataForSave(interventionData, interventionDetailsEl);
-
-        this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
-      },
-
-      _prepareDataForSave: function(interventionData, interventionDetailsEl) {
-        // prepare fr numbers
-        if (Array.isArray(this.intervention.frs) && this._needFrsUpdate(this.intervention.frs)) {
-          interventionData.frs = this.intervention.frs;
-        }
-        // frs_details are readonly, we do not have to send them to backend
-        delete interventionData.frs_details;
-
-        //no need to send planned_budget.total to backend
-        if (interventionData.planned_budget) {
-          delete interventionData.planned_budget.total;
-        }
-
-        // prepare attachments
-        interventionData.attachments = this._prepareAttachments();
-        if (_.isEmpty(interventionData.attachments)) {
-          delete interventionData.attachments;
-        }
-
-        // if prc_review_document is null we need to delete the property otherwise the
-        // file gets deleted from the backend
-        if (this.intervention.hasOwnProperty('prc_review_document') &&
-         _.isEmpty(this.intervention.prc_review_document)) {
-          delete interventionData.prc_review_document;
-        }
-
-      },
-
-      _showErrorsWarning: function(validDetails, validReviewAndSign) {
-        let msg = '';
-        if (this.intervention.status === 'draft' && this.intervention.signed_pd_document instanceof File) {
-          msg = 'Status of the PD will change to signed once all required fields are completed.';
-        } else {
-          msg = 'Please review invalid fields data';
-          let tabs = [];
-          if (validDetails === false) {
-            tabs.push('DETAILS');
-          }
-          if (validReviewAndSign === false) {
-            tabs.push('REVIEW & SIGN');
-          }
-          msg += ' from ' + ((tabs.length > 1) ? (tabs.join(', ') + ' tabs') : (tabs[0] + ' tab')) + '.';
-        }
-
-        this.fire('toast', {text: msg, showCloseBtn: true});
-      },
-
-      _needFrsUpdate: function(frs) {
-        let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
-        return diff.length > 0;
-      },
+    _needFrsUpdate: function(frs) {
+      let diff = this.getArraysDiff(this.originalIntervention.frs, frs);
+      return diff.length > 0;
+    },
   };
 
-  /** @polymerBehavior pmpBehaviors.SaveInterventionBehavior */
-  pmpBehaviors.SaveInterventionBehavior = [
-    pmpBehaviors.SaveInterventionBehaviorImpl,
-    pmpBehaviors.ArrayHelperBehavior,
-    pmpBehaviors.ModifiedInterventionFieldsBehavior
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SaveIntervention */
+  EtoolsPmpApp.Behaviors.SaveIntervention = [
+    EtoolsPmpApp.Behaviors.SaveInterventionImpl,
+    EtoolsPmpApp.Behaviors.ArrayHelper,
+    EtoolsPmpApp.Behaviors.ModifiedInterventionFields
   ];
 </script>

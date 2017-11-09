@@ -3,13 +3,11 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
-<link rel="import" href="../../app-config/etools-app-config.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
@@ -43,7 +41,7 @@
 
         --paper-fab-keyboard-focus-background: var(--add-button-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
 
@@ -61,7 +59,7 @@
 
       /* amendment template download section styles start */
       #download-template-wrapper {
-        @apply(--layout-justified);
+        @apply --layout-justified;
       }
       #download-template-msg {
         max-width: calc(100% - 210px);
@@ -75,14 +73,7 @@
         display: inherit;
       }
       /* amendment template download section styles end */
-
     </style>
-    <etools-ajax id="deleteAjax"
-                 on-success="_handleDeleteResponse"
-                 on-fail="_handleDeleteError"></etools-ajax>
-
-    <!-- include required and not future date validator -->
-    <required-and-not-future-date-validator></required-and-not-future-date-validator>
 
     <div id="download-template-wrapper" class="row-h flex-c row-second-bg b-border">
       <!-- Amendments template download -->
@@ -90,7 +81,7 @@
         Use the amendment template for documenting changes and signing.
       </div>
       <!-- Download template btn -->
-      <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.pdf">
+      <a id="download-template-a" target="_blank" href="/static/agreements/amendment_template.docx">
         <paper-button id="download-template-btn" class="secondary-btn">
           <iron-icon icon="cloud-download"></iron-icon>
           Download template
@@ -107,8 +98,6 @@
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
                                  icon="cancel"></paper-icon-button>
-              <!-- TODO: can we delete any amendment any time?
-              disabled="[[!_canBeRemoved(index, editMode)]]" -->
             </div>
           </div>
           <div class="item-content">
@@ -116,15 +105,18 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Signed Date -->
+                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"                                                        
+                                                        error-message="{{item.errorMessage}}">
+                </required-and-not-future-date-validator>
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed Date"
                                    value="{{item.signed_date}}"
                                    error-message="Please select signed date"
                                    no-init show-clear-btn
                                    readonly$="[[_showReadonlyDetails(item.id)]]"
-                                   validator="required-and-not-future-date-validator"
+                                   validator="signedDate_[[index]]_validator"
                                    auto-validate$="[[!_showReadonlyDetails(item.id)]]"
-                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]">
+                                   error-message$="[[item.errorMessage]]">
                 </etools-date-input>
               </div>
               <div class="col col-8 file-container">
@@ -196,9 +188,8 @@
         is: 'agreement-amendments',
 
         behaviors: [
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.RepeatableDataSetsBehavior
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.RepeatableDataSets
         ],
 
         properties: {
@@ -252,7 +243,6 @@
             }
             let signedDateEl = this.$$('#signedDate_' + index);
             if (signedDateEl) {
-              signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendm.signed_date);
               if (!signedDateEl.validate()) {
                 isValid = false;
               }
@@ -268,30 +258,6 @@
           }.bind(this));
           return isValid;
         },
-
-        _signedDateIsInTheFuture: function(signedDate) {
-          var signedDt = Date.parse(signedDate);
-          if (signedDt) {
-            return signedDt > Date.now();
-          }
-          return false;
-        },
-        /**
-         * The amendment can be removed only if it doesn't have and id assigned(only if is not saved)
-         */
-        // TODO: this might not be needed; clarify when agreement amendments can be removed !!!
-        // _canBeRemoved: function(index, editMode) {
-        //   if (!editMode) {
-        //     return false;
-        //   }
-        //   var amendment = this.dataItems[index];
-        //   var amendmentId = parseInt(amendment.id, 10);
-        //   if (amendment && isNaN(amendmentId) === false && amendmentId > 0 && amendment.signed_amendment) {
-        //     // amendment already saved (has an id assigned)
-        //     return false;
-        //   }
-        //   return true;
-        // },
 
         /**
          * If the amendment can be removed, the left border and top badge needs to have a different style.
@@ -382,12 +348,6 @@
             this._triggerAuthorizedOfficersLock();
           }
         },
-        _getSignedDateErrorMessage: function(signedDate) {
-          return this._signedDateIsInTheFuture(signedDate)
-              ? 'Signed Date can not be in the future'
-              : 'Please select Signed Date';
-        },
-
         _onAmendmentTypesSelected: function(e) {
           e.stopImmediatePropagation();
           if (!_.isEmpty(this.dataItems) && this.dataItems[e.model.index] &&

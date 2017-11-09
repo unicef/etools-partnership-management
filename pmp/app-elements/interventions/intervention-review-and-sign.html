@@ -19,11 +19,13 @@
 <link rel="import" href="../../../styles/file-styles.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 
-<link rel="import" href="../../app-behaviors/common-general-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
+<link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="intervention-amendments.html">
 <link rel="import" href="fr-numbers/intervention-fund-reservations.html">
+<link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <dom-module id="intervention-review-and-sign">
 
@@ -31,7 +33,7 @@
 
     <style include="page-layout-styles grid-layout-styles shared-styles file-styles required-field-starred-styles">
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         width: 100%;
       }
 
@@ -44,78 +46,83 @@
     </style>
 
     <etools-content-panel class="content-section" panel-title="Signatures & Dates">
-      <div class="row-h flex-c">
-        <div class="col col-3">
-          <!-- Document Submission Date -->
-          <etools-date-input id="submissionDateField"
-                             label="Document Submission Date"
-                             value="{{intervention.submission_date}}"
-                             readonly$="[[!intervention.permissions.edit.submission_date]]"
-                             no-init show-clear-btn>
-          </etools-date-input>
-        </div>
-        <div class="col col-3">
-          <!-- Submitted to PRC? -->
-          <etools-form-element-wrapper>
-            <etools-checkable-input checked="{{intervention.submitted_to_prc}}"
-                                    label="Submitted to PRC?"
-                                    type="checkbox"
-                                    label-alignment="right"
-                                    readonly$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
-                                    unchanged-readonly-style
-                                    hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
-            </etools-checkable-input>
-          </etools-form-element-wrapper>
-        </div>
-      </div>
-      <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
-        <div class="row-h flex-c row-second-bg">
+        <div class="row-h flex-c">
           <div class="col col-3">
-            <!-- Submission Date to PRC -->
-            <etools-date-input id="submissionDatePrcField"
-                               label="Submission Date to PRC"
-                               value="{{intervention.submission_date_prc}}"
-                               readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
+            <!-- Document Submission Date -->
+            <etools-date-input id="submissionDateField"
+                               label="Document Submission Date"
+                               value="{{intervention.submission_date}}"
+                               readonly$="[[!intervention.permissions.edit.submission_date]]"
                                no-init show-clear-btn>
             </etools-date-input>
           </div>
           <div class="col col-3">
-            <!-- Review Date by PRC -->
-            <etools-date-input id="reviewDatePrcField"
-                               label="Review Date by PRC"
-                               value="{{intervention.review_date_prc}}"
-                               readonly$="[[!intervention.permissions.edit.review_date_prc]]"
-                               no-init show-clear-btn>
-            </etools-date-input>
-          </div>
-          <div class="col col-6 file-container space-left">
-            <!-- PRC Review Document -->
-            <etools-single-file label="PRC Review Document"
-                                internal-file=[[intervention.prc_review_document_file]]
-                                file={{intervention.prc_review_document}}
-                                accept=".doc,.docx,.pdf,.jpg,.png"
-                                hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
-                                readonly$="[[!intervention.permissions.edit.prc_review_document]]">
-            </etools-single-file>
+            <!-- Submitted to PRC? -->
+            <etools-form-element-wrapper>
+              <etools-checkable-input checked="{{intervention.submitted_to_prc}}"
+                                      label="Submitted to PRC?"
+                                      type="checkbox"
+                                      label-alignment="right"
+                                      readonly$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
+                                      unchanged-readonly-style
+                                      hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
+              </etools-checkable-input>
+            </etools-form-element-wrapper>
           </div>
         </div>
-      </template>
-      <div class="row-h flex-c">
-        <div class="col col-6">
-          <!-- Signed By Partner Authorized Officer -->
-          <etools-single-selection-menu id="signedByAuthorizedOfficer"
-                                        label="Signed By Partner Authorized Officer"
-                                        placeholder="&#8212;"
-                                        options="[[agreementAuthorizedOfficers]]"
-                                        selected="{{intervention.partner_authorized_officer_signatory}}"
-                                        dynamic-align
-                                        readonly$="[[!intervention.permissions.edit.partner_authorized_officer_signatory]]"
-                                        required$="[[intervention.permissions.required.partner_authorized_officer_signatory]]"
-                                        auto-validate
-                                        error-message="Please select Partner Authorized Officer">
-          </etools-single-selection-menu>
-        </div>
+        <template is="dom-if" if="[[_showSubmittedToPrcFields(intervention.submitted_to_prc)]]">
+          <div class="row-h flex-c row-second-bg">
+            <div class="col col-3">
+              <!-- Submission Date to PRC -->
+              <etools-date-input id="submissionDatePrcField"
+                                 label="Submission Date to PRC"
+                                 value="{{intervention.submission_date_prc}}"
+                                 readonly$="[[!intervention.permissions.edit.submission_date_prc]]"
+                                 no-init show-clear-btn>
+              </etools-date-input>
+            </div>
+            <div class="col col-3">
+              <!-- Review Date by PRC -->
+              <etools-date-input id="reviewDatePrcField"
+                                 label="Review Date by PRC"
+                                 value="{{intervention.review_date_prc}}"
+                                 readonly$="[[!intervention.permissions.edit.review_date_prc]]"
+                                 no-init show-clear-btn>
+              </etools-date-input>
+            </div>
+            <div class="col col-6 file-container space-left">
+              <!-- PRC Review Document -->
+              <etools-single-file label="PRC Review Document"
+                                  internal-file=[[intervention.prc_review_document_file]]
+                                  file={{intervention.prc_review_document}}
+                                  accept=".doc,.docx,.pdf,.jpg,.png"
+                                  hide-delete-btn="[[_hideDeleteBtn(intervention.status, intervention.prc_review_document_file)]]"
+                                  readonly$="[[!intervention.permissions.edit.prc_review_document]]">
+              </etools-single-file>
+            </div>
+          </div>
+        </template>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <!-- Signed By Partner Authorized Officer -->
+            <etools-single-selection-menu id="signedByAuthorizedOfficer"
+                                          label="Signed By Partner Authorized Officer"
+                                          placeholder="&#8212;"
+                                          options="[[agreementAuthorizedOfficers]]"
+                                          selected="{{intervention.partner_authorized_officer_signatory}}"
+                                          dynamic-align
+                                          readonly$="[[!intervention.permissions.edit.partner_authorized_officer_signatory]]"
+                                          required$="[[intervention.permissions.required.partner_authorized_officer_signatory]]"
+                                          auto-validate
+                                          error-message="Please select Partner Authorized Officer">
+            </etools-single-selection-menu>
+          </div>
         <div class="col col-3">
+
+          <required-and-not-future-date-validator validator-name="partnerDateValidator"
+                                                  required="[[intervention.permissions.required.signed_by_partner_date]]"
+                                                  error-message="{{partnerDateValidatorErrorMessage}}">
+          </required-and-not-future-date-validator>
           <!-- Signed by Partner Date -->
           <etools-date-input id="signedByPartnerDateField"
                              label="Signed by Partner Date"
@@ -123,7 +130,8 @@
                              readonly="[[!intervention.permissions.edit.signed_by_partner_date]]"
                              required$="[[intervention.permissions.required.signed_by_partner_date]]"
                              auto-validate
-                             error-message="Please select Signed by Partner Date"
+                             validator="partnerDateValidator"
+                             error-message$="[[partnerDateValidatorErrorMessage]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -146,6 +154,10 @@
           </etools-single-selection-menu>
         </div>
         <div class="col col-3">
+          <required-and-not-future-date-validator validator-name="unicefDateValidator"
+                                                  required="[[intervention.permissions.required.signed_by_unicef_date]]"
+                                                  error-message="{{unicefDateValidatorErrorMessage}}">
+          </required-and-not-future-date-validator>
           <!-- Signed by UNICEF Date -->
           <etools-date-input id="signedByUnicefDateField"
                              label="Signed by UNICEF Date"
@@ -153,7 +165,8 @@
                              readonly="[[!intervention.permissions.edit.signed_by_unicef_date]]"
                              required$="[[intervention.permissions.required.signed_by_unicef_date]]"
                              auto-validate
-                             error-message="Please select Signed by UNICEF Date"
+                             validator="unicefDateValidator"
+                             error-message$="[[unicefDateValidatorErrorMessage]]"
                              no-init show-clear-btn>
           </etools-date-input>
         </div>
@@ -218,10 +231,10 @@
 
         behaviors: [
           EtoolsLogsBehavior,
-          etoolsAppConfig.globals,
-          pmpBehaviors.EtoolsStaticCommonDataReduxBehavior,
-          pmpBehaviors.CommonGeneralBehavior,
-          pmpBehaviors.MissingDropdownOptionsBehavior
+          EtoolsPmpApp.Behaviors.Date,
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.MissingDropdownOptions
         ],
 
         properties: {
@@ -245,14 +258,28 @@
           _lockSubmitToPrc: {
             type: Boolean,
             value: false
-          }
+          },
+          partnerDateValidatorErrorMessage: {
+            type: String,
+            value: ''
+          },
+          unicefDateValidatorErrorMessage: {
+            type: String,
+            value: ''
+          },
         },
         observers: [
           '_interventionDocTypeChanged(intervention.document_type)',
           '_signedPdDocHasChanged(intervention.signed_pd_document)'
         ],
 
-        ready: function() {
+        attached: function() {
+          /**
+           * Disable loading message for review and sign tab elements load,
+           * triggered by parent element on stamp or by tap event on tabs
+           */
+          this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+          this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
         },
         _isDraft: function(status) {
@@ -308,15 +335,17 @@
           return null;
         },
         validate: function() {
-          let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByPartnerDateField', '#signedByUnicef',
-            '#signedByUnicefDateField', '#signedIntervFile', '#intervAmendments'];
+          let fieldsToValidateSelectors = ['#signedByAuthorizedOfficer', '#signedByUnicef','#signedIntervFile',
+            '#signedByPartnerDateField', '#signedByUnicefDateField', '#intervAmendments'];
           let valid = true;
+
           fieldsToValidateSelectors.forEach(function(selector) {
             let field = this.$$(selector);
             if (field && !field.validate()) {
               valid = false;
             }
           }.bind(this));
+
           return valid;
         },
 
@@ -377,8 +406,7 @@
               this.fire('signed-doc-change-for-draft', {docSelected: false});
             }
           }
-        }
-
+        },
       });
 
     })();
