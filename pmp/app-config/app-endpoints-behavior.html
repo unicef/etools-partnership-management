@@ -13,8 +13,8 @@
 
   EtoolsPmpApp.EndpointConfig = {
     tokenEndpointsHost: {
-      prp: 'http://127.0.0.1:8080',
-      // prp: 'https://etools-test.unicef.org',
+      // prp: 'http://127.0.0.1:8080',
+      prp: 'https://etools-test.unicef.org'
     },
     tokenStorageKeys: {
       prp: 'etoolsPrpToken'
@@ -54,6 +54,10 @@
       return prpCountry.id;
     },
 
+    _urlTemplateHasCountryId: function(template) {
+      return template.indexOf('<%=countryId%>') > -1;
+    },
+
     getEndpoint: function(endpointName, data) {
       let endpoint = JSON.parse(JSON.stringify(EtoolsPmpApp.Endpoints[endpointName]));
       let authorizationTokenMustBeAdded = this.authorizationTokenMustBeAdded(endpoint);
@@ -62,7 +66,7 @@
           : EtoolsPmpApp.Config.baseSite;
 
       if (this._hasUrlTemplate(endpoint)) {
-        if (data && data.countryId && authorizationTokenMustBeAdded) {
+        if (data && authorizationTokenMustBeAdded && this._urlTemplateHasCountryId(endpoint.template)) {
           // we need to get corresponding PRP country ID
           data.countryId = this._getPrpCountryId();
         }

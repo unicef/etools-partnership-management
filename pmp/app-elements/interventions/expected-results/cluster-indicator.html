@@ -11,7 +11,6 @@
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="behaviors/indicators-common-behavior.html">
-<link rel="import" href="behaviors/indicators-mockups.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -72,7 +71,7 @@
                                     selected="{{clusterId}}"
                                     selected-item="{{cluster}}"
                                     options="[[clusters]]"
-                                    option-label="type"
+                                    option-label="title"
                                     option-value="id"
                                     error-message="Please select Cluster"
                                     disable-on-focus-handling>
@@ -97,13 +96,11 @@
     </template>
     <div class="row-h flex-c">
       <div class="col col-2">
-        <div class="layout-vertical">
           <paper-input label="Baseline"
                        value="{{indicator.baseline}}"
                        type="number"
                        placeholder="&#8212;">
           </paper-input>
-        </div>
       </div>
       <div class="col col-3">
         <paper-input id="targetEl"
@@ -120,7 +117,7 @@
     <div class="row-h flex-c">
       <div class="layout-vertical">
         <label class="paper-label">Means of Verification</label>
-        <label class="input-label" empty$="[[!prpClusterIndicator.means_of_verification]]">[[prpClusterIndicator.means_of_verification]]</label>
+        <label class="input-label" empty$="[[!_getMeansOfVerification(prpClusterIndicator.means_of_verification)]]">[[_getMeansOfVerification(prpClusterIndicator.means_of_verification)]]</label>
       </div>
     </div>
     <div class="row-h flex-c">
@@ -152,8 +149,7 @@
           EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
-          EtoolsLogsBehavior,
-          EtoolsPmpApp.Behaviors.IndicatorsMockups
+          EtoolsLogsBehavior
         ],
 
         properties: {
@@ -199,10 +195,6 @@
             type: Array,
             notify: true
           },
-          currentUser: {
-            type: Object,
-            statePath: 'currentUser',
-          }
         },
 
         observers: [
@@ -210,37 +202,29 @@
           '_targetChanged(indicator.target)',
         ],
         ready: function() {
-          if (!this.currentUser.profile.country) {
-            this.logWarn('User.profile.country is empty');
-            return;
-          }
           let self = this;
-          this.sendRequest({
-            method: 'GET',
-            endpoint: this.getEndpoint('getResponsePlans', {id: this.currentUser.profile.country})
-          }).then(function(response) {
+          this.fireRequest('getResponsePlans', {})
+          .then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
             self.fire('show-toast', {error: error});
           });
-          //todo-remove
-          this.responsePlans = this.responsePlansMockup;
         },
         indicatorChanged: function(indicator) {
           if (!indicator || !indicator.id) {
             this.set('isNewIndicator', true);
           } else {
             this.set('isNewIndicator', false);
-            this._getPrpClusterIndicator(indicator.cluster_indicator_id);
+            if (indicator.cluster_indicator_id) {
+              this._getPrpClusterIndicator(indicator.cluster_indicator_id);
+            }
           }
         },
         _getPrpClusterIndicator: function(clusterIndicId) {
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicator..'});
           let self = this;
-          this.sendRequest({
-            endpoint: this.getEndpoint('getPrpClusterIndicator', {id: clusterIndicId}),
-            method: 'GET'
-          }).then(function(response) {
+          this.fireRequest('getPrpClusterIndicator', {id: clusterIndicId})
+          .then(function(response) {
             self.prpClusterIndicator = response;
             self.fire('stop-spinner');
           }).catch(function(error) {
@@ -249,7 +233,6 @@
           });
         },
         _responsePlanChanged: function(responsePlan) {
-          console.log('_responsePlanChanged', responsePlan);
           this.clusterId = undefined;
 
           if (!responsePlan) {
@@ -268,16 +251,14 @@
           })[0].clusters;
         },
         _clusterChanged: function(cluster) {
-          console.log('cluster changed', cluster);
           this.prpClusterIndicators = [];
           this.set('indicator.cluster_indicator_id', undefined);
 
           if (!cluster) {
             return;
           }
-          console.log('Cluster changed ', cluster);
           this._populatePrpClusterIndicators(cluster.id);
-          this.indicator.cluster_name = cluster.type;
+          this.indicator.cluster_name = cluster.title;
         },
         _populatePrpClusterIndicators: function(clusterId) {
           if (!clusterId) {
@@ -285,18 +266,14 @@
           }
           this.fire('start-spinner', {spinnerText: 'Loading PRP cluster indicators..'});
           let self = this;
-          this.sendRequest({
-            method: 'GET',
-            endpoint: this.getEndpoint('getPrpClusterIndicators', {id: clusterId})
-          }).then(function(response) {
-            self.prpClusterIndicators = this._unnestIndicatorTitle(response.results);
+          this.fireRequest('getPrpClusterIndicators', {id: clusterId})
+          .then(function(response) {
+            self.prpClusterIndicators = self._unnestIndicatorTitle(response.results);
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
             self.fire('show-toast', {error: error});
           });
-          // TODO: remove
-          this.prpClusterIndicators = this._unnestIndicatorTitle(this.prpClusterIndicatorsMockup);
         },
         /* ESM dropdown can't process a nested property as option-label
          and it was decided to not add that functionality to the dopdown yet */
@@ -322,13 +299,28 @@
 
         },
         resetValidations: function() {
-          this.$$('#clusterIndicatorDropdw').invalid = false;
-          this.$$('#locationsDropdw').invalid = false;
-          this.$$('#targetEl').invalid = false;
+          let indDd = this.$$('#clusterIndicatorDropdw');
+          if (indDd) {
+            indDd.invalid = false;
+          }
+          let locDd = this.$$('#locationsDropdw');
+          if (locDd) {
+            locDd.invalid = false;
+          }
+          let targetEl = this.$$('#targetEl');
+          if (targetEl) {
+            targetEl.invalid = false;
+          }
         },
         resetFieldValues: function() {
           this.responsePlanId = undefined;
           this.clusterId = undefined;
+        },
+        _getMeansOfVerification: function(means) {
+          if (!means && this.prpClusterIndicator) {
+            return 'Temporarily unavailable';
+          }
+          return '';
         }
       });
     })();

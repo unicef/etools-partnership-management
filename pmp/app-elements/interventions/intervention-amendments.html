@@ -275,6 +275,10 @@
             this.set('dataItems', []);
           }
           this.set('_amendActionInProgress', this._thereAreUnsavedAmendments());
+          this.async(function() {
+            // adds appropriate mixins to fields that get changed to read-only
+            this.updateStyles();
+          }.bind(this), 0);
         },
         _dataItemsLengthChanged: function() {
           if (this._amendActionInProgress && !this._thereAreUnsavedAmendments()) {

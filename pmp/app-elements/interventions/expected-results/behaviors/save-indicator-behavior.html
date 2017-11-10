@@ -11,9 +11,7 @@
       nonClusterIndicatorCreateModel: {
         type: Object,
         value: {
-          id: null,
           indicator: {
-            id: null,
             title: null,
             unit: 'number',
             display_type: 'percentage'
@@ -41,7 +39,7 @@
       clusterIndicatorCreateModel: {
         type: Object,
         value: {
-          id: null,
+          indicator: null,
           section: null,
           baseline: null,
           target: null,
@@ -55,6 +53,7 @@
       clusterIndicatorEditModel: {
         type: Object,
         value: {
+          id: null,
           section: null,
           baseline: null,
           target: null,
@@ -122,6 +121,9 @@
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
           if (body.hasOwnProperty('disaggregation')) {
             this._prepareDisaggregations(body);
+          }
+          if (this.isCluster && !body.id) {
+            body.indicator = null;
           }
           return body;
       },

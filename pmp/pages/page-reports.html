@@ -19,6 +19,8 @@
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
 
+<link rel="import" href="../../scripts/lodash/lodash.html">
+
 <dom-module id="page-reports">
 
   <template strip-whitespace>
@@ -253,17 +255,16 @@
         }.bind(this));
       },
 
-      _accept: function(e) {
+      _accept: function() {
         this.reportRatingDialog.open();
       },
 
-      _sendBackToPartner: function(e) {
-        console.log('send report back to partner action here...');
+      _sendBackToPartner: function() {
         this.reportRejectDialog.open();
       },
 
-      _download: function(e) {
-        console.log('download report action here...');
+      _download: function() {
+        this.fire('toast', {text: 'Temporary unavailable. PRP download report URL is unknown.', showCloseBtn: true});
       },
 
       detached: function() {
@@ -279,29 +280,58 @@
         this.reportRatingDialog = document.createElement('report-rating-dialog');
         this.reportRatingDialog.setAttribute('id', 'reportRatingDialog');
         this.reportRatingDialog.set('toastEventSource', this);
-        this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj);
+        this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj.bind(this));
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
         
         this.reportRejectDialog = document.createElement('report-reject-dialog');
         this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
         this.reportRejectDialog.set('toastEventSource', this);
+        this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj.bind(this));
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRejectDialog);
       },
 
       _reportChanged: function(report) {
         this.reportRatingDialog.set('report', report);
-        this.reportRatingDialog.set('currentUser', this.currentUser);
-
         this.reportRejectDialog.set('report', report);
-        this.reportRejectDialog.set('currentUser', this.currentUser);
       },
 
       _updateReportDetailsObj: function(e) {
         e.stopImmediatePropagation();
-        console.log(e.detail.report);
+        if (!e.detail.report) {
+          return;
+        }
         this.set('report', e.detail.report);
+        // update reports list object data without makeing a new request
+        this._updateReportDataOnList(e.detail.report);
+      },
+
+      _updateReportDataOnList: function(report) {
+        let list = this.$$('#list');
+        if (list) {
+          let reportsDisplayList = list.$$('reports-display-list');
+          if (reportsDisplayList && !_.isEmpty(reportsDisplayList.reports)) {
+            let currentReports = reportsDisplayList.reports;
+            let index = -1;
+            for (let i = 0; i < currentReports.length; i++) {
+              if (currentReports[i].id === report.id) {
+                index = i;
+                break;
+              }
+            }
+            if (index > -1) {
+              // updates report found in list => update shown data
+              reportsDisplayList.set(['reports', index, 'status'], report.status);
+              // TODO: find out if any of the next report properties ca change on accept/send back
+              reportsDisplayList.set(['reports', index, 'due_date'], report.due_date);
+              reportsDisplayList.set(['reports', index, 'submission_date'], report.submission_date);
+              reportsDisplayList.set(['reports', index, 'review_date'], report.review_date);
+              reportsDisplayList.set(['reports', index, 'reporting_period'], report.reporting_period);
+            }
+
+          }
+        }
       }
 
     });

@@ -3,26 +3,19 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 
 <link rel="import" href="add-disaggregation-dialog.html">
 
 <dom-module id="disaggregation-list">
   <template strip-whitespace>
-    <style include="grid-layout-styles repeatable-data-sets-styles data-table-styles">
-      :host{
-        --header-title: {
-          height: 0px !important;
-        };
-        --data-table-header: {
-          height: 54px !important;
-        };
-      }
+    <style include="grid-layout-styles data-table-styles">
+        [hidden] {
+          display: none !important;
+        }
     </style>
 
     <etools-content-panel panel-title="Disaggregations">
@@ -30,34 +23,39 @@
                          icon="add-box"
                          on-tap="_addDisaggregation">
       </paper-icon-button>
-      <etools-data-table-header no-collapse>
-        <etools-data-table-column class="col-4" field="name">
-           Name
-        </etools-data-table-column>
-        <etools-data-table-column class="col-8" field="disaggregation_values">
-           Disaggregation Groups
-        </etools-data-table-column>
-      </etools-data-table-header>
-      <template is="dom-repeat" items="[[dataItems]]">
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-4">
-              [[item.name]]
-            </span>
-            <span class="col-data col-8">
-              [[_displayGroups(item.disaggregation_values)]]
-            </span>
-          </div>
-        </etools-data-table-row>
-      </template>
+      <div hidden$="[[_emptyList(disaggregations)]]">
+        <etools-data-table-header no-collapse no-title>
+          <etools-data-table-column class="col-4" field="name">
+            Name
+          </etools-data-table-column>
+          <etools-data-table-column class="col-8" field="disaggregation_values">
+            Disaggregation Groups
+          </etools-data-table-column>
+        </etools-data-table-header>
+        <template is="dom-repeat" items="[[dataItems]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-4">
+                [[item.name]]
+              </span>
+              <span class="col-data col-8">
+                [[_displayGroups(item.disaggregation_values)]]
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
 
-      <etools-data-table-footer
-        page-size="[[pagination.pageSize]]"
-        page-number="[[pagination.pageNumber]]"
-        total-results="[[pagination.totalResults]]"
-        on-page-size-changed="_pageSizeChanged"
-        on-page-number-changed="_pageNumberChanged">
-      </etools-data-table-footer>
+        <etools-data-table-footer
+          page-size="[[pagination.pageSize]]"
+          page-number="[[pagination.pageNumber]]"
+          total-results="[[pagination.totalResults]]"
+          on-page-size-changed="_pageSizeChanged"
+          on-page-number-changed="_pageNumberChanged">
+        </etools-data-table-footer>
+      </div>
+      <div class="row-padding" hidden$="[[!_emptyList(disaggregations)]]">
+        <p>The are no disaggregations defined.</p>
+      </div>
     </etools-content-panel>
 
 
@@ -70,7 +68,6 @@
       is: 'disaggregation-list',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.RepeatableDataSets,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         EtoolsAjaxRequestBehavior
@@ -106,6 +103,9 @@
         this.disaggregationModal = document.createElement('add-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
         Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
+      },
+      _emptyList: function() {
+        return !this.disaggregations || !this.disaggregations.length;
       },
       _disagregationsChanged: function(disaggregs) {
         if (!disaggregs || !disaggregs.length) {

@@ -280,7 +280,7 @@
         _editIndicator: function(event) {
           var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
           var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
-          var indicator = this.dataItems[llResultIndex].applied_indicators[indicatorIndex];
+          var indicator = JSON.parse(JSON.stringify(this.dataItems[llResultIndex].applied_indicators[indicatorIndex]));
 
           var resultMap = {
             cpOutputId: this.cpOutputId,
