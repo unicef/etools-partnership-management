@@ -124,16 +124,6 @@
         }
         source.fire('toast', {text: errorsString, showCloseBtn: true});
       }
-    },
-
-    checkJson: function(response) {
-      try {
-        JSON.parse(response);
-        return true;
-      }
-      catch(e) {
-        return false;
-      }
     }
 
   };
