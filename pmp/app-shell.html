@@ -272,7 +272,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           this._importMainPage(routePage);
 
-          if (this.route && this.baseUrl && this.page !== 'not-found') {
+          if (this.route && this.baseUrl) {
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
