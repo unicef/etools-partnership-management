@@ -25,7 +25,10 @@
       },
     },
 
-    handleErrorResponse: function(response, ajaxMethod) {
+    handleErrorResponse: function(response, ajaxMethod, redirectOn404) {
+      if (redirectOn404 && response.status === 404) {
+        this.fire('not-found-redirect', {});
+      }
       this.fire('global-loading', {
         active: false,
         loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null

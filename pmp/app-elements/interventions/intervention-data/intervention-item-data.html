@@ -88,7 +88,7 @@
         },
 
         _handleErrorResponse: function(response, ajaxMethod) {
-          this.handleErrorResponse(response, ajaxMethod);
+          this.handleErrorResponse(response, ajaxMethod, true);
           this._restoreUnsuccessfullyDeletedFrs();
         },
         _restoreUnsuccessfullyDeletedFrs: function() {

@@ -367,7 +367,8 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'intervention-page-attached': '_interventionPageAttached'
+        'intervention-page-attached': '_interventionPageAttached',
+        'not-found-redirect': '_handleNotFound'
       },
 
       ready: function() {
@@ -399,6 +400,13 @@
         if (this.finalizeAmendmentConfirmationDialog) {
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
+      },
+
+      _handleNotFound: function() {
+        let self = this;
+        self.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        self.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+        self._updateMainPath('not-found');
       },
 
       _showFinalizeAmendmentDialog: function() {
@@ -480,12 +488,16 @@
         if (!this.activeTab) {
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
+        this._updateMainPath(this.route.path);
+      },
+
+      _updateMainPath: function(path) {
         this.debounce('debounce-url-tab-update', function() {
           let tabs = this.$$('#intTabs');
           if (tabs) {
             tabs.notifyResize();
           }
-          this.fire('update-main-path', {path: this.route.path});
+          this.fire('update-main-path', {path: path});
         }.bind(this), 50);
       },
 
