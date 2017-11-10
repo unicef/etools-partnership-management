@@ -187,19 +187,23 @@
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
+              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]" -->
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]"
+                                   hide-tooltip
                                    important-warning>
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
-                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
+                <!--<span slot="message">[[getFrsStartDateValidationMsg()]]</span>-->
               </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
+              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]" -->
                <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]"
+                                    hide-tooltip
                                     important-warning>
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
-                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
+                 <!--<span slot="message">[[getFrsEndDateValidationMsg()]]</span>-->
               </etools-info-tooltip>
             </span>
           </div>
@@ -215,13 +219,15 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
+              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]" -->
               <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]"
+                                   hide-tooltip
                                    important-warning>
                 <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
-                <span slot="message">
-                  [[getFrsTotalAmountInconsistencyMsg()]]
-                </span>
+                <!--<span slot="message">-->
+                  <!--[[getFrsTotalAmountInconsistencyMsg()]]-->
+                <!--</span>-->
               </etools-info-tooltip>
 
             </div>
@@ -665,14 +671,15 @@
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
             params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
-          // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
-          // }
           if (this.selectedSectors && this.selectedSectors.length) {
             params.push('sector=' + this.selectedSectors[0].id);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
-            params.push('status=' + this.selectedStatuses[0].value);
+            let statuses = [];
+            this.selectedStatuses.forEach(function(elem) {
+              statuses.push(elem.value);
+            });
+            params.push('status=' + statuses.join(','));
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
@@ -793,7 +800,7 @@
         },
 
         _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
-          return status === 'draft' || status === 'closed'|| this.validateFrsVsInterventionDates(pdDate, frsDate);
+          return status === 'draft' || status === 'closed' || this.validateFrsVsInterventionDates(pdDate, frsDate);
         }
 
       });

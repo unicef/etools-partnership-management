@@ -131,23 +131,27 @@
           </div>
 
           <div class="col col-2 right-align">
+            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]" -->
             <etools-info-tooltip icon="report" icon-first
-                                 hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]"
+                                 hide-tooltip
                                  important-warning>
               <div slot="field">
                 <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                   <!-- readonly unicef cash -->
+                  <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                   <etools-form-element-wrapper no-label-float
-                                               id="unicef-cash"
-                                               class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]">
+                                               id="unicef-cash">
                     [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
                   </etools-form-element-wrapper>
                 </template>
                 <template is="dom-if"
                           if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                   <!-- editable unicef cash -->
+                  <!-- TODO: this will be needed in the future, after frs validation will be re-designed
+                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                   <etools-currency-amount-input id="unicefCashUsd"
-                                                class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]"
                                                 value="{{plannedBudget.unicef_cash}}" type="number"
                                                 placeholder="&#8212;"
                                                 required$="[[required]]" auto-validate
@@ -156,7 +160,7 @@
                   </etools-currency-amount-input>
                 </template>
               </div>
-              <span slot="message">[[_frsConsistencyWarning]]</span>
+              <!--<span slot="message">[[_frsConsistencyWarning]]</span>-->
             </etools-info-tooltip>
           </div>
 
