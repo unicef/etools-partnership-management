@@ -403,10 +403,9 @@
       },
 
       _handleNotFound: function() {
-        let self = this;
-        self.fire('global-loading', {active: false, loadingSource: 'main-page'});
-        self.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-        self._updateMainPath('not-found');
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
+        this._updatePath('not-found');
       },
 
       _showFinalizeAmendmentDialog: function() {
@@ -488,10 +487,10 @@
         if (!this.activeTab) {
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
-        this._updateMainPath(this.route.path);
+        this._updatePath(this.route.path);
       },
 
-      _updateMainPath: function(path) {
+      _updatePath: function(path) {
         this.debounce('debounce-url-tab-update', function() {
           let tabs = this.$$('#intTabs');
           if (tabs) {

@@ -257,7 +257,8 @@
       listeners: {
         'agreement-save-error': '_agreementSaveErrors',
         'reload-list': '_reloadAgreementsList',
-        'agreements-page-attached': '_handlePageTabAttached'
+        'agreements-page-attached': '_handlePageTabAttached',
+        'not-found-redirect': '_handleNotFound'
       },
       ready: function() {
         if (this.newAgreementActive) {
@@ -278,6 +279,12 @@
           active: true,
           loadingSource: 'ag-page'
         });
+      },
+
+      _handleNotFound: function() {
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
+        this.fire('update-main-path', {path: 'not-found'});
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {

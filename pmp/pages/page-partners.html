@@ -217,7 +217,8 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_handlePageTabAttached'
+        'partners-page-attached': '_handlePageTabAttached',
+        'not-found-redirect': '_handleNotFound'
       },
 
       ready: function() {
@@ -288,17 +289,27 @@
         return false;
       },
 
+      _handleNotFound: function() {
+        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
+        this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+        this._updatePath('not-found');
+      },
+
       _updateUrlTab: function(tab) {
         if (!tab) {
           return;
         }
+        this.set('activeTab', tab);
+        this._updatePath(this.route.path);
+      },
+
+      _updatePath: function(path) {
         this.debounce('debounce-url-tab-update', function() {
           var tabs = this.$$('#partnerTabs');
           if (tabs) {
             tabs.notifyResize();
           }
-          this.fire('update-main-path', {path: this.route.path});
-          this.set('activeTab', tab);
+          this.fire('update-main-path', {path: path});
         }.bind(this), 50);
       },
 
