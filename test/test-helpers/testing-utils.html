@@ -1,0 +1,34 @@
+<script>
+  window.EtoolsRequestCacheDisabled = true;
+
+  var PmpTestHelpers = {};
+  (function(scope) {
+
+    //*TODO - why doesn't Polymer.flush() work?
+    scope.makeDebounceSynchronous = function(element) {
+      element.debounce = function(jobName, callback, wait) {
+              callback.bind(element)();
+            }
+    }
+    scope.makeAsyncSynchronous = function(element) {
+      element.async = function(callback, wait) {
+              callback.bind(element)();
+            }
+    }
+
+    scope.initializeFakeServer = function() {
+      let server = sinon.fakeServer.create();
+      server.autoRespond = true;
+      server.respondImmediately = true;
+      return server;
+    }
+
+    scope.elementIsVisible = function(element) {
+        var contentRect = element.getBoundingClientRect();
+        var computedStyle = window.getComputedStyle(element);
+        return computedStyle.display !== 'none' &&
+          contentRect.width > 0 &&
+          contentRect.height > 0;
+      }
+  })(PmpTestHelpers);
+</script>

@@ -10,8 +10,9 @@
     <script src="../bower_components/web-component-tester/browser.js"></script>
     <script src="../node_modules/redux/dist/redux.min.js"></script>
 
-    <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
-    <link rel="import" href="test-helpers/agreement-list-data-mockup.html">
+
+    <link rel="import" href="test-helpers/testing-utils.html">
+    <link rel="import" href="test-helpers/agreements-testing-helper.html">
 
     <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
     <!-- Import the element to test -->
@@ -32,89 +33,108 @@
     </test-fixture>
 
     <script>
-      // suite('page-agreements tests', function() {
-      //   var pageAgrementEl;
-      //   setup(function() {
-      //     pageAgrementEl = fixture('agreementsPageFixture');
-      //     pageAgrementEl.set('agreementListActive', true);
-      //     pageAgrementEl.set('permissions', appUserPermissions);
-      //   });
 
-      //   test('can instantiate page-agreement element', function() {
-      //     assert.equal(pageAgrementEl.is, 'page-agreements');
-      //   });
-      //   test('default selected tab is agreement list', function () {
-      //     assert.equal(pageAgrementEl.agreementListActive, true);
-      //   });
-      //   test('can access New agreement page', function(done) {
-      //     flush(function() {
-      //       pageAgrementEl.addEventListener('update-main-path', function(event) {
-      //       assert.equal(event.detail.path, 'agreements/new-agreement');
-      //       done();
-      //     });
-      //       let newAgrBtn = pageAgrementEl.$$('#newAgreementBtn');
-      //       newAgrBtn.click();
-      //     })
+      suite('page-agreements tests', function() {
+        var pageAgrementEl;
+        setup(function() {
+          pageAgrementEl = fixture('agreementsPageFixture');
+          pageAgrementEl.set('agreementListActive', true);
+          pageAgrementEl.set('permissions', appUserPermissions);
+        });
 
-      //   });
-      // });
+        test('can instantiate page-agreement element', function() {
+          assert.equal(pageAgrementEl.is, 'page-agreements');
+        });
+        test('default selected tab is agreement list', function () {
+          assert.equal(pageAgrementEl.agreementListActive, true);
+        });
+        test('can access New agreement page', function(done) {
+          flush(function() {
+            pageAgrementEl.addEventListener('update-main-path', function(event) {
+            assert.equal(event.detail.path, 'agreements/new-agreement');
+            done();
+          });
+            let newAgrBtn = pageAgrementEl.$$('#newAgreementBtn');
+            newAgrBtn.click();
+          })
+
+        });
+      });
       suite('agreements-list tests', function() {
-        var agrListEl;
-        var request;
-        var server;
-        var responseHeaders = {
-          json: { 'Content-Type': 'application/json' }
-        };
+        var helper;
+        var queryStub;
         setup(function(done) {
-          server = sinon.fakeServer.create();
-          server.autoRespond = true;
-          server.respondImmediately = true;
-
-
-          agrListEl = fixture('agreementsListFixture');
-          agrListEl.set('permissions', appUserPermissions);
+          helper = new AgreementListHelper();
+          helper.setupGetAgreementList();
+          helper.initializeElementUnderTest();
+          helper.stubQuery();
 
           done();
         });
         teardown(function() {
-          server.restore();
+          helper.server.restore();
+          helper.agreementList.agreementListData.query.restore();
         });
 
-        // test('can instantiate agreements-list element', function() {
-        //   assert.equal(agrListEl.is, 'agreements-list');
-        // });
-        suite('when entering a search string', function() {
-          var spy1,spy2;
-          setup(function(done) {
-            agrListEl.set('urlParams', {size: "10", sort: "partner_name.asc"});
-            agrListEl.set('active', true);
-            server.respondWith('GET', '/api/v2/agreements/',
-            [
-              200, responseHeaders.json, JSON.stringify(agrListMockup)
-            ]
-          );
-          server.respond();
-            console.log('setup');
-            spy1 = sinon.spy(agrListEl, "_updateURL");
-
+        test('can instantiate agreements-list element', function() {
+          assert.equal(helper.agreementList.is, 'agreements-list');
+        });
+        test('agreement items are displayed on UI', function(done) {
+          flush(function() {
+            let rows = helper.agreementList.$$('#list').querySelectorAll('etools-data-table-row');
+            expect(rows.length).to.equal(helper.agreementList.filteredAgreements.length);
             done();
           });
+        });
+        suite('when filtering', function() {
+          var filterPaperMenu, ddContent;
+          setup(function(done) {
+            filterPaperMenu = helper.agreementList.$$('#filterMenu');
+            ddContent = Polymer.dom(filterPaperMenu).querySelector('.dropdown-content');
+            done();
+          });
+          test('filter options are available', function(done) {
+            flush(function() {
+              helper.runAfterOpen(filterPaperMenu, function() {
+               // expect(PmpTestHelpers.elementIsVisible(ddContent)).to.be.equal(true);
+                expect(helper.agreementList.availableListFilterOptions.length).to.be.greaterThan(0);
+                done();
+              });
+
+            })
+          });
+          test('can filter by an option', function(done) {
+            flush(function() {
+              helper.runAfterOpen(filterPaperMenu, function() {
+                var firstItem = ddContent.querySelector('paper-item');
+                let initialAvFiltersLength = helper.agreementList.availableListFilterOptions.length;
+                helper.runAfterClose(filterPaperMenu, firstItem, function() {
+                  expect(helper.agreementList.selectedFilters.length).to.be.greaterThan(0);
+                  expect(helper.agreementList.availableListFilterOptions.length).to.be.equal(initialAvFiltersLength - 1);
+                  done();
+                });
+              });
+            })
+          });
+        });
+        suite('when entering a search string', function() {
           teardown(function() {
-            agrListEl._updateURL.restore();
+            helper.agreementList._updateURL.restore();
           });
 
-          test('the list is filtered by the search string', function(done) {
-           flush(function() {
-             var agreementListData = agrListEl.$$('#agreements');
-            var queryStub = sinon.stub(agreementListData, 'query');
-            queryStub.returns(JSON.stringify(agrListMockup));
-            agrListEl.set('q', 'DANISH REFUGEE COUNCIL');
+          test('the list is filtered by the search string and the url is updated', function(done) {
+            flush(function() {
+              let spyUpdateUrl = sinon.spy(helper.agreementList, '_updateURL');
 
-           expect(spy1).called;
-           done();
-           });
+              helper.agreementList.set('q', 'DANISH REFUGEE COUNCIL');
+
+              expect(spyUpdateUrl).called;
+              expect(helper.queryStub).called;
+
+              done();
+            });
           });
-        })
+        });
       });
     </script>
   </body>

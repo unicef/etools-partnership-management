@@ -54,13 +54,10 @@
     },
     _requestListData: function() {
       let self = this;
-      console.log('List Data beh');
       this.sendRequest(this.options)
         .then(function(resp) {
-          console.log('S');
           self._handleMyResponse(resp);
         }).catch(function(error) {
-          console.log('error');
           self.handleErrorResponse(error);
         });
     },
@@ -71,7 +68,6 @@
 
     _handleResponse: function(res) {
       this._setData(res);
-      console.log('data');
       if (this.fireDataLoaded) {
         if (!this.dataLoadedEventName) {
           console.warn('Please specify data loaded event name(dataLoadedEventName property)');

@@ -189,7 +189,7 @@
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <span class="col-data col-2 ">
-              <a class="ag-ref truncate"
+              <a id="editAgrLink" class="ag-ref truncate"
                 href="agreements/[[agreement.id]]/details"
                 title="[[getDisplayValue(agreement.agreement_number)]]">
                 [[getDisplayValue(agreement.agreement_number)]]
@@ -398,15 +398,10 @@
         // Initializes the properties of the list at page load
         // to the params interpretted from the URL string.
         _init: function(active) {
-          console.log('_init');
           let urlQueryParams = this.urlParams;
           if (!active || !urlQueryParams) {
-            console.log('returned');
-            console.log(active);
-            console.log(urlQueryParams);
             return;
           }
-          console.log('here');
           this.set('initComplete', false);
           this.set('q', urlQueryParams.q ? urlQueryParams.q : '');
           this.set('agreementType', urlQueryParams.type ? urlQueryParams.type : '');
@@ -455,13 +450,9 @@
 
         // Updates URL state with new query string, and launches query
         _updateURL: function() {
-          console.log('updateurlrlrl');
           if (!this.requiredDataLoaded || !this.initComplete) {
-            console.log('returned 2');
-            console.log(this.initComplete);
             return;
           }
-
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
           var qs = this._buildQueryString();
 
