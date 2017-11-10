@@ -6,7 +6,7 @@
     properties: {
       globalMessage: {
         type: String,
-        value: 'An error occurred on data save!'
+        value: 'An error occurred. Please try again later.'
       },
       httpStatus413Msg: {
         type: String,
@@ -14,11 +14,11 @@
       }
     },
     tryGetResponseError: function(response) {
-      if (response.status >= 500) {
-        return this.globalMessage;
-      }
       if (response.status === 413) {
         return this.httpStatus413Msg;
+      }
+      if (response.status >= 401) {
+        return this.globalMessage;
       }
       return response.response || this.globalMessage;
     },
@@ -123,6 +123,16 @@
           source = this;
         }
         source.fire('toast', {text: errorsString, showCloseBtn: true});
+      }
+    },
+
+    checkJson: function(response) {
+      try {
+        JSON.parse(response);
+        return true;
+      }
+      catch(e) {
+        return false;
       }
     }
 
