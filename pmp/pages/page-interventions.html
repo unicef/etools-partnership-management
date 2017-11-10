@@ -192,7 +192,9 @@
           <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
                                   name="reports"
-                                  intervention-id="[[intervention.id]]"></intervention-reports>
+                                  intervention-id="[[intervention.id]]"
+                                  active="[[_pageEquals(interventionPage, 'reports')]]"
+                                  url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
           </template>
 
           <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive)]]">
@@ -350,7 +352,7 @@
         },
         _forceDetUiValidationOnAttach: Boolean,
         _forceReviewUiValidationOnAttach: Boolean,
-
+        _lastReportsUrlParams: Object
       },
       observers: [
         /**
@@ -670,6 +672,14 @@
             ? false
             : this._showSidebarStatus(intervListActive, _subPageOrTabAttached);
 
+      },
+
+      _getReportsTabUrlParams: function(interventionPage) {
+        let params = this._lastReportsUrlParams;
+        if (this._pageEquals(interventionPage, 'reports')) {
+          params = Object.assign({}, this.route.__queryParams);
+        }
+        return params;
       }
     });
 

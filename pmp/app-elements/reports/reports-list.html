@@ -83,7 +83,6 @@
 
     <reports-display-list query-params="[[queryParams]]"
                           paginator="{{paginator}}"
-                          no-collapse
                           wait-query-params-init></reports-display-list>
   </template>
 
@@ -151,7 +150,9 @@
         observers: [
           '_initListFilters(partners, cpOutputs, sections, reportStatuses)',
           '_updateURL(queryParams.*, paginator.page, paginator.page_size)',
-          '_init(active, urlParams, paginator)'
+          '_init(active, urlParams, paginator)',
+          '_filtersChanged(queryParams.pd_ref_title, queryParams.external_partner_id, ' +
+            'queryParams.cp_output, queryParams.section, queryParams.status)'
         ],
 
         attached: function() {
@@ -280,9 +281,9 @@
           return qStrData.join('&');
         },
 
-        _buildCsvDownloadUrl: function() {
-          // TODO: build download reports csv
-        },
+        _filtersChanged: function() {
+          this.set('paginator.page', 1);
+        }
 
       });
     })();
