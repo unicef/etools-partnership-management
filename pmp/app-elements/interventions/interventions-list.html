@@ -671,14 +671,15 @@
           if (this.selectedDocumentTypes && this.selectedDocumentTypes.length) {
             params.push('document_type=' + this.selectedDocumentTypes[0].value);
           }
-          // if (this.selectedCpOutputs && this.selectedCpOutputs.length) {
-          //   params.push('country_programme=' + this.selectedCpOutputs[0].id);
-          // }
           if (this.selectedSectors && this.selectedSectors.length) {
             params.push('sector=' + this.selectedSectors[0].id);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
-            params.push('status=' + this.selectedStatuses[0].value);
+            let statuses = [];
+            this.selectedStatuses.forEach(function(elem) {
+              statuses.push(elem.value);
+            });
+            params.push('status=' + statuses.join(','));
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
