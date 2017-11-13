@@ -282,9 +282,7 @@
       },
 
       _handleNotFound: function() {
-        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
-        this.fire('global-loading', {active: false, loadingSource: 'ag-page'});
-        this.fire('global-loading', {active: false, loadingSource: 'ag-data'});
+        this.fire('clear-loading-messages', {});
         this.fire('update-main-path', {path: 'not-found'});
       },
 

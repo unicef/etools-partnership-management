@@ -290,9 +290,7 @@
       },
 
       _handleNotFound: function() {
-        this.fire('global-loading', {active: false, loadingSource: 'main-page'});
-        this.fire('global-loading', {active: false, loadingSource: 'partners-page'});
-        this.fire('global-loading', {active: false, loadingSource: 'partner-data'});
+        this.fire('clear-loading-messages', {});
         this._updatePath('not-found');
       },
 

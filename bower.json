@@ -50,7 +50,7 @@
     "etools-dexiejs": "1.0.5",
     "etools-dialog": "1.2.7",
     "etools-file": "1.2.4",
-    "etools-loading": "1.1.0",
+    "etools-loading": "58587b6f7c",
     "etools-page-refresh": "1.1.2",
     "etools-searchable-multiselection-menu": "2.2.10",
     "etools-profile-dropdown": "1.0.7",
@@ -64,6 +64,7 @@
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   },
   "resolutions": {
+    "etools-loading": "58587b6f7c",
     "neon-animation": "1 - 2",
     "moment-element": "^2.0.0",
     "iron-test-helpers": "^2.0.0"
