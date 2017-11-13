@@ -351,8 +351,7 @@
           }
         },
         _forceDetUiValidationOnAttach: Boolean,
-        _forceReviewUiValidationOnAttach: Boolean,
-        _lastReportsUrlParams: Object
+        _forceReviewUiValidationOnAttach: Boolean
       },
       observers: [
         /**
@@ -675,7 +674,7 @@
       },
 
       _getReportsTabUrlParams: function(interventionPage) {
-        let params = this._lastReportsUrlParams;
+        let params = null;
         if (this._pageEquals(interventionPage, 'reports')) {
           params = Object.assign({}, this.route.__queryParams);
         }
