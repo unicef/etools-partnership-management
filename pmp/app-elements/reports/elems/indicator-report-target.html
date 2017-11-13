@@ -1,6 +1,5 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../app-behaviors/utils-behavior.html">
 
 <dom-module id="indicator-report-target">
@@ -55,7 +54,6 @@
     Polymer({
       is: 'indicator-report-target',
       behaviors: [
-        etoolsBehaviors.EtoolsCurrencyBehavior,
         EtoolsPmpApp.Behaviors.Utils
       ],
       properties: {
@@ -85,7 +83,7 @@
       _prepareValue: function(value) {
         switch (this.valuesType) {
           case 'number':
-            value = this.displayCurrencyAmount(value, '-');
+            value = this._formatNumber(value, '-', 0, '\,');
             break;
           case 'percentage':
             value = this._toPercentage(value);

@@ -1,5 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../reports/elems/reports-display-list.html">
+<link rel="import" href="../../../app-behaviors/app-navigation-helper-behavior.html">
+
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <dom-module id="intervention-reports">
   <template strip-whitespace>
@@ -11,7 +14,9 @@
       }
     </style>
 
-    <reports-display-list intervention-id="[[interventionId]]" no-pd-ssfa-ref></reports-display-list>
+    <reports-display-list intervention-id="[[interventionId]]"
+                          paginator="{{paginator}}"
+                          no-pd-ssfa-ref></reports-display-list>
 
   </template>
 
@@ -22,9 +27,23 @@
       Polymer({
         is: 'intervention-reports',
 
+        behaviors: [
+          EtoolsPmpApp.Behaviors.AppNavigationHelper
+        ],
+
         properties: {
           interventionId: Number,
+          paginator: Object,
+          urlParams: Object,
+          prevParams: Object,
+          active: Boolean,
+          initComplete: Boolean
         },
+
+        observers: [
+          '_init(active, urlParams)',
+          '_updateURL(paginator.page, paginator.page_size, interventionId, initComplete)'
+        ],
 
         attached: function() {
           /**
@@ -33,7 +52,43 @@
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
+        },
+
+        _init: function(active, urlParams) {
+          this.set('initComplete', false);
+          if (!active) {
+            return;
+          }
+          if (_.isEmpty(urlParams) && !_.isEmpty(this.prevParams)) {
+            // we need to make sure url query params are not lost at tab change
+            urlParams = Object.assign({}, this.prevParams);
+            this.set('prevParams', {});
+          }
+          let page = (urlParams && urlParams.page) ? Number(urlParams.page) : 1;
+          let pageSize = (urlParams && urlParams.page_size) ? Number(urlParams.page_size) : 10;
+          this.set('paginator.page', page);
+          this.set('paginator.page_size', pageSize);
+
+          this.set('initComplete', true);
+        },
+
+        _updateURL: function(page, pageSize, interventionId, initComplete) {
+          if (!initComplete || !interventionId) {
+            return;
+          }
+          if (!_.isEmpty(this.prevParams) && page === this.prevParams.page &&
+              pageSize === this.prevParams.page_size) {
+            // avoid multiple url updates with the same params
+            return;
+          }
+          let self = this;
+          self.debounce('pd-reports-url-update', function() {
+            let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
+            this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
+            this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
+          }, 20);
         }
+
       });
 
     })();

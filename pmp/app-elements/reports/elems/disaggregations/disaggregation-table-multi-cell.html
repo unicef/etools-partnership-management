@@ -71,8 +71,8 @@
         is="dom-if"
         if="[[!editableBool]]">
       <div class="app-grid">
-        <div class="item">[[data.v]]</div>
-        <div class="item">[[data.d]]</div>
+        <div class="item">[[_formatNumber(data.v, '-', 0, '\,')]]</div>
+        <div class="item">[[_formatNumber(data.d, '-', 0, '\,')]]</div>
         <div class="computed-value">[[_toPercentage(data.c)]]</div>
       </div>
     </template>

@@ -263,8 +263,19 @@
         this.reportRejectDialog.open();
       },
 
+      _computeReportFilename: function(report) {
+        return report.programme_document.reference_number + '_' + report.id + '_' + report.status + '.pdf';
+      },
+
       _download: function() {
-        this.fire('toast', {text: 'Temporary unavailable. PRP download report URL is unknown.', showCloseBtn: true});
+        if (!this.report) {
+          return;
+        }
+        let a = document.createElement('a');
+        a.setAttribute('target', '_blank');
+        let downloadEndpoint = this.getEndpoint('downloadReport', {reportId: this.report.id});
+        a.href = downloadEndpoint.url;
+        a.click();
       },
 
       detached: function() {
@@ -293,6 +304,9 @@
       },
 
       _reportChanged: function(report) {
+        if (!report) {
+          return;
+        }
         this.reportRatingDialog.set('report', report);
         this.reportRejectDialog.set('report', report);
       },

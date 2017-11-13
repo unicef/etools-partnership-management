@@ -49,7 +49,7 @@
         <etools-data-table-header id="listHeader"
                                   label="[[paginator.visible_range.0]]-[[paginator.visible_range.1]]
                                     of [[paginator.count]] results to show"
-                                  no-collapse="[[noCollapse]]">
+                                  no-collapse>
 
           <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
             <etools-data-table-column class="col-2">
@@ -76,7 +76,7 @@
         </etools-data-table-header>
 
         <template is="dom-repeat" items="[[reports]]" as="report">
-          <etools-data-table-row no-collapse="[[noCollapse]]">
+          <etools-data-table-row no-collapse>
 
             <div slot="row-data">
               <template is="dom-if" if="[[!noPdSsfaRef]]" restamp>
@@ -111,16 +111,6 @@
                 </a>
               </span>
             </div>
-
-            <template is="dom-if" if="[[!noCollapse]]">
-              <div slot="row-data-details">
-                <div class="row-details-content col-2">
-                  <span class="rdc-title">Location</span>
-                  <!-- TODO: are locations gonna come from PRP? -->
-                  <span>Temporary unavailable. PRP locations are missing.</span>
-                </div>
-              </div>
-            </template>
 
           </etools-data-table-row>
         </template>
@@ -170,10 +160,6 @@
             value: []
           },
           noPdSsfaRef: {
-            type: Boolean,
-            value: false
-          },
-          noCollapse: {
             type: Boolean,
             value: false
           },
