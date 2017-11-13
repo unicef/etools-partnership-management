@@ -488,15 +488,19 @@
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
         this._updatePath(this.route.path);
+        this._updateTabs();
       },
 
       _updatePath: function(path) {
-        this.debounce('debounce-url-tab-update', function() {
+        this.fire('update-main-path', {path: path});
+      },
+
+      _updateTabs: function() {
+        this.debounce('debounce-tab-update', function() {
           let tabs = this.$$('#intTabs');
           if (tabs) {
             tabs.notifyResize();
           }
-          this.fire('update-main-path', {path: path});
         }.bind(this), 50);
       },
 
