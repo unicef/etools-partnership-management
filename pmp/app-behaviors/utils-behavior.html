@@ -1,17 +1,44 @@
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <script>
   (function() {
     'use strict';
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.Utils */
-    EtoolsPmpApp.Behaviors.Utils = {
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.UtilsImpl */
+    EtoolsPmpApp.Behaviors.UtilsImpl = {
       _equals: function(a, b) {
         return a === b;
       },
 
       _toNumber: function(val) {
         return Number(val);
+      },
+
+      _formatNumber: function(val, placeholder, decimals, thousandsPoint, decimalsPoint) {
+        placeholder = placeholder ? placeholder : '-';
+
+        let nr = Number(val);
+        if (Number.isNaN(nr)) {
+          return placeholder;
+        }
+
+        decimals = !Number.isNaN(decimals) ? Number(decimals) : 2;
+        nr = nr.toFixed(decimals);
+
+        decimalsPoint = decimalsPoint ? decimalsPoint : '.';
+        thousandsPoint = thousandsPoint ? thousandsPoint : '';
+
+        if (decimalsPoint && thousandsPoint && decimalsPoint === thousandsPoint) {
+          this.logWarn('thousandsPoint and decimalsPoint should be different', 'utils-behavior');
+          return nr;
+        }
+        let nrParts = nr.split('.');
+        if (thousandsPoint) {
+          let thousandsRegex = new RegExp('(\\d)(?=(\\d{3})+(?!\\d))', 'g');
+          nrParts[0] = nrParts[0].replace(thousandsRegex, '$1' + thousandsPoint);
+        }
+        return nrParts.join(decimalsPoint);
       },
 
       _capitalizeFirstLetter: function(text) {
@@ -56,6 +83,12 @@
         return (value === expected) ? value1 : value2;
       }
     };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.Utils */
+    EtoolsPmpApp.Behaviors.Utils = [
+      EtoolsLogsBehavior,
+      EtoolsPmpApp.Behaviors.UtilsImpl
+    ];
   }());
 </script>
 
