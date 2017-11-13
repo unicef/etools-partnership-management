@@ -409,7 +409,7 @@
         _initListFilters: function(documentTypes, sections, interventionStatuses, offices, cpOutputs, unicefUsersData) {
           this.debounce('init-intervention-filters', function() {
             // init list filter options
-            // IMPORTANT!!!+
+            // IMPORTANT!!!
             // If you change filterName make sure you update it as well in _updateSelectedFiltersValues method
             // IMPORTANT!!!
             this.initListFiltersData([
@@ -685,7 +685,11 @@
             params.push('sections=' + this.selectedSections[0].id);
           }
           if (this.selectedStatuses && this.selectedStatuses.length) {
-            params.push('status=' + this.selectedStatuses[0].value);
+            let statuses = [];
+            this.selectedStatuses.forEach(function(elem) {
+              statuses.push(elem.value);
+            });
+            params.push('status=' + statuses.join(','));
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
             var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
