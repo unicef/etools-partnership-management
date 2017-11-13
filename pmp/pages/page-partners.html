@@ -299,7 +299,7 @@
           return;
         }
         this.set('activeTab', tab);
-        this._updateTabs();
+        this._notifyTabsResize();
         this._updatePath(this.route.path);
       },
 
@@ -307,7 +307,7 @@
         this.fire('update-main-path', {path: path});
       },
 
-      _updateTabs: function() {
+      _notifyTabsResize: function() {
         this.debounce('debounce-tab-update', function() {
           var tabs = this.$$('#partnerTabs');
           if (tabs) {
