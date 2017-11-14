@@ -74,14 +74,14 @@
         checkDexieCountryIsUserCountry: function(user) {
           let self = this;
           let country = {
-            id: user.profile.country,
-            name: user.profile.country_name
+            id: user.country.id,
+            name: user.country.name
           };
 
           EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.where('cacheKey').equals('currentCountry').toArray()
           .then(function(response) {
             if (response.length > 0) {
-              if (parseInt(response[0].data.id) !== parseInt(user.profile.country)) {
+              if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
 
                 self.fire('global-loading', {
                   message: 'Please wait while data is refreshed...',
