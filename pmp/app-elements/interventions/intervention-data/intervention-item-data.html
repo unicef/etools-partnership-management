@@ -89,7 +89,9 @@
 
         _handleErrorResponse: function(response, ajaxMethod) {
           this.handleErrorResponse(response, ajaxMethod, true);
-          this._restoreUnsuccessfullyDeletedFrs();
+          if (this.intervention) {
+            this._restoreUnsuccessfullyDeletedFrs();
+          }
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
           this.set('intervention.frs_details', this.originalIntervention.frs_details);
