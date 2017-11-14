@@ -165,9 +165,6 @@
         '_observeRouteDataId(routeData.id, listActive, tabsActive)',
         '_reportChanged(report)'
       ],
-      listners: {
-        'not-found-redirect': '_handleNotFound'
-      },
 
       ready: function() {
         this.debounce('mockup-list-loaded', function() {
@@ -175,9 +172,6 @@
         }.bind(this), 500);
       },
 
-      _handleNotFound: function() {
-        this._updatePath('not-found');
-      },
 
       attached: function() {
         // deactivate main page loading msg triggered in app-shell

@@ -367,8 +367,7 @@
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'intervention-page-attached': '_interventionPageAttached',
-        'not-found-redirect': '_handleNotFound'
+        'intervention-page-attached': '_interventionPageAttached'
       },
 
       ready: function() {
@@ -400,11 +399,6 @@
         if (this.finalizeAmendmentConfirmationDialog) {
           this.removeDialog(this.finalizeAmendmentConfirmationDialog);
         }
-      },
-
-      _handleNotFound: function() {
-        this.fire('clear-loading-messages', {});
-        this._updatePath('not-found');
       },
 
       _showFinalizeAmendmentDialog: function() {
