@@ -65,7 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .main-page {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       :host(.ie) page-footer {
@@ -75,9 +75,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       :host(:not(.ie)) page-footer {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
       }
     </style>
 
@@ -261,6 +261,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
           this.set('_lastActivePartnerPage', page);
         }
+        this.fire('clear-loading-messages', {});
       },
 
       _routePageChanged: function(routePage) {
@@ -271,7 +272,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           this._importMainPage(routePage);
-
           if (this.route && this.baseUrl) {
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
