@@ -257,8 +257,7 @@
       listeners: {
         'agreement-save-error': '_agreementSaveErrors',
         'reload-list': '_reloadAgreementsList',
-        'agreements-page-attached': '_handlePageTabAttached',
-        'not-found-redirect': '_handleNotFound'
+        'agreements-page-attached': '_handlePageTabAttached'
       },
       ready: function() {
         if (this.newAgreementActive) {
@@ -279,10 +278,6 @@
           active: true,
           loadingSource: 'ag-page'
         });
-      },
-
-      _handleNotFound: function() {
-        this.fire('update-main-path', {path: 'not-found'});
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {

@@ -217,8 +217,7 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_handlePageTabAttached',
-        'not-found-redirect': '_handleNotFound'
+        'partners-page-attached': '_handlePageTabAttached'
       },
 
       ready: function() {
@@ -287,10 +286,6 @@
           return true;
         }
         return false;
-      },
-
-      _handleNotFound: function() {
-        this._updatePath('not-found');
       },
 
       _updateUrlTab: function(tab) {

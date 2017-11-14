@@ -208,7 +208,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog'
+        'open-data-refresh-dialog': '_openDataRefreshDialog',
+        'not-found-redirect': '_handleNotFound'
       },
 
       _onForbidden: function(event) {
@@ -251,10 +252,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateMainPath: function(event) {
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this.set('route.__queryParams', null);
-          this.set('route.path', this.baseUrl + event.detail.path);
+          this._updatePath(event.detail.path);
         }
         event.stopImmediatePropagation();
+      },
+
+      _handleNotFound: function() {
+        this.fire('clear-loading-messages', {});
+        this._updatePath('not-found');
+      },
+
+      _updatePath: function (path) {
+        this.set('route.__queryParams', null);
+        this.set('route.path', this.baseUrl + path);
       },
 
       _pageChanged: function(page) {

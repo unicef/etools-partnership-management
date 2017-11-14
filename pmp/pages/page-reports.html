@@ -120,7 +120,7 @@
 
       </div> <!-- page content end -->
       <!-- No sidebar here -->
-    </div> <!-- main container end -->    
+    </div> <!-- main container end -->
   </template>
 
   <script>
@@ -172,6 +172,7 @@
         }.bind(this), 500);
       },
 
+
       attached: function() {
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
@@ -185,7 +186,7 @@
           active: true,
           loadingSource: 'reports-page'
         });
-    
+
         this._createReportStatusUpdateDialogs();
       },
 
@@ -223,13 +224,20 @@
         if (!tab) {
           return;
         }
-        this.debounce('debounce-url-tab-update', function() {
-          let tabs = this.$$('#reportTabs');
+        this._updatePath(this.route.path);
+        this._notifyTabsResize();
+      },
+
+      _updatePath: function(path) {
+        this.fire('update-main-path', {path: path});
+      },
+
+      _notifyTabsResize: function() {
+        this.debounce('debounce-tab-update', function() {
+          let tabs = this.$$('#intTabs');
           if (tabs) {
             tabs.notifyResize();
           }
-          this.fire('update-main-path', {path: this.route.path});
-          this.set('activeTab', tab);
         }.bind(this), 50);
       },
 
@@ -283,7 +291,7 @@
         this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj.bind(this));
 
         Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
-        
+
         this.reportRejectDialog = document.createElement('report-reject-dialog');
         this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
         this.reportRejectDialog.set('toastEventSource', this);
