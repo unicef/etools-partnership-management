@@ -1,3 +1,5 @@
+<script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
+
 <script>
   window.EtoolsRequestCacheDisabled = true;
 
@@ -23,13 +25,14 @@
     },
 
     elementIsVisible: function(element) {
-        var contentRect = element.getBoundingClientRect();
-        var computedStyle = window.getComputedStyle(element);
-        console.log(contentRect.width);
-        console.log(contentRect.height);
-        return computedStyle.display !== 'none' &&
-          contentRect.width > 0 &&
-          contentRect.height > 0;
+      Polymer.dom.flush();
+      var contentRect = element.getBoundingClientRect();
+      var computedStyle = window.getComputedStyle(element);
+      console.log(contentRect.width);
+      console.log(contentRect.height);
+      return computedStyle.display !== 'none' &&
+        contentRect.width > 0 &&
+        contentRect.height > 0;
     },
     deepCloneObject: function(obj) {
       return JSON.parse(JSON.stringify(obj));
@@ -37,7 +40,24 @@
     getCleanText: function(textContent) {
       // for now clean \n and unnecessary spaces, more char to clean to be added if needed
       return textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+    },
+    PaperMenuButton: {
+      runAfterOpen: function(menuButton, callback) {
+          menuButton.addEventListener('paper-dropdown-open', function() {
+            Polymer.Base.async(callback, 1);
+          });
+          let overlayTrigger = menuButton.$.trigger;
+          MockInteractions.tap(overlayTrigger);
+      },
+      runAfterClose: function(menuButton, closeTrigger, callback) {
+        menuButton.addEventListener('paper-dropdown-close', function() {
+          Polymer.Base.async(callback, 1);
+        });
+        MockInteractions.tap(closeTrigger);
+      }
     }
 
   };
+
+
 </script>

@@ -92,7 +92,7 @@
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]">
             <div class="col col-3">
-              <etools-form-element-wrapper label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
+              <etools-form-element-wrapper id="duration" label="Duration (Signed Date - CP End Date)" hidden$="[[!agreement.id]]">
                 <span>[[prettyDate(agreement.start)]] &#8212; [[prettyDate(agreement.end)]]</span>
               </etools-form-element-wrapper>
             </div>
@@ -160,7 +160,7 @@
           </template>
         </div>
 
-        <div hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
+        <div id="signedByFields" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By Partner -->
@@ -268,6 +268,7 @@
           </div>
           <div class="col col-9" hidden$="[[_typeMatches(agreement.agreement_type, 'SSFA')]]">
             <etools-single-file
+                id="signedAgreement"
                 file="{{agreement.attached_agreement}}"
                 internal-file="[[agreement.attached_agreement_file]]"
                 label="Signed Agreement"
@@ -434,8 +435,6 @@
         },
 
         _showAmendments: function(type, status) {
-          console.log(type);
-          console.log(status);
           if (type === 'PCA' && status !== 'draft') {
             return true;
           }
