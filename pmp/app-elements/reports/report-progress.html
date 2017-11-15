@@ -150,7 +150,7 @@
                   opened="{{indicatorReport.expanded}}" on-transitioning-changed="_indicatorDetailsTransitioningComplete">
                 <indicator-details
                     id$="indicator-details-[[resultIndex]]-[[lowerResultIndex]]-[[indicatorReportIndex]]"
-                    indicator-report-id="[[indicatorReport.id]]">
+                    indicator-report-id="[[indicatorReport.id]]" is-cluster-indicator$="[[indicatorReport.is_cluster_indicator]]">
                 </indicator-details>
               </iron-collapse>
             </div>
@@ -207,7 +207,7 @@
         },
 
         _getClusterIndicatorClass: function(indicatorReport) {
-          return (indicatorReport && indicatorReport.isClusterIndicator) ? 'cluster-indicator' : '';
+          return (indicatorReport && indicatorReport.is_cluster_indicator) ? 'cluster-indicator' : '';
         },
 
         _noReportDataToShow: function(cpOutputs) {
