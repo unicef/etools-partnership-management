@@ -13,11 +13,13 @@
 
     <link rel="import" href="test-helpers/testing-utils.html">
     <link rel="import" href="test-helpers/agreements-testing-helper.html">
+    <link rel="import" href="../pmp/pages/models/agreement-models.html">
 
     <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
     <!-- Import the element to test -->
     <link rel="import" href="../pmp/pages/page-agreements.html">
     <link rel="import" href="../pmp/app-elements/agreements/agreements-list.html">
+    <link rel="import" href="../pmp/app-elements/agreements/agreement-details.html">
   </head>
   <body>
     <test-fixture id="agreementsPageFixture">
@@ -31,6 +33,12 @@
         <agreements-list></agreements-list>
       </template>
     </test-fixture>
+
+    <test-fixture id="agreementDetailsFixture">
+        <template>
+          <agreement-details></agreement-details>
+        </template>
+      </test-fixture>
 
     <script>
 
@@ -96,7 +104,7 @@
           test('filter options are available', function(done) {
             flush(function() {
               helper.runAfterOpen(filterPaperMenu, function() {
-               // expect(PmpTestHelpers.elementIsVisible(ddContent)).to.be.equal(true);
+               // expect(PmpTestsHelper.elementIsVisible(ddContent)).to.be.equal(true);
                 expect(helper.agreementList.availableListFilterOptions.length).to.be.greaterThan(0);
                 done();
               });
@@ -135,6 +143,111 @@
             });
           });
         });
+      });
+      suite('agreement-details tests', function(){
+        let agrDetails;
+        setup(function(done){
+          agrDetails = fixture('agreementDetailsFixture');
+          done();
+        });
+        test('can instantiate agreement-details element', function() {
+          assert.equal(agrDetails.is, 'agreement-details');
+        });
+        suite('on new', function(){
+          setup(function(){
+            agrDetails.isNewAgreement = true;
+            agrDetails.agreementTypes = agreementTypes;
+          });
+
+          test('element is rendered', function(done) {
+            flush(function() {
+              agrDetails.agreement = JSON.parse(JSON.stringify(EtoolsPmpApp.Behaviors.AgreementModels.properties.newAgreementModel.value));
+
+              expect(PmpTestsHelper.elementIsVisible(agrDetails)).to.be.equal(true);
+
+              done();
+            });
+          });
+        });
+        suite('on edit', function() {
+          let agrMockData;
+          setup(function(){
+            agrDetails.isNewAgreement = false;
+            agrDetails.agreementTypes = agreementTypes;
+            agrMockData = PmpTestsHelper.deepCloneObject(agreementMock);
+          });
+
+          test('element is rendered', function(done) {
+            flush(function() {
+              agrDetails.agreement = agrMockData;
+
+              expect(PmpTestsHelper.elementIsVisible(agrDetails)).to.be.equal(true);
+
+              done();
+            });
+          });
+          test('amendments are visible for agreement type PCA and status other than draft', function(done) {
+            flush(function() {
+              agrMockData.status = 'signed';
+              agrMockData.agreement_type = 'PCA';
+              agrDetails.agreement = agrMockData;
+
+              expect(agrDetails.$$('#agreementAmendments')).to.not.equal(null);
+
+              done();
+            });
+          });
+          test('amendments are Not visible for agreement type PCA and status draft', function(done) {
+            flush(function() {
+              agrMockData.status = 'draft';
+              agrMockData.agreement_type = 'PCA';
+              agrDetails.agreement = agrMockData;
+
+              expect(agrDetails.$$('#agreementAmendments')).to.be.equal(null);
+
+              done();
+            });
+          });
+          test('amendments are Not visible for agreement type other than PCA', function(done) {
+            flush(function() {
+              agrMockData.status = 'signed';
+              agrMockData.agreement_type = 'SSFA';
+              agrDetails.agreement = agrMockData;
+
+              expect(agrDetails.$$('#agreementAmendments')).to.be.equal(null);
+
+              agrDetails.set('agreement.agreement_type', 'MOU');
+              Polymer.dom.flush();
+
+              expect(agrDetails.$$('#agreementAmendments')).to.be.equal(null);
+
+              done();
+            });
+          });
+          test('Cp structure is visible for agreement type PCA', function(done) {
+            flush(function() {
+              agrDetails.agreement = agrMockData;
+
+              expect(agrDetails.$$('#cpStructure')).to.not.equal(null);
+
+              done();
+            });
+          });
+          test('Cp structure is Not visible for agreement type other than PCA', function(done) {
+            flush(function() {
+              agrMockData.agreement_type = 'SSFA';
+              agrDetails.agreement = agrMockData;
+
+              expect(agrDetails.$$('#cpStructure')).to.be.equal(null);
+
+              agrDetails.set('agreement.agreement_type', 'SSFA');
+              Polymer.dom.flush();
+              expect(agrDetails.$$('#cpStructure')).to.be.equal(null);
+
+              done();
+            });
+          });
+      });
       });
     </script>
   </body>

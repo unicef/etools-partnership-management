@@ -176,8 +176,6 @@
           // check available filters
           if (this._validateFilterSelectedValue(filter.selectedValue)) {
             let foundInAvailable = false;
-            ///TODO - reduce duplication of code, method can be extracted and resused for this.availableListFilterOptions
-            // and this.selectedFilters below
             if (this.availableListFilterOptions instanceof Array && this.availableListFilterOptions.length > 0) {
               for (i = 0; i < this.availableListFilterOptions.length; i++) {
                 if (this.availableListFilterOptions[i].filterName === filter.filterName) {

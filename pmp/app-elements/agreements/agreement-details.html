@@ -434,6 +434,8 @@
         },
 
         _showAmendments: function(type, status) {
+          console.log(type);
+          console.log(status);
           if (type === 'PCA' && status !== 'draft') {
             return true;
           }

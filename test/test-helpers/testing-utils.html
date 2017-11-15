@@ -1,34 +1,43 @@
 <script>
   window.EtoolsRequestCacheDisabled = true;
 
-  var PmpTestHelpers = {};
-  (function(scope) {
-
+  window.PmpTestsHelper = window.PmpTestsHelper || {};
+  PmpTestsHelper = {
     //*TODO - why doesn't Polymer.flush() work?
-    scope.makeDebounceSynchronous = function(element) {
+    makeDebounceSynchronous: function(element) {
       element.debounce = function(jobName, callback, wait) {
               callback.bind(element)();
             }
-    }
-    scope.makeAsyncSynchronous = function(element) {
+    },
+    makeAsyncSynchronous: function(element) {
       element.async = function(callback, wait) {
               callback.bind(element)();
             }
-    }
+    },
 
-    scope.initializeFakeServer = function() {
+    initializeFakeServer: function() {
       let server = sinon.fakeServer.create();
       server.autoRespond = true;
       server.respondImmediately = true;
       return server;
-    }
+    },
 
-    scope.elementIsVisible = function(element) {
+    elementIsVisible: function(element) {
         var contentRect = element.getBoundingClientRect();
         var computedStyle = window.getComputedStyle(element);
+        console.log(contentRect.width);
+        console.log(contentRect.height);
         return computedStyle.display !== 'none' &&
           contentRect.width > 0 &&
           contentRect.height > 0;
-      }
-  })(PmpTestHelpers);
+    },
+    deepCloneObject: function(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    },
+    getCleanText: function(textContent) {
+      // for now clean \n and unnecessary spaces, more char to clean to be added if needed
+      return textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+    }
+
+  };
 </script>

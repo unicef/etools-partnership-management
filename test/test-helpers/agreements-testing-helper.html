@@ -1,5 +1,5 @@
 <link rel="import" href="users-and-permissions-data-mockup.html">
-<link rel="import" href="agreement-list-data-mockup.html">
+<link rel="import" href="agreement-data-mockup.html">
 <script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
 
 <script>
@@ -14,7 +14,7 @@
           };
   }
   AgreementListHelper.prototype.setupGetAgreementList = function(server) {
-    this.server = PmpTestHelpers.initializeFakeServer();
+    this.server = PmpTestsHelper.initializeFakeServer();
     let responseHeaders = {
             json: { 'Content-Type': 'application/json' }
             };
@@ -23,8 +23,8 @@
     this.server.respond();
   }
   AgreementListHelper.prototype.initializeElementUnderTest = function() {
-    PmpTestHelpers.makeDebounceSynchronous(this.agreementList);
-    PmpTestHelpers.makeAsyncSynchronous(this.agreementList);
+    PmpTestsHelper.makeDebounceSynchronous(this.agreementList);
+    PmpTestsHelper.makeAsyncSynchronous(this.agreementList);
     this.agreementList.set('permissions', appUserPermissions);
     this.agreementList.set('urlParams', this.defaultRoute.__queryParams);
     this.agreementList.set('active', true);
@@ -54,4 +54,6 @@
       });
       MockInteractions.tap(closeTrigger);
   }
+
+
 </script>
