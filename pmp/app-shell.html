@@ -66,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .main-page {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       :host(.ie) page-footer {
@@ -76,9 +76,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       :host(:not(.ie)) page-footer {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
       }
     </style>
 
@@ -212,7 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog'
+        'open-data-refresh-dialog': '_openDataRefreshDialog',
+        'not-found-redirect': '_handleNotFound'
       },
 
       toastFired: function() {
@@ -259,16 +260,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateMainPath: function(event) {
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this.set('route.__queryParams', null);
-          this.set('route.path', this.baseUrl + event.detail.path);
+          this._updatePath(event.detail.path);
         }
         event.stopImmediatePropagation();
+      },
+
+      _handleNotFound: function() {
+        this.fire('clear-loading-messages', {});
+        this._updatePath('not-found');
+      },
+
+      _updatePath: function (path) {
+        this.set('route.__queryParams', null);
+        this.set('route.path', this.baseUrl + path);
       },
 
       _pageChanged: function(page) {
         if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
           this.set('_lastActivePartnerPage', page);
         }
+        this.fire('clear-loading-messages', {});
       },
 
       _routePageChanged: function(routePage) {
@@ -279,8 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           this._importMainPage(routePage);
-
-          if (this.route && this.baseUrl && this.page !== 'not-found') {
+          if (this.route && this.baseUrl) {
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
