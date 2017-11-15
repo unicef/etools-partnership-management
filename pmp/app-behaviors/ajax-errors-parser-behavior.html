@@ -112,7 +112,10 @@
 
     parseRequestErrorsAndShowAsToastMsgs: function(error, source, redirectOn404) {
       if (redirectOn404 && error.status === 404) {
-        this.fire('not-found-redirect', {});
+        if (!source) {
+          source = this;
+        }
+        source.fire('not-found-redirect', {});
         return;
       }
 

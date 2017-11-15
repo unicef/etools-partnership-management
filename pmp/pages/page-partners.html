@@ -292,22 +292,7 @@
         if (!tab) {
           return;
         }
-        this.set('activeTab', tab);
-        this._notifyTabsResize();
-        this._updatePath(this.route.path);
-      },
-
-      _updatePath: function(path) {
-        this.fire('update-main-path', {path: path});
-      },
-
-      _notifyTabsResize: function() {
-        this.debounce('debounce-tab-update', function() {
-          var tabs = this.$$('#partnerTabs');
-          if (tabs) {
-            tabs.notifyResize();
-          }
-        }.bind(this), 50);
+        this._updateTabPath(tab, this.route.path, '#partnerTabs');
       },
 
       _savePartner: function(newPartnerData) {

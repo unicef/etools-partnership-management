@@ -480,21 +480,7 @@
         if (!this.activeTab) {
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
-        this._updatePath(this.route.path);
-        this._notifyTabsResize();
-      },
-
-      _updatePath: function(path) {
-        this.fire('update-main-path', {path: path});
-      },
-
-      _notifyTabsResize: function() {
-        this.debounce('debounce-tab-update', function() {
-          let tabs = this.$$('#intTabs');
-          if (tabs) {
-            tabs.notifyResize();
-          }
-        }.bind(this), 50);
+        this._updateTabPath(null, this.route.path, '#partnerTabs');
       },
 
       _setActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
