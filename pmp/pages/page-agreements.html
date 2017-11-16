@@ -10,6 +10,7 @@
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="models/agreement-models.html">
 
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
@@ -76,7 +77,7 @@
               </a>
             </div>
             <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
+              <paper-button id="newAgreementBtn" class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
                 <iron-icon icon="add"></iron-icon>
                 Add New Agreement
               </paper-button>
@@ -167,7 +168,8 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
-        EtoolsPmpApp.Behaviors.ScrollControl
+        EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsPmpApp.Behaviors.AgreementModels
       ],
 
       properties: {
@@ -181,52 +183,7 @@
         selectedAgreementId: {
           type: Number
         },
-        newAgreementModel: {
-          type: Object,
-          value: {
-            id: undefined,
-            authorized_officers: [],
-            amendments: [],
-            agreement_type: null,
-            agreement_number: undefined,
-            attached_agreement: undefined,
-            start: undefined,
-            end: undefined,
-            signed_by_unicef_date: null,
-            signed_by_partner_date: null,
-            status: undefined,
-            partner: null,
-            country_programme: undefined,
-            signed_by: null,
-            partner_manager: null,
-            permissions: {
-              edit: {
-                agreement_type: true,
-                amendments: false,
-                attached_agreement: true,
-                authorized_officers: true,
-                country_programme: true,
-                end: true,
-                partner: true,
-                partner_manager: true,
-                signed_by: true,
-                signed_by_id: true,
-                signed_by_partner_date: true,
-                signed_by_unicef_date: true,
-                start: true,
-              },
-              required: {
-                agreement_type: true,
-                partner: true,
-                country_programme: true,
-                partner_manager: false,
-                signed_by: false,
-                signed_by_partner_date: false,
-                signed_by_unicef_date: false,
-              }
-            }
-          }
-        },
+
         csvDownloadUrl: {
           type: String
         },

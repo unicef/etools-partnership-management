@@ -1,0 +1,178 @@
+<script>
+  var agrListMockup  = [
+  {
+    agreement_number: "PCA 2015/29-3",
+    agreement_type: "PCA",
+    end: "2016-09-29",
+    id: 8,
+    partner: 21,
+    partner_name: "DANISH REFUGEE COUNCIL",
+    signed_by: 1152,
+    signed_by_partner_date: "2015-07-28",
+    signed_by_unicef_date: "2015-07-28",
+    start: "2015-09-30",
+    status: "draft"
+  },
+  {
+    agreement_number: "PRC 2015/PCA 2015/10/02",
+    agreement_type: "PCA",
+    end: "2016-12-31",
+    id: 9,
+    partner: 51,
+    partner_name: "BEYOND ASSOCIATION",
+    signed_by: null,
+    signed_by_partner_date: null,
+    signed_by_unicef_date: null,
+    start: "2015-09-30",
+    status: "active"
+    }
+
+  ]
+  var agreementMock = {
+    "id": 49,
+    "partner_name": "ACTION CONTRE LA FAIM",
+    "authorized_officers": [{
+        "id": 8,
+        "title": "Field Coordinator",
+        "first_name": "Thomas",
+        "last_name": "Morley",
+        "email": "washpm-ir@jo.missions-acf.org",
+        "phone": "0778 499 630",
+        "active": true
+      }, {
+        "id": 9,
+        "title": "HoD FIN HR",
+        "first_name": "Dennis",
+        "last_name": "Njoka",
+        "email": "hodfi@jo.missions-acf.org",
+        "phone": "0778 465100",
+        "active": true
+      }, {
+        "id": 11,
+        "title": "Deputy Country Director - Programmes",
+        "first_name": "Valentina",
+        "last_name": "Ferrante",
+        "email": "dcdprograms@jo.missions-acf.org",
+        "phone": "0778 465150",
+        "active": true
+      }, {
+        "id": 87,
+        "title": "Country Director",
+        "first_name": "Julie",
+        "last_name": "Calafat",
+        "email": "cd@jomissions-acf.orgg",
+        "phone": "0778 304474",
+        "active": true
+      }
+    ],
+    "amendments": [],
+    "unicef_signatory": {
+      "id": 2276,
+      "username": "rjenkins@unicef.org",
+      "email": "rjenkins@unicef.org",
+      "is_superuser": false,
+      "first_name": "Robert",
+      "last_name": "Jenkins",
+      "is_staff": true,
+      "is_active": true,
+      "profile": {
+        "country": 18
+      }
+    },
+    "partner_signatory": null,
+    "attached_agreement_file": "http://localhost:80/media/jordan/file_attachments/agreements/None/ACF%20PCA%2014%20(2013-2017).pdf",
+    "permissions": {
+      "edit": {
+        "partner_manager_id": true,
+        "interventions": true,
+        "signed_by_id": true,
+        "agreement_type": true,
+        "partner": true,
+        "partner_id": true,
+        "id": true,
+        "amendments": false,
+        "end": true,
+        "country_programme_id": true,
+        "signed_by_partner_date": true,
+        "agreement_number": false,
+        "partner_manager": true,
+        "start": true,
+        "attached_agreement": true,
+        "status": true,
+        "signed_by_unicef_date": true,
+        "authorized_officers": true,
+        "created": true,
+        "modified": true,
+        "country_programme": true,
+        "signed_by": true
+      },
+      "required": {
+        "partner_manager_id": false,
+        "interventions": false,
+        "signed_by_id": false,
+        "agreement_type": true,
+        "partner": true,
+        "partner_id": false,
+        "id": false,
+        "amendments": false,
+        "end": false,
+        "country_programme_id": false,
+        "signed_by_partner_date": false,
+        "agreement_number": true,
+        "partner_manager": false,
+        "start": false,
+        "attached_agreement": false,
+        "status": false,
+        "signed_by_unicef_date": false,
+        "authorized_officers": false,
+        "created": false,
+        "modified": false,
+        "country_programme": false,
+        "signed_by": false
+      },
+      "view": {
+        "partner_manager_id": true,
+        "interventions": true,
+        "signed_by_id": true,
+        "agreement_type": false,
+        "partner": false,
+        "partner_id": true,
+        "id": true,
+        "amendments": false,
+        "end": false,
+        "country_programme_id": true,
+        "signed_by_partner_date": false,
+        "agreement_number": false,
+        "partner_manager": false,
+        "start": false,
+        "attached_agreement": false,
+        "status": true,
+        "signed_by_unicef_date": false,
+        "authorized_officers": false,
+        "created": true,
+        "modified": true,
+        "country_programme": false,
+        "signed_by": false
+      }
+    },
+    "created": "2016-08-16T12:27:24.651949Z",
+    "modified": "2017-10-20T17:14:08.556321Z",
+    "agreement_type": "PCA",
+    "agreement_number": "ACF PCA 14 (2013-2017)",
+    "attached_agreement": "http://localhost:80/media/jordan/file_attachments/agreements/None/ACF%20PCA%2014%20(2013-2017).pdf",
+    "start": "2015-08-03",
+    "end": "2017-12-31",
+    "signed_by_unicef_date": "2015-08-03",
+    "signed_by_partner_date": "2015-08-03",
+    "status": "draft",
+    "partner": 33,
+    "country_programme": 2,
+    "signed_by": 2276,
+    "partner_manager": null
+  }
+  var agreementTypes = [
+    {value: "PCA", label: "Programme Cooperation Agreement"},
+    {value: "SSFA", label: "Small Scale Funding Agreement"},
+    {value: "MOU", label: "Memorandum of Understanding"}
+  ];
+</script>
