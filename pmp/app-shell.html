@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <etools-piwik-analytics page="[[subroute.path]]"
                             user="[[user]]"
-                            toast="[[toast]]"></etools-piwik-analytics>
+                            toast="[[currentToastMessage]]"></etools-piwik-analytics>
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
@@ -190,9 +190,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         routeData: {
           type: Object
         },
-        toast: {
-          type: String
-        },
         _lastActivePartnerPage: String
       },
 
@@ -205,8 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'toast': 'toastFired'
+        'open-data-refresh-dialog': '_openDataRefreshDialog'
       },
 
       toastFired: function() {
