@@ -1,0 +1,14 @@
+<script>
+  window.PmpTestsHelper = window.PmpTestsHelper || {};
+
+  PmpTestsHelper = {
+    deepCloneObject: function(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    },
+    getCleanText: function(textContent) {
+      // for now clean \n and unnecessary spaces, more char to clean to be added if needed
+      return textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+    }
+  }
+
+</script>

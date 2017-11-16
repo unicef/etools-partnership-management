@@ -1,35 +1,248 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Partners Page</title>
+  <title>Partners Pages Tests</title>
 
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../node_modules/redux/dist/redux.min.js"></script>
 
-    <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
-    <!-- Import the element to test -->
-    <link rel="import" href="../pmp/pages/page-partners.html">
-  </head>
-  <body>
-    <test-fixture id="basic">
-      <template>
-        <page-partners></page-partners>
-      </template>
-    </test-fixture>
+  <!-- Import test helpers data -->
+  <link rel="import" href="test-helpers/tests-helper.html">
+  <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
+  <link rel="import" href="test-helpers/partner-tests-mockup-data.html">
 
-    <script>
-      suite('page-partners tests', function() {
-        var home;
-        setup(function() {
-          home = fixture('basic');
-        });
-        test('Page Header should be Partners', function() {
-          assert.equal(home.is, 'page-partners');
-        })
+  <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../pmp/pages/page-partners.html">
+  <link rel="import" href="../pmp/app-elements/partners/partners-list.html">
+  <link rel="import" href="../pmp/app-elements/partners/partner-overview.html">
+
+</head>
+<body>
+
+  <test-fixture id="partners">
+    <template>
+      <page-partners></page-partners>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="partners-list">
+    <template>
+      <partners-list></partners-list>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="partner-overview">
+    <template>
+      <partner-overview></partner-overview>
+    </template>
+  </test-fixture>
+
+  <script>
+    let defaultRoute = {
+      prefix: '',
+      path: 'partners/list',
+      '__queryParams': {size: 10, sort :'name.asc'}
+    };
+
+    // disable request data caching functionality
+    window.EtoolsRequestCacheDisabled = true;
+
+    // setup fake server to mock requests then test partners pages
+    suite('App partners pages tests', function() {
+      let server;
+      let responseHeaders = {
+        json: { 'Content-Type': 'application/json' }
+      };
+
+      setup(function() {
+        server = sinon.fakeServer.create();
+        server.autoRespond = true;
+        server.respondImmediately = true;
       });
-    </script>
-  </body>
+
+      teardown(function() {
+        server.restore();
+      });
+
+      suite('Main partners page tests', function() {
+        let partners;
+
+        setup(function() {
+          // setup main partners page test-fixture
+          partners = fixture('partners');
+          partners.set('route', defaultRoute);
+          partners.set('permissions', appUserPermissions);
+          partners.set('partnerPage', 'list');
+          partners.set('listActive', true);
+        });
+
+        test('Main partners element: page-partners is registered', function() {
+          assert.equal(partners.is, 'page-partners');
+        });
+
+        test('Default active page should be partners list', function(done) {
+          flush(function() {
+            expect(partners.route.path).to.equal('partners/list');
+            expect(partners.get('partnerPage')).to.equal('list');
+            expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
+            expect(partners.listActive).to.equal(true);
+            expect(partners.tabsActive).to.equal(false);
+
+            let titleEl = Polymer.dom(partners.root).querySelector('h1[main-title]');
+            let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
+            expect(titleText).to.equal('Partners');
+
+            let partnersListElement = partners.$$('#list');
+            expect(partnersListElement.is).to.equal('partners-list');
+            done();
+          });
+        });
+
+      });
+
+      // test partners list elements
+      suite('Partners list elements tests', function() {
+        let partnersList;
+        setup(function() {
+          partnersList = fixture('partners-list');
+          partnersList.set('urlParams', defaultRoute.__queryParams);
+        });
+
+        test('Test partners list data', function(done) {
+          // activate partners list page
+          partnersList.set('active', true);
+
+          // fake partners request
+          server.respondWith('GET', '/api/v2/partners/', [
+            200, responseHeaders.json,
+            JSON.stringify(partnersListData)
+          ]);
+          server.respond();
+
+          flush(function() {
+            // Polymer.dom(partnersList.root).querySelector('partners-list-data'
+            let partnersListDataEl = partnersList.$$('#partners');
+            expect(partnersListDataEl.is).to.equal('partners-list-data');
+            // /api/v2/partners/ response should match partnersListData
+            expect(JSON.stringify(partnersListData)).to.equal(JSON.stringify(partnersListDataEl.data));
+            partnersListDataEl.fire(partnersListDataEl.dataLoadedEventName);
+            expect(partnersList.requiredDataLoaded).to.equal(true);
+
+            // check default query string to match default urlParams
+            let defaultQueryString = Object.keys(partnersList.urlParams).map(function(k) {
+              return k + '=' + partnersList.urlParams[k];
+            }).join('&');
+            expect(partnersList._buildQueryString()).to.equal(defaultQueryString);
+
+            let dataListEl = partnersList.$$('#list');
+            expect(dataListEl.is).to.equal('paper-material');
+            expect(dataListEl.classList.contains('hidden')).to.equal(true);
+
+            // assign some data to the list
+            partnersList.set('filteredPartners', partnersListDataEl.data);
+            expect(dataListEl.classList.contains('hidden')).to.equal(false);
+
+            // use flush to make sure list rows were stamped before checking them
+            flush(function() {
+              let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
+              expect(rowsDisplayed.length).to.equal(partnersList.filteredPartners.length);
+              done();
+            });
+
+          });
+        });
+
+      });
+
+      suite('Partner overview elements tests', function() {
+        let partnerOverview;
+        setup(function() {
+           partnerOverview = fixture('partner-overview');
+        });
+
+        test('Overview', function(done) {
+          expect(partnerOverview.is).to.equal('partner-overview');
+          partnerOverview.set('partner', PmpTestsHelper.deepCloneObject(partnerDetailsExample1));
+
+          flush(function() {
+            expect(partnerOverview.partner.id).to.equal(71); // element partner property was set
+            // check number of interventions rendered, should equal partner.interventions.length
+            let interventionsList = Polymer.dom(partnerOverview.root).querySelectorAll('#partnerInterventions .row-h');
+            expect(interventionsList.length).to.equal(partnerDetailsExample1.interventions.length);
+
+            let firstPartnerInterv = partnerDetailsExample1.interventions[0];
+            // get first partner intervention and check data rendered
+            let partnershipCol = interventionsList[0].querySelectorAll('div')[0];
+            expect(PmpTestsHelper.getCleanText(partnershipCol.querySelector('a strong').textContent))
+              .to.equal(firstPartnerInterv.number);
+            expect(PmpTestsHelper.getCleanText(partnershipCol.querySelector('span').textContent))
+              .to.equal(firstPartnerInterv.title);
+
+            let totalPlannedBudgetCol = interventionsList[0].querySelectorAll('div')[1];
+            expect(totalPlannedBudgetCol.textContent.trim()).to.equal('$2,437,158');
+
+            let actualCol = interventionsList[0].querySelectorAll('div')[2];
+            expect(actualCol.textContent.trim()).to.equal('$1,423,562');
+
+            let statusCol = interventionsList[0].querySelectorAll('div')[3];
+            expect(statusCol.textContent.trim()).to.equal('active');
+
+            let timelineCol = interventionsList[0].querySelectorAll('div')[4];
+            let timelineColTextDisplayed = PmpTestsHelper.getCleanText(timelineCol.textContent);
+            expect(timelineColTextDisplayed).to.equal('1 Jan 2017 - 31 Dec 2017');
+
+            // test overview top section
+            let riskRatingDisplayed = Polymer.dom(partnerOverview.root).querySelector('.risk-rating-field');
+            expect(riskRatingDisplayed.textContent.trim()).to.equal(partnerDetailsExample1.rating);
+
+            let cpCycleDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[1];
+            expect(cpCycleDisplay.textContent.trim()).to.equal('$1,423,562');
+
+            let cashTransferDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[2];
+            expect(cashTransferDisplay.textContent.trim()).to.equal('$2,049,934');
+
+            let progVisitsDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[3];
+            let progVisitsDisplayDisplayText = PmpTestsHelper.getCleanText(progVisitsDisplay.textContent);
+            expect(progVisitsDisplayDisplayText).to.equal('12 / 2 / 47');
+
+            let spotChecksDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[4];
+            let spotChecksDisplayText = PmpTestsHelper.getCleanText(spotChecksDisplay.textContent);
+            expect(spotChecksDisplayText).to.equal('2 / 1');
+
+            let auditDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[5];
+            let auditDisplayText = PmpTestsHelper.getCleanText(auditDisplay.textContent);
+            expect(auditDisplayText).to.equal('2 / 1');
+
+            done();
+          });
+
+        });
+      });
+
+      suite('Partner details elements tests', function() {
+        let partnerDetails;
+        setup(function() {
+          // partnerDetails = fixture('partner-details');
+        });
+
+        test('Details', function() {
+
+        });
+      });
+
+    });
+
+  </script>
+</body>
 </html>
