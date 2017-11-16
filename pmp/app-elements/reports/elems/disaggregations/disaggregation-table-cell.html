@@ -1,5 +1,6 @@
 <link rel="import" href="disaggregation-field.html">
 <link rel="import" href="../../styles/disaggregation-table-styles.html">
+<link rel="import" href="../../../../app-behaviors/utils-behavior.html">
 
 <dom-module id="disaggregation-table-cell">
   <template>
@@ -22,13 +23,17 @@
     <template
         is="dom-if"
         if="[[!editableBool]]">
-      <span class="cellValue">[[data.v]]</span>
+      <span class="cellValue">[[_formatNumber(data.v, '-', 0, '\,')]]</span>
     </template>
   </template>
 
   <script>
     Polymer({
       is: 'disaggregation-table-cell',
+
+      behaviors: [
+        EtoolsPmpApp.Behaviors.Utils
+      ],
 
       properties: {
         data: Object,

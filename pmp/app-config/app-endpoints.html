@@ -131,7 +131,7 @@
       template: '/api/v2/interventions/applied-indicators/<%=id%>/'
     },
     getPrpClusterIndicators: { // by cluster id
-      template: '/api/indicator/ca/?cluster=<%=id%>',
+      template: '/api/indicator/ca/?clusters=<%=id%>',
       token: 'prp'
     },
     getPrpClusterIndicator: { // by id
@@ -195,6 +195,10 @@
       exp: 60 * 60 * 60 * 1000,
       token: 'prp',
       cachingKey: 'prpCountries'
+    },
+    downloadReport: {
+      template: '/api/unicef/<%=countryId%>/progress-reports/<%=reportId%>/annex-C-export-PDF/',
+      token: 'prp'
     },
 
     // tokens get/refresh endpoints
