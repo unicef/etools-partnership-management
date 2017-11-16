@@ -1,5 +1,6 @@
 <link rel="import" href="../test-helpers/testing-utils.html">
 <link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
+<link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
 <script>
   window.PmpTests = window.PmpTests || {};
   window.PmpTests.Partners = window.PmpTests.Partners || {};
@@ -7,15 +8,96 @@
   PmpTests.Partners.detailsTests = function() {
     suite('Partner details elements tests', function() {
       let partnerDetails;
+      let partnerData;
+
       setup(function() {
         partnerDetails = fixture('partner-details');
+        partnerData = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
+        partnerDetails.set('partner', partnerData);
+        partnerDetails.set('editMode', appUserPermissions && appUserPermissions.editPartnerDetails);
       });
 
-      test('Details', function() {
+      test('Details main element is a valid', function() {
         expect(partnerDetails.is).to.equal('partner-details');
-        let partner = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
-        partnerDetails.set('partner', partner);
       });
+
+      test('Current user should have edit permissions', function() {
+        expect(partnerDetails.editMode).to.equal(true);
+      });
+
+      test('Partner details panel data displayed data test', function(done) {
+        flush(function() {
+          let fullName = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Full Name"]');
+          expect(fullName.is).to.equal('paper-input');
+          expect(fullName.readonly).to.equal(true);
+          expect(fullName.value).to.equal('ABAAD RESOURCE CENTER FOR GENDER');
+
+          let shortName = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Short Name"]');
+          expect(shortName.is).to.equal('paper-input');
+          expect(shortName.readonly).to.equal(true);
+          expect(shortName.value).to.equal('abaad');
+
+          let vendorNr = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Vendor Number"]');
+          expect(vendorNr.is).to.equal('paper-input');
+          expect(vendorNr.readonly).to.equal(true);
+          expect(vendorNr.value).to.equal('2500225514');
+
+          let partnerType = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Partner Type"]');
+          expect(partnerType.is).to.equal('paper-input');
+          expect(partnerType.readonly).to.equal(true);
+          expect(partnerType.value).to.equal('Civil Society Organization/National');
+
+          let address = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Address"]');
+          expect(address.is).to.equal('paper-input');
+          expect(address.readonly).to.equal(true);
+          expect(address.value).to.equal('BUSTANI STREET');
+
+          let phone = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Phone Number"]');
+          expect(phone.is).to.equal('paper-input');
+          expect(phone.readonly).to.equal(true);
+          expect(phone.value).to.equal('03 663052');
+
+          let email = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="E-mail address"]');
+          expect(email.is).to.equal('paper-input');
+          expect(email.readonly).to.equal(true);
+          expect(email.value).to.equal('GHIDA.ANANI@ABAADMENA.ORG');
+
+          let alternateName = Polymer.dom(partnerDetails.root).querySelector('paper-input[label="Alternate Name"]');
+          expect(alternateName.is).to.equal('paper-input');
+          expect(alternateName.readonly).to.equal(false);
+          expect(alternateName.value).to.equal('test');
+
+          let sharedPartner = Polymer.dom(partnerDetails.root)
+              .querySelector('etools-multi-selection-menu[label="Shared Partner"]');
+          expect(sharedPartner.is).to.equal('etools-multi-selection-menu');
+          expect(sharedPartner.readonly).to.equal(false);
+          expect(sharedPartner.selectedValues).to.equal(null);
+          expect(sharedPartner.selectedItems.length).to.equal(0);
+
+          let coreValsAssessment = Polymer.dom(partnerDetails.root)
+              .querySelector('#core-values-assessment');
+          // core values assessment file should be visible for this partner
+          expect(coreValsAssessment.hasAttribute('hidden')).to.equal(false);
+          // no file selected
+          let coreValsAssessmentFile = Polymer.dom(partnerDetails.root)
+              .querySelector('#core-values-assessment etools-single-file');
+          expect(coreValsAssessmentFile.is).to.equal('etools-single-file');
+          expect(coreValsAssessmentFile.file).to.equal(null);
+          expect(coreValsAssessmentFile.readonly).to.equal(false); // should be able to select file
+
+          done();
+        });
+      });
+
+      test('Partners assessments', function(done) {
+        flush(function() {
+          let assessmentsList = Polymer.dom(partnerDetails.root).querySelector('#assessmentsList');
+          expect(assessmentsList.is).to.equal('assessments-items');
+
+          done();
+        });
+      });
+
     });
   }
 
