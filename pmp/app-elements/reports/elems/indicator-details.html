@@ -35,6 +35,11 @@
         };
       }
 
+      :host([is-cluster-indicator]) {
+        --paper-tab-ink: var(--ternary-color);
+        --paper-tabs-selection-bar-color: var(--ternary-color);
+      }
+
       .tab-header {
         @apply --layout-horizontal;
         @apply --layout-justified;
@@ -152,6 +157,11 @@
         selected: {
           type: String,
           value: ''
+        },
+        isClusterIndicator: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
         }
       },
 

@@ -58,7 +58,7 @@
       }).catch(function(error) {
         let errMsg = 'Reports details data request failed!';
         self.logError(errMsg, logMsgPrefix, error);
-        self.parseRequestErrorsAndShowAsToastMsgs(error, self);
+        self.parseRequestErrorsAndShowAsToastMsgs(error, self, true);
         self.fire('global-loading', {active: false, loadingSource: loadingSource});
       });
     }

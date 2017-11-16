@@ -292,14 +292,7 @@
         if (!tab) {
           return;
         }
-        this.debounce('debounce-url-tab-update', function() {
-          var tabs = this.$$('#partnerTabs');
-          if (tabs) {
-            tabs.notifyResize();
-          }
-          this.fire('update-main-path', {path: this.route.path});
-          this.set('activeTab', tab);
-        }.bind(this), 50);
+        this._updateTabPath(tab, this.route.path, '#partnerTabs');
       },
 
       _savePartner: function(newPartnerData) {

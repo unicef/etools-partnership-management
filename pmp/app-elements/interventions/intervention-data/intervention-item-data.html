@@ -88,8 +88,10 @@
         },
 
         _handleErrorResponse: function(response, ajaxMethod) {
-          this.handleErrorResponse(response, ajaxMethod);
-          this._restoreUnsuccessfullyDeletedFrs();
+          this.handleErrorResponse(response, ajaxMethod, true);
+          if (this.intervention) {
+            this._restoreUnsuccessfullyDeletedFrs();
+          }
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
           this.set('intervention.frs_details', this.originalIntervention.frs_details);

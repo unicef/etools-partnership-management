@@ -481,13 +481,7 @@
         if (!this.activeTab) {
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
-        this.debounce('debounce-url-tab-update', function() {
-          let tabs = this.$$('#intTabs');
-          if (tabs) {
-            tabs.notifyResize();
-          }
-          this.fire('update-main-path', {path: this.route.path});
-        }.bind(this), 50);
+        this._updateTabPath(null, this.route.path, '#partnerTabs');
       },
 
       _setActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
