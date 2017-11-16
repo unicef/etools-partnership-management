@@ -70,7 +70,7 @@
           this.sendRequest(options).then(function(resp) {
             self._handleSuccResponse(resp, ajaxMethod);
           }).catch(function(error) {
-            self.handleErrorResponse(error, ajaxMethod);
+            self.handleErrorResponse(error, ajaxMethod, true);
           });
         },
 
