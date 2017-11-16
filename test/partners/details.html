@@ -1,0 +1,22 @@
+<link rel="import" href="../test-helpers/testing-utils.html">
+<link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
+<script>
+  window.PmpTests = window.PmpTests || {};
+  window.PmpTests.Partners = window.PmpTests.Partners || {};
+
+  PmpTests.Partners.detailsTests = function() {
+    suite('Partner details elements tests', function() {
+      let partnerDetails;
+      setup(function() {
+        partnerDetails = fixture('partner-details');
+      });
+
+      test('Details', function() {
+        expect(partnerDetails.is).to.equal('partner-details');
+        let partner = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
+        partnerDetails.set('partner', partner);
+      });
+    });
+  }
+
+</script>

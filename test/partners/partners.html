@@ -1,0 +1,53 @@
+<link rel="import" href="../test-helpers/testing-utils.html">
+<link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
+<script>
+  window.PmpTests = window.PmpTests || {};
+  window.PmpTests.Partners = window.PmpTests.Partners || {};
+
+  PmpTests.Partners.partnersMainPageTests = function(defaultRoute) {
+    suite('Main partners page tests', function() {
+      let server;
+      let partners;
+
+      setup(function() {
+        server = PmpTestsHelper.initializeFakeServer();
+        // setup main partners page test-fixture
+        partners = fixture('partners');
+        partners.set('route', defaultRoute);
+        partners.set('permissions', appUserPermissions);
+        partners.set('partnerPage', 'list');
+        partners.set('listActive', true);
+      });
+
+      teardown(function() {
+        server.restore();
+      });
+
+
+      test('Main partners element: page-partners is registered', function() {
+        assert.equal(partners.is, 'page-partners');
+      });
+
+      test('Default active page should be partners list', function(done) {
+        flush(function() {
+          expect(partners.route.path).to.equal('partners/list');
+          expect(partners.get('partnerPage')).to.equal('list');
+          expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
+          expect(partners.listActive).to.equal(true);
+          expect(partners.tabsActive).to.equal(false);
+
+          let titleEl = Polymer.dom(partners.root).querySelector('h1[main-title]');
+          let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
+          expect(titleText).to.equal('Partners');
+
+          let partnersListElement = partners.$$('#list');
+          expect(partnersListElement.is).to.equal('partners-list');
+          done();
+        });
+      });
+
+    });
+  }
+
+</script>
+
