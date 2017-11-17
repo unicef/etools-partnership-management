@@ -30,11 +30,10 @@
   <script>
     suite('Partner details elements tests', function() {
       let partnerDetails;
-      let partnerData;
+      let partnerData = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
 
       setup(function() {
         partnerDetails = fixture('partner-details');
-        partnerData = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
         partnerDetails.set('partner', partnerData);
         partnerDetails.set('editMode', appUserPermissions && appUserPermissions.editPartnerDetails);
       });
@@ -111,10 +110,74 @@
         });
       });
 
-      test('Partners assessments', function(done) {
+      test('Partners assessments panel header row data should be readonly', function(done) {
+        flush(function() {
+          let riskRatingRow = Polymer.dom(partnerDetails.root).querySelector('#riskRatingRow');
+          let risk = riskRatingRow.querySelector('paper-input[label="Risk Rating"]');
+          expect(risk.is).to.equal('paper-input');
+          expect(risk.readonly).to.equal(true);
+          expect(risk.value).to.equal('Low');
+
+          let assessmentType = riskRatingRow.querySelector('paper-input[label="Assessment Type"]');
+          expect(assessmentType.is).to.equal('paper-input');
+          expect(assessmentType.readonly).to.equal(true);
+          expect(assessmentType.value).to.equal('Micro Assessment');
+
+          let dateOfA = riskRatingRow.querySelector('paper-input[label="Date of Assessment"]');
+          expect(dateOfA.is).to.equal('paper-input');
+          expect(dateOfA.readonly).to.equal(true);
+          expect(dateOfA.value).to.equal('13 Oct 2017');
+
+          done();
+        });
+      });
+
+      test('Partners assessments list tests: delete btn visibility, rendered assessments should be 4, ' +
+          'displayed data is readonly and correctly shown', function(done) {
+
         flush(function() {
           let assessmentsList = Polymer.dom(partnerDetails.root).querySelector('#assessmentsList');
           expect(assessmentsList.is).to.equal('assessments-items');
+
+          let assessmentsListRows = Polymer.dom(assessmentsList.root).querySelectorAll('.row-h.item-container');
+          expect(assessmentsListRows.length).to.equal(4);
+
+          let firstRow = assessmentsListRows[0];
+
+          // delete btn should be visible
+          let deleteBtn = firstRow.querySelector('.actions paper-icon-button');
+          expect(PmpTestsHelper.elementIsVisible(deleteBtn)).to.equal(true);
+
+          let assessmentType = firstRow.querySelector('[label="Assessment Type"]');
+          if (!partnerDetails.editMode) {
+            expect(assessmentType.is).to.equal('paper-input');
+            expect(assessmentType.readonly).to.equal(true);
+            expect(assessmentType.value).to.equal('Scheduled Audit report');
+          } else {
+            expect(assessmentType.is).to.equal('etools-single-selection-menu');
+            expect(assessmentType.readonly).to.equal(false);
+            expect(typeof assessmentType.selectedItem).to.equal('object');
+            expect(assessmentType.selected).to.equal('Scheduled Audit report');
+          }
+
+          let dateOfA = firstRow.querySelector('[label="Date of Assessment"]');
+          expect(dateOfA.is).to.equal('etools-date-input');
+          expect(dateOfA.$$('#dateInput').value).to.equal('29 May 2015');
+
+          let basisForRr = firstRow.querySelector('[label="Basis for Risk Rating"]');
+          expect(basisForRr.is).to.equal('etools-checkable-input');
+          expect(basisForRr.checked).to.equal(false);
+
+          let report = firstRow.querySelector('[label="Report"]');
+          expect(report.is).to.equal('etools-single-file');
+          expect(report.attachments[0].file_name).to.equal('ABAAD_2015_Audit_OUz135C.pdf');
+
+          done();
+        });
+      });
+
+      test('Assessments should not allow more than 1 checked Basis for Risk Rating field', function(done) {
+        flush(function() {
 
           done();
         });
