@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Agreements List</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+    <link rel="import" href="../test-helpers/testing-utils.html">
+    <link rel="import" href="../test-helpers/agreements-testing-helper.html">
+
+    <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+
+    <link rel="import" href="../../pmp/app-elements/agreements/agreements-list.html">
+  </head>
+  <body>
+    <test-fixture id="agreementsListFixture">
+      <template>
+        <agreements-list></agreements-list>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('agreements-list tests', function() {
+        var helper;
+        var queryStub;
+        setup(function(done) {
+          helper = new AgreementListHelper();
+          helper.setupGetAgreementList();
+          helper.initializeElementUnderTest();
+          helper.stubQuery();
+
+          done();
+        });
+        teardown(function() {
+          helper.server.restore();
+          helper.agreementList.agreementListData.query.restore();
+        });
+
+        test('can instantiate agreements-list element', function() {
+          assert.equal(helper.agreementList.is, 'agreements-list');
+        });
+        test('agreement items are displayed on UI', function(done) {
+          flush(function() {
+            let rows = helper.agreementList.$$('#list').querySelectorAll('etools-data-table-row');
+            expect(rows.length).to.equal(helper.agreementList.filteredAgreements.length);
+            done();
+          });
+        });
+        suite('when filtering', function() {
+          var filterPaperMenu, ddContent;
+          setup(function(done) {
+            filterPaperMenu = helper.agreementList.$$('#filterMenu');
+            ddContent = Polymer.dom(filterPaperMenu).querySelector('.dropdown-content');
+            done();
+          });
+          test('filter options are available', function(done) {
+            flush(function() {
+              PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
+               // expect(PmpTestsHelper.elementIsVisible(ddContent)).to.be.equal(true);
+                expect(helper.agreementList.availableListFilterOptions.length).to.be.greaterThan(0);
+                done();
+              });
+
+             })
+          });
+          test('can filter by an option', function(done) {
+            flush(function() {
+              PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
+                var firstItem = ddContent.querySelector('paper-item');
+                let initialAvFiltersLength = helper.agreementList.availableListFilterOptions.length;
+                PmpTestsHelper.PaperMenuButton.runAfterClose(filterPaperMenu, firstItem, function() {
+                  expect(helper.agreementList.selectedFilters.length).to.be.greaterThan(0);
+                  expect(helper.agreementList.availableListFilterOptions.length).to.be.equal(initialAvFiltersLength - 1);
+                  done();
+                });
+              });
+            })
+          });
+         });
+        suite('when entering a search string', function() {
+          teardown(function() {
+            helper.agreementList._updateURL.restore();
+          });
+
+          test('the list is filtered by the search string and the url is updated', function(done) {
+            flush(function() {
+              let spyUpdateUrl = sinon.spy(helper.agreementList, '_updateURL');
+
+              helper.agreementList.set('q', 'DANISH REFUGEE COUNCIL');
+
+              expect(spyUpdateUrl).called;
+              expect(helper.queryStub).called;
+
+              done();
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
