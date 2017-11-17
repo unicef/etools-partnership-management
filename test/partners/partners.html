@@ -1,20 +1,48 @@
-<link rel="import" href="../test-helpers/testing-utils.html">
-<link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
-<script>
-  window.PmpTests = window.PmpTests || {};
-  window.PmpTests.Partners = window.PmpTests.Partners || {};
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  PmpTests.Partners.partnersMainPageTests = function(defaultRoute) {
+  <title>Partners Pages Tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+  <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+  <link rel="import" href="../test-helpers/testing-utils.html">
+  <link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../pmp/pages/page-partners.html">
+
+</head>
+<body>
+
+  <test-fixture id="partners">
+    <template>
+      <page-partners></page-partners>
+    </template>
+  </test-fixture>
+
+  <script>
+
     suite('Main partners page tests', function() {
       let server;
       let partners;
+
+      let defaultRoute = {
+        prefix: '',
+        path: 'partners/list',
+        '__queryParams': {size: 10, sort :'name.asc'}
+      };
 
       setup(function() {
         server = PmpTestsHelper.initializeFakeServer();
         // setup main partners page test-fixture
         partners = fixture('partners');
         partners.set('route', defaultRoute);
-        partners.set('permissions', appUserPermissions);
         partners.set('partnerPage', 'list');
         partners.set('listActive', true);
       });
@@ -22,7 +50,6 @@
       teardown(function() {
         server.restore();
       });
-
 
       test('Main partners element: page-partners is registered', function() {
         assert.equal(partners.is, 'page-partners');
@@ -40,14 +67,17 @@
           let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
           expect(titleText).to.equal('Partners');
 
-          let partnersListElement = partners.$$('#list');
-          expect(partnersListElement.is).to.equal('partners-list');
-          done();
+          Polymer.Base.async(function() {
+            let partnersListElement = partners.$$('#list');
+            expect(partnersListElement.is).to.equal('partners-list');
+            done();
+          }, 1000);
         });
       });
 
     });
-  }
+  </script>
 
-</script>
+</body>
+</html>
 

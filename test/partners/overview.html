@@ -1,17 +1,39 @@
-<link rel="import" href="../test-helpers/testing-utils.html">
-<link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
-<script>
-  window.PmpTests = window.PmpTests || {};
-  window.PmpTests.Partners = window.PmpTests.Partners || {};
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  PmpTests.Partners.overviewTests = function() {
+  <title>Partner Overview Tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+  <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+  <link rel="import" href="../test-helpers/testing-utils.html">
+  <link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../pmp/app-elements/partners/partner-overview.html">
+
+</head>
+<body>
+
+  <test-fixture id="partner-overview">
+    <template>
+      <partner-overview></partner-overview>
+    </template>
+  </test-fixture>
+
+  <script>
     suite('Partner overview elements tests', function() {
       let partnerOverview;
       setup(function() {
         partnerOverview = fixture('partner-overview');
       });
 
-      test('Overview', function(done) {
+      test('Overview page and displayed data is correct', function(done) {
         expect(partnerOverview.is).to.equal('partner-overview');
 
         let partnerDetailsExample1 = PmpTests.Partners.MockupData.partnerDetailsExample1;
@@ -76,6 +98,7 @@
 
       });
     });
-  }
+  </script>
 
-</script>
+</body>
+</html>
