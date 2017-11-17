@@ -28,8 +28,6 @@
       Polymer.dom.flush();
       var contentRect = element.getBoundingClientRect();
       var computedStyle = window.getComputedStyle(element);
-      console.log(contentRect.width);
-      console.log(contentRect.height);
       return computedStyle.display !== 'none' &&
         contentRect.width > 0 &&
         contentRect.height > 0;

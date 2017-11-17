@@ -41,19 +41,5 @@
               _this.agreementList.filteredAgreements = agrListMockup;
             });
   }
-  AgreementListHelper.prototype.runAfterOpen = function(menuButton, callback) {
-      menuButton.addEventListener('paper-dropdown-open', function() {
-        Polymer.Base.async(callback, 1);
-      });
-      let overlayTrigger = menuButton.$.trigger;
-      MockInteractions.tap(overlayTrigger);
-  }
-  AgreementListHelper.prototype.runAfterClose = function(menuButton, closeTrigger, callback) {
-      menuButton.addEventListener('paper-dropdown-close', function() {
-        Polymer.Base.async(callback, 1);
-      });
-      MockInteractions.tap(closeTrigger);
-  }
-
 
 </script>
