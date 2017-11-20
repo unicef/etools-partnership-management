@@ -310,10 +310,50 @@
           expect(staffListRows.length).to.equal(initialStaffMembersNr + 1);
 
           // new staff member row should have delete btn visible
-          let deleteBtn = staffListRows[staffListRows.length - 1].querySelector('.actions paper-icon-button');
+          let newAddedRow = staffListRows[staffListRows.length - 1];
+          let deleteBtn = newAddedRow.querySelector('.actions paper-icon-button');
           expect(PmpTestsHelper.elementIsVisible(deleteBtn)).to.equal(true);
 
           // add data and validate
+          let valid = staff.validate();
+          expect(valid).to.equal(false);
+
+          let position = newAddedRow.querySelector('[label="Position"]');
+          let firstName = newAddedRow.querySelector('[label="First Name"]');
+          let lastName = newAddedRow.querySelector('[label="Last Name"]');
+          let phone = newAddedRow.querySelector('[label="Phone number"]');
+          let email = newAddedRow.querySelector('[label="E-mail address"]');
+          let active = newAddedRow.querySelector('etools-checkable-input');
+
+          // active is true by default
+          expect(active.checked).to.equal(true);
+          position.set('value', 'Developer');
+
+          expect(position.invalid).to.equal(false);
+          expect(position.errorMessage).to.equal('Position is required');
+
+          expect(firstName.invalid).to.equal(true);
+          expect(firstName.errorMessage).to.equal('First name is required');
+
+          expect(lastName.invalid).to.equal(true);
+          expect(lastName.errorMessage).to.equal('Last name is required');
+
+          expect(phone.invalid).to.equal(true);
+          expect(phone.errorMessage).to.equal('Phone number is required');
+
+          expect(email.invalid).to.equal(true);
+          expect(email.errorMessage).to.equal('A valid & unused email address is required');
+
+          email.set('value', 'test.me@notanemailaddress.org');
+
+          expect(email.invalid).to.equal(false);
+          expect(phone.invalid).to.equal(false);
+
+          firstName.set('value', 'John');
+          lastName.set('value', 'Doe');
+
+          valid = staff.validate();
+          expect(valid).to.equal(true); // new partner data entered is valid
 
           done();
         });
