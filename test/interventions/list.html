@@ -72,7 +72,7 @@
             })
         });
 
-        test('can filter by an option', function(done) {
+        test('filtering by an option', function(done) {
           flush(function() {
             PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
               var firstItem = ddContent.querySelector('paper-item');
@@ -87,6 +87,24 @@
         });
       });
 
+      suite('entering a search string', function() {
+        teardown(function() {
+          helper.interventionsList._updateURL.restore();
+        });
+
+        test('the list is filtered by the search string and the url is updated', function(done) {
+          flush(function() {
+            let spyUpdateUrl = sinon.spy(helper.interventionsList, '_updateURL');
+
+            helper.interventionsList.set('q', 'LEBA/PCA2017011/PD201701');
+
+            expect(spyUpdateUrl).called;
+            expect(helper.queryStub).called;
+
+            done();
+          });
+        });
+      });
 
     });
 
