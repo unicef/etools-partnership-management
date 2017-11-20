@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Interventions Pages Tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+  <!-- Import test helpers data -->
+  <link rel="import" href="../test-helpers/tests-helper.html">
+  <link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
+
+  <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../pmp/pages/page-interventions.html">
+
+
+</head>
+<body>
+<!-- fixtures go here -->
+  <test-fixture id="interventions">
+    <template>
+      <page-interventions></page-interventions>
+    </template>
+  </test-fixture>
+
+<script>
+  let defaultRoute = {
+    prefix: '',
+    path: 'interventions/list',
+    '__queryParams': {size: 10, sort :'partner_name.asc'}
+  };
+
+  // disable request data caching functionality
+  window.EtoolsRequestCacheDisabled = true;
+
+  // setup fake server to mock requests then test interventions pages
+  suite('App Interventions pages tests', function() {
+    let server;
+    let responseHeaders = {
+      json: { 'Content-Type': 'application/json' }
+    };
+
+    setup(function() {
+      server = sinon.fakeServer.create();
+      server.autoRespond = true;
+      server.respondImmediately = true;
+    });
+
+    teardown(function() {
+      server.restore();
+    });
+
+    let interventions;
+
+    setup(function() {
+      // setup main interventions page test-fixture
+      interventions = fixture('interventions');
+      interventions.set('route', defaultRoute);
+      interventions.set('permissions', appUserPermissions);
+      interventions.set('interventionPage', 'list');
+      interventions.set('intervListActive', true);
+    });
+
+    test('Main interventions element: page-interventions is registered', function() {
+      assert.equal(interventions.is, 'page-interventions');
+    });
+
+    test('Default active page should be interventions list', function(done) {
+      flush(function() {
+        expect(interventions.route.path).to.equal('interventions/list');
+        expect(interventions.get('interventionPage')).to.equal('list');
+        expect(interventions._pageEquals(interventions.interventionPage, 'list')).to.equal(true);
+        expect(interventions.intervListActive).to.equal(true);
+        expect(interventions.intervDetailsActive).to.equal(false);
+        let titleEl = Polymer.dom(interventions.root).querySelector('h1[main-title]');
+        let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
+        expect(titleText).to.equal('PD/SSFAs');
+
+        // let interventionsListElement = interventions.$$('#intList');
+        // expect(interventionsListElement.is).to.equal('interventions-list');
+        done();
+      });
+    });
+
+  });
+
+</script>
+</body>
+</html>

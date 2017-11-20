@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Interventions Pages Tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+  <!-- Import test helpers data -->
+  <link rel="import" href="../test-helpers/tests-helper.html">
+  <link rel="import" href="../test-helpers/interventions-mockup-data.html">
+
+  <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../pmp/app-elements/interventions/interventions-list.html">
+
+
+</head>
+<body>
+<!-- fixtures go here -->
+  <test-fixture id="interventions-list">
+    <template>
+      <interventions-list></interventions-list>
+    </template>
+  </test-fixture>
+<script>
+  let defaultRoute = {
+    prefix: '',
+    path: 'interventions/list',
+    '__queryParams': {size: 10, sort :'partner_name.asc'}
+  };
+
+  // disable request data caching functionality
+  window.EtoolsRequestCacheDisabled = true;
+
+  // setup fake server to mock requests then test interventions pages
+  suite('Interventions list tests', function() {
+    let server;
+    let responseHeaders = {
+      json: { 'Content-Type': 'application/json' }
+    };
+
+    setup(function() {
+      server = sinon.fakeServer.create();
+      server.autoRespond = true;
+      server.respondImmediately = true;
+    });
+
+    teardown(function() {
+      server.restore();
+    });
+
+    let interventionsList;
+    setup(function() {
+      interventionsList = fixture('interventions-list');
+      interventionsList.set('urlParams', defaultRoute.__queryParams);
+    });
+
+    test('Test interventions list data', function(done) {
+      // activate interventions list page
+      interventionsList.set('active', true);
+
+      // fake interventions request
+      server.respondWith('GET', '/api/v2/interventions/', [
+        200, responseHeaders.json,
+        JSON.stringify(interventionsListData)
+      ]);
+      server.respond();
+      console.log('list data:', interventionsListData);
+      flush(function() {
+          // use flush to make sure list rows were stamped before checking them
+          flush(function() {
+          let interventionsListDataEl = interventionsList.$$('#interventions');
+
+          expect(interventionsListDataEl.is).to.equal('interventions-list-data');
+          // /api/v2/interventions/ response should match interventionsListData
+          expect(JSON.stringify(interventionsListData)).to.equal(JSON.stringify(interventionsListDataEl.data));
+          interventionsListDataEl.fire(interventionsListDataEl.dataLoadedEventName);
+          expect(interventionsList.requiredDataLoaded).to.equal(true);
+
+          // check default query string to match default urlParams
+          let defaultQueryString = Object.keys(interventionsList.urlParams).map(function(k) {
+            return k + '=' + interventionsList.urlParams[k];
+          }).join('&');
+          expect(interventionsList._buildQueryString()).to.equal(defaultQueryString);
+
+          let dataListEl = interventionsList.$$('#list');
+          expect(dataListEl.is).to.equal('paper-material');
+          expect(dataListEl.classList.contains('hidden')).to.equal(true);
+
+          // assign some data to the list
+          interventionsList.set('filteredInterventions', interventionsListDataEl.data);
+          expect(dataListEl.classList.contains('hidden')).to.equal(false);
+
+          console.log(dataListEl.is);
+          let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
+          console.log('count:', rowsDisplayed.length);
+          // expect(rowsDisplayed.length).to.equal(interventionsList.filteredInterventions.length);
+          done();
+        });
+
+      });
+    });
+
+
+  });
+  // disable request data caching functionality
+  window.EtoolsRequestCacheDisabled = true;
+
+</script>
+</body>
+</html>
