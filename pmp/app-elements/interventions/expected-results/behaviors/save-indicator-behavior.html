@@ -64,6 +64,8 @@
 
     _validateAndSaveIndicator: function(event) {
         if (!this.validate()) {
+          this.activeTab = 'details';
+          this._centerDialog();
           return;
         }
 
