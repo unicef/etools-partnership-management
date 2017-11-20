@@ -1,0 +1,50 @@
+<script>
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.InterventionModels */
+    EtoolsPmpApp.Behaviors.InterventionModels = {
+      properties: {
+        newInterventionModel: {
+          type: Object,
+          value: {
+            id: null, // Required null, not undefined in order to trigger the observer
+            agreement: undefined,
+            document_type: undefined,
+            country_programme: undefined,
+            number: undefined,
+            prc_review_document_file: undefined,
+            title: undefined,
+            status: '',
+            start: null,
+            end: null,
+            submitted_to_prc: false,
+            submission_date_prc: undefined,
+            review_date_prc: undefined,
+            submission_date: undefined,
+            prc_review_document: undefined,
+            signed_by_unicef_date: undefined,
+            signed_by_partner_date: undefined,
+            unicef_signatory: undefined,
+            unicef_focal_points: [],
+            partner_focal_points: [],
+            partner_authorized_officer_signatory: undefined,
+            offices: [],
+            frs: [],
+            frs_details: {
+              frs: [],
+              total_frs_amt: 0,
+              earliest_start_date: null,
+              latest_end_date: null
+            },
+            planned_visits: [],
+            sections: [],
+            planned_budget: {},
+            result_links: [],
+            amendments: [],
+            attachments: [],
+            distributions: []
+          }
+        },
+      }
+    };
+</script>
