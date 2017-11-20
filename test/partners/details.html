@@ -10,6 +10,8 @@
   <script src="../../bower_components/web-component-tester/browser.js"></script>
   <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
   <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
   <link rel="import" href="../test-helpers/testing-utils.html">
   <link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
@@ -177,7 +179,141 @@
       });
 
       test('Assessments should not allow more than 1 checked Basis for Risk Rating field', function(done) {
+
+        function _getCheckedRiskratingFields(basisRiskRatingFields) {
+          let checkedFieldsNr = 0;
+          basisRiskRatingFields.forEach(function(bRiskrating) {
+            if (bRiskrating.checked) {
+              checkedFieldsNr++;
+            }
+          });
+          return checkedFieldsNr;
+        }
+
+        function noMoreThanOneFieldSelected(basisRiskRatingFields) {
+          let checkedFieldsNr = _getCheckedRiskratingFields(basisRiskRatingFields);
+          assert.isAtMost(checkedFieldsNr, 1, 'No more than one field selected');
+        }
+
         flush(function() {
+          let assessmentsList = Polymer.dom(partnerDetails.root).querySelector('#assessmentsList');
+          let basisRiskRatingFields = Polymer.dom(assessmentsList.root)
+              .querySelectorAll('.row-h.item-container etools-checkable-input');
+          noMoreThanOneFieldSelected(basisRiskRatingFields);
+
+          // start changing risk rating basis fields, only one should be checked
+          // tap on first field
+          MockInteractions.tap(Polymer.dom(basisRiskRatingFields[0].root).querySelector('#el'));
+          noMoreThanOneFieldSelected(basisRiskRatingFields);
+
+          // tap on second field
+          MockInteractions.tap(Polymer.dom(basisRiskRatingFields[1].root).querySelector('#el'));
+          noMoreThanOneFieldSelected(basisRiskRatingFields);
+          done();
+        });
+      });
+
+      test('Add new assessment and validations', function(done) {
+        flush(function() {
+          let assessmentsList = Polymer.dom(partnerDetails.root).querySelector('#assessmentsList');
+          let basisRiskRatingFields = Polymer.dom(assessmentsList.root).querySelectorAll('.row-h.item-container');
+          let initialRowsNr = basisRiskRatingFields.length;
+          let addNewAssessmentBtn = Polymer.dom(assessmentsList.root).querySelector('paper-fab');
+          MockInteractions.tap(addNewAssessmentBtn);
+          Polymer.dom.flush();
+          basisRiskRatingFields = Polymer.dom(assessmentsList.root).querySelectorAll('.row-h.item-container');
+          expect(basisRiskRatingFields.length).to.equal(initialRowsNr + 1);
+
+          // validation method on new empty row should not rigger errors, but it should not pass
+          let valid = assessmentsList.validate();
+          expect(valid).to.equal(false);
+
+          let newRowPrevAdded = basisRiskRatingFields[basisRiskRatingFields.length - 1];
+          let assessmentType = newRowPrevAdded.querySelector('[label="Assessment Type"]');
+          let dateOfA = newRowPrevAdded.querySelector('[label="Date of Assessment"]');
+          let report = newRowPrevAdded.querySelector('[label="Report"]');
+          // check invalid state
+          expect(assessmentType.invalid).to.equal(false);
+          expect(dateOfA.invalid).to.equal(false);
+          expect(report.invalid).to.equal(false);
+
+          // trigger validations messages to show
+          let currentDate = new Date();
+          let dateStr = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate();
+          dateOfA.set('value', dateStr);
+          Polymer.dom.flush();
+          expect(assessmentType.invalid).to.equal(true);
+          expect(dateOfA.invalid).to.equal(false);
+          expect(report.invalid).to.equal(true);
+          // check error messages
+          expect(assessmentType.errorMessage).to.equal('Assessment Type is required');
+          assert.isAtLeast(['This field is required!',
+            'Date cannot be in the future!'].indexOf(dateOfA.errorMessage), 0);
+          expect(report.errorMessage).to.equal('Please select the report file');
+
+          done();
+        });
+      });
+
+      test('Partner contacts rendered data', function(done) {
+        flush(function() {
+          let staff = Polymer.dom(partnerDetails.root).querySelector('#staffMembersList');
+          let staffListRows = Polymer.dom(staff.root).querySelectorAll('.row-h.item-container');
+          expect(staff.is).to.equal('staff-members');
+          expect(staffListRows.length).to.equal(2);
+
+          let position = staffListRows[0].querySelector('[label="Position"]');
+          let firstName = staffListRows[0].querySelector('[label="First Name"]');
+          let lastName = staffListRows[0].querySelector('[label="Last Name"]');
+          let phone = staffListRows[0].querySelector('[label="Phone number"]');
+          let email = staffListRows[0].querySelector('[label="E-mail address"]');
+          let active = staffListRows[0].querySelector('etools-checkable-input');
+
+          expect(position.value).to.equal('title');
+          expect(firstName.value).to.equal('Ghida Anani');
+          expect(lastName.value).to.equal('Ghida Anani');
+          expect(phone.value).to.equal('');
+          expect(email.value).to.equal('ghida.anani@abaadmena.org');
+          expect(active.checked).to.equal(true);
+
+          done();
+        });
+      });
+
+      test('Partner contacts: delete btn should be hidden for saved staff members', function(done) {
+        flush(function() {
+          let staff = Polymer.dom(partnerDetails.root).querySelector('#staffMembersList');
+          let staffListRows = Polymer.dom(staff.root).querySelectorAll('.row-h.item-container');
+          // cannot delete a saved staff member
+          // delete btn should be hidden
+          staffListRows.forEach(function(row) {
+            let deleteBtn = row.querySelector('.actions paper-icon-button');
+            expect(PmpTestsHelper.elementIsVisible(deleteBtn)).to.equal(false);
+          });
+
+          done();
+        });
+      });
+
+      test('Partner contacts: add new staff members and check validations', function(done) {
+        flush(function() {
+          let staff = Polymer.dom(partnerDetails.root).querySelector('#staffMembersList');
+          let staffListRows = Polymer.dom(staff.root).querySelectorAll('.row-h.item-container');
+          let initialStaffMembersNr = staffListRows.length;
+
+          let addNewStaffMemberBtn = Polymer.dom(staff.root).querySelector('paper-fab');
+          MockInteractions.tap(addNewStaffMemberBtn);
+
+          Polymer.dom.flush();
+
+          staffListRows = Polymer.dom(staff.root).querySelectorAll('.row-h.item-container');
+          expect(staffListRows.length).to.equal(initialStaffMembersNr + 1);
+
+          // new staff member row should have delete btn visible
+          let deleteBtn = staffListRows[staffListRows.length - 1].querySelector('.actions paper-icon-button');
+          expect(PmpTestsHelper.elementIsVisible(deleteBtn)).to.equal(true);
+
+          // add data and validate
 
           done();
         });

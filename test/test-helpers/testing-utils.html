@@ -34,6 +34,7 @@
       let contentRect = element.getBoundingClientRect();
       let computedStyle = window.getComputedStyle(element);
       return computedStyle.display !== 'none' &&
+          computedStyle.visibility !== 'hidden' &&
           contentRect.width > 0 &&
           contentRect.height > 0;
     },
