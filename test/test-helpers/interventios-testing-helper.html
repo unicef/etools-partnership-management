@@ -1,0 +1,54 @@
+<link rel="import" href="interventions-mockup-data.html">
+<link rel="import" href="users-and-permissions-data-mockup.html">
+<script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
+
+<script>
+  var InterventionsListHelper = function() {
+    this.interventionsList = fixture('interventionsListFixture');
+    var queryStub;
+
+    Polymer.dom.flush();
+
+    this.defaultRoute = {
+      prefix: '',
+      path: 'interventions/list',
+      '__queryParams': {size: 10, sort :'partner_name.asc'}
+    };
+  }
+
+  InterventionsListHelper.prototype.setupGetInterventionsList = function() {
+    this.server  = PmpTestsHelper.initializeFakeServer();
+    let responseHeaders = {
+      json: { 'Content-Type': 'application/json' }
+    };
+    this.server.respondWith('GET', '/api/v2/interventions/',
+      [200, responseHeaders.json, JSON.stringify(interventionsListData)]
+    );
+    this.server.respond();
+  }
+
+  InterventionsListHelper.prototype.intializeElementUnderTest = function() {
+    PmpTestsHelper.makeDebounceSynchronous(this.interventionsList);
+    PmpTestsHelper.makeAsyncSynchronous(this.interventionsList);
+    this.interventionsList.set('permissions', appUserPermissions);
+    this.interventionsList.set('urlParams', this.defaultRoute.__queryParams);
+    this.interventionsList.set('active', true);
+    this.interventionsList.interventionsListData = this.interventionsList.$$('#interventions');
+
+    // redux data
+    this.interventionsList.interventionStatuses = [];
+    this.interventionsList.unicefUsersData = [];
+    this.interventionsList.documentTypes = [];
+    this.interventionsList.cpOutputs = [];
+    this.interventionsList.sections = [];
+    this.interventionsList.offices = [];
+  }
+
+  InterventionsListHelper.prototype.stubQuery = function() {
+    let self = this;
+    // console.log(this.interventionsList.interventionsListData);
+    this.queryStub = sinon.stub(this.interventionsList.interventionsListData, 'query', function() {
+      self.interventionsList.filteredInterventions = interventionsListData;
+    });
+  }
+</script>

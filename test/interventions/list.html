@@ -10,108 +10,86 @@
   <script src="../../bower_components/web-component-tester/browser.js"></script>
   <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
-  <!-- Import test helpers data -->
-  <link rel="import" href="../test-helpers/tests-helper.html">
-  <link rel="import" href="../test-helpers/interventions-mockup-data.html">
+  <link rel="import" href="../test-helpers/testing-utils.html">
+  <link rel="import" href="../test-helpers/interventios-testing-helper.html">
 
   <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
 
-  <!-- Import the element to test -->
   <link rel="import" href="../../pmp/app-elements/interventions/interventions-list.html">
-
-
 </head>
 <body>
-<!-- fixtures go here -->
-  <test-fixture id="interventions-list">
+  <test-fixture id="interventionsListFixture">
     <template>
       <interventions-list></interventions-list>
     </template>
   </test-fixture>
-<script>
-  let defaultRoute = {
-    prefix: '',
-    path: 'interventions/list',
-    '__queryParams': {size: 10, sort :'partner_name.asc'}
-  };
 
-  // disable request data caching functionality
-  window.EtoolsRequestCacheDisabled = true;
+  <script>
+    suite('Interventions list tests', function() {
+      var helper;
 
-  // setup fake server to mock requests then test interventions pages
-  suite('Interventions list tests', function() {
-    let server;
-    let responseHeaders = {
-      json: { 'Content-Type': 'application/json' }
-    };
+      setup(function(done) {
+        helper = new InterventionsListHelper();
+        helper.setupGetInterventionsList();
+        helper.intializeElementUnderTest();
+        helper.stubQuery();
 
-    setup(function() {
-      server = sinon.fakeServer.create();
-      server.autoRespond = true;
-      server.respondImmediately = true;
-    });
+        done();
+      });
 
-    teardown(function() {
-      server.restore();
-    });
+      teardown(function() {
+        helper.server.restore();
+        helper.interventionsList.interventionsListData.query.restore();
+      });
 
-    let interventionsList;
-    setup(function() {
-      interventionsList = fixture('interventions-list');
-      interventionsList.set('urlParams', defaultRoute.__queryParams);
-    });
+      test('interventions-list element has been created', function() {
+        assert.equal(helper.interventionsList.is , 'interventions-list');
+      });
 
-    test('Test interventions list data', function(done) {
-      // activate interventions list page
-      interventionsList.set('active', true);
-
-      // fake interventions request
-      server.respondWith('GET', '/api/v2/interventions/', [
-        200, responseHeaders.json,
-        JSON.stringify(interventionsListData)
-      ]);
-      server.respond();
-      console.log('list data:', interventionsListData);
-      flush(function() {
-          // use flush to make sure list rows were stamped before checking them
-          flush(function() {
-          let interventionsListDataEl = interventionsList.$$('#interventions');
-
-          expect(interventionsListDataEl.is).to.equal('interventions-list-data');
-          // /api/v2/interventions/ response should match interventionsListData
-          expect(JSON.stringify(interventionsListData)).to.equal(JSON.stringify(interventionsListDataEl.data));
-          interventionsListDataEl.fire(interventionsListDataEl.dataLoadedEventName);
-          expect(interventionsList.requiredDataLoaded).to.equal(true);
-
-          // check default query string to match default urlParams
-          let defaultQueryString = Object.keys(interventionsList.urlParams).map(function(k) {
-            return k + '=' + interventionsList.urlParams[k];
-          }).join('&');
-          expect(interventionsList._buildQueryString()).to.equal(defaultQueryString);
-
-          let dataListEl = interventionsList.$$('#list');
-          expect(dataListEl.is).to.equal('paper-material');
-          expect(dataListEl.classList.contains('hidden')).to.equal(true);
-
-          // assign some data to the list
-          interventionsList.set('filteredInterventions', interventionsListDataEl.data);
-          expect(dataListEl.classList.contains('hidden')).to.equal(false);
-
-          console.log(dataListEl.is);
-          let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
-          console.log('count:', rowsDisplayed.length);
-          // expect(rowsDisplayed.length).to.equal(interventionsList.filteredInterventions.length);
+      test('interventions items are displayed on UI', function(done) {
+        flush(function() {
+          let rows = helper.interventionsList.$$('#list').querySelectorAll('etools-data-table-row');
+          expect(rows.length).to.equal(helper.interventionsList.filteredInterventions.length);
           done();
         });
-
       });
+
+      suite('when filtering', function() {
+        var filterPaperMenu, ddContent;
+        setup(function(done) {
+          filterPaperMenu = helper.interventionsList.$$('#filterMenu');
+          ddContent = Polymer.dom(filterPaperMenu).querySelector('.dropdown-content');
+          done();
+        });
+        test('filter options are available', function(done) {
+          flush(function() {
+            PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
+              // expect(PmpTestsHelper.elementIsVisible(ddContent)).to.be.equal(true);
+              expect(helper.interventionsList.availableListFilterOptions.length).to.be.greaterThan(0);
+              done();
+            });
+
+            })
+        });
+
+        test('can filter by an option', function(done) {
+          flush(function() {
+            PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
+              var firstItem = ddContent.querySelector('paper-item');
+              let initialAvFiltersLength = helper.interventionsList.availableListFilterOptions.length;
+              PmpTestsHelper.PaperMenuButton.runAfterClose(filterPaperMenu, firstItem, function() {
+                expect(helper.interventionsList.selectedFilters.length).to.be.greaterThan(0);
+                expect(helper.interventionsList.availableListFilterOptions.length).to.be.equal(initialAvFiltersLength - 1);
+                done();
+              });
+            });
+          })
+        });
+      });
+
+
     });
 
-
-  });
-  // disable request data caching functionality
-  window.EtoolsRequestCacheDisabled = true;
-
-</script>
+  </script>
 </body>
 </html>
