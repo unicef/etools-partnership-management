@@ -13,12 +13,14 @@
     <!-- Import test helpers data -->
     <link rel="import" href="test-helpers/tests-helper.html">
     <link rel="import" href="test-helpers/users-and-permissions-data-mockup.html">
-    <link rel="import" href="test-helpers/interventions-tests-mockup-data.html">
+    <link rel="import" href="test-helpers/interventions-mockup-data.html">
 
     <link rel="import" href="../pmp/app-config/app-dexie-db-config.html">
 
     <!-- Import the element to test -->
     <link rel="import" href="../pmp/pages/page-interventions.html">
+    <link rel="import" href="../pmp/app-elements/interventions/interventions-list.html">
+
 
   </head>
   <body>
@@ -28,17 +30,23 @@
         <page-interventions></page-interventions>
       </template>
     </test-fixture>
+
+    <test-fixture id="interventions-list">
+      <template>
+        <interventions-list></interventions-list>
+      </template>
+    </test-fixture>
   <script>
     let defaultRoute = {
       prefix: '',
       path: 'interventions/list',
-      '__queryParams': {size: 10, sort :'name.asc'}
+      '__queryParams': {size: 10, sort :'partner_name.asc'}
     };
 
     // disable request data caching functionality
     window.EtoolsRequestCacheDisabled = true;
 
-    // setup fake server to mock requests then test partners pages
+    // setup fake server to mock requests then test interventions pages
     suite('App Interventions pages tests', function() {
       let server;
       let responseHeaders = {
@@ -78,21 +86,75 @@
             expect(interventions._pageEquals(interventions.interventionPage, 'list')).to.equal(true);
             expect(interventions.intervListActive).to.equal(true);
             expect(interventions.intervDetailsActive).to.equal(false);
-            Polymer.dom.flush();
             let titleEl = Polymer.dom(interventions.root).querySelector('h1[main-title]');
             let titleText = String(Polymer.dom(titleEl).querySelector('span:not([hidden])').innerHTML);
             expect(titleText).to.equal('PD/SSFAs');
 
-            Polymer.dom.flush();
-            let interventionsListElement = interventions.$$('#list');
-            console.log(interventionsListElement);
-            expect(interventionsListElement.is).to.equal('interventions-list');
+            // let interventionsListElement = interventions.$$('#intList');
+            // expect(interventionsListElement.is).to.equal('interventions-list');
             done();
           });
         });
       });
-    });
 
+      suite('Interventions list elements tests', function() {
+        let interventionsList;
+        setup(function() {
+          interventionsList = fixture('interventions-list');
+          interventionsList.set('urlParams', defaultRoute.__queryParams);
+        });
+
+        test('Test interventions list data', function(done) {
+          // activate interventions list page
+          interventionsList.set('active', true);
+
+          // fake interventions request
+          server.respondWith('GET', '/api/v2/interventions/', [
+            200, responseHeaders.json,
+            JSON.stringify(interventionsListData)
+          ]);
+          server.respond();
+          console.log('list data:', interventionsListData);
+          flush(function() {
+              // use flush to make sure list rows were stamped before checking them
+              flush(function() {
+              let interventionsListDataEl = interventionsList.$$('#interventions');
+
+              expect(interventionsListDataEl.is).to.equal('interventions-list-data');
+              // /api/v2/interventions/ response should match interventionsListData
+              expect(JSON.stringify(interventionsListData)).to.equal(JSON.stringify(interventionsListDataEl.data));
+              interventionsListDataEl.fire(interventionsListDataEl.dataLoadedEventName);
+              expect(interventionsList.requiredDataLoaded).to.equal(true);
+
+              // check default query string to match default urlParams
+              let defaultQueryString = Object.keys(interventionsList.urlParams).map(function(k) {
+                return k + '=' + interventionsList.urlParams[k];
+              }).join('&');
+              expect(interventionsList._buildQueryString()).to.equal(defaultQueryString);
+
+              let dataListEl = interventionsList.$$('#list');
+              expect(dataListEl.is).to.equal('paper-material');
+              expect(dataListEl.classList.contains('hidden')).to.equal(true);
+
+              // assign some data to the list
+              interventionsList.set('filteredInterventions', interventionsListDataEl.data);
+              expect(dataListEl.classList.contains('hidden')).to.equal(false);
+
+              console.log(dataListEl.is);
+              let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
+              console.log('count:', rowsDisplayed.length);
+              // expect(rowsDisplayed.length).to.equal(interventionsList.filteredInterventions.length);
+              done();
+            });
+
+          });
+        });
+
+      });
+
+
+
+    });
     // disable request data caching functionality
     window.EtoolsRequestCacheDisabled = true;
 
