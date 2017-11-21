@@ -10,6 +10,8 @@
   <script src="../../bower_components/web-component-tester/browser.js"></script>
   <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
   <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
   <link rel="import" href="../test-helpers/testing-utils.html">
   <link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html">
@@ -64,6 +66,43 @@
             let titleText = String(PmpTestsHelper.domQuery(titleEl, 'span:not([hidden])').innerHTML);
             expect(titleText).to.equal('Partners');
             done();
+          });
+        });
+
+        test('Test add new partner: add dialog, vendor field validation, create-partner event data', function(done) {
+          flush(function() {
+            let newPartnerEl = partners.newPartnerDialog;
+            expect(newPartnerEl.is).to.equal('new-partner-dialog');
+
+            let newPartnerDialog = PmpTestsHelper.shadowDomQuery(newPartnerEl, '#newPartnerDialog');
+            expect(newPartnerDialog.is).to.equal('etools-dialog');
+            expect(newPartnerDialog.dialogTitle).to.equal('New Partner');
+
+            let vendorEl = newPartnerDialog.querySelector('#vendorNo');
+
+            let addNewPartnerBtn = PmpTestsHelper.shadowDomQuery(partners, '#addNewPartner');
+            MockInteractions.tap(addNewPartnerBtn);
+
+            expect(newPartnerDialog.opened).to.equal(true);
+            expect(vendorEl.invalid).to.equal(false);
+            expect(vendorEl.errorMessage).to.equal('Vendor# is required');
+
+            let dialogSaveBtn = PmpTestsHelper.shadowDomQuery(newPartnerDialog, 'paper-button[dialog-confirm]');
+            expect(dialogSaveBtn.hasAttribute('disabled')).to.equal(true);
+
+            vendorEl.validate();
+            expect(vendorEl.invalid).to.equal(true);
+
+            let vendorMock = '345345';
+            vendorEl.set('value', vendorMock);
+            expect(vendorEl.invalid).to.equal(false);
+            expect(dialogSaveBtn.hasAttribute('disabled')).to.equal(false);
+
+            partners.addEventListener('create-partner', function(e) {
+              expect(e.detail.vendor).to.equal(vendorMock);
+              done();
+            });
+            MockInteractions.tap(dialogSaveBtn);
           });
         });
 
