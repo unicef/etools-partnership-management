@@ -1,0 +1,33 @@
+<link rel="import" href="../../test-helpers/pmp-test-page.html">
+<script>
+  'use strict';
+
+  class PartnersPage extends PmpTestPage {
+    constructor(element) {
+      let pageElementsMap = [
+        {
+          name: 'pageTitle',
+          selector: 'h1[main-title]'
+        },
+        {
+          name: 'exportBtn',
+          selector: '#exportBtn'
+        },
+        {
+          name: 'addNewPartnerBtn',
+          selector: '#addNewPartner'
+        },
+        {
+          name: 'tabs',
+          selector: '#partnerTabs'
+        },
+        {
+          name: 'partnersPages',
+          selector: '#partnersPages'
+        }
+      ];
+      super(element, pageElementsMap);
+
+    }
+  }
+</script>

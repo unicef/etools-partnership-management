@@ -1,0 +1,33 @@
+<script>
+  'use strict';
+
+  class PmpTestPage {
+
+    constructor(element, elementsMap) {
+      this.el = element;
+      this.mainPageElements = {};
+      if(elementsMap instanceof Array) {
+        elementsMap.forEach((elMap) => {
+          this.mainPageElements[elMap.name] = this.shadowDomQuery(this.el, elMap.selector);
+        });
+      }
+    }
+
+    updateProperties(properties) {
+      for(let key in properties) {
+        this.el.set(key, properties[key])
+      }
+    }
+
+    shadowDomQuery(baseElement, selector, all) {
+      let baseElShadowDom = Polymer.dom(baseElement.root);
+      return all ? baseElShadowDom.querySelectorAll(selector) : baseElShadowDom.querySelector(selector);
+    }
+
+    domQuery(baseElement, selector, all) {
+      let baseElDom = Polymer.dom(baseElement);
+      return all ? baseElDom.querySelectorAll(selector) : baseElDom.querySelector(selector);
+    }
+
+  }
+</script>
