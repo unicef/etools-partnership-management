@@ -25,7 +25,7 @@
   AgreementListHelper.prototype.initializeElementUnderTest = function() {
     PmpTestsHelper.makeDebounceSynchronous(this.agreementList);
     PmpTestsHelper.makeAsyncSynchronous(this.agreementList);
-    this.agreementList.set('permissions', appUserPermissions);
+    this.agreementList.set('permissions', PmpTests.Login.UserPermissions);
     this.agreementList.set('urlParams', this.defaultRoute.__queryParams);
     this.agreementList.set('active', true);
     this.agreementList.agreementListData = this.agreementList.$$('#agreements');

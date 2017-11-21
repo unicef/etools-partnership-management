@@ -12,7 +12,7 @@
 
   <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
   <link rel="import" href="../test-helpers/testing-utils.html">
-  <link rel="import" href="../test-helpers/partner-tests-mockup-data.html">
+  <link rel="import" href="mockup-data/partner-tests-mockup-data.html">
 
   <!-- Import the element to test -->
   <link rel="import" href="../../pmp/app-elements/partners/partners-list.html">
@@ -27,72 +27,75 @@
   </test-fixture>
 
   <script>
+    (function() {
+      'use strict';
 
-    suite('Partners list tests with fake server', function() {
-      let server;
-      let partnersList;
+      suite('Partners list tests with fake server', function() {
+        let server;
+        let partnersList;
 
-      let defaultRoute = {
-        prefix: '',
-        path: 'partners/list',
-        '__queryParams': {size: 10, sort :'name.asc'}
-      };
+        let defaultRoute = {
+          prefix: '',
+          path: 'partners/list',
+          '__queryParams': {size: 10, sort :'name.asc'}
+        };
 
-      setup(function() {
-        server = PmpTestsHelper.initializeFakeServer();
-        partnersList = fixture('partners-list');
-        partnersList.set('urlParams', defaultRoute.__queryParams);
-      });
+        setup(function() {
+          server = PmpTestsHelper.initializeFakeServer();
+          partnersList = fixture('partners-list');
+          partnersList.set('urlParams', defaultRoute.__queryParams);
+        });
 
-      teardown(function() {
-        server.restore();
-      });
+        teardown(function() {
+          server.restore();
+        });
 
-      test('Partners list', function(done) {
-        // activate partners list page
-        partnersList.set('active', true);
+        test('Partners list', function(done) {
+          // activate partners list page
+          partnersList.set('active', true);
 
-        // fake partners request
-        server.respondWith('GET', '/api/v2/partners/', [
-          200, PmpTestsHelper.fakeServerResponseHeaders.json,
-          JSON.stringify(PmpTests.Partners.MockupData.partnersListData)
-        ]);
-        server.respond();
+          // fake partners request
+          server.respondWith('GET', '/api/v2/partners/', [
+            200, PmpTestsHelper.fakeServerResponseHeaders.json,
+            JSON.stringify(PmpTests.Partners.MockupData.partnersListData)
+          ]);
+          server.respond();
 
-        flush(function() {
-          // Polymer.dom(partnersList.root).querySelector('partners-list-data'
-          let partnersListDataEl = partnersList.$$('#partners');
-          expect(partnersListDataEl.is).to.equal('partners-list-data');
-          // /api/v2/partners/ response should match partnersListData
-          expect(JSON.stringify(PmpTests.Partners.MockupData.partnersListData))
-              .to.equal(JSON.stringify(partnersListDataEl.data));
-          partnersListDataEl.fire(partnersListDataEl.dataLoadedEventName);
-          expect(partnersList.requiredDataLoaded).to.equal(true);
-
-          // check default query string to match default urlParams
-          let defaultQueryString = Object.keys(partnersList.urlParams).map(function(k) {
-            return k + '=' + partnersList.urlParams[k];
-          }).join('&');
-          expect(partnersList._buildQueryString()).to.equal(defaultQueryString);
-
-          let dataListEl = partnersList.$$('#list');
-          expect(dataListEl.is).to.equal('paper-material');
-          expect(dataListEl.classList.contains('hidden')).to.equal(true);
-
-          // assign some data to the list
-          partnersList.set('filteredPartners', partnersListDataEl.data);
-          expect(dataListEl.classList.contains('hidden')).to.equal(false);
-
-          // use flush to make sure list rows were stamped before checking them
           flush(function() {
-            let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
-            expect(rowsDisplayed.length).to.equal(partnersList.filteredPartners.length);
-            done();
-          });
+            // Polymer.dom(partnersList.root).querySelector('partners-list-data'
+            let partnersListDataEl = partnersList.$$('#partners');
+            expect(partnersListDataEl.is).to.equal('partners-list-data');
+            // /api/v2/partners/ response should match partnersListData
+            expect(JSON.stringify(PmpTests.Partners.MockupData.partnersListData))
+                .to.equal(JSON.stringify(partnersListDataEl.data));
+            partnersListDataEl.fire(partnersListDataEl.dataLoadedEventName);
+            expect(partnersList.requiredDataLoaded).to.equal(true);
 
+            // check default query string to match default urlParams
+            let defaultQueryString = Object.keys(partnersList.urlParams).map(function(k) {
+              return k + '=' + partnersList.urlParams[k];
+            }).join('&');
+            expect(partnersList._buildQueryString()).to.equal(defaultQueryString);
+
+            let dataListEl = partnersList.$$('#list');
+            expect(dataListEl.is).to.equal('paper-material');
+            expect(dataListEl.classList.contains('hidden')).to.equal(true);
+
+            // assign some data to the list
+            partnersList.set('filteredPartners', partnersListDataEl.data);
+            expect(dataListEl.classList.contains('hidden')).to.equal(false);
+
+            // use flush to make sure list rows were stamped before checking them
+            flush(function() {
+              let rowsDisplayed = dataListEl.querySelectorAll('etools-data-table-row');
+              expect(rowsDisplayed.length).to.equal(partnersList.filteredPartners.length);
+              done();
+            });
+
+          });
         });
       });
-    });
+    })();
   </script>
 
 </body>
