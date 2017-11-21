@@ -187,9 +187,12 @@
           if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData)) {
             return;
           }
+          console.log('here 1');
           let self = this;
           this.debounce('load-reports-data', function() {
+            console.log('here 2');
             let params = self._prepareReqParamsObj(interventionId);
+            console.log('here 3');
 
             self.fire('global-loading', {
               message: 'Loading reports data...',
@@ -202,10 +205,12 @@
               // abort previous req and then fire a new one with updated params
               self.abortActiveRequest(activeReportsReq);
             }
-
+            console.log(self.fireRequest);
             self.fireRequest('reports', {}, {params: params}, this._endpointName)
                 .then(function(response) {
+                  console.log('here 999');
                   if (response) {
+                    console.log('bla');
                     self.set('reports', response.results);
                     self.updatePaginatorTotalResults(response);
                   }

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Page Reports</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+    <!-- <link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html"> -->
+    <!-- <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html"> -->
+    <link rel="import" href="../test-helpers/testing-utils.html">
+    <link rel="import" href="mockup-data/reports-mockup-data.html">
+    <link rel="import" href="../../pmp/pages/page-reports.html">
+  </head>
+  <body>
+    <test-fixture id="pageReportsFixture">
+      <template>
+        <page-reports></page-reports>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('page-reports tests', function() {
+        var pageReports;
+        setup(function(done) {
+          pageReports = fixture('pageReportsFixture');
+          pageReports.listActive = true;
+
+          pageReports.route = {prefix: '', path: 'reports/list', '__queryParams': {page:1, page_size: 10} };
+
+          done();
+        });
+      test('can instantiate page-reports element', function() {
+        assert.equal(pageReports.is, 'page-reports');
+      });
+      test('element is rendered', function(done) {
+        flush(function() {
+          assert.equal(PmpTestsHelper.elementIsVisible(pageReports), true);
+
+          done();
+        });
+      });
+      test('when listActive is true, only the reports-list elem is visible', function(done) {
+        flush(function() {
+          Polymer.Base.async(function() {
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), true);
+            assert.equal(pageReports.$$('#summary'), null);
+            assert.equal(pageReports.$$('#reportDetails'), null);
+            done();
+          }, 1000);
+        });
+      });
+      test('when listActive is false and active tab is summary, only the report-summary elem is visible', function(done) {
+        flush(function() {
+          pageReports.route = {prefix: '', path: 'reports/30/summary', '__queryParams': {} };
+          pageReports.listActive = false;
+          pageReports.fireRequest = function() {
+            return new Promise(function(resolve, reject){
+            resolve({results: PmpTests.ReportsMockupData.report});
+          });
+          };
+          pageReports.tabsActive = true;
+          pageReports.activeTab = 'summary';
+
+          Polymer.Base.async(function() {
+          //  assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), false);
+          console.log(pageReports.$$('#summary'));
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#summary')), true);
+         //   assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#reportDetails')), false);
+            done();
+          }, 1000);
+        });
+      });
+      test('when listActive is false and active tab is progress, only the report-progress elem is visible', function(done) {
+        flush(function() {
+          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
+          pageReports.listActive = false;
+          pageReports.fireRequest = function() {
+            return new Promise(function(resolve, reject){
+            resolve({results: PmpTests.ReportsMockupData.report});
+          });
+          };
+          pageReports.tabsActive = true;
+          pageReports.activeTab = 'progress';
+
+
+          Polymer.Base.async(function() {
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), false);
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#summary')), false);
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#reportDetails')), true);
+           // done();
+          }, 1000);
+        });
+      });
+
+
+    });
+    </script>
+  </body>
+</html>
+

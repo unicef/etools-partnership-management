@@ -37,7 +37,7 @@
         suite('on new', function(){
           setup(function(){
             agrDetails.isNewAgreement = true;
-            agrDetails.agreementTypes = agreementTypes;
+            agrDetails.agreementTypes = PmpTests.Agreements.agreementTypes;
             agrDetails.agreement = PmpTestsHelper.deepCloneObject(EtoolsPmpApp.Behaviors.AgreementModels.properties.newAgreementModel.value);
           });
 
@@ -115,8 +115,8 @@
           let agrMockData;
           setup(function(){
             agrDetails.isNewAgreement = false;
-            agrDetails.agreementTypes = agreementTypes;
-            agrMockData = PmpTestsHelper.deepCloneObject(agreementMock);
+            agrDetails.agreementTypes = PmpTests.Agreements.agreementTypes;
+            agrMockData = PmpTestsHelper.deepCloneObject(PmpTests.Agreements.agreementMock);
           });
 
           test('element is rendered', function(done) {

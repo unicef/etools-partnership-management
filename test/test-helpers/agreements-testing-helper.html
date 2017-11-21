@@ -1,5 +1,5 @@
 <link rel="import" href="users-and-permissions-data-mockup.html">
-<link rel="import" href="agreement-data-mockup.html">
+<link rel="import" href="../agreements/mockup-data/agreement-data-mockup.html">
 <script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
 
 <script>
@@ -19,7 +19,7 @@
             json: { 'Content-Type': 'application/json' }
             };
     this.server.respondWith('GET', '/api/v2/agreements/',
-      [200, responseHeaders.json, JSON.stringify(agrListMockup)]);
+      [200, responseHeaders.json, JSON.stringify(PmpTests.Agreements.listMockupData)]);
     this.server.respond();
   }
   AgreementListHelper.prototype.initializeElementUnderTest = function() {
@@ -38,7 +38,7 @@
   AgreementListHelper.prototype.stubQuery = function() {
     let _this = this;
     this.queryStub = sinon.stub(this.agreementList.agreementListData, 'query', function() {
-              _this.agreementList.filteredAgreements = agrListMockup;
+              _this.agreementList.filteredAgreements = PmpTests.Agreements.listMockupData;
             });
   }
 

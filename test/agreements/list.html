@@ -44,7 +44,7 @@
         test('can instantiate agreements-list element', function() {
           assert.equal(helper.agreementList.is, 'agreements-list');
         });
-        test('agreement items are displayed on UI', function(done) {
+        test('agreement list items are displayed', function(done) {
           flush(function() {
             let rows = helper.agreementList.$$('#list').querySelectorAll('etools-data-table-row');
             expect(rows.length).to.equal(helper.agreementList.filteredAgreements.length);
