@@ -48,7 +48,7 @@
       if (!this.endpointName) {
         console.warn('Please specify an endpointName property');
       } else {
-        this.options.endpoint = this.getEndpoint(this.endpointName);
+        this.set('options.endpoint', this.getEndpoint(this.endpointName));
         this._requestListData();
       }
     },

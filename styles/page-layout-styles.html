@@ -7,7 +7,8 @@
 <dom-module id="page-layout-styles">
   <template>
     <style>
-      @media only screen and (max-width: 1366px)  {
+      /* HD res: 1360/1366 x 768 */
+      @media only screen and (max-width: 1359px)  {
         :host {
           --etools-status-divider-styles: {
             border-left: none;
@@ -129,11 +130,11 @@
       }
 
       .page-top-content paper-tabs {
-        --paper-tabs-selection-bar-color: var(--secondary-color);
+        --paper-tabs-selection-bar-color: var(--primary-color);
       }
 
       .page-top-content paper-tab {
-        --paper-tab-ink: var(--secondary-color);
+        --paper-tab-ink: var(--primary-color);
         padding: 0 24px;
       }
 
@@ -143,7 +144,7 @@
       }
 
       .page-top-content paper-tab.iron-selected .tab-content {
-        color: var(--secondary-color);
+        color: var(--primary-color);
       }
 
       .content-section + .content-section,

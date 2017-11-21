@@ -18,7 +18,6 @@
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
-<link rel="import" href="../../app-behaviors/date-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
@@ -64,7 +63,6 @@
         padding: 24px;
       }
     </style>
-    <required-and-not-future-date-validator></required-and-not-future-date-validator>
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
       <template is="dom-repeat" id="amendmentsRepeater" items="{{dataItems}}">
         <div class="row-h item-container">
@@ -102,16 +100,20 @@
                 </template>
               </div>
               <div class="col col-3">
+                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"
+                                                        required
+                                                        error-message="{{item.errorMessage}}">
+                </required-and-not-future-date-validator>
                 <!-- Signed Date -->
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
                                    value="{{item.signed_date}}"
                                    readonly$="[[_isReadonlyAmendment(item.id)]]"
                                    required
-                                   validator="required-and-not-future-date-validator"
+                                   validator="signedDate_[[index]]_validator"
                                    error-message="Please select signed date"
                                    auto-validate="[[!_isReadonlyAmendment(item.id)]]"
-                                   error-message$="[[_getSignedDateErrorMessage(item.signed_date)]]"
+                                   error-message$="[[item.errorMessage]]"
                                    no-init show-clear-btn>
                 </etools-date-input>
               </div>
@@ -170,7 +172,6 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.RepeatableDataSets,
           etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.Dropdown
         ],
 
@@ -210,11 +211,6 @@
               'Please change all necessary fields before hitting save.';
           this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
               this._addAmendmentConfirmationCallback.bind(this), dialog);
-        },
-        _getSignedDateErrorMessage: function(signedDate) {
-          return this.isFutureDate(signedDate)
-              ? 'Signed Date can not be in the future'
-              : 'Please select Signed Date';
         },
         _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
@@ -327,7 +323,6 @@
 
           let signedDateEl = this.$$('#signedDate_' + index);
           if (signedDateEl) {
-            signedDateEl.errorMessage = this._getSignedDateErrorMessage(amendment.signed_date);
             if (!signedDateEl.validate()) {
               isValid = false;
             }

@@ -7,9 +7,21 @@
       globalMessage: {
         type: String,
         value: 'An error occurred on data save!'
+      },
+      httpStatus413Msg: {
+        type: String,
+        value: 'The uploaded file is too large!'
       }
     },
-
+    tryGetResponseError: function(response) {
+      if (response.status >= 500) {
+        return this.globalMessage;
+      }
+      if (response.status === 413) {
+        return this.httpStatus413Msg;
+      }
+      return response.response || this.globalMessage;
+    },
     _getErrorsArray: function(errors, prepareForToastMsg) {
       let errorsArray = [];
       if (!errors) {
@@ -24,7 +36,7 @@
         errorsArray.push(errors);
         return errorsArray;
       }
-      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string' ) {
+      if (typeof errors === 'object' && errors.error && typeof errors.error === 'string') {
         errorsArray.push(errors.error);
         return errorsArray;
       }
@@ -66,7 +78,7 @@
     _isArrayOfStrings: function(arr) {
       let allStrings = true;
       let i;
-      for(i = 0; i < arr.length; i++) {
+      for (i = 0; i < arr.length; i++) {
         if (typeof arr[i] !== 'string') {
           allStrings = false;
           break;
@@ -83,12 +95,9 @@
     },
 
     parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
-      let errorsString;
-      if (error.status >= 500) {
-        errorsString = this.globalMessage;
-      } else {
-        errorsString = this.formatServerErrorAsText(error.response);
-      }
+      let errorResponse = this.tryGetResponseError(error);
+      let errorsString = this.formatServerErrorAsText(errorResponse);
+
       this.showErrorAsToastMsg(errorsString, source);
     },
 

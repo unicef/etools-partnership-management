@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
@@ -81,6 +82,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <etools-piwik-analytics page="[[subroute.path]]"
+                            user="[[user]]"
+                            toast="[[currentToastMessage]]"></etools-piwik-analytics>
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
@@ -199,6 +203,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog'
+      },
+
+      toastFired: function() {
+        this.set('toast', event.detail.text)
       },
 
       _onForbidden: function(event) {
