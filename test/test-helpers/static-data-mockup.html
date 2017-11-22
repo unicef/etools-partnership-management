@@ -1,0 +1,317 @@
+<script>
+const sections = [{
+      "id": "185",
+      "name": "Humanitarian"
+  }, {
+      "id": "37",
+      "name": "Adolescent & Youth"
+  }, {
+      "id": "91",
+      "name": "Social Protection"
+  }, {
+      "id": "6",
+      "name": "PME"
+  }, {
+      "id": "7",
+      "name": "Child Protection"
+  }, {
+      "id": "10",
+      "name": "Education"
+  }, {
+      "id": "17",
+      "name": "Health and Nutrition"
+  }, {
+      "id": "19",
+      "name": "Operations"
+  }, {
+      "id": "84",
+      "name": "Donor Relations"
+  }, {
+      "id": "85",
+      "name": "MENA"
+  }, {
+      "id": "54",
+      "name": "Deputy Rep. Office"
+  }, {
+      "id": "86",
+      "name": "Water Sanitation & Hygiene"
+  }, {
+      "id": "69",
+      "name": "Social Policy"
+  }];
+const offices = [{
+      "id": 254,
+      "name": "Ruwaished",
+      "zonal_chief": null
+  }, {
+      "id": 91,
+      "name": "Amman",
+      "zonal_chief": null
+  }];
+const users = [{
+      "user_id": "17361",
+      "full_name": "Abdallah Yakhola",
+      "username": "ayakhola@unicef.org",
+      "email": "ayakhola@unicef.org"
+  }, {
+      "user_id": "1687",
+      "full_name": "Abdul-Kabir Yahaya",
+      "username": "ayahaya@unicef.org",
+      "email": "ayahaya@unicef.org"
+  }, {
+      "user_id": "18130",
+      "full_name": "Abed AlRahman Mukahhal",
+      "username": "amukahhal@unicef.org",
+      "email": "amukahhal@unicef.org"
+  }, {
+      "user_id": "1584",
+      "full_name": "Abrassac Kamara",
+      "username": "abkamara@unicef.org",
+      "email": "abkamara@unicef.org"
+  }, {
+      "user_id": "16142",
+      "full_name": "Adli Jaradat",
+      "username": "ajaradat@unicef.org",
+      "email": "ajaradat@unicef.org"
+  }, {
+      "user_id": "4141",
+      "full_name": "Lidia Nimri",
+      "username": "lnimri@unicef.org",
+      "email": "lnimri@unicef.org"
+  }, {
+      "user_id": "1572",
+      "full_name": "Lina Salameh",
+      "username": "lsalameh@unicef.org",
+      "email": "lsalameh@unicef.org"
+  }, {
+      "user_id": "10614",
+      "full_name": "Loui Abu Zaineh",
+      "username": "labuzaineh@unicef.org",
+      "email": "labuzaineh@unicef.org"
+  }];
+const countryProgrammes = [{
+      "id": 1,
+      "expired": false,
+      "active": true,
+      "special": true,
+      "future": false,
+      "name": "PCW IN JORDAN CP (2015 - 2017)",
+      "wbs": "2340/PC/07",
+      "invalid": false,
+      "from_date": "2015-01-01",
+      "to_date": "2017-12-31"
+  }, {
+      "id": 2,
+      "expired": false,
+      "active": true,
+      "special": false,
+      "future": false,
+      "name": "JORDAN COUNTRY PROGRAMME (2013 - 2017)",
+      "wbs": "2340/A0/04",
+      "invalid": false,
+      "from_date": "2013-01-01",
+      "to_date": "2017-12-31"
+  }, {
+      "id": 3,
+      "expired": true,
+      "active": false,
+      "special": false,
+      "future": false,
+      "name": "DO NOT USE",
+      "wbs": "2340/A0/99",
+      "invalid": false,
+      "from_date": "2012-01-02",
+      "to_date": "2012-12-31"
+  }];
+
+const locations = [{
+      "id": "2058",
+      "name": "Abdun [Localities - JOR005007001003]",
+      "p_code": "JOR005007001003",
+      "location_type": "Localities",
+      "parent": 1447,
+      "geo_point": "SRID=4326;POINT (35.8870009999999979 31.9419989999999991)"
+  }, {
+      "id": "2119",
+      "name": "Abil [Localities - JOR006002001017]",
+      "p_code": "JOR006002001017",
+      "location_type": "Localities",
+      "parent": 1500,
+      "geo_point": "SRID=4326;POINT (35.6010020000000011 30.8090000000000011)"
+  }, {
+      "id": "2451",
+      "name": "Abu Al 3zam [Localities - JOR009001002003]",
+      "p_code": "JOR009001002003",
+      "location_type": "Localities",
+      "parent": 1439,
+      "geo_point": "SRID=4326;POINT (35.5509989999999974 30.1600000000000001)"
+  }, {
+      "id": "2027",
+      "name": "Abu Alandah [Localities - JOR005004001002]",
+      "p_code": "JOR005004001002",
+      "location_type": "Localities",
+      "parent": 1468,
+      "geo_point": "SRID=4326;POINT (36.0600009999999997 31.9319990000000011)"
+  }, {
+      "id": "2026",
+      "name": "Abu Al Hayyat [Localities - JOR005004001001]",
+      "p_code": "JOR005004001001",
+      "location_type": "Localities",
+      "parent": 1468,
+      "geo_point": "SRID=4326;POINT (36.0670009999999976 31.9170000000000016)"
+  }, {
+      "id": "2479",
+      "name": "Abu Al Lasan [Localities - JOR009001004007]",
+      "p_code": "JOR009001004007",
+      "location_type": "Localities",
+      "parent": 1504,
+      "geo_point": "SRID=4326;POINT (35.5000000000000000 30.0390000000000015)"
+  }, {
+      "id": "2298",
+      "name": "Abu Al Lawqas [Localities - JOR007006001004]",
+      "p_code": "JOR007006001004",
+      "location_type": "Localities",
+      "parent": 1514,
+      "geo_point": "SRID=4326;POINT (35.8879999999999981 32.6360019999999977)"
+  }, {
+      "id": "2243",
+      "name": "Abu Al Qayn [Localities - JOR007002001030]",
+      "p_code": "JOR007002001030",
+      "location_type": "Localities",
+      "parent": 1508,
+      "geo_point": "SRID=4326;POINT (35.6679990000000018 32.4780009999999990)"
+  }, {
+      "id": "1907",
+      "name": "Abu Ash Shahm [Localities - JOR004007001010]",
+      "p_code": "JOR004007001010",
+      "location_type": "Localities",
+      "parent": 1448,
+      "geo_point": "SRID=4326;POINT (35.7500000000000000 31.1329990000000016)"
+  }, {
+      "id": "2810",
+      "name": "Abu As Salih [Localities - JOR012003001010]",
+      "p_code": "JOR012003001010",
+      "location_type": "Localities",
+      "parent": 1495,
+      "geo_point": "SRID=4326;POINT (36.0900000000000034 32.1580009999999987)"
+  }, {
+      "id": "2349",
+      "name": "Abu Az Zayt [Localities - JOR007008001006]",
+      "p_code": "JOR007008001006",
+      "location_type": "Localities",
+      "parent": 1483,
+      "geo_point": "SRID=4326;POINT (35.8240010000000026 32.5470010000000016)"
+  }, {
+      "id": "1651",
+      "name": "Abu Az Zighan [Localities - JOR002003001021]",
+      "p_code": "JOR002003001021",
+      "location_type": "Localities",
+      "parent": 1452,
+      "geo_point": "SRID=4326;POINT (35.6409990000000008 32.1880000000000024)"
+  }, {
+      "id": "2141",
+      "name": "Abu Bana [Localities - JOR006002001039]",
+      "p_code": "JOR006002001039",
+      "location_type": "Localities",
+      "parent": 1500,
+      "geo_point": "SRID=4326;POINT (35.6850009999999997 30.8759990000000002)"
+  }, {
+      "id": "2710",
+      "name": "Abu Gharah [Localities - JOR011003002001]",
+      "p_code": "JOR011003002001",
+      "location_type": "Localities",
+      "parent": 1489,
+      "geo_point": "SRID=4326;POINT (36.3209990000000005 32.1689989999999995)"
+  }, {
+      "id": "1924",
+      "name": "Abu Hammur [Localities - JOR004007001026]",
+      "p_code": "JOR004007001026",
+      "location_type": "Localities",
+      "parent": 1448,
+      "geo_point": "SRID=4326;POINT (35.7359999999999971 31.1819990000000011)"
+  }, {
+      "id": "2566",
+      "name": "Abu Makhtub [Localities - JOR009004001031]",
+      "p_code": "JOR009004001031",
+      "location_type": "Localities",
+      "parent": 1472,
+      "geo_point": "SRID=4326;POINT (35.5789990000000032 30.5359990000000003)"
+  }, {
+      "id": "1760",
+      "name": "Abu Nukhaylah [Localities - JOR003002001010]",
+      "p_code": "JOR003002001010",
+      "location_type": "Localities",
+      "parent": 1491,
+      "geo_point": "SRID=4326;POINT (35.4000020000000006 29.5499989999999997)"
+  }, {
+      "id": "1614",
+      "name": "Abu Nusayr [Localities - JOR002002001006]",
+      "p_code": "JOR002002001006",
+      "location_type": "Localities",
+      "parent": 1485,
+      "geo_point": "SRID=4326;POINT (35.8670010000000019 32.0769999999999982)"
+  }, {
+      "id": "2117",
+      "name": "Abur [Localities - JOR006002001014]",
+      "p_code": "JOR006002001014",
+      "location_type": "Localities",
+      "parent": 1500,
+      "geo_point": "SRID=4326;POINT (35.7140010000000032 30.7989999999999995)"
+  }, {
+      "id": "2135",
+      "name": "Abu Shawkah [Localities - JOR006002001033]",
+      "p_code": "JOR006002001033",
+      "location_type": "Localities",
+      "parent": 1500,
+      "geo_point": "SRID=4326;POINT (35.6670000000000016 30.8500000000000014)"
+  }, {
+      "id": "2620",
+      "name": "Abu Thuhur [Localities - JOR010002001007]",
+      "p_code": "JOR010002001007",
+      "location_type": "Localities",
+      "parent": 1471,
+      "geo_point": "SRID=4326;POINT (35.5999979999999994 31.5330009999999987)"
+  }, {
+      "id": "1817",
+      "name": "Abu Turabah [Localities - JOR004002002005]",
+      "p_code": "JOR004002002005",
+      "location_type": "Localities",
+      "parent": 1443,
+      "geo_point": "SRID=4326;POINT (35.7890009999999990 31.4089999999999989)"
+  }, {
+      "id": "2149",
+      "name": "Adba3ah [Localities - JOR006002001047]",
+      "p_code": "JOR006002001047",
+      "location_type": "Localities",
+      "parent": 1500,
+      "geo_point": "SRID=4326;POINT (35.5940020000000032 30.9150010000000002)"
+  }, {
+      "id": "2075",
+      "name": "Ad Da3jaa [Localities - JOR005008001007]",
+      "p_code": "JOR005008001007",
+      "location_type": "Localities",
+      "parent": 1515,
+      "geo_point": "SRID=4326;POINT (36.0829999999999984 31.8829990000000016)"
+  }, {
+      "id": "2503",
+      "name": "Ad Da3janiyah [Localities - JOR009002001005]",
+      "p_code": "JOR009002001005",
+      "location_type": "Localities",
+      "parent": 1503,
+      "geo_point": "SRID=4326;POINT (35.7210010000000011 30.5820010000000018)"
+  }, {
+      "id": "1853",
+      "name": "Ad Dabab [Localities - JOR004004001020]",
+      "p_code": "JOR004004001020",
+      "location_type": "Localities",
+      "parent": 1458,
+      "geo_point": "SRID=4326;POINT (35.6349980000000031 31.0370010000000001)"
+  }, {
+      "id": "2588",
+      "name": "Ad Dabalik [Localities - JOR010001001002]",
+      "p_code": "JOR010001001002",
+      "location_type": "Localities",
+      "parent": 1513,
+      "geo_point": "SRID=4326;POINT (35.7330019999999990 31.7330000000000005)"
+  }];
+</script>

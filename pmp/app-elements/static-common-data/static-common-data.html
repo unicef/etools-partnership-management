@@ -61,12 +61,12 @@
         this.fireRequest(endpointName, {}).then(function(resp) {
           successHandler.bind(self, resp)();
         }).catch(function(error) {
-          errorHandler.bind(self, error)();
+          errorHandler.bind(self, error, endpointName)();
         });
       },
 
-      _errorHandler: function(err) {
-        this.logError('Error getting static data', 'static-common-data', err);
+      _errorHandler: function(err, endpointName) {
+        this.logError('Error getting static data (' + endpointName + ')', 'static-common-data', err);
       },
 
       _getEndpointSuccessHandler: function(endpointName) {

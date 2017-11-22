@@ -12,6 +12,7 @@
 
     <link rel="import" href="../test-helpers/testing-utils.html">
     <link rel="import" href="../test-helpers/interventions-testing-helper.html">
+    <link rel="import" href="../test-helpers/static-data-mockup.html">
     <link rel="import" href="../../pmp/pages/models/intervention-models.html">
 
     <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
@@ -25,6 +26,7 @@
     </test-fixture>
 
     <script>
+
       suite('intervention-details test', function() {
         let intervDetails;
         setup(function(done) {
@@ -34,6 +36,30 @@
 
         test('agreement-details has an instance', function() {
           assert.equal(intervDetails.is, 'intervention-details');
+        });
+      });
+
+      suite('on new', function() {
+        let intervDetails;
+        setup(function() {
+          intervDetails = fixture('interventionDetailsFixture');
+          intervDetails.newIntervention = true;
+
+          //TODO: redux data should load from the static files in the source.
+          intervDetails.sections = sections;
+          intervDetails.offices = offices;
+          intervDetails.unicefUsersData = users;
+          intervDetails.countryProgrammes = countryProgrammes;
+          intervDetails.locations = locations;
+
+          intervDetails.intervention = PmpTestsHelper.deepCloneObject(EtoolsPmpApp.Behaviors.InterventionModels.properties.newInterventionModel.value);
+        });
+
+        test('element is rendered', function(done) {
+          flush(function() {
+            expect(PmpTestsHelper.elementIsVisible(intervDetails)).to.be.equal(true);
+            done();
+          });
         });
       });
     </script>
