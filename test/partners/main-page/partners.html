@@ -13,8 +13,8 @@
   <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../../../pmp/app-config/app-dexie-db-config.html">
-  <link rel="import" href="../../test-helpers/testing-utils.html">
   <link rel="import" href="../../test-helpers/users-and-permissions-data-mockup.html">
+  <link rel="import" href="../mockup-data/partner-tests-mockup-data.html">
 
   <link rel="import" href="partners.page-object.html">
 
@@ -39,89 +39,159 @@
         let partners;
         let partnersPage;
 
-        let defaultRoute = {
+        let detailsRoute = {
           prefix: '',
-          path: 'partners/list',
-          '__queryParams': {size: 10, sort :'name.asc'}
+          path: 'partners/71/details',
+          __queryParams: {}
         };
 
         setup(function() {
           // setup main partners page test-fixture
           partners = fixture('partners');
+          partners.set('currentPage', 'partners');
 
           partnersPage = new PartnersPage(partners);
-
-//          partners.set('route', defaultRoute);
-//          partners.set('partnerPage', 'list');
-//          partners.set('listActive', true);
         });
 
         test('Main element: page-partners is registered', function() {
           assert.equal(partners.is, 'page-partners');
         });
 
-        test('Test page routes', (done) => {
+        test('Page title for partners list is \'Partners\', page tabs are hidden, ' +
+            'active page is partners-list', (done) => {
           flush(() => {
-            partnersPage.updateProperties({currentPage: 'partners', route: defaultRoute});
-            console.log(partners.tab, partners.routeData);
-            expect(partners.route.path).to.equal('partners/list');
-            expect(partners.get('partnerPage')).to.equal('list');
+            partnersPage.updateProperties({
+              partnerPage: 'list',
+              listActive: true
+            });
+
+            expect(partnersPage.getPageTitle()).to.equal('Partners');
+            expect(partnersPage.tabsAreVisible()).to.equal(false);
+            expect(partnersPage.getActivePageTagName()).to.equal('partners-list');
+            done();
+          });
+        });
+
+        test('Page title for partners details pages is partner name, tabs are shown, ' +
+            'details or overview are active pages', (done) => {
+          flush(() => {
+            let partner = PmpTests.Partners.MockupData.partnerDetailsExample1;
+            partnersPage.updateProperties({
+              route: detailsRoute,
+              partnerPage: 'details',
+              activeTab: 'details',
+              tabsActive: true,
+              listActive: false,
+              partner: partner
+            });
+
+            expect(partnersPage.getPageTitle()).to.equal(partner.name);
+            expect(partnersPage.tabsAreVisible()).to.equal(true);
+            expect(partnersPage.getActivePageTagName()).to.equal('partner-details');
+
+            partnersPage.updateProperties({
+              partnerPage: 'overview',
+              activeTab: 'overview',
+            });
+
+            expect(partnersPage.getActivePageTagName()).to.equal('partner-overview');
 
             done();
           });
         });
 
-//        test('Default active page should be partners list', function(done) {
-//          flush(function() {
-//            expect(partners.route.path).to.equal('partners/list');
-//            expect(partners.get('partnerPage')).to.equal('list');
-//            expect(partners._pageEquals(partners.partnerPage, 'list')).to.equal(true);
-//            expect(partners.listActive).to.equal(true);
-//            expect(partners.tabsActive).to.equal(false);
-//
-//            let titleEl = PmpTestsHelper.shadowDomQuery(partners, 'h1[main-title]');
-//            let titleText = String(PmpTestsHelper.domQuery(titleEl, 'span:not([hidden])').innerHTML);
-//            expect(titleText).to.equal('Partners');
-//            done();
-//          });
-//        });
-//
-//        test('Test add new partner: add dialog, vendor field validation, create-partner event data', function(done) {
-//          flush(function() {
-//            let newPartnerEl = partners.newPartnerDialog;
-//            expect(newPartnerEl.is).to.equal('new-partner-dialog');
-//
-//            let newPartnerDialog = PmpTestsHelper.shadowDomQuery(newPartnerEl, '#newPartnerDialog');
-//            expect(newPartnerDialog.is).to.equal('etools-dialog');
-//            expect(newPartnerDialog.dialogTitle).to.equal('New Partner');
-//
-//            let vendorEl = newPartnerDialog.querySelector('#vendorNo');
-//
-//            let addNewPartnerBtn = PmpTestsHelper.shadowDomQuery(partners, '#addNewPartner');
-//            MockInteractions.tap(addNewPartnerBtn);
-//
-//            expect(newPartnerDialog.opened).to.equal(true);
-//            expect(vendorEl.invalid).to.equal(false);
-//            expect(vendorEl.errorMessage).to.equal('Vendor# is required');
-//
-//            let dialogSaveBtn = PmpTestsHelper.shadowDomQuery(newPartnerDialog, 'paper-button[dialog-confirm]');
-//            expect(dialogSaveBtn.hasAttribute('disabled')).to.equal(true);
-//
-//            vendorEl.validate();
-//            expect(vendorEl.invalid).to.equal(true);
-//
-//            let vendorMock = '345345';
-//            vendorEl.set('value', vendorMock);
-//            expect(vendorEl.invalid).to.equal(false);
-//            expect(dialogSaveBtn.hasAttribute('disabled')).to.equal(false);
-//
-//            partners.addEventListener('create-partner', function(e) {
-//              expect(e.detail.vendor).to.equal(vendorMock);
-//              done();
-//            });
-//            MockInteractions.tap(dialogSaveBtn);
-//          });
-//        });
+        test('Export partners list btn is available for all users', function(done) {
+          flush(function() {
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.UnicefUser,
+              partnerPage: 'list',
+              listActive: true
+            });
+            expect(partnersPage.exportBtnIsVisible()).to.equal(true);
+
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.PartnershipManager,
+            });
+            expect(partnersPage.exportBtnIsVisible()).to.equal(true);
+
+            done();
+          });
+        });
+
+        test('Add new partner is not available for Unicef Users', function(done) {
+          flush(function() {
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.UnicefUser,
+              partnerPage: 'list',
+              listActive: true
+            });
+            expect(partnersPage.addPartnerBtnIsVisible()).to.equal(false);
+
+            done();
+          });
+        });
+
+        test('Add new partner is available for Partnership Managers', function(done) {
+          flush(function() {
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.PartnershipManager,
+              partnerPage: 'list',
+              listActive: true
+            });
+            expect(partnersPage.addPartnerBtnIsVisible()).to.equal(true);
+
+            done();
+          });
+        });
+
+        test('Add new partner dialog is created and can be opened', function(done) {
+          flush(function() {
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.PartnershipManager,
+              partnerPage: 'list',
+              listActive: true
+            });
+            let newPartnerDialog = partnersPage.getNewPartnerDialog();
+            expect(newPartnerDialog.is).to.equal('etools-dialog');
+            expect(newPartnerDialog.dialogTitle).to.equal('New Partner');
+
+            partnersPage.openNewPartnerDialog();
+            expect(newPartnerDialog.opened).to.equal(true);
+            done();
+          });
+        });
+
+        test('Check new partner dialog fields validation and test create-partner event', function(done) {
+          flush(function() {
+            partnersPage.updateProperties({
+              permissions: PmpTests.Login.Permissions.PartnershipManager,
+              partnerPage: 'list',
+              listActive: true
+            });
+            partnersPage.openNewPartnerDialog();
+            let vendorEl = partnersPage.getNewPartnerVendorField();
+
+            expect(vendorEl.invalid).to.equal(false);
+            expect(vendorEl.errorMessage).to.equal('Vendor# is required');
+
+            let saveBtn = partnersPage.getNewPartnerDialogSaveBtn();
+            expect(saveBtn.hasAttribute('disabled')).to.equal(true);
+
+            vendorEl.validate();
+            expect(vendorEl.invalid).to.equal(true);
+
+            let vendorMock = '345345';
+            vendorEl.set('value', vendorMock);
+            expect(vendorEl.invalid).to.equal(false);
+            expect(saveBtn.hasAttribute('disabled')).to.equal(false);
+
+            partners.addEventListener('create-partner', function(e) {
+              expect(e.detail.vendor).to.equal(vendorMock);
+              done();
+            });
+            MockInteractions.tap(saveBtn);
+          });
+        });
 
       });
     })();

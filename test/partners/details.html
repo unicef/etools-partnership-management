@@ -42,7 +42,7 @@
           partnerDetails = fixture('partner-details');
           partnerDetails.set('partner', partnerData);
           partnerDetails.set('editMode',
-              PmpTests.Login.UserPermissions && PmpTests.Login.UserPermissions.editPartnerDetails);
+              PmpTests.Login.Permissions.PartnershipManager && PmpTests.Login.Permissions.PartnershipManager.editPartnerDetails);
         });
 
         test('Details main element is a valid', function() {

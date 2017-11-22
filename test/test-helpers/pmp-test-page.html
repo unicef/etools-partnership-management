@@ -1,3 +1,5 @@
+<script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+<link rel="import" href="testing-utils.html">
 <script>
   'use strict';
 
@@ -8,7 +10,7 @@
       this.mainPageElements = {};
       if(elementsMap instanceof Array) {
         elementsMap.forEach((elMap) => {
-          this.mainPageElements[elMap.name] = this.shadowDomQuery(this.el, elMap.selector);
+          this.mainPageElements[elMap.name] = this.shadowDomQuery(elMap.selector);
         });
       }
     }
@@ -19,14 +21,28 @@
       }
     }
 
-    shadowDomQuery(baseElement, selector, all) {
+    _getQueryBaseElement(baseElement) {
+      return !baseElement ? this.el : baseElement;
+    }
+
+    shadowDomQuery(selector, all, baseElement) {
+      baseElement = this._getQueryBaseElement(baseElement);
       let baseElShadowDom = Polymer.dom(baseElement.root);
       return all ? baseElShadowDom.querySelectorAll(selector) : baseElShadowDom.querySelector(selector);
     }
 
-    domQuery(baseElement, selector, all) {
+    domQuery(selector, all, baseElement) {
+      baseElement = this._getQueryBaseElement(baseElement);
       let baseElDom = Polymer.dom(baseElement);
       return all ? baseElDom.querySelectorAll(selector) : baseElDom.querySelector(selector);
+    }
+
+    isVisible(element) {
+      return PmpTestsHelper.elementIsVisible(element);
+    }
+
+    isVisibleByKey(key) {
+      return !this.mainPageElements[key] ? false : this.isVisible(this.mainPageElements[key]);
     }
 
   }
