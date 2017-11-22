@@ -52,7 +52,7 @@
     "etools-file": "1.2.4",
     "etools-loading": "1.1.0",
     "etools-page-refresh": "1.1.2",
-    "etools-piwik-analytics": "^1.0.0",
+    "etools-piwik-analytics": "1.0.3",
     "etools-searchable-multiselection-menu": "2.2.7",
     "etools-profile-dropdown": "1.0.7",
     "etools-info-tooltip": "^1.0.1",
