@@ -99,7 +99,7 @@
       </div>
       <div class="content-align">
         <countries-dropdown id="countries" countries="[[countries]]"
-                            current="[[user.profile.country]]"></countries-dropdown>
+                            current-country="[[user.country]]"></countries-dropdown>
         <etools-profile-dropdown
             sections="[[allSections]]"
             offices="[[allOffices]]"
@@ -157,7 +157,7 @@
           userProfileDialog: Object
         },
         observers: [
-          '_updateCountriesList(user.profile.countries_available)'
+          '_updateCountriesList(user.countries_available)'
         ],
 
         openDrawer: function() {
@@ -212,8 +212,8 @@
         _convertUsers: function(data) {
           return data.map(function(d) {
             return {
-              value: parseInt(d.user_id, 10),
-              label: d.full_name
+              value: parseInt(d.id, 10),
+              label: d.name
             };
           });
         },
