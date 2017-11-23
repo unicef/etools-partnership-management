@@ -1,0 +1,33 @@
+<link rel="import" href="reports-helper.html">
+<script>
+  var ReportsHelper = window.ReportsHelper || {};
+  ReportsHelper.populateReportsList = function(reportsList) {
+    reportsDisplayList = reportsList.$.reportsDisplayList;
+    reportsDisplayList.fireRequest = function() {
+      return new Promise(function(resolve, reject){
+      resolve({results: PmpTests.ReportsMockupData.list});
+    });
+    };
+    PmpTestsHelper.makeDebounceSynchronous(reportsDisplayList);
+    reportsDisplayList.currentUser = {email: 'k@email.com'};
+
+    reportsList.queryParams = {
+      "pd_ref_title": "",
+      "external_partner_id": null,
+      "cp_output": null,
+      "section": null,
+      "status": null
+    };
+    reportsList.partners = [];
+    reportsList.cpOutputs = [];
+    reportsList.sections = [];
+    reportsList.reportStatuses = [];
+  }
+  ReportsHelper.populateReportUderView = function(pageReports) {
+    pageReports.fireRequest = function() {
+      return new Promise(function(resolve, reject) {
+        resolve({results: PmpTests.ReportsMockupData.report});
+      });
+    };
+  }
+</script>

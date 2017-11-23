@@ -26,6 +26,9 @@
 
     elementIsVisible: function(element) {
       Polymer.dom.flush();
+      if (!element) {
+        return false;
+      }
       var contentRect = element.getBoundingClientRect();
       var computedStyle = window.getComputedStyle(element);
       return computedStyle.display !== 'none' &&

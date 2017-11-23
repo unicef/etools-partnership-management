@@ -36,6 +36,7 @@
       }
     },
     _getPrpCountryId: function() {
+      return 1;
       let self = this;
       let currentCountry = this.currentUser.profile.countries_available.find(function(country) {
         return country.id === self.currentUser.profile.country;

@@ -61,7 +61,6 @@
           test('filter options are available', function(done) {
             flush(function() {
               PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
-               // expect(PmpTestsHelper.elementIsVisible(ddContent)).to.be.equal(true);
                 expect(helper.agreementList.availableListFilterOptions.length).to.be.greaterThan(0);
                 done();
               });
