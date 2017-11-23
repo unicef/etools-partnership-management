@@ -173,13 +173,15 @@
 
           // set filtered agreements based on this
           let agreements = _.filter(this.agreements, function(agreement) {
-            if (this.intervention && this.intervention.id > 0) {
+            if (this.intervention) {
               // existing intervention
-              return agreement.partner === partnerId;
+              return agreement.partner === partnerId
+                && agreement.agreement_type !== 'MOU';
             } else {
               // new intervention
               return agreement.partner === partnerId &&
-                ['suspended', 'terminated'].indexOf(agreement.status) === -1;
+                ['suspended', 'terminated'].indexOf(agreement.status) === -1
+                && agreement.agreement_type !== 'MOU';
             }
 
           }.bind(this));
