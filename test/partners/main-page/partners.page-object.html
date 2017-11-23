@@ -29,6 +29,33 @@
       super(element, pageElementsMap);
     }
 
+    setCurrentPage(page, additionalData) {
+      switch (page) {
+        case 'list':
+          this.updateProperties({
+            partnerPage: 'list',
+            listActive: true
+          });
+          break;
+        case 'details':
+          this.updateProperties({
+            route: {
+              prefix: '',
+              path: 'partners/71/details',
+              __queryParams: {}
+            },
+            partnerPage: 'details',
+            activeTab: 'details',
+            tabsActive: true,
+            listActive: false
+          });
+          break;
+      }
+      if (additionalData) {
+        this.updateProperties(additionalData);
+      }
+    }
+
     getPageTitle() {
       if (!this.mainPageElements['pageTitle']) {
         throw new Error('Page title not found!');

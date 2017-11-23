@@ -139,31 +139,7 @@
             }
 
             queryResult = queryResult.filter(function(partner) {
-              if (partnerType && partner.partner_type !== partnerType) {
-                return false;
-              }
-
-              if (csoType && partner.cso_type !== csoType) {
-                return false;
-              }
-
-              if (searchString && searchString.length) {
-                let vnMatch = true;
-                if (partner.vendor_number) {
-                  vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
-                }
-                if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
-                    partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
-                    vnMatch) {
-                  return false;
-                }
-              }
-
-              if (!showHidden && partner.hidden) {
-                return false;
-              }
-
-              return true;
+             return self.filterData(partner, searchString, partnerType, csoType, showHidden);
             });
 
             // This special Dexie function allows the work of counting
@@ -187,6 +163,34 @@
             console.error('Error querying partners: ' + error);
             self.fire('global-loading', {active: false, loadingSource: 'partners-list'});
           });
+        },
+
+        filterData: function(partner, searchString, partnerType, csoType, showHidden) {
+          if (partnerType && partner.partner_type !== partnerType) {
+            return false;
+          }
+
+          if (csoType && partner.cso_type !== csoType) {
+            return false;
+          }
+
+          if (searchString && searchString.length) {
+            let vnMatch = true;
+            if (partner.vendor_number) {
+              vnMatch = partner.vendor_number.toString().toLowerCase().indexOf(searchString) < 0;
+            }
+            if (partner.name.toLowerCase().indexOf(searchString) < 0 &&
+                partner.short_name.toLowerCase().indexOf(searchString) < 0 &&
+                vnMatch) {
+              return false;
+            }
+          }
+
+          if (!showHidden && partner.hidden) {
+            return false;
+          }
+
+          return true;
         }
 
       });
