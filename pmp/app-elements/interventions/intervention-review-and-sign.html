@@ -143,8 +143,8 @@
                                       label="Signed by UNICEF"
                                       placeholder="&#8212;"
                                       options="[[getCleanEsmmOptions(signedByUnicefUsers, intervention)]]"
-                                      option-value="user_id"
-                                      option-label="full_name"
+                                      option-value="id"
+                                      option-label="name"
                                       selected="{{intervention.unicef_signatory}}"
                                       dynamic-align
                                       readonly$="[[!intervention.permissions.edit.unicef_signatory]]"
