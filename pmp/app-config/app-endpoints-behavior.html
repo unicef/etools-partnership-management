@@ -38,8 +38,8 @@
     _getPrpCountryId: function() {
       return 1;
       let self = this;
-      let currentCountry = this.currentUser.profile.countries_available.find(function(country) {
-        return country.id === self.currentUser.profile.country;
+      let currentCountry = this.currentUser.countries_available.find(function(country) {
+        return country.id === self.currentUser.country.id;
       });
       let prpCountry = self.prpCountries.find(function(prpCountry) {
         return prpCountry.business_area_code === currentCountry.business_area_code;

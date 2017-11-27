@@ -452,8 +452,8 @@
               {
                 filterName: 'UNICEF focal point',
                 type: 'esmm', // etools-multi-selection-menu
-                optionValue: 'user_id',
-                optionLabel: 'full_name',
+                optionValue: 'id',
+                optionLabel: 'name',
                 selectionOptions: this.unicefUsersData,
                 alreadySelected: [],
                 path: 'selectedUnicefFocalPoints'
@@ -538,7 +538,7 @@
               },
               {
                 filterName: 'UNICEF focal point',
-                selectedValue: _.map(this.selectedUnicefFocalPoints, 'user_id')
+                selectedValue: _.map(this.selectedUnicefFocalPoints, 'id')
               },
               {
                 filterName: 'Offices',
@@ -609,7 +609,7 @@
                 this._prepareQueryStrVal(this.selectedCpOutputs, 'id'),
                 _.map(this.selectedStatuses, 'value'),
                 this._prepareQueryStrVal(this.selectedSections, 'id'),
-                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'user_id'),
+                this._prepareQueryStrVal(this.selectedUnicefFocalPoints, 'id'),
                 this._prepareQueryStrVal(this.selectedOffices, 'id'),
                 this.startDate,
                 this.endDate,
@@ -650,7 +650,7 @@
           }
 
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            out.push('unicef_focal_points=' + _.map(this.selectedUnicefFocalPoints, 'user_id').join('|'));
+            out.push('unicef_focal_points=' + _.map(this.selectedUnicefFocalPoints, 'id').join('|'));
           }
 
           if (this.selectedOffices && this.selectedOffices.length) {
@@ -692,7 +692,7 @@
             params.push('status=' + statuses.join(','));
           }
           if (this.selectedUnicefFocalPoints && this.selectedUnicefFocalPoints.length) {
-            var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'user_id');
+            var serializedFocalPoints = _.map(this.selectedUnicefFocalPoints, 'id');
             serializedFocalPoints = encodeURIComponent(serializedFocalPoints);
             params.push('unicef_focal_points=' + serializedFocalPoints);
           }
@@ -742,7 +742,7 @@
               return [];
             }
             return this.unicefUsersData.filter(function(u) {
-              return focalPtsStrArr.indexOf(parseInt(u.user_id, 10)) > -1;
+              return focalPtsStrArr.indexOf(parseInt(u.id, 10)) > -1;
             });
           }
           return [];
