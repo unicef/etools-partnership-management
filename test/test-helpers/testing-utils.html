@@ -1,61 +1,81 @@
-<script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
+<script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
 <script>
+  // disable request data caching functionality
   window.EtoolsRequestCacheDisabled = true;
 
-  window.PmpTestsHelper = window.PmpTestsHelper || {};
-  PmpTestsHelper = {
-    //*TODO - why doesn't Polymer.flush() work?
-    makeDebounceSynchronous: function(element) {
-      element.debounce = function(jobName, callback, wait) {
-              callback.bind(element)();
-            }
-    },
-    makeAsyncSynchronous: function(element) {
-      element.async = function(callback, wait) {
-              callback.bind(element)();
-            }
-    },
+  (function(window) {
+    'use strict';
 
-    initializeFakeServer: function() {
-      let server = sinon.fakeServer.create();
-      server.autoRespond = true;
-      server.respondImmediately = true;
-      return server;
-    },
+    let testsHelper = {
+      //*TODO - why doesn't Polymer.flush() work?
+      makeDebounceSynchronous: function(element) {
+        element.debounce = function(jobName, callback, wait) {
+          callback.bind(element)();
+        }
+      },
+      makeAsyncSynchronous: function(element) {
+        element.async = function(callback, wait) {
+          callback.bind(element)();
+        }
+      },
 
-    elementIsVisible: function(element) {
-      Polymer.dom.flush();
-      var contentRect = element.getBoundingClientRect();
-      var computedStyle = window.getComputedStyle(element);
-      return computedStyle.display !== 'none' &&
-        contentRect.width > 0 &&
-        contentRect.height > 0;
-    },
-    deepCloneObject: function(obj) {
-      return JSON.parse(JSON.stringify(obj));
-    },
-    getCleanText: function(textContent) {
-      // for now clean \n and unnecessary spaces, more char to clean to be added if needed
-      return textContent.replace(/\n/g, '').replace(/\s\s/g, '');
-    },
-    PaperMenuButton: {
-      runAfterOpen: function(menuButton, callback) {
+      initializeFakeServer: function() {
+        let server = sinon.fakeServer.create();
+        server.autoRespond = true;
+        server.respondImmediately = true;
+        return server;
+      },
+
+      fakeServerResponseHeaders: {
+        json: {'Content-Type': 'application/json'}
+      },
+
+      elementIsVisible: function(element) {
+        Polymer.dom.flush();
+        let contentRect = element.getBoundingClientRect();
+        let computedStyle = window.getComputedStyle(element);
+        return computedStyle.display !== 'none' &&
+            computedStyle.visibility !== 'hidden' &&
+            contentRect.width > 0 &&
+            contentRect.height > 0;
+      },
+      deepCloneObject: function(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      },
+      getCleanText: function(textContent) {
+        // for now clean \n and unnecessary spaces, more char to clean to be added if needed
+        return textContent.replace(/\n/g, '').replace(/\s\s/g, '');
+      },
+      shadowDomQuery: function(baseElement, selector, all) {
+        let baseElShadowDom = Polymer.dom(baseElement.root);
+        return all ? baseElShadowDom.querySelectorAll(selector) : baseElShadowDom.querySelector(selector);
+      },
+      domQuery: function(baseElement, selector, all) {
+        let baseElDom = Polymer.dom(baseElement);
+        return all ? baseElDom.querySelectorAll(selector) : baseElDom.querySelector(selector);
+      },
+      PaperMenuButton: {
+        runAfterOpen: function(menuButton, callback) {
           menuButton.addEventListener('paper-dropdown-open', function() {
             Polymer.Base.async(callback, 1);
           });
           let overlayTrigger = menuButton.$.trigger;
           MockInteractions.tap(overlayTrigger);
-      },
-      runAfterClose: function(menuButton, closeTrigger, callback) {
-        menuButton.addEventListener('paper-dropdown-close', function() {
-          Polymer.Base.async(callback, 1);
-        });
-        MockInteractions.tap(closeTrigger);
+        },
+        runAfterClose: function(menuButton, closeTrigger, callback) {
+          menuButton.addEventListener('paper-dropdown-close', function() {
+            Polymer.Base.async(callback, 1);
+          });
+          MockInteractions.tap(closeTrigger);
+        }
       }
-    }
 
-  };
+    };
+
+    window.PmpTestsHelper = window.PmpTestsHelper || testsHelper;
+
+  })(window);
 
 
 </script>

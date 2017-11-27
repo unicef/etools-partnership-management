@@ -1,0 +1,118 @@
+<link rel="import" href="../../test-helpers/pmp-test-page.html">
+<script>
+  'use strict';
+
+  class PartnersListPage extends PmpTestPage {
+    constructor(element) {
+      let pageElementsMap = [
+        {
+          name: 'q',
+          selector: '#query'
+        },
+        {
+          name: 'filterMenu',
+          selector: '#filterMenu'
+        },
+        {
+          name: 'showHiddenBtn',
+          selector: '#hiddenToggle paper-toggle-button'
+        },
+        {
+          name: 'listData',
+          selector: '#partners'
+        },
+        {
+          name: 'list',
+          selector: '#list'
+        }
+      ];
+      super(element, pageElementsMap);
+    }
+
+    setupGetListRequest(data) {
+      // fake partners request
+      this.server.respondWith('GET', '/api/v2/partners/', [
+        200, PmpTestsHelper.fakeServerResponseHeaders.json,
+        JSON.stringify(data)
+      ]);
+      this.server.respond();
+      let dataEl = this.getListDataElement();
+      dataEl.fire(dataEl.dataLoadedEventName);
+    }
+
+    getListDataElement() {
+      if (!this.mainPageElements['listData']) {
+        Polymer.dom.flush();
+        this.mainPageElements['listData'] = this.shadowDomQuery('#partners');
+      }
+      return this.mainPageElements['listData'];
+    }
+
+    requiredDataHasBeenLoaded() {
+      return this.el.requiredDataLoaded;
+    }
+
+    getCurrentQueryString() {
+      return this.el._buildQueryString();
+    }
+
+    listIsVisible() {
+      return !this.mainPageElements['list'] ? false : !this.mainPageElements['list'].classList.contains('hidden');
+    }
+
+    setQueryStubMethod() {
+      this.setupStubMethod('partnerQuery', this.getListDataElement(), 'query', this.stubQueryCallback.bind(this));
+    }
+
+    stubQueryCallback() {
+      let dataEl = this.getListDataElement();
+      if (!dataEl.data || (dataEl.data instanceof Array && dataEl.data.length === 0)) {
+        return;
+      }
+      let searchString = arguments[2];
+      let partnerType = arguments[3];
+      let csoType = arguments[4];
+      let showHidden = arguments[7];
+
+      let filteredPartners = dataEl.data.filter((partner) => {
+        return dataEl.filterData(partner, searchString, partnerType, csoType, showHidden);
+      });
+      dataEl._setFilteredPartners(filteredPartners);
+    }
+
+    getListData() {
+      let dataEl = this.getListDataElement();
+      return dataEl.data;
+    }
+
+    getListFilteredData() {
+      let dataEl = this.getListDataElement();
+      return dataEl.filteredPartners;
+    }
+
+    getAvailableFilters() {
+      return this.el.availableListFilterOptions;
+    }
+
+    getSelectedFilters() {
+      return this.el.selectedFilters;
+    }
+
+    setPartnerType(type) {
+      this.el.set('partnerType', type);
+      this.el._updateSelectedFiltersValues();
+      Polymer.dom.flush();
+    }
+
+    getPartnerTypeDropdown() {
+      Polymer.dom.flush();
+      return this.shadowDomQuery('paper-dropdown-menu[label="Partner Type"]');
+    }
+
+    getPartnerTypeDropdownMenu() {
+      let partnerTypeDr = this.getPartnerTypeDropdown();
+      return this.domQuery('paper-menu', false, partnerTypeDr);
+    }
+
+  }
+</script>
