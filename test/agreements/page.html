@@ -28,7 +28,7 @@
         setup(function() {
           pageAgrementEl = fixture('agreementsPageFixture');
           pageAgrementEl.set('agreementListActive', true);
-          pageAgrementEl.set('permissions', appUserPermissions);
+          pageAgrementEl.set('permissions', PmpTests.Login.Permissions.PartnershipManager);
         });
 
         test('can instantiate page-agreement element', function() {

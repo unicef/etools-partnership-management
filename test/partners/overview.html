@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Partner Overview Tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+  <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+  <link rel="import" href="../test-helpers/testing-utils.html">
+  <link rel="import" href="mockup-data/partner-tests-mockup-data.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../pmp/app-elements/partners/partner-overview.html">
+
+</head>
+<body>
+
+  <test-fixture id="partner-overview">
+    <template>
+      <partner-overview></partner-overview>
+    </template>
+  </test-fixture>
+
+  <script>
+    (function() {
+      'use strict';
+
+
+      suite('Partner overview elements tests', function() {
+        let partnerOverview;
+        setup(function() {
+          partnerOverview = fixture('partner-overview');
+        });
+
+        test('Overview page - displayed data is correct', function(done) {
+          expect(partnerOverview.is).to.equal('partner-overview');
+
+          let partnerDetailsData = PmpTestsHelper.deepCloneObject(PmpTests.Partners.MockupData.partnerDetailsExample1);
+          partnerOverview.set('partner', partnerDetailsData);
+          flush(function() {
+            expect(partnerOverview.partner.id).to.equal(71); // element partner property was set
+            // check number of interventions rendered, should equal partner.interventions.length
+            let interventionsList = PmpTestsHelper.shadowDomQuery(partnerOverview, '#partnerInterventions .row-h', true);
+            expect(interventionsList.length).to.equal(partnerDetailsData.interventions.length);
+
+            let firstPartnerInterv = partnerDetailsData.interventions[0];
+            // get first partner intervention and check data rendered
+            let partnershipCol = interventionsList[0].querySelectorAll('div')[0];
+            expect(PmpTestsHelper.getCleanText(partnershipCol.querySelector('a strong').textContent))
+                .to.equal(firstPartnerInterv.number);
+            expect(PmpTestsHelper.getCleanText(partnershipCol.querySelector('span').textContent))
+                .to.equal(firstPartnerInterv.title);
+
+            let totalPlannedBudgetCol = interventionsList[0].querySelectorAll('div')[1];
+            expect(totalPlannedBudgetCol.textContent.trim()).to.equal('$2,437,158');
+
+            let actualCol = interventionsList[0].querySelectorAll('div')[2];
+            expect(actualCol.textContent.trim()).to.equal('$1,423,562');
+
+            let statusCol = interventionsList[0].querySelectorAll('div')[3];
+            expect(statusCol.textContent.trim()).to.equal('active');
+
+            let timelineCol = interventionsList[0].querySelectorAll('div')[4];
+            let timelineColTextDisplayed = PmpTestsHelper.getCleanText(timelineCol.textContent);
+            expect(timelineColTextDisplayed).to.equal('1 Jan 2017 - 31 Dec 2017');
+
+            // test overview top section
+            let riskRatingDisplayed = PmpTestsHelper.shadowDomQuery(partnerOverview, '.risk-rating-field');
+            expect(riskRatingDisplayed.textContent.trim()).to.equal(partnerDetailsData.rating);
+
+            let cpCycleDisplay = PmpTestsHelper.shadowDomQuery(partnerOverview, '#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[1];
+            expect(cpCycleDisplay.textContent.trim()).to.equal('$1,423,562');
+
+            let cashTransferDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[2];
+            expect(cashTransferDisplay.textContent.trim()).to.equal('$2,049,934');
+
+            let progVisitsDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[3];
+            let progVisitsDisplayDisplayText = PmpTestsHelper.getCleanText(progVisitsDisplay.textContent);
+            expect(progVisitsDisplayDisplayText).to.equal('12 / 2 / 47');
+
+            let spotChecksDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[4];
+            let spotChecksDisplayText = PmpTestsHelper.getCleanText(spotChecksDisplay.textContent);
+            expect(spotChecksDisplayText).to.equal('2 / 1');
+
+            let auditDisplay = partnerOverview.$$('#overviewDetails')
+                .querySelector('.row-h').querySelectorAll('div')[5];
+            let auditDisplayText = PmpTestsHelper.getCleanText(auditDisplay.textContent);
+            expect(auditDisplayText).to.equal('2 / 1');
+
+            done();
+          });
+
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

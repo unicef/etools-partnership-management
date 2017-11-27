@@ -1,0 +1,45 @@
+<link rel="import" href="users-and-permissions-data-mockup.html">
+<link rel="import" href="agreement-data-mockup.html">
+<script src="../../bower_components//iron-test-helpers/mock-interactions.js"></script>
+
+<script>
+  var AgreementListHelper = function() {
+    this.agreementList = fixture('agreementsListFixture');
+    Polymer.dom.flush();
+
+    this.defaultRoute = {
+            prefix: '',
+            path: 'agreements/list',
+            '__queryParams':  {size: "10", sort: "partner_name.asc"}
+          };
+  }
+  AgreementListHelper.prototype.setupGetAgreementList = function(server) {
+    this.server = PmpTestsHelper.initializeFakeServer();
+    let responseHeaders = {
+            json: { 'Content-Type': 'application/json' }
+            };
+    this.server.respondWith('GET', '/api/v2/agreements/',
+      [200, responseHeaders.json, JSON.stringify(agrListMockup)]);
+    this.server.respond();
+  }
+  AgreementListHelper.prototype.initializeElementUnderTest = function() {
+    PmpTestsHelper.makeDebounceSynchronous(this.agreementList);
+    PmpTestsHelper.makeAsyncSynchronous(this.agreementList);
+    this.agreementList.set('permissions', PmpTests.Login.Permissions.PartnershipManager);
+    this.agreementList.set('urlParams', this.defaultRoute.__queryParams);
+    this.agreementList.set('active', true);
+    this.agreementList.agreementListData = this.agreementList.$$('#agreements');
+
+    //initialize data from redux
+    this.agreementList.partnersDropdownData = [];
+    this.agreementList.agreementTypes = [];
+    this.agreementList.agreementStatuses = [];
+  }
+  AgreementListHelper.prototype.stubQuery = function() {
+    let _this = this;
+    this.queryStub = sinon.stub(this.agreementList.agreementListData, 'query', function() {
+              _this.agreementList.filteredAgreements = agrListMockup;
+            });
+  }
+
+</script>

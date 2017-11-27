@@ -1,0 +1,122 @@
+<script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+<link rel="import" href="testing-utils.html">
+<script>
+  'use strict';
+
+  class PmpTestPage {
+
+    constructor(element, elementsMap) {
+      this.el = element;
+      this.mainPageElements = {};
+      if(elementsMap instanceof Array) {
+        elementsMap.forEach((elMap) => {
+          this.mainPageElements[elMap.name] = this.shadowDomQuery(elMap.selector);
+        });
+      }
+
+      this.server = PmpTestsHelper.initializeFakeServer();
+
+      // stub Polymer debounce to be able to test it
+      this.stubDebouncePolymerMethod();
+    }
+
+    restoreServer() {
+      this.server.restore();
+    }
+
+    updateProperties(properties) {
+      for(let key in properties) {
+        this.el.set(key, properties[key])
+      }
+    }
+
+    _getQueryBaseElement(baseElement) {
+      return !baseElement ? this.el : baseElement;
+    }
+
+    shadowDomQuery(selector, all, baseElement) {
+      baseElement = this._getQueryBaseElement(baseElement);
+      let baseElShadowDom = Polymer.dom(baseElement.root);
+      return all ? baseElShadowDom.querySelectorAll(selector) : baseElShadowDom.querySelector(selector);
+    }
+
+    domQuery(selector, all, baseElement) {
+      baseElement = this._getQueryBaseElement(baseElement);
+      return all ? baseElement.querySelectorAll(selector) : baseElement.querySelector(selector);
+    }
+
+    isVisible(element) {
+      return PmpTestsHelper.elementIsVisible(element);
+    }
+
+    isVisibleByKey(key) {
+      return !this.mainPageElements[key] ? false : this.isVisible(this.mainPageElements[key]);
+    }
+
+    getFieldByKey(key) {
+      return this.mainPageElements[key];
+    }
+
+    setupStubMethod(stubMethodName, baseElement, realMethodName, stubCallback) {
+      this[stubMethodName] = sinon.stub(baseElement, realMethodName, stubCallback);
+    }
+
+    /**
+     * Create stub for Polymer debounce method
+     * @param baseElement
+     */
+    stubDebouncePolymerMethod(baseElement) {
+      baseElement = baseElement ? baseElement : this.el;
+      this.setupStubMethod('debounceStub', baseElement, 'debounce', this.debounceStubCallback.bind(this));
+    }
+
+    debounceStubCallback() {
+      this.prepareStubDebouncersQueue();
+      // prepare debounce arguments
+      let debounceName = arguments[0];
+      let debounceFunc = arguments[1];
+      let timeout = arguments[2] ? arguments[2] : 0;
+
+      if (this.debouncers[debounceName]) {
+        // debounce already running
+        // stop it and run only the last one triggered
+        this.stopDebounceStub(debounceName);
+      }
+      this.debouncers[debounceName] = setTimeout(this.modifiedDebounce.bind(this, debounceName, debounceFunc), timeout);
+    }
+
+    modifiedDebounce(debounceName, debounceFunc) {
+      // execute debounce function after timeout passes
+      debounceFunc.bind(this.el)();
+      this.el.fire('stub-debounce-job-completed', {debounceName: debounceName});
+      this.removeFromStubDebouncersQueue(debounceName);
+    }
+
+    prepareStubDebouncersQueue() {
+      if (!this.debouncers) {
+        this.debouncers = {};
+      }
+    }
+
+    removeFromStubDebouncersQueue(debounceName) {
+      if (!this.debouncers) {
+        return;
+      }
+      if (this.debouncers[debounceName]) {
+        delete this.debouncers[debounceName];
+      }
+    }
+
+    stopDebounceStub(debounceName) {
+      if (this.debouncers && this.debouncers[debounceName]) {
+        clearTimeout(this.debouncers[debounceName]);
+        this.removeFromStubDebouncersQueue(debounceName);
+      }
+    }
+
+//    getFuncArgumentsNames(func) {
+//      return func.toString().replace (/[\r\n\s]+/g, ' ').match (/function\s*\w*\s*\((.*?)\)/)[1].split (/\s*,\s*/);
+//    }
+
+  }
+</script>
