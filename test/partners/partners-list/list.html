@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Partners List Tests</title>
+
+  <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../../node_modules/redux/dist/redux.min.js"></script>
+
+  <link rel="import" href="../../../pmp/app-config/app-dexie-db-config.html">
+  <link rel="import" href="../mockup-data/partner-tests-mockup-data.html">
+
+  <link rel="import" href="partners-list.page-object.html">
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../../../pmp/app-elements/partners/partners-list.html">
+
+</head>
+<body>
+
+  <test-fixture id="partners-list">
+    <template>
+      <partners-list></partners-list>
+    </template>
+  </test-fixture>
+
+  <script>
+    (function() {
+      'use strict';
+
+      suite('Partners list tests with fake server', () => {
+        let server;
+        let partnersList;
+        let partnersListPage;
+
+        setup(() => {
+          server = PmpTestsHelper.initializeFakeServer();
+          partnersList = fixture('partners-list');
+          partnersList.set('urlParams', {size: 10, sort :'name.asc'});
+          partnersList.set('active', true);
+
+          partnersListPage = new PartnersListPage(partnersList);
+          // fake partners list get request
+          partnersListPage.setupGetListRequest(PmpTests.Partners.MockupData.partnersListData);
+
+          // bypass dexie partners filter using stubs, but using the real partners filter method
+          partnersListPage.setQueryStubMethod();
+        });
+
+        teardown(() => {
+          partnersListPage.restoreServer();
+        });
+
+        test('Partners list is ready to filter data', (done) => {
+          flush(() => {
+            let dataEl = partnersListPage.getListDataElement();
+            expect(dataEl.is).to.equal('partners-list-data');
+            // /api/v2/partners/ response should match partnersListData
+            expect(JSON.stringify(PmpTests.Partners.MockupData.partnersListData))
+                .to.equal(JSON.stringify(dataEl.data));
+
+            expect(partnersListPage.requiredDataHasBeenLoaded()).to.equal(true);
+
+            // check default query string to match default urlParams
+            let defaultQueryString = Object.keys(partnersList.urlParams).map(function(k) {
+              return k + '=' + partnersList.urlParams[k];
+            }).join('&');
+            expect(partnersListPage.getCurrentQueryString()).to.equal(defaultQueryString);
+            expect(partnersListPage.listIsVisible()).to.equal(false);
+
+            expect(partnersListPage.isVisibleByKey('q')).to.equal(true);
+            expect(partnersListPage.isVisibleByKey('filterMenu')).to.equal(true);
+            expect(partnersListPage.isVisibleByKey('showHiddenBtn')).to.equal(true);
+
+            done();
+          });
+        });
+
+        test('Partners list: filter data', (done) => {
+          flush(() => {
+            let q = partnersListPage.getFieldByKey('q');
+            q.set('value', 'Society');
+
+            let queryRunTimesNr = 0;
+            let filteredPartners = [];
+            partnersList.addEventListener('stub-debounce-job-completed', (e) => {
+              if (e.detail.debounceName === 'query') {
+                expect(partnersListPage.partnerQuery).called;
+                switch (queryRunTimesNr) {
+                  case 0:
+                    // filter by q completed, set showHidden on and re-filter
+                    filteredPartners = partnersListPage.getListFilteredData();
+                    expect(filteredPartners.length).to.equal(0);
+                    queryRunTimesNr++;
+                    // set show hidden on to re-trigger search
+                    let showHiddenBtn = partnersListPage.getFieldByKey('showHiddenBtn');
+                    MockInteractions.tap(showHiddenBtn);
+                    return;
+
+                  case 1:
+                    // filter by q and showHidden on completed, set partnerType and re-filter
+                    filteredPartners = partnersListPage.getListFilteredData();
+                    expect(filteredPartners.length).to.equal(1);
+
+                    let avFilters = partnersListPage.getAvailableFilters();
+                    expect(avFilters.length).to.be.greaterThan(0);
+
+                    partnersListPage.setPartnerType('Civil Society Organisation');
+                    queryRunTimesNr++;
+                    break;
+
+                  case 2:
+                    // still one result for filters
+                    // hidden: true, q: society and partnerType: 'Civil Society Organisation'
+                    filteredPartners = partnersListPage.getListFilteredData();
+                    expect(filteredPartners.length).to.equal(1);
+
+                    // use a simple timeout to make sure filter were updated and rendered,
+                    // tired of mocking debouncers and methods :)
+                    setTimeout(() => {
+                      let selectedFilters = partnersListPage.getSelectedFilters();
+                      expect(selectedFilters.length).to.be.greaterThan(0);
+
+                      let partnerTypeFilterDropdown = partnersListPage.getPartnerTypeDropdown();
+                      expect(PmpTestsHelper.elementIsVisible(partnerTypeFilterDropdown)).to.equal(true);
+
+                      expect(partnersListPage.getPartnerTypeDropdownMenu().selected)
+                          .to.equal('Civil Society Organisation');
+                      done();
+                    }, 500);
+
+                    break;
+                }
+
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,118 @@
+<link rel="import" href="../../test-helpers/pmp-test-page.html">
+<script>
+  'use strict';
+
+  class PartnersPage extends PmpTestPage {
+    constructor(element) {
+      let pageElementsMap = [
+        {
+          name: 'pageTitle',
+          selector: 'h1[main-title]'
+        },
+        {
+          name: 'exportBtn',
+          selector: '#exportBtn'
+        },
+        {
+          name: 'addNewPartnerBtn',
+          selector: '#addNewPartner'
+        },
+        {
+          name: 'tabs',
+          selector: '#partnerTabs'
+        },
+        {
+          name: 'partnersPages',
+          selector: '#partnersPages'
+        }
+      ];
+      super(element, pageElementsMap);
+    }
+
+    setCurrentPage(page, additionalData) {
+      switch (page) {
+        case 'list':
+          this.updateProperties({
+            partnerPage: 'list',
+            listActive: true
+          });
+          break;
+        case 'details':
+          this.updateProperties({
+            route: {
+              prefix: '',
+              path: 'partners/71/details',
+              __queryParams: {}
+            },
+            partnerPage: 'details',
+            activeTab: 'details',
+            tabsActive: true,
+            listActive: false
+          });
+          break;
+      }
+      if (additionalData) {
+        this.updateProperties(additionalData);
+      }
+    }
+
+    getPageTitle() {
+      if (!this.mainPageElements['pageTitle']) {
+        throw new Error('Page title not found!');
+      }
+      Polymer.dom.flush();
+      let title = this.domQuery('span:not([hidden])', false, this.mainPageElements['pageTitle']);
+      return title.textContent;
+    }
+
+    tabsAreVisible() {
+      Polymer.dom.flush();
+      if (!this.mainPageElements['tabs']) {
+        // query for tabs in case it wasn't rendered first time
+        this.mainPageElements['tabs'] = this.shadowDomQuery('#partnerTabs');
+      }
+      return this.isVisibleByKey('tabs');
+    }
+
+    getActivePageTagName() {
+      let pages = this.mainPageElements['partnersPages'];
+      if (!pages) {
+        return null;
+      }
+      Polymer.dom.flush();
+      let activePage = this.domQuery('[name="' + pages.selected + '"]', false, pages);
+      return activePage ? activePage.tagName.toLowerCase() : '';
+    }
+
+    exportBtnIsVisible() {
+      return this.isVisibleByKey('exportBtn');
+    }
+
+    addPartnerBtnIsVisible() {
+      return this.isVisibleByKey('addNewPartnerBtn');
+    }
+
+    getNewPartnerDialog() {
+      if (!this.el.newPartnerDialog) {
+        return null;
+      }
+      return this.shadowDomQuery('#newPartnerDialog', false, this.el.newPartnerDialog);
+    }
+
+    openNewPartnerDialog() {
+      if (this.addPartnerBtnIsVisible()) {
+        MockInteractions.tap(this.mainPageElements['addNewPartnerBtn']);
+      }
+    }
+
+    getNewPartnerVendorField() {
+      let newPartnerDialog = this.getNewPartnerDialog();
+      return this.domQuery('#vendorNo', false, newPartnerDialog);
+    }
+
+    getNewPartnerDialogSaveBtn() {
+      let newPartnerDialog = this.getNewPartnerDialog();
+      return this.shadowDomQuery('paper-button[dialog-confirm]', false, newPartnerDialog);
+    }
+  }
+</script>
