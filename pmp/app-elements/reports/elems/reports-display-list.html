@@ -202,6 +202,7 @@
               // abort previous req and then fire a new one with updated params
               self.abortActiveRequest(activeReportsReq);
             }
+
             self.fireRequest('reports', {}, {params: params}, this._endpointName)
                 .then(function(response) {
                   if (response) {
