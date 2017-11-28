@@ -1,6 +1,7 @@
 <link rel="import" href="../../test-helpers/testing-utils.html">
 <script>
   class ReportsHelper {
+
     static populateReportsList(reportsList) {
       let reportsDisplayList = reportsList.$.reportsDisplayList;
       reportsDisplayList.fireRequest = function() {
@@ -23,6 +24,7 @@
       reportsList.sections = [];
       reportsList.reportStatuses = [];
     }
+
     static populateReportUderView(pageReports) {
       pageReports.fireRequest = function() {
         return new Promise(function(resolve, reject) {

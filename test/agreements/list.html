@@ -38,7 +38,7 @@
         });
         teardown(function() {
           helper.server.restore();
-          helper.agreementList.agreementListData.query.restore();
+          helper.agreementList.$$('#agreements').query.restore();
         });
 
         test('can instantiate agreements-list element', function() {
@@ -72,6 +72,7 @@
               PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
                 var firstItem = ddContent.querySelector('paper-item');
                 let initialAvFiltersLength = helper.agreementList.availableListFilterOptions.length;
+
                 PmpTestsHelper.PaperMenuButton.runAfterClose(filterPaperMenu, firstItem, function() {
                   expect(helper.agreementList.selectedFilters.length).to.be.greaterThan(0);
                   expect(helper.agreementList.availableListFilterOptions.length).to.be.equal(initialAvFiltersLength - 1);

@@ -1,0 +1,59 @@
+<script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+<script>
+  // POM = Page Object Model
+  class PageReportsPOM {
+    constructor(pageReports) {
+      this.pageReports = pageReports;
+    }
+    //---Elements
+    getListRows() {
+      let rows = this.getReportsDisplayList().$.list.querySelectorAll('etools-data-table-row');
+      return rows;
+    }
+    getList() {
+      return this.pageReports.$$('#list');
+    }
+    getSummary() {
+      return this.pageReports.$$('#summary');
+    }
+    getProgress() {
+      return this.pageReports.$$('#reportDetails');
+    }
+    getReportsDisplayList() {
+      return this.getList().$.reportsDisplayList;
+    }
+    getEtoolsActionButton() {
+      return Polymer.dom(this.pageReports.root).querySelector('etools-action-button');
+    }
+    getAcceptBtn() {
+      return  Polymer.dom(this.getEtoolsActionButton().root).querySelector('paper-button').querySelector('.main-btn-part');
+    }
+    getSendBkToPartnerBtn() {
+      return Polymer.dom(this.getEtoolsActionButton().root).querySelector('paper-button')
+        .querySelector('paper-menu-button').querySelector('paper-menu').querySelector('paper-item');
+    }
+    getAcceptDialog() {
+      return this.pageReports.reportRatingDialog;
+    }
+    getEtoolsDialogFromAcceptDialog() {
+      return this.getAcceptDialog().$.reportRatingDialog;
+    }
+    getSendBackToPartnerDialog() {
+      return this.pageReports.reportRejectDialog;
+    }
+    getEtoolsDialogFromSendBackToPartnerDialog() {
+      return this.getSendBackToPartnerDialog().$.reportRejectDialog;
+    }
+
+    //----Actions
+    clickAccept() {
+      let acceptBtn = this.getAcceptBtn();
+      MockInteractions.tap(acceptBtn);
+    }
+    clickSendBackToPartner() {
+      let sendBkBtn = this.getSendBkToPartnerBtn();
+      MockInteractions.tap(sendBkBtn);
+    }
+  }
+
+</script>

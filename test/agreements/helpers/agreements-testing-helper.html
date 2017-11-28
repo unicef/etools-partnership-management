@@ -28,10 +28,9 @@
     initializeElementUnderTest() {
       PmpTestsHelper.makeDebounceSynchronous(this.agreementList);
       PmpTestsHelper.makeAsyncSynchronous(this.agreementList);
-      this.agreementList.set('permissions', appUserPermissions);
+      this.agreementList.set('permissions', PmpTests.Login.Permissions.PartnershipManager);
       this.agreementList.set('urlParams', this.defaultRoute.__queryParams);
       this.agreementList.set('active', true);
-      this.agreementList.agreementListData = this.agreementList.$$('#agreements');
 
       //initialize data from redux
       this.agreementList.partnersDropdownData = [];
@@ -40,7 +39,7 @@
     }
     stubQuery() {
       let _this = this;
-      this.queryStub = sinon.stub(this.agreementList.agreementListData, 'query', function() {
+      this.queryStub = sinon.stub(this.agreementList.$$('#agreements'), 'query', function() {
                 _this.agreementList.filteredAgreements = PmpTests.Agreements.listMockupData;
               });
     }

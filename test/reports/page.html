@@ -13,6 +13,7 @@
     <link rel="import" href="../test-helpers/testing-utils.html">
     <link rel="import" href="helpers/reports-mockup-data.html">
     <link rel="import" href="helpers/reports-helper.html">
+    <link rel="import" href="helpers/page-reports-pom.html">
     <link rel="import" href="../../pmp/pages/page-reports.html">
   </head>
   <body>
@@ -24,13 +25,12 @@
 
     <script>
       suite('page-reports tests', function() {
-        var pageReports;
+        var pageReports, pagePom;
         setup(function(done) {
           pageReports = fixture('pageReportsFixture');
           pageReports.listActive = true;
-
           pageReports.route = {prefix: '', path: 'reports/list', '__queryParams': {page:1, page_size: 10} };
-
+          pagePom = new PageReportsPOM(pageReports);
           done();
         });
       test('can instantiate page-reports element', function() {
@@ -46,8 +46,8 @@
       test('when list is active, only the reports-list elem is visible', function(done) {
         flush(function() {
           Polymer.Base.async(function() {
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), true);
-            assert.equal(pageReports.$$('#summary'), null);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), true);
+            assert.equal(pagePom.getSummary(), null);
             assert.equal(pageReports.$$('#reportDetails'), null);
             done();
           }, 1000);
@@ -56,50 +56,60 @@
       test('when list is not active and active tab is summary, only the report-summary elem is visible', function(done) {
         flush(function() {
           pageReports.route = {prefix: '', path: 'reports/30/summary', '__queryParams': {} };
-          pageReports.listActive = false;
-          pageReports.fireRequest = function() {
-            return new Promise(function(resolve, reject){
-            resolve({results: PmpTests.ReportsMockupData.report});
-          });
-          };
-          pageReports.tabsActive = true;
-          pageReports.activeTab = 'summary';
-
-          Polymer.Base.async(function() {
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), false);
-            console.log(pageReports.$$('#summary'));
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#summary')), true);
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#reportDetails')), false);
-            done();
-          }, 1000);
-        });
-      });
-      test('when list is not active and active tab is progress, only the report-progress elem is visible', function(done) {
-        flush(function() {
-          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
-          pageReports.listActive = false;
+          Polymer.dom.flush();
           ReportsHelper.populateReportUderView(pageReports);
-          pageReports.tabsActive = true;
-          pageReports.activeTab = 'progress';
-
 
           Polymer.Base.async(function() {
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#list')), false);
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#summary')), false);
-            assert.equal(PmpTestsHelper.elementIsVisible(pageReports.$$('#reportDetails')), true);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), true);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), false);
             done();
           }, 1000);
         });
       });
       test('can view report details', function(done) {
         flush(function() {
+          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
+          Polymer.dom.flush();
+          ReportsHelper.populateReportUderView(pageReports);
 
-          done();
+          Polymer.Base.async(function() {
+            assert.equal(pageReports.activeTab, 'progress');
+            assert.equal(pageReports.reportPage, 'progress');
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), true);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
+            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), false);
+            done();
+          }, 1000);
         });
       });
+      suite('on view report', function() {
+        setup(function() {
+          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
+          Polymer.dom.flush();
+          ReportsHelper.populateReportUderView(pageReports);
+        });
+        test('can Accept report', function(done) {
+          flush(function() {
+            pagePom.clickAccept();
+            Polymer.Base.async(function() {
+              assert.equal(pagePom.getEtoolsDialogFromAcceptDialog().opened, true);
+              done();
+            }, 1000);
+          });
+        });
+        test('can Send report back to partner', function(done) {
+          flush(function() {
+            pagePom.clickSendBackToPartner();
+            Polymer.Base.async(function() {
+              assert.equal(pagePom.getEtoolsDialogFromSendBackToPartnerDialog().opened, true);
+              done();
+            }, 1000);
+          });
+        });
 
-
-    });
+      })
+  });
     </script>
   </body>
 </html>

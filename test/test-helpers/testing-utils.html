@@ -61,15 +61,16 @@
       PaperMenuButton: {
         runAfterOpen: function(menuButton, callback) {
           menuButton.addEventListener('paper-dropdown-open', function() {
-            Polymer.Base.async(callback, 1);
+            Polymer.Base.async(callback, 1000);
           });
           let overlayTrigger = menuButton.$.trigger;
           MockInteractions.tap(overlayTrigger);
         },
         runAfterClose: function(menuButton, closeTrigger, callback) {
           menuButton.addEventListener('paper-dropdown-close', function() {
-            Polymer.Base.async(callback, 1);
+            Polymer.Base.async(callback, 1000);
           });
+          console.log(closeTrigger);
           MockInteractions.tap(closeTrigger);
         }
       }
