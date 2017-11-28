@@ -125,9 +125,10 @@
           this._agreementIdChanged(this.agreementId);
         },
         _agreementIdChanged: function(agreementId) {
-          if (!this.agreements) {
+          if (!this.agreements || !this.agreements.length || !agreementId) {
             return;
           }
+
           let agreement = _.find(this.agreements, function(agreement) {
             return agreement.id === agreementId;
           });
