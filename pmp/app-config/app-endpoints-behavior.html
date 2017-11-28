@@ -45,7 +45,7 @@
       });
 
       if (!prpCountry) {
-        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.profile.country_name + ' country data was ' +
+        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
             'not found in the available PRP countries by business_area_code!';
         this.fire('toast', {text: countryNotFoundInPrpWarning, showCloseBtn: true});
       }

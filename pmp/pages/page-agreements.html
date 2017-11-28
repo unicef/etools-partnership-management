@@ -396,6 +396,7 @@
         if (agreement.agreement_type === 'MOU') {
           newAgreement.start = agreement.start;
           newAgreement.end = agreement.end;
+          delete newAgreement.authorized_officers;
         }
         if (agreement.agreement_type === 'PCA') {
           newAgreement.country_programme = agreement.country_programme;
@@ -416,8 +417,10 @@
         if (this._primitiveFieldIsModified('partner')) {
           changes.partner = this.agreement.partner;
         }
-        if (this._authorizedOfficersChanged()) {
-          changes.authorized_officers = this.authorizedOfficers;
+        if (this.agreement.agreement_type !== 'MOU') {
+          if (this._authorizedOfficersChanged()) {
+            changes.authorized_officers = this.authorizedOfficers;
+          }
         }
         if (this.agreement.agreement_type !== 'SSFA') {
           if ((this.agreement.hasOwnProperty('attached_agreement')) &&
