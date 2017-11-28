@@ -61,6 +61,17 @@
             done();
           });
         });
+
+        test('dropdowns are populating', function(done) {
+          flush(function() {
+            // let partnersDD = PmpTestsHelper.shadowDomQuery(intervDetails, 'paper-input[label="Full Name"]');
+            intervDetails.set('intervention.agreement', 48);
+            let len = intervDetails.$$('#documentType').options.length;
+            expect(len).to.be.equal(2);
+
+            done();
+          });
+        });
       });
     </script>
   </body>
