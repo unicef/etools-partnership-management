@@ -76,7 +76,7 @@ const polylint = require('gulp-polylint');
 const shell = require('gulp-shell');
 
 // Log task end messages
-var log = function (message) {
+function log(message) {
   return function () {
     gutil.log(message);
   }
@@ -101,9 +101,9 @@ function source() {
     // lint CSS not working correctly. Not seeing temporary css files
     // .pipe(gulpif('**/*.{css,html}', css.lint()))              .on('end', log('Linted CSS'))
     .pipe(gulpif('**/*.{html,css}', css.minify())).on('end', log('Minified CSS'))
-    .pipe(gulpif('**/*.{js,html}', javascript.babelify())).on('end', log('Transpiled JS'))
 
     .pipe(gulpif('**/*.js', javascript.lint())).on('end', log('Linted Javascript'))
+    .pipe(gulpif('**/*.{js,html}', javascript.babelify())).on('end', log('Transpiled JS (using babel)'))
     .pipe(gulpif('**/*.js', javascript.minify())).on('end', log('Minified Javascript'))
 
     .pipe(gulpif('**/*.{gif,jpg,svg}', images.minify())).on('end', log('Minified Images'))
