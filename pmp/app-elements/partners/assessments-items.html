@@ -86,7 +86,7 @@
     <paper-material elevation="[[elevation]]">
 
       <paper-toolbar>
-        <paper-icon-button on-click="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
+        <paper-icon-button on-tap="_toggle" icon$="[[_getExpandBtnIcon(open)]]"></paper-icon-button>
         <div class="title">Assessments</div>
       </paper-toolbar>
 
@@ -222,7 +222,12 @@
               missing: 'Date of Assessment is required',
               futureDate: 'Date of Assesment cannot be in the future'
             }
-          }
+          },
+          open: {
+            type: Boolean,
+            value: true,
+            reflectToAttribute: true
+          },
         },
 
         observers: [
@@ -253,6 +258,17 @@
           if (!Array.isArray(dataItems)) {
             this.set('dataItems', []);
           }
+        },
+
+        _toggle: function() {
+          this.set('open', !this.open);
+        },
+
+        _getExpandBtnIcon: function(open) {
+          if (!open) {
+            return 'icons:expand-more';
+          }
+          return 'icons:expand-less';
         },
 
         _assessmentPropertyChanged: function(dataPath) {

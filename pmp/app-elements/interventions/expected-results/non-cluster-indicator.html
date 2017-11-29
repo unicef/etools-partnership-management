@@ -4,17 +4,21 @@
 <link rel="import" href="../../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
+
+<link rel="import" href="behaviors/indicators-common-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       .radioGroup {
         width: 320px;
       }
@@ -42,9 +46,9 @@
       <div class="layout-vertical">
         <label class="paper-label">Type </label>
         <div class="radioGroup">
-          <paper-radio-group selected="{{indicator.unit}}">
-            <paper-radio-button class="no-left-padding" name="numeric">Quantity (#)</paper-radio-button>
-            <paper-radio-button name="percent">Percent/Ratio</paper-radio-button>
+          <paper-radio-group selected="{{indicator.indicator.unit}}">
+            <paper-radio-button disabled$="[[readonly]]" class="no-left-padding" name="number">Quantity (#)</paper-radio-button>
+            <paper-radio-button disabled$="[[readonly]]" name="percentage">Percent/Ratio</paper-radio-button>
           </paper-radio-group>
 
         </div>
@@ -52,60 +56,68 @@
       <div class="layout-vertical">
         <label class="paper-label">Display Type </label>
         <div class="radioGroup">
-           <paper-radio-group selected="{{indicator.displayUnit}}">
-            <paper-radio-button class="no-left-padding" name="percentage">Percentage</paper-radio-button>
-            <paper-radio-button name="ratio">Ratio</paper-radio-button>
+           <paper-radio-group  selected="{{indicator.indicator.display_type}}">
+            <paper-radio-button disabled="[[readonly]]" class="no-left-padding" name="percentage">Percentage</paper-radio-button>
+            <paper-radio-button disabled="[[readonly]]" name="ratio">Ratio</paper-radio-button>
           </paper-radio-group>
         </div>
       </div>
     </div>
     <div class="row-h flex-c">
-      <paper-input label="Indicator" value="{{indicator.name}}" placeholder="&#8212;"></paper-input>
+      <paper-input id="titleEl" required label="Indicator"
+        value="{{indicator.indicator.title}}" placeholder="&#8212;"
+        error-message="Please add a title" auto-validate
+        readonly$="[[readonly]]">
+      </paper-input>
     </div>
 
     <!-- Baseline & Target -->
     <div class="row-h flex-c">
       <div class="col col-3">
-        <template is="dom-if" if="[[_unitIsNumeric(indicator.unit)]]">
+        <template is="dom-if" if="[[_unitIsNumeric(indicator.indicator.unit)]]">
           <paper-input label="Baseline"
                       value="{{indicator.baseline}}"
                       type="number"
-                      placeholder="&#8212;" disabled="[[indicator.baselineIsUnknown]]">
+                      placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
           </paper-input>
         </template>
-        <template is="dom-if" if="[[!_unitIsNumeric(indicator.unit)]]">
+        <template is="dom-if" if="[[!_unitIsNumeric(indicator.indicator.unit)]]">
           <paper-input label="Baseline"
                       value="{{indicator.baseline}}"
                       type="number"
                       min="0"
                       max="100"
                       allowed-pattern="[0-9\.]"
-                      placeholder="&#8212;" disabled="[[indicator.baselineIsUnknown]]">
+                      placeholder="&#8212;" disabled="[[baselineIsUnknown]]">
           </paper-input>
         </template>
       </div>
       <div class="col col-3">
-        <template is="dom-if" if="[[_unitIsNumeric(indicator.unit)]]">
-          <paper-input label="Target"
-                      value="{{indicator.target}}"
-                      type="number"
-                      placeholder="&#8212;">
-          </paper-input>
-        </template>
-        <template is="dom-if" if="[[!_unitIsNumeric(indicator.unit)]]">
-          <paper-input label="Target"
-                      value="{{indicator.target}}"
-                      type="number"
-                      min="0"
-                      max="100"
-                      allowed-pattern="[0-9\.]"
-                      placeholder="&#8212;">
-          </paper-input>
-        </template>
+        <paper-input label="Target" id="targetElForNumericUnit"
+                    value="{{indicator.target}}"
+                    type="number"
+                    placeholder="&#8212;"
+                    required
+                    auto-validate
+                    error-message="Please add a valid target"
+                    hidden$="[[!_unitIsNumeric(indicator.indicator.unit)]]">
+        </paper-input>
+        <paper-input label="Target" id="targetElForNonNumericUnit"
+                    value="{{indicator.target}}"
+                    type="number"
+                    min="0"
+                    max="100"
+                    allowed-pattern="[0-9\.]"
+                    placeholder="&#8212;"
+                    required
+                    auto-validate
+                    error-message="Please add a valid target"
+                    hidden$=[[_unitIsNumeric(indicator.indicator.unit)]]>
+        </paper-input>
       </div>
     </div>
     <div class="unknown">
-      <paper-checkbox checked="{{indicator.baselineIsUnknown}}">Unknown </paper-checkbox>
+      <paper-checkbox checked="{{baselineIsUnknown}}">Unknown </paper-checkbox>
     </div>
     <!-- Baseline & Target -->
 
@@ -117,14 +129,17 @@
         </paper-textarea>
     </div>
     <div class="row-h flex-c">
-      <etools-multi-selection-menu id$="locationsDropdw"
+      <etools-multi-selection-menu id="locationsDropdw"
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
                                    options="[[locations]]"
                                    option-label="name"
                                    option-value="id"
-                                   error-message="Please select section locations">
+                                   required
+                                   auto-validate
+                                   error-message="Please select locations"
+                                   disable-on-focus-handling>
       </etools-multi-selection-menu>
     </div>
   </template>
@@ -137,30 +152,83 @@
         is: 'non-cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
+          EtoolsLogsBehavior
         ],
 
         properties: {
           indicator: {
-            type: Object
+            type: Object,
+            observer: '_indicatorChanged'
+          },
+          readonly: {
+            type: Boolean,
+            value: false,
+            observer: '_readonlyChanged'
           },
           locations: {
             type: Array,
             statePath: 'locations'
           },
+          baselineIsUnknown: {
+            type: Boolean
+          }
 
         },
         observers: [
-           '_baselineUnknownChanged(indicator.baselineIsUnknown)'
+          '_baselineChanged(indicator.baseline)',
+          '_targetChanged(indicator.target)',
+          '_baselineUnknownChanged(baselineIsUnknown)'
         ],
-        _unitIsNumeric: function(unit) {
-          return unit === 'numeric';
-        },
 
+        _unitIsNumeric: function(unit) {
+          return unit === 'number';
+        },
+        _indicatorChanged: function(indicator) {
+          if (!indicator) {
+            return;
+          }
+          if (!this.indicator.id) {
+            this.baselineIsUnknown = false;
+            this.readonly = false;
+          } else {
+            this.baselineIsUnknown = indicator.baseline ? false : true;
+            this.readonly = true;
+          }
+        },
+        _readonlyChanged: function() {
+          this.updateStyles();
+        },
         _baselineUnknownChanged: function(isUnknown) {
           if (isUnknown) {
             this.set('indicator.baseline', null);
           }
+        },
+        validate: function() {
+          let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
+          return this.validateComponents(elemIds);
+        },
+        resetValidations: function() {
+          let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
+          let i;
+          for (i = 0; i < elemIds.length; i++) {
+            let elem = this.$$('#' + elemIds[i]);
+            if (elem) {
+              elem.invalid = false;
+            } else {
+              this.logWarn('Elem ' + elemIds[i] + ' not found');
+            }
+          }
+        },
+
+        _getIndicatorTargetElId: function() {
+          let elId = 'targetElForNumericUnit';
+          if (!this.indicator || !this.indicator.indicator) {
+            return 'targetElForNumericUnit';
+          }
+          return (this._unitIsNumeric(this.indicator.indicator.unit))
+              ? 'targetElForNumericUnit' : 'targetElForNonNumericUnit';
         }
 
     });

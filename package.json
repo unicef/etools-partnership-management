@@ -33,6 +33,7 @@
   },
   "scripts": {
     "dev": "polymer serve & npm run watch",
+    "bundle": "node --max_old_space_size=4096 ./node_modules/gulp/bin/gulp",
     "test": "polymer test",
     "watch": "browser-sync start --proxy localhost:8082 --files '**/*.html, **/*.js, images/*' "
   },

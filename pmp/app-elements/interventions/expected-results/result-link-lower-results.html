@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
@@ -10,11 +9,15 @@
 <link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../../app-elements/common-elements/etools-form-element-wrapper.html">
+
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
+<link rel="import" href="pd-lower-result-name.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
-    <style include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
+    <style
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
       [hidden] {
         display: none !important;
       }
@@ -27,24 +30,18 @@
         box-sizing: border-box;
       }
 
-      paper-input {
-        width: 100%;
-      }
-
-      paper-textarea {
-        width: 100%;
-      }
-
       .indicator-col {
         margin-right: 10px;
         width: 100px;
       }
+
       .indicator-col .heading {
         display: inline-block;
         width: 100%;
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         margin-bottom: 10px;
       }
+
       .indicator-col .indicator-baseline,
       .indicator-col .indicator-target {
         padding: 10px;
@@ -53,24 +50,30 @@
         box-sizing: border-box;
         min-height: 41px;
       }
+
       .indicator-col .indicator-baseline {
         background-color: var(--light-info-color);
       }
+
       .indicator-col .indicator-target {
         background-color: var(--success-color);
       }
+
       .indicator-col .content {
         padding: 10px 0;
         display: block;
       }
+
       .indicator-nr {
         @apply --layout-horizontal;
         padding-top: 31px;
       }
+
       .indicator-nr strong {
         @apply --layout-self-center;
         min-width: 30px;
       }
+
       .edit-indicator {
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         width: 36px;
@@ -90,17 +93,18 @@
                                  data-args$="[[index]]"
                                  icon="cancel"
                                  disabled$="[[!editMode]]"></paper-icon-button>
+              <paper-icon-button class="action edit"
+                                 on-tap="_editLowerResult"
+                                 data-args$="[[index]]"
+                                 icon="create"
+                                 disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div>
           <div class="item-content">
             <div class="row-h">
-              <paper-input label="PD output or SSFA expected result"
-                           value="{{item.name}}"
-                           readonly$="[[!editMode]]"
-                           required
-                           auto-validate
-                           invalid
-                           error-message="PD output or SSFA expected result must be specified"></paper-input>
+              <etools-form-element-wrapper label="PD output or SSFA expected result">
+                <span>[[item.name]]</span>
+              </etools-form-element-wrapper>
             </div>
             <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
@@ -132,7 +136,7 @@
                   <div class="indicator-col flex-c">
                     <span class="heading">Indicator</span>
                     <span class="content">
-                      [[_getIndicatorType(indicator.unit)]][[_displayIndicatorValue(indicator.name)]]
+                      [[_getIndicatorType(indicator.unit)]][[_getIndicatorTitle(indicator)]]
                     </span>
                   </div>
                 </div>
@@ -143,6 +147,7 @@
               <paper-button class="secondary-btn"
                             on-tap="_addNewIndicator"
                             title="Add Indicator"
+                            data-ll-result-id$="[[item.id]]"
                             disabled$="[[!editMode]]"
                             hidden$="[[!editMode]]">
                 Add Indicator
@@ -189,23 +194,38 @@
           },
           editMode: {
             type: Boolean,
-            value: false,
-            observer: '_editModeChanged'
-          }
+            value: false
+          },
+          expectedResultId: Number,
+        },
+        listeners: {
+          'delete-confirm': '_updateInterventionLocAndClusters'
+        },
+        _updateInterventionLocAndClusters: function() {
+          this.fire('indicators-changed');
+        },
+        _addNewLowerResult: function() {
+          this.fire('add-new-lower-result', {expectedResultId: this.expectedResultId});
         },
 
-        ready: function() {
-          this.dataSetModel = {
-            id: null,
-            name: null,
-            applied_indicators: []
-          };
-        },
-
-        _editModeChanged: function(newValue, oldValue) {
-          if (newValue !== oldValue) {
-            this.updateStyles();
+        _editLowerResult: function(e) {
+          let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
+          if (index < 0) {
+            this.logError('Can not edit, invalid index selected', 'lower-results');
+            return;
           }
+
+          let lowerResult = this.dataItems[index];
+          if (!lowerResult) {
+            this.logError('Lower result not found in data items by index: ' + index, 'lower-results');
+            return;
+          }
+
+          this.fire('edit-lower-result', {
+            expectedResultId: this.expectedResultId,
+            lowerResultId: lowerResult.id,
+            lowerResultName: lowerResult.name
+          });
         },
 
         _displayIndicatorValue: function(value) {
@@ -214,6 +234,16 @@
             return value;
           } else {
             return '-';
+          }
+        },
+        _getIndicatorTitle: function(indicator) {
+          if (!indicator) {
+            return '-';
+          }
+          if (indicator.cluster_indicator_id) {
+            return indicator.cluster_indicator_title;
+          } else {
+            return indicator.indicator ? indicator.indicator.title : '-';
           }
         },
 
@@ -226,8 +256,8 @@
               return '# - ';
             case 'percentage':
               return '% - ';
-            case 'yesno':
-              return 'Yes/No - ';
+              // case 'yesno':
+              //   return 'Yes/No - ';
           }
         },
 
@@ -235,22 +265,12 @@
           return parseInt(indicatorIndex, 10) + 1;
         },
 
-        /**
-         * Validate last amendment type; if valid add a new one.
-         */
-        _addNewLowerResult: function() {
-          if (!this.cpOutputId) {
-            this.fire('toast', {text: 'Please select a CP Output first', showCloseBtn: true});
-            return;
-          }
-          this._addElement();
-        },
-
         _addNewIndicator: function(event) {
           // build a map (actionParams) to know where to put indicator data at add/edit
           var resultMap = {
             cpOutputId: this.cpOutputId,
             llResultIndex: event.model.index,
+            llResultId: parseInt(Polymer.dom(event).localTarget.getAttribute('data-ll-result-id'), 10),
             indicatorData: null,
             appliedIndicatorsIndex: null
           };
@@ -260,11 +280,12 @@
         _editIndicator: function(event) {
           var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
           var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
-          var indicator = this.dataItems[llResultIndex].applied_indicators[indicatorIndex];
+          var indicator = JSON.parse(JSON.stringify(this.dataItems[llResultIndex].applied_indicators[indicatorIndex]));
 
           var resultMap = {
             cpOutputId: this.cpOutputId,
             llResultIndex: llResultIndex,
+            llResultId: indicator.lower_result,
             indicatorData: indicator,
             appliedIndicatorsIndex: indicatorIndex
           };

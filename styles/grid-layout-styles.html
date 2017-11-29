@@ -6,21 +6,36 @@
 <dom-module id="grid-layout-styles">
   <template>
     <style>
+      .layout-horizontal,
+      .layout-vertical {
+        box-sizing: border-box;
+      }
       .layout-horizontal {
-         @apply(--layout-horizontal);
+         @apply --layout-horizontal;
       }
       .layout-vertical {
-         @apply(--layout-vertical);
+         @apply --layout-vertical;
+      }
+      .row-padding {
+        padding: 16px 24px;
+      }
+      .row-padding-h {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .row-padding-v {
+        padding-top: 16px;
+        padding-bottom: 16px;
       }
       .row-h {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       .row-v {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
       .flex-c {
         /* flex container */
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
       .row-h, .row-v {
         padding: 16px 24px;
@@ -66,11 +81,17 @@
         overflow: hidden;
       }
       .col {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
         box-sizing: border-box;
       }
+
       .col:not(:first-of-type) {
         padding-left: 24px;
+      }
+
+      .col-1 {
+        flex: 0 0 8.333333333%;
+        max-width: 8.333333333%;
       }
 
       .col-2 {
@@ -96,6 +117,11 @@
       .col-6 {
         flex: 0 0 50%;
         max-width: 50%;
+      }
+
+      .col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
       }
 
       .col-8 {

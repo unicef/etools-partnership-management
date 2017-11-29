@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
@@ -22,6 +23,7 @@
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
+
 <link rel="import" href="../../scripts/lodash/lodash.html">
 
 <dom-module id="page-interventions">
@@ -112,6 +114,16 @@
                 <span class="tab-content">Attachments</span>
               </paper-tab>
 
+              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+                <paper-tab name="reports" link>
+                  <span class="tab-content">Reports</span>
+                </paper-tab>
+
+                <paper-tab name="progress" link>
+                  <span class="tab-content">Progress</span>
+                </paper-tab>
+              </template>
+
             </paper-tabs>
           </div>
         </template>
@@ -139,7 +151,7 @@
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_showInterventionOverview(interventionPage, newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
@@ -175,6 +187,19 @@
             </intervention-attachments>
           </template>
 
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
+            <intervention-reports id="interventionReports"
+                                  name="reports"
+                                  intervention-id="[[intervention.id]]"
+                                  active="[[_pageEquals(interventionPage, 'reports')]]"
+                                  url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
+          </template>
+
+          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive)]]">
+            <intervention-progress name="progress"
+                                   intervention-id="[[intervention.id]]"></intervention-progress>
+          </template>
+
         </iron-pages>
 
         <intervention-item-data id="interventionData"
@@ -190,7 +215,7 @@
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[_showSidebarStatus(intervListActive, _subPageOrTabAttached)]]">
+      <template is="dom-if" if="[[_showInterventionSidebarStatus(intervListActive, _subPageOrTabAttached, interventionPage)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                active="[[!intervListActive]]"
@@ -215,6 +240,7 @@
 
       is: 'page-interventions',
       behaviors: [
+        EtoolsLogsBehavior,
         etoolsBehaviors.DynamicDialogBehavior,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
@@ -278,7 +304,7 @@
               latest_end_date: null
             },
             planned_visits: [],
-            sector_locations: [],
+            sections: [],
             planned_budget: {},
             result_links: [],
             amendments: [],
@@ -323,8 +349,7 @@
           }
         },
         _forceDetUiValidationOnAttach: Boolean,
-        _forceReviewUiValidationOnAttach: Boolean,
-
+        _forceReviewUiValidationOnAttach: Boolean
       },
       observers: [
         /**
@@ -348,7 +373,7 @@
         if (this.newInterventionActive) {
           this.set('intervention', JSON.parse(JSON.stringify(this.newInterventionModel)));
         }
-        var dialog = document.createElement('div');
+        let dialog = document.createElement('div');
         dialog.setAttribute('id', 'finalizeAmendmentConfirmation');
         dialog.innerHTML = 'All fields in the details tab will now be closed for editing. Do you want to continue?';
         this.finalizeAmendmentConfirmationDialog = this.createDialog('Finalize Amendment', 'md', 'Yes', 'Cancel',
@@ -454,13 +479,7 @@
         if (!this.activeTab) {
           this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
         }
-        this.debounce('debounce-url-tab-update', function() {
-          let tabs = this.$$('#intTabs');
-          if (tabs) {
-            tabs.notifyResize();
-          }
-          this.fire('update-main-path', {path: this.route.path});
-        }.bind(this), 50);
+        this._updateTabPath(null, this.route.path, '#partnerTabs');
       },
 
       _setActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
@@ -472,8 +491,11 @@
             // return new intervention page tab name
             page = this.routeDataNewInterv.intTab;
           } else {
-            // return intervention details page tab name
+            // return intervention page tab name
             page = this.routeData.intTab;
+            if (['reports', 'progress'].indexOf(page) > -1) {
+              pageBaseUrl += page + '/';
+            }
           }
           pagePrefix = 'intervention-';
         }
@@ -493,8 +515,8 @@
             }
           })
           .catch(function(err) {
-            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
-            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
+            self.logError('Intervention page import error occurred', '[intervention(s) ' + page + ']', err);
+            self.fire('global-loading', {active: false, loadingSource: 'interv-page'});
             self._triggerPageNotFound();
           });
         }
@@ -566,8 +588,8 @@
         return newInterventionActive === true;
       },
 
-      _showInterventionOverview: function(interventionPage, newInterventionActive) {
-        return interventionPage === 'overview' && !this._newIntervention(newInterventionActive);
+      _vizibleTab: function(interventionPage, expectedPage, newInterventionActive) {
+        return this._pageEquals(interventionPage, expectedPage) && !this._newIntervention(newInterventionActive);
       },
 
       /**
@@ -635,6 +657,21 @@
         // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
       },
+
+      _showInterventionSidebarStatus: function(intervListActive, _subPageOrTabAttached, interventionPage) {
+        return (['reports', 'progress'].indexOf(interventionPage) > -1)
+            ? false
+            : this._showSidebarStatus(intervListActive, _subPageOrTabAttached);
+
+      },
+
+      _getReportsTabUrlParams: function(interventionPage) {
+        let params = null;
+        if (this._pageEquals(interventionPage, 'reports')) {
+          params = Object.assign({}, this.route.__queryParams);
+        }
+        return params;
+      }
     });
 
   </script>

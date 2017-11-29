@@ -201,6 +201,16 @@
         padding-top: 8px;
       }
 
+      .input-label {
+        min-height: 24px;
+        padding-top: 4px;
+        min-width: 0;
+      }
+      .input-label[empty]::after {
+        content: "—";
+        color: var(--medium-primary-text-color);
+      }
+
       /* responsive css rules */
       @media (min-width: 850px) {
 

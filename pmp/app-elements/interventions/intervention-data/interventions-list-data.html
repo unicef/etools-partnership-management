@@ -49,7 +49,7 @@
         },
 
         query: function(field, order, searchString, documentTypes, cpOutputs,
-                        interventionStatuses, sectors, unicefFocalPoints, offices, startDate,
+                        interventionStatuses, sections, unicefFocalPoints, offices, startDate,
                         endDate, pageNumber, pageSize, showQueryLoading) {
 
           // If an active query transaction exists, abort it and start
@@ -112,11 +112,11 @@
                 }
               }
 
-              if (sectors.length) {
-                let matchSectors = intervention.sectors.filter(function(sector) {
-                  return sectors.indexOf(sector) > -1;
+              if (sections.length) {
+                let matchSections = intervention.sections.filter(function(section) {
+                  return sections.indexOf(section + '') > -1;
                 });
-                if (matchSectors && matchSectors.length === 0) {
+                if (matchSections && matchSections.length === 0) {
                   return false;
                 }
               }

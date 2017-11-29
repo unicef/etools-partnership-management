@@ -25,7 +25,7 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
-<link rel="import" href="../../../styles/partner-status-styles.html">
+<link rel="import" href="../../../styles/app-mixins.html">
 
 <link rel="import" href="agreement-data/agreement-list-data.html">
 <link rel="import" href="../partners/partners-data/partners-list-data.html">
@@ -38,6 +38,10 @@
     <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles">
       :host {
         width: 100%;
+      }
+      .ag-ref {
+        @apply --text-btn-style;
+        text-transform: none;
       }
     </style>
 
@@ -185,7 +189,7 @@
         <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <span class="col-data col-2 ">
-              <a class="truncate"
+              <a class="ag-ref truncate"
                 href="agreements/[[agreement.id]]/details"
                 title="[[getDisplayValue(agreement.agreement_number)]]">
                 [[getDisplayValue(agreement.agreement_number)]]

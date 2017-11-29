@@ -136,11 +136,14 @@ function dependencies() {
 // By default: just lint and minify
 // No building into eTools
 // hint: good for testing build efficiency
+// IMPORTANT: if you build results in `JavaScript heap out of memory` error, run it like this:
+// gulp --max_old_space_size=4096
+
 gulp.task('default', gulp.series([
   clean.build,
   project.merge(source, dependencies),
   project.serviceWorker,
-  shell.task(['git rev-parse HEAD > build/pmp/bundled/revision.txt'])
+  // shell.task(['git rev-parse HEAD > build/pmp/bundled/revision.txt'])
 ]));
 
 // Run polylint,

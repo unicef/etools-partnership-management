@@ -2,11 +2,8 @@
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
-<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
@@ -14,11 +11,12 @@
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 
-<link rel="import" href="../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../styles/page-common-styles.html">
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
+<link rel="import" href="../../../styles/buttons-styles.html">
 
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
@@ -26,6 +24,7 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="intervention-form/agreement-selector.html">
@@ -33,58 +32,39 @@
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
 <link rel="import" href="intervention-planned-visits.html">
-<link rel="import" href="intervention-sector-locations.html">
+<link rel="import" href="reports/reporting-requirements.html">
+<link rel="import" href="grouped-locations-dialog.html">
 
 <dom-module id="intervention-details">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
       }
 
       paper-input,
-      paper-textarea,
-      agreement-selector,
-      paper-material {
+      agreement-selector {
         width: 100%;
       }
 
-      paper-material {
-        padding: 0;
-        background-color: var(--ecp-content-bg-color, #FFFFFF);
-      }
-
-      paper-material paper-toolbar {
-        --paper-toolbar-height: 40px;
-        --paper-toolbar-background: var(--medium-theme-background-color);
-        --paper-toolbar: {
-          -webkit-border-radius: 8px;
-          -moz-border-radius: 8px;
-          border-radius: 8px;
-        };
-        --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
-          margin-left: 0;
-        };
-      }
-
       .expiry-warning {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
         padding-bottom: 12px;
         color: var(--error-color);
       }
+
       paper-toggle-button {
         font-size: 16px;
       }
 
       etools-info-tooltip {
         --etools-tooltip-trigger-icon: {
-          @apply(--pmp-form-field-frs-inconsistency-icon);
+          @apply --pmp-form-field-frs-inconsistency-icon;
         };
       }
 
@@ -93,8 +73,19 @@
           color: var(--error-color);
         }
       }
+
       div[no-left-padding] {
         padding-left: 0px !important;
+      }
+
+      .names-padding {
+        padding-right: 15px;
+      }
+
+      .see-locations iron-icon {
+        margin-right: 0;
+        --iron-icon-height: 18px;
+        --iron-icon-width: 18px;
       }
     </style>
 
@@ -165,8 +156,8 @@
                                        label="UNICEF Focal Point(s)"
                                        placeholder="&#8212;"
                                        options="[[getCleanEsmmOptions(unicefUsersData, intervention)]]"
-                                       option-label="full_name"
-                                       option-value="user_id"
+                                       option-label="name"
+                                       option-value="id"
                                        selected-values="{{intervention.unicef_focal_points}}"
                                        dynamic-align
                                        readonly$="[[!intervention.permissions.edit.unicef_focal_points]]"
@@ -200,9 +191,12 @@
     <etools-content-panel class="content-section" panel-title="PD or SSFA Details">
       <div class="row-h flex-c row-second-bg">
         <div hidden$="[[!_showContingencyPd(agreement)]]" class="col col-3">
-          <paper-toggle-button checked="{{intervention.contingency_pd}}" disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD</paper-toggle-button>
+          <paper-toggle-button checked="{{intervention.contingency_pd}}"
+                               disabled="[[!intervention.permissions.edit.contingency_pd]]">Contingency PD
+          </paper-toggle-button>
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
+             class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
           <!-- TODO: this will be needed in the future, after frs validation will be re-designed
               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]" -->
@@ -246,7 +240,8 @@
             <!--<span slot="message">[[_frsEndConsistencyWarning]]</span>-->
           </etools-info-tooltip>
         </div>
-        <div class="col col-3" hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
+        <div class="col col-3"
+             hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]">
           <div class="expiry-warning">
             <span>[[_daysUntilExpiry(intervention.end)]]</span>
           </div>
@@ -254,44 +249,76 @@
       </div>
       <div class="row-h flex-c">
         <etools-single-selection-menu id="cpStructure"
-                                        label="CP Structure"
-                                        placeholder="&#8212;"
-                                        options="[[cpStructureOptions]]"
-                                        option-value="id"
-                                        option-label="name"
-                                        selected="{{intervention.country_programme}}"
-                                        dynamic-align
-                                        hide-search
-                                        readonly$="[[!intervention.permissions.edit.country_programme]]"
-                                        required$="[[intervention.permissions.required.country_programme]]"
-                                        auto-validate
-                                        error-message="Please select CP Structure">
-          </etools-single-selection-menu>
+                                      label="CP Structure"
+                                      placeholder="&#8212;"
+                                      options="[[cpStructureOptions]]"
+                                      option-value="id"
+                                      option-label="name"
+                                      selected="{{intervention.country_programme}}"
+                                      dynamic-align
+                                      hide-search
+                                      readonly$="[[!intervention.permissions.edit.country_programme]]"
+                                      required$="[[intervention.permissions.required.country_programme]]"
+                                      auto-validate
+                                      error-message="Please select CP Structure">
+        </etools-single-selection-menu>
       </div>
       <div class="row-h flex-c">
-        <paper-material elevation="0">
-          <paper-toolbar>
-            <div class="title">Section/Cluster, Locations</div>
-          </paper-toolbar>
-          <intervention-sector-locations id="sectorLocations"
-                                         data-items="[[_sectorLocationData]]"
-                                         edit-mode$="[[intervention.permissions.edit.sector_locations]]"
-                                         required$="[[intervention.permissions.required.sector_locations]]"
-                                         on-change-sector-locations="_changeSectorLocations">
-          </intervention-sector-locations>
-        </paper-material>
+        <etools-multi-selection-menu id="sections"
+                                     label="Section(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.sections}}"
+                                     options="[[sections]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.sections]]"
+                                     required$="[[intervention.permissions.required.sections]]"
+                                     auto-validate
+                                     error-message="Please select a section">
+        </etools-multi-selection-menu>
+      </div>
+      <div class="row-h flex-c">
+        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+          <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
+          <template is="dom-repeat" items="[[intervention.cluster_names]]">
+            <span class="names-padding">[[item]]</span>
+          </template>
+        </etools-form-element-wrapper>
+      </div>
+      <div class="row-h flex-c">
+        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
+          <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
+          <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
+            <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
+              <span class="names-padding">[[item]]</span>
+            </template>
+            <paper-button class="secondary-btn see-locations"
+                          on-tap="_openLocationsDialog"
+                          title="See all locations">
+              <iron-icon icon="add"></iron-icon>
+              See all
+            </paper-button>
+          </div>
+        </etools-form-element-wrapper>
       </div>
     </etools-content-panel>
 
     <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
-      <intervention-expected-results id="expectedResults"
-                                     data-items="{{intervention.result_links}}"
-                                     selected-cp-structure="[[intervention.country_programme]]"
-                                     intervention-id="[[intervention.id]]"
-                                     required$="[[intervention.permissions.required.result_links]]"
-                                     edit-mode$="[[intervention.permissions.edit.result_links]]">
-      </intervention-expected-results>
-    </etools-content-panel>
+      <template is="dom-if" if="[[!newIntervention]]">
+        <intervention-expected-results id="expectedResults"
+                                      data-items="{{intervention.result_links}}"
+                                      selected-cp-structure="[[intervention.country_programme]]"
+                                      intervention-id="[[intervention.id]]"
+                                      edit-mode$="[[intervention.permissions.edit.result_links]]"
+                                      on-indicators-changed="_updateInteventionLocAndClusters">
+        </intervention-expected-results>
+      </template>
+      <template is="dom-if" if="[[newIntervention]]">
+        <div class="row-h">
+          <p> You must save this PD/SSFA before you can add expected results. </p>
+        </div>
+        </template>
+      </etools-content-panel>
 
     <intervention-planned-budget id="plannedBudget"
                                  class="content-section"
@@ -311,6 +338,8 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
+    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section">
+    </reporting-requirements>
   </template>
 
   <script>
@@ -353,6 +382,10 @@
           ssfaDocTypes: {
             type: Array,
             value: []
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections'
           },
           offices: {
             type: Array,
@@ -398,28 +431,32 @@
             type: String,
             value: ''
           },
-          _forceSectorLocationsRefresh: {
-            type: Boolean,
-            value: false
-          },
-          _sectorLocationData: {
+          locations: {
             type: Array,
-            value: []
+            statePath: 'locations'
           }
         },
 
         observers: [
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
-          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, intervention.start, intervention.status)',
+          '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
+            'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
-          'prepareSectorLocations(intervention, _forceSectorLocationsRefresh)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
           '_contingencyPDChanged(intervention.contingency_pd)'
         ],
-
+        ready: function() {
+          this.locationsDialog = document.createElement('grouped-locations-dialog');
+          Polymer.dom(document.querySelector('body')).appendChild(this.locationsDialog);
+        },
+        detached: function() {
+          if (this.locationsDialog) {
+            Polymer.dom(document.querySelector('body')).removeChild(this.locationsDialog);
+          }
+        },
         attached: function() {
           /**
            * Disable loading message for details tab elements load,
@@ -428,8 +465,14 @@
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
-         },
-         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
+        },
+        getFirst3Locations: function(locNames) {
+          if (!locNames || !locNames.length) {
+            return '';
+          }
+          return locNames.slice(0, Math.min(locNames.length, 3));
+        },
+        _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
             return true;
           }
@@ -437,6 +480,11 @@
             return false;
           }
           return true;
+        },
+        _openLocationsDialog: function() {
+          this.locationsDialog.adminLevel = null;
+          this.locationsDialog.iterventionLocationIds = this.intervention.locations;
+          this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {
           return countryProgrammes.filter(function(cp) {
@@ -487,7 +535,7 @@
         },
         _contingencyPDChanged: function(newValue) {
           if (newValue && this.intervention.status === 'signed') {
-           this._updateDatesRequiredState(false);
+            this._updateDatesRequiredState(false);
           } else {
             if (['signed', 'active'].indexOf(this.intervention.status) > -1) {
               this._updateDatesRequiredState(true);
@@ -497,8 +545,8 @@
           this.$.intEnd.updateStyles();
         },
         _updateDatesRequiredState: function(isRequired) {
-           this.set('intervention.permissions.required.start', isRequired);
-           this.set('intervention.permissions.required.end', isRequired);
+          this.set('intervention.permissions.required.start', isRequired);
+          this.set('intervention.permissions.required.end', isRequired);
         },
         _showContingencyPd: function(agreement) {
           if (!agreement) {
@@ -555,10 +603,10 @@
             this.fieldValidationReset('#' + field);
           }.bind(this));
 
-          var elements = ['sectorLocations', 'expectedResults', 'plannedVisits'];
-          elements.forEach(function(el) {
-            this.elementValidationReset('#' + el);
-          }.bind(this));
+          let plannedVisitsEl = this.$$('#plannedVisits');
+          if (plannedVisitsEl && typeof plannedVisitsEl.resetValidations === 'function') {
+            plannedVisitsEl.resetValidations();
+          }
           this.set('fieldsResetted', true);
         },
 
@@ -622,44 +670,11 @@
           return options;
         },
 
-        prepareSectorLocations: function(intervention, forceSectorLocationsRefresh) {
-          if (forceSectorLocationsRefresh) {
-            this.set('_forceSectorLocationsRefresh', false);
-            return;
-          }
-          if (!intervention) {
-            intervention = this.intervention;
-          }
-
-          let sectorLocationData = [];
-          if (intervention.sector_locations instanceof Array && intervention.sector_locations.length > 0) {
-            sectorLocationData = intervention.sector_locations.map(function(sectorLocation) {
-              return {
-                id: sectorLocation.id,
-                sector: (sectorLocation.sector && typeof sectorLocation.sector === 'object')
-                    ? sectorLocation.sector.id
-                    : sectorLocation.sector,
-                locations: this._prepareLocationsForSave(sectorLocation.locations)
-              };
-            }.bind(this));
-          }
-          this.set('_sectorLocationData', sectorLocationData);
-        },
-
-        _prepareLocationsForSave: function(locations) {
-          if (!Array.isArray(locations) || (Array.isArray(locations) && locations.length === 0)) {
-            return [];
-          }
-          return locations.map(function(location) {
-            return (location && typeof location === 'object') ?  location.id : location;
-          });
-        },
-
         validate: function() {
           let valid = true;
           let fieldSelectors = ['#agreementSelector', '#documentType', '#title', '#unicefOffices', '#unicefFocalPts',
-            '#partnerFocalPts', '#cpStructure', '#sectorLocations',
-            '#plannedBudget', '#expectedResults', '#plannedVisits'];
+            '#partnerFocalPts', '#cpStructure', '#sections',
+            '#plannedBudget', '#plannedVisits'];
           if (!this.intervention.contingency_pd || this.intervention.status === 'active') {
             fieldSelectors.push('#intStart', '#intEnd');
           }
@@ -684,7 +699,7 @@
 
         _checkFrsStartConsistency: function(frsEarliestStartDate, interventionStart, interventionStatus) {
           if (this.newIntervention || this.emptyFrsList(this.intervention)
-            || interventionStatus === 'closed') {
+              || interventionStatus === 'closed') {
             this.set('_frsStartConsistencyWarning', null);
             this.$.intStart.updateStyles();
             return;
@@ -696,7 +711,7 @@
 
         _checkFrsEndConsistency: function(frsLatestEndDate, interventionEnd, interventionStatus) {
           if (this.newIntervention || this.emptyFrsList(this.intervention)
-            || interventionStatus === 'closed') {
+              || interventionStatus === 'closed') {
             this.set('_frsEndConsistencyWarning', '');
             this.$.intEnd.updateStyles();
             return;
@@ -705,17 +720,76 @@
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
         },
-
-        _changeSectorLocations: function(e) {
-          e.stopImmediatePropagation();
+        _updateInteventionLocAndClusters: function() {
           if (!this.intervention) {
             return;
           }
-          this.set('intervention.sector_locations', e.detail.sectorLocations);
+          let locAndClusters = this._extractLocAndClustersFromIndicators();
+          this.set('intervention.locations', locAndClusters.locationIds);
+          this.set('intervention.location_names', locAndClusters.locationNames);
+          this.set('intervention.cluster_names', locAndClusters.clusterNames);
+        },
+        _extractLocAndClustersFromIndicators: function() {
+          let locAndClusters = {
+            locationIds: [],
+            clusterNames: [],
+            locationNames: [],
+          };
+
+          this.intervention.result_links.forEach(function(rl) {
+            if (_.isEmpty(rl.ll_results)) {
+              return;
+            }
+            rl.ll_results.forEach(function(llResult) {
+              if (_.isEmpty(llResult.applied_indicators)) {
+                return;
+              }
+              llResult.applied_indicators.forEach(function(indicator) {
+                if (!_.isEmpty(indicator.locations)) {
+                  [].push.apply(locAndClusters.locationIds,
+                      this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
+                }
+
+                if (indicator.cluster_name) {
+                  [].push.apply(locAndClusters.clusterNames,
+                      this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                }
+              }, this);
+
+            }, this);
+          }, this);
+
+          if (!_.isEmpty(locAndClusters.locationIds)) {
+            [].push.apply(locAndClusters.locationNames,
+                this._extractLocationNames(locAndClusters.locationIds));
+          }
+          return locAndClusters;
+        },
+        _extractLocationNames: function(locationIds) {
+          let selectedLocations = this.locations.filter(function(loc) {
+            return locationIds.indexOf(parseInt(loc.id)) > -1;
+          });
+          let locNames = selectedLocations.map(function(l) {
+            return l.name;
+          });
+          return locNames;
+        },
+        _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
+          let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
+            return interventionLocIds.indexOf(indicLoc) < 0;
+          });
+          return uniqueLocIds;
+        },
+        _getUniqueClusterNames: function(indicatorClusterName, intervetionClusterNames) {
+          if (intervetionClusterNames.indexOf(indicatorClusterName) > -1) {
+            return [];
+          }
+          return [indicatorClusterName];
+        },
+        _isEmpty: function(length) {
+          return !!!length;
         }
-
       });
-
     })();
   </script>
 

@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
-<link rel="import" href="app-config/app-config-behavior.html">
+<link rel="import" href="app-config/app-config.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -66,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .main-page {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       :host(.ie) page-footer {
@@ -76,9 +76,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       :host(:not(.ie)) page-footer {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
-        @apply(--layout-end-justified);
+        @apply --layout-vertical;
+        @apply --layout-flex;
+        @apply --layout-end-justified;
       }
     </style>
 
@@ -133,8 +133,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </page-interventions>
         </template>
 
+        <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+          <page-reports id="reports" class="main-page"
+                        route="[[subroute]]"
+                        permissions="[[permissions]]">
+          </page-reports>
+        </template>
+
         <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
           <page-not-found class="main-page"></page-not-found>
+        </template>
+
+        <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
+          <page-settings id="settings" class="main-page"></page-settings>
         </template>
 
         <page-footer></page-footer>
@@ -157,7 +168,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.AppConfig,
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
@@ -202,7 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog'
+        'open-data-refresh-dialog': '_openDataRefreshDialog',
+        'not-found-redirect': '_handleNotFound'
       },
 
       toastFired: function() {
@@ -210,7 +221,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _onForbidden: function(event) {
-        window.location.href = this.loginPath;
+        window.location.href = EtoolsPmpApp.Config.loginPath;
       },
 
       created: function() {
@@ -221,7 +232,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       ready: function() {
         // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = this.basePath;
+        this.baseUrl = EtoolsPmpApp.Config.basePath;
 
         this.addIE11StyleTweaks();
 
@@ -249,16 +260,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateMainPath: function(event) {
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this.set('route.__queryParams', null);
-          this.set('route.path', this.baseUrl + event.detail.path);
+          this._updatePath(event.detail.path);
         }
         event.stopImmediatePropagation();
+      },
+
+      _handleNotFound: function() {
+        this.fire('clear-loading-messages', {});
+        this._updatePath('not-found');
+      },
+
+      _updatePath: function (path) {
+        this.set('route.__queryParams', null);
+        this.set('route.path', this.baseUrl + path);
       },
 
       _pageChanged: function(page) {
         if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
           this.set('_lastActivePartnerPage', page);
         }
+        this.fire('clear-loading-messages', {});
       },
 
       _routePageChanged: function(routePage) {
@@ -269,8 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           this._importMainPage(routePage);
-
-          if (this.route && this.baseUrl && this.page !== 'not-found') {
+          if (this.route && this.baseUrl) {
             let subroute = JSON.parse(JSON.stringify(this.route));
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
@@ -332,6 +352,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
         var currentPath = this.route.path;
+        if (currentPath.indexOf('settings') > -1) {
+          return;
+        }
         if (currentPath.substr(-1) === '/') {
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
@@ -348,5 +371,4 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
   </script>
-
 </dom-module>

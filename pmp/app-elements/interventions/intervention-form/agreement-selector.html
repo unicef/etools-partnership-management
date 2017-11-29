@@ -125,9 +125,10 @@
           this._agreementIdChanged(this.agreementId);
         },
         _agreementIdChanged: function(agreementId) {
-          if (!this.agreements) {
+          if (!this.agreements || !this.agreements.length || !agreementId) {
             return;
           }
+
           let agreement = _.find(this.agreements, function(agreement) {
             return agreement.id === agreementId;
           });
@@ -151,9 +152,9 @@
             return partner.id === agreement.partner;
           });
           if (!partner) {
-            let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name + ' is not CSO or it\'s hidden!' +
-              ' In edit mode you will not be able to see this partner in the available partners organizations and ' +
-              'nor the agreement number.';
+            let partnerIsHiddenOrNotCSOMsg = 'Intervention partner ' + agreement.partner_name +
+              ' is not CSO or it\'s hidden! In edit mode you will not be able to see this partner in the ' +
+              'available partners organizations and nor the agreement number.';
             this.fire('toast', {text: partnerIsHiddenOrNotCSOMsg, showCloseBtn: true});
             return;
           }
@@ -172,13 +173,15 @@
 
           // set filtered agreements based on this
           let agreements = _.filter(this.agreements, function(agreement) {
-            if (this.intervention && this.intervention.id > 0) {
+            if (this.intervention) {
               // existing intervention
-              return agreement.partner === partnerId;
+              return agreement.partner === partnerId
+                && agreement.agreement_type !== 'MOU';
             } else {
               // new intervention
               return agreement.partner === partnerId &&
-                ['suspended', 'terminated'].indexOf(agreement.status) === -1;
+                ['suspended', 'terminated'].indexOf(agreement.status) === -1
+                && agreement.agreement_type !== 'MOU';
             }
 
           }.bind(this));

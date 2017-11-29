@@ -18,7 +18,7 @@
     country_programme: false,
     start: false,
     end: false,
-    sector_locations: false,
+    sections: false,
 
     // details - PD Output or SSFA Expected results
     result_links: false,
@@ -78,7 +78,7 @@
 
     _getDraftToSignedRequiredFields: function(intervention) {
 
-      let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sector_locations',
+      let fields = ['offices', 'unicef_focal_points', 'partner_focal_points', 'sections',
         'partner_authorized_officer_signatory', 'signed_by_partner_date', 'unicef_signatory',
         'signed_by_unicef_date', 'signed_pd_document'];
       if (!intervention.contingency_pd) {
@@ -89,7 +89,7 @@
 
     _getEditableFieldsForAddAmendmentAction: function() {
       return ['partner', 'agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-        'partner_focal_points', 'country_programme', 'start', 'end', 'sector_locations',
+        'partner_focal_points', 'country_programme', 'start', 'end', 'sections',
         'result_links', 'planned_budget', 'planned_budget_unicef_cash', 'planned_visits'];
     },
 
@@ -220,7 +220,7 @@
       if (['signed', 'active'].indexOf(status) === -1) {
         return;
       }
-      let fieldsToRestore = ['agreement', 'document_type', 'title', 'country_programme', 'sector_locations',
+      let fieldsToRestore = ['agreement', 'document_type', 'title', 'country_programme', 'sections',
         'planned_budget', 'result_links', 'planned_visits'];
       if (status === 'active') {
         fieldsToRestore = fieldsToRestore.concat(['start', 'end']);
@@ -237,10 +237,6 @@
           this.set('intervention.planned_budget.unicef_cash', unicefCashCopy);
         }
       }.bind(this));
-      let details = this.$$('#interventionDetails');
-      if (details) {
-        details.set('_forceSectorLocationsRefresh', true);
-      }
       this.fire('toast', {text: 'There are no new/unsaved amendments.\n' +
         'All fields unlocked by amendments are restored to the original values.', showCloseBtn: true});
     },

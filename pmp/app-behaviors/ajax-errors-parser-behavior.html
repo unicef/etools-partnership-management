@@ -6,7 +6,7 @@
     properties: {
       globalMessage: {
         type: String,
-        value: 'An error occurred on data save!'
+        value: 'An error occurred. Please try again later.'
       },
       httpStatus413Msg: {
         type: String,
@@ -14,11 +14,11 @@
       }
     },
     tryGetResponseError: function(response) {
-      if (response.status >= 500) {
-        return this.globalMessage;
-      }
       if (response.status === 413) {
         return this.httpStatus413Msg;
+      }
+      if (response.status >= 401) {
+        return this.globalMessage;
       }
       return response.response || this.globalMessage;
     },
@@ -42,7 +42,23 @@
       }
 
       if (typeof errors === 'object' && errors.errors && Array.isArray(errors.errors)) {
-        Array.prototype.push.apply(errorsArray, errors.errors);
+        errors.errors.forEach(function(err) {
+          if (typeof err === 'object') {
+            let errKeys = Object.keys(err);
+            if (errKeys.length > 0) {
+              errKeys.forEach(function(k) {
+                errorsArray.push(err[k]); // will work only for strings
+              });
+            }
+          } else {
+            errorsArray.push(err);
+          }
+        });
+        return errorsArray;
+      }
+
+      if (typeof errors === 'object' && errors.non_field_errors && Array.isArray(errors.non_field_errors)) {
+        [].push.apply(errorsArray, errors.non_field_errors);
         return errorsArray;
       }
 
@@ -94,7 +110,15 @@
       return errors;
     },
 
-    parseRequestErrorsAndShowAsToastMsgs: function(error, source) {
+    parseRequestErrorsAndShowAsToastMsgs: function(error, source, redirectOn404) {
+      if (redirectOn404 && error.status === 404) {
+        if (!source) {
+          source = this;
+        }
+        source.fire('not-found-redirect', {});
+        return;
+      }
+
       let errorResponse = this.tryGetResponseError(error);
       let errorsString = this.formatServerErrorAsText(errorResponse);
 
