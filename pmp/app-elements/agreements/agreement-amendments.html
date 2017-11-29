@@ -105,7 +105,7 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Signed Date -->
-                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"                                                        
+                <required-and-not-future-date-validator validator-name="signedDate_[[index]]_validator"
                                                         error-message="{{item.errorMessage}}">
                 </required-and-not-future-date-validator>
                 <etools-date-input id$="signedDate_[[index]]"
@@ -205,6 +205,12 @@
           _amendmentTypes: {
             type: Array,
             statePath: 'agreementAmendmentTypes'
+          },
+          legacyAmendmentTypes: {
+            type: Object,
+            value: {
+              'CP extension': 'Extension of Country Programme Cycle'
+            }
           }
         },
 
@@ -375,17 +381,29 @@
 
         _getReadonlyAmendmentTypes: function(types) {
           if (types instanceof Array && types.length > 0) {
+            let legacyAmTypesFiltered  = [];
+            let amTypesFiltered  = [];
+
             // search for item amendments types
             let amTypes = this._amendmentTypes.filter(function(t) {
               return types.indexOf(t.value) > -1;
             });
+
             if (amTypes.length) {
               // map to get the labels
-              let amTypesFiltered = amTypes.map(function(t) {
+              amTypesFiltered = amTypes.map(function(t) {
                 return t.label;
               });
-              return amTypesFiltered.join(' | ');
             }
+
+            for (let key in this.legacyAmendmentTypes) {
+              if (types.indexOf(key) > -1) {
+                let value = this.legacyAmendmentTypes[key];
+                legacyAmTypesFiltered.push(value);
+              }
+            };
+
+            return amTypesFiltered.concat(legacyAmTypesFiltered).join(' | ');
           }
           return null;
         }
