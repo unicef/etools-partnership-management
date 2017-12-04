@@ -217,7 +217,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       toastFired: function() {
-        this.set('toast', event.detail.text)
+        this.set('toast', event.detail.text);
       },
 
       _onForbidden: function(event) {
@@ -270,7 +270,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updatePath('not-found');
       },
 
-      _updatePath: function (path) {
+      _updatePath: function(path) {
         this.set('route.__queryParams', null);
         this.set('route.path', this.baseUrl + path);
       },
