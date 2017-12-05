@@ -11,7 +11,7 @@
     <script src="../../node_modules/redux/dist/redux.min.js"></script>
 
     <link rel="import" href="../test-helpers/testing-utils.html">
-    <link rel="import" href="../test-helpers/agreements-testing-helper.html">
+    <link rel="import" href="helpers/agreements-testing-helper.html">
 
     <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
 
@@ -29,7 +29,7 @@
         var helper;
         var queryStub;
         setup(function(done) {
-          helper = new AgreementListHelper();
+          helper = new AgreementListHelper(fixture('agreementsListFixture'));
           helper.setupGetAgreementList();
           helper.initializeElementUnderTest();
           helper.stubQuery();
@@ -38,13 +38,13 @@
         });
         teardown(function() {
           helper.server.restore();
-          helper.agreementList.agreementListData.query.restore();
+          helper.agreementList.$$('#agreements').query.restore();
         });
 
         test('can instantiate agreements-list element', function() {
           assert.equal(helper.agreementList.is, 'agreements-list');
         });
-        test('agreement items are displayed on UI', function(done) {
+        test('agreement list items are displayed', function(done) {
           flush(function() {
             let rows = helper.agreementList.$$('#list').querySelectorAll('etools-data-table-row');
             expect(rows.length).to.equal(helper.agreementList.filteredAgreements.length);
@@ -61,7 +61,6 @@
           test('filter options are available', function(done) {
             flush(function() {
               PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
-               // expect(PmpTestsHelper.elementIsVisible(ddContent)).to.be.equal(true);
                 expect(helper.agreementList.availableListFilterOptions.length).to.be.greaterThan(0);
                 done();
               });
@@ -73,6 +72,7 @@
               PmpTestsHelper.PaperMenuButton.runAfterOpen(filterPaperMenu, function() {
                 var firstItem = ddContent.querySelector('paper-item');
                 let initialAvFiltersLength = helper.agreementList.availableListFilterOptions.length;
+
                 PmpTestsHelper.PaperMenuButton.runAfterClose(filterPaperMenu, firstItem, function() {
                   expect(helper.agreementList.selectedFilters.length).to.be.greaterThan(0);
                   expect(helper.agreementList.availableListFilterOptions.length).to.be.equal(initialAvFiltersLength - 1);

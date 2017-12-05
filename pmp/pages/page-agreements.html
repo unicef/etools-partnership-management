@@ -356,7 +356,7 @@
         if (!agreementDetailsEl) {
           return;
         }
-        if (!agreementDetailsEl._validateAgreement()) {
+        if (!agreementDetailsEl.validate()) {
           this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           return;
         }

@@ -1,0 +1,82 @@
+<script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+<script>
+  class AgreementDetailsPOM {
+    constructor(agrDetailsElem) {
+      this.agreementDetails = agrDetailsElem;
+    }
+
+    //---Elements
+    getStartDate() {
+      return this.agreementDetails.$$('#startDateField');
+    }
+
+    getEndDate() {
+      return this.agreementDetails.$$('#endDateField');
+    }
+
+    getSignedByContainer() {
+      return this.agreementDetails.$.signedByFields;
+    }
+
+    getSignedAgreement() {
+      return this.agreementDetails.$$('#signedAgreement');
+    }
+
+    getCpStructure() {
+      return this.agreementDetails.$$('#cpStructure');
+    }
+
+    getAuthorizedOfficers() {
+      return this.agreementDetails.$.officers;
+    }
+
+    getPartner() {
+      return this.agreementDetails.$.partner;
+    }
+
+    getAuthorizedOfficersDiv() {
+      return this.agreementDetails.$.authOffDiv;
+    }
+
+    getAmendments() {
+      return this.agreementDetails.$$('#agreementAmendments');
+    }
+
+    getAgreementType() {
+      return this.agreementDetails.$$('#agreementType');
+    }
+
+    getAgreementTypeDropdownMenu() {
+      return this.getAgreementType().$.dropdownMenu;
+    }
+
+    getInvalidFields() {
+      return Polymer.dom(this.agreementDetails.root).querySelectorAll('[invalid]');
+    }
+
+    getRequiredFields() {
+      return Polymer.dom(this.agreementDetails.root).querySelectorAll('[required]:not([hidden])');
+    }
+
+    //---Actions
+    selectAgreementTypeMOU(agrTypesDd) {
+      let mouPaperItem = Polymer.dom(agrTypesDd)
+          .querySelector('.dropdown-content .list-wrapper paper-listbox paper-item[internal-id=\'MOU\']');
+      MockInteractions.tap(mouPaperItem);
+    }
+
+    selectAgeementTypePCA(agrTypesDd) {
+      let pcaPaperItem = Polymer.dom(agrTypesDd)
+          .querySelector('.dropdown-content .list-wrapper paper-listbox paper-item[internal-id=\'PCA\']');
+      MockInteractions.tap(pcaPaperItem);
+    }
+
+    selectAgreementTypeSSFA(agrTypesDd) {
+      let ssfaPaperItem = Polymer.dom(agrTypesDd)
+          .querySelector('.dropdown-content .list-wrapper paper-listbox paper-item[internal-id=\'SSFA\']');
+      MockInteractions.tap(ssfaPaperItem);
+    }
+
+  }
+</script>
