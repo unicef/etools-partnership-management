@@ -338,8 +338,13 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section">
-    </reporting-requirements>
+    <template is="dom-if" if="[[intervention.permissions.view.reporting_periods]]">
+      <reporting-requirements class="content-section"
+                              is-new-intervention="[[newIntervention]]"
+                              edit-mode="[[intervention.permissions.edit.reporting_periods]]"
+                              intervention-id="[[intervention.id]]">
+      </reporting-requirements>
+    </template>
   </template>
 
   <script>
