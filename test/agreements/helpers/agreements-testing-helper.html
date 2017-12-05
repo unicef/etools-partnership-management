@@ -1,10 +1,9 @@
 <link rel="import" href="../../test-helpers/users-and-permissions-data-mockup.html">
 <link rel="import" href="agreement-data-mockup.html">
-<script src="../../../bower_components//iron-test-helpers/mock-interactions.js"></script>
+<script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
 <script>
-  class AgreementListHelper
-  {
+  class AgreementListHelper {
     constructor(agreementsList) {
       this.agreementList = agreementsList;
       Polymer.dom.flush();
@@ -12,19 +11,20 @@
       this.defaultRoute = {
         prefix: '',
         path: 'agreements/list',
-        '__queryParams':  {size: "10", sort: "partner_name.asc"}
+        '__queryParams': {size: "10", sort: "partner_name.asc"}
       };
     }
 
     setupGetAgreementList(server) {
       this.server = PmpTestsHelper.initializeFakeServer();
       let responseHeaders = {
-              json: { 'Content-Type': 'application/json' }
-              };
+        json: {'Content-Type': 'application/json'}
+      };
       this.server.respondWith('GET', '/api/v2/agreements/',
-        [200, responseHeaders.json, JSON.stringify(PmpTests.Agreements.listMockupData)]);
+          [200, responseHeaders.json, JSON.stringify(PmpTests.Agreements.listMockupData)]);
       this.server.respond();
     }
+
     initializeElementUnderTest() {
       PmpTestsHelper.makeDebounceSynchronous(this.agreementList);
       PmpTestsHelper.makeAsyncSynchronous(this.agreementList);
@@ -37,11 +37,12 @@
       this.agreementList.agreementTypes = [];
       this.agreementList.agreementStatuses = [];
     }
+
     stubQuery() {
       let _this = this;
       this.queryStub = sinon.stub(this.agreementList.$$('#agreements'), 'query', function() {
-                _this.agreementList.filteredAgreements = PmpTests.Agreements.listMockupData;
-              });
+        _this.agreementList.filteredAgreements = PmpTests.Agreements.listMockupData;
+      });
     }
   }
 </script>

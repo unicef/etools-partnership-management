@@ -25,7 +25,7 @@
 
     <script>
       suite('page-reports tests', function() {
-        var pageReports, pagePom;
+        let pageReports, pagePom;
         setup(function(done) {
           pageReports = fixture('pageReportsFixture');
           pageReports.listActive = true;
@@ -33,83 +33,91 @@
           pagePom = new PageReportsPOM(pageReports);
           done();
         });
-      test('can instantiate page-reports element', function() {
-        assert.equal(pageReports.is, 'page-reports');
-      });
-      test('element is rendered', function(done) {
-        flush(function() {
-          assert.equal(PmpTestsHelper.elementIsVisible(pageReports), true);
 
-          done();
+        test('can instantiate page-reports element', function() {
+          assert.equal(pageReports.is, 'page-reports');
         });
-      });
-      test('when list is active, only the reports-list elem is visible', function(done) {
-        flush(function() {
-          Polymer.Base.async(function() {
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), true);
-            assert.equal(pagePom.getSummary(), null);
-            assert.equal(pageReports.$$('#reportDetails'), null);
-            done();
-          }, 1000);
-        });
-      });
-      test('when list is not active and active tab is summary, only the report-summary elem is visible', function(done) {
-        flush(function() {
-          pageReports.route = {prefix: '', path: 'reports/30/summary', '__queryParams': {} };
-          Polymer.dom.flush();
-          ReportsHelper.populateReportUderView(pageReports);
 
-          Polymer.Base.async(function() {
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), true);
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), false);
-            done();
-          }, 1000);
-        });
-      });
-      test('can view report details', function(done) {
-        flush(function() {
-          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
-          Polymer.dom.flush();
-          ReportsHelper.populateReportUderView(pageReports);
-
-          Polymer.Base.async(function() {
-            assert.equal(pageReports.activeTab, 'progress');
-            assert.equal(pageReports.reportPage, 'progress');
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), true);
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
-            assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), false);
-            done();
-          }, 1000);
-        });
-      });
-      suite('on view report', function() {
-        setup(function() {
-          pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
-          Polymer.dom.flush();
-          ReportsHelper.populateReportUderView(pageReports);
-        });
-        test('can Accept report', function(done) {
+        test('element is rendered', function(done) {
           flush(function() {
-            pagePom.clickAccept();
-            Polymer.Base.async(function() {
-              assert.equal(pagePom.getEtoolsDialogFromAcceptDialog().opened, true);
-              done();
-            }, 1000);
+            assert.equal(PmpTestsHelper.elementIsVisible(pageReports), true);
+            done();
           });
         });
-        test('can Send report back to partner', function(done) {
+
+        test('when list is active, only the reports-list elem is visible', function(done) {
           flush(function() {
-            pagePom.clickSendBackToPartner();
             Polymer.Base.async(function() {
-              assert.equal(pagePom.getEtoolsDialogFromSendBackToPartnerDialog().opened, true);
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), true);
+              assert.equal(pagePom.getSummary(), null);
+              assert.equal(pageReports.$$('#reportDetails'), null);
               done();
             }, 1000);
           });
         });
 
-      })
-  });
+        test('when list is not active and active tab is summary, only the report-summary elem is visible', function(done) {
+          flush(function() {
+            pageReports.route = {prefix: '', path: 'reports/30/summary', '__queryParams': {} };
+            Polymer.dom.flush();
+            ReportsHelper.populateReportUnderView(pageReports);
+
+            Polymer.Base.async(function() {
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), true);
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), false);
+              done();
+            }, 1000);
+          });
+        });
+
+        test('can view report details', function(done) {
+          flush(function() {
+            pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
+            Polymer.dom.flush();
+            ReportsHelper.populateReportUnderView(pageReports);
+
+            Polymer.Base.async(function() {
+              assert.equal(pageReports.activeTab, 'progress');
+              assert.equal(pageReports.reportPage, 'progress');
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getProgress()), true);
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getList()), false);
+              assert.equal(PmpTestsHelper.elementIsVisible(pagePom.getSummary()), false);
+              done();
+            }, 1000);
+          });
+        });
+
+        suite('on view report', function() {
+          setup(function() {
+            pageReports.route = {prefix: '', path: 'reports/30/progress', '__queryParams': {} };
+            Polymer.dom.flush();
+            ReportsHelper.populateReportUnderView(pageReports);
+          });
+
+          test('can Accept report', function(done) {
+            flush(function() {
+              pagePom.clickAccept();
+              Polymer.Base.async(function() {
+                assert.equal(pagePom.getEtoolsDialogFromAcceptDialog().opened, true);
+                done();
+              }, 1000);
+            });
+          });
+
+          test('can Send report back to partner', function(done) {
+            flush(function() {
+              pagePom.clickSendBackToPartner();
+              Polymer.Base.async(function() {
+                assert.equal(pagePom.getEtoolsDialogFromSendBackToPartnerDialog().opened, true);
+                done();
+              }, 1000);
+            });
+          });
+
+        });
+
+      });
     </script>
   </body>
 </html>

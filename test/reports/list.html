@@ -26,37 +26,38 @@
 
     <script>
       suite('reports-list tests', function() {
-        var reportsList;
+        let reportsList;
         setup(function(done) {
           reportsList = fixture('reportsListFixture');
           ReportsHelper.populateReportsList(reportsList);
           reportsList.active = true;
-
           done();
         });
-      test('can instantiate reports-list element', function() {
-        assert.equal(reportsList.is, 'reports-list');
-      });
-      test('element is rendered', function(done) {
-        flush(function() {
-          assert.equal(PmpTestsHelper.elementIsVisible(reportsList), true);
 
-          done();
+        test('can instantiate reports-list element', function() {
+          assert.equal(reportsList.is, 'reports-list');
         });
-      });
-      test('report list items are displayed', function(done) {
-        flush(function() {
-          let reportsDisplayList = reportsList.$.reportsDisplayList;
-          let rows = reportsDisplayList.$$('#list').querySelectorAll('etools-data-table-row');
 
-          expect(rows.length).to.equal(2);
-          expect(reportsDisplayList.reports.length).to.equal(2);
-          done();
+        test('element is rendered', function(done) {
+          flush(function() {
+            assert.equal(PmpTestsHelper.elementIsVisible(reportsList), true);
+
+            done();
+          });
         });
+
+        test('report list items are displayed', function(done) {
+          flush(function() {
+            let reportsDisplayList = reportsList.$.reportsDisplayList;
+            let rows = reportsDisplayList.$$('#list').querySelectorAll('etools-data-table-row');
+
+            expect(rows.length).to.equal(2);
+            expect(reportsDisplayList.reports.length).to.equal(2);
+            done();
+          });
+        });
+
       });
-
-
-    });
     </script>
   </body>
 </html>
