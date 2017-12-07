@@ -216,10 +216,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'not-found-redirect': '_handleNotFound'
       },
 
-      toastFired: function() {
-        this.set('toast', event.detail.text)
-      },
-
       _onForbidden: function(event) {
         window.location.href = EtoolsPmpApp.Config.loginPath;
       },
@@ -270,7 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updatePath('not-found');
       },
 
-      _updatePath: function (path) {
+      _updatePath: function(path) {
         this.set('route.__queryParams', null);
         this.set('route.path', this.baseUrl + path);
       },
