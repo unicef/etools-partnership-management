@@ -76,7 +76,7 @@ const polylint = require('gulp-polylint');
 const shell = require('gulp-shell');
 
 // Log task end messages
-var log = function (message) {
+function log(message) {
   return function () {
     gutil.log(message);
   }
@@ -103,6 +103,7 @@ function source() {
     .pipe(gulpif('**/*.{html,css}', css.minify())).on('end', log('Minified CSS'))
 
     .pipe(gulpif('**/*.js', javascript.lint())).on('end', log('Linted Javascript'))
+    .pipe(gulpif('**/*.{js,html}', javascript.babelify())).on('end', log('Transpiled JS (using babel)'))
     .pipe(gulpif('**/*.js', javascript.minify())).on('end', log('Minified Javascript'))
 
     .pipe(gulpif('**/*.{gif,jpg,svg}', images.minify())).on('end', log('Minified Images'))
