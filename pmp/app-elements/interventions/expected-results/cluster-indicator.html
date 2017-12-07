@@ -117,7 +117,7 @@
     <div class="row-h flex-c">
       <div class="layout-vertical">
         <label class="paper-label">Means of Verification</label>
-        <label class="input-label" empty$="[[!_getMeansOfVerification(prpClusterIndicator.means_of_verification)]]">[[_getMeansOfVerification(prpClusterIndicator.means_of_verification)]]</label>
+        <label class="input-label" empty$="[[!prpClusterIndicator.means_of_verification]]">[[prpClusterIndicator.means_of_verification]]</label>
       </div>
     </div>
     <div class="row-h flex-c">
@@ -315,12 +315,6 @@
         resetFieldValues: function() {
           this.responsePlanId = undefined;
           this.clusterId = undefined;
-        },
-        _getMeansOfVerification: function(means) {
-          if (!means && this.prpClusterIndicator) {
-            return '';
-          }
-          return means;
         }
       });
     })();
