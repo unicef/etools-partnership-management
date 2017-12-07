@@ -1,11 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
+  'use strict';
   // shuts up the linting script
   var Redux = Redux || {};
   var PolymerRedux = PolymerRedux || {};
 
-  let initialDropdownPmpData = {
+  let reduxStoreDefaultData = {
+    appSectionVisibility: {
+      // this flag will be changed with a value that will be received from API (future feature, API changes needed)
+      prp_flag: false
+    },
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -48,7 +53,7 @@
 
   let commonStaticDataStore = Redux.createStore(function(state, action) {
     if (!state) {
-      return initialDropdownPmpData;
+      return reduxStoreDefaultData;
     }
 
     switch (action.type) {

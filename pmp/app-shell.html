@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
 <link rel="import" href="app-config/app-config.html">
+<link rel="import" href="app-config/app-section-visibility-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -35,7 +36,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
 <link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
+
 <link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
+<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 
 <link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
 <link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
@@ -44,7 +47,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
 <link rel="import" href="../styles/app-theme.html">
 
 <dom-module id="app-shell">
@@ -168,6 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
+        EtoolsPmpApp.Behaviors.AppSectionVisibility,
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
@@ -332,6 +335,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _activePageIs: function(activePage, expectedPages) {
+        if (activePage === 'reports' && !this.showPrpReports()) {
+          this.fire('404');
+          return false;
+        }
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
       },
@@ -356,7 +363,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         if (currentPath === this.baseUrl + this.routeData.page) {
           this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-          return;
         }
       },
 

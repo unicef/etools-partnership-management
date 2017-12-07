@@ -13,6 +13,7 @@
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
+<link rel="import" href="../app-config/app-section-visibility-behavior.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -114,7 +115,7 @@
                 <span class="tab-content">Attachments</span>
               </paper-tab>
 
-              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+              <template is="dom-if" if="[[_showReportsTabs(newInterventionActive)]]">
                 <paper-tab name="reports" link>
                   <span class="tab-content">Reports</span>
                 </paper-tab>
@@ -151,7 +152,7 @@
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'overview', newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
@@ -187,7 +188,7 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'reports', newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
@@ -195,7 +196,7 @@
                                   url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTab(interventionPage, 'progress', newInterventionActive)]]">
+          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'progress', newInterventionActive)]]">
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
@@ -242,6 +243,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         etoolsBehaviors.DynamicDialogBehavior,
+        EtoolsPmpApp.Behaviors.AppSectionVisibility,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
@@ -494,6 +496,13 @@
             // return intervention page tab name
             page = this.routeData.intTab;
             if (['reports', 'progress'].indexOf(page) > -1) {
+
+              if (!this.showPrpReports()) {
+                // prp pages are disabled
+                this.fire('404');
+                return;
+              }
+
               pageBaseUrl += page + '/';
             }
           }
@@ -588,8 +597,14 @@
         return newInterventionActive === true;
       },
 
-      _vizibleTab: function(interventionPage, expectedPage, newInterventionActive) {
-        return this._pageEquals(interventionPage, expectedPage) && !this._newIntervention(newInterventionActive);
+      _showReportsTabs: function(newInterventionActive) {
+        return !this._newIntervention(newInterventionActive) && this.showPrpReports();
+      },
+
+      _vizibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
+        return this._pageEquals(interventionPage, expectedPage) &&
+            !this._newIntervention(newInterventionActive) &&
+            this.showPrpReports();
       },
 
       /**

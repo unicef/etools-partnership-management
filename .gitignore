@@ -8,3 +8,4 @@ bower_components/
 .vscode/settings.json
 *.sublime-workspace.vscode/settings.json
 vscode/*
+package-lock.json
