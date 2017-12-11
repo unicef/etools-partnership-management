@@ -65,6 +65,8 @@
         test('dropdowns are populating', function(done) {
           flush(function() {
             intervDetails.set('agreement', agreements[2]);
+            intervDetails.set('documentTypes', interventionDocTypes);
+
             let len = intervDetails.$$('#documentType').options.length;
             expect(len).to.be.equal(2);
 
