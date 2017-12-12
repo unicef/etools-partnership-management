@@ -93,9 +93,7 @@
                              value="{{item.phone}}"
                              placeholder="&#8212;"
                              allowed-pattern="[0-9\ \.\+\-\(\)]"
-                             readonly$="[[!editMode]]"
-                             invalid$="[[!_isValid('phone', item.title, item.first_name, item.last_name, item.email, item.phone, index)]]"
-                             error-message="Phone number is required">
+                             readonly$="[[!editMode]]">
                   <iron-icon prefix icon="communication:phone"></iron-icon>
                 </paper-input>
               </div>
@@ -210,18 +208,12 @@
               valid = false;
             }
             break;
-          case 'phone':
-            if (!this._notEmpty(phone) && !this._notEmpty(emailAddress) &&
-                (this._notEmpty(title) || this._notEmpty(firstName) || this._notEmpty(lastName))) {
-              valid = false;
-            }
-            break;
           case 'emailAddress':
             if (this._notEmpty(emailAddress)) {
               valid = this._validStaffMemberEmailAddress(emailAddress, index);
             } else {
-              if (!this._notEmpty(phone) && (this._notEmpty(title) || this._notEmpty(firstName) ||
-                  this._notEmpty(lastName))) {
+              if (this._notEmpty(phone) || this._notEmpty(title) || this._notEmpty(firstName) ||
+                  this._notEmpty(lastName)) {
                 valid = false;
               } else {
                 valid = true; // empty staff member data, hide error msgs
