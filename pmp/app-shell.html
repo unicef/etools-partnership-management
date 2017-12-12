@@ -203,7 +203,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         routeData: {
           type: Object
         },
-        _lastActivePartnerPage: String
+        _lastActivePartnerPage: String,
+        prpPages: {
+          type: Array,
+          value: ['reports', 'settings']
+        }
       },
 
       observers: [
@@ -294,7 +298,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
           }
-          this.set('page', routePage);
+
+          if (this._validatePageChange(routePage)) {
+            this.set('page', routePage);
+          }
         }.bind(this), 10);
       },
 
@@ -334,15 +341,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
-      _activePageIs: function(activePage, expectedPages) {
-        if (activePage === 'reports' && !this.showPrpReports()) {
-          this.fire('404');
+      _validatePageChange: function(page) {
+        if (this.prpPages.indexOf(page) > -1 && !this.showPrpReports()) {
+          this._handleNotFound();
           return false;
         }
+        return true;
+      },
+
+      _activePageIs: function(activePage, expectedPages) {
         let pagesToMatch = expectedPages.split('|');
         return pagesToMatch.indexOf(activePage) > -1;
       },
-
       _redirectToProperListPage: function() {
         if (this.route.path.indexOf('not-found') > -1) {
           return;

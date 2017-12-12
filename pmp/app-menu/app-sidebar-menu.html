@@ -91,13 +91,15 @@
           </a>
         </template>
 
-        <a class="nav-menu-item" menu-name="settings" href$="[[baseUrl]]settings" on-tap="_firePageChangeLoading">
-          <iron-icon id="settings-icon" icon="settings"></iron-icon>
-          <paper-tooltip for="settings-icon" position="right">
-            Settings
-          </paper-tooltip>
-          <div class="name">Settings</div>
-        </a>
+        <template is="dom-if" if="[[appSectionVisibility.prp_flag]]" restamp>
+          <a class="nav-menu-item" menu-name="settings" href$="[[baseUrl]]settings" on-tap="_firePageChangeLoading">
+            <iron-icon id="settings-icon" icon="settings"></iron-icon>
+            <paper-tooltip for="settings-icon" position="right">
+              Settings
+            </paper-tooltip>
+            <div class="name">Settings</div>
+          </a>
+        </template>
 
       </iron-selector>
 
