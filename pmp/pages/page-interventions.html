@@ -152,7 +152,7 @@
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'overview', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
@@ -188,7 +188,7 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'reports', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'reports', newInterventionActive)]]">
             <intervention-reports id="interventionReports"
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
@@ -196,7 +196,7 @@
                                   url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_vizibleTabContent(interventionPage, 'progress', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'progress', newInterventionActive)]]">
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
@@ -601,7 +601,7 @@
         return !this._newIntervention(newInterventionActive) && this.showPrpReports();
       },
 
-      _vizibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
+      _visibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
         return this._pageEquals(interventionPage, expectedPage) &&
             !this._newIntervention(newInterventionActive) &&
             this.showPrpReports();
