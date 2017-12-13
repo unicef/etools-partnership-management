@@ -191,18 +191,26 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+
       case 'SET_DISAGGREGATIONS_DATA':
         return Object.assign({}, state, {disaggregations: action.disaggregations});
+
       case 'ADD_DISAGGREGATION':
         let disaggregsCopy = state.disaggregations.slice(0);
         disaggregsCopy.push(action.disaggregation);
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
+
       case 'SET_CURRENT_USER':
         return Object.assign({}, state, {currentUser: action.user});
+
       case 'SET_LOCATION_TYPES':
         return Object.assign({}, state, {locationTypes: action.locationTypes});
+
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
+
+      case 'SET_ENV_FLAGS':
+        return Object.assign({}, state, {appSectionVisibility: action.appSectionVisibility});
     }
   });
 

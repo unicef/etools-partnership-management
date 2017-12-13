@@ -16,6 +16,7 @@
 <link rel="import" href="behaviors/user-country-data.html">
 <link rel="import" href="behaviors/disaggregations-data.html">
 <link rel="import" href="behaviors/prp-countries.html">
+<link rel="import" href="behaviors/environment-flags.html">
 
 <dom-module id="static-common-data">
   <script>
@@ -35,12 +36,13 @@
         EtoolsPmpApp.Behaviors.UnicefUsersData,
         EtoolsPmpApp.Behaviors.UserCountryData,
         EtoolsPmpApp.Behaviors.DisaggregationsData,
-        EtoolsPmpApp.Behaviors.PRPCountries
+        EtoolsPmpApp.Behaviors.PRPCountries,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags
       ],
       properties: {
         dataEndpointNames: {
           type: Array,
-          value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
+          value: ['environmentFlags', 'countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
             'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations', 'getPRPCountries']
         }
       },
@@ -93,6 +95,8 @@
             return this._handleDisaggregationsResponse;
           case 'getPRPCountries':
             return this._handlePRPCountryDataResponse;
+          case 'environmentFlags':
+            return this._handleEnvironmentFlagsResponse;
         }
       }
 

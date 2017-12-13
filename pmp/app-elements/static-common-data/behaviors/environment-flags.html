@@ -1,0 +1,49 @@
+<link rel="import" href="../redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../../scripts/lodash/lodash.html">
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlagsImp */
+    EtoolsPmpApp.Behaviors.EnvironmentFlagsImp = {
+
+      actions: {
+        setEnvFlags: function(envFlags) {
+          let flags = envFlags.active_flags;
+          let appSectionVisibility = {
+            prp_flag: true
+          };
+
+          for (let key in flags) {
+            let flag = flags[key];
+            if (flag === 'prp_mode_off') {
+              appSectionVisibility.prp_flag = false;
+            }
+          }
+
+          return {
+            type: 'SET_ENV_FLAGS',
+            appSectionVisibility: appSectionVisibility
+          };
+        }
+      },
+
+      _handleEnvironmentFlagsResponse: function(response) {
+        if (!_.isEmpty(response)) {
+          this.dispatch('setEnvFlags', response);
+        }
+      }
+
+    };
+
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
+    EtoolsPmpApp.Behaviors.EnvironmentFlags = [
+      EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+      EtoolsPmpApp.Behaviors.EnvironmentFlagsImp
+    ];
+
+  })();
+</script>
+
