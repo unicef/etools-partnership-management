@@ -427,14 +427,18 @@
           this._setDraftStatus(editMode, this.isNewAgreement);
         },
 
+        _statusIsNotDraft: function(status) {
+          return status !== 'draft' && status !== '';
+        },
+
         _setDraftStatus: function(editMode, isNewAgreement) {
-          if (editMode && isNewAgreement && this.agreement && this.agreement.status !== 'draft') {
-            this.set('agreement.status', 'draft');
+          if (editMode && isNewAgreement && this.agreement && this._statusIsNotDraft(this.agreement.status)) {
+            this.set('agreement.status', '');
           }
         },
 
         _showAmendments: function(type, status) {
-          if (type === 'PCA' && status !== 'draft') {
+          if (type === 'PCA' && this._statusIsNotDraft(status)) {
             return true;
           }
           return false;
