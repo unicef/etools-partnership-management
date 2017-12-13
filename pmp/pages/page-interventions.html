@@ -604,8 +604,7 @@
 
       _visibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
         return this._pageEquals(interventionPage, expectedPage) &&
-            !this._newIntervention(newInterventionActive) &&
-            this.showPrpReports();
+            !this._newIntervention(newInterventionActive);
       },
 
       /**
