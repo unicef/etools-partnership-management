@@ -6,8 +6,8 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvFlagsDataImp */
-    EtoolsPmpApp.Behaviors.EnvFlagsDataImp = {
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvFlagsDataImpl */
+    EtoolsPmpApp.Behaviors.EnvFlagsDataImpl = {
 
       actions: {
         setEnvFlags: function(envFlags) {
@@ -37,7 +37,7 @@
     /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvFlagsData */
     EtoolsPmpApp.Behaviors.EnvFlagsData = [
       EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-      EtoolsPmpApp.Behaviors.EnvFlagsDataImp
+      EtoolsPmpApp.Behaviors.EnvFlagsDataImpl
     ];
 
   })();
