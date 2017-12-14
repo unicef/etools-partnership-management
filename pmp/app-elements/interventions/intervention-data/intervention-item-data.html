@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
+<link rel="import" href="../../../app-config/environment-flags-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-config/app-dexie-db-config.html">
 <link rel="import" href="../../../app-behaviors/ajax-server-errors-behavior.html">
@@ -22,7 +23,8 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsLogsBehavior,
           EtoolsPmpApp.Behaviors.AjaxServerErrors,
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
+          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags,
         ],
         properties: {
           pdEndpoints: {
@@ -311,11 +313,13 @@
 
           return dexieObject;
         },
+
         _updateSections: function(dexieObject, intervention) {
           let selectedSections = this._getSelectedSections(intervention);
           dexieObject.sections = selectedSections.sectionIds;
           dexieObject.section_names = selectedSections.section_names;
         },
+
         _updatePlannedBudgetInfo: function(dexieObject, intervention) {
           dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
               parseFloat(intervention.planned_budget.in_kind_amount);
@@ -323,6 +327,7 @@
           dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
           dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash);
         },
+
         _updateFrInfo: function(dexieObject, intervFrDetails) {
           if (this._noFrOnIntervention(intervFrDetails)) {
             return;
@@ -331,9 +336,11 @@
           dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
           dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
         },
+
         _noFrOnIntervention: function(intervFrDetails) {
           return (!intervFrDetails || !intervFrDetails.earliest_start_date);
         },
+
         _updateOffices: function(dexieObject, responseDetail) {
           if (!responseDetail.offices || !responseDetail.offices.length) {
             dexieObject.offices_names = [];
@@ -342,6 +349,7 @@
 
           dexieObject.offices_names = this._getSelectedOfficesNames(responseDetail);
         },
+
         _getSelectedOfficesNames: function(responseDetail) {
           let selectedOffices = this.offices.filter(function(office) {
             return responseDetail.offices.indexOf(office.id.toString()) > -1;
@@ -353,15 +361,18 @@
             return office.name;
           });
         },
+
         _getSelectedSections: function(responseDetail) {
           let selectedSections = {
             sectionIds: [],
             section_names: []
           };
 
-          if (responseDetail.sections) {
+          let sections = this.showPrpReports()? responseDetail.flagged_sections : responseDetail.sections;
+
+          if (sections) {
             let sectionNames = [];
-            let interventionSectionIds = _.map(responseDetail.sections, function(sectionId) {
+            let interventionSectionIds = _.map(sections, function(sectionId) {
               return parseInt(sectionId, 10);
             });
             selectedSections.sectionIds = interventionSectionIds;

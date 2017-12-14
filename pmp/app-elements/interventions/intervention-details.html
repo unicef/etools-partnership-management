@@ -369,7 +369,9 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[conditionsAreTrue(!environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]" restamp>
+    <template is="dom-if"
+              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
+              restamp>
       <reporting-requirements class="content-section"
                               is-new-intervention="[[newIntervention]]"
                               edit-mode="[[intervention.permissions.edit.reporting_periods]]"
@@ -857,7 +859,12 @@
 
         _isEmpty: function(length) {
           return !length;
+        },
+
+        _showReportingRequirements: function(prpModeOff, permission) {
+          return !prpModeOff && permission;
         }
+
       });
     })();
 

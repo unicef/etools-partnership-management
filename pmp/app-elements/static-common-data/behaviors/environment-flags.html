@@ -12,7 +12,9 @@
       actions: {
         setEnvFlags: function(envFlags) {
           let flags = envFlags.active_flags;
-          let flagObject = {};
+          let flagObject = {
+            prp_mode_off: false
+          };
 
           for (let key in flags) {
             let flag = flags[key];
