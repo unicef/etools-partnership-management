@@ -765,12 +765,16 @@
           this.set('intervention.locations', locAndClusters.locationIds);
           this.set('intervention.location_names', locAndClusters.locationNames);
           this.set('intervention.cluster_names', locAndClusters.clusterNames);
+          this.set('intervention.section_names', locAndClusters.sectionNames);
+          this.set('intervention.flagged_sections', locAndClusters.flaggedSections);
         },
         _extractLocAndClustersFromIndicators: function() {
           let locAndClusters = {
             locationIds: [],
+            flaggedSections: [],
             clusterNames: [],
             locationNames: [],
+            sectionNames: [],
           };
 
           this.intervention.result_links.forEach(function(rl) {
@@ -790,6 +794,14 @@
                 if (indicator.cluster_name) {
                   [].push.apply(locAndClusters.clusterNames,
                       this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                }
+
+                if (indicator.section) {
+                  [].push.apply(locAndClusters.flaggedSections,
+                      this._getSectionIds(indicator.section, locAndClusters.flaggedSections));
+
+                  [].push.apply(locAndClusters.sectionNames,
+                      this._getSectionNames(indicator.section, locAndClusters.sectionNames));
                 }
               }, this);
 
@@ -823,8 +835,28 @@
           }
           return [indicatorClusterName];
         },
+        _getSectionIds: function(sectionId, sectionIds) {
+          if (sectionIds.indexOf(sectionId) > -1) {
+            return [];
+          }
+          return [sectionId];
+        },
+
+        _getSectionNames: function(sectionId, interventionSectionNames) {
+          let section = this.sections.find(function(elem) {
+            return elem.id === sectionId;
+          });
+          let sectionName = section.name;
+
+          if (interventionSectionNames.indexOf(sectionName) > -1) {
+            return [];
+          }
+
+          return [sectionName];
+        },
+
         _isEmpty: function(length) {
-          return !!!length;
+          return !length;
         }
       });
     })();
