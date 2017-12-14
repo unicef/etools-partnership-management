@@ -27,7 +27,7 @@
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
-<link rel="import" href="intervention-form/agreement-selector.html">
+<link rel="import" href="agreement-selector/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
@@ -583,7 +583,7 @@
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
-              this.set('selectedPartnerId', null);
+              this.set('selectedPartnerId', undefined);
             }
 
             this.set('fieldsResetted', false);
