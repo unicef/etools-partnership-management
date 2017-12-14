@@ -7,10 +7,7 @@
   var PolymerRedux = PolymerRedux || {};
 
   let reduxStoreDefaultData = {
-    appSectionVisibility: {
-      // this flag will be changed with a value that will be received from API (future feature, API changes needed)
-      prp_flag: false
-    },
+    envFlags: {},
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -210,7 +207,7 @@
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
 
       case 'SET_ENV_FLAGS':
-        return Object.assign({}, state, {appSectionVisibility: action.appSectionVisibility});
+        return Object.assign({}, state, {envFlags: action.envFlags});
     }
   });
 

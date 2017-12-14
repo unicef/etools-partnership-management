@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
 <link rel="import" href="app-config/app-config.html">
-<link rel="import" href="app-config/app-section-visibility-behavior.html">
+<link rel="import" href="app-config/environment-flags-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
@@ -170,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'app-shell',
 
       behaviors: [
-        EtoolsPmpApp.Behaviors.AppSectionVisibility,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.IE11,
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,

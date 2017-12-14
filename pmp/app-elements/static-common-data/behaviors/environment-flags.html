@@ -6,26 +6,22 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlagsImp */
-    EtoolsPmpApp.Behaviors.EnvironmentFlagsImp = {
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvFlagsDataImp */
+    EtoolsPmpApp.Behaviors.EnvFlagsDataImp = {
 
       actions: {
         setEnvFlags: function(envFlags) {
           let flags = envFlags.active_flags;
-          let appSectionVisibility = {
-            prp_flag: true
-          };
+          let flagObject = {};
 
           for (let key in flags) {
             let flag = flags[key];
-            if (flag === 'prp_mode_off') {
-              appSectionVisibility.prp_flag = false;
-            }
+            flagObject[flag] = true;
           }
 
           return {
             type: 'SET_ENV_FLAGS',
-            appSectionVisibility: appSectionVisibility
+            envFlags: flagObject
           };
         }
       },
@@ -38,10 +34,10 @@
 
     };
 
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
-    EtoolsPmpApp.Behaviors.EnvironmentFlags = [
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvFlagsData */
+    EtoolsPmpApp.Behaviors.EnvFlagsData = [
       EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-      EtoolsPmpApp.Behaviors.EnvironmentFlagsImp
+      EtoolsPmpApp.Behaviors.EnvFlagsDataImp
     ];
 
   })();

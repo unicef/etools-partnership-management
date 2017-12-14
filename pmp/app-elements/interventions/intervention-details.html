@@ -18,7 +18,7 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-config/app-section-visibility-behavior.html">
+<link rel="import" href="../../app-config/environment-flags-behavior.html">
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
@@ -265,7 +265,7 @@
         </etools-single-selection-menu>
       </div>
 
-      <template is="dom-if" if="[[appSectionVisibility.prp_flag]]" restamp>
+      <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
         <div class="row-h flex-c">
           <etools-form-element-wrapper label="Sections PD/SSFA Covers">
             <span class="placeholder" hidden$="[[!_isEmpty(intervention.section_names.length)]]">&#8212;</span>
@@ -301,7 +301,7 @@
           </etools-form-element-wrapper>
         </div>
       </template>
-      <template is="dom-if" if="[[!appSectionVisibility.prp_flag]]" restamp>
+      <template is="dom-if" if="[[environmentFlags.prp_mode_off]]" restamp>
         <div class="row-h flex-c">
           <etools-multi-selection-menu id="sections"
                                        label="Section(s)"
@@ -333,7 +333,7 @@
       </template>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[appSectionVisibility.prp_flag]]" restamp>
+    <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
       <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
         <template is="dom-if" if="[[!newIntervention]]">
           <intervention-expected-results id="expectedResults"
@@ -369,7 +369,7 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[conditionsAreTrue(appSectionVisibility.prp_flag, intervention.permissions.view.reporting_periods)]]" restamp>
+    <template is="dom-if" if="[[conditionsAreTrue(!environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]" restamp>
       <reporting-requirements class="content-section"
                               is-new-intervention="[[newIntervention]]"
                               edit-mode="[[intervention.permissions.edit.reporting_periods]]"
@@ -389,7 +389,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.AppSectionVisibility,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions,
           EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],

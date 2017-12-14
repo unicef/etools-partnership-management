@@ -10,7 +10,7 @@
 <link rel="import" href="../../styles/custom-iconsets/pmp-icons.html">
 <link rel="import" href="styles/nav-menu-styles.html">
 
-<link rel="import" href="../app-config/app-section-visibility-behavior.html">
+<link rel="import" href="../app-config/environment-flags-behavior.html">
 
 <dom-module id="app-sidebar-menu">
 
@@ -81,7 +81,7 @@
           <div class="name">Government</div>
         </a>
 
-        <template is="dom-if" if="[[appSectionVisibility.prp_flag]]" restamp>
+        <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
           <a class="nav-menu-item" menu-name="reports" href$="[[baseUrl]]reports/list" on-tap="_firePageChangeLoading">
             <iron-icon id="reports-icon" icon="assignment"></iron-icon>
             <paper-tooltip for="reports-icon" position="right">
@@ -91,7 +91,7 @@
           </a>
         </template>
 
-        <template is="dom-if" if="[[appSectionVisibility.prp_flag]]" restamp>
+        <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
           <a class="nav-menu-item" menu-name="settings" href$="[[baseUrl]]settings" on-tap="_firePageChangeLoading">
             <iron-icon id="settings-icon" icon="settings"></iron-icon>
             <paper-tooltip for="settings-icon" position="right">
@@ -146,7 +146,7 @@
         is: 'app-sidebar-menu',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.AppSectionVisibility
+          EtoolsPmpApp.Behaviors.EnvironmentFlags
         ],
 
         properties: {
