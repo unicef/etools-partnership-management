@@ -234,6 +234,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._setContentScrollPosition(0);
       },
       ready: function() {
+        window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
+            .querySelector('#appHeadLayout').$$('#contentContainer');
         // for some reason the "$=" will make basePath undefined, we need to use a local property
         this.baseUrl = EtoolsPmpApp.Config.basePath;
 
