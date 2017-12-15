@@ -763,15 +763,15 @@
           if (!this.intervention) {
             return;
           }
-          let locAndClusters = this._extractLocAndClustersFromIndicators();
-          this.set('intervention.locations', locAndClusters.locationIds);
-          this.set('intervention.location_names', locAndClusters.locationNames);
-          this.set('intervention.cluster_names', locAndClusters.clusterNames);
-          this.set('intervention.section_names', locAndClusters.sectionNames);
-          this.set('intervention.flagged_sections', locAndClusters.flaggedSections);
+          let result = this._extractLocAndClustersFromIndicators();
+          this.set('intervention.locations', result.locationIds);
+          this.set('intervention.location_names', result.locationNames);
+          this.set('intervention.cluster_names', result.clusterNames);
+          this.set('intervention.section_names', result.sectionNames);
+          this.set('intervention.flagged_sections', result.flaggedSections);
         },
         _extractLocAndClustersFromIndicators: function() {
-          let locAndClusters = {
+          let result = {
             locationIds: [],
             flaggedSections: [],
             clusterNames: [],
@@ -789,32 +789,32 @@
               }
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
-                  [].push.apply(locAndClusters.locationIds,
-                      this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
+                  [].push.apply(result.locationIds,
+                      this._getUniqueLocIds(indicator.locations, result.locationIds));
                 }
 
                 if (indicator.cluster_name) {
-                  [].push.apply(locAndClusters.clusterNames,
-                      this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                  [].push.apply(result.clusterNames,
+                      this._getUniqueClusterNames(indicator.cluster_name, result.clusterNames));
                 }
 
                 if (indicator.section) {
-                  [].push.apply(locAndClusters.flaggedSections,
-                      this._getSectionIds(indicator.section, locAndClusters.flaggedSections));
+                  [].push.apply(result.flaggedSections,
+                      this._getSectionIds(indicator.section, result.flaggedSections));
 
-                  [].push.apply(locAndClusters.sectionNames,
-                      this._getSectionNames(indicator.section, locAndClusters.sectionNames));
+                  [].push.apply(result.sectionNames,
+                      this._getSectionNames(indicator.section, result.sectionNames));
                 }
               }, this);
 
             }, this);
           }, this);
 
-          if (!_.isEmpty(locAndClusters.locationIds)) {
-            [].push.apply(locAndClusters.locationNames,
-                this._extractLocationNames(locAndClusters.locationIds));
+          if (!_.isEmpty(result.locationIds)) {
+            [].push.apply(result.locationNames,
+                this._extractLocationNames(result.locationIds));
           }
-          return locAndClusters;
+          return result;
         },
         _extractLocationNames: function(locationIds) {
           let selectedLocations = this.locations.filter(function(loc) {
