@@ -18,6 +18,7 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../app-config/environment-flags-behavior.html">
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
@@ -27,7 +28,7 @@
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
-<link rel="import" href="intervention-form/agreement-selector.html">
+<link rel="import" href="agreement-selector/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
@@ -263,63 +264,93 @@
                                       error-message="Please select CP Structure">
         </etools-single-selection-menu>
       </div>
-      <div class="row-h flex-c">
-        <etools-multi-selection-menu id="sections"
-                                     label="Section(s)"
-                                     placeholder="&#8212;"
-                                     selected-values="{{intervention.sections}}"
-                                     options="[[sections]]"
-                                     option-label="name"
-                                     option-value="id"
-                                     readonly$="[[!intervention.permissions.edit.sections]]"
-                                     required$="[[intervention.permissions.required.sections]]"
-                                     auto-validate
-                                     error-message="Please select a section">
-        </etools-multi-selection-menu>
-      </div>
-      <div class="row-h flex-c">
-        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-          <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
-          <template is="dom-repeat" items="[[intervention.cluster_names]]">
-            <span class="names-padding">[[item]]</span>
-          </template>
-        </etools-form-element-wrapper>
-      </div>
-      <div class="row-h flex-c">
-        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
-          <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
-            <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
+
+      <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+        <div class="row-h flex-c">
+          <etools-form-element-wrapper label="Sections PD/SSFA Covers">
+            <span class="placeholder" hidden$="[[!_isEmpty(intervention.section_names.length)]]">&#8212;</span>
+            <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.section_names.length)]]">
+              <template is="dom-repeat" items="[[intervention.section_names]]">
+                <span class="names-padding">[[item]]</span>
+              </template>
+            </div>
+          </etools-form-element-wrapper>
+        </div>
+        <div class="row-h flex-c">
+          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+            <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
+            <template is="dom-repeat" items="[[intervention.cluster_names]]">
               <span class="names-padding">[[item]]</span>
             </template>
-            <paper-button class="secondary-btn see-locations"
-                          on-tap="_openLocationsDialog"
-                          title="See all locations">
-              <iron-icon icon="add"></iron-icon>
-              See all
-            </paper-button>
-          </div>
-        </etools-form-element-wrapper>
-      </div>
+          </etools-form-element-wrapper>
+        </div>
+        <div class="row-h flex-c">
+          <etools-form-element-wrapper label="Locations PD/SSFA Covers">
+            <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
+            <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
+              <template is="dom-repeat" items="[[getFirst3NamesFromArray(intervention.location_names)]]">
+                <span class="names-padding">[[item]]</span>
+              </template>
+              <paper-button class="secondary-btn see-locations"
+                            on-tap="_openLocationsDialog"
+                            title="See all locations">
+                <iron-icon icon="add"></iron-icon>
+                See all
+              </paper-button>
+            </div>
+          </etools-form-element-wrapper>
+        </div>
+      </template>
+      <template is="dom-if" if="[[environmentFlags.prp_mode_off]]" restamp>
+        <div class="row-h flex-c">
+          <etools-multi-selection-menu id="sections"
+                                       label="Section(s)"
+                                       placeholder="&#8212;"
+                                       selected-values="{{intervention.sections}}"
+                                       options="[[sections]]"
+                                       option-label="name"
+                                       option-value="id"
+                                       readonly$="[[!intervention.permissions.edit.sections]]"
+                                       required$="[[intervention.permissions.required.sections]]"
+                                       auto-validate
+                                       error-message="Please select a section">
+          </etools-multi-selection-menu>
+        </div>
+        <div class="row-h flex-c">
+          <etools-multi-selection-menu id="locationsDropdw"
+                    label="Locations"
+                    placeholder="&#8212;"
+                    selected-values="{{intervention.flat_locations}}"
+                    options="[[locations]]"
+                    option-label="name"
+                    option-value="id"
+                    readonly$="[[!intervention.permissions.edit.flat_locations]]"
+                    required$="[[intervention.permissions.required.flat_locations]]"
+                    error-message="Please select locations"
+                    disable-on-focus-handling>
+          </etools-multi-selection-menu>
+        </div>
+      </template>
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
-      <template is="dom-if" if="[[!newIntervention]]">
-        <intervention-expected-results id="expectedResults"
-                                      data-items="{{intervention.result_links}}"
-                                      selected-cp-structure="[[intervention.country_programme]]"
-                                      intervention-id="[[intervention.id]]"
-                                      edit-mode$="[[intervention.permissions.edit.result_links]]"
-                                      on-indicators-changed="_updateInteventionLocAndClusters">
-        </intervention-expected-results>
-      </template>
-      <template is="dom-if" if="[[newIntervention]]">
-        <div class="row-h">
-          <p> You must save this PD/SSFA before you can add expected results. </p>
-        </div>
+    <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+      <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
+        <template is="dom-if" if="[[!newIntervention]]">
+          <intervention-expected-results id="expectedResults"
+                                        data-items="{{intervention.result_links}}"
+                                        selected-cp-structure="[[intervention.country_programme]]"
+                                        intervention-id="[[intervention.id]]"
+                                        edit-mode$="[[intervention.permissions.edit.result_links]]"
+                                        on-indicators-changed="_updateInteventionLocClustersSections">
+          </intervention-expected-results>
+        </template>
+        <template is="dom-if" if="[[newIntervention]]">
+          <div class="row-h">
+            <p> You must save this PD/SSFA before you can add expected results. </p>
+          </div>
         </template>
       </etools-content-panel>
-
+    </template>
     <intervention-planned-budget id="plannedBudget"
                                  class="content-section"
                                  planned-budget="{{intervention.planned_budget}}"
@@ -338,7 +369,9 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <template is="dom-if" if="[[intervention.permissions.view.reporting_periods]]">
+    <template is="dom-if"
+              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
+              restamp>
       <reporting-requirements class="content-section"
                               is-new-intervention="[[newIntervention]]"
                               edit-mode="[[intervention.permissions.edit.reporting_periods]]"
@@ -358,6 +391,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
           EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions,
           EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
@@ -471,11 +505,11 @@
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-        getFirst3Locations: function(locNames) {
-          if (!locNames || !locNames.length) {
+        getFirst3NamesFromArray: function(names) {
+          if (!names || !names.length) {
             return '';
           }
-          return locNames.slice(0, Math.min(locNames.length, 3));
+          return names.slice(0, Math.min(names.length, 3));
         },
         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
@@ -583,7 +617,7 @@
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
-              this.set('selectedPartnerId', null);
+              this.set('selectedPartnerId', undefined);
             }
 
             this.set('fieldsResetted', false);
@@ -725,21 +759,23 @@
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
         },
-        _updateInteventionLocAndClusters: function() {
+
+        _updateInteventionLocClustersSections: function() {
           if (!this.intervention) {
             return;
           }
-          let locAndClusters = this._extractLocAndClustersFromIndicators();
-          this.set('intervention.locations', locAndClusters.locationIds);
-          this.set('intervention.location_names', locAndClusters.locationNames);
-          this.set('intervention.cluster_names', locAndClusters.clusterNames);
+          let result = this._extractLocClustersSectionsFromIndicators();
+          //Override intervention values to cover delete and edit indicators also , beside create
+          this.set('intervention.locations', result.locationIds);
+          this.set('intervention.location_names', result.locationNames);
+          this.set('intervention.cluster_names', result.clusterNames);
+          this.set('intervention.section_names', result.sectionNames);
+          this.set('intervention.flagged_sections', result.flaggedSections);
         },
-        _extractLocAndClustersFromIndicators: function() {
-          let locAndClusters = {
-            locationIds: [],
-            clusterNames: [],
-            locationNames: [],
-          };
+        _extractLocClustersSectionsFromIndicators: function() {
+          let locationIds = new Set(),
+            flaggedSections = new Set(),
+            clusterNames = new Set();
 
           this.intervention.result_links.forEach(function(rl) {
             if (_.isEmpty(rl.ll_results)) {
@@ -751,51 +787,71 @@
               }
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
-                  [].push.apply(locAndClusters.locationIds,
-                      this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
+                  indicator.locations.forEach(function(locId){
+                    locationIds.add(+locId);
+                  })
                 }
 
                 if (indicator.cluster_name) {
-                  [].push.apply(locAndClusters.clusterNames,
-                      this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                  clusterNames.add(indicator.cluster_name);
+                }
+
+                if (indicator.section) {
+                  flaggedSections.add(+indicator.section);
                 }
               }, this);
 
             }, this);
           }, this);
 
-          if (!_.isEmpty(locAndClusters.locationIds)) {
-            [].push.apply(locAndClusters.locationNames,
-                this._extractLocationNames(locAndClusters.locationIds));
+          let locationNames = [],
+            sectionNames = [];
+
+          if (!_.isEmpty(locationIds)) {
+            locationNames = this._extractLocationNames(locationIds);
           }
-          return locAndClusters;
+          if (!_.isEmpty(flaggedSections)) {
+            sectionNames = this._getSectionNames(flaggedSections);
+          }
+          return {
+            locationIds: Array.from(locationIds),
+            locationNames: locationNames,
+            clusterNames: Array.from(clusterNames),
+            flaggedSections: Array.from(flaggedSections),
+            sectionNames: sectionNames
+          };
         },
+
         _extractLocationNames: function(locationIds) {
           let selectedLocations = this.locations.filter(function(loc) {
-            return locationIds.indexOf(parseInt(loc.id)) > -1;
+            return locationIds.has(parseInt(loc.id));
           });
           let locNames = selectedLocations.map(function(l) {
             return l.name;
           });
           return locNames;
         },
-        _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
-          let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
-            return interventionLocIds.indexOf(indicLoc) < 0;
+        _getSectionNames: function(sectionIds) {
+          let selectedSections = this.sections.filter(function(s) {
+            return sectionIds.has(parseInt(s.id));
           });
-          return uniqueLocIds;
+          let sectionNames = selectedSections.map(function(s) {
+            return s.name;
+          });;
+
+          return sectionNames;
         },
-        _getUniqueClusterNames: function(indicatorClusterName, intervetionClusterNames) {
-          if (intervetionClusterNames.indexOf(indicatorClusterName) > -1) {
-            return [];
-          }
-          return [indicatorClusterName];
-        },
+
         _isEmpty: function(length) {
-          return !!!length;
+          return !length;
+        },
+
+        _showReportingRequirements: function(prpModeOff, permission) {
+          return !prpModeOff && permission;
         }
+
       });
     })();
-  </script>
 
+  </script>
 </dom-module>

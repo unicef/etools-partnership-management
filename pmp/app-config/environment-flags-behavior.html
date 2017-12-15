@@ -1,0 +1,25 @@
+<link rel="import" href="../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl */
+  EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl = {
+    properties: {
+      environmentFlags: {
+        type: Object,
+        statePath: 'envFlags'
+      }
+    },
+
+    showPrpReports: function() {
+      return this.environmentFlags && !this.environmentFlags.prp_mode_off;
+    }
+
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
+  EtoolsPmpApp.Behaviors.EnvironmentFlags = [
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+    EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl
+  ];
+</script>

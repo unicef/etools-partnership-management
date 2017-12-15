@@ -207,7 +207,7 @@
           .then(function(response) {
             self.responsePlans = response;
           }).catch(function(error) {
-            self.fire('show-toast', {error: error});
+            self.fire('show-toast', {error: {response: error.message || error.response}});
           });
         },
         indicatorChanged: function(indicator) {
@@ -229,7 +229,7 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error});
+            self.fire('show-toast', {error: {response: error.message || error.response}});
           });
         },
         _responsePlanChanged: function(responsePlan) {
@@ -272,7 +272,7 @@
             self.fire('stop-spinner');
           }).catch(function(error) {
             self.fire('stop-spinner');
-            self.fire('show-toast', {error: error});
+            self.fire('show-toast', {error: {response: error.message || error.response}});
           });
         },
         /* ESM dropdown can't process a nested property as option-label

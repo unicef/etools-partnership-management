@@ -83,6 +83,10 @@
           }
           let self = this;
           self.debounce('pd-reports-url-update', function() {
+            // prevent url change if active is changed to false before debounce func is executed
+            if (!this.active) {
+              return;
+            }
             let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
             this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
             this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));

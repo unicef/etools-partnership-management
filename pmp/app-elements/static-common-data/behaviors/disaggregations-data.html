@@ -5,7 +5,7 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.CountryProgrammesDataImpl */
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationsDataImpl */
     EtoolsPmpApp.Behaviors.DisaggregationsDataImpl = {
        actions: {
         setDisaggregationsData: function(disaggregs) {
@@ -22,7 +22,7 @@
         }
       }
     };
-    /** @polymerBehavior EtoolsPmpApp.Behaviors.CountryProgrammesData */
+    /** @polymerBehavior EtoolsPmpApp.Behaviors.DisaggregationsData */
     EtoolsPmpApp.Behaviors.DisaggregationsData = [
       EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
       EtoolsPmpApp.Behaviors.DisaggregationsDataImpl

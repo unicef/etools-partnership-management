@@ -432,7 +432,7 @@
                 path: 'selectedCpOutputs'
               },
               {
-                filterName: 'Section/Cluster',
+                filterName: 'Sections',
                 type: 'esmm', // etools-multi-selection-menu
                 optionValue: 'id',
                 optionLabel: 'name',
@@ -533,7 +533,7 @@
                 selectedValue: _.map(this.selectedCpOutputs, 'id')
               },
               {
-                filterName: 'Section/Cluster',
+                filterName: 'Sections',
                 selectedValue: _.map(this.selectedSections, 'id')
               },
               {
@@ -754,7 +754,7 @@
           }
           if (sectionsArr && sectionsArr.length) {
             let selectedSections = this.sections.filter(function(s) {
-              return sectionsArr.indexOf(s.id) > -1;
+              return sectionsArr.indexOf(String(s.id)) > -1;
             });
             return selectedSections;
           }
