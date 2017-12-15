@@ -341,7 +341,7 @@
                                         selected-cp-structure="[[intervention.country_programme]]"
                                         intervention-id="[[intervention.id]]"
                                         edit-mode$="[[intervention.permissions.edit.result_links]]"
-                                        on-indicators-changed="_updateInteventionLocAndClusters">
+                                        on-indicators-changed="_updateInteventionLocClustersSections">
           </intervention-expected-results>
         </template>
         <template is="dom-if" if="[[newIntervention]]">
@@ -759,25 +759,23 @@
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
         },
-        _updateInteventionLocAndClusters: function() {
+
+        _updateInteventionLocClustersSections: function() {
           if (!this.intervention) {
             return;
           }
-          let result = this._extractLocAndClustersFromIndicators();
+          let result = this._extractLocClustersSectionsFromIndicators();
+          //Override intervention values to cover delete and edit indicators also , beside create
           this.set('intervention.locations', result.locationIds);
           this.set('intervention.location_names', result.locationNames);
           this.set('intervention.cluster_names', result.clusterNames);
           this.set('intervention.section_names', result.sectionNames);
           this.set('intervention.flagged_sections', result.flaggedSections);
         },
-        _extractLocAndClustersFromIndicators: function() {
-          let result = {
-            locationIds: [],
-            flaggedSections: [],
-            clusterNames: [],
-            locationNames: [],
-            sectionNames: [],
-          };
+        _extractLocClustersSectionsFromIndicators: function() {
+          let locationIds = new Set(),
+            flaggedSections = new Set(),
+            clusterNames = new Set();
 
           this.intervention.result_links.forEach(function(rl) {
             if (_.isEmpty(rl.ll_results)) {
@@ -789,72 +787,59 @@
               }
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
-                  [].push.apply(result.locationIds,
-                      this._getUniqueLocIds(indicator.locations, result.locationIds));
+                  indicator.locations.forEach(function(locId){
+                    locationIds.add(+locId);
+                  })
                 }
 
                 if (indicator.cluster_name) {
-                  [].push.apply(result.clusterNames,
-                      this._getUniqueClusterNames(indicator.cluster_name, result.clusterNames));
+                  clusterNames.add(indicator.cluster_name);
                 }
 
                 if (indicator.section) {
-                  [].push.apply(result.flaggedSections,
-                      this._getSectionIds(indicator.section, result.flaggedSections));
-
-                  [].push.apply(result.sectionNames,
-                      this._getSectionNames(indicator.section, result.sectionNames));
+                  flaggedSections.add(+indicator.section);
                 }
               }, this);
 
             }, this);
           }, this);
 
-          if (!_.isEmpty(result.locationIds)) {
-            [].push.apply(result.locationNames,
-                this._extractLocationNames(result.locationIds));
+          let locationNames = [],
+            sectionNames = [];
+
+          if (!_.isEmpty(locationIds)) {
+            locationNames = this._extractLocationNames(locationIds);
           }
-          return result;
+          if (!_.isEmpty(flaggedSections)) {
+            sectionNames = this._getSectionNames(flaggedSections);
+          }
+          return {
+            locationIds: Array.from(locationIds),
+            locationNames: locationNames,
+            clusterNames: Array.from(clusterNames),
+            flaggedSections: Array.from(flaggedSections),
+            sectionNames: sectionNames
+          };
         },
+
         _extractLocationNames: function(locationIds) {
           let selectedLocations = this.locations.filter(function(loc) {
-            return locationIds.indexOf(parseInt(loc.id)) > -1;
+            return locationIds.has(parseInt(loc.id));
           });
           let locNames = selectedLocations.map(function(l) {
             return l.name;
           });
           return locNames;
         },
-        _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
-          let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
-            return interventionLocIds.indexOf(indicLoc) < 0;
+        _getSectionNames: function(sectionIds) {
+          let selectedSections = this.sections.filter(function(s) {
+            return sectionIds.has(parseInt(s.id));
           });
-          return uniqueLocIds;
-        },
-        _getUniqueClusterNames: function(indicatorClusterName, intervetionClusterNames) {
-          if (intervetionClusterNames.indexOf(indicatorClusterName) > -1) {
-            return [];
-          }
-          return [indicatorClusterName];
-        },
-        _getSectionIds: function(sectionId, sectionIds) {
-          if (sectionIds.indexOf(sectionId) > -1) {
-            return [];
-          }
-          return [sectionId];
-        },
+          let sectionNames = selectedSections.map(function(s) {
+            return s.name;
+          });;
 
-        _getSectionNames: function(sectionId, interventionSectionNames) {
-          let section = this.sections.find(function(elem) {
-            return elem.id === sectionId;
-          });
-          let sectionName = section.name;
-
-          if (interventionSectionNames.indexOf(sectionName) > -1) {
-            return [];
-          }
-
-          return [sectionName];
+          return sectionNames;
         },
 
         _isEmpty: function(length) {
