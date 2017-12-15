@@ -343,7 +343,7 @@
           this.indicator = JSON.parse(JSON.stringify(resetModel));
           this.disaggregations = [];
           this.prpDisaggregations = [];
-          if (this.isCluster) {
+          if (this.isCluster && this.$$('#clusterIndicatorEl')) {
             this.$$('#clusterIndicatorEl').resetFieldValues();
           }
         },
