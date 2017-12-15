@@ -101,13 +101,12 @@
         },
 
         _convertIdsToStrings: function(dataArray) {
-          dataArray.forEach(function(elem, key) {
-            if (typeof elem !== 'string') {
-              dataArray[key] = elem.toString();
+          return dataArray.map(function(elem) {
+            if (typeof elem === 'number') {
+              return String(elem);
             }
+            return elem;
           });
-
-          return dataArray;
         },
 
         _handleDataConversions: function (intervention) {
