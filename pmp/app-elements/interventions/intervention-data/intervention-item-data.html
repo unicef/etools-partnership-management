@@ -99,11 +99,36 @@
           this.set('intervention.frs_details', this.originalIntervention.frs_details);
           this.set('intervention.frs', this.originalIntervention.frs);
         },
+
+        _convertIdsToStrings: function(dataArray) {
+          return dataArray.map(function(elem) {
+            return typeof elem === 'number' ? String(elem) : elem;
+          });
+        },
+
+        _handleDataConversions: function (intervention) {
+          let fieldsToConvert = [
+            'flat_locations',
+            'offices',
+            'partner_focal_points',
+            'sections',
+            'unicef_focal_points'
+          ];
+
+          fieldsToConvert.forEach(function(propName) {
+            if (!intervention[propName] || !intervention[propName].length) {
+              return;
+            }
+            intervention[propName] = this._convertIdsToStrings(intervention[propName]);
+          }.bind(this));
+
+          return intervention;
+        },
         /**
          * Handle received data from request
          */
         _handleResponse: function(response, ajaxMethod) {
-          this._setIntervention(response);
+          this._setIntervention(this._handleDataConversions(response));
 
           // call additional callback, if any
           if (typeof this.handleResponseAdditionalCallback === 'function') {
