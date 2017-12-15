@@ -102,10 +102,7 @@
 
         _convertIdsToStrings: function(dataArray) {
           return dataArray.map(function(elem) {
-            if (typeof elem === 'number') {
-              return String(elem);
-            }
-            return elem;
+            return typeof elem === 'number' ? String(elem) : elem;
           });
         },
 
