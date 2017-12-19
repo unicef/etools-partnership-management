@@ -37,15 +37,15 @@
     },
     _getPrpCountryId: function() {
       let self = this;
-      let currentCountry = this.currentUser.profile.countries_available.find(function(country) {
-        return country.id === self.currentUser.profile.country;
+      let currentCountry = this.currentUser.countries_available.find(function(country) {
+        return country.id === self.currentUser.country.id;
       });
       let prpCountry = self.prpCountries.find(function(prpCountry) {
         return prpCountry.business_area_code === currentCountry.business_area_code;
       });
 
       if (!prpCountry) {
-        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.profile.country_name + ' country data was ' +
+        let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
             'not found in the available PRP countries by business_area_code!';
         this.fire('toast', {text: countryNotFoundInPrpWarning, showCloseBtn: true});
       }

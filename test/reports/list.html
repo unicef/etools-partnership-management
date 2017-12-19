@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Page Reports</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+    <!-- <link rel="import" href="../test-helpers/users-and-permissions-data-mockup.html"> -->
+    <!-- <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html"> -->
+    <link rel="import" href="../test-helpers/testing-utils.html">
+    <link rel="import" href="helpers/reports-mockup-data.html">
+    <link rel="import" href="helpers/reports-helper.html">
+    <link rel="import" href="../../pmp/app-elements/reports/reports-list.html">
+  </head>
+  <body>
+    <test-fixture id="reportsListFixture">
+      <template>
+        <reports-list></reports-list>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('reports-list tests', function() {
+        let reportsList;
+        setup(function(done) {
+          reportsList = fixture('reportsListFixture');
+          ReportsHelper.populateReportsList(reportsList);
+          reportsList.active = true;
+          done();
+        });
+
+        test('can instantiate reports-list element', function() {
+          assert.equal(reportsList.is, 'reports-list');
+        });
+
+        test('element is rendered', function(done) {
+          flush(function() {
+            assert.equal(PmpTestsHelper.elementIsVisible(reportsList), true);
+
+            done();
+          });
+        });
+
+        test('report list items are displayed', function(done) {
+          flush(function() {
+            let reportsDisplayList = reportsList.$.reportsDisplayList;
+            let rows = reportsDisplayList.$$('#list').querySelectorAll('etools-data-table-row');
+
+            expect(rows.length).to.equal(2);
+            expect(reportsDisplayList.reports.length).to.equal(2);
+            done();
+          });
+        });
+
+      });
+    </script>
+  </body>
+</html>
+

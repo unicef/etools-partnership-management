@@ -1,34 +1,36 @@
 <script>
-  var agrListMockup  = [
-  {
-    agreement_number: "PCA 2015/29-3",
-    agreement_type: "PCA",
-    end: "2016-09-29",
-    id: 8,
-    partner: 21,
-    partner_name: "DANISH REFUGEE COUNCIL",
-    signed_by: 1152,
-    signed_by_partner_date: "2015-07-28",
-    signed_by_unicef_date: "2015-07-28",
-    start: "2015-09-30",
-    status: "draft"
-  },
-  {
-    agreement_number: "PRC 2015/PCA 2015/10/02",
-    agreement_type: "PCA",
-    end: "2016-12-31",
-    id: 9,
-    partner: 51,
-    partner_name: "BEYOND ASSOCIATION",
-    signed_by: null,
-    signed_by_partner_date: null,
-    signed_by_unicef_date: null,
-    start: "2015-09-30",
-    status: "active"
-    }
+  var PmpTests = window.PmpTests || {};
 
-  ]
-  var agreementMock = {
+  PmpTests.Agreements = {
+    listMockupData: [
+      {
+        agreement_number: "PCA 2015/29-3",
+        agreement_type: "PCA",
+        end: "2016-09-29",
+        id: 8,
+        partner: 21,
+        partner_name: "DANISH REFUGEE COUNCIL",
+        signed_by: 1152,
+        signed_by_partner_date: "2015-07-28",
+        signed_by_unicef_date: "2015-07-28",
+        start: "2015-09-30",
+        status: "draft"
+      },
+      {
+        agreement_number: "PRC 2015/PCA 2015/10/02",
+        agreement_type: "PCA",
+        end: "2016-12-31",
+        id: 9,
+        partner: 51,
+        partner_name: "BEYOND ASSOCIATION",
+        signed_by: null,
+        signed_by_partner_date: null,
+        signed_by_unicef_date: null,
+        start: "2015-09-30",
+        status: "active"
+      }
+    ],
+    agreementMock: {
     "id": 49,
     "partner_name": "ACTION CONTRE LA FAIM",
     "authorized_officers": [{
@@ -169,10 +171,25 @@
     "country_programme": 2,
     "signed_by": 2276,
     "partner_manager": null
-  }
-  var agreementTypes = [
+  },
+  agreementTypes: [
     {value: "PCA", label: "Programme Cooperation Agreement"},
     {value: "SSFA", label: "Small Scale Funding Agreement"},
     {value: "MOU", label: "Memorandum of Understanding"}
-  ];
+  ],
+  countryProgrammes: [
+    {
+      "id": 2,
+      "expired": false,
+      "active": true,
+      "special": false,
+      "future": false,
+      "name": "JORDAN COUNTRY PROGRAMME (2013 - 2017)",
+      "wbs": "2340/A0/04",
+      "invalid": false,
+      "from_date": "2013-01-01",
+      "to_date": "2017-12-31"
+    }
+  ]
+}
 </script>
