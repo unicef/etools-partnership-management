@@ -38,7 +38,7 @@
     updatePaginatorTotalResults: function(reqResponse) {
       if (reqResponse && reqResponse.count) {
         let count = parseInt(reqResponse.count, 10);
-        if (!Number.isNaN(count)) {
+        if (!isNaN(count)) {
           this.set('paginator.count', count);
           return;
         }

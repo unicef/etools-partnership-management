@@ -239,7 +239,7 @@
           return;
         }
         this.async(function() {
-          if (Number.isNaN(id)) {
+          if (isNaN(id)) {
             this.fire('toast', {text: 'Invalid report ID!', showCloseBtn: true});
             this.set('report', null);
             return;

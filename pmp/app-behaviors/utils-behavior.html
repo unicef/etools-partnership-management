@@ -19,11 +19,11 @@
         placeholder = placeholder ? placeholder : '-';
 
         let nr = Number(val);
-        if (Number.isNaN(nr)) {
+        if (isNaN(nr)) {
           return placeholder;
         }
 
-        decimals = !Number.isNaN(decimals) ? Number(decimals) : 2;
+        decimals = !isNaN(decimals) ? Number(decimals) : 2;
         nr = nr.toFixed(decimals);
 
         decimalsPoint = decimalsPoint ? decimalsPoint : '.';
