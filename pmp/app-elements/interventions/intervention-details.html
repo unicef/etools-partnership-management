@@ -773,9 +773,9 @@
           this.set('intervention.flagged_sections', result.flaggedSections);
         },
         _extractLocClustersSectionsFromIndicators: function() {
-          let locationIds = new Set(),
-            flaggedSections = new Set(),
-            clusterNames = new Set();
+          let locationIds = new Set();
+          let flaggedSections = new Set();
+          let clusterNames = new Set();
 
           this.intervention.result_links.forEach(function(rl) {
             if (_.isEmpty(rl.ll_results)) {
@@ -787,9 +787,9 @@
               }
               llResult.applied_indicators.forEach(function(indicator) {
                 if (!_.isEmpty(indicator.locations)) {
-                  indicator.locations.forEach(function(locId){
+                  indicator.locations.forEach(function(locId) {
                     locationIds.add(+locId);
-                  })
+                  });
                 }
 
                 if (indicator.cluster_name) {
@@ -804,8 +804,8 @@
             }, this);
           }, this);
 
-          let locationNames = [],
-            sectionNames = [];
+          let locationNames = [];
+          let sectionNames = [];
 
           if (!_.isEmpty(locationIds)) {
             locationNames = this._extractLocationNames(locationIds);
@@ -837,7 +837,7 @@
           });
           let sectionNames = selectedSections.map(function(s) {
             return s.name;
-          });;
+          });
 
           return sectionNames;
         },
