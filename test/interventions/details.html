@@ -108,6 +108,64 @@
           });
         });
       });
+
+      suite('Test Draft ', function() {
+        let intervDetails;
+        setup(function() {
+          intervDetails = fixture('interventionDetailsFixture');
+          intervDetails.newIntervention = false;
+
+          //TODO: redux data should load from the static files in the source.
+          intervDetails.sections = sections;
+          intervDetails.offices = offices;
+          intervDetails.unicefUsersData = users;
+          intervDetails.countryProgrammes = countryProgrammes;
+          intervDetails.locations = locations;
+
+          intervDetails.intervention = PmpTestsHelper.deepCloneObject(interventionData);
+        });
+
+        test('element is rendered', function(done) {
+          flush(function() {
+            expect(PmpTestsHelper.elementIsVisible(intervDetails)).to.be.equal(true);
+            done();
+          });
+        });
+
+        test('Inputs rendered and populated', function(done) {
+          flush(function() {
+            let refNumberInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'paper-input[label="Reference Number"]');
+            expect(refNumberInput.is).to.equal('paper-input');
+            expect(refNumberInput.disabled).to.equal(true);
+            expect(refNumberInput.value).to.equal('Oxfam PCA 13-PD 02-2016');
+
+            let titleInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'paper-input[label="Title"]');
+            expect(titleInput.is).to.equal('paper-input');
+            // expect(titleInput.required).to.equal(true);
+            expect(titleInput.value).to.equal('Provision of water, sanitation and hygiene promotion assistance to the displaced Syrian population in Jordan.');
+
+            let unicefOfficeInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="UNICEF Office(s)"]');
+            expect(unicefOfficeInput.is).to.equal('etools-multi-selection-menu');
+            // expect(unicefOfficeInput.required).to.equal(false);
+            expect(typeof unicefOfficeInput.selectedValues).to.equal('object');
+            expect(unicefOfficeInput.selectedValues.length).to.equal(1);
+
+            let partnerFocalPointInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="Partner Focal Point(s)"]');
+            expect(partnerFocalPointInput.is).to.equal('etools-multi-selection-menu');
+            // expect(partnerFocalPointInput.required).to.equal(false);
+            expect(typeof partnerFocalPointInput.selectedValues).to.equal('object');
+            expect(partnerFocalPointInput.selectedValues.length).to.equal(1);
+
+            let unicefFocalPointInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="UNICEF Focal Point(s)"]');
+            expect(unicefFocalPointInput.is).to.equal('etools-multi-selection-menu');
+            // expect(unicefFocalPointInput.required).to.equal(false);
+            expect(typeof unicefFocalPointInput.selectedValues).to.equal('object');
+            expect(unicefFocalPointInput.selectedValues.length).to.equal(1);
+
+            done();
+          });
+        });
+      });
     </script>
   </body>
 </html>
