@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Interventions Review&Sign</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+    <link rel="import" href="../test-helpers/testing-utils.html">
+    <link rel="import" href="../test-helpers/interventions-testing-helper.html">
+    <link rel="import" href="../test-helpers/static-data-mockup.html">
+    <link rel="import" href="../../pmp/pages/models/intervention-models.html">
+
+    <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+    <link rel="import" href="../../pmp/app-elements/interventions/intervention-review-and-sign.html">
+  </head>
+  <body>
+    <test-fixture id="interventionReviewAndSignFixture">
+        <template>
+          <intervention-review-and-sign></intervention-review-and-sign>
+        </template>
+    </test-fixture>
+
+    <script>
+
+      suite('intervention-review-and-sign test', function() {
+        let intervReviewAndSign;
+        setup(function(done) {
+          intervReviewAndSign = fixture('interventionReviewAndSignFixture');
+          done();
+        });
+
+        test('intervention-review-and-sign has an instance', function() {
+          assert.equal(intervReviewAndSign.is, 'intervention-review-and-sign');
+        });
+      });
+
+      suite('Test Draft ', function() {
+        let intervReviewAndSign;
+        setup(function() {
+          intervReviewAndSign = fixture('interventionReviewAndSignFixture');
+          intervReviewAndSign.newIntervention = false;
+
+          //TODO: redux data should load from the static files in the source.
+          intervReviewAndSign.unicefUsersData = users;
+
+          intervReviewAndSign.intervention = PmpTestsHelper.deepCloneObject(interventionData);
+        });
+
+        test('element is rendered', function(done) {
+          flush(function() {
+            expect(PmpTestsHelper.elementIsVisible(intervReviewAndSign)).to.be.equal(true);
+            done();
+          });
+        });
+
+        test('Inputs rendered and populated', function(done) {
+          flush(function() {
+            /*
+                Signed PD/SSFA (file)
+                Signed by UNICEF Date
+                Signed by UNICEF
+                Signed by Partner Date
+                Signed By Partner Authorized Officer
+                Document Submission Date
+            */
+
+            let docSubmissionDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Document Submission Date"]');
+            expect(docSubmissionDate.is).to.equal('etools-date-input');
+            expect(docSubmissionDate.value).to.equal('2016-03-13');
+
+            let signedByParterOfficer = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-single-selection-menu[label="Signed by Partner Authorized Officer"]');
+            
+            expect(signedByParterOfficer.is).to.equal('etools-single-selection-menu');
+            expect(signedByParterOfficer.value).to.equal('1970-01-01');
+
+            done();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
