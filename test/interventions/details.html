@@ -73,6 +73,40 @@
             done();
           });
         });
+
+        test('New intervention elems rendered', function(done) {
+          flush(function() {
+            let refNumberInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'paper-input[label="Reference Number"]');
+            expect(refNumberInput.is).to.equal('paper-input');
+            expect(refNumberInput.disabled).to.equal(true);
+            expect(refNumberInput.value).to.equal(undefined);
+
+            let titleInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'paper-input[label="Title"]');
+            expect(titleInput.is).to.equal('paper-input');
+            // expect(titleInput.required).to.equal(true);
+            expect(titleInput.value).to.equal(undefined);
+
+            let unicefOfficeInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="UNICEF Office(s)"]');
+            expect(unicefOfficeInput.is).to.equal('etools-multi-selection-menu');
+            // expect(unicefOfficeInput.required).to.equal(false);
+            expect(typeof unicefOfficeInput.selectedValues).to.equal('object');
+            expect(unicefOfficeInput.selectedValues.length).to.equal(0);
+
+            let partnerFocalPointInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="Partner Focal Point(s)"]');
+            expect(partnerFocalPointInput.is).to.equal('etools-multi-selection-menu');
+            // expect(partnerFocalPointInput.required).to.equal(false);
+            expect(typeof partnerFocalPointInput.selectedValues).to.equal('object');
+            expect(partnerFocalPointInput.selectedValues.length).to.equal(0);
+
+            let unicefFocalPointInput = PmpTestsHelper.shadowDomQuery(intervDetails, 'etools-multi-selection-menu[label="UNICEF Focal Point(s)"]');
+            expect(unicefFocalPointInput.is).to.equal('etools-multi-selection-menu');
+            // expect(unicefFocalPointInput.required).to.equal(false);
+            expect(typeof unicefFocalPointInput.selectedValues).to.equal('object');
+            expect(unicefFocalPointInput.selectedValues.length).to.equal(0);
+
+            done();
+          });
+        });
       });
     </script>
   </body>
