@@ -14,8 +14,14 @@ app.get(/.*service-worker\.js/, function(req, res) {
 app.get(/.*redux\.min\.js/, function(req, res) {
   res.sendFile(node_modulesReduxDir + 'redux.min.js');
 });
+
 app.use(function(req, res) {
-  res.sendFile(basedir + 'index.html');
+  if (req.originalUrl.startsWith('/pmp/pmp/')) {
+    console.log('sending 404 status for url', req.originalUrl);
+    res.status(404).send('Not found');
+  } else {
+    res.sendFile(basedir + 'index.html');
+  }
 });
 
 
