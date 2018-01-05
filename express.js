@@ -17,7 +17,6 @@ app.get(/.*redux\.min\.js/, function(req, res) {
 
 app.use(function(req, res) {
   if (req.originalUrl.startsWith('/pmp/pmp/')) {
-    console.log('sending 404 status for url', req.originalUrl);
     res.status(404).send('Not found');
   } else {
     res.sendFile(basedir + 'index.html');
