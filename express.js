@@ -16,9 +16,11 @@ app.get(/.*redux\.min\.js/, function(req, res) {
 });
 
 app.use(function(req, res) {
+  // static file requrests that end up here are missing so they should return 404
   if (req.originalUrl.startsWith('/pmp/pmp/')) {
     res.status(404).send('Not found');
   } else {
+    // handles requests that look like /pmp/interventions/details
     res.sendFile(basedir + 'index.html');
   }
 });
