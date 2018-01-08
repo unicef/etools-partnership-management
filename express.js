@@ -14,8 +14,15 @@ app.get(/.*service-worker\.js/, function(req, res) {
 app.get(/.*redux\.min\.js/, function(req, res) {
   res.sendFile(node_modulesReduxDir + 'redux.min.js');
 });
+
 app.use(function(req, res) {
-  res.sendFile(basedir + 'index.html');
+  // static file requrests that end up here are missing so they should return 404
+  if (req.originalUrl.startsWith('/pmp/pmp/')) {
+    res.status(404).send('Not found');
+  } else {
+    // handles requests that look like /pmp/interventions/details
+    res.sendFile(basedir + 'index.html');
+  }
 });
 
 
