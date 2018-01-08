@@ -48,7 +48,7 @@
     </style>
 
       <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
-        <template is="dom-if" if="[[editMode]]">
+        <template is="dom-if" if="[[_showAddRequirementButton(editMode, isNewIntervention)]]">
           <div slot="panel-btns" id="edit-btns">
             <paper-icon-button icon="add-box"
                               title="Add Reporting Requirement"
@@ -176,7 +176,9 @@
           this.removeDialog(this.deleteDialog);
           this.removeDialog(this.requirementsDialog);
         },
-
+        _showAddRequirementButton: function(editMode, isNewIntervention) {
+          return editMode && !isNewIntervention;
+        },
         _createRequirementsDialog: function() {
           this.requirementsDialog = document.createElement('reporting-requirements-dialog');
           this.requirementsDialog.setAttribute('id', 'requirementsDialog');
