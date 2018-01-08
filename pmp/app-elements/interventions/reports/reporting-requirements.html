@@ -89,16 +89,16 @@
                     [[item.due_date]]
                   </span>
                   <span class="col-data col-1 actions-button-container">
-                    <template is="dom-if" if="[[editMode]]">
-                      <paper-icon-button icon="create"
-                                          role="button"
-                                          on-tap="_handleRequirementEdit">
-                      </paper-icon-button>
-                      <paper-icon-button icon="delete"
+                    <paper-icon-button  icon="create"
                                         role="button"
+                                        hidden$="[[!editMode]]"
+                                        on-tap="_handleRequirementEdit">
+                    </paper-icon-button>
+                    <paper-icon-button  icon="delete"
+                                        role="button"
+                                        hidden$="[[!editMode]]"
                                         on-tap="_handleRequirementDelete">
-                      </paper-icon-button>
-                    </template>
+                    </paper-icon-button>
                   </span>
                 </div>
               </etools-data-table-row>
