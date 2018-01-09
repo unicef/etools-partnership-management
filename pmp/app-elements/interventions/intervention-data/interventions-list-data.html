@@ -139,12 +139,12 @@
               }
 
               if (startDate && startDate.length &&
-                  (!intervention.start || moment(intervention.start).isBefore(startDate))) {
+                  (!intervention.start || !moment(intervention.start).isAfter(startDate))) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!intervention.end || moment(intervention.end).isAfter(endDate))) {
+                  (!intervention.end || !moment(intervention.end).isBefore(endDate))) {
                 return false;
               }
 
