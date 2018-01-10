@@ -238,7 +238,6 @@
           });
         },
         _saveProfile: function(e) {
-          //this seems redundant, the profile is passed by reference so it's updated anyway
           this.set('profile', e.detail.profile);
           let modifiedFields = this._getModifiedFields(this.originalProfile, this.profile);
           this.$.userProfileData.saveProfile(modifiedFields);
