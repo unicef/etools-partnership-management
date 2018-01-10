@@ -139,12 +139,12 @@
               }
 
               if (startDate && startDate.length &&
-                  (!intervention.start || !moment(intervention.start).isAfter(startDate))) {
+                  (!intervention.start || !moment.utc(intervention.start).isAfter(moment.utc(startDate)))) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!intervention.end || !moment(intervention.end).isBefore(endDate))) {
+                  (!intervention.end || !moment.utc(intervention.end).isBefore(moment.utc(endDate)))) {
                 return false;
               }
 

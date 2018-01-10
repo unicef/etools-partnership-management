@@ -112,12 +112,12 @@
               }
 
               if (startDate && startDate.length &&
-                  (!agreement.start || agreement.start <= startDate)) {
+              (!agreement.start || !moment.utc(agreement.start).isAfter(moment.utc(startDate)))) {
                 return false;
               }
 
               if (endDate && endDate.length &&
-                  (!agreement.end || agreement.end >= endDate)) {
+              (!agreement.end || !moment.utc(agreement.end).isBefore(moment.utc(endDate)))) {
                 return false;
               }
 
