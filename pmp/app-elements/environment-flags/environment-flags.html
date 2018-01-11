@@ -1,4 +1,6 @@
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+
 <link rel="import" href="../../app-config/app-endpoints.html">
 
 <dom-module id="environment-flags">
@@ -7,21 +9,24 @@
       is: 'environment-flags',
 
       behaviors: [
+        EtoolsLogsBehavior,
         EtoolsAjaxRequestBehavior,
       ],
 
       ready: function() {
+        let self = this;
         let requestConfig = {
           endpoint: EtoolsPmpApp.Endpoints.environmentFlags
         };
 
-        this.sendRequest(requestConfig).then(function(resp) {
-          if (resp) {
-            window.envFlags = resp.active_flags;
+        window.envFlags = [];
+
+        this.sendRequest(requestConfig).then(function(response) {
+          if (response) {
+            window.envFlags = response.active_flags;
           }
         }).catch(function(error) {
-          // if you see this during code review, remind me to change it please
-          console.log('env flags request failed');
+          self.logError('Env flags request failed', null, error);
         });
       },
     });
