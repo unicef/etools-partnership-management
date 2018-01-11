@@ -204,6 +204,9 @@
 
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
+
+      case 'SET_ENV_FLAGS':
+        return Object.assign({}, state, {envFlags: action.envFlags});
     }
   });
 
