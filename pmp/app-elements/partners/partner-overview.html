@@ -46,7 +46,7 @@
           border-radius: 8px;
         };
         --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
+          @apply --nested-content-panel-title;
           margin-left: 0;
         };
       }
@@ -60,7 +60,7 @@
       }
 
       .hact-heading {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         background-color: var(--medium-theme-background-color);
       }
 
@@ -80,7 +80,7 @@
       }
 
       .hact-body {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
 
       .row-h + .row-h {
@@ -144,7 +144,7 @@
       }
 
       .timeline-col {
-        @apply(--layout-start-justified);
+        @apply --layout-start-justified;
       }
 
       .timeline-col .date-delimiter {

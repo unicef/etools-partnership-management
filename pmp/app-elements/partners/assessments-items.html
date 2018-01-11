@@ -47,12 +47,12 @@
           border-radius: 8px;
         };
         --paper-toolbar-title: {
-          @apply(--nested-content-panel-title);
+          @apply --nested-content-panel-title;
         };
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
 
       }
@@ -62,7 +62,7 @@
       }
 
       paper-toolbar paper-icon-button {
-        @apply(--nested-content-panel-collapse-btn);
+        @apply --nested-content-panel-collapse-btn;
       }
 
       #assessments-wrapper {
