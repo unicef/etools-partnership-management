@@ -1,0 +1,29 @@
+<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../app-config/app-endpoints.html">
+
+<dom-module id="environment-flags">
+  <script>
+    Polymer({
+      is: 'environment-flags',
+
+      behaviors: [
+        EtoolsAjaxRequestBehavior,
+      ],
+
+      ready: function() {
+        let requestConfig = {
+          endpoint: EtoolsPmpApp.Endpoints.environmentFlags
+        };
+
+        this.sendRequest(requestConfig).then(function(resp) {
+          if (resp) {
+            window.envFlags = resp.active_flags;
+          }
+        }).catch(function(error) {
+          // if you see this during code review, remind me to change it please
+          console.log('env flags request failed');
+        });
+      },
+    });
+  </script>
+</dom-module>

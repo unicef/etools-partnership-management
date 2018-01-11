@@ -7,9 +7,6 @@
   var PolymerRedux = PolymerRedux || {};
 
   let reduxStoreDefaultData = {
-    envFlags: {
-      prp_mode_off: true
-    },
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -207,9 +204,6 @@
 
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
-
-      case 'SET_ENV_FLAGS':
-        return Object.assign({}, state, {envFlags: action.envFlags});
     }
   });
 

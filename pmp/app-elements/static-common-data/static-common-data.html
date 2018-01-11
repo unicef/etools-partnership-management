@@ -16,7 +16,6 @@
 <link rel="import" href="behaviors/user-country-data.html">
 <link rel="import" href="behaviors/disaggregations-data.html">
 <link rel="import" href="behaviors/prp-countries.html">
-<link rel="import" href="behaviors/environment-flags.html">
 
 <dom-module id="static-common-data">
   <script>
@@ -37,13 +36,8 @@
         EtoolsPmpApp.Behaviors.UserCountryData,
         EtoolsPmpApp.Behaviors.DisaggregationsData,
         EtoolsPmpApp.Behaviors.PRPCountries,
-        EtoolsPmpApp.Behaviors.EnvFlagsData
       ],
       properties: {
-        environmentFlagsEndpointName: {
-          type: String,
-          value: 'environmentFlags'
-        },
         pmpStaticDataEndpointsNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
@@ -56,10 +50,6 @@
       },
 
       ready: function() {
-        // request environment flags
-        this._makeRequest(this.environmentFlagsEndpointName,
-            this._environmentFlagsSuccessHandler.bind(this), this._errorHandler);
-
         // get PMP static data
         this._getStaticData(this.pmpStaticDataEndpointsNames);
       },
@@ -82,17 +72,6 @@
 
       _needToFirePrpReq: function(resp) {
         return resp && resp.active_flags instanceof Array && resp.active_flags.indexOf('prp_mode_off') === -1;
-      },
-
-      /**
-       * Environment flags will tell us if we have to get static prp data too
-       */
-      _environmentFlagsSuccessHandler: function(resp) {
-        this._getEndpointSuccessHandler(this.environmentFlagsEndpointName).bind(this, resp)();
-        if (this._needToFirePrpReq(resp)) {
-          // get PRP static data
-          this._getStaticData(this.prpStaticDataEndpointsNames);
-        }
       },
 
       _errorHandler: function(err) {
@@ -123,8 +102,6 @@
             return this._handleDisaggregationsResponse;
           case 'getPRPCountries':
             return this._handlePRPCountryDataResponse;
-          case 'environmentFlags':
-            return this._handleEnvironmentFlagsResponse;
         }
       }
 
