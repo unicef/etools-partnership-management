@@ -7,7 +7,7 @@
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../common-elements/etools-date-input.html">
@@ -40,9 +40,16 @@
       paper-input {
         width: 100%;
       }
-      etools-checkable-input[readonly] {
+
+      paper-checkbox[disabled] {
         cursor: not-allowed;
+        --paper-checkbox-unchecked-color:black;
+        --paper-checkbox-label:{
+          color: var(--primary-text-color);
+          opacity: 1;
+        };
       }
+
     </style>
 
     <etools-content-panel class="content-section" panel-title="Signatures & Dates">
@@ -59,14 +66,11 @@
           <div class="col col-3">
             <!-- Submitted to PRC? -->
             <etools-form-element-wrapper>
-              <etools-checkable-input checked="{{intervention.submitted_to_prc}}"
-                                      label="Submitted to PRC?"
-                                      type="checkbox"
-                                      label-alignment="right"
-                                      readonly$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
-                                      unchanged-readonly-style
+              <paper-checkbox checked="{{intervention.submitted_to_prc}}"
+                                      disabled$="[[_isSubmittedToPrcCheckReadonly(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)]]"
                                       hidden$="[[!_submittedToPrcAvailable(intervention.document_type)]]">
-              </etools-checkable-input>
+                                      Submitted to PRC?
+              </paper-checkbox>
             </etools-form-element-wrapper>
           </div>
         </div>
@@ -270,7 +274,8 @@
         },
         observers: [
           '_interventionDocTypeChanged(intervention.document_type)',
-          '_signedPdDocHasChanged(intervention.signed_pd_document)'
+          '_signedPdDocHasChanged(intervention.signed_pd_document)',
+          '_updateStyles(intervention.permissions.edit.prc_review_document, _lockSubmitToPrc)'
         ],
 
         attached: function() {
@@ -281,6 +286,9 @@
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.signedByUnicef, 'unicefUsers', {dropdown: true});
+        },
+        _updateStyles: function() {
+          this.updateStyles();
         },
         _isDraft: function(status) {
           return status === 'draft' || status === '';

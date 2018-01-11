@@ -7,7 +7,7 @@
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../bower_components/etools-file/etools-file.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 <link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
@@ -38,6 +38,8 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+
+        --paper-radio-button-size: 20px;
 
         --paper-toolbar-height: 40px;
         --paper-toolbar-background: var(--medium-theme-background-color);
@@ -79,6 +81,17 @@
 
       .row-h.file-container {
         padding-bottom: 15px;
+      }
+      .centered-top {
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+      }
+      .padd-bottom {
+        padding-bottom: 2px;
+      }
+      paper-radio-button[disabled][checked] {
+        --paper-radio-button-unchecked-color: var(--primary-color);
       }
 
     </style>
@@ -145,14 +158,15 @@
                     </div>
                     <div class="col col-4">
                       <!-- Basis for risk rating checkbox -->
-                      <div class="custom-field-wrapper">
-                        <etools-checkable-input checked="{{item.current}}"
-                                                label="Basis for Risk Rating"
-                                                type="radio"
-                                                label-alignment="top"
-                                                readonly$="[[!editMode]]"
-                                                on-value-changed="_basisForRiskRatingChanged"
-                                                data-args$="[[index]]"></etools-checkable-input>
+                      <div class="layout-vertical centered-top">
+                        <div class="padd-bottom paper-label">
+                          Basis for Risk Rating
+                        </div>
+                        <paper-radio-button checked="{{item.current}}"
+                                            disabled="[[!editMode]]"
+                                            on-checked-changed="_basisForRiskRatingChanged"
+                                            data-args$="[[index]]">
+                        </paper-radio-button>
                       </div>
                     </div>
                   </div>
@@ -228,6 +242,11 @@
             value: true,
             reflectToAttribute: true
           },
+          editMode: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_editModeChanged'
+          }
         },
 
         observers: [
@@ -243,6 +262,9 @@
             report: null,
             report_file: ''
           };
+        },
+        _editModeChanged: function() {
+          this.updateStyles();
         },
         _hideDeleteBtn: function(itemReportFile) {
            if (!itemReportFile) {
@@ -288,7 +310,7 @@
           if (!this.editMode) {
             return;
           }
-          if (event.detail.checked === true) {
+          if (event.detail.value === true) {
             var index = parseInt(Polymer.dom(event).localTarget.getAttribute('data-args'));
             for (var i = 0; i < this.dataItems.length; i++) {
               if (i !== index) {
