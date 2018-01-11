@@ -55,8 +55,8 @@
     "etools-piwik-analytics": "1.0.3",
     "etools-profile-dropdown": "2.0.1",
     "etools-info-tooltip": "^1.0.1",
-    "paper-checkbox": "1.4.2",
-    "paper-radio-button": "1.4.0",
+    "paper-checkbox": "2.0.0",
+    "paper-radio-button": "2.0.0",
     "paper-radio-group": "^2.0.0",
     "paper-progress": "PolymerElements/paper-progress#^2.0.1",
     "lodash": "^4.17.4"
