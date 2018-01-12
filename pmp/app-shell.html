@@ -360,9 +360,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _validatePageChange: function(page) {
         let self = this;
         return self._checkFlagsReady().then(function(flagsLoaded) {
-          return self._checkFlagsReady();
+          return flagsLoaded || self._checkFlagsReady();
         }).then(function(flagsLoaded) {
-          return self._flagsReady();
+          return flagsLoaded || self._checkFlagsReady();
         }).then(function() {
           if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
             self._handleNotFound();

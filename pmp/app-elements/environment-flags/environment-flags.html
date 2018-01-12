@@ -38,9 +38,13 @@
         };
 
         this.sendRequest(requestConfig).then(function(response) {
-            if (response) {
-                self.dispatch('setEnvFlags', response);
-            }
+            // if (response) {
+
+            // }
+            window.setTimeout(function() {
+              console.log('env flags loaded');
+              self.dispatch('setEnvFlags', response);
+            }, 0);
         }).catch(function(error) {
           self.logError('Env flags request failed', null, error);
         });
