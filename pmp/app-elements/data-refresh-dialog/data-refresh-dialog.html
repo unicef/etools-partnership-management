@@ -2,7 +2,7 @@
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../bower_components/etools-page-refresh/etools-refresh-behavior.html">
-<link rel="import" href="../../../bower_components/etools-checkable-input/etools-checkable-input.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
 
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
@@ -37,6 +37,11 @@
         padding: 0 24px;
         font-size: 16px;
       }
+      paper-checkbox {
+        --paper-checkbox-label: {
+          font-size: 16px;
+        }
+      }
 
     </style>
     <etools-dialog
@@ -52,30 +57,26 @@
           <div class="title-indent">Select the data you want to refresh:</div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <etools-checkable-input checked="{{partnersSelected}}"
-                                      label="Partners data"
-                                      label-alignment="right">
-              </etools-checkable-input>
+              <paper-checkbox checked="{{partnersSelected}}">
+                Partners data
+              </paper-checkbox>
             </div>
             <div class="col col-6">
-              <etools-checkable-input checked="{{interventionsSelected}}"
-                                      label="PD/SSFA data"
-                                      label-alignment="right">
-              </etools-checkable-input>
+              <paper-checkbox checked="{{interventionsSelected}}">
+                PD/SSFA data
+              </paper-checkbox>
             </div>
           </div>
           <div class="row-h row-indent">
             <div class="col col-6">
-              <etools-checkable-input checked="{{agreementsSelected}}"
-                                      label="Agreements data"
-                                      label-alignment="right">
-              </etools-checkable-input>
+              <paper-checkbox checked="{{agreementsSelected}}">
+                Agreements data
+              </paper-checkbox>
             </div>
             <div class="col col-6">
-              <etools-checkable-input checked="{{allSelected}}"
-                                      label="All"
-                                      label-alignment="right">
-              </etools-checkable-input>
+              <paper-checkbox checked="{{allSelected}}">
+                All
+              </paper-checkbox>
             </div>
           </div>
 
