@@ -11,6 +11,10 @@
       }
     },
 
+    envFlagsLoaded: function() {
+      return typeof this.environmentFlags !== 'undefined';
+    },
+
     showPrpReports: function() {
       return this.environmentFlags && !this.environmentFlags.prp_mode_off;
     }

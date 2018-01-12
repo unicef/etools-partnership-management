@@ -300,10 +300,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
           }
-
-          if (this._validatePageChange(routePage)) {
-            this.set('page', routePage);
-          }
+          this._validatePageChange(routePage).then(function(redirectApproved) {
+            if (redirectApproved) {
+              this.set('page', routePage);
+            }
+          }.bind(this));
         }.bind(this), 10);
       },
 
@@ -343,12 +344,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
+      _checkFlagsReady: function() {
+        let self = this;
+        return new Promise(function(resolve, reject) {
+          if (self.envFlagsLoaded()) {
+            resolve(true);
+          } else {
+            window.setTimeout(function() {
+              resolve(self.envFlagsLoaded());
+            }, 200);
+          }
+        });
+      },
+
       _validatePageChange: function(page) {
-        if (this.prpPages.indexOf(page) > -1 && !this.showPrpReports()) {
-          this._handleNotFound();
-          return false;
-        }
-        return true;
+        let self = this;
+        return self._checkFlagsReady().then(function(flagsLoaded) {
+          return self._checkFlagsReady();
+        }).then(function(flagsLoaded) {
+          return self._flagsReady();
+        }).then(function() {
+          if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
+            self._handleNotFound();
+            return false;
+          }
+          return true;
+        });
       },
 
       _activePageIs: function(activePage, expectedPages) {
