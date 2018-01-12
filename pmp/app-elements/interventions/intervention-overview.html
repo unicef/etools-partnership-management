@@ -3,9 +3,9 @@
 <link rel="import" href="../../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
@@ -23,10 +23,14 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles paper-material-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
+      }
+
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
       }
 
       .block {
@@ -66,7 +70,7 @@
       }
     </style>
 
-    <paper-material elevation="1" id="top-container">
+    <div elevation="1" id="top-container">
       <div class="row-h flex-c">
         <div class="col col-12 block">
           <iron-label for="cp_outputs_list">
@@ -120,7 +124,7 @@
           </div>
         </div>
       </div>
-    </paper-material>
+    </div>
 
     <etools-content-panel id="fund-reservation-display" class="content-section" panel-title="Implementation Status">
       <fund-reservations-display intervention="[[intervention]]"

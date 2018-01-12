@@ -1,8 +1,8 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import"
       href="../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
 
@@ -20,14 +20,14 @@
 
   <template strip-whitespace>
 
-    <style include="shared-styles list-filter-styles">
-      :host {
-
+    <style include="shared-styles list-filter-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
       }
 
     </style>
 
-    <paper-material id="listControls" elevation="1">
+    <div id="listControls" elevation="1">
 
       <div class="wrap-controls">
 
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-    </paper-material>
+    </div>
 
     <reports-display-list query-params="[[queryParams]]"
                           paginator="{{paginator}}"
