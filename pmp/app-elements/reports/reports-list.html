@@ -70,11 +70,11 @@
               <iron-icon icon="filter-list"></iron-icon>
               Add filter
             </paper-button>
-            <paper-menu class="dropdown-content">
+            <paper-listbox class="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
-            </paper-menu>
+            </paper-listbox>
           </paper-menu-button>
         </div>
       </div>

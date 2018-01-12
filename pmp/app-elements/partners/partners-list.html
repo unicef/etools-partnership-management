@@ -6,7 +6,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
@@ -74,7 +74,7 @@
                                disabled$="[[filter.disabled]]"
                                hidden$="[[filter.disabled]]"></paper-icon-button>
             <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
-              <paper-menu class="dropdown-content"
+              <paper-listbox class="dropdown-content"
                           attr-for-selected="name"
                           on-iron-select="filterValueChanged"
                           on-iron-deselect="filterValueChanged"
@@ -84,7 +84,7 @@
                 <template is="dom-repeat" items="[[filter.selectionOptions]]" as="filterOption">
                   <paper-item name="[[filterOption]]">[[filterOption]]</paper-item>
                 </template>
-              </paper-menu>
+              </paper-listbox>
             </paper-dropdown-menu>
             <paper-icon-button class="remove" icon="cancel"
                                on-tap="removeFilter"
@@ -106,11 +106,11 @@
               <iron-icon icon="filter-list"></iron-icon>
               add filter
             </paper-button>
-            <paper-menu class="dropdown-content">
+            <paper-listbox class="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
-            </paper-menu>
+            </paper-listbox>
           </paper-menu-button>
         </div>
 
