@@ -190,7 +190,7 @@
           this.requirementsDialog.addEventListener('update-reporting-requirement',
               this.updateReportingRequirement.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
+          document.querySelector('body').appendChild(this.requirementsDialog);
         },
 
         _createDeleteConfirmationDialog: function() {
