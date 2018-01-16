@@ -184,7 +184,10 @@
           interventionDocumentType: {
             type: String
           },
-          _amendActionInProgress: Boolean
+          amendActionInProgress: {
+            type: Boolean,
+            notify: true
+          }
         },
 
         observers: [
@@ -265,7 +268,7 @@
         },
         _addAmendmentConfirmationCallback: function(event) {
           if (event.detail.confirmed) {
-            this.set('_amendActionInProgress', true);
+            this.set('amendActionInProgress', true);
             this._addElement();
             this._unlockInterventionDetailsFields();
           }
@@ -274,14 +277,14 @@
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
-          this.set('_amendActionInProgress', this._thereAreUnsavedAmendments());
+          this.set('amendActionInProgress', this._thereAreUnsavedAmendments());
           this.async(function() {
             // adds appropriate mixins to fields that get changed to read-only
             this.updateStyles();
           }.bind(this), 0);
         },
         _dataItemsLengthChanged: function() {
-          if (this._amendActionInProgress && !this._thereAreUnsavedAmendments()) {
+          if (this.amendActionInProgress && !this._thereAreUnsavedAmendments()) {
             // cancel adding amendment
             this._restoreInterventionOriginalDataAndPermissions();
           }
@@ -290,7 +293,7 @@
           this.fire('unlock-details-fields');
         },
         _restoreInterventionOriginalDataAndPermissions: function() {
-          this.set('_amendActionInProgress', false);
+          this.set('amendActionInProgress', false);
           this.fire('restore-original-permissions');
         },
         _validateAmendment: function(index) {

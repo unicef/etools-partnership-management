@@ -337,6 +337,10 @@
         editMode: {
           type: Boolean
         },
+        inAmendment: {
+          type: Boolean,
+          notify: true
+        },
         _redirectToNewIntervPageInProgress: Boolean,
         errorMsgBox_Title: {
           type: String,
@@ -363,7 +367,9 @@
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
-        '_interventionChanged(intervention, permissions)'
+        '_interventionChanged(intervention, permissions)',
+        '_amendmentModeChanged(intervention.in_amendment)',
+        '_amendmentModeChanged(inAmendment)'
       ],
 
       listeners: {
@@ -407,6 +413,20 @@
         if (this.finalizeAmendmentConfirmationDialog) {
           this.finalizeAmendmentConfirmationDialog.opened = true;
         }
+      },
+
+      _amendmentModeChanged: function(newValue) {
+        if (!this.intervention) {
+          return;
+        }
+        console.log('linking variables..');
+        // Since the inAmendment flag is shared across elements but intervention.in_amendment isn't, these two should be linked together
+        if (this.inAmendment !== newValue) {
+          this.inAmendment = this.intervention.in_amendment;
+        } else {
+          this.intervention.in_amendment = this.inAmendment;
+        }
+
       },
 
       _interventionChanged: function(intervention, permissions) {

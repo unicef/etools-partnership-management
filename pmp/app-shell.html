@@ -73,9 +73,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       :host(.ie) page-footer {
-        /*position: absolute;
+        position: absolute;
         bottom: 0;
-        height: 90px; */
+        height: 90px;
       }
 
       :host(:not(.ie)) page-footer {
@@ -142,6 +142,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
             <page-interventions id="interventions" class="main-page"
                                 route="[[subroute]]"
+                                in-amendment="{{amendmentModeActive}}"
                                 permissions="[[permissions]]">
             </page-interventions>
           </template>
@@ -161,14 +162,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <page-settings id="settings" class="main-page"></page-settings>
           </template>
 
-          <page-footer></page-footer>
+          <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
       </div>
       <div id="floatingFooter"
            hidden$="[[!amendmentModeActive]]">
         <strong> AMENDMENT MODE </strong>
         | All fields in the details tab are now open for editing.
         Please change all necessary fields before saving.
-        <paper-button class="primary-btn">I AM DONE</paper-button>
+        <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
       </div>
       </app-header-layout>
     </app-drawer-layout>
@@ -210,9 +211,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Boolean,
           reflectToAttribute: true
         },
-          amendmentModeActive: {
+        amendmentModeActive: {
           type: Boolean,
-          value: true
+          value: false
         },
         baseUrl: String,
         permissions: {
@@ -405,7 +406,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       computePageContainerStyles: function(amendmentModeActive) {
-        return amendmentModeActive ? 'border: 24px solid #8B00D8; padding-bottom: 48px;': '';
+        let styles = 'border: 24px solid #8B00D8; ';
+        if (!window.isIE) {
+          styles += 'padding-bottom: 48px;';
+        }
+        return amendmentModeActive ? styles : '';
+      },
+
+      _closeAmendment: function() {
+        this.amendmentModeActive = false;
       }
 
     });
