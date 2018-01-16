@@ -37,7 +37,9 @@
           color: var(--primary-text-color);
           background-color: var(--risk-rating-significant-color);
         };
-        --risk-rating-unavailable: {
+
+        /* TODO - style below might not even be applied because of the missing ':' */
+        --risk-rating-unavailable {
           @apply --risk-rating-field;
           background-color: var(--risk-rating-default-color);
           color: var(--primary-text-color);
@@ -45,7 +47,7 @@
           text-transform: capitalize;
           padding-left: 0;
         };
-        --risk-rating-not-assessed: {
+        --risk-rating-not-assessed {
           @apply --risk-rating-field;
           background-color: var(--risk-rating-not-assesed-color);
           color: var(--dark-secondary-text-color);
