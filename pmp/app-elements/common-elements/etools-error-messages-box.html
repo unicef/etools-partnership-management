@@ -9,9 +9,9 @@
   <template strip-whitespace>
     <style include="buttons-styles">
       :host {
-        @apply(--layout-horizontal);
-        @apply(--layout-flex);
-        @apply(--etools-error-messages-box);
+        @apply --layout-horizontal;
+        @apply --layout-flex;
+        @apply --etools-error-messages-box;
       }
       :host([hidden]) {
         display: none;
@@ -39,8 +39,8 @@
       }
       .errors-box-actions {
         margin-top: 20px;
-        @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
       }
       paper-button {
         margin: 0;

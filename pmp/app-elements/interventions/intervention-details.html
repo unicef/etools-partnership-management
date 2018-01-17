@@ -489,11 +489,11 @@
         ],
         ready: function() {
           this.locationsDialog = document.createElement('grouped-locations-dialog');
-          Polymer.dom(document.querySelector('body')).appendChild(this.locationsDialog);
+          document.querySelector('body').appendChild(this.locationsDialog);
         },
         detached: function() {
           if (this.locationsDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.locationsDialog);
+            document.querySelector('body').removeChild(this.locationsDialog);
           }
         },
         attached: function() {

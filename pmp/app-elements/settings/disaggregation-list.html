@@ -102,7 +102,7 @@
         this.editMode = true;
         this.disaggregationModal = document.createElement('add-disaggregation-dialog');
         this.disaggregationModal.setAttribute('id', 'disaggregationModal');
-        Polymer.dom(document.querySelector('body')).appendChild(this.disaggregationModal);
+        document.querySelector('body').appendChild(this.disaggregationModal);
       },
       _emptyList: function() {
         return !this.disaggregations || !this.disaggregations.length;
@@ -129,7 +129,7 @@
       },
       detached: function() {
         if (this.disaggregationModal) {
-          Polymer.dom(document.querySelector('body')).removeChild(this.disaggregationModal);
+          document.querySelector('body').removeChild(this.disaggregationModal);
         }
       },
       _openModal: function() {

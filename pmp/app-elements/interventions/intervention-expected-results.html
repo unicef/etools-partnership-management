@@ -32,7 +32,7 @@
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
 
@@ -147,12 +147,12 @@
             this.indicatorDialogDataReceived(event.detail);
           }.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.indicatorDialog);
+          document.querySelector('body').appendChild(this.indicatorDialog);
         },
 
         detached: function() {
           if (this.indicatorDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
+            document.querySelector('body').removeChild(this.indicatorDialog);
           }
           this.removeCpOutputRamIndicatorsDialog();
         },

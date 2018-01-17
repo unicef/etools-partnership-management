@@ -376,7 +376,7 @@
         ready: function() {
           this.generatePCADialog = document.createElement('generate-pca-dialog');
           this.generatePCADialog.setAttribute('id', 'generatePCADialog');
-          Polymer.dom(document.querySelector('body')).appendChild(this.generatePCADialog);
+          document.querySelector('body').appendChild(this.generatePCADialog);
         },
         attached: function() {
           /**
@@ -390,7 +390,7 @@
         },
         detached: function() {
           if (this.generatePCADialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.generatePCADialog);
+            document.querySelector('body').removeChild(this.generatePCADialog);
           }
         },
 

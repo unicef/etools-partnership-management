@@ -3,7 +3,7 @@
 <dom-module id="required-field-starred-styles">
   <template>
     <style>
-      :root {
+      :host > * {
         --required-star-style: {
           background: url(../images/required.svg) no-repeat 99% 20%/8px;
           width: auto !important;
@@ -21,13 +21,13 @@
       etools-single-file[required],
       etools-file[required] {
         --paper-input-container-label: {
-          @apply(--required-star-style);
+          @apply --required-star-style;
         };
       }
 
       etools-currency-amount-input[required] {
         --etools-currency-container-label: {
-          @apply(--required-star-style);
+          @apply --required-star-style;
         }
       }
     </style>

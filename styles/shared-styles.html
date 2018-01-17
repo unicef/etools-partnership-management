@@ -52,8 +52,8 @@
       }
 
       .tab-link {
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
       }
 
       paper-item {
@@ -61,7 +61,7 @@
         white-space: nowrap;
       }
 
-      paper-material {
+      div[elevation] {
         padding: 15px 20px;
         background-color: var(--primary-background-color);
       }
@@ -98,8 +98,8 @@
       }
 
       .dropdown-with-clear-btn {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       paper-input {
@@ -177,6 +177,7 @@
       paper-checkbox {
         --paper-checkbox-ink-size: 0px;
       }
+
       paper-radio-button {
         --paper-radio-button-ink-size: 0px;
       }
