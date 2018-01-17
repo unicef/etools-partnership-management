@@ -336,6 +336,14 @@
     <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
       <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
         <template is="dom-if" if="[[!newIntervention]]">
+          <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
+              <div slot="panel-btns" id="edit-btns">
+                  <paper-icon-button icon="add-box"
+                                    title="Add"
+                                    on-tap="openCpOutputAndRamIndicatorsDialog">
+                  </paper-icon-button>
+              </div>
+            </template>
           <intervention-expected-results id="expectedResults"
                                         data-items="{{intervention.result_links}}"
                                         selected-cp-structure="[[intervention.country_programme]]"
@@ -510,6 +518,13 @@
             return '';
           }
           return names.slice(0, Math.min(names.length, 3));
+        },
+        openCpOutputAndRamIndicatorsDialog: function() {
+          let expectedResultsElem = this.$$('#expectedResults');
+          if (!expectedResultsElem) {
+            return;
+          }
+          expectedResultsElem._addNewCpOutputAndRamIndicators();
         },
         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
