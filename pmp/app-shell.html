@@ -359,13 +359,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       },
 
-      _validatePageChange: function(page) {
+      _waitForEnvFlagsToLoad: function(page) {
         let self = this;
         return self._checkFlagsReady().then(function(flagsLoaded) {
           return flagsLoaded || self._checkFlagsReady();
         }).then(function(flagsLoaded) {
           return flagsLoaded || self._checkFlagsReady();
-        }).then(function() {
+        });
+      },
+
+      _validatePageChange: function(page) {
+        let self = this;
+        return self._waitForEnvFlagsToLoad().then(function() {
           if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
             self._handleNotFound();
             return false;
