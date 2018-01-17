@@ -60,23 +60,25 @@
 
         test('Inputs rendered and populated', function(done) {
           flush(function() {
-            /*
-                Signed PD/SSFA (file)
-                Signed by UNICEF Date
-                Signed by UNICEF
-                Signed by Partner Date
-                Signed By Partner Authorized Officer
-                Document Submission Date
-            */
-
             let docSubmissionDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Document Submission Date"]');
             expect(docSubmissionDate.is).to.equal('etools-date-input');
             expect(docSubmissionDate.value).to.equal('2016-03-13');
 
-            let signedByParterOfficer = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-single-selection-menu[label="Signed by Partner Authorized Officer"]');
-            
+            let signedByParterOfficer =  PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-single-selection-menu[label="Signed by Partner Authorized Officer"]');
             expect(signedByParterOfficer.is).to.equal('etools-single-selection-menu');
-            expect(signedByParterOfficer.value).to.equal('1970-01-01');
+            expect(signedByParterOfficer.selected).to.equal(84);
+
+            let partnerSignatureDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Signed by Partner Date"]');
+            expect(partnerSignatureDate.is).to.equal('etools-date-input');
+            expect(partnerSignatureDate.value).to.equal('2016-04-01');
+
+            let signedByUnicefOfficer =  PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-single-selection-menu[label="Signed by UNICEF"]');
+            expect(signedByUnicefOfficer.is).to.equal('etools-single-selection-menu');
+            expect(signedByUnicefOfficer.selected).to.equal(2276);
+
+            let unicefSignatureDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Signed by UNICEF Date"]');
+            expect(unicefSignatureDate.is).to.equal('etools-date-input');
+            expect(unicefSignatureDate.value).to.equal('2016-04-01');
 
             done();
           });
