@@ -414,7 +414,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _closeAmendment: function() {
-        this.amendmentModeActive = false;
+        let intervElem = this.$$('#interventions');
+        if (intervElem) {
+          intervElem._showFinalizeAmendmentDialog();
+        }
       }
 
     });

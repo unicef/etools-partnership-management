@@ -368,8 +368,7 @@
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
         '_interventionChanged(intervention, permissions)',
-        '_amendmentModeChanged(intervention.in_amendment)',
-        '_amendmentModeChanged(inAmendment)'
+        '_amendmentModeChanged(intervention.in_amendment)'
       ],
 
       listeners: {
@@ -419,14 +418,10 @@
         if (!this.intervention) {
           return;
         }
-        console.log('linking variables..');
-        // Since the inAmendment flag is shared across elements but intervention.in_amendment isn't, these two should be linked together
+
         if (this.inAmendment !== newValue) {
           this.inAmendment = this.intervention.in_amendment;
-        } else {
-          this.intervention.in_amendment = this.inAmendment;
         }
-
       },
 
       _interventionChanged: function(intervention, permissions) {
@@ -569,6 +564,7 @@
       },
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
+          this.set('intervention.in_amendment', false);
           this._validateAndSaveIntervention(null);
         }
       },
