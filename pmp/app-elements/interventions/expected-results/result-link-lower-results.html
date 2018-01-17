@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -17,7 +18,7 @@
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
+        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles data-table-styles">
       [hidden] {
         display: none !important;
       }
@@ -86,7 +87,7 @@
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
-          <div class="item-actions-container">
+          <!-- <div class="item-actions-container">
             <div class="actions">
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
@@ -99,7 +100,7 @@
                                  icon="create"
                                  disabled$="[[!editMode]]"></paper-icon-button>
             </div>
-          </div>
+          </div> -->
           <div class="item-content">
             <div class="row-h">
               <etools-form-element-wrapper label="PD output or SSFA expected result">
@@ -144,14 +145,13 @@
             </div>
 
             <div class="add-btn-wrapper">
-              <paper-button class="secondary-btn"
-                            on-tap="_addNewIndicator"
-                            title="Add Indicator"
-                            data-ll-result-id$="[[item.id]]"
-                            disabled$="[[!editMode]]"
-                            hidden$="[[!editMode]]">
-                Add Indicator
-              </paper-button>
+              <paper-icon-button icon="add-box"
+                title="Add  Indicator"
+                on-tap="_addNewIndicator"
+                data-ll-result-id$="[[item.id]]"
+                disabled$="[[!editMode]]"
+                hidden$="[[!editMode]]">
+              </paper-icon-button>
             </div>
 
           </div>
