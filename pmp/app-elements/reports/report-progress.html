@@ -1,6 +1,6 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../bower_components/etools-content-panel/etools-content-panel.html">
 
 <link rel="import" href="../../../scripts/lodash/lodash.html">
@@ -21,7 +21,11 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles">
+    <style include="page-common-styles grid-layout-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+
       *[hidden] {
         display: none !important;
       }
@@ -80,12 +84,12 @@
       }
     </style>
 
-    <paper-material id="no-report-data" elevation="1"
+    <div id="no-report-data" elevation="1"
                     hidden$="[[!_noReportDataToShow(report.programme_document.cp_outputs)]]">
       <div class="row-h">
         <p>There is no report data to display.</p>
       </div>
-    </paper-material>
+    </div>
 
     <template is="dom-repeat"
               items="[[report.programme_document.cp_outputs]]"

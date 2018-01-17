@@ -1,6 +1,6 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -37,6 +37,7 @@
     }
     .list-wrapper {
       position: relative;
+      outline: none;
       z-index: 5;
       width: 100%;
       overflow-y: hidden;
@@ -59,6 +60,7 @@
       width: 100%;
       min-width: 120px;
     }
+
   </style>
 
   <template>
@@ -72,13 +74,13 @@
           <paper-menu-button horizontal-align="right">
 
             <paper-icon-button icon="expand-more" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content">
+            <paper-listbox class="dropdown-content">
               <div class="list-wrapper">
                 <template is="dom-repeat" items="[[secondaryActions]]" as="item">
                   <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
                 </template>
               </div>
-            </paper-menu>
+            </paper-listbox>
 
           </paper-menu-button>
         </template>
