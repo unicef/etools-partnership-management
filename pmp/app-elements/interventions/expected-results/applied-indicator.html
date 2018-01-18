@@ -1,0 +1,88 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+
+<dom-module id="applied-indicator">
+  <template strip-whitespace>
+    <style include="grid-layout-styles data-table-styles">
+      :host {
+        --list-second-bg-color: #eeeeeeaf;
+        --list-row-wrapper: {
+          padding 0px 0px !important;
+        };
+        --list-row-collapse-wrapper: {
+          padding 0px 0px !important;
+        };
+      }
+
+    </style>
+
+     <etools-data-table-row>
+        <div slot="row-data">
+        <!-- <div class="indicator-nr">
+          <strong>[[_getIndicatorNr(indicatorIndex)]]</strong>
+          <paper-icon-button class="edit-indicator"
+                             on-tap="_editIndicator"
+                             data-ind-index$="[[indicatorIndex]]"
+                             data-result-index$="[[index]]"
+                             icon="create"
+                             disabled$="[[!editMode]]"
+                             hidden$="[[!editMode]]"></paper-icon-button>
+        </div> -->
+
+        <div class="col-10">
+            [[_getIndicatorType(indicator.unit)]][[_getIndicatorTitle(indicator)]]
+        </div>
+        <div class="col-1">
+            [[_displayIndicatorValue(indicator.baseline)]]
+        </div>
+        <div class="col-1">
+            [[_displayIndicatorValue(indicator.target)]]
+        </div>
+      </div>
+      </etools-data-table-row>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'applied-indicator',
+        properties: {
+          indicator: {
+            type: Object
+          }
+        },
+        _getIndicatorType: function(unit) {
+          if (!unit) {
+            return '';
+          }
+          switch (unit) {
+            case 'numeric':
+              return '# - ';
+            case 'percentage':
+              return '% - ';
+          }
+        },
+        _getIndicatorTitle: function(indicator) {
+          if (!indicator) {
+            return '-';
+          }
+          if (indicator.cluster_indicator_id) {
+            return indicator.cluster_indicator_title;
+          } else {
+            return indicator.indicator ? indicator.indicator.title : '-';
+          }
+        },
+        _displayIndicatorValue: function(value) {
+          value = value ? value.toString() : '';
+          if (value) {
+            return value;
+          } else {
+            return '-';
+          }
+        },
+      });
+    })();
+  </script>
+</dom-module>
