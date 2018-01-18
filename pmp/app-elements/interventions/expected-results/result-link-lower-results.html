@@ -29,6 +29,22 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        --list-bg-color: #eeeeee;
+        --list-second-bg-color: #eeeeeeaf;
+        --list-row-collapse-wrapper: {
+          padding: 16px 24px 16px 24px !important;
+        };
+      }
+      /* TODO -why doesn't --list-row-collapse-wrapper work ???? */
+      etools-data-table-row {
+        --list-row-collapse-wrapper: {
+          padding: 16px 24px 16px 24px !important;
+        };
+      }
+      etools-data-table-header {
+        --data-table-header: {
+          padding: 0px 0px;
+        }
       }
 
       .indicator-col {
@@ -82,9 +98,27 @@
         margin-right: 20px;
       }
 
+      .left-border {
+        border-left: 1px solid #9d9d9d;
+      }
+
+
     </style>
 
+    <div hidden$="[[!_emptyList(dataItems.length)]]">
+      <etools-data-table-header no-title no-collapse>
+        <etools-data-table-column class="col-12"> PD Output or SSFA Expected Result</etools-data-table-column>
+      </etools-data-table-header>
+    </div>
+
     <div hidden$="[[_emptyList(dataItems.length)]]">
+        <etools-data-table-header no-title no-collapse>
+        <etools-data-table-column class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</etools-data-table-column>
+        <etools-data-table-column class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
+        <etools-data-table-column class="col-1" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
+        <etools-data-table-column class="col-1" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
+      </etools-data-table-header>
+
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="row-h item-container">
           <!-- <div class="item-actions-container">
@@ -146,7 +180,7 @@
 
             <div class="add-btn-wrapper">
               <paper-icon-button icon="add-box"
-                title="Add  Indicator"
+                title="Add Indicator"
                 on-tap="_addNewIndicator"
                 data-ll-result-id$="[[item.id]]"
                 disabled$="[[!editMode]]"
@@ -160,15 +194,22 @@
       </template>
     </div>
 
-    <div class="add-btn-wrapper">
-      <paper-button class="secondary-btn"
-                    on-tap="_addNewLowerResult"
-                    title="Add PD or SSFA OUTPUT"
-                    disabled$="[[!editMode]]"
-                    hidden$="[[!editMode]]">
-        Add PD output or SSFA expected result
-      </paper-button>
-    </div>
+    <etools-data-table-row no-collapse>
+      <div slot="row-data">
+        <div class="col-4">
+        <paper-icon-button icon="add-box"
+                      on-tap="_addNewLowerResult"
+                      title="Add PD or SSFA OUTPUT"
+                      disabled$="[[!editMode]]"
+                      hidden$="[[!editMode]]">
+          Add PD output or SSFA expected result
+        </paper-icon-button>
+       </div>
+       <div class="col-8" hidden$="[[_emptyList(dataItems.length)]]">
+
+       </div>
+      </div>
+    </etools-data-table-row>
 
   </template>
 
@@ -197,9 +238,48 @@
             value: false
           },
           expectedResultId: Number,
+          thereAreIndicators: {
+            type: Boolean,
+            value: false
+          }
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters'
+        },
+        observers: [
+          'updateStyle(dataItems.*)'
+        ],
+
+        updateStyle: function() {
+          if (!this.dataItems) {
+            this.thereAreIndicators = false;
+            return;
+          }
+          let foundSomeIndicators = false;
+          for(let i in this.dataItems) {
+            if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
+              foundSomeIndicators = true;
+              break;
+            }
+          }
+          this.thereAreIndicators = foundSomeIndicators;
+        },
+        getColumnLength: function(column, thereAreIndicators) {
+          if (!thereAreIndicators) {
+            switch(column) {
+              case 'result':
+                return 'col-8';
+              case 'indicator':
+                return 'col-4';
+            }
+          } else {
+            switch(column) {
+              case 'result':
+                return 'col-4';
+              case 'indicator':
+                return 'col-6';
+            }
+          }
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
