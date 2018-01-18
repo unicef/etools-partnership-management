@@ -93,11 +93,15 @@
           this.handleErrorResponse(response, ajaxMethod, true);
           if (this.intervention) {
             this._restoreUnsuccessfullyDeletedFrs();
+            this._restoreInAmmendmentFlag();
           }
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
           this.set('intervention.frs_details', this.originalIntervention.frs_details);
           this.set('intervention.frs', this.originalIntervention.frs);
+        },
+        _restoreInAmmendmentFlag: function() {
+          this.set('intervention.in_amendment', this.intervention.review_and_sign_amendment_open);
         },
 
         _convertIdsToStrings: function(dataArray) {

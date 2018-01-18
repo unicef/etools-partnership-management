@@ -368,7 +368,8 @@
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
         '_interventionChanged(intervention, permissions)',
-        '_amendmentModeChanged(intervention.in_amendment)'
+        '_amendmentModeChanged(intervention.in_amendment)',
+        '_amendmentModeChanged(intervention.review_and_sign_amendment_open)',
       ],
 
       listeners: {
@@ -420,7 +421,7 @@
         }
 
         if (this.inAmendment !== newValue) {
-          this.inAmendment = this.intervention.in_amendment;
+          this.inAmendment = this.intervention.in_amendment = newValue;
         }
       },
 
