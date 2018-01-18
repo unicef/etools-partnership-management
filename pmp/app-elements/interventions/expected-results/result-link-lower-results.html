@@ -14,6 +14,7 @@
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
+<link rel="import" href="applied-indicator.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -30,17 +31,14 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         --list-bg-color: #eeeeee;
-        --list-second-bg-color: #eeeeeeaf;
-        --list-row-collapse-wrapper: {
-          padding: 16px 24px 16px 24px !important;
+        --list-row-no-collapse: {
+          padding: 0px 0px !important;
+        };
+        --list-row-wrapper: {
+          padding 0px 0px;
         };
       }
-      /* TODO -why doesn't --list-row-collapse-wrapper work ???? */
-      etools-data-table-row {
-        --list-row-collapse-wrapper: {
-          padding: 16px 24px 16px 24px !important;
-        };
-      }
+
       etools-data-table-header {
         --data-table-header: {
           padding: 0px 0px;
@@ -66,14 +64,6 @@
         display: inline-block;
         box-sizing: border-box;
         min-height: 41px;
-      }
-
-      .indicator-col .indicator-baseline {
-        background-color: var(--light-info-color);
-      }
-
-      .indicator-col .indicator-target {
-        background-color: var(--success-color);
       }
 
       .indicator-col .content {
@@ -112,7 +102,7 @@
     </div>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
-        <etools-data-table-header no-title no-collapse>
+      <etools-data-table-header no-title no-collapse>
         <etools-data-table-column class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</etools-data-table-column>
         <etools-data-table-column class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
         <etools-data-table-column class="col-1" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
@@ -120,7 +110,8 @@
       </etools-data-table-header>
 
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
           <!-- <div class="item-actions-container">
             <div class="actions">
               <paper-icon-button class="action delete"
@@ -135,62 +126,27 @@
                                  disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div> -->
-          <div class="item-content">
-            <div class="row-h">
-              <etools-form-element-wrapper label="PD output or SSFA expected result">
+            <div class="col-4">
                 <span>[[item.name]]</span>
-              </etools-form-element-wrapper>
             </div>
-            <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
-              <template is="dom-repeat"
-                        items="[[item.applied_indicators]]"
-                        as="indicator" index-as="indicatorIndex">
-                <div class="row-h">
-                  <div class="indicator-nr">
-                    <strong>[[_getIndicatorNr(indicatorIndex)]]</strong>
-                    <paper-icon-button class="edit-indicator"
-                                       on-tap="_editIndicator"
-                                       data-ind-index$="[[indicatorIndex]]"
-                                       data-result-index$="[[index]]"
-                                       icon="create"
-                                       disabled$="[[!editMode]]"
-                                       hidden$="[[!editMode]]"></paper-icon-button>
-                  </div>
-                  <div class="indicator-col">
-                    <span class="heading">Baseline</span>
-                    <span class="indicator-baseline">
-                      [[_displayIndicatorValue(indicator.baseline)]]
-                    </span>
-                  </div>
-                  <div class="indicator-col">
-                    <span class="heading">Target</span>
-                    <span class="indicator-target">
-                      [[_displayIndicatorValue(indicator.target)]]
-                    </span>
-                  </div>
-                  <div class="indicator-col flex-c">
-                    <span class="heading">Indicator</span>
-                    <span class="content">
-                      [[_getIndicatorType(indicator.unit)]][[_getIndicatorTitle(indicator)]]
-                    </span>
-                  </div>
-                </div>
-              </template>
+            <div class="col-8">
+              <div hidden="[[!item.applied_indicators.length]]">
+                <template is="dom-repeat"
+                          items="[[item.applied_indicators]]"
+                          as="indicator" index-as="indicatorIndex">
+                  <applied-indicator indicator="[[indicator]]"></applied-indicator>
+                </template>
+              </div>
+                  <paper-icon-button icon="add-box"
+                    title="Add Indicator"
+                    on-tap="_addNewIndicator"
+                    data-ll-result-id$="[[item.id]]"
+                    disabled$="[[!editMode]]"
+                    hidden$="[[!editMode]]">
+                  </paper-icon-button>
             </div>
-
-            <div class="add-btn-wrapper">
-              <paper-icon-button icon="add-box"
-                title="Add Indicator"
-                on-tap="_addNewIndicator"
-                data-ll-result-id$="[[item.id]]"
-                disabled$="[[!editMode]]"
-                hidden$="[[!editMode]]">
-              </paper-icon-button>
-            </div>
-
           </div>
-
-        </div>
+        </etools-data-table-row>
       </template>
     </div>
 
@@ -306,39 +262,6 @@
             lowerResultId: lowerResult.id,
             lowerResultName: lowerResult.name
           });
-        },
-
-        _displayIndicatorValue: function(value) {
-          value = value ? value.toString() : '';
-          if (typeof value === 'string' && value !== '') {
-            return value;
-          } else {
-            return '-';
-          }
-        },
-        _getIndicatorTitle: function(indicator) {
-          if (!indicator) {
-            return '-';
-          }
-          if (indicator.cluster_indicator_id) {
-            return indicator.cluster_indicator_title;
-          } else {
-            return indicator.indicator ? indicator.indicator.title : '-';
-          }
-        },
-
-        _getIndicatorType: function(unit) {
-          if (!unit) {
-            return '';
-          }
-          switch (unit) {
-            case 'numeric':
-              return '# - ';
-            case 'percentage':
-              return '% - ';
-              // case 'yesno':
-              //   return 'Yes/No - ';
-          }
         },
 
         _getIndicatorNr: function(indicatorIndex) {
