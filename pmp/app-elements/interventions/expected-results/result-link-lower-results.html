@@ -42,7 +42,7 @@
       etools-data-table-header {
         --data-table-header: {
           padding: 0px 0px;
-        }
+        };
       }
 
       .indicator-col {
@@ -88,10 +88,35 @@
         margin-right: 20px;
       }
 
-      .left-border {
-        border-left: 1px solid #9d9d9d;
+      .add-indicator-btn {
+        padding-left: 32px;
       }
+      etools-data-table-column[performanceIndicatorCol] {
+        padding-left: 24px;
+      }
+      .rborder {
+        border-right: 1px solid var(--list-divider-color);
+      }
+      .lborder {
+        border-left: 1px solid var(--list-divider-color);
+      }
+      etools-data-table-row {
+        border-bottom: 1px solid var(--list-divider-color);
+      }
+      .padd-top-bott {
+        padding-top: 16px;
+        padding-bottom: 16px;
+      }
+      .iron-icon-color {
+        color: #6f6f70;
+      }
+      .horizontal-layout {
+        @apply --layout-horizontal;
+        @apply --layout-center;
 
+        min-height: 56px;
+        border-bottom: 1px solid var(--list-divider-color);
+      }
 
     </style>
 
@@ -104,14 +129,13 @@
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <etools-data-table-header no-title no-collapse>
         <etools-data-table-column class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</etools-data-table-column>
-        <etools-data-table-column class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
-        <etools-data-table-column class="col-1" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
-        <etools-data-table-column class="col-1" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
+        <etools-data-table-column performanceIndicatorCol class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
+        <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
+        <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
       </etools-data-table-header>
 
       <template is="dom-repeat" items="{{dataItems}}">
-          <etools-data-table-row no-collapse>
-            <div slot="row-data">
+            <div class="horizontal-layout">
           <!-- <div class="item-actions-container">
             <div class="actions">
               <paper-icon-button class="action delete"
@@ -126,10 +150,10 @@
                                  disabled$="[[!editMode]]"></paper-icon-button>
             </div>
           </div> -->
-            <div class="col-4">
+            <div class="col-4 padd-top-bott">
                 <span>[[item.name]]</span>
             </div>
-            <div class="col-8">
+            <div class="col-8 lborder">
               <div hidden="[[!item.applied_indicators.length]]">
                 <template is="dom-repeat"
                           items="[[item.applied_indicators]]"
@@ -137,23 +161,24 @@
                   <applied-indicator indicator="[[indicator]]"></applied-indicator>
                 </template>
               </div>
-                  <paper-icon-button icon="add-box"
+              <div class="add-indicator-btn padd-top-bott">
+                  <paper-icon-button icon="add-box" class="iron-icon-color"
                     title="Add Indicator"
                     on-tap="_addNewIndicator"
                     data-ll-result-id$="[[item.id]]"
                     disabled$="[[!editMode]]"
                     hidden$="[[!editMode]]">
                   </paper-icon-button>
+                </div>
             </div>
           </div>
-        </etools-data-table-row>
       </template>
     </div>
 
     <etools-data-table-row no-collapse>
       <div slot="row-data">
         <div class="col-4">
-        <paper-icon-button icon="add-box"
+        <paper-icon-button icon="add-box" class="iron-icon-color"
                       on-tap="_addNewLowerResult"
                       title="Add PD or SSFA OUTPUT"
                       disabled$="[[!editMode]]"
