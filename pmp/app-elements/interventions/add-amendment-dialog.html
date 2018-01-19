@@ -110,11 +110,12 @@
         },
         disableConfirmBtn: {
           type: Boolean,
-          value: false
+          value: true
         },
         opened: {
           type: Boolean,
-          notify: true
+          notify: true,
+          observer: '_resetAmendmentValidations'
         },
         interventionDocumentType: {
           type: String
@@ -129,28 +130,14 @@
         },
         filteredAmendmentTypes: Object,
       },
+
       observers: [
-        '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
+        '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)',
+        '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment.size)'
       ],
-      ready: function() {
-        console.log('add amendment dialog ready');
-      },
-      // validate fields
-      validate: function() {
-        var valid = true;
-        if (!this.dataItems.length) {
-          return valid;
-        }
-        this.dataItems.forEach(function(amendment, index) {
-          // validate only new(not saved yet) amendments
-          if (!this._isReadonlyAmendment(amendment.id) && !this._validateAmendment(index)) {
-            valid = false;
-          }
-        }.bind(this));
-        return valid;
-      },
-      _validateAndSaveAmendment: function() {
-        console.log('implementation pending');
+
+      _disableConfirmBtn: function(typesLength, signedDate, fileSize) {
+        this.set('disableConfirmBtn', !typesLength || !signedDate || !fileSize);
       },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
@@ -180,115 +167,85 @@
           otherInput.value = null;
         }
       },
-      _validateAmendment: function(index) {
-          var amendment = this.dataItems[index];
-          if (!amendment || this._isReadonlyAmendment(amendment.id)) {
-            //Avoid validation for existing readonly amendments
-            return true;
-          }
-          var isValid1 = this._validateAmendmentTypes(index);
-          var isValid2 = this._validateSignedDate(amendment, index);
-          var isValid3 = this._validateFileUpload(amendment, index);
 
-          return (isValid1 && isValid2 && isValid3);
-        },
-        _validateAmendmentTypes: function(index) {
-          var valid = true;
-          var typeEl = this.$$('#amendmentTypes_' + index);
-          if (typeEl && !typeEl.validate()) {
-            valid = false;
-          }
-          return valid;
-        },
-        _validateFileUpload: function(amendment, index) {
-          var valid = true;
-          var fileUplodEl = this.$$('#fileUpload_' + index);
-          if (fileUplodEl) {
-            valid = !!amendment.signed_amendment;
-            fileUplodEl.invalid = !valid;
-          }
-          return valid;
-        },
-        _validateSignedDate: function(amendment, index) {
-          var isValid = true;
+      isValidAmendment: function() {
+        var isValid1 = this._validateAmendmentTypes();
+        var isValid2 = this._validateSignedDate(this.item);
+        var isValid3 = this._validateFileUpload(this.item);
 
-          let signedDateEl = this.$$('#signedDate_' + index);
-          if (signedDateEl) {
-            if (!signedDateEl.validate()) {
-              isValid = false;
-            }
-          }
-          return isValid;
-        },
-/**
-         * Check if amendment fields are empty
-         */
-        _amendmentFieldsAreEmpty: function(amendment) {
-          if (amendment.id) {
-            return false;
-          }
-          return (this._amendmentTypeIsEmpty(amendment) ||
-          this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
-        },
- _signedDateIsEmpty: function(amendment) {
-          return amendment.signed_date === null || amendment.signed_date === '';
-        },
-        _newAttachmentIsEmpty: function(amendment) {
-          return amendment.signed_amendment instanceof File === false;
-        },
-        _amendmentTypeIsEmpty: function(amendment) {
-          return !amendment.types;
-        },
-/**
-         * Validate last added amendment and if is not empty add a new one
-         */
-        _addNewAmendment: function() {
-          var lastAmendmIndex = this.dataItems.length - 1;
+        return (isValid1 && isValid2 && isValid3);
+      },
 
-          if (lastAmendmIndex > -1) {
-            let lastAmendm = this.dataItems[lastAmendmIndex];
-            if (!lastAmendm.id && this._amendmentFieldsAreEmpty(lastAmendm)) {
-              this.fire('toast', {text: 'Last amendment fields are empty!', showCloseBtn: true});
-              return;
-            }
-          }
-          if (this._thereAreUnsavedAmendments()) {
-            // Avoid showing the dialog when adding amendments consecutively
-            this._addElement();
-          } else {
-            this._showAddAmendmentConfirmationDialog();
-          }
+      _validateAmendmentTypes: function() {
+        var valid = true;
+        var typeEl = this.$$('#amendmentTypes');
+        if (typeEl && !typeEl.validate()) {
+          valid = false;
+        }
+        return valid;
+      },
 
-        },
-        resetValidations: function() {
-          if (!this.dataItems.length) {
-            return;
-          }
-          this.dataItems.forEach(function(amendment, index) {
-            if (!this._isReadonlyAmendment(amendment.id)) {
-              this._resetAmendmentValidations(index);
-            }
-          }.bind(this));
-        },
+      _validateFileUpload: function(amendment) {
+        var valid = true;
+        var fileUplodEl = this.$$('#fileUpload');
+        if (fileUplodEl) {
+          valid = !!amendment.signed_amendment;
+          fileUplodEl.invalid = !valid;
+        }
+        return valid;
+      },
 
-        _resetAmendmentValidations: function(index) {
-          var typeEl = this.$$('#amendmentTypes_' + index);
-          if (typeEl) {
-            typeEl.invalid = false;
-          }
-          var signedDateEl = this.$$('#signedDate_' + index);
-          if (signedDateEl) {
-            signedDateEl.invalid = false;
-          }
-          var fileUpload = this.$$('#fileUpload_' + index);
-          if (fileUpload) {
-            fileUpload.invalid = false;
-          }
-        },
+      _validateSignedDate: function(amendment) {
+        var isValid = true;
 
-        _isReadonlyAmendment: function(amendmentId) {
-          return !!amendmentId;
-        },
+        let signedDateEl = this.$$('#signedDate');
+        if (signedDateEl) {
+          if (!signedDateEl.validate()) {
+            isValid = false;
+          }
+        }
+        return isValid;
+      },
+
+      _amendmentFieldsAreEmpty: function(amendment) {
+        if (amendment.id) {
+          return false;
+        }
+        return (this._amendmentTypeIsEmpty(amendment) ||
+        this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
+      },
+
+      _signedDateIsEmpty: function(amendment) {
+        return amendment.signed_date === null || amendment.signed_date === '';
+      },
+
+      _newAttachmentIsEmpty: function(amendment) {
+        return amendment.signed_amendment instanceof File === false;
+      },
+
+      _amendmentTypeIsEmpty: function(amendment) {
+        return !amendment.types;
+      },
+
+      _resetAmendmentValidations: function() {
+        var typeEl = this.$$('#amendmentTypes');
+        if (typeEl) {
+          typeEl.invalid = false;
+        }
+        var signedDateEl = this.$$('#signedDate');
+        if (signedDateEl) {
+          signedDateEl.invalid = false;
+        }
+        var fileUpload = this.$$('#fileUpload');
+        if (fileUpload) {
+          fileUpload.invalid = false;
+        }
+      },
+
+      _isReadonlyAmendment: function(amendmentId) {
+        return !!amendmentId;
+      },
+
       _getSelectedAmendmentTypeWarning: function(types) {//TODO
         if (!types || !types.length) {
           return;
@@ -313,7 +270,16 @@
         message = message.substring(0, message.length - 2);
         message += ' section' + (message.indexOf(',') > -1 ? 's' : '') + ' of this PD/SSFA';
         return message;
-      }
+      },
+
+      _validateAndSaveAmendment: function() {
+        if (!this.isValidAmendment()) {
+          return;
+        }
+
+
+      },
+
     });
   })();
 </script>
