@@ -4,8 +4,8 @@
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
+<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
@@ -21,7 +21,7 @@
     </style>
 
     <etools-dialog keep-dialog-open
-                   id="etoolsDialog"
+                   id="addAmendmentDialog"
                    opened="{{opened}}"
                    size="lg"
                    ok-btn-text="Save"
@@ -97,14 +97,18 @@
     Polymer({
       is: 'add-amendment-dialog',
       behaviors: [
+        EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.AjaxErrorsParser,
-        EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.Dropdown,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
       ],
 
       properties: {
+        endpointName: {
+          type: String,
+          value: 'interventionAmendmentAdd'
+        },
         toastEventSource: {
           type: Object
         },
@@ -135,6 +139,13 @@
         '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)',
         '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment.size)'
       ],
+      startSpinner: function() {
+        this.$.addAmendmentDialog.startSpinner();
+      },
+
+      stopSpinner: function() {
+        this.$.addAmendmentDialog.stopSpinner();
+      },
 
       _disableConfirmBtn: function(typesLength, signedDate, fileSize) {
         this.set('disableConfirmBtn', !typesLength || !signedDate || !fileSize);
@@ -276,8 +287,34 @@
         if (!this.isValidAmendment()) {
           return;
         }
+        this.startSpinner();
 
+        let self = this;
+        let options = {
+          method: 'POST',
+          endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
+          body: this.item,
+          multiPart: true,
+          prepareMultipartData: true
+        };
 
+        this.sendRequest(options)
+          .then(function(resp) {
+          self._handleResponse();
+        }).catch(function(error) {
+          self._handleErrorResponse(error);
+        });
+      },
+
+      _handleResponse: function(reponse) {
+        this.fire('amendment-added', reponse);
+        this.stopSpinner();
+        this.set('opened', false);
+      },
+
+      _handleErrorResponse: function(error) {
+        this.stopSpinner();
+        this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
       },
 
     });

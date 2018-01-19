@@ -90,12 +90,8 @@
                 <!-- Signed Date -->
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
-                                   value="{{item.signed_date}}"
-                                   readonly
-                                   required
-                                   error-message="Please select signed date"
-                                   error-message$="[[item.errorMessage]]"
-                                   no-init show-clear-btn>
+                                   value="[[item.signed_date]]"
+                                   readonly>
                 </etools-date-input>
               </div>
               <div class="col col-5 file-container">
@@ -103,20 +99,16 @@
                 <etools-single-file id="fileUpload_[[index]]"
                                     label="Signed Agreement"
                                     internal-file=[[item.signed_amendment_file]]
-                                    file={{item.signed_amendment}}
-                                    accept=".doc,.docx,.pdf,.jpg,.png"
-                                    error-message="Attachment required"
-                                    readonly
-                                    required
-                                    auto-validate></etools-single-file>
+                                    file="[[item.signed_amendment]]"
+                                    readonly></etools-single-file>
               </div>
             </div>
             <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]">
               <paper-input id="other"
                            placeholder="&#8212;"
                            label="Other"
-                           value="{{item.other_description}}"
-                           readonly$>
+                           value="[[item.other_description]]"
+                           readonly>
               </paper-input>
             </div>
           </div>
@@ -151,6 +143,10 @@
 
         properties: {
           filteredAmendmentTypes: Object,
+          amendmentTypes: {
+            type: Object,
+            statePath: 'interventionAmendmentTypes'
+          },
           interventionDocumentType: {
             type: String
           },
@@ -177,23 +173,16 @@
             signed_amendment_file: '',
             amendment_number: null
           };
-          this._createAmendmentConfirmationDialog();
           this._createAddAmendmentDialog();
         },
         _createAddAmendmentDialog: function() {
           this.addAmendmentDialog = document.createElement('add-amendment-dialog');
           this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
           this.addAmendmentDialog.interventionDocumentType = this.interventionDocumentType;
-          Polymer.dom(document.querySelector('body')).appendChild(this.addAmendmentDialog);
+          this.addAmendmentDialog.interventionId = this.interventionId;
+          this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
+          document.querySelector('body').appendChild(this.addAmendmentDialog);
 
-        },
-        _createAmendmentConfirmationDialog: function() {
-          var dialog = document.createElement('div');
-          dialog.setAttribute('id', 'addAmendmendConfirmation');
-          dialog.innerHTML = 'All fields in the details tab will now be open for editing. ' +
-              'Please change all necessary fields before hitting save.';
-          this.addAmendmentConfirmationDialog = this.createDialog('Add Amendment Confirmation', 'md', 'OK', 'Cancel',
-              this._addAmendmentConfirmationCallback.bind(this), dialog);
         },
         _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
@@ -212,29 +201,8 @@
         },
 
         detached: function() {
-          if (this.addAmendmentConfirmationDialog) {
-            this.removeDialog(this.addAmendmentConfirmationDialog);
-          }
-        },
-        _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength, index) {
-          if (!selectedAmdTypes || !selectedAmdTypes.length) {
-            return false;
-          }
-          if (selectedAmdTypes.indexOf('other') > -1) {
-            return true;
-          }
-          this._clearOtherInput(index);
-          return false;
-        },
-        _clearOtherInput: function(index) {
-          var otherInput = this.$$('#other_' + index);
-          if (otherInput) {
-            otherInput.value = null;
-          }
-        },
-        _showAddAmendmentConfirmationDialog: function() {
-          if (this.addAmendmentConfirmationDialog) {
-            this.addAmendmentConfirmationDialog.opened = true;
+          if (this.addAmendmentDialog) {
+            this.removeDialog(this.addAmendmentDialog);
           }
         },
         _showAddAmendmentDialog: function() {
@@ -242,12 +210,12 @@
             this.addAmendmentDialog.opened = true;
           }
         },
-        _addAmendmentConfirmationCallback: function(event) {
-          if (event.detail.confirmed) {
-            this.set('amendActionInProgress', true);
-            this._addElement();
-            this._unlockInterventionDetailsFields();
-          }
+        newAmendmentAdded: function(event) {
+          let data = event.detail;
+          this.set('amendActionInProgress', true);
+          this.push('dataItems', data);
+          this._addElement();
+          this._unlockInterventionDetailsFields();
         },
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
@@ -273,12 +241,9 @@
           this.fire('restore-original-permissions');
         },
 
-
         _getItemNr: function(index) {
           return parseInt(index, 10) + 1;
         },
-
-
 
         _thereAreUnsavedAmendments: function() {
           if (!this.dataItems && !this.dataItems.length) {
