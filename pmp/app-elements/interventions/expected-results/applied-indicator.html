@@ -17,15 +17,14 @@
         };
 
         --icon-wrapper: {
-          padding-left: 0px;
+          padding: 0px 0px;
+          margin-right: 16px;
+          background-color:var(--collapse-icon-bg-color, var(--primary-color));
         };
         --list-second-bg-color: #dfdfdf;
-        --list-icon-color: blue;
+        --list-icon-color: white;
       }
 
-      etools-data-table-row {
-        @apply --layout-center;
-      }
       .header-text {
         font-size: 12px;
         color: var(--list-secondary-text-color, #757575);
@@ -59,13 +58,13 @@
                              hidden$="[[!editMode]]"></paper-icon-button>
         </div> -->
 
-        <div class="col-9">
+        <div class="col-data col-9">
             [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
         </div>
-        <div class="col-1 right-align">
+        <div class="col-data col-1 right-align">
             [[_displayIndicatorValue(indicator.baseline)]]
         </div>
-        <div class="col-2 right-align">
+        <div class="col-data col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
       </div>
@@ -100,7 +99,8 @@
         is: 'applied-indicator',
         properties: {
           indicator: {
-            type: Object
+            type: Object,
+            observer: '_indicatorChanged'
           },
           locations: {
             type: Array,
@@ -130,6 +130,15 @@
         observers: [
           'setDisaggregationNames(disaggregations, indicator)'
         ],
+        _indicatorChanged: function(indicator) {
+          if (indicator.cluster_indicator_id) {
+            this.customStyle['--collapse-icon-bg-color'] = 'green';
+          } else {
+            this.customStyle['--collapse-icon-bg-color'] = 'var(--primary-color)';
+          }
+
+          this.updateStyles();
+        },
         _setLocationNames: function() {
           if (!this.locations) {
             return;
