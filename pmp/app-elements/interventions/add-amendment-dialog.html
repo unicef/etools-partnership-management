@@ -34,7 +34,7 @@
           <div class="row-h flex-c">
             <div class="col col-4">
               <!-- Amendment Type -->
-              <etools-multi-selection-menu id$="amendmentTypes"
+              <etools-multi-selection-menu id="amendmentTypes"
                                           label="Amendment Types"
                                           placeholder="&#8212;"
                                           options="[[filteredAmendmentTypes]]"
@@ -53,7 +53,7 @@
                                                       error-message="{{item.errorMessage}}">
               </required-and-not-future-date-validator>
               <!-- Signed Date -->
-              <etools-date-input id$="signedDate"
+              <etools-date-input id="signedDate"
                                 label="Signed date"
                                 value="{{item.signed_date}}"
                                 required
@@ -176,7 +176,10 @@
           otherFieldIsOk = this.item.other_description && this.item.other_description.length;
         }
 
-        this.set('disableConfirmBtn', !typesLength || !signedDate || !file || !otherFieldIsOk);
+        let signedDateEl = this.$$('#signedDate');
+        let signedDateIsOk = signedDateEl && signedDateEl.validate();
+
+        this.set('disableConfirmBtn', !typesLength || !signedDate || !file || !otherFieldIsOk || !signedDateIsOk);
       },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
@@ -313,6 +316,7 @@
 
       _validateAndSaveAmendment: function() {
         if (!this.isValidAmendment()) {
+          this.showErrorAsToastMsg('Amendment not valid', this.toastEventSource);
           return;
         }
         this.startSpinner();
