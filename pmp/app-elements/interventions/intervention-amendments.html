@@ -63,19 +63,15 @@
       #no-amend-warning {
         padding: 24px;
       }
+      .item-actions-container {
+        min-width: 36px;
+      }
     </style>
     <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
-      <template is="dom-repeat" id="amendmentsRepeater" items="{{dataItems}}">
+      <template is="dom-repeat" id="amendmentsRepeater" items="[[dataItems]]">
         <div class="row-h item-container">
-          <div class$="item-actions-container locked"
+          <div class="item-actions-container locked"
                data-item-nr$="[[_getItemNr(index)]]">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$></paper-icon-button>
-            </div>
           </div>
           <div class="item-content">
             <div class="row-h flex-c">
