@@ -27,9 +27,10 @@
                    hidden$="[[datePickerOpen]]"
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
-                   disable-confirm-btn="[[disableConfirmBtn]]"
+                   disable-confirm-btn$="[[disableConfirmBtn]]"
                    on-confirm-btn-clicked="_validateAndSaveAmendment">
 
+            <!-- disabled: [[disableConfirmBtn]] -->
           <div class="row-h flex-c">
             <div class="col col-4">
               <!-- Amendment Type -->
@@ -153,7 +154,7 @@
 
       observers: [
         '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)',
-        '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment.size)'
+        '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment, item.other_description)'
       ],
       ready: function() {
         this.resetItem();
@@ -169,8 +170,13 @@
         this.$.addAmendmentDialog.stopSpinner();
       },
 
-      _disableConfirmBtn: function(typesLength, signedDate, fileSize) {
-        this.set('disableConfirmBtn', !typesLength || !signedDate || !fileSize);
+      _disableConfirmBtn: function(typesLength, signedDate, file) {
+        let otherFieldIsOk = true;
+        if (this._showOtherInput(this.item.types, this.item.types.length)) {
+          otherFieldIsOk = this.item.other_description && this.item.other_description.length;
+        }
+
+        this.set('disableConfirmBtn', !typesLength || !signedDate || !file || !otherFieldIsOk);
       },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
