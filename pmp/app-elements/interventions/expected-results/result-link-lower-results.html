@@ -38,6 +38,9 @@
         --list-row-wrapper: {
           padding 0px 0px;
         };
+        --edit-delete-actions: {
+          background-color: var(--list-bg-color);
+        };
       }
 
       etools-data-table-header {
@@ -138,6 +141,12 @@
       .border-b {
         border-bottom: 1px solid var(--list-divider-color);
       }
+      edit-delete-actions {
+        visibility:hidden;
+      }
+      div#resultStatement:hover edit-delete-actions{
+        visibility: visible;
+      }
 
     </style>
 
@@ -165,23 +174,10 @@
 
         </div>
       <template is="dom-repeat" items="{{dataItems}}">
-            <div class="horizontal-layout">
-          <!-- <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-              <paper-icon-button class="action edit"
-                                 on-tap="_editLowerResult"
-                                 data-args$="[[index]]"
-                                 icon="create"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-            </div>
-          </div> -->
-            <div class="col-4 padd-top-bott">
-                <span>[[item.name]]</span>
+          <div class="horizontal-layout">
+            <div id="resultStatement" class="col-4 padd-top-bott" style="position:relative">
+              <edit-delete-actions data-args$="[[index]]" on-edit="_editLowerResult" on-delete="_openDeleteConfirmation"></edit-delete-actions>
+              <span>[[item.name]]</span>
             </div>
             <div class="col-8 lborder">
               <div hidden="[[!item.applied_indicators.length]]">
@@ -189,7 +185,7 @@
                           items="[[item.applied_indicators]]"
                           as="indicator" index-as="indicatorIndex">
                   <applied-indicator  data-ind-index$="[[indicatorIndex]]"
-                  data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"></applied-indicator>
+                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"></applied-indicator>
                 </template>
               </div>
               <div class="add-indicator-btn padd-top-bott">
@@ -309,6 +305,7 @@
         },
 
         _editLowerResult: function(e) {
+          e.stopPropagation();
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
           if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'lower-results');
