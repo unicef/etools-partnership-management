@@ -420,6 +420,10 @@
           return;
         }
 
+        if (typeof newValue === 'undefined') {
+          return;
+        }
+
         if (this.inAmendment !== newValue) {
           this.inAmendment = this.intervention.in_amendment = newValue;
         }

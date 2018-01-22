@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-end-justified;
       }
       #floatingFooter {
-        background-color: #8B00D8;
+        background-color: var(--amendment-mode-color);
         color: white;
         padding: 12px 12px 12px 65px;
         position: fixed;
@@ -92,6 +92,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         bottom: 0;
         width: 100%;
       }
+      #pageContainer.inAmendment {
+        min-height: calc(100% - 96px);
+        height: auto;
+        border-top: 12px solid var(--amendment-mode-color);
+        border-left: 12px solid var(--amendment-mode-color);
+        border-right: 12px solid var(--amendment-mode-color);
+      }
+      :host(:not(.ie)) #pageContainer.inAmendment {
+        padding-bottom: 48px;
+      }
+      /* paper-buttons have a z-index of 51 */
+      #floatingFooter {
+        z-index: 52;
+      }
+
     </style>
 
     <etools-piwik-analytics page="[[subroute.path]]"
@@ -121,7 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
-        <div id="pageContainer" style$="[[computePageContainerStyles(amendmentModeActive)]]">
+        <div id="pageContainer" class$="[[computePageContainerClass(amendmentModeActive)]]">
 
           <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
             <page-partners id="partners" class="main-page"
@@ -245,7 +260,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'open-data-refresh-dialog': '_openDataRefreshDialog',
         'not-found-redirect': '_handleNotFound'
       },
-
       _onForbidden: function(event) {
         window.location.href = EtoolsPmpApp.Config.loginPath;
       },
@@ -405,12 +419,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return page === 'government-partners';
       },
 
-      computePageContainerStyles: function(amendmentModeActive) {
-        let styles = 'border: 24px solid #8B00D8; ';
-        if (!window.isIE) {
-          styles += 'padding-bottom: 48px;';
-        }
-        return amendmentModeActive ? styles : '';
+      computePageContainerClass: function(amendmentModeActive) {
+        return amendmentModeActive? 'inAmendment': '';
       },
 
       _closeAmendment: function() {
