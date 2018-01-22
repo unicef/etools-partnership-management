@@ -59,7 +59,7 @@
 
     <etools-data-table-row style="position:relative">
       <div slot="row-data">
-        <edit-delete-actions show-delete="[[showDelete]]"></edit-delete-actions>
+        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[showDelete]]"></edit-delete-actions>
 
         <div class="col-8">
             [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
@@ -129,6 +129,9 @@
           showDelete: {
             type: Boolean,
             value: false
+          },
+          editMode: {
+            type: Boolean
           }
         },
         behaviors: [

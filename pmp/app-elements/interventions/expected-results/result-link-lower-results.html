@@ -176,7 +176,7 @@
       <template is="dom-repeat" items="{{dataItems}}">
           <div class="horizontal-layout">
             <div id="resultStatement" class="col-4 padd-top-bott" style="position:relative">
-              <edit-delete-actions data-args$="[[index]]" on-edit="_editLowerResult" on-delete="_openDeleteConfirmation"></edit-delete-actions>
+              <edit-delete-actions  hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult" on-delete="_openDeleteConfirmation"></edit-delete-actions>
               <span>[[item.name]]</span>
             </div>
             <div class="col-8 lborder">
@@ -185,7 +185,7 @@
                           items="[[item.applied_indicators]]"
                           as="indicator" index-as="indicatorIndex">
                   <applied-indicator  data-ind-index$="[[indicatorIndex]]"
-                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"></applied-indicator>
+                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]" editMode="[[editMode]]"></applied-indicator>
                 </template>
               </div>
               <div class="add-indicator-btn padd-top-bott">
@@ -205,13 +205,13 @@
     <etools-data-table-row no-collapse>
       <div slot="row-data">
         <div class$="[[getColumnLength('result', thereAreIndicators)]]">
-        <paper-icon-button icon="add-box"
-                      on-tap="_addNewLowerResult"
-                      title="Add PD or SSFA OUTPUT"
-                      disabled$="[[!editMode]]"
-                      hidden$="[[!editMode]]">
-          Add PD output or SSFA expected result
-        </paper-icon-button>
+          <paper-icon-button icon="add-box"
+                        on-tap="_addNewLowerResult"
+                        title="Add PD or SSFA OUTPUT"
+                        disabled$="[[!editMode]]"
+                        hidden$="[[!editMode]]">
+            Add PD output or SSFA expected result
+          </paper-icon-button>
        </div>
        <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
 

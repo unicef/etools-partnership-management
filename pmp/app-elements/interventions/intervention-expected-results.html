@@ -46,7 +46,7 @@
       edit-delete-actions {
         visibility:hidden;
       }
-      etools-data-table-row:hover edit-delete-actions {
+      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
         visibility: visible;
       }
 
@@ -61,7 +61,7 @@
       <template is="dom-repeat" items="{{dataItems}}">
           <etools-data-table-row style="position:relative">
             <div slot="row-data">
-                <edit-delete-actions data-args$="[[index]]" on-edit="_editCpOutputAndRamIndicators" on-delete="_openDeleteConfirmation"></edit-delete-actions>
+                <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editCpOutputAndRamIndicators" on-delete="_openDeleteConfirmation"></edit-delete-actions>
               <div class="col-4">
                   <span>[[item.cp_output_name]]</span>
               </div>
@@ -153,6 +153,7 @@
         },
 
         _editCpOutputAndRamIndicators: function(e) {
+          e.stopPropagation();
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
           if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'expected-results');
