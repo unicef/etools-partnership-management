@@ -128,9 +128,20 @@
           type: Object,
           statePath: 'interventionAmendmentTypes'
         },
-        item: {
+
+        itemDefaultState: {
           type: Object,
-          value: {"id":null,"types":[],"other_description":null,"signed_date":null,"signed_amendment":null,"signed_amendment_file":"","amendment_number":null}
+          value: {
+            'types': [],
+            'other_description': null,
+            'signed_date': null,
+            'signed_amendment': null,
+            'signed_amendment_file': '',
+            'amendment_number': null
+          }
+        },
+        item: {
+          type: Object
         },
         filteredAmendmentTypes: Object,
       },
@@ -139,6 +150,12 @@
         '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)',
         '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment.size)'
       ],
+      ready: function() {
+        this.resetItem();
+      },
+      resetItem: function() {
+        this.set('item', JSON.parse(JSON.stringify(this.itemDefaultState)));
+      },
       startSpinner: function() {
         this.$.addAmendmentDialog.startSpinner();
       },
@@ -300,7 +317,7 @@
 
         this.sendRequest(options)
           .then(function(resp) {
-          self._handleResponse();
+          self._handleResponse(resp);
         }).catch(function(error) {
           self._handleErrorResponse(error);
         });
@@ -309,14 +326,14 @@
       _handleResponse: function(reponse) {
         this.fire('amendment-added', reponse);
         this.stopSpinner();
+        this.resetItem();
         this.set('opened', false);
       },
 
       _handleErrorResponse: function(error) {
         this.stopSpinner();
         this.parseRequestErrorsAndShowAsToastMsgs(error, this.toastEventSource);
-      },
-
+      }
     });
   })();
 </script>

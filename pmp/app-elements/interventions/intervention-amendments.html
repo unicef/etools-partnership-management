@@ -10,14 +10,12 @@
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
-<link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
 
 <link rel="import" href="../common-elements/etools-date-input.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
 
 <link rel="import" href="../../../styles/app-mixins.html">
-<link rel="import" href="../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../validators/required-and-not-future-date-validator.html">
@@ -26,7 +24,7 @@
 <dom-module id="intervention-amendments">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles shared-styles">
+        include="grid-layout-styles file-styles shared-styles">
       [hidden] {
         display: none !important;
       }
@@ -77,10 +75,8 @@
             <div class="row-h flex-c">
               <div class="col col-4">
                 <!-- Amendment Type -->
-
-                <paper-input label="Amendment Types" value="[[_getReadonlyAmendmentTypes(item.types)]]"
+                <paper-input label="Amendment Types" value$="[[_getReadonlyAmendmentTypes(item.types)]]"
                                readonly></paper-input>
-
               </div>
               <div class="col col-3">
                 <!-- Signed Date -->
@@ -92,10 +88,10 @@
               </div>
               <div class="col col-5 file-container">
                 <!-- Signed Agreement -->
-                <etools-single-file id="fileUpload_[[index]]"
+                <etools-single-file id$="fileUpload_[[index]]"
                                     label="Signed Agreement"
-                                    internal-file=[[item.signed_amendment_file]]
-                                    file="[[item.signed_amendment]]"
+                                    internal-file$=[[item.signed_amendment_file]]
+                                    file$="[[item.signed_amendment]]"
                                     readonly></etools-single-file>
               </div>
             </div>
@@ -132,7 +128,6 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.RepeatableDataSets,
           etoolsBehaviors.DynamicDialogBehavior,
           EtoolsPmpApp.Behaviors.Dropdown
         ],
@@ -156,9 +151,9 @@
         },
 
         observers: [
-          '_dataHasChanged(dataItems)',
-          '_dataItemsLengthChanged(dataItems.length)'
+          '_dataHasChanged(dataItems)'
         ],
+
         ready: function() {
           this.dataSetModel = {
             id: null,
@@ -171,6 +166,7 @@
           };
           this._createAddAmendmentDialog();
         },
+
         _createAddAmendmentDialog: function() {
           this.addAmendmentDialog = document.createElement('add-amendment-dialog');
           this.addAmendmentDialog.setAttribute('id', 'addAmendmentDialog');
@@ -180,6 +176,7 @@
           document.querySelector('body').appendChild(this.addAmendmentDialog);
 
         },
+
         _getReadonlyAmendmentTypes: function(types) {
           if (!types || !types.length) {
             return null;
@@ -201,58 +198,52 @@
             this.removeDialog(this.addAmendmentDialog);
           }
         },
+
         _showAddAmendmentDialog: function() {
           if (this.addAmendmentDialog) {
             this.addAmendmentDialog.opened = true;
           }
         },
+
         newAmendmentAdded: function(event) {
+          event.stopImmediatePropagation();
           let data = event.detail;
           this.set('amendActionInProgress', true);
           this.push('dataItems', data);
-          this._addElement();
           this._unlockInterventionDetailsFields();
         },
+
         _dataHasChanged: function(dataItems) {
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
-          this.set('amendActionInProgress', this._thereAreUnsavedAmendments());
+
           this.async(function() {
-            // adds appropriate mixins to fields that get changed to read-only
+            // renders appropriate mixins to amendments that get added
             this.updateStyles();
           }.bind(this), 0);
         },
-        _dataItemsLengthChanged: function() {
-          if (this.amendActionInProgress && !this._thereAreUnsavedAmendments()) {
-            // cancel adding amendment
-            this._restoreInterventionOriginalDataAndPermissions();
-          }
-        },
+
         _unlockInterventionDetailsFields: function() {
           this.fire('unlock-details-fields');
-        },
-        _restoreInterventionOriginalDataAndPermissions: function() {
-          this.set('amendActionInProgress', false);
-          this.fire('restore-original-permissions');
         },
 
         _getItemNr: function(index) {
           return parseInt(index, 10) + 1;
         },
 
-        _thereAreUnsavedAmendments: function() {
-          if (!this.dataItems && !this.dataItems.length) {
+        _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength) {
+          if (!selectedAmdTypes || !selectedAmdTypes.length) {
             return false;
           }
-          if (this.dataItems.find(this._unsavedAmendment)) {
+          if (selectedAmdTypes.indexOf('other') > -1) {
             return true;
           }
           return false;
         },
 
-        _unsavedAmendment: function(amd) {
-          return !!!amd.id;
+        _emptyList: function(listLength) {
+          return listLength === 0;
         },
 
       });
