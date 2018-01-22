@@ -158,7 +158,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
             <page-interventions id="interventions" class="main-page"
                                 route="[[subroute]]"
-                                in-amendment="{{amendmentModeActive}}"
                                 permissions="[[permissions]]">
             </page-interventions>
           </template>
@@ -259,8 +258,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'not-found-redirect': '_handleNotFound'
+        'not-found-redirect': '_handleNotFound',
+        'set-amendment-mode': '_updateAmendmentMode'
       },
+
       _onForbidden: function(event) {
         window.location.href = EtoolsPmpApp.Config.loginPath;
       },
@@ -268,9 +269,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       created: function() {
         this.checkIE11Browser();
       },
+
       _routeChanged: function() {
         this._setContentScrollPosition(0);
       },
+
       ready: function() {
         window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
             .querySelector('#appHeadLayout').$$('#contentContainer');
@@ -418,6 +421,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
+      },
+
+      _updateAmendmentMode: function(event) {
+        let detail = event.detail || {};
+        this.set('amendmentModeActive', !!detail.active);
       },
 
       computePageContainerClass: function(amendmentModeActive) {

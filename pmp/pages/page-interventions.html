@@ -338,10 +338,6 @@
         editMode: {
           type: Boolean
         },
-        inAmendment: {
-          type: Boolean,
-          notify: true
-        },
         _redirectToNewIntervPageInProgress: Boolean,
         errorMsgBox_Title: {
           type: String,
@@ -425,9 +421,8 @@
           return;
         }
 
-        if (this.inAmendment !== newValue) {
-          this.inAmendment = this.intervention.in_amendment = newValue;
-        }
+        this.intervention.in_amendment = newValue;
+        this.fire('set-amendment-mode', {active: newValue});
       },
 
       _interventionChanged: function(intervention, permissions) {
@@ -563,6 +558,9 @@
         this.debounce('pageChange', function() {
           this._setActivePage(intervListActive, intervDetailsActive, newInterventionActive);
         }.bind(this), 10);
+        if (intervListActive) {
+          this.fire('set-amendment-mode', {active: false});
+        }
       },
 
       _observeRouteDataId: function(id) {
