@@ -15,7 +15,7 @@
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
 <link rel="import" href="applied-indicator.html">
-<link rel="import" href="edit-delete-actions.html">
+<link rel="import" href="../edit-delete-actions.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -340,10 +340,7 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
-        test: function() {
-          console.log('here');
-        },
-        _editIndicator: function(event, test) {
+        _editIndicator: function(event) {
           var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
           var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
           var indicator = JSON.parse(JSON.stringify(this.dataItems[llResultIndex].applied_indicators[indicatorIndex]));

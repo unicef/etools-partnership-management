@@ -18,6 +18,7 @@
 <link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
+<link rel="import" href="edit-delete-actions.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
@@ -32,11 +33,21 @@
         --list-row-collapse-wrapper: {
           padding: 0px 24px 0px 24px;
         };
+        --edit-delete-actions: {
+          background-color: white;
+        };
       }
 
       .ram-indicator-name {
         display: inline-block;
         width: 100%;
+      }
+
+      edit-delete-actions {
+        visibility:hidden;
+      }
+      etools-data-table-row:hover edit-delete-actions {
+        visibility: visible;
       }
 
 
@@ -48,23 +59,9 @@
         <etools-data-table-column class="col-8"> Corresponding CP Indicator(s)</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{dataItems}}">
-          <!-- <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-
-              <paper-icon-button class="action edit"
-                                 on-tap="_editCpOutputAndRamIndicators"
-                                 data-args$="[[index]]"
-                                 icon="create"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-            </div>
-          </div> -->
-          <etools-data-table-row>
+          <etools-data-table-row style="position:relative">
             <div slot="row-data">
+                <edit-delete-actions data-args$="[[index]]" on-edit="_editCpOutputAndRamIndicators" on-delete="_openDeleteConfirmation"></edit-delete-actions>
               <div class="col-4">
                   <span>[[item.cp_output_name]]</span>
               </div>
