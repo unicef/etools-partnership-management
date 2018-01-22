@@ -15,6 +15,7 @@
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
 <link rel="import" href="applied-indicator.html">
+<link rel="import" href="edit-delete-actions.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
@@ -104,10 +105,10 @@
         border-bottom: 1px solid var(--list-divider-color);
       }
       .padd-top-bott {
-        padding-top: 16px;
-        padding-bottom: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
-      .iron-icon-color {
+      paper-icon-button {
         color: #6f6f70;
       }
       .horizontal-layout {
@@ -115,6 +116,26 @@
         @apply --layout-center;
 
         min-height: 56px;
+        border-bottom: 1px solid var(--list-divider-color);
+      }
+      .headerContainer {
+        min-height: 56px;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      .header-text {
+        font-size: 12px;
+        color: var(--list-secondary-text-color, #757575);
+        font-weight: bold;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .flex1 {
+        flex:1;
+      }
+      .border-b {
         border-bottom: 1px solid var(--list-divider-color);
       }
 
@@ -127,13 +148,22 @@
     </div>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
-      <etools-data-table-header no-title no-collapse>
+      <!-- <etools-data-table-header no-title no-collapse>
         <etools-data-table-column class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</etools-data-table-column>
         <etools-data-table-column performanceIndicatorCol class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
         <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
         <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
-      </etools-data-table-header>
+      </etools-data-table-header> -->
+      <div class="headerContainer header-text border-b">
+          <div class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</div>
+          <div style="min-width:40px"></div>
+          <div class="headerContainer flex1">
+              <div class="col-8"> Performance Indicator</div>
+              <div class="col-2 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</div>
+              <div class="col-2 right-align" hidden$="[[!thereAreIndicators]]"> Target</div>
+          </div>
 
+        </div>
       <template is="dom-repeat" items="{{dataItems}}">
             <div class="horizontal-layout">
           <!-- <div class="item-actions-container">
@@ -158,11 +188,12 @@
                 <template is="dom-repeat"
                           items="[[item.applied_indicators]]"
                           as="indicator" index-as="indicatorIndex">
-                  <applied-indicator indicator="[[indicator]]"></applied-indicator>
+                  <applied-indicator  data-ind-index$="[[indicatorIndex]]"
+                  data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"></applied-indicator>
                 </template>
               </div>
               <div class="add-indicator-btn padd-top-bott">
-                  <paper-icon-button icon="add-box" class="iron-icon-color"
+                  <paper-icon-button icon="add-box"
                     title="Add Indicator"
                     on-tap="_addNewIndicator"
                     data-ll-result-id$="[[item.id]]"
@@ -177,8 +208,8 @@
 
     <etools-data-table-row no-collapse>
       <div slot="row-data">
-        <div class="col-4">
-        <paper-icon-button icon="add-box" class="iron-icon-color"
+        <div class$="[[getColumnLength('result', thereAreIndicators)]]">
+        <paper-icon-button icon="add-box"
                       on-tap="_addNewLowerResult"
                       title="Add PD or SSFA OUTPUT"
                       disabled$="[[!editMode]]"
@@ -186,7 +217,7 @@
           Add PD output or SSFA expected result
         </paper-icon-button>
        </div>
-       <div class="col-8" hidden$="[[_emptyList(dataItems.length)]]">
+       <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
 
        </div>
       </div>
@@ -225,12 +256,14 @@
           }
         },
         listeners: {
-          'delete-confirm': '_updateInterventionLocAndClusters'
+          'delete-confirm': '_updateInterventionLocAndClusters',
         },
         observers: [
           'updateStyle(dataItems.*)'
         ],
-
+        handleIndicatorEdit: function(indicIndex, resultIndex) {
+         // this.addE
+        },
         updateStyle: function() {
           if (!this.dataItems) {
             this.thereAreIndicators = false;
@@ -246,20 +279,26 @@
           this.thereAreIndicators = foundSomeIndicators;
         },
         getColumnLength: function(column, thereAreIndicators) {
-          if (!thereAreIndicators) {
-            switch(column) {
-              case 'result':
-                return 'col-8';
-              case 'indicator':
-                return 'col-4';
-            }
-          } else {
-            switch(column) {
-              case 'result':
-                return 'col-4';
-              case 'indicator':
-                return 'col-6';
-            }
+          // if (!thereAreIndicators) {
+          //   switch(column) {
+          //     case 'result':
+          //       return 'col-8';
+          //     case 'indicator':
+          //       return 'col-4';
+          //   }
+          // } else {
+          //   switch(column) {
+          //     case 'result':
+          //       return 'col-4';
+          //     case 'indicator':
+          //       return 'col-6';
+          //   }
+          // }
+          switch(column) {
+            case 'result':
+              return thereAreIndicators ? 'col-4' : 'col-8';
+            case 'indicator':
+              return thereAreIndicators ? 'col-8' : 'col-4';
           }
         },
         _updateInterventionLocAndClusters: function() {
@@ -304,8 +343,10 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
-
-        _editIndicator: function(event) {
+        test: function() {
+          console.log('here');
+        },
+        _editIndicator: function(event, test) {
           var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
           var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
           var indicator = JSON.parse(JSON.stringify(this.dataItems[llResultIndex].applied_indicators[indicatorIndex]));
@@ -318,6 +359,9 @@
             appliedIndicatorsIndex: indicatorIndex
           };
           this.fire('open-indicator-dialog', resultMap);
+        },
+        _deleteIndicator: function() {
+          // -no bk
         }
 
       });

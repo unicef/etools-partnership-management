@@ -4,11 +4,16 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="edit-delete-actions.html">
+
 
 <dom-module id="applied-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles data-table-styles">
       :host {
+        --edit-delete-actions: {
+          background-color: var(--list-bg-color);
+        };
         --list-row-wrapper: {
           padding: 0px 0px !important;
         };
@@ -43,28 +48,26 @@
       .padd-left {
         padding-left: 16px;
       }
+      edit-delete-actions {
+        visibility:hidden;
+      }
+      etools-data-table-row:hover edit-delete-actions{
+        visibility: visible;
+      }
     </style>
 
-    <etools-data-table-row>
-      <div slot="row-data">
-        <!-- <div class="indicator-nr">
-          <strong>[[_getIndicatorNr(indicatorIndex)]]</strong>
-          <paper-icon-button class="edit-indicator"
-                             on-tap="_editIndicator"
-                             data-ind-index$="[[indicatorIndex]]"
-                             data-result-index$="[[index]]"
-                             icon="create"
-                             disabled$="[[!editMode]]"
-                             hidden$="[[!editMode]]"></paper-icon-button>
-        </div> -->
 
-        <div class="col-data col-9">
+    <etools-data-table-row style="position:relative">
+      <div slot="row-data">
+        <edit-delete-actions show-delete="[[showDelete]]"></edit-delete-actions>
+
+        <div class="col-8">
             [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
         </div>
-        <div class="col-data col-1 right-align">
+        <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.baseline)]]
         </div>
-        <div class="col-data col-2 right-align">
+        <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
       </div>
@@ -122,6 +125,10 @@
           disaggregationNames: {
             type: Array,
             value: ['-']
+          },
+          showDelete: {
+            type: Boolean,
+            value: false
           }
         },
         behaviors: [
@@ -130,6 +137,18 @@
         observers: [
           'setDisaggregationNames(disaggregations, indicator)'
         ],
+        listeners: {
+          'edit': '_editIndicator',
+          'delete': '_deleteIndicator'
+        },
+        _editIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('edit-indicator', e.detail);
+        },
+        _deleteIndicator: function(e) {
+          e.stopPropagation();
+          this.fire('delete-indicator', e.detail);
+        },
         _indicatorChanged: function(indicator) {
           if (indicator.cluster_indicator_id) {
             this.customStyle['--collapse-icon-bg-color'] = 'green';
