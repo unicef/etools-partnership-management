@@ -286,7 +286,9 @@
     },
 
     _unlockDetailsFields: function(e) {
-      e.stopImmediatePropagation();
+      if (e) {
+        e.stopImmediatePropagation();
+      }
       this.setInterventionPermissions(false,
           this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
     },

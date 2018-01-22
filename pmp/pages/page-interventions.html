@@ -441,11 +441,17 @@
               this._newIntervention(this.newInterventionActive);
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
+          this._handleAmendmentMode(intervention);
           this.async(function() {
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
             this._setContentScrollPosition(0);
           }.bind(this), 1000);
+        }
+      },
+      _handleAmendmentMode: function(intervention) {
+        if (intervention.in_amendment) {
+          this._unlockDetailsFields();
         }
       },
       _displayAnyMigrationErrors: function(intervention) {
