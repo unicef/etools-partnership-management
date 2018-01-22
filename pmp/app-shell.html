@@ -93,14 +93,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 100%;
       }
       #pageContainer.inAmendment {
-        min-height: calc(100% - 96px);
-        height: auto;
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
         border-right: 12px solid var(--amendment-mode-color);
       }
       :host(:not(.ie)) #pageContainer.inAmendment {
         padding-bottom: 48px;
+      }
+      :host(.ie) #pageContainer.inAmendment {
+        margin-bottom: -40px;
       }
       /* paper-buttons have a z-index of 51 */
       #floatingFooter {
