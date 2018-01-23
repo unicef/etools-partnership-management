@@ -80,13 +80,17 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {
-              message: 'Loading PD/SSFA data...',
-              active: true,
-              loadingSource: this.ajaxLoadingMsgSource
-            });
-            this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
+            this.fetchInterventon(newId);
           }
+        },
+
+        fetchInterventon: function(id) {
+          this.fire('global-loading', {
+            message: 'Loading PD/SSFA data...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
+          this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: id})});
         },
 
         _handleErrorResponse: function(response, ajaxMethod) {

@@ -223,7 +223,11 @@
         },
 
         _unlockInterventionDetailsFields: function() {
-          this.fire('unlock-details-fields');
+          if (!this.amendActionInProgress) {
+            // we need the new permissions for ammendment mode, so we have to refresh the intervention data
+            // after the permissions are updated, the fileds will automatically unlock
+            this.fire('refresh-intervention');
+          }
         },
 
         _getItemNr: function(index) {
