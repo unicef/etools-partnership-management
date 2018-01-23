@@ -89,7 +89,8 @@
       }
 
       .add-indicator-btn {
-        padding-left: 24px;
+        padding-left: 16px;
+        width: 100%;
       }
 
       etools-data-table-column[performanceIndicatorCol] {
@@ -174,12 +175,20 @@
         padding: 0 24px;
       }
 
-      .col.indicator-header-container {
-        padding-left: 56px;
-      }
-
       applied-indicator {
         margin-right: -24px;
+      }
+
+      .resultStatement {
+        @apply --layout-horizontal;
+      }
+      .indicators-content {
+        @apply --layout-vertical;
+      }
+      .resultStatement,
+      .indicators-content {
+        @apply --layout-center;
+        @apply --layout-self-stretch;
       }
 
     </style>
@@ -199,7 +208,7 @@
       </etools-data-table-header> -->
       <div class="header-container header-text border-b">
         <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
-        <div class$="col [[_getIndicatorsHeaderClass(thereAreIndicators)]] flex1">
+        <div class="col flex1">
           <div class="col col-8">Performance Indicator</div>
           <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
           <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Target</div>
@@ -215,7 +224,7 @@
                                  on-delete="_openDeleteConfirmation"></edit-delete-actions>
             <span>[[item.name]]</span>
           </div>
-          <div class="flex1 lborder">
+          <div class="flex1 lborder indicators-content">
             <div hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
                         items="[[item.applied_indicators]]"
@@ -393,10 +402,6 @@
         },
         _deleteIndicator: function() {
           // -no bk
-        },
-
-        _getIndicatorsHeaderClass: function(thereAreIndicators) {
-          return thereAreIndicators ? 'indicator-header-container' : '';
         }
 
       });
