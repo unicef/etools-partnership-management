@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="behaviors/country-programmes-data.html">
 <link rel="import" href="behaviors/dropdowns-pmp-data.html">
@@ -24,6 +25,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.CountryProgrammesData,
         EtoolsPmpApp.Behaviors.DropdownsPmpData,
@@ -52,6 +54,15 @@
       ready: function() {
         // get PMP static data
         this._getStaticData(this.pmpStaticDataEndpointsNames);
+        this._handlePrpData();
+      },
+
+      _handlePrpData: function() {
+        this._waitForEnvFlagsToLoad().then(function() {
+          if (this.showPrpReports()) {
+            this._getStaticData(this.prpStaticDataEndpointsNames);
+          }
+        }.bind(this));
       },
 
       _getStaticData: function(endpointsNames) {
@@ -68,10 +79,6 @@
         }).catch(function(error) {
           errorHandler.bind(self, error)();
         });
-      },
-
-      _needToFirePrpReq: function(resp) {
-        return resp && resp.active_flags instanceof Array && resp.active_flags.indexOf('prp_mode_off') === -1;
       },
 
       _errorHandler: function(err) {
