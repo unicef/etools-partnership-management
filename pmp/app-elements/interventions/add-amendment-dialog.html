@@ -2,6 +2,7 @@
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../common-elements/etools-single-file.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
@@ -27,10 +28,8 @@
                    hidden$="[[datePickerOpen]]"
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
-                   disable-confirm-btn$="[[disableConfirmBtn]]"
                    on-confirm-btn-clicked="_validateAndSaveAmendment">
 
-            <!-- disabled: [[disableConfirmBtn]] -->
           <div class="row-h flex-c">
             <div class="col col-4">
               <!-- Amendment Type -->
@@ -38,7 +37,7 @@
                                           label="Amendment Types"
                                           placeholder="&#8212;"
                                           options="[[filteredAmendmentTypes]]"
-                                          selected-values="{{item.types}}"
+                                          selected-values="{{newAmendment.types}}"
                                           dynamic-align
                                           required
                                           hide-search
@@ -50,18 +49,18 @@
             <div class="col col-3">
               <required-and-not-future-date-validator validator-name="signedDate_validator"
                                                       required
-                                                      error-message="{{item.errorMessage}}">
+                                                      error-message="{{newAmendment.errorMessage}}">
               </required-and-not-future-date-validator>
               <!-- Signed Date -->
               <etools-date-input id="signedDate"
                                 label="Signed date"
-                                value="{{item.signed_date}}"
+                                value="{{newAmendment.signed_date}}"
                                 required
                                 open="{{datePickerOpen}}"
                                 validator="signedDate_validator"
                                 error-message="Please select signed date"
                                 auto-validate
-                                error-message$="[[item.errorMessage]]"
+                                error-message$="[[newAmendment.errorMessage]]"
                                 no-init show-clear-btn>
               </etools-date-input>
             </div>
@@ -69,24 +68,28 @@
               <!-- Signed Agreement -->
               <etools-single-file id="fileUpload"
                                   label="Signed Agreement"
-                                  internal-file=[[item.signed_amendment_file]]
-                                  file={{item.signed_amendment}}
+                                  internal-file=[[newAmendment.signed_amendment_file]]
+                                  file={{newAmendment.signed_amendment}}
                                   accept=".doc,.docx,.pdf,.jpg,.png"
                                   error-message="Attachment required"
                                   required
                                   auto-validate></etools-single-file>
             </div>
           </div>
-          <div class="row-h flex-c" hidden$="[[!item.types]]">
+          <div class="row-h flex-c" hidden$="[[!newAmendment.types]]">
             <span class="type-warning">
-              [[_getSelectedAmendmentTypeWarning(item.types, item.types.length)]]
+              [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
             </span>
           </div>
-          <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length)]]">
+          <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
             <paper-input id="other"
                         placeholder="&#8212;"
                         label="Other"
-                        value="{{item.other_description}}">
+                        invalid
+                        required
+                        auto-validate
+                        error-message="This is required"
+                        value="{{newAmendment.other_description}}">
             </paper-input>
           </div>
     </etools-dialog>
@@ -126,7 +129,7 @@
         opened: {
           type: Boolean,
           notify: true,
-          observer: '_resetAmendmentValidations'
+          observer: '_resetFields'
         },
         interventionDocumentType: {
           type: String
@@ -135,7 +138,7 @@
           type: Object,
           statePath: 'interventionAmendmentTypes'
         },
-        itemDefaultState: {
+        newAmendmentModel: {
           type: Object,
           value: {
             'types': [],
@@ -146,22 +149,26 @@
             'amendment_number': null
           }
         },
-        item: {
+        newAmendment: {
           type: Object
         },
         filteredAmendmentTypes: Object,
       },
 
       observers: [
-        '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)',
-        '_disableConfirmBtn(item.types.length, item.signed_date, item.signed_amendment, item.other_description)'
+        '_filterAmendmentTypes(amendmentTypes, interventionDocumentType)'
       ],
+
       ready: function() {
-        this.resetItem();
+        this.resetAmendment();
       },
-      resetItem: function() {
-        this.set('item', JSON.parse(JSON.stringify(this.itemDefaultState)));
+
+      resetAmendment: function() {
+        // this is to trigger change detection on etools-single-file
+        this.set('newAmendment.signed_amendment_file', null);
+        this.set('newAmendment', JSON.parse(JSON.stringify(this.newAmendmentModel)));
       },
+
       startSpinner: function() {
         this.$.addAmendmentDialog.startSpinner();
       },
@@ -170,57 +177,51 @@
         this.$.addAmendmentDialog.stopSpinner();
       },
 
-      _disableConfirmBtn: function(typesLength, signedDate, file) {
-        let otherFieldIsOk = true;
-        if (this._showOtherInput(this.item.types, this.item.types.length)) {
-          otherFieldIsOk = this.item.other_description && this.item.other_description.length;
-        }
-
-        let signedDateEl = this.$$('#signedDate');
-        let signedDateIsOk = signedDateEl && signedDateEl.validate();
-
-        this.set('disableConfirmBtn', !typesLength || !signedDate || !file || !otherFieldIsOk || !signedDateIsOk);
-      },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
         if (interventionDocumentType === 'SSFA') {
-          this.filteredAmendmentTypes = this.amendmentTypes.filter(function(item) {
-            return ['Dates', 'Other'].indexOf(item.label) > -1;
+          this.filteredAmendmentTypes = this.amendmentTypes.filter(function(newAmendment) {
+            return ['Dates', 'Other'].indexOf(newAmendment.label) > -1;
           });
         } else {
           this.filteredAmendmentTypes = JSON.parse(JSON.stringify(this.amendmentTypes));
         }
       },
 
-      _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength) {
-        if (!selectedAmdTypes || !selectedAmdTypes.length) {
+      _showOtherInput: function() {
+        let amdTypes = this.newAmendment.types;
+        if (!amdTypes || !amdTypes.length) {
           return false;
         }
-        if (selectedAmdTypes.indexOf('other') > -1) {
+        if (amdTypes.indexOf('other') > -1) {
           return true;
         }
-        this._clearOtherInput();
         return false;
       },
 
-      _clearOtherInput: function() {
-        var otherInput = this.$$('#other');
-        if (otherInput) {
-          otherInput.value = null;
-        }
+      isValidAmendment: function() {
+        let isValid1 = this._validateAmendmentTypes();
+        let isValid2 = this._validateOtherInput();
+        let isValid3 = this._validateSignedDate(this.newAmendment);
+        let isValid4 = this._validateFileUpload(this.newAmendment);
+
+        return (isValid1 && isValid2 && isValid3 && isValid4);
       },
 
-      isValidAmendment: function() {
-        var isValid1 = this._validateAmendmentTypes();
-        var isValid2 = this._validateSignedDate(this.item);
-        var isValid3 = this._validateFileUpload(this.item);
-
-        return (isValid1 && isValid2 && isValid3);
+      _validateOtherInput: function() {
+        let valid = true;
+        if (this._showOtherInput()) {
+          let otherEl = this.$$('#other');
+          if (otherEl && !otherEl.validate()) {
+            valid = false;
+          }
+        }
+        return valid;
       },
 
       _validateAmendmentTypes: function() {
-        var valid = true;
-        var typeEl = this.$$('#amendmentTypes');
+        let valid = true;
+        let typeEl = this.$$('#amendmentTypes');
         if (typeEl && !typeEl.validate()) {
           valid = false;
         }
@@ -228,8 +229,8 @@
       },
 
       _validateFileUpload: function(amendment) {
-        var valid = true;
-        var fileUplodEl = this.$$('#fileUpload');
+        let valid = true;
+        let fileUplodEl = this.$$('#fileUpload');
         if (fileUplodEl) {
           valid = !!amendment.signed_amendment;
           fileUplodEl.invalid = !valid;
@@ -238,7 +239,7 @@
       },
 
       _validateSignedDate: function(amendment) {
-        var isValid = true;
+        let isValid = true;
 
         let signedDateEl = this.$$('#signedDate');
         if (signedDateEl) {
@@ -269,18 +270,27 @@
         return !amendment.types;
       },
 
+      _resetFields: function() {
+        this.resetAmendment();
+        this._resetAmendmentValidations();
+      },
+
       _resetAmendmentValidations: function() {
-        var typeEl = this.$$('#amendmentTypes');
+        let typeEl = this.$$('#amendmentTypes');
         if (typeEl) {
           typeEl.invalid = false;
         }
-        var signedDateEl = this.$$('#signedDate');
+        let signedDateEl = this.$$('#signedDate');
         if (signedDateEl) {
           signedDateEl.invalid = false;
         }
-        var fileUpload = this.$$('#fileUpload');
+        let fileUpload = this.$$('#fileUpload');
         if (fileUpload) {
           fileUpload.invalid = false;
+        }
+        let otherField = this.$$('#other');
+        if (otherField) {
+          otherField.invalid = false;
         }
       },
 
@@ -292,7 +302,7 @@
         if (!types || !types.length) {
           return;
         }
-        var message = 'Please make sure you update ';
+        let message = 'Please make sure you update ';
         types.forEach(function(amdType) {
           switch (amdType) {
             case 'dates':
@@ -316,7 +326,6 @@
 
       _validateAndSaveAmendment: function() {
         if (!this.isValidAmendment()) {
-          this.showErrorAsToastMsg('Amendment not valid', this.toastEventSource);
           return;
         }
         this.startSpinner();
@@ -325,7 +334,7 @@
         let options = {
           method: 'POST',
           endpoint: this.getEndpoint(this.endpointName, {intervId: this.interventionId}),
-          body: this.item,
+          body: this.newAmendment,
           multiPart: true,
           prepareMultipartData: true
         };
@@ -341,7 +350,7 @@
       _handleResponse: function(reponse) {
         this.fire('amendment-added', reponse);
         this.stopSpinner();
-        this.resetItem();
+        this.resetAmendment();
         this.set('opened', false);
       },
 
