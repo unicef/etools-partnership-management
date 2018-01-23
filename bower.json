@@ -42,8 +42,8 @@
     "etools-behaviors": "1.0.3",
     "etools-content-panel": "1.0.6",
     "etools-content-toggle-button": "1.0.1",
-    "etools-currency-amount-input": "1.0.10",
-    "etools-data-table": "1.0.12",
+    "etools-currency-amount-input": "1.0.11",
+    "etools-data-table": "bd5b2d661c32b",
     "etools-datepicker": "1.0.14",
     "etools-dexiejs": "1.0.5",
     "etools-dialog": "1.2.8",
@@ -67,6 +67,8 @@
     "neon-animation": "1 - 2",
     "moment-element": "^2.0.0",
     "iron-test-helpers": "^2.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "paper-checkbox": "2.0.0",
+    "paper-radio-button": "2.0.0"
   }
 }

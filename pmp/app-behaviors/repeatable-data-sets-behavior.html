@@ -91,6 +91,7 @@
     },
 
     _openDeleteConfirmation: function(event) {
+      event.stopPropagation();
       if (!this.editMode) {
         return;
       }
