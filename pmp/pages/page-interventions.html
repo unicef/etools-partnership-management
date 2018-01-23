@@ -430,6 +430,8 @@
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
+        this.set('intervention.review_and_sign_amendment_open', intervention.in_amendment);
+
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
