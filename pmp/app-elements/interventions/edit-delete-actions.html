@@ -1,54 +1,65 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<!--
+TODO: edit-delete-actions element should be moved to common-elements folder... we can use it anywhere
+-->
 
 <dom-module id="edit-delete-actions">
-    <template strip-whitespace>
-      <style>
-        [hidden] {
-          display: none !important;
-        }
-        :host {
-          position:absolute;
-          top:0;
-          right: 0;
+  <template strip-whitespace>
+    <style>
+      [hidden] {
+        display: none !important;
+      }
 
-          @apply --edit-delete-actions;
-        }
-        paper-icon-button {
-          color:#6f6f70
-        }
-      </style>
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        background-color: var(--list-second-bg-color);
+        position: absolute;
+        top: 1px;
+        right: 0;
+        bottom: 1px;
+
+        @apply --edit-delete-actions;
+      }
+
+      paper-icon-button {
+        color: var(--dark-icon-color);
+      }
+    </style>
     <paper-icon-button hidden$="[[!showEdit]]" icon="create" on-tap="_onEdit"></paper-icon-button>
     <paper-icon-button hidden$="[[!showDelete]]" icon="delete" on-tap="_onDelete"></paper-icon-button>
-    </template>
-    <script>
-        (function() {
-          'use strict';
+  </template>
+  <script>
+    (function() {
+      'use strict';
 
-          Polymer({
-            is: 'edit-delete-actions',
-            properties: {
-              itemDetails: {
-                type: Object
-              },
-              showEdit: {
-                type: Boolean,
-                value: true
-              },
-              showDelete: {
-                tye: Boolean,
-                value: true
-              }
-            },
-            _onEdit: function() {
-              this.fire('edit');
-            },
-            _onDelete: function() {
-              this.fire('delete');
-            }
+      Polymer({
+        is: 'edit-delete-actions',
+        properties: {
+          itemDetails: {
+            type: Object
+          },
+          showEdit: {
+            type: Boolean,
+            value: true
+          },
+          showDelete: {
+            tye: Boolean,
+            value: true
+          }
+        },
+        _onEdit: function() {
+          this.fire('edit');
+        },
+        _onDelete: function() {
+          this.fire('delete');
+        }
 
-          });
-        })();
-    </script>
+      });
+    })();
+  </script>
 </dom-module>

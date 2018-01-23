@@ -11,15 +11,17 @@
   <template strip-whitespace>
     <style include="grid-layout-styles data-table-styles">
       :host {
+        display: block;
          /* '!important' is for IE */
         --list-bg-color: #eeeeee !important;
         --list-second-bg-color: #dfdfdf !important;
         --list-icon-color: white !important;
         --edit-delete-actions: {
           background-color: #dfdfdf !important;
+          right: 16px;
         };
         --list-row-wrapper: {
-          padding: 0px 0px !important;
+          padding: 0 24px 0 0 !important;
         };
 
         --list-row-collapse-wrapper: {
@@ -29,7 +31,12 @@
         };
 
         --icon-wrapper: {
-          padding: 0px 0px !important;
+          @apply --layout-vertical;
+          @apply --layout-center-justified;
+          @apply --layout-self-stretch;
+          min-height: 48px;
+          height: auto;
+          padding: 0 !important;
           margin-right: 16px !important;
           background-color: var(--collapse-icon-bg-color, var(--primary-color));
         };
@@ -64,8 +71,6 @@
 
     <etools-data-table-row style="position:relative">
       <div slot="row-data">
-        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[showDelete]]"></edit-delete-actions>
-
         <div class="col-8">
             [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
         </div>
@@ -75,6 +80,7 @@
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
+        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[showDelete]]"></edit-delete-actions>
       </div>
 
       <div slot="row-data-details">

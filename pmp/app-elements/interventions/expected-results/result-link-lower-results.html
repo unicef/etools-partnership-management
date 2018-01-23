@@ -32,21 +32,16 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         --list-bg-color: #eeeeee;
+        /* TODO: clean this CSS */
         --list-row-no-collapse: {
-          padding: 0px 0px !important;
+          /*padding: 0px 0px !important;*/
           background-color: var(--list-second-bg-color);
         };
-        --list-row-wrapper: {
-          padding 0px 0px;
-        };
+        /*--list-row-wrapper: {*/
+          /*padding 0px 0px;*/
+        /*};*/
         --edit-delete-actions: {
           background-color: var(--list-second-bg-color);
-        };
-      }
-
-      etools-data-table-header {
-        --data-table-header: {
-          padding: 0px 0px;
         };
       }
 
@@ -94,27 +89,39 @@
       }
 
       .add-indicator-btn {
-        padding-left: 32px;
+        padding-left: 16px;
+        width: 100%;
       }
+
       etools-data-table-column[performanceIndicatorCol] {
         padding-left: 24px;
       }
+
       .rborder {
         border-right: 1px solid var(--list-divider-color);
       }
+
       .lborder {
         border-left: 1px solid var(--list-divider-color);
       }
+
       etools-data-table-row {
-        border-bottom: 1px solid var(--list-divider-color);
+        border-bottom: none;
       }
+
+      etools-data-table-row + etools-data-table-row {
+        border-top: 1px solid var(--list-divider-color); /* TODO: this might not be needed */
+      }
+
       .padd-top-bott {
         padding-top: 10px;
         padding-bottom: 10px;
       }
+
       paper-icon-button {
         color: #6f6f70;
       }
+
       .horizontal-layout {
         @apply --layout-horizontal;
         @apply --layout-center;
@@ -122,11 +129,13 @@
         min-height: 56px;
         border-bottom: 1px solid var(--list-divider-color);
       }
-      .headerContainer {
-        min-height: 56px;
+
+      .header-container {
+        height: 56px;
         @apply --layout-horizontal;
         @apply --layout-center;
       }
+
       .header-text {
         font-size: 12px;
         color: var(--list-secondary-text-color, #757575);
@@ -136,30 +145,60 @@
         -ms-user-select: none;
         user-select: none;
       }
+
       .flex1 {
-        flex:1;
+        flex: 1;
       }
+
       .border-b {
         border-bottom: 1px solid var(--list-divider-color);
       }
+
       edit-delete-actions {
-        visibility:hidden;
+        visibility: hidden;
       }
-      div#resultStatement:hover edit-delete-actions{
+
+      div#resultStatement:hover edit-delete-actions {
         visibility: visible;
       }
+
       .padd-right {
         padding-right: 10px;
       }
+
       div {
         box-sizing: border-box;
+      }
+
+      .header-container,
+      .lower-result-row {
+        padding: 0 24px;
+      }
+
+      applied-indicator {
+        margin-right: -24px;
+      }
+
+      .resultStatement {
+        @apply --layout-horizontal;
+      }
+      .indicators-content {
+        @apply --layout-vertical;
+      }
+      .resultStatement,
+      .indicators-content {
+        @apply --layout-center;
+        @apply --layout-self-stretch;
+      }
+      .w100 {
+        width: 100%;
       }
 
     </style>
 
     <div hidden$="[[!_emptyList(dataItems.length)]]">
       <etools-data-table-header no-title no-collapse>
-        <etools-data-table-column class="col-12"> PD Output or SSFA Expected Result</etools-data-table-column>
+        <etools-data-table-column class="col-12">PD Output or SSFA Expected Result</etools-data-table-column>
       </etools-data-table-header>
     </div>
 
@@ -170,42 +209,46 @@
         <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
         <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
       </etools-data-table-header> -->
-      <div class="headerContainer header-text border-b">
-          <div class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</div>
-          <div style="min-width:40px"></div>
-          <div class="headerContainer flex1">
-              <div class="col-8"> Performance Indicator</div>
-              <div class="col-2 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</div>
-              <div class="col-2 right-align" hidden$="[[!thereAreIndicators]]"> Target</div>
-          </div>
-
+      <div class="header-container header-text border-b">
+        <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
+        <div class="col flex1">
+          <div class="col col-8">Performance Indicator</div>
+          <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
+          <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Target</div>
         </div>
+      </div>
+
       <template is="dom-repeat" items="{{dataItems}}">
-          <div class="horizontal-layout">
-            <div id="resultStatement" class$="[[getColumnLength('result', thereAreIndicators, 's')]] padd-top-bott padd-right" style="position:relative">
-              <edit-delete-actions  hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult" on-delete="_openDeleteConfirmation"></edit-delete-actions>
-              <span>[[item.name]]</span>
+        <div class="horizontal-layout lower-result-row">
+          <div id="resultStatement"
+               class$="[[getColumnLength('result', thereAreIndicators, 's')]] padd-top-bott padd-right"
+               style="position:relative">
+            <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
+                                 on-delete="_openDeleteConfirmation"></edit-delete-actions>
+            <span>[[item.name]]</span>
+          </div>
+          <div class="flex1 lborder indicators-content">
+            <div hidden="[[!item.applied_indicators.length]]" class="w100">
+              <template is="dom-repeat"
+                        items="[[item.applied_indicators]]"
+                        as="indicator" index-as="indicatorIndex">
+                <applied-indicator data-ind-index$="[[indicatorIndex]]"
+                                   data-result-index$="[[index]]" on-edit-indicator="_editIndicator"
+                                   on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"
+                                   editMode="[[editMode]]"></applied-indicator>
+              </template>
             </div>
-            <div class="flex1 lborder">
-              <div hidden="[[!item.applied_indicators.length]]">
-                <template is="dom-repeat"
-                          items="[[item.applied_indicators]]"
-                          as="indicator" index-as="indicatorIndex">
-                  <applied-indicator  data-ind-index$="[[indicatorIndex]]"
-                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator" on-delete-indicator="_deleteIndicator" indicator="[[indicator]]" editMode="[[editMode]]"></applied-indicator>
-                </template>
-              </div>
-              <div class="add-indicator-btn padd-top-bott">
-                  <paper-icon-button icon="add-box"
-                    title="Add Indicator"
-                    on-tap="_addNewIndicator"
-                    data-ll-result-id$="[[item.id]]"
-                    disabled$="[[!editMode]]"
-                    hidden$="[[!editMode]]">
-                  </paper-icon-button>
-                </div>
+            <div class="add-indicator-btn padd-top-bott">
+              <paper-icon-button icon="add-box"
+                                 title="Add Indicator"
+                                 on-tap="_addNewIndicator"
+                                 data-ll-result-id$="[[item.id]]"
+                                 disabled$="[[!editMode]]"
+                                 hidden$="[[!editMode]]">
+              </paper-icon-button>
             </div>
           </div>
+        </div>
       </template>
     </div>
 
@@ -213,16 +256,16 @@
       <div slot="row-data">
         <div class="[[getColumnLength('result', thereAreIndicators)]]">
           <paper-icon-button icon="add-box"
-                        on-tap="_addNewLowerResult"
-                        title="Add PD or SSFA OUTPUT"
-                        disabled$="[[!editMode]]"
-                        hidden$="[[!editMode]]">
+                             on-tap="_addNewLowerResult"
+                             title="Add PD or SSFA OUTPUT"
+                             disabled$="[[!editMode]]"
+                             hidden$="[[!editMode]]">
             Add PD output or SSFA expected result
           </paper-icon-button>
-       </div>
-       <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
+        </div>
+        <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
 
-       </div>
+        </div>
       </div>
     </etools-data-table-row>
 
@@ -271,7 +314,7 @@
             return;
           }
           let foundSomeIndicators = false;
-          for(let i in this.dataItems) {
+          for (let i in this.dataItems) {
             if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
               foundSomeIndicators = true;
               break;
@@ -295,12 +338,12 @@
           //       return 'col-6';
           //   }
           // }
-          switch(column) {
+          switch (column) {
             case 'result':
               return thereAreIndicators ? 'col-4' : 'col-8';
             case 'indicator':
               return thereAreIndicators ? 'col-8' : 'col-4';
-          };
+          }
 
         },
         _updateInterventionLocAndClusters: function() {
