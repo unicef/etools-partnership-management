@@ -131,7 +131,7 @@
       }
 
       .header-container {
-        min-height: 56px;
+        height: 56px;
         @apply --layout-horizontal;
         @apply --layout-center;
       }
@@ -190,6 +190,9 @@
         @apply --layout-center;
         @apply --layout-self-stretch;
       }
+      .w100 {
+        width: 100%;
+      }
 
     </style>
 
@@ -225,7 +228,7 @@
             <span>[[item.name]]</span>
           </div>
           <div class="flex1 lborder indicators-content">
-            <div hidden="[[!item.applied_indicators.length]]">
+            <div hidden="[[!item.applied_indicators.length]]" class="w100">
               <template is="dom-repeat"
                         items="[[item.applied_indicators]]"
                         as="indicator" index-as="indicatorIndex">
