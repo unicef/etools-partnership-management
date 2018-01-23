@@ -4,12 +4,13 @@
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../edit-delete-actions.html">
 
 
 <dom-module id="applied-indicator">
   <template strip-whitespace>
-    <style include="grid-layout-styles data-table-styles">
+    <style include="grid-layout-styles data-table-styles shared-styles">
       :host {
         display: block;
          /* '!important' is for IE */
@@ -31,8 +32,8 @@
         };
 
         --icon-wrapper: {
-          @apply --layout-vertical;
-          @apply --layout-center-justified;
+          @apply --layout-horizontal;
+          @apply --layout-center;
           @apply --layout-self-stretch;
           min-height: 48px;
           height: auto;
@@ -42,24 +43,13 @@
         };
       }
 
-      .header-text {
-        font-size: 12px;
-        color: var(--list-secondary-text-color, #757575);
-        font-weight: bold;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      .stretch {
-        width: 100%;
-      }
       .divider {
         height: 24px;
       }
       .padd-left {
         padding-left: 16px;
       }
+
       edit-delete-actions {
         visibility:hidden;
       }
@@ -84,7 +74,7 @@
       </div>
 
       <div slot="row-data-details">
-        <div class="layout-horizontal stretch">
+        <div class="layout-horizontal w100">
           <div class="col-4">
             <div class="header-text">Section / Cluster</div>
             <div>[[getSectionName(indicator.section, sections)]] / [[getClusterName(indicator.cluster_name)]]</div>

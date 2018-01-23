@@ -1,16 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../../styles/buttons-styles.html">
-
-<link rel="import" href="../../../app-elements/common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
@@ -20,7 +15,7 @@
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles data-table-styles">
+        include="grid-layout-styles shared-styles data-table-styles">
       [hidden] {
         display: none !important;
       }
@@ -34,83 +29,19 @@
         --list-bg-color: #eeeeee;
         /* TODO: clean this CSS */
         --list-row-no-collapse: {
-          /*padding: 0px 0px !important;*/
           background-color: var(--list-second-bg-color);
         };
-        /*--list-row-wrapper: {*/
-          /*padding 0px 0px;*/
-        /*};*/
         --edit-delete-actions: {
           background-color: var(--list-second-bg-color);
         };
       }
 
-      .indicator-col {
-        margin-right: 10px;
-        width: 100px;
-      }
-
-      .indicator-col .heading {
-        display: inline-block;
-        width: 100%;
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
-        margin-bottom: 10px;
-      }
-
-      .indicator-col .indicator-baseline,
-      .indicator-col .indicator-target {
-        padding: 10px;
-        width: 100%;
-        display: inline-block;
-        box-sizing: border-box;
-        min-height: 41px;
-      }
-
-      .indicator-col .content {
-        padding: 10px 0;
-        display: block;
-      }
-
-      .indicator-nr {
-        @apply --layout-horizontal;
-        padding-top: 31px;
-      }
-
-      .indicator-nr strong {
-        @apply --layout-self-center;
-        min-width: 30px;
-      }
-
-      .edit-indicator {
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
-        width: 36px;
-        height: 36px;
-        margin-right: 20px;
-      }
-
-      .add-indicator-btn {
+      .padd-left {
         padding-left: 16px;
-        width: 100%;
-      }
-
-      etools-data-table-column[performanceIndicatorCol] {
-        padding-left: 24px;
-      }
-
-      .rborder {
-        border-right: 1px solid var(--list-divider-color);
       }
 
       .lborder {
         border-left: 1px solid var(--list-divider-color);
-      }
-
-      etools-data-table-row {
-        border-bottom: none;
-      }
-
-      etools-data-table-row + etools-data-table-row {
-        border-top: 1px solid var(--list-divider-color); /* TODO: this might not be needed */
       }
 
       .padd-top-bott {
@@ -119,7 +50,7 @@
       }
 
       paper-icon-button {
-        color: #6f6f70;
+        color: var(--dark-icon-color, #6f6f70);
       }
 
       .horizontal-layout {
@@ -134,16 +65,6 @@
         height: 56px;
         @apply --layout-horizontal;
         @apply --layout-center;
-      }
-
-      .header-text {
-        font-size: 12px;
-        color: var(--list-secondary-text-color, #757575);
-        font-weight: bold;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
       }
 
       .flex1 {
@@ -182,16 +103,11 @@
       .resultStatement {
         @apply --layout-horizontal;
       }
-      .indicators-content {
-        @apply --layout-vertical;
-      }
+
       .resultStatement,
-      .indicators-content {
+      .indicators-container {
         @apply --layout-center;
         @apply --layout-self-stretch;
-      }
-      .w100 {
-        width: 100%;
       }
 
     </style>
@@ -203,12 +119,6 @@
     </div>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
-      <!-- <etools-data-table-header no-title no-collapse>
-        <etools-data-table-column class$="[[getColumnLength('result', thereAreIndicators)]]"> PD/SSFA Result Statement</etools-data-table-column>
-        <etools-data-table-column performanceIndicatorCol class$="[[getColumnLength('indicator', thereAreIndicators)]]"> Performance Indicator</etools-data-table-column>
-        <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Baseline</etools-data-table-column>
-        <etools-data-table-column class="col-1 right-align" hidden$="[[!thereAreIndicators]]"> Target</etools-data-table-column>
-      </etools-data-table-header> -->
       <div class="header-container header-text border-b">
         <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
         <div class="col flex1">
@@ -221,14 +131,14 @@
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="horizontal-layout lower-result-row">
           <div id="resultStatement"
-               class$="[[getColumnLength('result', thereAreIndicators, 's')]] padd-top-bott padd-right"
+               class$="[[getColumnLength('result', thereAreIndicators)]] padd-top-bott padd-right"
                style="position:relative">
             <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
                                  on-delete="_openDeleteConfirmation"></edit-delete-actions>
             <span>[[item.name]]</span>
           </div>
-          <div class="flex1 lborder indicators-content">
-            <div hidden="[[!item.applied_indicators.length]]" class="w100">
+          <div class="flex1 lborder indicators-container">
+            <div hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
                         items="[[item.applied_indicators]]"
                         as="indicator" index-as="indicatorIndex">
@@ -238,7 +148,7 @@
                                    editMode="[[editMode]]"></applied-indicator>
               </template>
             </div>
-            <div class="add-indicator-btn padd-top-bott">
+            <div class="padd-left padd-top-bott">
               <paper-icon-button icon="add-box"
                                  title="Add Indicator"
                                  on-tap="_addNewIndicator"
@@ -323,28 +233,12 @@
           this.thereAreIndicators = foundSomeIndicators;
         },
         getColumnLength: function(column, thereAreIndicators) {
-          // if (!thereAreIndicators) {
-          //   switch(column) {
-          //     case 'result':
-          //       return 'col-8';
-          //     case 'indicator':
-          //       return 'col-4';
-          //   }
-          // } else {
-          //   switch(column) {
-          //     case 'result':
-          //       return 'col-4';
-          //     case 'indicator':
-          //       return 'col-6';
-          //   }
-          // }
           switch (column) {
             case 'result':
               return thereAreIndicators ? 'col-4' : 'col-8';
             case 'indicator':
               return thereAreIndicators ? 'col-8' : 'col-4';
           }
-
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
