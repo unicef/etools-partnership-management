@@ -11,6 +11,7 @@
   <template strip-whitespace>
     <style include="grid-layout-styles data-table-styles">
       :host {
+        display: block;
          /* '!important' is for IE */
         --list-bg-color: #eeeeee !important;
         --list-second-bg-color: #dfdfdf !important;
@@ -19,7 +20,7 @@
           background-color: #dfdfdf !important;
         };
         --list-row-wrapper: {
-          padding: 0px 0px !important;
+          padding: 0 24px 0 0 !important;
         };
 
         --list-row-collapse-wrapper: {
