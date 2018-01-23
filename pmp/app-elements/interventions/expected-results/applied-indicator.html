@@ -25,6 +25,8 @@
 
         --list-row-collapse-wrapper: {
           padding: 16px 24px 16px 24px !important;
+          max-height: 220px;
+          overflow-y: auto;
         };
 
         --icon-wrapper: {
@@ -106,17 +108,15 @@
         is: 'applied-indicator',
         properties: {
           indicator: {
-            type: Object,
-            observer: '_indicatorChanged'
+            type: Object
           },
           locations: {
             type: Array,
-            statePath: 'locations',
-            observer: '_setLocationNames'
+            statePath: 'locations'
           },
           locationNames: {
             type: Array,
-            value: ['-']
+            value: ['—']
           },
           sections: {
             type: Array,
@@ -128,7 +128,7 @@
           },
           disaggregationNames: {
             type: Array,
-            value: ['-']
+            value: ['—']
           },
           showDelete: {
             type: Boolean,
@@ -142,21 +142,26 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
         ],
         observers: [
-          'setDisaggregationNames(disaggregations, indicator)'
+          'setIndicatorDetails(indicator, disaggregations, locations)'
         ],
         listeners: {
           'edit': '_editIndicator',
           'delete': '_deleteIndicator'
         },
+        setIndicatorDetails: function(indicator) {
+          this._updateCollapsableIconBg(indicator);
+          this._setLocationNames();
+          this._setDisaggregationNames();
+        },
         _editIndicator: function(e) {
           e.stopPropagation();
-          this.fire('edit-indicator', e.detail);
+          this.fire('edit-indicator');
         },
         _deleteIndicator: function(e) {
           e.stopPropagation();
-          this.fire('delete-indicator', e.detail);
+          this.fire('delete-indicator');
         },
-        _indicatorChanged: function(indicator) {
+        _updateCollapsableIconBg: function(indicator) {
           if (indicator.cluster_indicator_id) {
             this.customStyle['--collapse-icon-bg-color'] = 'green';
           } else {
@@ -179,25 +184,25 @@
         },
         getSectionName: function(sectionId) {
           if (!sectionId) {
-            return '-';
+            return '—';
           }
           let section = this.sections.find(function(s) {
             return parseInt(s.id) === parseInt(sectionId);
           });
           if (!section) {
-            return '-';
+            return '—';
           }
           return section.name;
         },
         getClusterName: function(clusterName) {
           if (!clusterName) {
-            return '-';
+            return '—';
           }
           return clusterName;
         },
-        setDisaggregationNames: function() {
-          if (!this.indicator.disaggregation) {
-            this.disaggregationNames = ['-'];
+        _setDisaggregationNames: function() {
+          if (!this.indicator.disaggregation || !this.indicator.disaggregation.length) {
+            this.disaggregationNames = ['—'];
             return;
           }
           let disaggregs = this.disaggregations.filter(function(d) {
@@ -210,7 +215,7 @@
         },
         _getDisaggregGroups: function(disaggregGroups) {
           if (!disaggregGroups || !disaggregGroups.length) {
-            return '-';
+            return '—';
           }
           let groups = disaggregGroups.reduce(function(flattened, current) {
             return flattened + ', ' + current.value;
@@ -232,12 +237,12 @@
         },
         _getIndicatorTitle: function(indicator) {
           if (!indicator) {
-            return '-';
+            return '—';
           }
           if (indicator.cluster_indicator_id) {
             return indicator.cluster_indicator_title;
           } else {
-            return indicator.indicator ? indicator.indicator.title : '-';
+            return indicator.indicator ? indicator.indicator.title : '—';
           }
 
         },
@@ -246,7 +251,7 @@
           if (value) {
             return value;
           } else {
-            return '-';
+            return '—';
           }
         },
       });

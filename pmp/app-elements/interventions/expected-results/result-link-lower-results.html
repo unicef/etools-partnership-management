@@ -32,11 +32,13 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         --list-bg-color: #eeeeee;
-        /*--list-row-no-collapse: {*/
-          /*padding: 0 !important;*/
-        /*};*/
+        /* TODO: clean this CSS */
+        --list-row-no-collapse: {
+          /*padding: 0px 0px !important;*/
+          background-color: var(--list-second-bg-color);
+        };
         /*--list-row-wrapper: {*/
-          /*padding: 0;*/
+          /*padding 0px 0px;*/
         /*};*/
         --edit-delete-actions: {
           background-color: var(--list-second-bg-color);
@@ -330,7 +332,6 @@
             case 'indicator':
               return thereAreIndicators ? 'col-8' : 'col-4';
           }
-          ;
 
         },
         _updateInterventionLocAndClusters: function() {
