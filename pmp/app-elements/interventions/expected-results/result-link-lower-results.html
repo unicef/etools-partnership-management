@@ -147,6 +147,12 @@
       div#resultStatement:hover edit-delete-actions{
         visibility: visible;
       }
+      .padd-right {
+        padding-right: 10px;
+      }
+      div {
+        box-sizing: border-box;
+      }
 
     </style>
 
@@ -175,11 +181,11 @@
         </div>
       <template is="dom-repeat" items="{{dataItems}}">
           <div class="horizontal-layout">
-            <div id="resultStatement" class="col-4 padd-top-bott" style="position:relative">
+            <div id="resultStatement" class$="[[getColumnLength('result', thereAreIndicators, 's')]] padd-top-bott padd-right" style="position:relative">
               <edit-delete-actions  hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult" on-delete="_openDeleteConfirmation"></edit-delete-actions>
               <span>[[item.name]]</span>
             </div>
-            <div class="col-8 lborder">
+            <div class="flex1 lborder">
               <div hidden="[[!item.applied_indicators.length]]">
                 <template is="dom-repeat"
                           items="[[item.applied_indicators]]"
@@ -204,7 +210,7 @@
 
     <etools-data-table-row no-collapse>
       <div slot="row-data">
-        <div class$="[[getColumnLength('result', thereAreIndicators)]]">
+        <div class="[[getColumnLength('result', thereAreIndicators)]]">
           <paper-icon-button icon="add-box"
                         on-tap="_addNewLowerResult"
                         title="Add PD or SSFA OUTPUT"
@@ -295,7 +301,8 @@
               return thereAreIndicators ? 'col-4' : 'col-8';
             case 'indicator':
               return thereAreIndicators ? 'col-8' : 'col-4';
-          }
+          };
+
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
