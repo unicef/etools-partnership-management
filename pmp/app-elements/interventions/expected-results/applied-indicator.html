@@ -11,23 +11,26 @@
   <template strip-whitespace>
     <style include="grid-layout-styles data-table-styles">
       :host {
+         /* '!important' is for IE */
+        --list-bg-color: #eeeeee !important;
+        --list-second-bg-color: #dfdfdf !important;
+        --list-icon-color: white !important;
         --edit-delete-actions: {
-          background-color: var(--list-second-bg-color);;
+          background-color: #dfdfdf !important;
         };
         --list-row-wrapper: {
           padding: 0px 0px !important;
         };
+
         --list-row-collapse-wrapper: {
-          padding: 16px 24px 16px 24px;
+          padding: 16px 24px 16px 24px !important;
         };
 
         --icon-wrapper: {
-          padding: 0px 0px;
-          margin-right: 16px;
-          background-color:var(--collapse-icon-bg-color, var(--primary-color));
+          padding: 0px 0px !important;
+          margin-right: 16px !important;
+          background-color: var(--collapse-icon-bg-color, var(--primary-color));
         };
-        --list-second-bg-color: #dfdfdf;
-        --list-icon-color: white;
       }
 
       .header-text {
