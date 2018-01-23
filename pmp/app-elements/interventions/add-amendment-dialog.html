@@ -18,35 +18,31 @@
 <dom-module id="add-amendment-dialog">
   <template>
     <style include="grid-layout-styles buttons-styles file-styles shared-styles">
+      .type-warning {
+        color: var(--warning-color);
+      }
 
+      paper-input#other {
+        width: 100%;
+      }
+
+      .row-h {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
     </style>
 
-    <etools-dialog keep-dialog-open
+    <etools-dialog no-padding
+                   keep-dialog-open
                    id="addAmendmentDialog"
                    opened="{{opened}}"
-                   size="lg"
+                   size="md"
                    hidden$="[[datePickerOpen]]"
                    ok-btn-text="Save"
                    dialog-title="Add Amendment"
                    on-confirm-btn-clicked="_validateAndSaveAmendment">
 
-          <div class="row-h flex-c">
-            <div class="col col-4">
-              <!-- Amendment Type -->
-              <etools-multi-selection-menu id="amendmentTypes"
-                                          label="Amendment Types"
-                                          placeholder="&#8212;"
-                                          options="[[filteredAmendmentTypes]]"
-                                          selected-values="{{newAmendment.types}}"
-                                          dynamic-align
-                                          required
-                                          hide-search
-                                          error-message="Type is required"
-                                          on-focused-changed="_onFocusChangedUpdateAutovalidate">
-              </etools-multi-selection-menu>
-
-            </div>
-            <div class="col col-3">
+            <div class="row-h flex-c">
               <required-and-not-future-date-validator validator-name="signedDate_validator"
                                                       required
                                                       error-message="{{newAmendment.errorMessage}}">
@@ -64,7 +60,37 @@
                                 no-init show-clear-btn>
               </etools-date-input>
             </div>
-            <div class="col col-5 file-container">
+            <div class="row-h flex-c">
+              <!-- Amendment Type -->
+              <etools-multi-selection-menu id="amendmentTypes"
+                                          label="Amendment Types"
+                                          placeholder="&#8212;"
+                                          options="[[filteredAmendmentTypes]]"
+                                          selected-values="{{newAmendment.types}}"
+                                          dynamic-align
+                                          required
+                                          hide-search
+                                          error-message="Type is required"
+                                          on-focused-changed="_onFocusChangedUpdateAutovalidate">
+              </etools-multi-selection-menu>
+            </div>
+            <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
+              <span class="type-warning">
+                [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
+              </span>
+            </div>
+            <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
+              <paper-input id="other"
+                          placeholder="&#8212;"
+                          label="Other"
+                          invalid
+                          required
+                          auto-validate
+                          error-message="This is required"
+                          value="{{newAmendment.other_description}}">
+              </paper-input>
+            </div>
+            <div class="row-h flex-c">
               <!-- Signed Agreement -->
               <etools-single-file id="fileUpload"
                                   label="Signed Agreement"
@@ -75,23 +101,6 @@
                                   required
                                   auto-validate></etools-single-file>
             </div>
-          </div>
-          <div class="row-h flex-c" hidden$="[[!newAmendment.types]]">
-            <span class="type-warning">
-              [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
-            </span>
-          </div>
-          <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
-            <paper-input id="other"
-                        placeholder="&#8212;"
-                        label="Other"
-                        invalid
-                        required
-                        auto-validate
-                        error-message="This is required"
-                        value="{{newAmendment.other_description}}">
-            </paper-input>
-          </div>
     </etools-dialog>
 
  </template>
