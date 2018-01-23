@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
@@ -31,11 +32,13 @@
         display: block;
         width: 100%;
         --list-row-collapse-wrapper: {
-          padding: 0px 24px 0px 24px;
+          padding: 0;
         };
-        --edit-delete-actions: {
-          background-color: var(--list-second-bg-color);
-        };
+      }
+
+      .ram-indicators-col {
+        @apply --layout-vertical;
+        position: relative;
       }
 
       .ram-indicator-name {
@@ -44,42 +47,50 @@
       }
 
       edit-delete-actions {
-        visibility:hidden;
+        visibility: hidden;
+        --edit-delete-actions: {
+          background-color: var(--list-second-bg-color);
+          height: 100%;
+        };
       }
+
       etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
         visibility: visible;
       }
-
 
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <etools-data-table-header no-title>
-        <etools-data-table-column class="col-4"> Corresponding CP Output</etools-data-table-column>
-        <etools-data-table-column class="col-8"> Corresponding CP Indicator(s)</etools-data-table-column>
+        <etools-data-table-column class="col-4">Corresponding CP Output</etools-data-table-column>
+        <etools-data-table-column class="col-8">Corresponding CP Indicator(s)</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{dataItems}}">
-          <etools-data-table-row style="position:relative">
-            <div slot="row-data">
-                <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editCpOutputAndRamIndicators" on-delete="_openDeleteConfirmation"></edit-delete-actions>
-              <div class="col-4">
-                  <span>[[item.cp_output_name]]</span>
-              </div>
-              <div class="col-8">
-                  <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
-                    <span class="ram-indicator-name">[[ramIndicatorName]]</span>
-                  </template>
-              </div>
+        <etools-data-table-row>
+          <div slot="row-data">
+            <div class="col-data col-4">
+              <span>[[item.cp_output_name]]</span>
             </div>
-            <div slot="row-data-details">
-              <result-link-lower-results data-items="{{item.ll_results}}"
-                                        edit-mode$="[[editMode]]"
-                                        expected-result-id="[[item.id]]"
-                                        cp-output-id="[[item.cp_output]]"
-                                        on-open-indicator-dialog="_openIndicatorDialog">
-              </result-link-lower-results>
+            <div class="col-data col-8 ram-indicators-col">
+              <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+                <span class="ram-indicator-name">[[ramIndicatorName]]</span>
+              </template>
+              <edit-delete-actions hidden$="[[!editMode]]"
+                                   data-args$="[[index]]"
+                                   on-edit="_editCpOutputAndRamIndicators"
+                                   on-delete="_openDeleteConfirmation">
+              </edit-delete-actions>
             </div>
-          </etools-data-table-row>
+          </div>
+          <div slot="row-data-details">
+            <result-link-lower-results data-items="{{item.ll_results}}"
+                                       edit-mode$="[[editMode]]"
+                                       expected-result-id="[[item.id]]"
+                                       cp-output-id="[[item.cp_output]]"
+                                       on-open-indicator-dialog="_openIndicatorDialog">
+            </result-link-lower-results>
+          </div>
+        </etools-data-table-row>
       </template>
     </div>
 
