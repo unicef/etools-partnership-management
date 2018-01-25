@@ -307,8 +307,10 @@
             },
             planned_visits: [],
             sections: [],
+            flagged_sections: [],
             planned_budget: {},
             flat_locations: [],
+            locations: [],
             result_links: [],
             amendments: [],
             attachments: [],
@@ -449,10 +451,7 @@
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
         }
-        if (['suspended', 'terminated'].indexOf(intervention.status) > -1) {
-          return true;
-        }
-        return false;
+        return (['suspended', 'terminated'].indexOf(intervention.status) > -1);
       },
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
@@ -622,7 +621,7 @@
        * Get intervention details page title: 'partner name: intervention number'
        */
       _getInterventionDetailsTitle: function(intervention) {
-        var title = '';
+        let title = '';
         if (intervention) {
           if (intervention.partner) {
             title += intervention.partner + ': ';
@@ -635,10 +634,7 @@
       },
 
       _showAddNewIntervBtn: function(intervListActive, permissions) {
-        if (intervListActive && this._hasEditPermissions(permissions)) {
-          return true;
-        }
-        return false;
+        return (intervListActive && this._hasEditPermissions(permissions));
       },
 
       _interventionSaveErrors: function(event) {
