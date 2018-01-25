@@ -1,21 +1,21 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
-<link rel="import" href="../common-elements/etools-single-file.html">
-<link rel="import" href="../common-elements/etools-date-input.html">
-<link rel="import" href="../validators/required-and-not-future-date-validator.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
+<link rel="import" href="../../common-elements/etools-single-file.html">
+<link rel="import" href="../../common-elements/etools-date-input.html">
+<link rel="import" href="../../validators/required-and-not-future-date-validator.html">
 
-<link rel="import" href="../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
-<link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../app-config/app-endpoints-behavior.html">
+<link rel="import" href="../../../app-behaviors/dropdown-behavior.html">
+<link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
-<link rel="import" href="../../../styles/grid-layout-styles.html">
-<link rel="import" href="../../../styles/file-styles.html">
-<link rel="import" href="../../../styles/buttons-styles.html">
-<link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="../../../../styles/file-styles.html">
+<link rel="import" href="../../../../styles/buttons-styles.html">
+<link rel="import" href="../../../../styles/shared-styles.html">
 
 
 <dom-module id="add-amendment-dialog">
@@ -351,10 +351,9 @@
       },
 
       _handleResponse: function(reponse) {
+        this.set('opened', false);
         this.fire('amendment-added', reponse);
         this.stopSpinner();
-        this.set('opened', false);
-        this.resetAmendment();
       },
 
       _handleErrorResponse: function(error) {
