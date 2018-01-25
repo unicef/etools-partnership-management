@@ -1,8 +1,9 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
+
 
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
@@ -21,10 +22,14 @@
 
   <template strip-whitespace>
 
-    <style include="data-table-styles grid-layout-styles">
+    <style include="data-table-styles grid-layout-styles paper-material-styles">
       :host {
         @apply --layout-flex;
         width: 100%;
+      }
+
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
       }
 
       .pd-ref,
@@ -37,7 +42,7 @@
       }
     </style>
 
-    <paper-material id="list" elevation="1">
+    <div id="list" elevation="1">
 
       <template is="dom-if" if="[[!reports.length]]">
         <div class="row-h">
@@ -125,7 +130,7 @@
         </etools-data-table-footer>
 
       </template>
-    </paper-material>
+    </div>
 
   </template>
 

@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <style is="custom-style">
-  :root {
+  html {
 
     --page-title: {
       margin: 0;
@@ -55,8 +55,8 @@
     };
 
     --partner-status-wrapper: {
-      @apply(--layout-vertical);
-      @apply(--layout-center-justified);
+      @apply --layout-vertical;
+      @apply --layout-center-justified;
       width: 24px;
       height: 24px;
       -webkit-border-radius: 50%;

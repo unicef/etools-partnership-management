@@ -223,7 +223,7 @@
       ready: function() {
         this.newPartnerDialog = document.createElement('new-partner-dialog');
         this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
-        Polymer.dom(document.querySelector('body')).appendChild(this.newPartnerDialog);
+        document.querySelector('body').appendChild(this.newPartnerDialog);
 
         this.newPartnerDialog.addEventListener('create-partner', function(event) {
           this.fire('create-partner', event.detail);
@@ -244,7 +244,7 @@
       },
       detached: function() {
         if (this.newPartnerDialog) {
-          Polymer.dom(document.querySelector('body')).removeChild(this.newPartnerDialog);
+          document.querySelector('body').removeChild(this.newPartnerDialog);
         }
       },
 

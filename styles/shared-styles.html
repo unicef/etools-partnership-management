@@ -52,8 +52,8 @@
       }
 
       .tab-link {
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
       }
 
       paper-item {
@@ -61,7 +61,7 @@
         white-space: nowrap;
       }
 
-      paper-material {
+      div[elevation] {
         padding: 15px 20px;
         background-color: var(--primary-background-color);
       }
@@ -98,8 +98,8 @@
       }
 
       .dropdown-with-clear-btn {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       paper-input {
@@ -174,21 +174,12 @@
         padding: 8px 0;
       }
 
-      .custom-field-wrapper etools-checkable-input {
-        --etools-checkable-input-label: {
-          margin-top: 1px;
-        }
+      paper-checkbox {
+        --paper-checkbox-ink-size: 0px;
       }
 
-      etools-checkable-input[label-alignment="right"] {
-        --etools-checkable-input-font-size: 16px;
-        --etools-checkable-input-label: {
-          color: var(--primary-text-color);
-          line-height: 24px;
-          @apply(--layout-vertical);
-          @apply(--layout-center-justified);
-        };
-        --etools-checkable-input-size: 18px;
+      paper-radio-button {
+        --paper-radio-button-ink-size: 0px;
       }
 
       .capitalize {
@@ -215,6 +206,19 @@
       @media (min-width: 850px) {
 
       }
+      .w100 {
+        width: 100%;
+      }
+      .header-text {
+        font-size: 12px;
+        color: var(--list-secondary-text-color, #757575);
+        font-weight: bold;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
 
     </style>
   </template>

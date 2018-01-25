@@ -7,7 +7,7 @@
 
 <style is="custom-style">
 
-  :root {
+  html {
 
     --primary-color: #0099ff;
     --secondary-color: #0061e9; /* TODO: unused color, remove? */
@@ -117,17 +117,13 @@
 
     /* custom etools polymer elements general customization */
 
-    /* etools-checkable-input, paper-checkbox, radio btns style */
-    --etools-checkable-input-size: 20px;
-    --etools-checkable-input-ripple-color: rgba(255, 255, 255, 0);
-    --etools-checkable-input-checked-color: var(--primary-color);
-    --etools-checkable-input-unchecked-color: var(--secondary-text-color);
-    --paper-checkbox-checked-color: var(--etools-checkable-input-checked-color);
-    --paper-checkbox-unchecked-color: var(--etools-checkable-input-unchecked-color);
-    --paper-radio-button-checked-color: var(--etools-checkable-input-checked-color);
-    --paper-radio-button-unchecked-color: var(--etools-checkable-input-unchecked-color);
-    --paper-toggle-button-checked-bar-color: var(--etools-checkable-input-checked-color);
-    --paper-toggle-button-checked-button-color: var(--etools-checkable-input-checked-color);
+    /* paper-checkbox, radio btns style */
+    --paper-checkbox-checked-color: var(--primary-color);
+    --paper-checkbox-unchecked-color: var(--secondary-text-color);
+    --paper-radio-button-checked-color: var(--primary-color);
+    --paper-radio-button-unchecked-color: var(--secondary-text-color);
+    --paper-toggle-button-checked-bar-color: var(--primary-color);
+    --paper-toggle-button-checked-button-color: var(--primary-color);
 
     /* etools-panel styles */
     --ecp-content-bg-color: var(--primary-background-color);

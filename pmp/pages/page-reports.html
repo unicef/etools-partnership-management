@@ -273,10 +273,10 @@
 
       detached: function() {
         if (this.reportRatingDialog) {
-          Polymer.dom(document.querySelector('body')).removeChild(this.reportRatingDialog);
+          document.querySelector('body').removeChild(this.reportRatingDialog);
         }
         if (this.reportRejectDialog) {
-          Polymer.dom(document.querySelector('body')).removeChild(this.reportRejectDialog);
+          document.querySelector('body').removeChild(this.reportRejectDialog);
         }
       },
 
@@ -286,14 +286,14 @@
         this.reportRatingDialog.set('toastEventSource', this);
         this.reportRatingDialog.addEventListener('report-accepted', this._updateReportDetailsObj.bind(this));
 
-        Polymer.dom(document.querySelector('body')).appendChild(this.reportRatingDialog);
+        document.querySelector('body').appendChild(this.reportRatingDialog);
 
         this.reportRejectDialog = document.createElement('report-reject-dialog');
         this.reportRejectDialog.setAttribute('id', 'reportRejectDialog');
         this.reportRejectDialog.set('toastEventSource', this);
         this.reportRejectDialog.addEventListener('report-rejected', this._updateReportDetailsObj.bind(this));
 
-        Polymer.dom(document.querySelector('body')).appendChild(this.reportRejectDialog);
+        document.querySelector('body').appendChild(this.reportRejectDialog);
       },
 
       _reportChanged: function(report) {

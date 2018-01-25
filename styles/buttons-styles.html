@@ -6,7 +6,7 @@
 <dom-module id="buttons-styles">
   <template>
     <style>
-      :root {
+      :host > * {
         --primary-button-default: {
           color: var(--light-primary-text-color, #fff);
           /*font-size: 14px;*/
@@ -24,10 +24,10 @@
         padding: 24px;
       }
       .buttons-section.horizontal {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       .buttons-section.vertical {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
 
       .buttons-section.vertical .primary-btn:not(:first-of-type) {
@@ -37,7 +37,7 @@
       .primary-btn {
         background-color: var(--primary-color);
         --paper-button: {
-          @apply(--primary-button-default);
+          @apply --primary-button-default;
         };
       }
 
@@ -55,14 +55,14 @@
 
       .primary-btn.with-prefix {
         --paper-button: {
-          @apply(--primary-button-default);
-          @apply(--primary-button-with-prefix);
+          @apply --primary-button-default;
+          @apply --primary-button-with-prefix;
         };
       }
       paper-button .btn-label {
-        @apply(--layout-horizontal);
-        @apply(--layout-flex);
-        @apply(--layout-center-justified);
+        @apply --layout-horizontal;
+        @apply --layout-flex;
+        @apply --layout-center-justified;
       }
 
       paper-button.w100 {
@@ -74,13 +74,13 @@
       .secondary-btn-wrapper {
         width: 100%;
         --paper-input-container-input: {
-          @apply(--basic-btn-style);
+          @apply --basic-btn-style;
         };
       }
 
       .secondary-btn {
         --paper-button: {
-          @apply(--basic-btn-style);
+          @apply --basic-btn-style;
         };
       }
 
