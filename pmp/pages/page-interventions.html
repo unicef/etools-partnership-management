@@ -416,11 +416,9 @@
         if (!this.intervention) {
           return;
         }
-
         if (typeof newValue === 'undefined') {
           return;
         }
-
         this.fire('set-amendment-mode', {active: newValue});
       },
 
@@ -429,7 +427,6 @@
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
-
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
           let isNewIntervention = this._redirectToNewIntervPageInProgress ||
