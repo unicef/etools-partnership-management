@@ -144,7 +144,7 @@
         detached: function() {
           // remove update frs el on fr el detached
           if (this.updateFrNumbersEl) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.updateFrNumbersEl);
+            document.querySelector('body').removeChild(this.updateFrNumbersEl);
           }
           // remove confirmations frs dialog on fr element detached
           if (this.frsConfirmationsDialog) {
@@ -160,7 +160,7 @@
           // attach frs update handler (on modal/dialog close)
           this.updateFrNumbersEl.addEventListener('update-frs-dialog-close', this.frNumbersUpdateHandler.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.updateFrNumbersEl);
+          document.querySelector('body').appendChild(this.updateFrNumbersEl);
         },
 
         _createFrsConfirmationsDialog: function() {

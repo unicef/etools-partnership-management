@@ -1,9 +1,10 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/repeatable-data-sets-styles.html">
@@ -18,10 +19,11 @@
 <link rel="import" href="expected-results/result-cp-output-and-ram-indicators.html">
 <link rel="import" href="expected-results/result-link-lower-results.html">
 <link rel="import" href="expected-results/indicator-dialog.html">
+<link rel="import" href="edit-delete-actions.html">
 
 <dom-module id="intervention-expected-results">
   <template strip-whitespace>
-    <style include="grid-layout-styles repeatable-data-sets-styles buttons-styles">
+    <style include="grid-layout-styles repeatable-data-sets-styles buttons-styles data-table-styles">
       [hidden] {
         display: none !important;
       }
@@ -29,76 +31,68 @@
       :host {
         display: block;
         width: 100%;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply(--paper-fab-btn-green);
+        --list-row-collapse-wrapper: {
+          padding: 0;
         };
+      }
+
+      .ram-indicators-col {
+        @apply --layout-vertical;
+        position: relative;
       }
 
       .ram-indicator-name {
         display: inline-block;
         width: 100%;
       }
+
+      edit-delete-actions {
+        visibility: hidden;
+      }
+
+      etools-data-table-row div[slot="row-data"]:hover edit-delete-actions {
+        visibility: visible;
+      }
+
     </style>
 
     <div hidden$="[[_emptyList(dataItems.length)]]">
+      <etools-data-table-header no-title>
+        <etools-data-table-column class="col-4">Corresponding CP Output</etools-data-table-column>
+        <etools-data-table-column class="col-8">Corresponding CP Indicator(s)</etools-data-table-column>
+      </etools-data-table-header>
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
-          <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-
-              <paper-icon-button class="action edit"
-                                 on-tap="_editCpOutputAndRamIndicators"
-                                 data-args$="[[index]]"
-                                 icon="create"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
+        <etools-data-table-row>
+          <div slot="row-data">
+            <div class="col-data col-4">
+              <span>[[item.cp_output_name]]</span>
+            </div>
+            <div class="col-data col-8 ram-indicators-col">
+              <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
+                <span class="ram-indicator-name">[[ramIndicatorName]]</span>
+              </template>
+              <edit-delete-actions hidden$="[[!editMode]]"
+                                   data-args$="[[index]]"
+                                   on-edit="_editCpOutputAndRamIndicators"
+                                   on-delete="_openDeleteConfirmation">
+              </edit-delete-actions>
             </div>
           </div>
-          <div class="item-content">
-
-            <div class="row-h">
-              <div class="col col-4">
-                <etools-form-element-wrapper label="CP Output">
-                  <span>[[item.cp_output_name]]</span>
-                </etools-form-element-wrapper>
-              </div>
-              <div class="col col-8">
-                <etools-form-element-wrapper label="Ram Indicators">
-                  <template is="dom-repeat" items="[[item.ram_indicator_names]]" as="ramIndicatorName">
-                    <span class="ram-indicator-name">[[ramIndicatorName]]</span>
-                  </template>
-                </etools-form-element-wrapper>
-              </div>
-            </div>
-
+          <div slot="row-data-details">
             <result-link-lower-results data-items="{{item.ll_results}}"
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
                                        on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
-
           </div>
-        </div>
+        </etools-data-table-row>
       </template>
     </div>
 
     <div class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
       <p>There are no results added.</p>
     </div>
-
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_addNewCpOutputAndRamIndicators"
-                 title="Add"></paper-fab>
-    </div>
-
   </template>
 
   <script>
@@ -147,12 +141,12 @@
             this.indicatorDialogDataReceived(event.detail);
           }.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.indicatorDialog);
+          document.querySelector('body').appendChild(this.indicatorDialog);
         },
 
         detached: function() {
           if (this.indicatorDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.indicatorDialog);
+            document.querySelector('body').removeChild(this.indicatorDialog);
           }
           this.removeCpOutputRamIndicatorsDialog();
         },
@@ -166,6 +160,7 @@
         },
 
         _editCpOutputAndRamIndicators: function(e) {
+          e.stopPropagation();
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
           if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'expected-results');

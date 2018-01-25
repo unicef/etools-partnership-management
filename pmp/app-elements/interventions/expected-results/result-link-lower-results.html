@@ -1,23 +1,21 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
-<link rel="import" href="../../../../styles/buttons-styles.html">
-
-<link rel="import" href="../../../app-elements/common-elements/etools-form-element-wrapper.html">
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
+<link rel="import" href="applied-indicator.html">
+<link rel="import" href="../edit-delete-actions.html">
 
 <dom-module id="result-link-lower-results">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles shared-styles repeatable-data-sets-styles repeatable-data-sets-styles-v3 buttons-styles">
+        include="grid-layout-styles shared-styles data-table-styles">
       [hidden] {
         display: none !important;
       }
@@ -28,147 +26,158 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        --list-bg-color: #eeeeee;
+        /* TODO: clean this CSS */
+        --list-row-no-collapse: {
+          background-color: var(--list-second-bg-color);
+        };
+        --edit-delete-actions: {
+          background-color: var(--list-second-bg-color);
+        };
       }
 
-      .indicator-col {
-        margin-right: 10px;
-        width: 100px;
+      .padd-left {
+        padding-left: 16px;
       }
 
-      .indicator-col .heading {
-        display: inline-block;
-        width: 100%;
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
-        margin-bottom: 10px;
+      .lborder {
+        border-left: 1px solid var(--list-divider-color);
       }
 
-      .indicator-col .indicator-baseline,
-      .indicator-col .indicator-target {
-        padding: 10px;
-        width: 100%;
-        display: inline-block;
-        box-sizing: border-box;
-        min-height: 41px;
+      .padd-top-bott {
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
-      .indicator-col .indicator-baseline {
-        background-color: var(--light-info-color);
+      paper-icon-button {
+        color: var(--dark-icon-color, #6f6f70);
       }
 
-      .indicator-col .indicator-target {
-        background-color: var(--success-color);
-      }
-
-      .indicator-col .content {
-        padding: 10px 0;
-        display: block;
-      }
-
-      .indicator-nr {
+      .horizontal-layout {
         @apply --layout-horizontal;
-        padding-top: 31px;
+        @apply --layout-center;
+
+        min-height: 56px;
+        border-bottom: 1px solid var(--list-divider-color);
       }
 
-      .indicator-nr strong {
-        @apply --layout-self-center;
-        min-width: 30px;
+      .header-container {
+        height: 56px;
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
-      .edit-indicator {
-        color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
-        width: 36px;
-        height: 36px;
-        margin-right: 20px;
+      .flex1 {
+        flex: 1;
+      }
+
+      .border-b {
+        border-bottom: 1px solid var(--list-divider-color);
+      }
+
+      edit-delete-actions {
+        visibility: hidden;
+      }
+
+      div#resultStatement:hover edit-delete-actions {
+        visibility: visible;
+      }
+
+      .padd-right {
+        padding-right: 10px;
+      }
+
+      div {
+        box-sizing: border-box;
+      }
+
+      .header-container,
+      .lower-result-row {
+        padding: 0 24px;
+      }
+
+      applied-indicator {
+        margin-right: -24px;
+      }
+
+      .resultStatement {
+        @apply --layout-horizontal;
+      }
+
+      .resultStatement,
+      .indicators-container {
+        @apply --layout-center;
+        @apply --layout-self-stretch;
       }
 
     </style>
 
+    <div hidden$="[[!_emptyList(dataItems.length)]]">
+      <etools-data-table-header no-title no-collapse>
+        <etools-data-table-column class="col-12">PD Output or SSFA Expected Result</etools-data-table-column>
+      </etools-data-table-header>
+    </div>
+
     <div hidden$="[[_emptyList(dataItems.length)]]">
+      <div class="header-container header-text border-b">
+        <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
+        <div class="col flex1">
+          <div class="col col-8">Performance Indicator</div>
+          <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
+          <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Target</div>
+        </div>
+      </div>
+
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="row-h item-container">
-          <div class="item-actions-container">
-            <div class="actions">
-              <paper-icon-button class="action delete"
-                                 on-tap="_openDeleteConfirmation"
-                                 data-args$="[[index]]"
-                                 icon="cancel"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-              <paper-icon-button class="action edit"
-                                 on-tap="_editLowerResult"
-                                 data-args$="[[index]]"
-                                 icon="create"
-                                 disabled$="[[!editMode]]"></paper-icon-button>
-            </div>
+        <div class="horizontal-layout lower-result-row">
+          <div id="resultStatement"
+               class$="[[getColumnLength('result', thereAreIndicators)]] padd-top-bott padd-right"
+               style="position:relative">
+            <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
+                                 on-delete="_openDeleteConfirmation"></edit-delete-actions>
+            <span>[[item.name]]</span>
           </div>
-          <div class="item-content">
-            <div class="row-h">
-              <etools-form-element-wrapper label="PD output or SSFA expected result">
-                <span>[[item.name]]</span>
-              </etools-form-element-wrapper>
-            </div>
-            <div class="indicators-wrapper" hidden="[[!item.applied_indicators.length]]">
+          <div class="flex1 lborder indicators-container">
+            <div hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
                         items="[[item.applied_indicators]]"
                         as="indicator" index-as="indicatorIndex">
-                <div class="row-h">
-                  <div class="indicator-nr">
-                    <strong>[[_getIndicatorNr(indicatorIndex)]]</strong>
-                    <paper-icon-button class="edit-indicator"
-                                       on-tap="_editIndicator"
-                                       data-ind-index$="[[indicatorIndex]]"
-                                       data-result-index$="[[index]]"
-                                       icon="create"
-                                       disabled$="[[!editMode]]"
-                                       hidden$="[[!editMode]]"></paper-icon-button>
-                  </div>
-                  <div class="indicator-col">
-                    <span class="heading">Baseline</span>
-                    <span class="indicator-baseline">
-                      [[_displayIndicatorValue(indicator.baseline)]]
-                    </span>
-                  </div>
-                  <div class="indicator-col">
-                    <span class="heading">Target</span>
-                    <span class="indicator-target">
-                      [[_displayIndicatorValue(indicator.target)]]
-                    </span>
-                  </div>
-                  <div class="indicator-col flex-c">
-                    <span class="heading">Indicator</span>
-                    <span class="content">
-                      [[_getIndicatorType(indicator.unit)]][[_getIndicatorTitle(indicator)]]
-                    </span>
-                  </div>
-                </div>
+                <applied-indicator data-ind-index$="[[indicatorIndex]]"
+                                   data-result-index$="[[index]]" on-edit-indicator="_editIndicator"
+                                   on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"
+                                   editMode="[[editMode]]"></applied-indicator>
               </template>
             </div>
-
-            <div class="add-btn-wrapper">
-              <paper-button class="secondary-btn"
-                            on-tap="_addNewIndicator"
-                            title="Add Indicator"
-                            data-ll-result-id$="[[item.id]]"
-                            disabled$="[[!editMode]]"
-                            hidden$="[[!editMode]]">
-                Add Indicator
-              </paper-button>
+            <div class="padd-left padd-top-bott">
+              <paper-icon-button icon="add-box"
+                                 title="Add Indicator"
+                                 on-tap="_addNewIndicator"
+                                 data-ll-result-id$="[[item.id]]"
+                                 disabled$="[[!editMode]]"
+                                 hidden$="[[!editMode]]">
+              </paper-icon-button>
             </div>
-
           </div>
-
         </div>
       </template>
     </div>
 
-    <div class="add-btn-wrapper">
-      <paper-button class="secondary-btn"
-                    on-tap="_addNewLowerResult"
-                    title="Add PD or SSFA OUTPUT"
-                    disabled$="[[!editMode]]"
-                    hidden$="[[!editMode]]">
-        Add PD output or SSFA expected result
-      </paper-button>
-    </div>
+    <etools-data-table-row no-collapse>
+      <div slot="row-data">
+        <div class="[[getColumnLength('result', thereAreIndicators)]]">
+          <paper-icon-button icon="add-box"
+                             on-tap="_addNewLowerResult"
+                             title="Add PD or SSFA OUTPUT"
+                             disabled$="[[!editMode]]"
+                             hidden$="[[!editMode]]">
+            Add PD output or SSFA expected result
+          </paper-icon-button>
+        </div>
+        <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
+
+        </div>
+      </div>
+    </etools-data-table-row>
 
   </template>
 
@@ -197,9 +206,39 @@
             value: false
           },
           expectedResultId: Number,
+          thereAreIndicators: {
+            type: Boolean,
+            value: false
+          }
         },
         listeners: {
-          'delete-confirm': '_updateInterventionLocAndClusters'
+          'delete-confirm': '_updateInterventionLocAndClusters',
+        },
+        observers: [
+          'updateStyle(dataItems.*)'
+        ],
+
+        updateStyle: function() {
+          if (!this.dataItems) {
+            this.thereAreIndicators = false;
+            return;
+          }
+          let foundSomeIndicators = false;
+          for (let i in this.dataItems) {
+            if (this.dataItems[i].applied_indicators && this.dataItems[i].applied_indicators.length) {
+              foundSomeIndicators = true;
+              break;
+            }
+          }
+          this.thereAreIndicators = foundSomeIndicators;
+        },
+        getColumnLength: function(column, thereAreIndicators) {
+          switch (column) {
+            case 'result':
+              return thereAreIndicators ? 'col-4' : 'col-8';
+            case 'indicator':
+              return thereAreIndicators ? 'col-8' : 'col-4';
+          }
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
@@ -209,6 +248,7 @@
         },
 
         _editLowerResult: function(e) {
+          e.stopPropagation();
           let index = parseInt(Polymer.dom(e).localTarget.getAttribute('data-args'), 10);
           if (index < 0) {
             this.logError('Can not edit, invalid index selected', 'lower-results');
@@ -228,39 +268,6 @@
           });
         },
 
-        _displayIndicatorValue: function(value) {
-          value = value ? value.toString() : '';
-          if (typeof value === 'string' && value !== '') {
-            return value;
-          } else {
-            return '-';
-          }
-        },
-        _getIndicatorTitle: function(indicator) {
-          if (!indicator) {
-            return '-';
-          }
-          if (indicator.cluster_indicator_id) {
-            return indicator.cluster_indicator_title;
-          } else {
-            return indicator.indicator ? indicator.indicator.title : '-';
-          }
-        },
-
-        _getIndicatorType: function(unit) {
-          if (!unit) {
-            return '';
-          }
-          switch (unit) {
-            case 'numeric':
-              return '# - ';
-            case 'percentage':
-              return '% - ';
-              // case 'yesno':
-              //   return 'Yes/No - ';
-          }
-        },
-
         _getIndicatorNr: function(indicatorIndex) {
           return parseInt(indicatorIndex, 10) + 1;
         },
@@ -276,7 +283,6 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
-
         _editIndicator: function(event) {
           var indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
           var llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
@@ -290,6 +296,9 @@
             appliedIndicatorsIndex: indicatorIndex
           };
           this.fire('open-indicator-dialog', resultMap);
+        },
+        _deleteIndicator: function() {
+          // -no bk
         }
 
       });

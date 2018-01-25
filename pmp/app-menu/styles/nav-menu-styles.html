@@ -9,7 +9,7 @@
         display: none !important;
       }
       :host {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         height: 100%;
         overflow-y: var(--side-bar-scrolling);
         overflow-x: hidden;
@@ -32,12 +32,12 @@
       .menu-header,
       :host([small-menu]) .menu-header .ripple-wrapper.main,
       .nav-menu-item {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       .menu-header {
-        @apply(--layout-justified);
+        @apply --layout-justified;
         background-color: var(--primary-color);
         color: white;
         min-height: 60px;
@@ -59,7 +59,7 @@
       .nav-menu-item.section-title,
       :host([small-menu]) .nav-menu-item,
       :host([small-menu]) .menu-header .ripple-wrapper.main {
-        @apply(--layout-center-justified);
+        @apply --layout-center-justified;
       }
 
       :host([small-menu]) #app-name,
@@ -99,13 +99,13 @@
         border-bottom: 1px solid var(--dark-divider-color);
       }
       .nav-menu {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
         background: var(--primary-background-color);
         min-height: 550px;
         padding: 8px 0 0;
       }
       .nav-menu, .nav-menu iron-selector[role="navigation"] {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
 
       .nav-menu-item {

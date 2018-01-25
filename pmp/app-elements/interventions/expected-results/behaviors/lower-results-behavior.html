@@ -14,15 +14,14 @@
     },
 
     createLowerResultNameDialog: function() {
-      this.lowerResultNameEditElem = Polymer.dom(document.querySelector('body'))
-          .querySelector('#pdLowerResultName');
+      this.lowerResultNameEditElem = document.querySelector('body').querySelector('#pdLowerResultName');
       if (!this.lowerResultNameEditElem) {
         this.lowerResultNameEditElem = document.createElement('pd-lower-result-name');
         this.lowerResultNameEditElem.setAttribute('id', 'pdLowerResultName');
         this.lowerResultNameEditElem.set('toastEventSource', this);
         this.lowerResultNameEditElem.addEventListener('lower-result-saved',
             this._lowerResultSaved.bind(this));
-        Polymer.dom(document.querySelector('body')).appendChild(this.lowerResultNameEditElem);
+        document.querySelector('body').appendChild(this.lowerResultNameEditElem);
       }
     },
 
