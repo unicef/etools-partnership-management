@@ -257,26 +257,6 @@
         return isValid;
       },
 
-      _amendmentFieldsAreEmpty: function(amendment) {
-        if (amendment.id) {
-          return false;
-        }
-        return (this._amendmentTypeIsEmpty(amendment) ||
-        this._signedDateIsEmpty(amendment) || this._newAttachmentIsEmpty(amendment));
-      },
-
-      _signedDateIsEmpty: function(amendment) {
-        return amendment.signed_date === null || amendment.signed_date === '';
-      },
-
-      _newAttachmentIsEmpty: function(amendment) {
-        return amendment.signed_amendment instanceof File === false;
-      },
-
-      _amendmentTypeIsEmpty: function(amendment) {
-        return !amendment.types;
-      },
-
       _resetFields: function() {
         this.resetAmendment();
         this._resetAmendmentValidations();
