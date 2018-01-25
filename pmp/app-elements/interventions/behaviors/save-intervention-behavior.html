@@ -66,6 +66,7 @@
         interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
       }
       this._prepareDataForSave(interventionData, interventionDetailsEl);
+      this._updateAmendmentMode(this.intervention, interventionData);
 
       this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
     },
@@ -120,8 +121,13 @@
           !(this.intervention.prc_review_document instanceof File)) {
         delete interventionData.prc_review_document;
       }
-
     },
+
+    _updateAmendmentMode: function(intervention, modifiedFileds) {
+      if (intervention.close_amendment) {
+        modifiedFileds.in_amendment = false;
+      }
+    }, 
 
     _showErrorsWarning: function(validDetails, validReviewAndSign) {
       let msg = '';

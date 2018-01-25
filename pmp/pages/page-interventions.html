@@ -565,10 +565,8 @@
       },
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
-          // tricks the change detection script
-          // TODO:  find a better way to handle this
-          this.set('originalIntervention.in_amendment', true);
-          this.set('intervention.in_amendment', false);
+          // tells _validateAndSave that amendment mode needs to be closed
+          this.set('intervention.close_amendment', true);
           this._validateAndSaveIntervention(null);
         }
       },
