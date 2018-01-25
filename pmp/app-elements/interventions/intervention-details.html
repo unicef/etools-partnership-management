@@ -85,6 +85,8 @@
 
       .see-locations iron-icon {
         margin-right: 0;
+        padding-right: 0;
+        min-width: 100px;
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
@@ -266,15 +268,20 @@
       </div>
 
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+        <!-- PRP is enabled -->
         <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Sections PD/SSFA Covers">
-            <span class="placeholder" hidden$="[[!_isEmpty(intervention.section_names.length)]]">&#8212;</span>
-            <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.section_names.length)]]">
-              <template is="dom-repeat" items="[[intervention.section_names]]">
-                <span class="names-padding">[[item]]</span>
-              </template>
-            </div>
-          </etools-form-element-wrapper>
+          <etools-multi-selection-menu id="sections"
+                                       label="Sections PD/SSFA Covers"
+                                       placeholder="&#8212;"
+                                       selected-values="{{intervention.flagged_sections}}"
+                                       options="[[sections]]"
+                                       option-label="name"
+                                       option-value="id"
+                                       readonly$="[[!intervention.permissions.edit.flagged_sections]]"
+                                       required$="[[intervention.permissions.required.flagged_sections]]"
+                                       auto-validate
+                                       error-message="Please select sections(s)">
+          </etools-multi-selection-menu>
         </div>
         <div class="row-h flex-c">
           <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
@@ -285,23 +292,28 @@
           </etools-form-element-wrapper>
         </div>
         <div class="row-h flex-c">
-          <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-            <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
-            <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
-              <template is="dom-repeat" items="[[getFirst3NamesFromArray(intervention.location_names)]]">
-                <span class="names-padding">[[item]]</span>
-              </template>
-              <paper-button class="secondary-btn see-locations"
-                            on-tap="_openLocationsDialog"
-                            title="See all locations">
-                <iron-icon icon="add"></iron-icon>
-                See all
-              </paper-button>
-            </div>
-          </etools-form-element-wrapper>
+          <etools-multi-selection-menu id="locations"
+                                       label="Locations PD/SSFA Covers"
+                                       placeholder="&#8212;"
+                                       selected-values="{{intervention.locations}}"
+                                       options="[[locations]]"
+                                       option-label="name"
+                                       option-value="id"
+                                       readonly$="[[!intervention.permissions.edit.locations]]"
+                                       required$="[[intervention.permissions.required.locations]]"
+                                       error-message="Please select location(s)">
+          </etools-multi-selection-menu>
+
+          <paper-button class="secondary-btn see-locations"
+                        on-tap="_openLocationsDialog"
+                        title="See all locations">
+            <iron-icon icon="add"></iron-icon>
+            See all
+          </paper-button>
         </div>
       </template>
       <template is="dom-if" if="[[environmentFlags.prp_mode_off]]" restamp>
+        <!-- PRP is disabled -->
         <div class="row-h flex-c">
           <etools-multi-selection-menu id="sections"
                                        label="Section(s)"
@@ -317,7 +329,7 @@
           </etools-multi-selection-menu>
         </div>
         <div class="row-h flex-c">
-          <etools-multi-selection-menu id="locationsDropdw"
+          <etools-multi-selection-menu id="locations"
                     label="Location(s)"
                     placeholder="&#8212;"
                     selected-values="{{intervention.flat_locations}}"
@@ -513,12 +525,6 @@
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-        getFirst3NamesFromArray: function(names) {
-          if (!names || !names.length) {
-            return '';
-          }
-          return names.slice(0, Math.min(names.length, 3));
-        },
         openCpOutputAndRamIndicatorsDialog: function() {
           let expectedResultsElem = this.$$('#expectedResults');
           if (!expectedResultsElem) {
@@ -530,10 +536,8 @@
           if (!this._showContingencyPd(agreement)) {
             return true;
           }
-          if (contingencyPd && intervention.status !== 'active') {
-            return false;
-          }
-          return true;
+          return !(contingencyPd && intervention.status !== 'active');
+
         },
         _openLocationsDialog: function() {
           this.locationsDialog.adminLevel = null;
@@ -603,20 +607,14 @@
           this.set('intervention.permissions.required.end', isRequired);
         },
         _showContingencyPd: function(agreement) {
-          if (!agreement) {
-            return false;
-          }
-          if ('PCA' === agreement.agreement_type) {
-            return true;
-          }
-          return false;
+          return agreement && 'PCA' === agreement.agreement_type;
         },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
             return;
           }
-          var pcaTypes = [];
-          var ssfaTypes = [];
+          let pcaTypes = [];
+          let ssfaTypes = [];
           documentTypes.forEach(function(type) {
             if (type.value !== 'SSFA') {
               pcaTypes.push(type);
@@ -651,7 +649,7 @@
           this.$.documentType.resetInvalidState();
           this.$.plannedBudget.resetValidations();
 
-          var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+          let fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
@@ -667,9 +665,9 @@
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
               && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            var start = parseInt(interventionStart.substr(0, 4), 10);
-            var end = parseInt(interventionEnd.substr(0, 4), 10);
-            var years = [];
+            let start = parseInt(interventionStart.substr(0, 4), 10);
+            let end = parseInt(interventionEnd.substr(0, 4), 10);
+            let years = [];
             while (start <= end) {
               years.push({
                 value: start,
@@ -743,8 +741,8 @@
 
         _daysUntilExpiry: function(end) {
           if (this.isFutureDate(end)) {
-            var today = new Date().toString();
-            var diff = this.dateDiff(today, end);
+            let today = new Date().toString();
+            let diff = this.dateDiff(today, end);
             if (diff) {
               return diff + ' days until expiry';
             }
@@ -779,82 +777,31 @@
           if (!this.intervention) {
             return;
           }
-          let result = this._extractLocClustersSectionsFromIndicators();
-          //Override intervention values to cover delete and edit indicators also , beside create
-          this.set('intervention.locations', result.locationIds);
-          this.set('intervention.location_names', result.locationNames);
-          this.set('intervention.cluster_names', result.clusterNames);
-          this.set('intervention.section_names', result.sectionNames);
-          this.set('intervention.flagged_sections', result.flaggedSections);
+          // Override intervention cluster names to cover delete and edit indicators also, beside create
+          this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
         },
-        _extractLocClustersSectionsFromIndicators: function() {
-          let locationIds = new Set();
-          let flaggedSections = new Set();
+
+        _extractClusterNamesFromIndicators: function() {
           let clusterNames = new Set();
 
-          this.intervention.result_links.forEach(function(rl) {
+          this.intervention.result_links.forEach((rl) => {
             if (_.isEmpty(rl.ll_results)) {
               return;
             }
-            rl.ll_results.forEach(function(llResult) {
+            rl.ll_results.forEach((llResult) => {
               if (_.isEmpty(llResult.applied_indicators)) {
                 return;
               }
-              llResult.applied_indicators.forEach(function(indicator) {
-                if (!_.isEmpty(indicator.locations)) {
-                  indicator.locations.forEach(function(locId) {
-                    locationIds.add(+locId);
-                  });
-                }
-
+              llResult.applied_indicators.forEach((indicator) => {
                 if (indicator.cluster_name) {
                   clusterNames.add(indicator.cluster_name);
                 }
+              });
 
-                if (indicator.section) {
-                  flaggedSections.add(+indicator.section);
-                }
-              }, this);
-
-            }, this);
-          }, this);
-
-          let locationNames = [];
-          let sectionNames = [];
-
-          if (!_.isEmpty(locationIds)) {
-            locationNames = this._extractLocationNames(locationIds);
-          }
-          if (!_.isEmpty(flaggedSections)) {
-            sectionNames = this._getSectionNames(flaggedSections);
-          }
-          return {
-            locationIds: Array.from(locationIds),
-            locationNames: locationNames,
-            clusterNames: Array.from(clusterNames),
-            flaggedSections: Array.from(flaggedSections),
-            sectionNames: sectionNames
-          };
-        },
-
-        _extractLocationNames: function(locationIds) {
-          let selectedLocations = this.locations.filter(function(loc) {
-            return locationIds.has(parseInt(loc.id));
-          });
-          let locNames = selectedLocations.map(function(l) {
-            return l.name;
-          });
-          return locNames;
-        },
-        _getSectionNames: function(sectionIds) {
-          let selectedSections = this.sections.filter(function(s) {
-            return sectionIds.has(parseInt(s.id));
-          });
-          let sectionNames = selectedSections.map(function(s) {
-            return s.name;
+            });
           });
 
-          return sectionNames;
+          return Array.from(clusterNames);
         },
 
         _isEmpty: function(length) {
