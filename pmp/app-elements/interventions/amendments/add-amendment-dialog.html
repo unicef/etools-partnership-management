@@ -37,7 +37,7 @@
 
     <etools-dialog no-padding
                    keep-dialog-open
-                   id="addAmendmentDialog"
+                   id="add-amendment-dialog"
                    opened="{{opened}}"
                    size="md"
                    hidden$="[[datePickerOpen]]"
@@ -51,7 +51,7 @@
                                                       error-message="{{newAmendment.errorMessage}}">
               </required-and-not-future-date-validator>
               <!-- Signed Date -->
-              <etools-date-input id="signedDate"
+              <etools-date-input id="signed-date"
                                 label="Signed date"
                                 value="{{newAmendment.signed_date}}"
                                 required
@@ -65,7 +65,7 @@
             </div>
             <div class="row-h flex-c">
               <!-- Amendment Type -->
-              <etools-multi-selection-menu id="amendmentTypes"
+              <etools-multi-selection-menu id="amendment-types"
                                           label="Amendment Types"
                                           placeholder="&#8212;"
                                           options="[[filteredAmendmentTypes]]"
@@ -95,7 +95,7 @@
             </div>
             <div class="row-h flex-c">
               <!-- Signed Agreement -->
-              <etools-single-file id="fileUpload"
+              <etools-single-file id="file-upload"
                                   label="Signed Agreement"
                                   internal-file="[[newAmendment.signed_amendment_file]]"
                                   file="{{newAmendment.signed_amendment}}"
@@ -178,11 +178,11 @@
       },
 
       startSpinner: function() {
-        this.$.addAmendmentDialog.startSpinner();
+        this.$$('#add-amendment-dialog').startSpinner();
       },
 
       stopSpinner: function() {
-        this.$.addAmendmentDialog.stopSpinner();
+        this.$$('#add-amendment-dialog').stopSpinner();
       },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
@@ -228,7 +228,7 @@
 
       _validateAmendmentTypes: function() {
         let valid = true;
-        let typeEl = this.$$('#amendmentTypes');
+        let typeEl = this.$$('#amendment-types');
         if (typeEl && !typeEl.validate()) {
           valid = false;
         }
@@ -237,7 +237,7 @@
 
       _validateFileUpload: function(amendment) {
         let valid = true;
-        let fileUplodEl = this.$$('#fileUpload');
+        let fileUplodEl = this.$$('#file-upload');
         if (fileUplodEl) {
           valid = !!amendment.signed_amendment;
           fileUplodEl.invalid = !valid;
@@ -248,7 +248,7 @@
       _validateSignedDate: function(amendment) {
         let isValid = true;
 
-        let signedDateEl = this.$$('#signedDate');
+        let signedDateEl = this.$$('#signed-date');
         if (signedDateEl) {
           if (!signedDateEl.validate()) {
             isValid = false;
@@ -283,15 +283,15 @@
       },
 
       _resetAmendmentValidations: function() {
-        let typeEl = this.$$('#amendmentTypes');
+        let typeEl = this.$$('#amendment-types');
         if (typeEl) {
           typeEl.invalid = false;
         }
-        let signedDateEl = this.$$('#signedDate');
+        let signedDateEl = this.$$('#signed-date');
         if (signedDateEl) {
           signedDateEl.invalid = false;
         }
-        let fileUpload = this.$$('#fileUpload');
+        let fileUpload = this.$$('#file-upload');
         if (fileUpload) {
           fileUpload.invalid = false;
         }

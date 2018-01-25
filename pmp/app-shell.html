@@ -83,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-flex;
         @apply --layout-end-justified;
       }
-      #floatingFooter {
+      #floating-footer {
         background-color: var(--amendment-mode-color);
         color: var(--light-primary-text-color);
         padding: 12px 12px 12px 65px;
@@ -93,15 +93,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 100%;/* paper-buttons have a z-index of 51 */
         z-index: 52;
       }
-      #pageContainer.inAmendment {
+      #page-container.in-amendment {
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
         border-right: 12px solid var(--amendment-mode-color);
       }
-      :host(:not(.ie)) #pageContainer.inAmendment {
+      :host(:not(.ie)) #page-container.in-amendment {
         padding-bottom: 48px;
       }
-      :host(.ie) #pageContainer.inAmendment {
+      :host(.ie) #page-container.in-amendment {
         margin-bottom: -40px;
       }
     </style>
@@ -133,7 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
-        <div id="pageContainer" class$="[[getPageContainerClass(amendmentModeActive)]]">
+        <div id="page-container" class$="[[getPageContainerClass(amendmentModeActive)]]">
 
           <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
             <page-partners id="partners" class="main-page"
@@ -175,7 +175,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
       </div>
-      <div id="floatingFooter"
+      <div id="floating-footer"
            hidden$="[[!amendmentModeActive]]">
         <strong> AMENDMENT MODE </strong>
         | All fields in the details tab are now open for editing.
@@ -425,7 +425,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       getPageContainerClass: function(amendmentModeActive) {
-        return amendmentModeActive ? 'inAmendment' : '';
+        return amendmentModeActive ? 'in-amendment' : '';
       },
 
       _closeAmendment: function() {
