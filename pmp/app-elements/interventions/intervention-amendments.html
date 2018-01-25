@@ -206,9 +206,9 @@
         newAmendmentAdded: function(event) {
           event.stopImmediatePropagation();
           let data = event.detail;
-          this.set('amendActionInProgress', true);
-          this.push('dataItems', data);
           this._unlockInterventionDetailsFields();
+          this.push('dataItems', data);
+          this.set('amendActionInProgress', true);
         },
 
         _dataHasChanged: function(dataItems) {

@@ -1,13 +1,16 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/etools-dialog/etools-dialog.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
-<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../common-elements/etools-single-file.html">
+<link rel="import" href="../common-elements/etools-date-input.html">
+<link rel="import" href="../validators/required-and-not-future-date-validator.html">
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/ajax-errors-parser-behavior.html">
-<link rel="import" href="../validators/required-and-not-future-date-validator.html">
+<link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/file-styles.html">
@@ -94,8 +97,8 @@
               <!-- Signed Agreement -->
               <etools-single-file id="fileUpload"
                                   label="Signed Agreement"
-                                  internal-file=[[newAmendment.signed_amendment_file]]
-                                  file={{newAmendment.signed_amendment}}
+                                  internal-file="[[newAmendment.signed_amendment_file]]"
+                                  file="{{newAmendment.signed_amendment}}"
                                   accept=".doc,.docx,.pdf,.jpg,.png"
                                   error-message="Attachment required"
                                   required
@@ -126,10 +129,6 @@
         },
         toastEventSource: {
           type: Object
-        },
-        disableConfirmBtn: {
-          type: Boolean,
-          value: true
         },
         datePickerOpen: {
           type: Boolean,
@@ -303,10 +302,6 @@
         }
       },
 
-      _isReadonlyAmendment: function(amendmentId) {
-        return !!amendmentId;
-      },
-
       _getSelectedAmendmentTypeWarning: function(types) {//TODO
         if (!types || !types.length) {
           return;
@@ -359,8 +354,8 @@
       _handleResponse: function(reponse) {
         this.fire('amendment-added', reponse);
         this.stopSpinner();
-        this.resetAmendment();
         this.set('opened', false);
+        this.resetAmendment();
       },
 
       _handleErrorResponse: function(error) {

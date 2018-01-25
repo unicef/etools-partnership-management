@@ -365,8 +365,7 @@
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
         '_interventionChanged(intervention, permissions)',
-        '_amendmentModeChanged(intervention.in_amendment)',
-        '_amendmentModeChanged(intervention.review_and_sign_amendment_open)',
+        '_amendmentModeChanged(intervention.in_amendment)'
       ],
 
       listeners: {
@@ -422,7 +421,6 @@
           return;
         }
 
-        this.intervention.in_amendment = newValue;
         this.fire('set-amendment-mode', {active: newValue});
       },
 
@@ -431,7 +429,6 @@
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
 
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
-        this.set('intervention.review_and_sign_amendment_open', intervention.in_amendment);
 
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
