@@ -573,7 +573,7 @@
       _isNewIntervention: function() {
         return !this.intervention.id;
       },
-      _forceInterventionRefresh: function (e) {
+      _forceInterventionRefresh: function(e) {
         e.stopImmediatePropagation();
         this.$.interventionData.fetchInterventon(this.intervention.id);
       },
