@@ -270,7 +270,7 @@
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
         <!-- PRP is enabled -->
         <div class="row-h flex-c">
-          <etools-multi-selection-menu id="sections"
+          <etools-multi-selection-menu id="prp-on-sections"
                                        label="Sections PD/SSFA Covers"
                                        placeholder="&#8212;"
                                        selected-values="{{intervention.flagged_sections}}"
@@ -292,7 +292,7 @@
           </etools-form-element-wrapper>
         </div>
         <div class="row-h flex-c">
-          <etools-multi-selection-menu id="locations"
+          <etools-multi-selection-menu id="prp-on-locations"
                                        label="Locations PD/SSFA Covers"
                                        placeholder="&#8212;"
                                        selected-values="{{intervention.locations}}"
