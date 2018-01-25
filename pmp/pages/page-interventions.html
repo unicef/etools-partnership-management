@@ -433,6 +433,7 @@
               this._newIntervention(this.newInterventionActive);
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
+              this.fire('set-amendment-mode', {active: intervention.in_amendment});    
           this.async(function() {
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
@@ -565,8 +566,7 @@
       },
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
-          // tells _validateAndSave that amendment mode needs to be closed
-          this.set('intervention.close_amendment', true);
+          this.set('intervention.in_amendment', false);
           this._validateAndSaveIntervention(null);
         }
       },

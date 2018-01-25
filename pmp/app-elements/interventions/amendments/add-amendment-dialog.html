@@ -1,12 +1,12 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/etools-dialog.html">
-<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/etools-searchable-multiselection-menu/etools-multi-selection-menu.html">
 <link rel="import" href="../../common-elements/etools-single-file.html">
 <link rel="import" href="../../common-elements/etools-date-input.html">
 <link rel="import" href="../../validators/required-and-not-future-date-validator.html">
 
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
@@ -45,65 +45,66 @@
                    dialog-title="Add Amendment"
                    on-confirm-btn-clicked="_validateAndSaveAmendment">
 
-            <div class="row-h flex-c">
-              <required-and-not-future-date-validator validator-name="signedDate_validator"
-                                                      required
-                                                      error-message="{{newAmendment.errorMessage}}">
-              </required-and-not-future-date-validator>
-              <!-- Signed Date -->
-              <etools-date-input id="signed-date"
-                                label="Signed date"
-                                value="{{newAmendment.signed_date}}"
-                                required
-                                open="{{datePickerOpen}}"
-                                validator="signedDate_validator"
-                                error-message="Please select signed date"
-                                auto-validate
-                                error-message$="[[newAmendment.errorMessage]]"
-                                no-init show-clear-btn>
-              </etools-date-input>
-            </div>
-            <div class="row-h flex-c">
-              <!-- Amendment Type -->
-              <etools-multi-selection-menu id="amendment-types"
-                                          label="Amendment Types"
-                                          placeholder="&#8212;"
-                                          options="[[filteredAmendmentTypes]]"
-                                          selected-values="{{newAmendment.types}}"
-                                          dynamic-align
-                                          required
-                                          hide-search
-                                          error-message="Type is required"
-                                          on-focused-changed="_onFocusChangedUpdateAutovalidate">
-              </etools-multi-selection-menu>
-            </div>
-            <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
-              <span class="type-warning">
-                [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
-              </span>
-            </div>
-            <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
-              <paper-input id="other"
-                          placeholder="&#8212;"
-                          label="Other"
-                          invalid
+      <div class="row-h flex-c">
+        <required-and-not-future-date-validator validator-name="signedDate_validator"
+                                                required
+                                                error-message="{{newAmendment.errorMessage}}">
+        </required-and-not-future-date-validator>
+        <!-- Signed Date -->
+        <etools-date-input id="signed-date"
+                          label="Signed date"
+                          value="{{newAmendment.signed_date}}"
                           required
+                          open="{{datePickerOpen}}"
+                          validator="signedDate_validator"
+                          error-message="Please select signed date"
                           auto-validate
-                          error-message="This is required"
-                          value="{{newAmendment.other_description}}">
-              </paper-input>
-            </div>
-            <div class="row-h flex-c">
-              <!-- Signed Agreement -->
-              <etools-single-file id="file-upload"
-                                  label="Signed Agreement"
-                                  internal-file="[[newAmendment.signed_amendment_file]]"
-                                  file="{{newAmendment.signed_amendment}}"
-                                  accept=".doc,.docx,.pdf,.jpg,.png"
-                                  error-message="Attachment required"
-                                  required
-                                  auto-validate></etools-single-file>
-            </div>
+                          error-message$="[[newAmendment.errorMessage]]"
+                          no-init show-clear-btn>
+        </etools-date-input>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Amendment Type -->
+        <etools-multi-selection-menu id="amendment-types"
+                                    label="Amendment Types"
+                                    placeholder="&#8212;"
+                                    options="[[filteredAmendmentTypes]]"
+                                    selected-values="{{newAmendment.types}}"
+                                    dynamic-align
+                                    required
+                                    hide-search
+                                    error-message="Type is required"
+                                    on-focused-changed="_onFocusChangedUpdateAutovalidate">
+        </etools-multi-selection-menu>
+      </div>
+      <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
+        <span class="type-warning">
+          [[_getSelectedAmendmentTypeWarning(newAmendment.types, newAmendment.types.length)]]
+        </span>
+      </div>
+      <div class="row-h" hidden$="[[!_showOtherInput(newAmendment.types, newAmendment.types.length)]]">
+        <paper-input id="other"
+                    placeholder="&#8212;"
+                    label="Other"
+                    invalid
+                    required
+                    auto-validate
+                    error-message="This is required"
+                    value="{{newAmendment.other_description}}">
+        </paper-input>
+      </div>
+      <div class="row-h flex-c">
+        <!-- Signed Agreement -->
+        <etools-single-file id="file-upload"
+                            label="Signed Agreement"
+                            internal-file="[[newAmendment.signed_amendment_file]]"
+                            file="{{newAmendment.signed_amendment}}"
+                            accept=".doc,.docx,.pdf,.jpg,.png"
+                            error-message="Attachment required"
+                            required
+                            auto-validate>
+        </etools-single-file>
+      </div>
     </etools-dialog>
 
  </template>
@@ -146,6 +147,12 @@
           type: Object,
           statePath: 'interventionAmendmentTypes'
         },
+        filteredAmendmentTypes: {
+          type: Object
+        },
+        newAmendment: {
+          type: Object
+        },
         newAmendmentModel: {
           type: Object,
           value: {
@@ -156,11 +163,7 @@
             'signed_amendment_file': '',
             'amendment_number': null
           }
-        },
-        newAmendment: {
-          type: Object
-        },
-        filteredAmendmentTypes: Object,
+        }
       },
 
       observers: [
@@ -197,13 +200,7 @@
 
       _showOtherInput: function() {
         let amdTypes = this.newAmendment.types;
-        if (!amdTypes || !amdTypes.length) {
-          return false;
-        }
-        if (amdTypes.indexOf('other') > -1) {
-          return true;
-        }
-        return false;
+        return amdTypes && amdTypes.indexOf('other') > -1;
       },
 
       isValidAmendment: function() {
