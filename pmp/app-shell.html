@@ -323,7 +323,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('_lastActivePartnerPage', page);
         }
         this.fire('clear-loading-messages', {});
-        this.set('amendmentModeActive', false);
+        this._setAmendMode(false);
       },
 
       _routePageChanged: function(routePage) {
@@ -350,10 +350,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
-        var mainPageName = this._getMainPageName(page);
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
+        let mainPageName = this._getMainPageName(page);
+        let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(mainPageName);
+        let pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
           // make the import
           this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
@@ -405,7 +405,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
-        var currentPath = this.route.path;
+        let currentPath = this.route.path;
         if (currentPath.indexOf('settings') > -1) {
           return;
         }
@@ -423,11 +423,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _updateAmendmentMode: function(event) {
         let detail = event.detail || {};
-        this.set('amendmentModeActive', !!detail.active);
+        this._setAmendMode(detail.active);
       },
 
       _getPageContainerClass: function(amendmentModeActive) {
         return amendmentModeActive ? 'in-amendment' : '';
+      },
+      
+      _setAmendMode: function(newVal) {
+        this.set('amendmentModeActive', !!newVal);
       },
 
       _closeAmendment: function() {
