@@ -67,10 +67,6 @@
         @apply --layout-center;
       }
 
-      .flex1 {
-        flex: 1;
-      }
-
       .border-b {
         border-bottom: 1px solid var(--list-divider-color);
       }
@@ -121,7 +117,7 @@
     <div hidden$="[[_emptyList(dataItems.length)]]">
       <div class="header-container header-text border-b">
         <div class$="[[getColumnLength('result', thereAreIndicators)]]">PD/SSFA Result Statement</div>
-        <div class="col flex1">
+        <div class="col flex-c">
           <div class="col col-8">Performance Indicator</div>
           <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Baseline</div>
           <div class="col col-2 right-align" hidden$="[[!thereAreIndicators]]">Target</div>
@@ -137,7 +133,7 @@
                                  on-delete="_openDeleteConfirmation"></edit-delete-actions>
             <span>[[item.name]]</span>
           </div>
-          <div class="flex1 lborder indicators-container">
+          <div class="flex-c lborder indicators-container">
             <div hidden="[[!item.applied_indicators.length]]">
               <template is="dom-repeat"
                         items="[[item.applied_indicators]]"
@@ -145,7 +141,7 @@
                 <applied-indicator data-ind-index$="[[indicatorIndex]]"
                                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator"
                                    on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"
-                                   editMode="[[editMode]]"></applied-indicator>
+                                   edit-mode="[[editMode]]"></applied-indicator>
               </template>
             </div>
             <div class="padd-left padd-top-bott">
@@ -173,7 +169,7 @@
             Add PD output or SSFA expected result
           </paper-icon-button>
         </div>
-        <div class="flex1" hidden$="[[_emptyList(dataItems.length)]]">
+        <div class="flex-c" hidden$="[[_emptyList(dataItems.length)]]">
 
         </div>
       </div>
@@ -215,10 +211,10 @@
           'delete-confirm': '_updateInterventionLocAndClusters',
         },
         observers: [
-          'updateStyle(dataItems.*)'
+          '_seeIfThereAreIndicators(dataItems.*)'
         ],
 
-        updateStyle: function() {
+        _seeIfThereAreIndicators: function() {
           if (!this.dataItems) {
             this.thereAreIndicators = false;
             return;
