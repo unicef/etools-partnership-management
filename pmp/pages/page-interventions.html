@@ -433,7 +433,6 @@
               this._newIntervention(this.newInterventionActive);
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
-              this.fire('set-amendment-mode', {active: intervention.in_amendment});    
           this.async(function() {
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
@@ -549,10 +548,8 @@
       _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
           this._setActivePage(intervListActive, intervDetailsActive, newInterventionActive);
-        }.bind(this), 10);
-        if (intervListActive) {
-          this.fire('set-amendment-mode', {active: false});
-        }
+          this._handleAmendmentMode();
+        }.bind(this), 10);         
       },
 
       _observeRouteDataId: function(id) {
@@ -562,8 +559,20 @@
             id = null;
           }
           this.set('selectedInterventionId', id);
+          this._handleAmendmentMode();
         }.bind(this));
       },
+
+      _handleAmendmentMode: function() {
+        if (this.intervListActive) {
+          this.fire('set-amendment-mode', {active: false});
+        }
+        if (this.intervDetailsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
+          // handles the case when the user goes from an intervention to the list and back to the same intervention
+          this.fire('set-amendment-mode', {active: this.intervention.in_amendment});
+        }
+      },
+      
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
           this.set('intervention.in_amendment', false);
