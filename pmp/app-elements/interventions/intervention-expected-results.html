@@ -83,7 +83,7 @@
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
-                                       on-open-indicator-dialog="_openIndicatorDialog">
+                                       on-open-indicator-dialog="_openIndicatorDialog" >
             </result-link-lower-results>
           </div>
         </etools-data-table-row>
@@ -119,6 +119,14 @@
           },
           indicatorDialog: {
             type: Object
+          },
+          indicatorLocationOptions: {
+            type: Array,
+            observer: '_indicatorLocationOptionsUpdate'
+          },
+          indicatorSectionOptions: {
+            type: Array,
+            observer: '_indicatorSectionOptionsUpdate'
           }
         },
 
@@ -218,8 +226,23 @@
           this.indicatorDialog.openIndicatorDialog();
           this.indicatorDialog.resetValidations();
         },
+
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
+        },
+
+        _indicatorSectionOptionsUpdate: function(sectionOptions) {
+          this._updateIndicatorData('sectionOptionsIds', sectionOptions);
+        },
+
+        _indicatorLocationOptionsUpdate: function(locationOptions) {
+          this._updateIndicatorData('locationOptionsIds', locationOptions);
+        },
+
+        _updateIndicatorData: function(property, data) {
+          if (this.indicatorDialog && typeof data !== 'undefined') {
+            this.indicatorDialog.set(property, data);
+          }
         }
 
       });

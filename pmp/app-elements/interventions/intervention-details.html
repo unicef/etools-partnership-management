@@ -360,11 +360,13 @@
               </div>
             </template>
           <intervention-expected-results id="expectedResults"
-                                        data-items="{{intervention.result_links}}"
-                                        selected-cp-structure="[[intervention.country_programme]]"
-                                        intervention-id="[[intervention.id]]"
-                                        edit-mode$="[[intervention.permissions.edit.result_links]]"
-                                        on-indicators-changed="_updateInteventionLocClustersSections">
+                                         data-items="{{intervention.result_links}}"
+                                         selected-cp-structure="[[intervention.country_programme]]"
+                                         intervention-id="[[intervention.id]]"
+                                         indicator-location-options="[[originalIntervention.locations]]"
+                                         indicator-section-options="[[originalIntervention.flagged_sections]]"
+                                         edit-mode$="[[intervention.permissions.edit.result_links]]"
+                                         on-indicators-changed="_updateInteventionLocClustersSections">
           </intervention-expected-results>
         </template>
         <template is="dom-if" if="[[newIntervention]]">
