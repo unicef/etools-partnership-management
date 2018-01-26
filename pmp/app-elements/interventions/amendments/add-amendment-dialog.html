@@ -37,7 +37,7 @@
 
     <etools-dialog no-padding
                    keep-dialog-open
-                   id="add-amendment-dialog"
+                   id="add-amendment"
                    opened="{{opened}}"
                    size="md"
                    hidden$="[[datePickerOpen]]"
@@ -181,11 +181,11 @@
       },
 
       startSpinner: function() {
-        this.$$('#add-amendment-dialog').startSpinner();
+        this.$$('#add-amendment').startSpinner();
       },
 
       stopSpinner: function() {
-        this.$$('#add-amendment-dialog').stopSpinner();
+        this.$$('#add-amendment').stopSpinner();
       },
 
       _filterAmendmentTypes: function(amendmentTypes, interventionDocumentType) {
