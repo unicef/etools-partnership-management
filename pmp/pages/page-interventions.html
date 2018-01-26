@@ -440,6 +440,7 @@
           }.bind(this), 1000);
         }
       },
+
       _displayAnyMigrationErrors: function(intervention) {
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
@@ -451,6 +452,7 @@
           }
         }
       },
+
       /* Show metadata error message on intervention detail 'page load'*/
       _makeSureMigrationErrorIsNotShownAgainAfterSave: function(intervention) {
         if (this.saved.interventionId !== intervention.id) {
@@ -458,6 +460,7 @@
         }
         this.saved.interventionId = intervention.id;
       },
+
       _isAttachmentsTabReadonly: function(permissions, intervention) {
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
@@ -467,6 +470,7 @@
         }
         return false;
       },
+
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
           if (this.newInterventionActive) {
@@ -566,6 +570,7 @@
       _handleAmendmentMode: function() {
         if (this.intervListActive) {
           this.fire('set-amendment-mode', {active: false});
+          return;
         }
         if (this.intervDetailsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
           // handles the case when the user goes from an intervention to the list and back to the same intervention
@@ -579,17 +584,21 @@
           this._validateAndSaveIntervention(null);
         }
       },
+
       _isNewIntervention: function() {
         return !this.intervention.id;
       },
+
       _forceInterventionRefresh: function(e) {
         e.stopImmediatePropagation();
         this.$.interventionData.fetchIntervention(this.intervention.id);
       },
+
       _updateInterventionStatus: function(event) {
         event.stopImmediatePropagation();
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
+
       _hasEditPermissions: function(permissions, intervention) {
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {
@@ -652,7 +661,7 @@
        * Get intervention details page title: 'partner name: intervention number'
        */
       _getInterventionDetailsTitle: function(intervention) {
-        var title = '';
+        let title = '';
         if (intervention) {
           if (intervention.partner) {
             title += intervention.partner + ': ';
