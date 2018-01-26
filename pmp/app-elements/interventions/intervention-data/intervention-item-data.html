@@ -80,11 +80,11 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fetchInterventon(newId);
+            this.fetchIntervention(newId);
           }
         },
 
-        fetchInterventon: function(id) {
+        fetchIntervention: function(id) {
           this.fire('global-loading', {
             message: 'Loading PD/SSFA data...',
             active: true,
