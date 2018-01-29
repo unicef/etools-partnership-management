@@ -1,23 +1,16 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<!-- TODO: check for missing/deprecated imports  -->
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
-<link rel="import" href="../../../app-behaviors/common-behavior.html">
 
-<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
+<link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/file-styles.html">
-<link rel="import" href="../../../../styles/app-mixins.html">
 
-<link rel="import" href="../../common-elements/etools-date-input.html">
-<link rel="import" href="../../common-elements/etools-single-file.html">
-
-<link rel="import" href="../../../app-behaviors/dropdown-behavior.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="add-amendment-dialog.html">
 
 <dom-module id="intervention-amendments">
@@ -25,14 +18,9 @@
     <style
         include="shared-styles data-table-styles grid-layout-styles">
       [hidden] {
-        display: none !important;
-      }
+        display: none !important;     }
       :host {
-        display: block;
         width: 100%;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
       }
       .list-container {
         position: relative;
@@ -41,65 +29,74 @@
         color: var(--dark-icon-color);
         margin-right: 8px;
       }
+      etools-content-panel {
+        margin-top: 24px;
+        margin-bottom: 24px;
+      }
     </style>
 
-    <div class="list-container" id="amendments-wrapper">
-      <etools-data-table-header id="listHeader"
-                                no-collapse
-                                no-title
-                                hidden$="[[_emptyList(dataItems.length)]]">
-        <etools-data-table-column class="col-1">
-          Ref #
-        </etools-data-table-column>
-        <etools-data-table-column class="col-1">
-          Signed Date
-        </etools-data-table-column>
-        <etools-data-table-column class="col-2">
-          Amendment Types
-        </etools-data-table-column>
-        <etools-data-table-column class="col-4">
-          Signed Amendment
-        </etools-data-table-column>
-        <etools-data-table-column class="col-4">
-          Other details
-        </etools-data-table-column>
-
-      </etools-data-table-header>
-      <template is="dom-repeat" items="[[dataItems]]">
-        <etools-data-table-row no-collapse secondary-bg-on-hover>
-          <div slot="row-data">
-            <span class="col-data col-1">
-              [[item.amendment_number]]
-            </span>
-            <span class="col-data col-1">
-              [[item.signed_date]]
-            </span>
-            <span class="col-data col-2">
-              [[_getReadonlyAmendmentTypes(item.types)]]
-            </span>
-            <span class="col-data col-4">
-              <iron-icon icon="attachment" class="attachment"></iron-icon>
-              <a href$="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
-            </span>
-            <span class="col-data col-4">
-              <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
-                [[item.other_description]]
-              </template>
-            </span>
-          </div>
-        </etools-data-table-row>
-      </template>
-      <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
-        <div class="row-h" id="no-amend-warning">
-          <p>There are no amendments added.</p>
+    <etools-content-panel panel-title="Amendments">
+      <template is="dom-if" if="[[editMode]]">
+        <div slot="panel-btns" id="add-btn">
+          <paper-icon-button icon="add-box"
+                            title="Add Amendment"
+                            on-tap="_showAddAmendmentDialog">
+          </paper-icon-button>
         </div>
       </template>
-    </div>
-    <!-- <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_showAddAmendmentDialog"
-                 title="Add"></paper-fab>
-    </div> -->
+      <div class="list-container" id="amendments-wrapper">
+        <etools-data-table-header id="listHeader"
+                                  no-collapse
+                                  no-title
+                                  hidden$="[[_emptyList(dataItems.length)]]">
+          <etools-data-table-column class="col-1">
+            Ref #
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
+            Signed Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Amendment Types
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4">
+            Signed Amendment
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4">
+            Other Info
+          </etools-data-table-column>
+
+        </etools-data-table-header>
+        <template is="dom-repeat" items="[[dataItems]]">
+          <etools-data-table-row no-collapse secondary-bg-on-hover>
+            <div slot="row-data">
+              <span class="col-data col-1">
+                [[item.amendment_number]]
+              </span>
+              <span class="col-data col-1">
+                [[prettyDate(item.signed_date)]]
+              </span>
+              <span class="col-data col-2">
+                [[_getReadonlyAmendmentTypes(item.types)]]
+              </span>
+              <span class="col-data col-4">
+                <iron-icon icon="attachment" class="attachment"></iron-icon>
+                <a href$="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
+              </span>
+              <span class="col-data col-4">
+                <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
+                  [[item.other_description]]
+                </template>
+              </span>
+            </div>
+          </etools-data-table-row>
+        </template>
+        <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
+          <div class="row-h" id="no-amend-warning">
+            <p>There are no amendments added.</p>
+          </div>
+        </template>
+      </div>
+    </etools-content-panel>
   </template>
 
   <script>
@@ -162,7 +159,6 @@
           this.addAmendmentDialog.toastEventSource = this;
           this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
           document.querySelector('body').appendChild(this.addAmendmentDialog);
-
         },
 
         _getReadonlyAmendmentTypes: function(types) {
