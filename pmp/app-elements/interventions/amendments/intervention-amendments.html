@@ -36,7 +36,10 @@
       .break-word {
         word-break: break-word;
         word-wrap: break-word; /* for IE */
-        display: block !important;
+        align-items: center;
+      }
+      .file-label {
+        width: calc(100% - 32px);
       }
     </style>
 
@@ -84,15 +87,17 @@
                 [[_getReadonlyAmendmentTypes(item.types)]]
               </span>
               <span class="col-data col-4">
-                <span class="truncate">
-                  <iron-icon icon="attachment" class="attachment"></iron-icon>
-                  <!-- target="_blank" is there for IE -->
-                  <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
-                </span>
+                <iron-icon icon="attachment" class="attachment"></iron-icon>
+                  <span class="break-word file-label">
+                    <!-- target="_blank" is there for IE -->
+                    <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                  </span>
               </span>
               <div class="col-data col-3 break-word">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
-                  [[item.other_description]]
+                  <div>
+                    [[item.other_description]]
+                  </div>
                 </template>
               </div>
             </div>
