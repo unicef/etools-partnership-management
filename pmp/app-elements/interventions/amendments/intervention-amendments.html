@@ -52,7 +52,7 @@
           <etools-data-table-column class="col-1">
             Ref #
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
             Signed Date
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
@@ -61,7 +61,7 @@
           <etools-data-table-column class="col-4">
             Signed Amendment
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Other Info
           </etools-data-table-column>
 
@@ -72,17 +72,17 @@
               <span class="col-data col-1">
                 [[item.amendment_number]]
               </span>
-              <span class="col-data col-1">
+              <span class="col-data col-2">
                 [[prettyDate(item.signed_date)]]
               </span>
               <span class="col-data col-2">
                 [[_getReadonlyAmendmentTypes(item.types)]]
               </span>
-              <span class="col-data col-4">
+              <span class="col-data col-4 truncate">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <a href$="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
               </span>
-              <span class="col-data col-4">
+              <span class="col-data col-3">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
                   [[item.other_description]]
                 </template>
