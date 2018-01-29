@@ -117,8 +117,7 @@
 
       <template is="dom-repeat" items="{{dataItems}}">
         <div class="horizontal-layout lower-result-row">
-          <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement"
-               style="position:relative">
+          <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
             <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
                                  on-delete="_openDeleteConfirmation"></edit-delete-actions>
             <span>[[item.name]]</span>
