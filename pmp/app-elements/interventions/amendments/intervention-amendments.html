@@ -33,6 +33,11 @@
         color: var(--dark-icon-color);
         margin-right: 8px;
       }
+      .break-word {
+        word-break: break-word;
+        word-wrap: break-word; /* for IE */
+        display: block !important;
+      }
     </style>
 
     <etools-content-panel panel-title="Amendments">
@@ -81,13 +86,13 @@
               <span class="col-data col-4 truncate">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
                 <!-- target="_blank" is there for IE -->
-                <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[item.signed_amendment_file_name]]</a>
+                <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
               </span>
-              <span class="col-data col-3">
+              <div class="col-data col-3 break-word">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
                   [[item.other_description]]
                 </template>
-              </span>
+              </div>
             </div>
           </etools-data-table-row>
         </template>
@@ -202,18 +207,6 @@
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
-
-          this.async(function() {
-            // renders appropriate mixins to amendments that get added
-            this.updateStyles();
-          }.bind(this), 0);
-          this._prepareFileData();
-        },
-
-        _prepareFileData: function() {
-          this.dataItems.forEach(function(elem) {
-            elem.signed_amendment_file_name = this.getFileNameFromURL(elem.signed_amendment_file);
-          }.bind(this));
         },
 
         _unlockInterventionDetailsFields: function() {
