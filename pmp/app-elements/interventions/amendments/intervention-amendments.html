@@ -27,82 +27,27 @@
       [hidden] {
         display: none !important;
       }
-      .list-container {
-        position: relative;
-      }
-        /* old css below */
       :host {
         display: block;
         width: 100%;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
-
       }
-      #amendments-wrapper {
-        margin-top: 16px;
+      .list-container {
+        position: relative;
       }
-
-      :host(:not([edit-mode])) #amendments-wrapper {
-        margin-bottom: 24px;
-      }
-
-      #no-amend-warning {
-        padding: 24px;
-      }
-      .item-actions-container {
-        min-width: 36px;
+      .attachment {
+        color: var(--dark-icon-color);
+        margin-right: 8px;
       }
     </style>
-    <!-- <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
-      <template is="dom-repeat" id="amendmentsRepeater" items="[[dataItems]]">
-        <div class="row-h item-container">
-          <div class="item-actions-container locked"
-               data-item-nr$="[[_getItemNr(index)]]">
-          </div>
-          <div class="item-content">
-            <div class="row-h flex-c">
-              <div class="col col-4">
-                <paper-input label="Amendment Types" value$="[[_getReadonlyAmendmentTypes(item.types)]]"
-                               readonly></paper-input>
-              </div>
-              <div class="col col-3">
-                <etools-date-input id$="signedDate_[[index]]"
-                                   label="Signed date"
-                                   value="[[item.signed_date]]"
-                                   readonly>
-                </etools-date-input>
-              </div>
-              <div class="col col-5 file-container">
-                <etools-single-file id$="fileUpload_[[index]]"
-                                    label="Signed Agreement"
-                                    internal-file$="[[item.signed_amendment_file]]"
-                                    file$="[[item.signed_amendment]]"
-                                    readonly></etools-single-file>
-              </div>
-            </div>
-            <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]">
-              <paper-input id="other"
-                           placeholder="&#8212;"
-                           label="Other"
-                           value="[[item.other_description]]"
-                           readonly>
-              </paper-input>
-            </div>
-          </div>
 
-        </div>
-      </template>
-    </div> -->
-    <div class="list-container" hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
+    <div class="list-container" id="amendments-wrapper">
       <etools-data-table-header id="listHeader"
                                 no-collapse
-                                no-title>
+                                no-title
+                                hidden$="[[_emptyList(dataItems.length)]]">
         <etools-data-table-column class="col-1">
           Ref #
         </etools-data-table-column>
@@ -133,11 +78,13 @@
               [[_getReadonlyAmendmentTypes(item.types)]]
             </span>
             <span class="col-data col-4">
-              <iron-icon icon="attachment"></iron-icon>
-              <a href="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
+              <iron-icon icon="attachment" class="attachment"></iron-icon>
+              <a href$="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
             </span>
             <span class="col-data col-4">
-              [[item.other_description]]
+              <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
+                [[item.other_description]]
+              </template>
             </span>
           </div>
         </etools-data-table-row>
@@ -229,7 +176,7 @@
             let amdTypesLabels = amdTypes.map(function(t) {
               return t.label;
             });
-            return amdTypesLabels.join(' | ');
+            return amdTypesLabels.join(', ');
           }
           return null;
         },
@@ -270,7 +217,6 @@
           this.dataItems.forEach(function(elem) {
             elem.signed_amendment_file_name = this.getFileNameFromURL(elem.signed_amendment_file);
           }.bind(this));
-          // this.prepareEtoolsFileDataFromUrl(this.internalFile)
         },
 
         _unlockInterventionDetailsFields: function() {
@@ -279,10 +225,6 @@
             // after the permissions are updated, the fields will automatically unlock
             this.fire('refresh-intervention');
           }
-        },
-
-        _getItemNr: function(index) {
-          return parseInt(index, 10) + 1;
         },
 
         _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength) {
