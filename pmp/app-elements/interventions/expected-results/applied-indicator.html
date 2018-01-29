@@ -57,7 +57,7 @@
       }
       .bolder-txt {
         font-weight: 500;
-        color:black;
+        color: black;
       }
     </style>
 
@@ -176,8 +176,8 @@
             return this.indicator.locations.indexOf(parseInt(loc.id)) > -1;
           }.bind(this));
           let locNames = locations.map(function(l) {
-            return { name: l.name.substring(0, l.name.indexOf('[')),
-                     adminLevel: l.name.substring(l.name.indexOf('['))
+            return {name: l.name.substring(0, l.name.indexOf('[')),
+                    adminLevel: l.name.substring(l.name.indexOf('['))
                    };
           });
           this.locationNames = locNames;
@@ -209,7 +209,7 @@
             return this.indicator.disaggregation.indexOf(parseInt(d.id)) > -1;
           }.bind(this));
           let disaggregNames = disaggregs.map(function(d) {
-            return { name: d.name , groups: this._getDisaggregGroups(d.disaggregation_values)};
+            return {name: d.name , groups: this._getDisaggregGroups(d.disaggregation_values)};
           }.bind(this));
           this.disaggregationNames = disaggregNames;
         },
