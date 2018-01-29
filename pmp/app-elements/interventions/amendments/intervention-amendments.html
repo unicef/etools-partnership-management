@@ -3,6 +3,10 @@
 <link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<!-- TODO: check for missing/deprecated imports  -->
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
+
 <link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
@@ -19,11 +23,14 @@
 <dom-module id="intervention-amendments">
   <template strip-whitespace>
     <style
-        include="grid-layout-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles shared-styles">
+        include="shared-styles data-table-styles grid-layout-styles">
       [hidden] {
         display: none !important;
       }
-
+      .list-container {
+        position: relative;
+      }
+        /* old css below */
       :host {
         display: block;
         width: 100%;
@@ -35,8 +42,8 @@
         --paper-fab: {
           @apply --paper-fab-btn-green;
         };
-      }
 
+      }
       #amendments-wrapper {
         margin-top: 16px;
       }
@@ -52,7 +59,7 @@
         min-width: 36px;
       }
     </style>
-    <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
+    <!-- <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
       <template is="dom-repeat" id="amendmentsRepeater" items="[[dataItems]]">
         <div class="row-h item-container">
           <div class="item-actions-container locked"
@@ -61,12 +68,10 @@
           <div class="item-content">
             <div class="row-h flex-c">
               <div class="col col-4">
-                <!-- Amendment Type -->
                 <paper-input label="Amendment Types" value$="[[_getReadonlyAmendmentTypes(item.types)]]"
                                readonly></paper-input>
               </div>
               <div class="col col-3">
-                <!-- Signed Date -->
                 <etools-date-input id$="signedDate_[[index]]"
                                    label="Signed date"
                                    value="[[item.signed_date]]"
@@ -74,10 +79,9 @@
                 </etools-date-input>
               </div>
               <div class="col col-5 file-container">
-                <!-- Signed Agreement -->
                 <etools-single-file id$="fileUpload_[[index]]"
                                     label="Signed Agreement"
-                                    internal-file$=[[item.signed_amendment_file]]
+                                    internal-file$="[[item.signed_amendment_file]]"
                                     file$="[[item.signed_amendment]]"
                                     readonly></etools-single-file>
               </div>
@@ -94,16 +98,61 @@
 
         </div>
       </template>
-    </div>
+    </div> -->
+    <div class="list-container" hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
+      <etools-data-table-header id="listHeader"
+                                no-collapse
+                                no-title>
+        <etools-data-table-column class="col-1">
+          Ref #
+        </etools-data-table-column>
+        <etools-data-table-column class="col-1">
+          Signed Date
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2">
+          Amendment Types
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4">
+          Signed Amendment
+        </etools-data-table-column>
+        <etools-data-table-column class="col-4">
+          Other details
+        </etools-data-table-column>
 
-    <div id="no-amend-warning" class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      There are no amendments added.
+      </etools-data-table-header>
+      <template is="dom-repeat" items="[[dataItems]]">
+        <etools-data-table-row no-collapse secondary-bg-on-hover>
+          <div slot="row-data">
+            <span class="col-data col-1">
+              [[item.amendment_number]]
+            </span>
+            <span class="col-data col-1">
+              [[item.signed_date]]
+            </span>
+            <span class="col-data col-2">
+              [[_getReadonlyAmendmentTypes(item.types)]]
+            </span>
+            <span class="col-data col-4">
+              <iron-icon icon="attachment"></iron-icon>
+              <a href="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
+            </span>
+            <span class="col-data col-4">
+              [[item.other_description]]
+            </span>
+          </div>
+        </etools-data-table-row>
+      </template>
+      <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
+        <div class="row-h" id="no-amend-warning">
+          <p>There are no amendments added.</p>
+        </div>
+      </template>
     </div>
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
+    <!-- <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
       <paper-fab icon="add"
                  on-tap="_showAddAmendmentDialog"
                  title="Add"></paper-fab>
-    </div>
+    </div> -->
   </template>
 
   <script>
@@ -116,7 +165,7 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsPmpApp.Behaviors.Dropdown
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -214,6 +263,14 @@
             // renders appropriate mixins to amendments that get added
             this.updateStyles();
           }.bind(this), 0);
+          this._prepareFileData();
+        },
+
+        _prepareFileData: function() {
+          this.dataItems.forEach(function(elem) {
+            elem.signed_amendment_file_name = this.getFileNameFromURL(elem.signed_amendment_file);
+          }.bind(this));
+          // this.prepareEtoolsFileDataFromUrl(this.internalFile)
         },
 
         _unlockInterventionDetailsFields: function() {
