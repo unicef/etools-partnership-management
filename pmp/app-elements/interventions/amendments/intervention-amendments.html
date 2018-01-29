@@ -17,7 +17,8 @@
   <template strip-whitespace>
     <style include="shared-styles data-table-styles grid-layout-styles">
       [hidden] {
-        display: none !important;     }
+        display: none !important;
+      }
       :host {
         display: block;
         width: 100%;
@@ -79,7 +80,8 @@
               </span>
               <span class="col-data col-4 truncate">
                 <iron-icon icon="attachment" class="attachment"></iron-icon>
-                <a href$="[[item.signed_amendment_file]]" download>[[item.signed_amendment_file_name]]</a>
+                <!-- target="_blank" is there for IE -->
+                <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[item.signed_amendment_file_name]]</a>
               </span>
               <span class="col-data col-3">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
