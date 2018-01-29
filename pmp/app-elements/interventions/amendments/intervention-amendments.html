@@ -41,6 +41,11 @@
       .file-label {
         width: calc(100% - 32px);
       }
+      /* for IE */
+      .other-description {
+        display: block;
+        width: 100%;
+      }
     </style>
 
     <etools-content-panel panel-title="Amendments">
@@ -95,7 +100,7 @@
               </span>
               <div class="col-data col-3 break-word">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
-                  <div>
+                  <div class="other-description">
                     [[item.other_description]]
                   </div>
                 </template>
