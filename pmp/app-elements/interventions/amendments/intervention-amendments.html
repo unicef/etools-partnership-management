@@ -83,10 +83,12 @@
               <span class="col-data col-2">
                 [[_getReadonlyAmendmentTypes(item.types)]]
               </span>
-              <span class="col-data col-4 truncate">
-                <iron-icon icon="attachment" class="attachment"></iron-icon>
-                <!-- target="_blank" is there for IE -->
-                <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+              <span class="col-data col-4">
+                <span class="truncate">
+                  <iron-icon icon="attachment" class="attachment"></iron-icon>
+                  <!-- target="_blank" is there for IE -->
+                  <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                </span>
               </span>
               <div class="col-data col-3 break-word">
                 <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
