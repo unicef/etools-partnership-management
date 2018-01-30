@@ -23,7 +23,6 @@
         --list-icon-color: white !important;
         --edit-delete-actions: {
           background-color: #dfdfdf !important;
-          right: 16px;
         };
         --list-row-wrapper: {
           padding: 0 24px 0 0 !important;
@@ -60,11 +59,14 @@
       etools-data-table-row div[slot="row-data"]:hover edit-delete-actions{
         visibility: visible;
       }
+      .bolder-txt {
+        font-weight: 600;
+      }
     </style>
 
 
-    <etools-data-table-row style="position:relative">
-      <div slot="row-data">
+    <etools-data-table-row>
+      <div slot="row-data" class="p-relative">
         <div class="col-8">
             [[_getIndicatorType(indicator.indicator.unit)]][[_getIndicatorTitle(indicator)]]
         </div>
@@ -85,13 +87,13 @@
             <div class="divider"></div>
             <div class="header-text">Disaggregation</div>
             <template is="dom-repeat" items="[[disaggregationNames]]">
-                <div>[[item]]</div>
+                <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
             </template>
           </div>
           <div class="col-8 padd-left">
               <div class="header-text">Locations</div>
               <template is="dom-repeat" items="[[locationNames]]">
-                  <div>[[item]]</div>
+                  <div><span class="bolder-txt">[[item.name]]</span> [[item.adminLevel]]</div>
               </template>
 
           </div>
@@ -177,7 +179,9 @@
             return this.indicator.locations.indexOf(parseInt(loc.id)) > -1;
           }.bind(this));
           let locNames = locations.map(function(l) {
-            return l.name;
+            return {name: l.name.substring(0, l.name.indexOf('[')),
+                    adminLevel: l.name.substring(l.name.indexOf('['))
+                   };
           });
           this.locationNames = locNames;
         },
@@ -208,7 +212,7 @@
             return this.indicator.disaggregation.indexOf(parseInt(d.id)) > -1;
           }.bind(this));
           let disaggregNames = disaggregs.map(function(d) {
-            return d.name + ': ' + this._getDisaggregGroups(d.disaggregation_values);
+            return {name: d.name , groups: this._getDisaggregGroups(d.disaggregation_values)};
           }.bind(this));
           this.disaggregationNames = disaggregNames;
         },
@@ -229,9 +233,9 @@
           }
           switch (unit) {
             case 'number':
-              return '# - ';
+              return '# ';
             case 'percentage':
-              return '% - ';
+              return '% ';
           }
         },
         _getIndicatorTitle: function(indicator) {
