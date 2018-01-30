@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Interventions Overview</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+    <link rel="import" href="../test-helpers/testing-utils.html">
+    <link rel="import" href="../test-helpers/interventions-testing-helper.html">
+    <link rel="import" href="../test-helpers/static-data-mockup.html">
+    <link rel="import" href="../../pmp/pages/models/intervention-models.html">
+
+    <link rel="import" href="../../pmp/app-config/app-dexie-db-config.html">
+    <link rel="import" href="../../pmp/app-elements/interventions/intervention-overview.html">
+  </head>
+  <body>
+    <test-fixture id="interventionOverviewFixture">
+        <template>
+          <intervention-overview></intervention-overview>
+        </template>
+    </test-fixture>
+
+    <script>
+
+      suite('intervention-overview test', function() {
+        let intervOverview;
+        setup(function(done) {
+          intervOverview = fixture('interventionOverviewFixture');
+          done();
+        });
+
+        test('intervention-overview has an instance', function() {
+          assert.equal(intervOverview.is, 'intervention-overview');
+        });
+      });
+
+      suite('Overview test', function() {
+        let intervOverview;
+        setup(function() {
+          intervOverview = fixture('interventionOverviewFixture');
+          intervOverview.newIntervention = false;
+
+          intervOverview.sections = sections;
+          intervOverview.intervention = PmpTestsHelper.deepCloneObject(interventionData);
+        });
+
+        test('Element is rendered', function(done) {
+          flush(function() {
+            expect(PmpTestsHelper.elementIsVisible(intervOverview)).to.be.equal(true);
+            done();
+          });
+        });
+
+        test('Details populated', function(done) {
+          flush(function() {
+            let docTitle = PmpTestsHelper.shadowDomQuery(intervOverview, '#document_title');
+            expect(docTitle.innerText).to.equal('Provision of water, sanitation and hygiene promotion assistance to the displaced Syrian population in Jordan.');
+
+            let docSections = PmpTestsHelper.shadowDomQuery(intervOverview, '#intervention-sections');
+            expect(docSections.innerText).to.equal('Health and Nutrition');
+
+            let cpOutputs = PmpTestsHelper.shadowDomQuery(intervOverview, '#cp_outputs_list');
+            expect(cpOutputs.children.length).to.equal(1);
+
+            let timeline = PmpTestsHelper.shadowDomQuery(intervOverview, '#interventions_timeline');
+            expect(timeline.innerText).to.equal('1 Apr 2016 - 31 Aug 2017');
+
+            done();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
