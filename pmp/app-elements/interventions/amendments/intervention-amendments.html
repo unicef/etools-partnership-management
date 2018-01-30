@@ -50,7 +50,7 @@
 
     <etools-content-panel panel-title="Amendments">
       <template is="dom-if" if="[[editMode]]">
-        <div slot="panel-btns" id="add-btn">
+        <div slot="panel-btns">
           <paper-icon-button icon="add-box"
                             title="Add Amendment"
                             on-tap="_showAddAmendmentDialog">
@@ -77,8 +77,8 @@
           <etools-data-table-column class="col-3">
             Other Info
           </etools-data-table-column>
-
         </etools-data-table-header>
+
         <template is="dom-repeat" items="[[dataItems]]">
           <etools-data-table-row no-collapse secondary-bg-on-hover>
             <div slot="row-data">
@@ -109,7 +109,7 @@
           </etools-data-table-row>
         </template>
         <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
-          <div class="row-h" id="no-amend-warning">
+          <div class="row-h">
             <p>There are no amendments added.</p>
           </div>
         </template>
@@ -157,15 +157,6 @@
         ],
 
         ready: function() {
-          this.dataSetModel = {
-            id: null,
-            types: [],
-            other_description: null,
-            signed_date: null,
-            signed_amendment: null,
-            signed_amendment_file: '',
-            amendment_number: null
-          };
           this._createAddAmendmentDialog();
         },
 
@@ -223,7 +214,7 @@
 
         _unlockInterventionDetailsFields: function() {
           if (!this.amendActionInProgress) {
-            // we need the new permissions for ammendment mode, so we have to refresh the intervention data
+            // we need the new permissions for ammendment mode, so we have to refresh the intervention data;
             // after the permissions are updated, the fields will automatically unlock
             this.fire('refresh-intervention');
           }
@@ -233,10 +224,7 @@
           if (!selectedAmdTypes || !selectedAmdTypes.length) {
             return false;
           }
-          if (selectedAmdTypes.indexOf('other') > -1) {
-            return true;
-          }
-          return false;
+          return selectedAmdTypes.indexOf('other') > -1;
         },
 
         _emptyList: function(listLength) {
