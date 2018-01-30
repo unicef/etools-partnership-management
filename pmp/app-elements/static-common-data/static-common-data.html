@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="behaviors/country-programmes-data.html">
 <link rel="import" href="behaviors/dropdowns-pmp-data.html">
@@ -16,7 +17,6 @@
 <link rel="import" href="behaviors/user-country-data.html">
 <link rel="import" href="behaviors/disaggregations-data.html">
 <link rel="import" href="behaviors/prp-countries.html">
-<link rel="import" href="behaviors/environment-flags.html">
 
 <dom-module id="static-common-data">
   <script>
@@ -25,6 +25,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.CountryProgrammesData,
         EtoolsPmpApp.Behaviors.DropdownsPmpData,
@@ -37,13 +38,8 @@
         EtoolsPmpApp.Behaviors.UserCountryData,
         EtoolsPmpApp.Behaviors.DisaggregationsData,
         EtoolsPmpApp.Behaviors.PRPCountries,
-        EtoolsPmpApp.Behaviors.EnvFlagsData
       ],
       properties: {
-        environmentFlagsEndpointName: {
-          type: String,
-          value: 'environmentFlags'
-        },
         pmpStaticDataEndpointsNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
@@ -56,12 +52,17 @@
       },
 
       ready: function() {
-        // request environment flags
-        this._makeRequest(this.environmentFlagsEndpointName,
-            this._environmentFlagsSuccessHandler.bind(this), this._errorHandler);
-
         // get PMP static data
         this._getStaticData(this.pmpStaticDataEndpointsNames);
+        this._handlePrpData();
+      },
+
+      _handlePrpData: function() {
+        this._waitForEnvFlagsToLoad().then(function() {
+          if (this.showPrpReports()) {
+            this._getStaticData(this.prpStaticDataEndpointsNames);
+          }
+        }.bind(this));
       },
 
       _getStaticData: function(endpointsNames) {
@@ -78,21 +79,6 @@
         }).catch(function(error) {
           errorHandler.bind(self, error)();
         });
-      },
-
-      _needToFirePrpReq: function(resp) {
-        return resp && resp.active_flags instanceof Array && resp.active_flags.indexOf('prp_mode_off') === -1;
-      },
-
-      /**
-       * Environment flags will tell us if we have to get static prp data too
-       */
-      _environmentFlagsSuccessHandler: function(resp) {
-        this._getEndpointSuccessHandler(this.environmentFlagsEndpointName).bind(this, resp)();
-        if (this._needToFirePrpReq(resp)) {
-          // get PRP static data
-          this._getStaticData(this.prpStaticDataEndpointsNames);
-        }
       },
 
       _errorHandler: function(err) {
@@ -123,8 +109,6 @@
             return this._handleDisaggregationsResponse;
           case 'getPRPCountries':
             return this._handlePRPCountryDataResponse;
-          case 'environmentFlags':
-            return this._handleEnvironmentFlagsResponse;
         }
       }
 

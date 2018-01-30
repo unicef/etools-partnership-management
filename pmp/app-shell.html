@@ -26,13 +26,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="app-config/app-dexie-db-config.html">
 <link rel="import" href="app-config/app-config.html">
-<link rel="import" href="app-config/environment-flags-behavior.html">
+<link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 <link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
 <link rel="import" href="app-menu/styles/app-drawer-styles.html">
 
+<link rel="import" href="app-elements/environment-flags/environment-flags.html">
 <link rel="import" href="app-elements/users-data/user-data.html">
 <link rel="import" href="app-elements/page-header/page-header.html">
 <link rel="import" href="app-elements/page-footer/page-footer.html">
@@ -107,6 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <environment-flags></environment-flags>
     <etools-piwik-analytics page="[[subroute.path]]"
                             user="[[user]]"
                             toast="[[currentToastMessage]]"></etools-piwik-analytics>
@@ -339,10 +341,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
             this.set('subroute', subroute);
           }
-
-          if (this._validatePageChange(routePage)) {
-            this.set('page', routePage);
-          }
+          this._validatePageChange(routePage).then(function(redirectApproved) {
+            if (redirectApproved) {
+              this.set('page', routePage);
+            }
+          }.bind(this));
         }.bind(this), 10);
       },
 
@@ -383,11 +386,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _validatePageChange: function(page) {
-        if (this.prpPages.indexOf(page) > -1 && !this.showPrpReports()) {
-          this._handleNotFound();
-          return false;
-        }
-        return true;
+        let self = this;
+        return self._waitForEnvFlagsToLoad().then(function() {
+          if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
+            self._handleNotFound();
+            return false;
+          }
+          return true;
+        });
       },
 
       _activePageIs: function(activePage, expectedPages) {
