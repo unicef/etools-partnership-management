@@ -19,6 +19,9 @@
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
+       [hidden] {
+        display: none !important;
+      }
       .radioGroup {
         width: 320px;
       }
@@ -47,7 +50,7 @@
 
         </div>
       </div>
-      <div class="layout-vertical">
+      <div class="layout-vertical" hidden$="[[!_showDisplayType(indicator.indicator.unit)]]">
         <label class="paper-label">Display Type </label>
         <div class="radioGroup">
            <paper-radio-group  selected="{{indicator.indicator.display_type}}">
@@ -175,7 +178,9 @@
           '_targetChanged(indicator.target)',
           '_baselineUnknownChanged(baselineIsUnknown)'
         ],
-
+        _showDisplayType: function(unit) {
+          return (unit === 'percentage') ? true : false;
+        },
         _unitIsNumeric: function(unit) {
           return unit === 'number';
         },
