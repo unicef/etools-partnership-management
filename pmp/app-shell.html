@@ -218,11 +218,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       listeners: {
         'drawer': 'toggleDrawer',
-        '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'not-found-redirect': '_handleNotFound'
+        'not-found-redirect': '_pageNotFound'
       },
 
       _onForbidden: function(event) {
@@ -270,11 +269,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this._updatePath(event.detail.path);
         }
         event.stopImmediatePropagation();
-      },
-
-      _handleNotFound: function() {
-        this.fire('clear-loading-messages', {});
-        this._updatePath('not-found');
       },
 
       _updatePath: function(path) {
@@ -337,8 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.set('route.path', this.baseUrl + 'not-found');
-        this.set('route.__queryParams', null);
+        this._updatePath('not-found');
         this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
@@ -350,7 +343,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         let self = this;
         return self._waitForEnvFlagsToLoad().then(function() {
           if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
-            self._handleNotFound();
+            self._pageNotFound();
             return false;
           }
           return true;
