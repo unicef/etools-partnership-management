@@ -33,13 +33,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -75,7 +75,7 @@
         <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
           <div class="top-content-row">
             <paper-tabs id="partnerTabs"
-                        selected="{{activeTab}}"
+                        selected="{{routeData.tab}}"
                         attr-for-selected="name"
                         noink bottom-item
                         on-iron-select="_handleTabSelectAction">
@@ -167,6 +167,7 @@
       ],
 
       properties: {
+        listActive: Boolean,
         tabsActive: {
           type: Boolean
         },
@@ -175,11 +176,6 @@
         },
         routeData: {
           type: Object,
-        },
-        activeTab: {
-          type: String,
-          value: '',
-          observer: '_activeTabChanged'
         },
         csvDownloadUrl: {
           type: String
@@ -203,13 +199,13 @@
           value: []
         },
         currentPage: String,
-        originalPartnerData: Object,
-        listActive: Boolean
+        originalPartnerData: Object
       },
 
       observers: [
-        '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, activeTab)',
+          // TODO: this should removed, keep tabs notifyResize(inside new and future tabs element)
+//        '_updateUrlTab(routeData.tab)',
+        '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)'
       ],
 
@@ -217,7 +213,8 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_handlePageTabAttached'
+        'partners-page-attached': '_handlePageTabAttached',
+        'trigger-partner-loading-msg': '_handlePartnerSelectionLoadingMsg'
       },
 
       ready: function() {
@@ -235,22 +232,11 @@
         /**
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
-        this.fire('global-loading', {
-          message: 'Loading ' + (this.listActive ? 'partners list' :
-              (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
-          active: true,
-          loadingSource: 'partners-page'
-        });
+        this._showPartnersPageLoadingMessage();
       },
       detached: function() {
         if (this.newPartnerDialog) {
           document.querySelector('body').removeChild(this.newPartnerDialog);
-        }
-      },
-
-      _activeTabChanged: function(activeTab) {
-        if (activeTab) {
-          this.set('routeData.tab', activeTab);
         }
       },
 
@@ -264,7 +250,7 @@
         } else {
           this.set('serverErrors', []);
         }
-        if (page) {
+        if (page && page !== this.partnerPage) {
           let self = this;
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             self.set('partnerPage', page);
@@ -277,23 +263,23 @@
         }
       },
 
-      _pageChanged: function(listActive, tab) {
-        this._setActivePage(listActive, tab);
+      _pageChanged: function(listActive, tabsActive, routeData) {
+        if (!listActive && !tabsActive) {
+          return;
+        }
+        this._setActivePage(listActive, routeData.tab);
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && permissions.editPartnerDetails === true) {
-          return true;
-        }
-        return false;
+        return permissions && permissions.editPartnerDetails === true;
       },
 
-      _updateUrlTab: function(tab) {
-        if (!tab) {
-          return;
-        }
-        this._updateTabPath(tab, this.route.path, '#partnerTabs');
-      },
+//      _updateUrlTab: function(tab) {
+//        if (!tab) {
+//          return;
+//        }
+//        this._updateTabPath(tab, this.route.path, '#partnerTabs');
+//      },
 
       _savePartner: function(newPartnerData) {
         let partnerData = this.$$('#partnerData');
@@ -328,7 +314,7 @@
       },
 
       _observeRouteDataId: function(id) {
-        if (this.route && this.route.path.indexOf('partners') > -1) {
+        if (this.route && this.route.prefix.indexOf('partners') > -1) {
           this.set('selectedPartnerId', id);
         }
       },
@@ -439,6 +425,22 @@
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
       },
+
+      _handlePartnerSelectionLoadingMsg: function() {
+        this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+      },
+
+      /**
+       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showPartnersPageLoadingMessage: function() {
+        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
+        this.fire('global-loading', {
+          message: 'Loading ' + appSection + ' elements...',
+          active: true,
+          loadingSource: 'partners-page'
+        });
+      }
 
     });
 

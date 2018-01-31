@@ -193,8 +193,9 @@
           <div slot="row-data">
             <span class="col-data col-2 ">
               <a class="ag-ref truncate"
-                href="agreements/[[agreement.id]]/details"
-                title="[[getDisplayValue(agreement.agreement_number)]]">
+                 href="agreements/[[agreement.id]]/details"
+                 title="[[getDisplayValue(agreement.agreement_number)]]"
+                 on-tap="_triggerAgreementLoadingMsg">
                 [[getDisplayValue(agreement.agreement_number)]]
               </a>
             </span>
@@ -617,6 +618,9 @@
           return this.getDisplayValue(dateString, true);
         },
 
+        _triggerAgreementLoadingMsg: function() {
+          this.fire('trigger-agreement-loading-msg');
+        }
       });
     })();
   </script>

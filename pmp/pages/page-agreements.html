@@ -32,19 +32,19 @@
 
     <app-route
         route="{{route}}"
-        pattern="agreements/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{agreementListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="agreements/:id/details"
+        pattern="/:id/details"
         active="{{agreementDetailsActive}}"
         data="{{routeData}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="agreements/new-agreement"
+        pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
@@ -257,7 +257,8 @@
       listeners: {
         'agreement-save-error': '_agreementSaveErrors',
         'reload-list': '_reloadAgreementsList',
-        'agreements-page-attached': '_handlePageTabAttached'
+        'agreements-page-attached': '_handlePageTabAttached',
+        'trigger-agreement-loading-msg': '_handleAgreementSelectionLoadingMsg'
       },
       ready: function() {
         if (this.newAgreementActive) {
@@ -269,15 +270,8 @@
       attached: function() {
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
-        /**
-         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
-         */
-        this.fire('global-loading', {
-          message: 'Loading ' + (this.agreementListActive ? 'agreements list' : 'agreement details page') +
-            ' elements...',
-          active: true,
-          loadingSource: 'ag-page'
-        });
+        // fire agreement page loading message
+        this._showAgreementsPageLoadingMessage();
       },
 
       _showNewAgreementAddButton: function(agreementListActive, permissions) {
@@ -362,7 +356,9 @@
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         this.set('selectedAgreementId', 0);
         this.fire('update-main-path', {path: 'agreements/new-agreement'});
+        this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
       },
+
       _observeRouteDataId: function(id) {
         this.set('selectedAgreementId', id);
       },
@@ -518,13 +514,28 @@
           return null;
         }
         return this.originalAgreementData.authorized_officers.map(function(off) {
-              return off.id.toString();
-            }
-        );
+          return off.id.toString();
+        });
       },
 
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
+      },
+
+      _handleAgreementSelectionLoadingMsg: function() {
+        this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
+      },
+
+      /**
+       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showAgreementsPageLoadingMessage: function() {
+        let appSection = this.agreementListActive ? 'agreements list' : 'agreement details page';
+        this.fire('global-loading', {
+          message: 'Loading ' + appSection + ' elements...',
+          active: true,
+          loadingSource: 'ag-page'
+        });
       }
 
     });

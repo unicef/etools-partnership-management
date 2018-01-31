@@ -39,13 +39,13 @@
 
     <app-route
         route="{{route}}"
-        pattern="reports/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="reports/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
@@ -74,7 +74,7 @@
         <template is="dom-if" if="[[tabsActive]]">
           <div class="top-content-row">
             <paper-tabs id="reportTabs"
-                        selected="{{activeTab}}"
+                        selected="{{routeData.tab}}"
                         attr-for-selected="name"
                         noink bottom-item
                         on-iron-select="_handleTabSelectAction">
@@ -151,17 +151,11 @@
         },
         reportRejectDialog: {
           type: Object
-        },
-        activeTab: {
-          type: String,
-          value: '',
-          observer: '_activeTabChanged'
         }
       },
 
       observers: [
-        '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, activeTab)',
+        '_pageChanged(listActive, tabsActive)',
         '_observeRouteDataId(routeData.id, listActive, tabsActive)',
         '_reportChanged(report)'
       ],
@@ -179,7 +173,7 @@
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
         let loadingMsg = 'Loading ' + (this.listActive ? 'reports list' :
-            (this._removeStrDash(this.activeTab) + ' page')) + ' elements...';
+            (this._removeStrDash(this.routeData.tab) + ' page')) + ' elements...';
         this.fire('global-loading', {
           message: loadingMsg,
           active: true,
@@ -189,12 +183,12 @@
         this._createReportStatusUpdateDialogs();
       },
 
-      _setActivePage: function(listActive, tab) {
+      _setActivePage: function(listActive) {
         let page = 'list';
         let pagePrefix = 'reports-';
         let pageBaseUrl = '../app-elements/reports/';
         if (!listActive) {
-          page = tab;
+          page = this.routeData.tab;
           pagePrefix = 'report-';
         }
         if (page) {
@@ -209,21 +203,11 @@
         }
       },
 
-      _pageChanged: function(listActive, tab) {
-        this._setActivePage(listActive, tab);
-      },
-
-      _activeTabChanged: function(activeTab) {
-        if (activeTab) {
-          this.set('routeData.tab', activeTab);
-        }
-      },
-
-      _updateUrlTab: function(tab) {
-        if (!tab) {
+      _pageChanged: function(listActive, tabsActive) {
+        if (!listActive && !tabsActive) {
           return;
         }
-        this._updateTabPath(tab, this.route.path, '#reportTabs');
+        this._setActivePage(listActive);
       },
 
       _handleTabSelectAction: function(e) {
