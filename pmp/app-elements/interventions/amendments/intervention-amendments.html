@@ -1,109 +1,120 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
+<link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
+
+<link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
-<link rel="import" href="../../../../styles/repeatable-data-sets-styles.html">
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/file-styles.html">
-<link rel="import" href="../../../../styles/app-mixins.html">
 
-<link rel="import" href="../../common-elements/etools-date-input.html">
-<link rel="import" href="../../common-elements/etools-single-file.html">
-
-<link rel="import" href="../../../app-behaviors/dropdown-behavior.html">
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="add-amendment-dialog.html">
 
 <dom-module id="intervention-amendments">
   <template strip-whitespace>
-    <style
-        include="grid-layout-styles repeatable-data-sets-styles repeatable-data-sets-styles-v2 file-styles shared-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles">
       [hidden] {
         display: none !important;
       }
-
       :host {
         display: block;
         width: 100%;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-
-        --paper-fab-keyboard-focus-background: var(--success-color);
-        --paper-fab: {
-          @apply --paper-fab-btn-green;
-        };
       }
-
-      #amendments-wrapper {
-        margin-top: 16px;
+      .list-container {
+        position: relative;
       }
-
-      :host(:not([edit-mode])) #amendments-wrapper {
-        margin-bottom: 24px;
+      .attachment {
+        color: var(--dark-icon-color);
+        margin-right: 8px;
       }
-
-      #no-amend-warning {
-        padding: 24px;
+      .break-word {
+        word-break: break-word;
+        word-wrap: break-word; /* for IE */
+        align-items: center;
       }
-      .item-actions-container {
-        min-width: 36px;
+      .file-label {
+        width: calc(100% - 32px);
+      }
+      /* for IE */
+      .other-description {
+        display: block;
+        width: 100%;
       }
     </style>
-    <div hidden$="[[_emptyList(dataItems.length)]]" id="amendments-wrapper">
-      <template is="dom-repeat" id="amendmentsRepeater" items="[[dataItems]]">
-        <div class="row-h item-container">
-          <div class="item-actions-container locked"
-               data-item-nr$="[[_getItemNr(index)]]">
-          </div>
-          <div class="item-content">
-            <div class="row-h flex-c">
-              <div class="col col-4">
-                <!-- Amendment Type -->
-                <paper-input label="Amendment Types" value$="[[_getReadonlyAmendmentTypes(item.types)]]"
-                               readonly></paper-input>
-              </div>
-              <div class="col col-3">
-                <!-- Signed Date -->
-                <etools-date-input id$="signedDate_[[index]]"
-                                   label="Signed date"
-                                   value="[[item.signed_date]]"
-                                   readonly>
-                </etools-date-input>
-              </div>
-              <div class="col col-5 file-container">
-                <!-- Signed Agreement -->
-                <etools-single-file id$="fileUpload_[[index]]"
-                                    label="Signed Agreement"
-                                    internal-file$=[[item.signed_amendment_file]]
-                                    file$="[[item.signed_amendment]]"
-                                    readonly></etools-single-file>
-              </div>
-            </div>
-            <div class="row-h" hidden$="[[!_showOtherInput(item.types, item.types.length, index)]]">
-              <paper-input id="other"
-                           placeholder="&#8212;"
-                           label="Other"
-                           value="[[item.other_description]]"
-                           readonly>
-              </paper-input>
-            </div>
-          </div>
 
+    <etools-content-panel panel-title="Amendments">
+      <template is="dom-if" if="[[editMode]]">
+        <div slot="panel-btns">
+          <paper-icon-button icon="add-box"
+                            title="Add Amendment"
+                            on-tap="_showAddAmendmentDialog">
+          </paper-icon-button>
         </div>
       </template>
-    </div>
+      <div class="list-container" id="amendments-wrapper">
+        <etools-data-table-header id="listHeader"
+                                  no-collapse
+                                  no-title
+                                  hidden$="[[_emptyList(dataItems.length)]]">
+          <etools-data-table-column class="col-1">
+            Ref #
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Signed Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Amendment Types
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4">
+            Signed Amendment
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3">
+            Other Info
+          </etools-data-table-column>
+        </etools-data-table-header>
 
-    <div id="no-amend-warning" class="row-h" hidden$="[[!_emptyList(dataItems.length)]]">
-      There are no amendments added.
-    </div>
-    <div id="bottom-actions" class="row-h" hidden$="[[!editMode]]">
-      <paper-fab icon="add"
-                 on-tap="_showAddAmendmentDialog"
-                 title="Add"></paper-fab>
-    </div>
+        <template is="dom-repeat" items="[[dataItems]]">
+          <etools-data-table-row no-collapse>
+            <div slot="row-data">
+              <span class="col-data col-1">
+                [[item.amendment_number]]
+              </span>
+              <span class="col-data col-2">
+                [[prettyDate(item.signed_date)]]
+              </span>
+              <span class="col-data col-2">
+                [[_getReadonlyAmendmentTypes(item.types)]]
+              </span>
+              <span class="col-data col-4">
+                <iron-icon icon="attachment" class="attachment"></iron-icon>
+                  <span class="break-word file-label">
+                    <!-- target="_blank" is there for IE -->
+                    <a href$="[[item.signed_amendment_file]]" target="_blank" download>[[getFileNameFromURL(item.signed_amendment_file)]]</a>
+                  </span>
+              </span>
+              <div class="col-data col-3 break-word">
+                <template is="dom-if" if="[[_showOtherInput(item.types, item.types.length, index)]]">
+                  <div class="other-description">
+                    [[item.other_description]]
+                  </div>
+                </template>
+              </div>
+            </div>
+          </etools-data-table-row>
+        </template>
+        <template is="dom-if" if="[[_emptyList(dataItems.length)]]">
+          <div class="row-h">
+            <p>There are no amendments added.</p>
+          </div>
+        </template>
+      </div>
+    </etools-content-panel>
   </template>
 
   <script>
@@ -116,7 +127,7 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           etoolsBehaviors.DynamicDialogBehavior,
-          EtoolsPmpApp.Behaviors.Dropdown
+          EtoolsPmpApp.Behaviors.Common
         ],
 
         properties: {
@@ -146,15 +157,6 @@
         ],
 
         ready: function() {
-          this.dataSetModel = {
-            id: null,
-            types: [],
-            other_description: null,
-            signed_date: null,
-            signed_amendment: null,
-            signed_amendment_file: '',
-            amendment_number: null
-          };
           this._createAddAmendmentDialog();
         },
 
@@ -166,7 +168,6 @@
           this.addAmendmentDialog.toastEventSource = this;
           this.addAmendmentDialog.addEventListener('amendment-added', this.newAmendmentAdded.bind(this));
           document.querySelector('body').appendChild(this.addAmendmentDialog);
-
         },
 
         _getReadonlyAmendmentTypes: function(types) {
@@ -180,7 +181,7 @@
             let amdTypesLabels = amdTypes.map(function(t) {
               return t.label;
             });
-            return amdTypesLabels.join(' | ');
+            return amdTypesLabels.join(', ');
           }
           return null;
         },
@@ -209,33 +210,21 @@
           if (dataItems instanceof Array === false) {
             this.set('dataItems', []);
           }
-
-          this.async(function() {
-            // renders appropriate mixins to amendments that get added
-            this.updateStyles();
-          }.bind(this), 0);
         },
 
         _unlockInterventionDetailsFields: function() {
           if (!this.amendActionInProgress) {
-            // we need the new permissions for ammendment mode, so we have to refresh the intervention data
+            // we need the new permissions for ammendment mode, so we have to refresh the intervention data;
             // after the permissions are updated, the fields will automatically unlock
             this.fire('refresh-intervention');
           }
-        },
-
-        _getItemNr: function(index) {
-          return parseInt(index, 10) + 1;
         },
 
         _showOtherInput: function(selectedAmdTypes, selectedAmdTypesLength) {
           if (!selectedAmdTypes || !selectedAmdTypes.length) {
             return false;
           }
-          if (selectedAmdTypes.indexOf('other') > -1) {
-            return true;
-          }
-          return false;
+          return selectedAmdTypes.indexOf('other') > -1;
         },
 
         _emptyList: function(listLength) {

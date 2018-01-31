@@ -55,7 +55,6 @@
           opacity: 1;
         };
       }
-
     </style>
 
     <etools-content-panel class="content-section" panel-title="Signatures & Dates">
@@ -216,14 +215,13 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!_isDraft(intervention.status)]]">
-      <etools-content-panel class="content-section" panel-title="Amendments">
-        <intervention-amendments id="intervAmendments"
-                                 intervention-document-type="[[intervention.document_type]]"
-                                 intervention-id="[[intervention.id]]"
-                                 amend-action-in-progress="{{intervention.in_amendment}}"
-                                 data-items="{{intervention.amendments}}"
-                                 edit-mode$="[[intervention.permissions.edit.amendments]]"></intervention-amendments>
-      </etools-content-panel>
+      <intervention-amendments  class="content-section"
+                                intervention-document-type="[[intervention.document_type]]"
+                                intervention-id="[[intervention.id]]"
+                                amend-action-in-progress="{{intervention.in_amendment}}"
+                                data-items="{{intervention.amendments}}"
+                                edit-mode$="[[intervention.permissions.edit.amendments]]">
+      </intervention-amendments>
     </template>
 
     <intervention-fund-reservations class="content-section"
