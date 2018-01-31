@@ -312,7 +312,7 @@
           let indicatorEl;
           if (this.isCluster) {
             indicatorEl = this.$$('#clusterIndicatorEl');
-            this.customStyle['--border-color'] = 'green';
+            this.customStyle['--border-color'] = 'var(--ternary-color)';
           } else {
             indicatorEl = this.$$('#nonClusterIndicatorEl');
             this.customStyle['--border-color'] = 'var(--dark-divider-color)';
