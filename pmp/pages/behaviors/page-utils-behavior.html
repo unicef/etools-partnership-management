@@ -34,7 +34,7 @@
     },
 
     _removeStrDash: function(str) {
-      return str.replace(new RegExp('-', 'g'), ' ');
+      return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
     },
 
     _showPageTabs: function(page) {
@@ -58,7 +58,7 @@
             resolve();
           }, function(err) {
             reject(err);
-          }, true);
+          });
         } else {
           resolve();
         }
