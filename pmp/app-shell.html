@@ -101,12 +101,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <!--<app-route-->
-        <!--route="{{route}}"-->
-        <!--pattern="/partners"-->
-        <!--tail="{{partnersSubroute}}"></app-route>-->
-
-
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
       <!-- Drawer content -->
@@ -234,7 +228,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'not-found-redirect': '_handleNotFound'
       },
 
-      _onForbidden: function(event) {
+      _onForbidden: function() {
         window.location.href = EtoolsPmpApp.Config.loginPath;
       },
 
@@ -273,12 +267,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.drawer.toggle();
       },
 
-      _updateMainPath: function(event) {
-        if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
-          // set route.path only if received path is different
-          // this._updatePath(event.detail.path);
+      _updateMainPath: function(e) {
+        if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
+         // set route.path only if received path is different
+         this._updatePath(e.detail.path);
         }
-        event.stopImmediatePropagation();
+        e.stopImmediatePropagation();
       },
 
       _handleNotFound: function() {
@@ -305,14 +299,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this._updatePath('partners/list');
             return;
           }
-
-          console.log('current page: ', routePage);
           this._importMainPage(routePage);
-//          if (this.route && this.baseUrl) {
-//            let subroute = JSON.parse(JSON.stringify(this.route));
-//            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-//            this.set('subroute', subroute);
-//          }
           this._validatePageChange(routePage).then(function(redirectApproved) {
             if (redirectApproved) {
               this.set('page', routePage);
@@ -325,10 +312,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!page) {
           return;
         }
-        var mainPageName = this._getMainPageName(page);
-        var resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
+        let mainPageName = this._getMainPageName(page);
+        let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
         // check if page has been loaded, only if wasn't use importHref to load it
-        var pageEl = this._getPageElement(mainPageName);
+        let pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
           // make the import
           this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
@@ -348,8 +335,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.set('route.path', this.baseUrl + 'not-found');
-        this.set('route.__queryParams', null);
+        this._updatePath('not-found');
         this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 

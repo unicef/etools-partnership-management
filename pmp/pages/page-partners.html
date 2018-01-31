@@ -251,7 +251,6 @@
           this.set('serverErrors', []);
         }
         if (page && page !== this.partnerPage) {
-          console.log(listActive, tab, page);
           let self = this;
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             self.set('partnerPage', page);
@@ -272,10 +271,7 @@
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && permissions.editPartnerDetails === true) {
-          return true;
-        }
-        return false;
+        return permissions && permissions.editPartnerDetails === true;
       },
 
 //      _updateUrlTab: function(tab) {

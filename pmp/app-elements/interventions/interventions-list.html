@@ -180,7 +180,8 @@
             <span class="col-data col-2">
               <a class="pd-ref truncate"
                  href="interventions/[[intervention.id]]/details"
-                 title="[[getDisplayValue(intervention.number)]]">
+                 title="[[getDisplayValue(intervention.number)]]"
+                 on-tap="_triggerInterventionLoadingMsg">
                 [[getDisplayValue(intervention.number)]]
               </a>
             </span>
@@ -815,6 +816,10 @@
 
         _hideFrsWarningTooltip: function(pdDate, frsDate, status) {
           return status === 'draft' || status === 'closed' || this.validateFrsVsInterventionDates(pdDate, frsDate);
+        },
+
+        _triggerInterventionLoadingMsg: function() {
+          this.fire('trigger-intervention-loading-msg');
         }
 
       });

@@ -43,21 +43,15 @@
 
     <app-route
         route="{{route}}"
-        pattern="interventions/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{intervListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="interventions/:intId/:intTab"
+        pattern="/:id/:tab"
         active="{{intervDetailsActive}}"
         data="{{routeData}}"></app-route>
-
-    <app-route
-        route="{{route}}"
-        pattern="interventions/new/:intTab"
-        active="{{newInterventionActive}}"
-        data="{{routeDataNewInterv}}"></app-route>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
       <div class="top-content">
@@ -93,11 +87,11 @@
         <template is="dom-if" if="[[_showPageTabs(interventionPage)]]">
           <div class="top-content-row">
             <paper-tabs id="intTabs"
-                        selected="{{activeTab}}"
+                        selected="{{routeData.tab}}"
                         attr-for-selected="name"
                         noink bottom-item
                         on-iron-select="_handleTabSelectAction">
-              <template is="dom-if" if="[[!_newIntervention(newInterventionActive)]]">
+              <template is="dom-if" if="[[!newInterventionActive]]">
                 <paper-tab name="overview" link>
                   <span class="tab-content">Overview</span>
                 </paper-tab>
@@ -163,7 +157,7 @@
             <intervention-details id="interventionDetails"
                                   name="details"
                                   intervention="{{intervention}}"
-                                  new-intervention="[[_newIntervention(newInterventionActive)]]"
+                                  new-intervention="[[newInterventionActive]]"
                                   on-update-intervention-status="_updateInterventionStatus"
                                   original-intervention="[[originalIntervention]]">
             </intervention-details>
@@ -180,7 +174,7 @@
           <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
             <intervention-attachments id="intervAttachments"
                                       name="attachments"
-                                      active="[[_isAttachementsTabActive(activeTab)]]"
+                                      active="[[_isAttachementsTabActive(routeData.tab)]]"
                                       intervention="[[intervention]]"
                                       file-model="[[_getAttachmentModel(intervention.id)]]"
                                       attachments="{{intervention.attachments}}"
@@ -188,7 +182,7 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'reports', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'reports', newInterventionActive)]]" restamp>
             <intervention-reports id="interventionReports"
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
@@ -196,7 +190,7 @@
                                   url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'progress', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'progress', newInterventionActive)]]" restamp>
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
@@ -220,7 +214,7 @@
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                active="[[!intervListActive]]"
-                               active-tab="[[routeData.intTab]]"
+                               active-tab="[[routeData.tab]]"
                                intervention-id$="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
                                intervention-agreement-status="[[agreement.status]]"
@@ -315,11 +309,6 @@
             distributions: []
           }
         },
-        activeTab: {
-          type: String,
-          value: '',
-          observer: '_activeTabChanged'
-        },
         serverErrors: {
           type: Array,
           value: []
@@ -330,9 +319,9 @@
         intervDetailsActive: {
           type: Boolean
         },
-        newInterventionActive: Boolean,
-        routeDataNewInterv: {
-          type: Object
+        newInterventionActive: {
+          type: Boolean,
+          computed: '_updateNewIntervFlag(routeData.id, intervListActive)'
         },
         editMode: {
           type: Boolean
@@ -355,21 +344,16 @@
         _forceReviewUiValidationOnAttach: Boolean
       },
       observers: [
-        /**
-         * _updateUrlTab and _updateUrlTabNewInterv do the same thing but, we can not use a single observer for
-         * both dependencies because all observer dependecies need to be defined for the observer to work
-         */
-        '_updateUrlTab(routeData.intTab)',
-        '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
-        '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
-        '_observeRouteDataId(routeData.intId)',
+        '_pageChanged(intervListActive, intervDetailsActive, routeData)',
+        '_observeRouteDataId(routeData.id)',
         '_interventionChanged(intervention, permissions)'
       ],
 
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'intervention-page-attached': '_interventionPageAttached'
+        'intervention-page-attached': '_interventionPageAttached',
+        'trigger-intervention-loading-msg': '_handleInterventionSelectionLoadingMsg'
       },
 
       ready: function() {
@@ -386,15 +370,7 @@
       attached: function() {
         // deactivate main page loading msg triggered in app-shell
         this.fire('global-loading', {active: false, loadingSource: 'main-page'});
-        /**
-         * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
-         */
-        this.fire('global-loading', {
-          message: 'Loading ' + (this.intervListActive ? 'PD/SSFA list' :
-              (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
-          active: true,
-          loadingSource: 'interv-page'
-        });
+        this._showInterventionPageLoadingMessage();
       },
 
       detached: function() {
@@ -416,8 +392,7 @@
         this.set('originalIntervention', JSON.parse(JSON.stringify(intervention)));
         if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
           // set edit permissions
-          let isNewIntervention = this._redirectToNewIntervPageInProgress ||
-              this._newIntervention(this.newInterventionActive);
+          let isNewIntervention = this._redirectToNewIntervPageInProgress || this.newInterventionActive;
           this.checkAndUpdateInterventionPermissions(intervention,
               this._hasEditPermissions(permissions), isNewIntervention);
           this.async(function() {
@@ -454,58 +429,23 @@
         }
         return false;
       },
-      _activeTabChanged: function(activeTab) {
-        if (activeTab) {
-          if (this.newInterventionActive) {
-            this.set('routeDataNewInterv.intTab', activeTab);
-          } else {
-            this.set('routeData.intTab', activeTab);
-          }
-        }
-      },
 
-      _updateUrlTab: function(tab) {
-        if (!tab) {
-          return;
-        }
-        this._updateUrl();
-      },
-
-      _updateUrlTabNewInterv: function(newIntervTab) {
-        if (!newIntervTab) {
-          return;
-        }
-        this._updateUrl();
-      },
-
-      _updateUrl: function() {
-        if (!this.activeTab) {
-          this.set('activeTab', this.newInterventionActive ? this.routeDataNewInterv.intTab : this.routeData.intTab);
-        }
-        this._updateTabPath(null, this.route.path, '#intTabs');
-      },
-
-      _setActivePage: function(intervListActive, intervDetailsActive, newInterventionActive) {
+      _setActivePage: function(intervListActive, intervDetailsActive) {
         let page = 'list';
         let pagePrefix = 'interventions-';
         let pageBaseUrl = '../app-elements/interventions/';
         if (intervListActive === false) {
-          if (newInterventionActive) {
-            // return new intervention page tab name
-            page = this.routeDataNewInterv.intTab;
-          } else {
-            // return intervention page tab name
-            page = this.routeData.intTab;
-            if (['reports', 'progress'].indexOf(page) > -1) {
+          // return intervention page tab name
+          page = this.routeData.tab;
+          if (['reports', 'progress'].indexOf(page) > -1) {
 
-              if (!this.showPrpReports()) {
-                // prp pages are disabled
-                this.fire('404');
-                return;
-              }
-
-              pageBaseUrl += page + '/';
+            if (!this.showPrpReports()) {
+              // prp pages are disabled
+              this.fire('404');
+              return;
             }
+
+            pageBaseUrl += page + '/';
           }
           pagePrefix = 'intervention-';
         }
@@ -514,10 +454,6 @@
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             if (page === 'list') {
               self.set('serverErrors', []);
-              self.set('activeTab', 'details');
-            }
-            if (page === 'details') {
-              self.set('activeTab', 'details');
             }
             self.set('interventionPage', page);
             if (self._redirectToNewIntervPageInProgress) {
@@ -532,9 +468,9 @@
         }
       },
 
-      _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
+      _pageChanged: function(intervListActive, intervDetailsActive) {
         this.debounce('pageChange', function() {
-          this._setActivePage(intervListActive, intervDetailsActive, newInterventionActive);
+          this._setActivePage(intervListActive, intervDetailsActive);
         }.bind(this), 10);
       },
 
@@ -598,17 +534,12 @@
         return JSON.parse(JSON.stringify(this.newInterventionModel));
       },
 
-      _newIntervention: function(newInterventionActive) {
-        return newInterventionActive === true;
-      },
-
       _showReportsTabs: function(newInterventionActive) {
-        return !this._newIntervention(newInterventionActive) && this.showPrpReports();
+        return !newInterventionActive && this.showPrpReports();
       },
 
       _visibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
-        return this._pageEquals(interventionPage, expectedPage) &&
-            !this._newIntervention(newInterventionActive);
+        return this._pageEquals(interventionPage, expectedPage) && !newInterventionActive;
       },
 
       /**
@@ -690,6 +621,26 @@
           params = Object.assign({}, this.route.__queryParams);
         }
         return params;
+      },
+
+      /**
+       * Loading msg used stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showInterventionPageLoadingMessage: function() {
+        this.fire('global-loading', {
+          message: 'Loading ' + (this.intervListActive ? 'PD/SSFA list' :
+              (this._removeStrDash(this.routeData.tab) + ' page')) + ' elements...',
+          active: true,
+          loadingSource: 'interv-page'
+        });
+      },
+
+      _updateNewIntervFlag: function(tab, intervListActive) {
+        return tab === 'new' && !intervListActive;
+      },
+
+      _handleInterventionSelectionLoadingMsg: function() {
+        this._showTabChangeLoadingMsg(null, 'interv-page', 'intervention-', 'details');
       }
     });
 

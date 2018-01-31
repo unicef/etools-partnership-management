@@ -527,9 +527,10 @@
           }
           this.removeFilterOption('CSO Type', 'csoType');
           this.set('pageNumber', 1);
+          this.set('showHidden', false);
         },
 
-        _triggerPartnerLoadingMsg: function(e) {
+        _triggerPartnerLoadingMsg: function() {
           this.fire('trigger-partner-loading-msg');
         }
 
