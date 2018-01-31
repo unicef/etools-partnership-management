@@ -153,7 +153,8 @@
               <span class="col-data flex">
                 <a class="vendor-nr truncate"
                    href$="[[currentPage]]/[[partner.id]]/details"
-                   title$="[[getDisplayValue(partner.vendor_number)]]">
+                   title$="[[getDisplayValue(partner.vendor_number)]]"
+                   on-tap="_triggerPartnerLoadingMsg">
                   [[getDisplayValue(partner.vendor_number)]]
                 </a>
               </span>
@@ -369,7 +370,7 @@
 
         _updateSelectedFiltersValues: function() {
           this.debounce('updateShownFilters', function() {
-            var filtersValues = [
+            let filtersValues = [
               {
                 filterName: 'Partner Type',
                 selectedValue: this.partnerType,
@@ -392,7 +393,7 @@
           }
 
           this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-          var qs = this._buildQueryString();
+          let qs = this._buildQueryString();
 
           if (qs !== _partnersLastNavigated) {
             _partnersLastNavigated = qs;
@@ -518,11 +519,18 @@
           if (showOnlyGovernmentType) {
             // lock list to government partners only
             this.set('partnerType', 'Government');
+            this._updateSelectedFiltersValues();
           } else {
             // unlock list from government partners only
+            this.set('partnerType', null);
             this.removeFilterOption('Partner Type', 'partnerType');
           }
           this.removeFilterOption('CSO Type', 'csoType');
+          this.set('pageNumber', 1);
+        },
+
+        _triggerPartnerLoadingMsg: function(e) {
+          this.fire('trigger-partner-loading-msg');
         }
 
       });

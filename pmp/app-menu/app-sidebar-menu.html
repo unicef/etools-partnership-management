@@ -178,7 +178,7 @@
           }
 
           if (newPageName !== this.page) {
-            e.preventDefault();
+            // e.preventDefault();
             this.fire('global-loading', {
               message: 'Loading ' + newPageName + ' pages elements...',
               active: true,

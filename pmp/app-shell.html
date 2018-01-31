@@ -86,17 +86,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <environment-flags></environment-flags>
+
     <etools-piwik-analytics page="[[subroute.path]]"
                             user="[[user]]"
                             toast="[[currentToastMessage]]"></etools-piwik-analytics>
+
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 
     <app-route
         route="{{route}}"
-        pattern$="[[baseUrl]]:page"
-        data="{{routeData}}"></app-route>
+        pattern="[[baseUrl]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <!--<app-route-->
+        <!--route="{{route}}"-->
+        <!--pattern="/partners"-->
+        <!--tail="{{partnersSubroute}}"></app-route>-->
+
 
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
@@ -118,28 +127,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <page-partners id="partners" class="main-page"
                          show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
                          current-page="[[_lastActivePartnerPage]]"
-                         route="[[subroute]]"
+                         route="{{subroute}}"
                          permissions="[[permissions]]">
           </page-partners>
         </template>
 
         <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
           <page-agreements id="agreements" class="main-page"
-                           route="[[subroute]]"
+                           route="{{subroute}}"
                            permissions="[[permissions]]">
           </page-agreements>
         </template>
 
         <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
           <page-interventions id="interventions" class="main-page"
-                              route="[[subroute]]"
+                              route="{{subroute}}"
                               permissions="[[permissions]]">
           </page-interventions>
         </template>
 
         <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
           <page-reports id="reports" class="main-page"
-                        route="[[subroute]]"
+                        route="{{subroute}}"
                         permissions="[[permissions]]">
           </page-reports>
         </template>
@@ -267,7 +276,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateMainPath: function(event) {
         if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this._updatePath(event.detail.path);
+          // this._updatePath(event.detail.path);
         }
         event.stopImmediatePropagation();
       },
@@ -283,25 +292,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageChanged: function(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
-        }
+        // set last partners active page... needed to make a difference between partners and government-partners
+        this._updateLastPartnersActivePage(page);
+        // clear loading messages queue
         this.fire('clear-loading-messages', {});
       },
 
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
           if (!routePage) {
-            this.fire('update-main-path', {path: 'partners/list'});
+            // this.fire('update-main-path', {path: 'partners/list'});
+            this._updatePath('partners/list');
             return;
           }
 
+          console.log('current page: ', routePage);
           this._importMainPage(routePage);
-          if (this.route && this.baseUrl) {
-            let subroute = JSON.parse(JSON.stringify(this.route));
-            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-            this.set('subroute', subroute);
-          }
+//          if (this.route && this.baseUrl) {
+//            let subroute = JSON.parse(JSON.stringify(this.route));
+//            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
+//            this.set('subroute', subroute);
+//          }
           this._validatePageChange(routePage).then(function(redirectApproved) {
             if (redirectApproved) {
               this.set('page', routePage);
@@ -372,7 +383,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         // redirect from /pmp/<page> to /pmp/<page>/list
-        var currentPath = this.route.path;
+        let currentPath = this.route.path;
         if (currentPath.indexOf('settings') > -1) {
           return;
         }
@@ -386,6 +397,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showOnlyGovernmentPartners: function(page) {
         return page === 'government-partners';
+      },
+
+      _updateLastPartnersActivePage: function(page) {
+        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
+          this.set('_lastActivePartnerPage', page);
+        }
       }
 
     });

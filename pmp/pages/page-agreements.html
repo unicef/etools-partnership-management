@@ -32,19 +32,19 @@
 
     <app-route
         route="{{route}}"
-        pattern="agreements/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{agreementListActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="agreements/:id/details"
+        pattern="/:id/details"
         active="{{agreementDetailsActive}}"
         data="{{routeData}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="agreements/new-agreement"
+        pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
     <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
