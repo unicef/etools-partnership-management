@@ -120,6 +120,14 @@
           indicatorDialog: {
             type: Object
           },
+          indicatorLocationOptions: {
+            type: Array,
+            observer: '_indicatorLocationOptionsUpdate'
+          },
+          indicatorSectionOptions: {
+            type: Array,
+            observer: '_indicatorSectionOptionsUpdate'
+          },
           detailsOpened: {
             type: Boolean,
             value: true
@@ -220,10 +228,25 @@
           this.indicatorDialog.resetFieldValues();
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
-          this.indicatorDialog.resetValidations();
+          this.indicatorDialog.resetValidationsAndStyle();
         },
+
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
+        },
+
+        _indicatorSectionOptionsUpdate: function(sectionOptions) {
+          this._updateIndicatorData('sectionOptionsIds', sectionOptions);
+        },
+
+        _indicatorLocationOptionsUpdate: function(locationOptions) {
+          this._updateIndicatorData('locationOptionsIds', locationOptions);
+        },
+
+        _updateIndicatorData: function(property, data) {
+          if (this.indicatorDialog && typeof data !== 'undefined') {
+            this.indicatorDialog.set(property, data);
+          }
         }
 
       });

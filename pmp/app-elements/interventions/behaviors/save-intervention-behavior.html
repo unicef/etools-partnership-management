@@ -18,8 +18,8 @@
         return;
       }
 
-      var interventionDetailsEl = this.$$('#interventionDetails');
-      var interventionDetailsAreValid = false;
+      let interventionDetailsEl = this.$$('#interventionDetails');
+      let interventionDetailsAreValid = false;
       if (interventionDetailsEl && typeof interventionDetailsEl.validate === 'function') {
         interventionDetailsAreValid = interventionDetailsEl.validate();
       } else {
@@ -36,8 +36,8 @@
         this.set('_forceDetUiValidationOnAttach', true);
       }
 
-      var reviewAndSignEl = this.$$('#interventionReviewAndSign');
-      var reviewAndSignIsValid = false;
+      let reviewAndSignEl = this.$$('#interventionReviewAndSign');
+      let reviewAndSignIsValid = false;
       if (reviewAndSignEl && typeof reviewAndSignEl.validate === 'function') {
         reviewAndSignIsValid = reviewAndSignEl.validate();
       } else {
@@ -56,16 +56,16 @@
         return;
       }
 
-      var interventionData;
+      let interventionData;
       if (this._isNewIntervention()) {
         interventionData = Object.assign({}, this.intervention);
         interventionData.status = 'draft';
       } else {
-        var modifiedDetails = this._getModifiedInterventionDetails();
-        var modifiedReviewAndSign = this._getModifiedReviewAndSign();
+        let modifiedDetails = this._getModifiedInterventionDetails();
+        let modifiedReviewAndSign = this._getModifiedReviewAndSign();
         interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
       }
-      this._prepareDataForSave(interventionData, interventionDetailsEl);
+      interventionData = this._prepareDataForSave(interventionData, interventionDetailsEl);
 
       this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
     },
@@ -120,6 +120,7 @@
           !(this.intervention.prc_review_document instanceof File)) {
         delete interventionData.prc_review_document;
       }
+      return interventionData;
     },
 
     _showErrorsWarning: function(validDetails, validReviewAndSign) {
