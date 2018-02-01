@@ -41,13 +41,6 @@
       return page !== 'list';
     },
 
-    _getTopContentAdditionalClass: function(page) {
-      if (this._showPageTabs(page)) {
-        return 'with-tabs';
-      }
-      return '';
-    },
-
     _importPageElement: function(page, pagePrefix, pageBaseUrl) {
       let self = this;
       return new Promise(function(resolve, reject) {
