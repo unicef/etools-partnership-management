@@ -43,11 +43,11 @@
         pmpStaticDataEndpointsNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-            'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
+            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations']
         },
         prpStaticDataEndpointsNames: {
           type: Array,
-          value: ['addGetDisaggregations', 'getPRPCountries']
+          value: ['getPRPCountries']
         }
       },
 
@@ -59,7 +59,7 @@
 
       _handlePrpData: function() {
         this._waitForEnvFlagsToLoad().then(function() {
-          if (this.showPrpReports()) {
+          if (this.callPrpApis()) {
             this._getStaticData(this.prpStaticDataEndpointsNames);
           }
         }.bind(this));
