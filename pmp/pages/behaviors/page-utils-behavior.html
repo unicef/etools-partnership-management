@@ -83,23 +83,6 @@
       e.stopImmediatePropagation();
       // just a flag to know when to show sidebar status element
       this.set('_subPageOrTabAttached', true);
-    },
-
-    _notifyTabsResize: function(tabsSelector) {
-      this.debounce('debounce-tab-update', function() {
-        let tabs = this.$$(tabsSelector);
-        if (tabs) {
-          tabs.notifyResize();
-        }
-      }.bind(this), 50);
-    },
-
-    _updateTabPath: function(tab, path, tabsSelector) {
-//      if (tab) {
-//        this.set('activeTab', tab);
-//      }
-//      this.fire('update-main-path', {path: path});
-      this._notifyTabsResize(tabsSelector);
     }
 
   };

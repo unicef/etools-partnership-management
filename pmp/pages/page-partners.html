@@ -14,6 +14,7 @@
 
 <link rel="import" href="../app-elements/page-header/page-content-header.html">
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
+<link rel="import" href="../app-elements/common-elements/etools-tabs.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -72,20 +73,26 @@
         </div>
       </div>
 
-      <paper-tabs id="partnerTabs"
-                  selected="{{routeData.tab}}"
-                  attr-for-selected="name"
-                  noink bottom-item
-                  on-iron-select="_handleTabSelectAction">
+      <etools-tabs slot="tabs"
+                   tabs="[[partnerTabs]]"
+                   active-tab="{{routeData.tab}}"
+                   on-iron-select="_handleTabSelectAction"></etools-tabs>
+      <!--<div slot="tabs" class="etools-tabs">-->
+        <!--<paper-tabs id="partnerTabs"-->
+                    <!--selected="{{routeData.tab}}"-->
+                    <!--attr-for-selected="name"-->
+                    <!--noink bottom-item-->
+                    <!--on-iron-select="_handleTabSelectAction">-->
 
-        <paper-tab name="overview" link>
-          <span class="tab-content">Overview</span>
-        </paper-tab>
+          <!--<paper-tab name="overview" link>-->
+            <!--<span class="tab-content">Overview</span>-->
+          <!--</paper-tab>-->
 
-        <paper-tab name="details" link>
-          <span class="tab-content">Partner Details</span>
-        </paper-tab>
-      </paper-tabs>
+          <!--<paper-tab name="details" link>-->
+            <!--<span class="tab-content">Partner Details</span>-->
+          <!--</paper-tab>-->
+        <!--</paper-tabs>-->
+      <!--</div>-->
     </page-content-header>
 
     <div id="main">
@@ -161,6 +168,21 @@
       ],
 
       properties: {
+        partnerTabs: {
+          type: Array,
+          value: [
+            {
+              tab: 'overview',
+              tabLabel: 'Overview',
+              hidden: false
+            },
+            {
+              tab: 'details',
+              tabLabel: 'Details',
+              hidden: false
+            }
+          ]
+        },
         listActive: Boolean,
         tabsActive: {
           type: Boolean
@@ -197,8 +219,6 @@
       },
 
       observers: [
-          // TODO: this should removed, keep tabs notifyResize(inside new and future tabs element)
-//        '_updateUrlTab(routeData.tab)',
         '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)'
       ],
@@ -267,13 +287,6 @@
       _hasEditPermissions: function(permissions) {
         return permissions && permissions.editPartnerDetails === true;
       },
-
-//      _updateUrlTab: function(tab) {
-//        if (!tab) {
-//          return;
-//        }
-//        this._updateTabPath(tab, this.route.path, '#partnerTabs');
-//      },
 
       _savePartner: function(newPartnerData) {
         let partnerData = this.$$('#partnerData');
