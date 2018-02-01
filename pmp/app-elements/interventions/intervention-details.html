@@ -18,7 +18,7 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
-<link rel="import" href="../../app-config/environment-flags-behavior.html">
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
@@ -320,7 +320,7 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-      <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
+      <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result ([[noOfResultLinks]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
               <div slot="panel-btns" id="edit-btns">
@@ -469,6 +469,10 @@
           locations: {
             type: Array,
             statePath: 'locations'
+          },
+          noOfResultLinks: {
+            type: String,
+            value: '0'
           }
         },
 
@@ -481,7 +485,9 @@
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
-          '_contingencyPDChanged(intervention.contingency_pd)'
+          '_contingencyPDChanged(intervention.contingency_pd)',
+          '_updateNoOfResultLinks(intervention.result_links)',
+          '_updateNoOfResultLinks(intervention.result_links.length)'
         ],
         ready: function() {
           this.locationsDialog = document.createElement('grouped-locations-dialog');
@@ -500,6 +506,9 @@
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+        },
+        _updateNoOfResultLinks: function() {
+            this.noOfResultLinks = !this.intervention.result_links ? 0 : this.intervention.result_links.length;
         },
         openCpOutputAndRamIndicatorsDialog: function() {
           let expectedResultsElem = this.$$('#expectedResults');
@@ -560,7 +569,7 @@
           let currentCP;
           if (cpStructures && cpStructures.length) {
             if (cpStructures.length === 1) {
-              currentCP = cpStructures[0].id;
+              currentCP = cpStructures[0];
             } else {
               currentCP = this._getCurrentCountryProgramme(cpStructures);
             }

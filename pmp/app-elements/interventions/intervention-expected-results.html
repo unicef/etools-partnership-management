@@ -62,7 +62,7 @@
         <etools-data-table-column class="col-8">Corresponding CP Indicator(s)</etools-data-table-column>
       </etools-data-table-header>
       <template is="dom-repeat" items="{{dataItems}}">
-        <etools-data-table-row>
+        <etools-data-table-row details-opened="[[detailsOpened]]">
           <div slot="row-data">
             <div class="col-data col-4">
               <span>[[item.cp_output_name]]</span>
@@ -83,7 +83,7 @@
                                        edit-mode$="[[editMode]]"
                                        expected-result-id="[[item.id]]"
                                        cp-output-id="[[item.cp_output]]"
-                                       on-open-indicator-dialog="_openIndicatorDialog" >
+                                       on-open-indicator-dialog="_openIndicatorDialog">
             </result-link-lower-results>
           </div>
         </etools-data-table-row>
@@ -127,6 +127,10 @@
           indicatorSectionOptions: {
             type: Array,
             observer: '_indicatorSectionOptionsUpdate'
+          },
+          detailsOpened: {
+            type: Boolean,
+            value: true
           }
         },
 
@@ -224,7 +228,7 @@
           this.indicatorDialog.resetFieldValues();
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
-          this.indicatorDialog.resetValidations();
+          this.indicatorDialog.resetValidationsAndStyle();
         },
 
         _updateInterventionLocAndClusters: function() {

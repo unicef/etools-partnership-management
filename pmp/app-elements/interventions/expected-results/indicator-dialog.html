@@ -37,11 +37,14 @@
       paper-input {
         width: 100%;
       }
+      :host {
+        --border-color: var(--dark-divider-color);
+      }
 
       .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
-        border: solid 1px var(--dark-divider-color);
+        border: solid 1px var(--border-color);
         overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
 
@@ -243,7 +246,7 @@
         observers: [
           '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
           '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
-          'resetValidations(isCluster)'
+          'resetValidationsAndStyle(isCluster)'
         ],
 
         _indicatorIsNew: function(indicator) {
@@ -333,16 +336,19 @@
           this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
         },
 
-        resetValidations: function() {
+        resetValidationsAndStyle: function() {
           let indicatorEl;
           if (this.isCluster) {
             indicatorEl = this.$$('#clusterIndicatorEl');
+            this.customStyle['--border-color'] = 'var(--ternary-color)';
           } else {
             indicatorEl = this.$$('#nonClusterIndicatorEl');
+            this.customStyle['--border-color'] = 'var(--dark-divider-color)';
           }
           if (indicatorEl) {
-              indicatorEl.resetValidations();
-            }
+            indicatorEl.resetValidations();
+          }
+          this.updateStyles();
         },
         resetFieldValues: function() {
           let resetModel = {

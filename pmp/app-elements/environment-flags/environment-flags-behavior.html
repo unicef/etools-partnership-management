@@ -1,0 +1,52 @@
+<link rel="import" href="../../app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl */
+  EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl = {
+    properties: {
+      environmentFlags: {
+        type: Object,
+        statePath: 'envFlags'
+      }
+    },
+
+    envFlagsLoaded: function() {
+      return typeof this.environmentFlags !== 'undefined';
+    },
+
+    showPrpReports: function() {
+      return this.environmentFlags && !this.environmentFlags.prp_mode_off;
+    },
+
+    _checkFlagsReady: function() {
+      let self = this;
+      return new Promise(function(resolve, reject) {
+        if (self.envFlagsLoaded()) {
+          resolve(true);
+        } else {
+          // flags not loaded yet, wait a bit and check again
+          window.setTimeout(function() {
+            resolve(self.envFlagsLoaded());
+          }, 200);
+        }
+      });
+    },
+
+    _waitForEnvFlagsToLoad: function(page) {
+      let self = this;
+      return self._checkFlagsReady().then(function(flagsLoaded) {
+        return flagsLoaded || self._checkFlagsReady();
+      }).then(function(flagsLoaded) {
+        return flagsLoaded || self._checkFlagsReady();
+      });
+    },
+
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
+  EtoolsPmpApp.Behaviors.EnvironmentFlags = [
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+    EtoolsPmpApp.Behaviors.EnvironmentFlagsImpl
+  ];
+</script>
