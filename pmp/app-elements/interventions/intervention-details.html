@@ -270,22 +270,22 @@
         </etools-single-selection-menu>
       </div>
 
+      <div class="row-h flex-c">
+        <etools-multi-selection-menu id="sections"
+                                     label="Section(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.sections}}"
+                                     options="[[sections]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.sections]]"
+                                     required$="[[intervention.permissions.required.sections]]"
+                                     auto-validate
+                                     error-message="Please select a section">
+        </etools-multi-selection-menu>
+      </div>
+
       <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-        <!-- PRP is enabled -->
-        <div class="row-h flex-c">
-          <etools-multi-selection-menu id="prp-on-sections"
-                                       label="Sections PD/SSFA Covers"
-                                       placeholder="&#8212;"
-                                       selected-values="{{intervention.flagged_sections}}"
-                                       options="[[sections]]"
-                                       option-label="name"
-                                       option-value="id"
-                                       readonly$="[[!intervention.permissions.edit.flagged_sections]]"
-                                       required$="[[intervention.permissions.required.flagged_sections]]"
-                                       auto-validate
-                                       error-message="Please select sections(s)">
-          </etools-multi-selection-menu>
-        </div>
         <div class="row-h flex-c">
           <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
             <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
@@ -294,58 +294,29 @@
             </template>
           </etools-form-element-wrapper>
         </div>
-        <div class="row-h flex-c">
-          <etools-multi-selection-menu id="prp-on-locations"
-                                       label="Locations PD/SSFA Covers"
-                                       placeholder="&#8212;"
-                                       selected-values="{{intervention.locations}}"
-                                       options="[[locations]]"
-                                       option-label="name"
-                                       option-value="id"
-                                       readonly$="[[!intervention.permissions.edit.locations]]"
-                                       required$="[[intervention.permissions.required.locations]]"
-                                       error-message="Please select location(s)">
-          </etools-multi-selection-menu>
+      </template>
 
-          <paper-button class="secondary-btn see-locations"
-                        on-tap="_openLocationsDialog"
-                        title="See all locations">
-            <iron-icon icon="add"></iron-icon>
-            See all
-          </paper-button>
-        </div>
-      </template>
-      <template is="dom-if" if="[[environmentFlags.prp_mode_off]]" restamp>
-        <!-- PRP is disabled -->
-        <div class="row-h flex-c">
-          <etools-multi-selection-menu id="sections"
-                                       label="Section(s)"
-                                       placeholder="&#8212;"
-                                       selected-values="{{intervention.sections}}"
-                                       options="[[sections]]"
-                                       option-label="name"
-                                       option-value="id"
-                                       readonly$="[[!intervention.permissions.edit.sections]]"
-                                       required$="[[intervention.permissions.required.sections]]"
-                                       auto-validate
-                                       error-message="Please select a section">
-          </etools-multi-selection-menu>
-        </div>
-        <div class="row-h flex-c">
-          <etools-multi-selection-menu id="locations"
-                    label="Location(s)"
-                    placeholder="&#8212;"
-                    selected-values="{{intervention.flat_locations}}"
-                    options="[[locations]]"
-                    option-label="name"
-                    option-value="id"
-                    readonly$="[[!intervention.permissions.edit.flat_locations]]"
-                    required$="[[intervention.permissions.required.flat_locations]]"
-                    error-message="Please select locations"
-                    disable-on-focus-handling>
-          </etools-multi-selection-menu>
-        </div>
-      </template>
+      <div class="row-h flex-c">
+        <etools-multi-selection-menu id="locations"
+                                     label="Location(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.flat_locations}}"
+                                     options="[[locations]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.flat_locations]]"
+                                     required$="[[intervention.permissions.required.flat_locations]]"
+                                     error-message="Please select locations"
+                                     disable-on-focus-handling>
+        </etools-multi-selection-menu>
+        <paper-button class="secondary-btn see-locations"
+                      on-tap="_openLocationsDialog"
+                      title="See all locations">
+          <iron-icon icon="add"></iron-icon>
+          See all
+        </paper-button>
+      </div>
+
     </etools-content-panel>
 
     <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
@@ -363,8 +334,8 @@
                                          data-items="{{intervention.result_links}}"
                                          selected-cp-structure="[[intervention.country_programme]]"
                                          intervention-id="[[intervention.id]]"
-                                         indicator-location-options="[[originalIntervention.locations]]"
-                                         indicator-section-options="[[originalIntervention.flagged_sections]]"
+                                         indicator-location-options="[[originalIntervention.flat_locations]]"
+                                         indicator-section-options="[[originalIntervention.sections]]"
                                          edit-mode$="[[intervention.permissions.edit.result_links]]"
                                          on-indicators-changed="_updateInteventionLocClustersSections">
           </intervention-expected-results>
@@ -546,7 +517,7 @@
         },
         _openLocationsDialog: function() {
           this.locationsDialog.adminLevel = null;
-          this.locationsDialog.interventionLocationIds = this.intervention.locations;
+          this.locationsDialog.interventionLocationIds = this.intervention.flat_locations;
           this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {
