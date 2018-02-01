@@ -220,7 +220,7 @@
           this.indicatorDialog.resetFieldValues();
           this.indicatorDialog.setIndicatorData(actionParams.indicatorData, actionParams);
           this.indicatorDialog.openIndicatorDialog();
-          this.indicatorDialog.resetValidations();
+          this.indicatorDialog.resetValidationsAndStyle();
         },
         _updateInterventionLocAndClusters: function() {
           this.fire('indicators-changed');
