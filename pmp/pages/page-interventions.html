@@ -34,6 +34,7 @@
     <style include="page-layout-styles shared-styles buttons-styles">
       :host {
         display: block;
+        min-height: calc(100vh - 120px);
       }
 
       .no-capitalization {
@@ -363,13 +364,15 @@
         '_updateUrlTabNewInterv(routeDataNewInterv.intTab)',
         '_pageChanged(intervListActive, intervDetailsActive, newInterventionActive, activeTab)',
         '_observeRouteDataId(routeData.intId)',
-        '_interventionChanged(intervention, permissions)'
+        '_interventionChanged(intervention, permissions)',
+        '_amendmentModeChanged(intervention.in_amendment)'
       ],
 
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'intervention-page-attached': '_interventionPageAttached'
+        'intervention-page-attached': '_interventionPageAttached',
+        'refresh-intervention': '_forceInterventionRefresh'
       },
 
       ready: function() {
@@ -409,6 +412,16 @@
         }
       },
 
+      _amendmentModeChanged: function(newValue) {
+        if (!this.intervention) {
+          return;
+        }
+        if (typeof newValue === 'undefined') {
+          return;
+        }
+        this.fire('set-amendment-mode', {active: newValue});
+      },
+
       _interventionChanged: function(intervention, permissions) {
         this._displayAnyMigrationErrors(intervention);
         this._makeSureMigrationErrorIsNotShownAgainAfterSave(intervention);
@@ -427,6 +440,7 @@
           }.bind(this), 1000);
         }
       },
+
       _displayAnyMigrationErrors: function(intervention) {
         if (intervention.metadata && intervention.metadata.error_msg && intervention.metadata.error_msg.length) {
           if (this.saved.interventionId !== intervention.id && !this.saved.justSaved) {
@@ -438,6 +452,7 @@
           }
         }
       },
+
       /* Show metadata error message on intervention detail 'page load'*/
       _makeSureMigrationErrorIsNotShownAgainAfterSave: function(intervention) {
         if (this.saved.interventionId !== intervention.id) {
@@ -445,12 +460,14 @@
         }
         this.saved.interventionId = intervention.id;
       },
+
       _isAttachmentsTabReadonly: function(permissions, intervention) {
         if (!this._hasEditPermissions(permissions, intervention)) {
           return true;
         }
         return (['suspended', 'terminated'].indexOf(intervention.status) > -1);
       },
+
       _activeTabChanged: function(activeTab) {
         if (activeTab) {
           if (this.newInterventionActive) {
@@ -532,7 +549,8 @@
       _pageChanged: function(intervListActive, intervDetailsActive, newInterventionActive) {
         this.debounce('pageChange', function() {
           this._setActivePage(intervListActive, intervDetailsActive, newInterventionActive);
-        }.bind(this), 10);
+          this._handleAmendmentMode();
+        }.bind(this), 10);         
       },
 
       _observeRouteDataId: function(id) {
@@ -542,21 +560,42 @@
             id = null;
           }
           this.set('selectedInterventionId', id);
+          this._handleAmendmentMode();
         }.bind(this));
       },
+
+      _handleAmendmentMode: function() {
+        if (this.intervListActive) {
+          this.fire('set-amendment-mode', {active: false});
+          return;
+        }
+        if (this.intervDetailsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
+          // handles the case when the user goes from an intervention to the list and back to the same intervention
+          this.fire('set-amendment-mode', {active: this.intervention.in_amendment});
+        }
+      },
+      
       _finalizeAmendmentConfirmationCallback: function() {
         if (event.detail.confirmed) {
+          this.set('intervention.in_amendment', false);
           this._validateAndSaveIntervention(null);
         }
       },
+
       _isNewIntervention: function() {
-        return !!!this.intervention.id;
+        return !this.intervention.id;
+      },
+
+      _forceInterventionRefresh: function(e) {
+        e.stopImmediatePropagation();
+        this.$.interventionData.fetchIntervention(this.intervention.id);
       },
 
       _updateInterventionStatus: function(event) {
         event.stopImmediatePropagation();
         this.$.interventionData.updateInterventionStatus(event.detail);
       },
+
       _hasEditPermissions: function(permissions, intervention) {
         if (permissions && permissions.editInterventionDetails === true) {
           if (intervention) {

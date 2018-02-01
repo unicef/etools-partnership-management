@@ -65,13 +65,6 @@
         let modifiedReviewAndSign = this._getModifiedReviewAndSign();
         interventionData = Object.assign({id: this.intervention.id}, modifiedDetails, modifiedReviewAndSign);
       }
-
-      if (event && !_.isEmpty(interventionData.amendments)) {
-        //* An Amendment was just added and the method _validateAndSaveIntervention was NOT called manually
-        this._showFinalizeAmendmentDialog();
-        return;
-      }
-
       interventionData = this._prepareDataForSave(interventionData, interventionDetailsEl);
 
       this.$.interventionData.saveIntervention(interventionData, this._newInterventionSaved);
