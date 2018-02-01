@@ -12,6 +12,8 @@
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/pagination-behavior.html">
+<link rel="import" href="../../../app-elements/environment-flags/environment-flags-behavior.html">
+
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="report-status.html">
 
@@ -148,7 +150,8 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.Pagination
+          EtoolsPmpApp.Behaviors.Pagination,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags
         ],
 
         properties: {
@@ -189,7 +192,7 @@
         ],
 
         _loadReportsData: function(interventionId, currentUser, pageSize, page, qParamsData) {
-          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData)) {
+          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || !this.prpServerIsOn()) {
             return;
           }
           let self = this;
