@@ -45,9 +45,13 @@
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
             'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
         },
+        pmpDataEndpointNamesForPrpSections: {
+          type: Array,
+          value: ['addGetDisaggregations']
+        },
         prpStaticDataEndpointsNames: {
           type: Array,
-          value: ['addGetDisaggregations', 'getPRPCountries']
+          value: ['getPRPCountries']
         }
       },
 
@@ -59,8 +63,11 @@
 
       _handlePrpData: function() {
         this._waitForEnvFlagsToLoad().then(function() {
-          if (this.prpServerIsOn()) {
-            this._getStaticData(this.prpStaticDataEndpointsNames);
+          if (this.showPrpReports()) {
+            this._getStaticData(this.pmpDataEndpointNamesForPrpSections);
+            if (this.prpServerIsOn()) {
+              this._getStaticData(this.prpStaticDataEndpointsNames);
+            }
           }
         }.bind(this));
       },
