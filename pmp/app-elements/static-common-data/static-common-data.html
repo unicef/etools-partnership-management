@@ -59,7 +59,7 @@
 
       _handlePrpData: function() {
         this._waitForEnvFlagsToLoad().then(function() {
-          if (this.callPrpApis()) {
+          if (this.prpServerIsOn()) {
             this._getStaticData(this.prpStaticDataEndpointsNames);
           }
         }.bind(this));
