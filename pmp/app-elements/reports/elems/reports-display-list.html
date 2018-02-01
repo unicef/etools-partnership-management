@@ -12,8 +12,6 @@
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../../app-behaviors/pagination-behavior.html">
-<link rel="import" href="../../../app-elements/environment-flags/environment-flags-behavior.html">
-
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="report-status.html">
 
@@ -150,8 +148,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.Common,
-          EtoolsPmpApp.Behaviors.Pagination,
-          EtoolsPmpApp.Behaviors.EnvironmentFlags
+          EtoolsPmpApp.Behaviors.Pagination
         ],
 
         properties: {
@@ -188,11 +185,11 @@
         },
 
         observers: [
-          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
+          '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
         ],
 
-        _loadReportsData: function(interventionId, currentUser, pageSize, page, qParamsData) {
-          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || !this.prpServerIsOn()) {
+        _loadReportsData: function(prpCountries, interventionId, currentUser, pageSize, page, qParamsData) {
+          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || _.isEmpty(prpCountries)) {
             return;
           }
           let self = this;
