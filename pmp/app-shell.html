@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
+<link rel="import" href="app-behaviors/amendment-mode-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 <link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
 <link rel="import" href="app-menu/styles/app-drawer-styles.html">
@@ -219,7 +220,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
         etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl
+        EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsPmpApp.Behaviors.AmendmentMode
       ],
 
       properties: {
@@ -235,10 +237,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         narrow: {
           type: Boolean,
           reflectToAttribute: true
-        },
-        amendmentModeActive: {
-          type: Boolean,
-          value: false
         },
         baseUrl: String,
         permissions: {
@@ -268,8 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'not-found-redirect': '_handleNotFound',
-        'set-amendment-mode': '_updateAmendmentMode'
+        'not-found-redirect': '_handleNotFound'
       },
 
       _onForbidden: function() {
@@ -435,26 +432,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateLastPartnersActivePage: function(page) {
         if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
           this.set('_lastActivePartnerPage', page);
-        }
-      },
-
-      _updateAmendmentMode: function(event) {
-        let detail = event.detail || {};
-        this._setAmendMode(detail.active);
-      },
-
-      _getPageContainerClass: function(amendmentModeActive) {
-        return amendmentModeActive ? 'in-amendment' : '';
-      },
-
-      _setAmendMode: function(newVal) {
-        this.set('amendmentModeActive', !!newVal);
-      },
-
-      _closeAmendment: function() {
-        let intervElem = this.$$('#interventions');
-        if (intervElem) {
-          intervElem._showFinalizeAmendmentDialog();
         }
       }
 
