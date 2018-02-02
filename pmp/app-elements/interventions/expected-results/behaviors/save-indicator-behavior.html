@@ -88,11 +88,12 @@
         });
       },
       validate: function() {
-        var valid = true;
+        let valid = true;
+        let sectionSelected = this.$$('#sectionDropdw').validate();
         if (this.isCluster) {
-          valid = this.$$('#clusterIndicatorEl').validate();
+          valid = this.$$('#clusterIndicatorEl').validate() && sectionSelected;
         } else {
-          valid = this.$$('#nonClusterIndicatorEl').validate();
+          valid = this.$$('#nonClusterIndicatorEl').validate() && sectionSelected;
         }
         return valid;
       },

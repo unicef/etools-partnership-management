@@ -6,7 +6,6 @@
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../common-elements/etools-form-element-wrapper.html">
 
@@ -123,7 +122,7 @@
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
-                                   options="[[locations]]"
+                                   options="[[locationOptions]]"
                                    option-label="name"
                                    option-value="id"
                                    required
@@ -143,7 +142,6 @@
         is: 'cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsAjaxRequestBehavior,
           EtoolsPmpApp.Behaviors.Endpoints,
@@ -164,9 +162,8 @@
           clusterId: {
             type: String,
           },
-          locations: {
-            type: Array,
-            statePath: 'locations'
+          locationOptions: {
+            type: Array
           },
           responsePlanId: {
             type: String,
