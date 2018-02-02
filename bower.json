@@ -17,7 +17,7 @@
     "paper-input": "^1.1.19",
     "paper-listbox": "^1.1.2",
     "paper-styles": "^1.1.4",
-    "paper-tabs": "^1.6.2",
+    "paper-tabs": "^2.0.0",
     "paper-toast": "^1.3.0",
     "paper-toggle-button": "^1.2.1",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.7",

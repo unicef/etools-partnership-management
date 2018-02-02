@@ -4,6 +4,10 @@
 <dom-module id="page-content-header">
   <template strip-whitespace>
     <style>
+      *[hidden] {
+        display: none !important;
+      }
+
       :host {
         @apply --layout-vertical;
         @apply --layout-start-justified;
@@ -62,12 +66,11 @@
         margin-right: 10px;
       }
 
-      .content-header-row + .content-header-row {
+      .tabs {
         margin-top: 5px;
       }
 
     </style>
-
 
     <div class="content-header-row title-row">
       <h1>
@@ -76,11 +79,9 @@
       <slot name="title-row-actions"></slot>
     </div>
 
-    <template is="dom-if" if="[[withTabsVisible]]">
-      <div class="content-header-row tabs">
-        <slot name="tabs"></slot>
-      </div>
-    </template>
+    <div class="content-header-row tabs" hidden$="[[!withTabsVisible]]">
+      <slot name="tabs"></slot>
+    </div>
 
   </template>
 
@@ -96,8 +97,7 @@
           value: false,
           reflectToAttribute: true
         }
-      },
-
+      }
 
     });
   </script>

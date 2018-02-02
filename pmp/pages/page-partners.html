@@ -45,7 +45,7 @@
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <page-content-header with-tabs-visible="[[_showPageTabs(partnerPage)]]">
+    <page-content-header with-tabs-visible="[[tabsActive]]">
       <div slot="page-title">
         <template is="dom-if" if="[[listActive]]">
           <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
@@ -73,26 +73,12 @@
         </div>
       </div>
 
-      <etools-tabs slot="tabs"
-                   tabs="[[partnerTabs]]"
-                   active-tab="{{routeData.tab}}"
-                   on-iron-select="_handleTabSelectAction"></etools-tabs>
-      <!--<div slot="tabs" class="etools-tabs">-->
-        <!--<paper-tabs id="partnerTabs"-->
-                    <!--selected="{{routeData.tab}}"-->
-                    <!--attr-for-selected="name"-->
-                    <!--noink bottom-item-->
-                    <!--on-iron-select="_handleTabSelectAction">-->
-
-          <!--<paper-tab name="overview" link>-->
-            <!--<span class="tab-content">Overview</span>-->
-          <!--</paper-tab>-->
-
-          <!--<paper-tab name="details" link>-->
-            <!--<span class="tab-content">Partner Details</span>-->
-          <!--</paper-tab>-->
-        <!--</paper-tabs>-->
-      <!--</div>-->
+      <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[partnerTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
     </page-content-header>
 
     <div id="main">
@@ -178,7 +164,7 @@
             },
             {
               tab: 'details',
-              tabLabel: 'Details',
+              tabLabel: 'Partner Details',
               hidden: false
             }
           ]

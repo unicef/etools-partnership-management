@@ -31,22 +31,14 @@
     <paper-tabs id="tabs"
                 selected="{{activeTab}}"
                 attr-for-selected="name"
-                noink bottom-item
+                noink
                 on-iron-select="_handleTabSelection">
 
-      <!--<template is="dom-repeat" items="[[tabs]]">-->
-        <!--<paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">-->
-          <!--<span class="tab-content">[[item.tabLabel]]</span>-->
-        <!--</paper-tab>-->
-      <!--</template>-->
-
-      <paper-tab name="overview" link>
-        <span class="tab-content">Overview</span>
-      </paper-tab>
-
-      <paper-tab name="details" link>
-        <span class="tab-content">Details</span>
-      </paper-tab>
+      <template is="dom-repeat" items="[[tabs]]">
+        <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
+          <span class="tab-content">[[item.tabLabel]]</span>
+        </paper-tab>
+      </template>
 
     </paper-tabs>
 
@@ -78,8 +70,7 @@
       },
 
       notifyTabsResize: function() {
-        this.async(() => {
-          console.log('resize...');
+        this.debounce('tabs-resize-debounce' , () => {
           this.$.tabs.notifyResize();
         }, 50);
       }
