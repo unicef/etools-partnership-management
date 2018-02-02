@@ -11,9 +11,12 @@
 <link rel="import" href="../app-elements/common-elements/etools-error-messages-box.html">
 <link rel="import" href="../app-elements/interventions/behaviors/intervention-permissions-behavior.html">
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
+<link rel="import" href="behaviors/intervention-page-tabs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../app-elements/environment-flags/environment-flags-behavior.html">
+<link rel="import" href="../app-elements/page-header/page-content-header.html">
+<link rel="import" href="../app-elements/common-elements/etools-tabs.html">
 
 <link rel="import" href="../app-elements/interventions/intervention-data/intervention-item-data.html">
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -54,77 +57,43 @@
         active="{{intervDetailsActive}}"
         data="{{routeData}}"></app-route>
 
-    <div class$="page-top-content [[_getTopContentAdditionalClass(interventionPage)]]">
-      <div class="top-content">
-        <div class="top-content-row title-row">
-          <h1 main-title>
-            <template is="dom-if" if="[[intervListActive]]">
-              PD/SSFAs
-            </template>
-            <template is="dom-if" if="[[newInterventionActive]]">
-              <span class="no-capitalization">Add Programme Document or SSFA</span>
-            </template>
-            <template is="dom-if" if="[[intervDetailsActive]]">
-              [[_getInterventionDetailsTitle(intervention)]]
-            </template>
-          </h1>
-          <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!intervListActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
-              </a>
-            </div>
-            <div class="top-content-action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
-                <iron-icon icon="add"></iron-icon>
-                Add new PD/SSFA
-              </paper-button>
-            </div>
-          </div>
-        </div>
-        <template is="dom-if" if="[[_showPageTabs(interventionPage)]]">
-          <div class="top-content-row">
-            <paper-tabs id="intTabs"
-                        selected="{{routeData.tab}}"
-                        attr-for-selected="name"
-                        noink bottom-item
-                        on-iron-select="_handleTabSelectAction">
-              <template is="dom-if" if="[[!newInterventionActive]]">
-                <paper-tab name="overview" link>
-                  <span class="tab-content">Overview</span>
-                </paper-tab>
-              </template>
-
-              <paper-tab name="details" link>
-                <span class="tab-content">Details</span>
-              </paper-tab>
-
-              <paper-tab name="review-and-sign" link>
-                <span class="tab-content">Review & Sign</span>
-              </paper-tab>
-
-              <paper-tab name="attachments" link>
-                <span class="tab-content">Attachments</span>
-              </paper-tab>
-
-              <template is="dom-if" if="[[_showReportsTabs(newInterventionActive)]]">
-                <paper-tab name="reports" link>
-                  <span class="tab-content">Reports</span>
-                </paper-tab>
-
-                <paper-tab name="progress" link>
-                  <span class="tab-content">Progress</span>
-                </paper-tab>
-              </template>
-
-            </paper-tabs>
-          </div>
+    <page-content-header with-tabs-visible="[[intervDetailsActive]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[intervListActive]]">
+          PD/SSFAs
+        </template>
+        <template is="dom-if" if="[[newInterventionActive]]">
+          <span class="no-capitalization">Add Programme Document or SSFA</span>
+        </template>
+        <template is="dom-if" if="[[intervDetailsActive]]">
+          [[_getInterventionDetailsTitle(intervention)]]
         </template>
       </div>
-    </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!intervListActive]]">
+          <a target="_blank" href$="[[csvDownloadUrl]]">
+            <paper-button>
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+          </a>
+        </div>
+        <div class="action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
+          <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
+            <iron-icon icon="add"></iron-icon>
+            Add new PD/SSFA
+          </paper-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[_showPageTabs(interventionPage)]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[interventionTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
 
     <div id="main">
       <div id="pageContent">
@@ -241,6 +210,7 @@
         EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.InterventionPageTabs,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
         EtoolsPmpApp.Behaviors.SaveIntervention
       ],
@@ -563,14 +533,11 @@
         this.set('intervention', this._getNewInterventionObjModel());
         this.set('selectedInterventionId', null);
         this.fire('update-main-path', {path: 'interventions/new/details'});
+        this._handleInterventionSelectionLoadingMsg();
       },
 
       _getNewInterventionObjModel: function() {
         return JSON.parse(JSON.stringify(this.newInterventionModel));
-      },
-
-      _showReportsTabs: function(newInterventionActive) {
-        return !newInterventionActive && this.showPrpReports();
       },
 
       _visibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
