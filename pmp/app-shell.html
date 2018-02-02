@@ -85,6 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-flex;
         @apply --layout-end-justified;
       }
+
       #floating-footer {
         background-color: var(--amendment-mode-color);
         color: var(--light-primary-text-color);
@@ -92,17 +93,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: fixed;
         top: auto;
         bottom: 0;
-        width: 100%;/* paper-buttons have a z-index of 51 */
+        width: 100%; /* paper-buttons have a z-index of 51 */
         z-index: 52;
       }
+
       #page-container.in-amendment {
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
         border-right: 12px solid var(--amendment-mode-color);
       }
+
       :host(:not(.ie)) #page-container.in-amendment {
         padding-bottom: 48px;
       }
+
       :host(.ie) #page-container.in-amendment {
         margin-bottom: -40px;
       }
@@ -311,8 +315,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _updateMainPath: function(e) {
         if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
-         // set route.path only if received path is different
-         this._updatePath(e.detail.path);
+          // set route.path only if received path is different
+          this._updatePath(e.detail.path);
         }
         e.stopImmediatePropagation();
       },
