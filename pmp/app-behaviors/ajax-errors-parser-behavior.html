@@ -22,6 +22,7 @@
       }
       return response.response || this.globalMessage;
     },
+
     _getErrorsArray: function(errors, prepareForToastMsg) {
       let errorsArray = [];
       if (!errors) {
@@ -70,14 +71,24 @@
       if (typeof errors === 'object' && Object.keys(errors).length > 0) {
         let errField;
         for (errField in errors) {
+
           if (typeof errors[errField] === 'string') {
             errorsArray.push('Field ' + errField + ' - ' + errors[errField]);
             continue;
           }
           if (Array.isArray(errors[errField]) && errors[errField].length > 0) {
-            errorsArray.push('Field ' + errField + ':');
+            let parentErr = 'Field ' + errField + ': ';
             let nestedErrs =  this._getErrorsArray(errors[errField]);
-            Array.prototype.push.apply(errorsArray, nestedErrs);
+            if (nestedErrs.length === 1) {
+              parentErr += nestedErrs[0];
+              errorsArray.push(parentErr);
+            } else {
+              errorsArray.push(parentErr);
+              // * The marking is used for display in etools-error-messages-box
+              // * and adds a welcomed identations when displayed as a toast message
+              nestedErrs = this._markNestedErrors(nestedErrs);
+              Array.prototype.push.apply(errorsArray, nestedErrs);
+            }
             continue;
           }
           if (typeof errors[errField] === 'object' && Object.keys(errors[errField]).length > 0) {
@@ -86,11 +97,17 @@
               errorsArray.push('Field ' + errField + '(' + errF + ') - ' + errors[errField][errF]);
             }
           }
+
         }
       }
 
       return errorsArray;
     },
+
+    _markNestedErrors: function(errs) {
+      return errs.map(er => ' ' + er);
+    },
+
     _isArrayOfStrings: function(arr) {
       let allStrings = true;
       let i;
