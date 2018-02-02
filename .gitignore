@@ -9,3 +9,4 @@ bower_components/
 *.sublime-workspace.vscode/settings.json
 vscode/*
 package-lock.json
+npm-debug.log

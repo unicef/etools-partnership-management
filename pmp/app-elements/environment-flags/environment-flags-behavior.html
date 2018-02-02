@@ -19,6 +19,10 @@
       return this.environmentFlags && !this.environmentFlags.prp_mode_off;
     },
 
+    prpServerIsOn: function() {
+      return this.environmentFlags && this.environmentFlags.prp_server_on;
+    },
+
     _checkFlagsReady: function() {
       let self = this;
       return new Promise(function(resolve, reject) {

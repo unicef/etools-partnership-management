@@ -14,8 +14,6 @@
 
 <link rel="import" href="behaviors/indicators-common-behavior.html">
 
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
@@ -130,7 +128,7 @@
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
-                                   options="[[locations]]"
+                                   options="[[locationOptions]]"
                                    option-label="name"
                                    option-value="id"
                                    required
@@ -149,7 +147,6 @@
         is: 'non-cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsLogsBehavior
         ],
@@ -164,9 +161,8 @@
             value: false,
             observer: '_readonlyChanged'
           },
-          locations: {
-            type: Array,
-            statePath: 'locations'
+          locationOptions: {
+            type: Array
           },
           baselineIsUnknown: {
             type: Boolean

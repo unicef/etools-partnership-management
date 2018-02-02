@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../scripts/polyfils/es6-polyfils.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
@@ -49,12 +50,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../styles/shared-styles.html">
 <link rel="import" href="../styles/page-layout-styles.html">
 <link rel="import" href="../styles/app-theme.html">
+<link rel="import" href="../styles/buttons-styles.html">
 
 <dom-module id="app-shell">
 
   <template strip-whitespace>
 
-    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style">
+    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style buttons-styles">
 
       :host {
         display: block;
@@ -82,6 +84,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-vertical;
         @apply --layout-flex;
         @apply --layout-end-justified;
+      }
+      #floating-footer {
+        background-color: var(--amendment-mode-color);
+        color: var(--light-primary-text-color);
+        padding: 12px 12px 12px 65px;
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        width: 100%;/* paper-buttons have a z-index of 51 */
+        z-index: 52;
+      }
+      #page-container.in-amendment {
+        border-top: 12px solid var(--amendment-mode-color);
+        border-left: 12px solid var(--amendment-mode-color);
+        border-right: 12px solid var(--amendment-mode-color);
+      }
+      :host(:not(.ie)) #page-container.in-amendment {
+        padding-bottom: 48px;
+      }
+      :host(.ie) #page-container.in-amendment {
+        margin-bottom: -40px;
       }
     </style>
 
@@ -113,49 +136,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
+
         <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
-          <page-partners id="partners" class="main-page"
-                         show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                         current-page="[[_lastActivePartnerPage]]"
-                         route="{{subroute}}"
-                         permissions="[[permissions]]">
-          </page-partners>
-        </template>
+        <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
-        <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
-          <page-agreements id="agreements" class="main-page"
+          <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
+            <page-partners id="partners" class="main-page"
+                           show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
+                           current-page="[[_lastActivePartnerPage]]"
                            route="{{subroute}}"
                            permissions="[[permissions]]">
-          </page-agreements>
-        </template>
+            </page-partners>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
-          <page-interventions id="interventions" class="main-page"
-                              route="{{subroute}}"
-                              permissions="[[permissions]]">
-          </page-interventions>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
+            <page-agreements id="agreements" class="main-page"
+                             route="{{subroute}}"
+                             permissions="[[permissions]]">
+            </page-agreements>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
-          <page-reports id="reports" class="main-page"
-                        route="{{subroute}}"
-                        permissions="[[permissions]]">
-          </page-reports>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
+            <page-interventions id="interventions" class="main-page"
+                                route="{{subroute}}"
+                                permissions="[[permissions]]">
+            </page-interventions>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
-          <page-not-found class="main-page"></page-not-found>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+            <page-reports id="reports" class="main-page"
+                          route="{{subroute}}"
+                          permissions="[[permissions]]">
+            </page-reports>
+          </template>
 
-        <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
-          <page-settings id="settings" class="main-page"></page-settings>
-        </template>
+          <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
+            <page-not-found class="main-page"></page-not-found>
+          </template>
 
-        <page-footer></page-footer>
+          <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
+            <page-settings id="settings" class="main-page"></page-settings>
+          </template>
+
+          <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+        </div>
+
+        <div id="floating-footer"
+             hidden$="[[!amendmentModeActive]]">
+          <strong> AMENDMENT MODE </strong>
+          | All fields in the details tab are now open for editing.
+          Please save before clicking "I am done".
+          <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
+        </div>
 
       </app-header-layout>
     </app-drawer-layout>
@@ -197,6 +232,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Boolean,
           reflectToAttribute: true
         },
+        amendmentModeActive: {
+          type: Boolean,
+          value: false
+        },
         baseUrl: String,
         permissions: {
           type: Object,
@@ -225,7 +264,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'not-found-redirect': '_handleNotFound'
+        'not-found-redirect': '_handleNotFound',
+        'set-amendment-mode': '_updateAmendmentMode'
       },
 
       _onForbidden: function() {
@@ -235,9 +275,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       created: function() {
         this.checkIE11Browser();
       },
+
       _routeChanged: function() {
         this._setContentScrollPosition(0);
       },
+
       ready: function() {
         window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
             .querySelector('#appHeadLayout').$$('#contentContainer');
@@ -290,6 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updateLastPartnersActivePage(page);
         // clear loading messages queue
         this.fire('clear-loading-messages', {});
+        this._setAmendMode(false);
       },
 
       _routePageChanged: function(routePage) {
@@ -388,6 +431,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _updateLastPartnersActivePage: function(page) {
         if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
           this.set('_lastActivePartnerPage', page);
+        }
+      },
+
+      _updateAmendmentMode: function(event) {
+        let detail = event.detail || {};
+        this._setAmendMode(detail.active);
+      },
+
+      _getPageContainerClass: function(amendmentModeActive) {
+        return amendmentModeActive ? 'in-amendment' : '';
+      },
+
+      _setAmendMode: function(newVal) {
+        this.set('amendmentModeActive', !!newVal);
+      },
+
+      _closeAmendment: function() {
+        let intervElem = this.$$('#interventions');
+        if (intervElem) {
+          intervElem._showFinalizeAmendmentDialog();
         }
       }
 

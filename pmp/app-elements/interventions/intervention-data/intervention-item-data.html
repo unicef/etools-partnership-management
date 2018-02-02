@@ -80,24 +80,32 @@
 
         _interventionIdChanged: function(newId) {
           if (newId) {
-            this.fire('global-loading', {
-              message: 'Loading PD/SSFA data...',
-              active: true,
-              loadingSource: this.ajaxLoadingMsgSource
-            });
-            this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: newId})});
+            this.fetchIntervention(newId);
           }
+        },
+
+        fetchIntervention: function(id) {
+          this.fire('global-loading', {
+            message: 'Loading PD/SSFA data...',
+            active: true,
+            loadingSource: this.ajaxLoadingMsgSource
+          });
+          this._triggerInterventionRequest({endpoint: this.getEndpoint(this.pdEndpoints.DETAILS, {id: id})});
         },
 
         _handleErrorResponse: function(response, ajaxMethod) {
           this.handleErrorResponse(response, ajaxMethod, true);
           if (this.intervention) {
             this._restoreUnsuccessfullyDeletedFrs();
+            this._restoreInAmmendmentFlag();
           }
         },
         _restoreUnsuccessfullyDeletedFrs: function() {
           this.set('intervention.frs_details', this.originalIntervention.frs_details);
           this.set('intervention.frs', this.originalIntervention.frs);
+        },
+        _restoreInAmmendmentFlag: function() {
+          this.set('intervention.in_amendment', this.originalIntervention.in_amendment);
         },
 
         _convertIdsToStrings: function(dataArray) {
@@ -393,7 +401,7 @@
             section_names: []
           };
 
-          let sections = this.showPrpReports() ? responseDetail.flagged_sections : responseDetail.sections;
+          let sections = responseDetail.sections;
 
           if (sections) {
             let sectionNames = [];

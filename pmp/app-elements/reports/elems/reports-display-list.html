@@ -185,11 +185,11 @@
         },
 
         observers: [
-          '_loadReportsData(interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
+          '_loadReportsData(prpCountries, interventionId, currentUser, paginator.page_size, paginator.page, queryParams.*)'
         ],
 
-        _loadReportsData: function(interventionId, currentUser, pageSize, page, qParamsData) {
-          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData)) {
+        _loadReportsData: function(prpCountries, interventionId, currentUser, pageSize, page, qParamsData) {
+          if (_.isEmpty(currentUser) || this._queryParamsNotInitialized(qParamsData) || _.isEmpty(prpCountries)) {
             return;
           }
           let self = this;
