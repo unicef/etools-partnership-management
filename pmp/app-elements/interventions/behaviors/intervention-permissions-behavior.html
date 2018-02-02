@@ -70,7 +70,6 @@
 
     listeners: {
       'signed-doc-change-for-draft': '_signedDocChangedForDraft',
-      'unlock-details-fields': '_unlockDetailsFields',
       'restore-original-permissions': '_restoreInterventionOriginalDataAndPermissions'
     },
 
@@ -87,12 +86,6 @@
         fields.push('start', 'end');
       }
       return fields;
-    },
-
-    _getEditableFieldsForAddAmendmentAction: function() {
-      return ['partner', 'agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-        'partner_focal_points', 'country_programme', 'start', 'end', 'sections',
-        'result_links', 'planned_budget', 'planned_budget_unicef_cash', 'planned_visits'];
     },
 
     _getNoEditPermissionsClone: function() {
@@ -177,19 +170,6 @@
       reqFieldsForSignedStatus.forEach(function(field) {
         perm.required[field] = true;
         perm.edit[field] = true;
-      });
-      return perm;
-    },
-
-    /**
-     * Alter current permission to allow details fields edit
-     */
-    getDetailsEditPermissionsForAmendAction: function(currentPerm) {
-      let perm = JSON.parse(JSON.stringify(currentPerm));
-      let editableFields = this._getEditableFieldsForAddAmendmentAction();
-      editableFields.forEach(function(field) {
-        perm.edit[field] = true;
-        perm.required[field] = true;
       });
       return perm;
     },
@@ -283,12 +263,6 @@
           reviewAndSign.validate();
         }
       }
-    },
-
-    _unlockDetailsFields: function(e) {
-      e.stopImmediatePropagation();
-      this.setInterventionPermissions(false,
-          this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
     },
 
     _restoreInterventionOriginalDataAndPermissions: function(e) {
