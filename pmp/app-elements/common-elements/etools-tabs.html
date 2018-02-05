@@ -8,6 +8,13 @@
       *[hidden] {
         display: none !important;
       }
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-start-justified;
+      }
+      :host([border-bottom]) {
+        border-bottom: 1px solid var(--darker-divider-color);
+      }
       paper-tabs {
         --paper-tabs-selection-bar-color: var(--primary-color);
       }
@@ -36,7 +43,12 @@
 
       <template is="dom-repeat" items="[[tabs]]">
         <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
-          <span class="tab-content">[[item.tabLabel]]</span>
+          <span class="tab-content">
+            [[item.tabLabel]]
+            <template is="dom-if" if="[[item.showTabCounter]]" restamp>
+              ([[item.counter]])
+            </template>
+          </span>
         </paper-tab>
       </template>
 
