@@ -12,6 +12,8 @@
 <link rel="import" href="behaviors/page-utils-behavior.html">
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
+<link rel="import" href="../app-elements/page-header/page-content-header.html">
+<link rel="import" href="../app-elements/common-elements/etools-tabs.html">
 <link rel="import" href="../app-elements/partners/partners-data/partner-item-data.html">
 
 <link rel="import" href="../../styles/page-layout-styles.html">
@@ -33,66 +35,51 @@
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="[[currentPage]]/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <div class$="page-top-content [[_getTopContentAdditionalClass(partnerPage)]]">
-      <div class="top-content">
-        <div class="top-content-row title-row">
-          <h1 main-title>
-            <template is="dom-if" if="[[listActive]]">
-              <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
-              <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
-            </template>
-            <template is="dom-if" if="[[tabsActive]]">
-              <span>[[partner.name]]</span>
-            </template>
-          </h1>
-          <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!listActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
-              </a>
-            </div>
-            <div class="top-content-action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
-                <iron-icon icon="add"></iron-icon>
-                Add New Partner
-              </paper-button>
-            </div>
-          </div>
-        </div>
-        <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
-          <div class="top-content-row">
-            <paper-tabs id="partnerTabs"
-                        selected="{{activeTab}}"
-                        attr-for-selected="name"
-                        noink bottom-item
-                        on-iron-select="_handleTabSelectAction">
-
-              <paper-tab name="overview" link>
-                <span class="tab-content">Overview</span>
-              </paper-tab>
-
-              <paper-tab name="details" link>
-                <span class="tab-content">Partner Details</span>
-              </paper-tab>
-
-            </paper-tabs>
-          </div>
+    <page-content-header with-tabs-visible="[[tabsActive]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[listActive]]">
+          <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+          <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
+        </template>
+        <template is="dom-if" if="[[tabsActive]]">
+          <span>[[partner.name]]</span>
         </template>
       </div>
-    </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!listActive]]">
+          <a target="_blank" href$="[[csvDownloadUrl]]">
+            <paper-button>
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+          </a>
+        </div>
+        <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+          <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+            <iron-icon icon="add"></iron-icon>
+            Add New Partner
+          </paper-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[partnerTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
 
     <div id="main">
       <div id="pageContent">
@@ -167,6 +154,22 @@
       ],
 
       properties: {
+        partnerTabs: {
+          type: Array,
+          value: [
+            {
+              tab: 'overview',
+              tabLabel: 'Overview',
+              hidden: false
+            },
+            {
+              tab: 'details',
+              tabLabel: 'Partner Details',
+              hidden: false
+            }
+          ]
+        },
+        listActive: Boolean,
         tabsActive: {
           type: Boolean
         },
@@ -175,11 +178,6 @@
         },
         routeData: {
           type: Object,
-        },
-        activeTab: {
-          type: String,
-          value: '',
-          observer: '_activeTabChanged'
         },
         csvDownloadUrl: {
           type: String
@@ -203,13 +201,11 @@
           value: []
         },
         currentPage: String,
-        originalPartnerData: Object,
-        listActive: Boolean
+        originalPartnerData: Object
       },
 
       observers: [
-        '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, activeTab)',
+        '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)'
       ],
 
@@ -217,7 +213,8 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_handlePageTabAttached'
+        'partners-page-attached': '_handlePageTabAttached',
+        'trigger-partner-loading-msg': '_handlePartnerSelectionLoadingMsg'
       },
 
       ready: function() {
@@ -235,22 +232,11 @@
         /**
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
-        this.fire('global-loading', {
-          message: 'Loading ' + (this.listActive ? 'partners list' :
-              (this._removeStrDash(this.activeTab) + ' page')) + ' elements...',
-          active: true,
-          loadingSource: 'partners-page'
-        });
+        this._showPartnersPageLoadingMessage();
       },
       detached: function() {
         if (this.newPartnerDialog) {
           document.querySelector('body').removeChild(this.newPartnerDialog);
-        }
-      },
-
-      _activeTabChanged: function(activeTab) {
-        if (activeTab) {
-          this.set('routeData.tab', activeTab);
         }
       },
 
@@ -264,7 +250,7 @@
         } else {
           this.set('serverErrors', []);
         }
-        if (page) {
+        if (page && page !== this.partnerPage) {
           let self = this;
           self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
             self.set('partnerPage', page);
@@ -277,22 +263,15 @@
         }
       },
 
-      _pageChanged: function(listActive, tab) {
-        this._setActivePage(listActive, tab);
+      _pageChanged: function(listActive, tabsActive, routeData) {
+        if (!listActive && !tabsActive) {
+          return;
+        }
+        this._setActivePage(listActive, routeData.tab);
       },
 
       _hasEditPermissions: function(permissions) {
-        if (permissions && permissions.editPartnerDetails === true) {
-          return true;
-        }
-        return false;
-      },
-
-      _updateUrlTab: function(tab) {
-        if (!tab) {
-          return;
-        }
-        this._updateTabPath(tab, this.route.path, '#partnerTabs');
+        return permissions && permissions.editPartnerDetails === true;
       },
 
       _savePartner: function(newPartnerData) {
@@ -328,7 +307,7 @@
       },
 
       _observeRouteDataId: function(id) {
-        if (this.route && this.route.path.indexOf('partners') > -1) {
+        if (this.route && this.route.prefix.indexOf('partners') > -1) {
           this.set('selectedPartnerId', id);
         }
       },
@@ -439,6 +418,22 @@
       _handleTabSelectAction: function(e) {
         this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
       },
+
+      _handlePartnerSelectionLoadingMsg: function() {
+        this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+      },
+
+      /**
+       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showPartnersPageLoadingMessage: function() {
+        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
+        this.fire('global-loading', {
+          message: 'Loading ' + appSection + ' elements...',
+          active: true,
+          loadingSource: 'partners-page'
+        });
+      }
 
     });
 

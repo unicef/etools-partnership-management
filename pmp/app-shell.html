@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="app-behaviors/ie11-behavior.html">
+<link rel="import" href="app-behaviors/amendment-mode-behavior.html">
 <link rel="import" href="app-menu/app-sidebar-menu.html">
 <link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
 <link rel="import" href="app-menu/styles/app-drawer-styles.html">
@@ -85,6 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-flex;
         @apply --layout-end-justified;
       }
+
       #floating-footer {
         background-color: var(--amendment-mode-color);
         color: var(--light-primary-text-color);
@@ -92,34 +94,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: fixed;
         top: auto;
         bottom: 0;
-        width: 100%;/* paper-buttons have a z-index of 51 */
+        width: 100%; /* paper-buttons have a z-index of 51 */
         z-index: 52;
       }
+
       #page-container.in-amendment {
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
         border-right: 12px solid var(--amendment-mode-color);
       }
+
       :host(:not(.ie)) #page-container.in-amendment {
         padding-bottom: 48px;
       }
+
       :host(.ie) #page-container.in-amendment {
         margin-bottom: -40px;
       }
     </style>
 
     <environment-flags></environment-flags>
+
     <etools-piwik-analytics page="[[subroute.path]]"
                             user="[[user]]"
                             toast="[[currentToastMessage]]"></etools-piwik-analytics>
+
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location route="{{route}}"></app-location>
 
     <app-route
         route="{{route}}"
-        pattern$="[[baseUrl]]:page"
-        data="{{routeData}}"></app-route>
+        pattern="[[baseUrl]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
 
     <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
 
@@ -133,37 +141,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
+
         <app-header fixed shadow>
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
+
         <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
           <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
             <page-partners id="partners" class="main-page"
-                          show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                          current-page="[[_lastActivePartnerPage]]"
-                          route="[[subroute]]"
-                          permissions="[[permissions]]">
+                           show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
+                           current-page="[[_lastActivePartnerPage]]"
+                           route="{{subroute}}"
+                           permissions="[[permissions]]">
             </page-partners>
           </template>
 
           <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
             <page-agreements id="agreements" class="main-page"
-                            route="[[subroute]]"
-                            permissions="[[permissions]]">
+                             route="{{subroute}}"
+                             permissions="[[permissions]]">
             </page-agreements>
           </template>
 
           <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
             <page-interventions id="interventions" class="main-page"
-                                route="[[subroute]]"
+                                route="{{subroute}}"
                                 permissions="[[permissions]]">
             </page-interventions>
           </template>
 
           <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
             <page-reports id="reports" class="main-page"
-                          route="[[subroute]]"
+                          route="{{subroute}}"
                           permissions="[[permissions]]">
             </page-reports>
           </template>
@@ -175,15 +185,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
             <page-settings id="settings" class="main-page"></page-settings>
           </template>
-      </div>
-      <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
-      <div id="floating-footer"
-           hidden$="[[!amendmentModeActive]]">
-        <strong> AMENDMENT MODE </strong>
-        | All fields in the details tab are now open for editing.
-        Please save before clicking "I am done".
-        <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
-      </div>
+
+        </div>
+        <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
+        <div id="floating-footer"
+             hidden$="[[!amendmentModeActive]]">
+          <strong> AMENDMENT MODE </strong>
+          | All fields in the details tab are now open for editing.
+          Please save before clicking "I am done".
+          <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
+        </div>
+
       </app-header-layout>
     </app-drawer-layout>
     <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
@@ -207,7 +219,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         EtoolsPmpApp.Behaviors.AppMenu,
         EtoolsPmpApp.Behaviors.NotificationToasts,
         etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl
+        EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsPmpApp.Behaviors.AmendmentMode
       ],
 
       properties: {
@@ -223,10 +236,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         narrow: {
           type: Boolean,
           reflectToAttribute: true
-        },
-        amendmentModeActive: {
-          type: Boolean,
-          value: false
         },
         baseUrl: String,
         permissions: {
@@ -252,15 +261,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       listeners: {
         'drawer': 'toggleDrawer',
-        '404': '_pageNotFound',
         'update-main-path': '_updateMainPath',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
-        'not-found-redirect': '_handleNotFound',
-        'set-amendment-mode': '_updateAmendmentMode'
+        '404': '_pageNotFound'
       },
 
-      _onForbidden: function(event) {
+      _onForbidden: function() {
         window.location.href = EtoolsPmpApp.Config.loginPath;
       },
 
@@ -301,17 +308,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.drawer.toggle();
       },
 
-      _updateMainPath: function(event) {
-        if (event.detail.path !== this.route.path.replace(this.baseUrl, '')) {
+      _updateMainPath: function(e) {
+        if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
           // set route.path only if received path is different
-          this._updatePath(event.detail.path);
+          this._updatePath(e.detail.path);
         }
-        event.stopImmediatePropagation();
-      },
-
-      _handleNotFound: function() {
-        this.fire('clear-loading-messages', {});
-        this._updatePath('not-found');
+        e.stopImmediatePropagation();
       },
 
       _updatePath: function(path) {
@@ -320,9 +322,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageChanged: function(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
-        }
+        // set last partners active page... needed to make a difference between partners and government-partners
+        this._updateLastPartnersActivePage(page);
+        // clear loading messages queue
         this.fire('clear-loading-messages', {});
         this._setAmendMode(false);
       },
@@ -330,16 +332,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
           if (!routePage) {
-            this.fire('update-main-path', {path: 'partners/list'});
+            // this.fire('update-main-path', {path: 'partners/list'});
+            this._updatePath('partners/list');
             return;
           }
-
           this._importMainPage(routePage);
-          if (this.route && this.baseUrl) {
-            let subroute = JSON.parse(JSON.stringify(this.route));
-            subroute.path = this.route.path.substring(subroute.path.indexOf(this.baseUrl) + this.baseUrl.length);
-            this.set('subroute', subroute);
-          }
           this._validatePageChange(routePage).then(function(redirectApproved) {
             if (redirectApproved) {
               this.set('page', routePage);
@@ -375,8 +372,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _pageNotFound: function() {
-        this.set('route.path', this.baseUrl + 'not-found');
-        this.set('route.__queryParams', null);
+        this._updatePath('not-found');
+        // the _pageChanged method will trigger and clear loading messages so no need to do that here
         this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       },
 
@@ -388,7 +385,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         let self = this;
         return self._waitForEnvFlagsToLoad().then(function() {
           if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
-            self._handleNotFound();
+            self._pageNotFound();
             return false;
           }
           return true;
@@ -426,23 +423,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return page === 'government-partners';
       },
 
-      _updateAmendmentMode: function(event) {
-        let detail = event.detail || {};
-        this._setAmendMode(detail.active);
-      },
-
-      _getPageContainerClass: function(amendmentModeActive) {
-        return amendmentModeActive ? 'in-amendment' : '';
-      },
-
-      _setAmendMode: function(newVal) {
-        this.set('amendmentModeActive', !!newVal);
-      },
-
-      _closeAmendment: function() {
-        let intervElem = this.$$('#interventions');
-        if (intervElem) {
-          intervElem._showFinalizeAmendmentDialog();
+      _updateLastPartnersActivePage: function(page) {
+        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
+          this.set('_lastActivePartnerPage', page);
         }
       }
 

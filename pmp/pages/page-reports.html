@@ -9,6 +9,8 @@
 <link rel="import" href="behaviors/page-utils-behavior.html">
 <link rel="import" href="../app-config/app-endpoints-behavior.html">
 
+<link rel="import" href="../app-elements/page-header/page-content-header.html">
+<link rel="import" href="../app-elements/common-elements/etools-tabs.html">
 <link rel="import" href="../app-elements/etools-status/etools-action-button.html">
 <link rel="import" href="../app-elements/reports/elems/behaviors/report-details-behavior.html">
 <link rel="import" href="../app-elements/reports/elems/report-status.html">
@@ -39,59 +41,43 @@
 
     <app-route
         route="{{route}}"
-        pattern="reports/list"
+        pattern="/list"
         query-params="{{listPageQueryParams}}"
         active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
-        pattern="reports/:id/:tab"
+        pattern="/:id/:tab"
         active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-
-    <div class$="page-top-content [[_getTopContentAdditionalClass(reportsPage)]]">
-      <div class="top-content">
-        <div class="top-content-row title-row">
-          <h1 main-title>
-            <template is="dom-if" if="[[listActive]]">
-              Partner Reports
-            </template>
-            <template is="dom-if" if="[[tabsActive]]">
-              <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
-              <sup><report-status status="[[report.status]]"></report-status></sup>
-            </template>
-          </h1>
-          <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!tabsActive]]">
-              <etools-action-button actions="[[reportActions]]"
-                                    on-accept-report="_accept"
-                                    on-send-back-to-partner="_sendBackToPartner"
-                                    on-download-report="_download"></etools-action-button>
-            </div>
-          </div>
-        </div>
+    <page-content-header with-tabs-visible="[[tabsActive]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[listActive]]">
+          Partner Reports
+        </template>
         <template is="dom-if" if="[[tabsActive]]">
-          <div class="top-content-row">
-            <paper-tabs id="reportTabs"
-                        selected="{{activeTab}}"
-                        attr-for-selected="name"
-                        noink bottom-item
-                        on-iron-select="_handleTabSelectAction">
-
-              <paper-tab name="summary" link>
-                <span class="tab-content">Report Summary</span>
-              </paper-tab>
-
-              <paper-tab name="progress" link>
-                <span class="tab-content">Progress</span>
-              </paper-tab>
-
-            </paper-tabs>
-          </div>
+          <span>[[report.programme_document.reference_number]]: [[report.reporting_period]]</span>
+          <sup><report-status status="[[report.status]]"></report-status></sup>
         </template>
       </div>
-    </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!tabsActive]]">
+          <etools-action-button actions="[[reportActions]]"
+                                on-accept-report="_accept"
+                                on-send-back-to-partner="_sendBackToPartner"
+                                on-download-report="_download"></etools-action-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[tabsActive]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[reportTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
 
     <div id="main">
       <div id="pageContent">
@@ -137,6 +123,21 @@
       ],
 
       properties: {
+        reportTabs: {
+          type: Array,
+          value: [
+            {
+              tab: 'summary',
+              tabLabel: 'Report Summary',
+              hidden: false
+            },
+            {
+              tab: 'progress',
+              tabLabel: 'Progress',
+              hidden: false
+            }
+          ]
+        },
         tabsActive: {
           type: Boolean
         },
@@ -151,17 +152,11 @@
         },
         reportRejectDialog: {
           type: Object
-        },
-        activeTab: {
-          type: String,
-          value: '',
-          observer: '_activeTabChanged'
         }
       },
 
       observers: [
-        '_updateUrlTab(routeData.tab)',
-        '_pageChanged(listActive, activeTab)',
+        '_pageChanged(listActive, tabsActive)',
         '_observeRouteDataId(routeData.id, listActive, tabsActive)',
         '_reportChanged(report)'
       ],
@@ -179,7 +174,7 @@
          * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
          */
         let loadingMsg = 'Loading ' + (this.listActive ? 'reports list' :
-            (this._removeStrDash(this.activeTab) + ' page')) + ' elements...';
+            (this._removeStrDash(this.routeData.tab) + ' page')) + ' elements...';
         this.fire('global-loading', {
           message: loadingMsg,
           active: true,
@@ -189,12 +184,12 @@
         this._createReportStatusUpdateDialogs();
       },
 
-      _setActivePage: function(listActive, tab) {
+      _setActivePage: function(listActive) {
         let page = 'list';
         let pagePrefix = 'reports-';
         let pageBaseUrl = '../app-elements/reports/';
         if (!listActive) {
-          page = tab;
+          page = this.routeData.tab;
           pagePrefix = 'report-';
         }
         if (page) {
@@ -209,21 +204,11 @@
         }
       },
 
-      _pageChanged: function(listActive, tab) {
-        this._setActivePage(listActive, tab);
-      },
-
-      _activeTabChanged: function(activeTab) {
-        if (activeTab) {
-          this.set('routeData.tab', activeTab);
-        }
-      },
-
-      _updateUrlTab: function(tab) {
-        if (!tab) {
+      _pageChanged: function(listActive, tabsActive) {
+        if (!listActive && !tabsActive) {
           return;
         }
-        this._updateTabPath(tab, this.route.path, '#reportTabs');
+        this._setActivePage(listActive);
       },
 
       _handleTabSelectAction: function(e) {
@@ -330,7 +315,7 @@
             if (index > -1) {
               // updates report found in list => update shown data
               reportsDisplayList.set(['reports', index, 'status'], report.status);
-              // TODO: find out if any of the next report properties ca change on accept/send back
+              // TODO: find out if any of the next report properties can change on accept/send back
               reportsDisplayList.set(['reports', index, 'due_date'], report.due_date);
               reportsDisplayList.set(['reports', index, 'submission_date'], report.submission_date);
               reportsDisplayList.set(['reports', index, 'review_date'], report.review_date);
