@@ -1,0 +1,76 @@
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.InterventionPageTabsImpl */
+  EtoolsPmpApp.Behaviors.InterventionPageTabsImpl = {
+    properties: {
+      /**
+       * Hidden tabs rules:
+       *  - overview - on new intervention page
+       *  - reports & progress - if prp sections are disabled and on new intervention page
+       */
+      interventionTabs: {
+        type: Array,
+        value: [
+          {
+            tab: 'overview',
+            tabLabel: 'Overview',
+            hidden: false
+          },
+          {
+            tab: 'details',
+            tabLabel: 'Details',
+            hidden: false
+          },
+          {
+            tab: 'review-and-sign',
+            tabLabel: 'Review & Sign',
+            hidden: false
+          },
+          {
+            tab: 'attachments',
+            tabLabel: 'Attachments',
+            hidden: false
+          },
+          {
+            tab: 'reports',
+            tabLabel: 'Reports',
+            hidden: false
+          },
+          {
+            tab: 'progress',
+            tabLabel: 'Progress',
+            hidden: false
+          }
+        ]
+      }
+
+    },
+
+    observers: ['_computeInterventionTabs(newInterventionActive, environmentFlags)'],
+
+    _computeInterventionTabs: function(newInterventionActive) {
+      let showPrpTabs = this.showPrpReports();
+      this.interventionTabs.forEach((t, index) => {
+        if (t.tab === 'overview') {
+          this._updateTabProperty(index, 'hidden', newInterventionActive);
+        }
+        if (['reports', 'progress'].indexOf(t.tab) > -1) {
+          this._updateTabProperty(index, 'hidden', !showPrpTabs || newInterventionActive);
+        }
+      });
+    },
+
+    _updateTabProperty: function(tabIndex, property, value) {
+      this.set(['interventionTabs', tabIndex, property], value);
+    }
+
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.InterventionPageTabs */
+  EtoolsPmpApp.Behaviors.InterventionPageTabs = [
+    EtoolsPmpApp.Behaviors.EnvironmentFlags,
+    EtoolsPmpApp.Behaviors.InterventionPageTabsImpl
+  ];
+</script>

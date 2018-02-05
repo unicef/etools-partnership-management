@@ -1,0 +1,82 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+
+<dom-module id="etools-tabs">
+  <template strip-whitespace>
+    <style>
+      *[hidden] {
+        display: none !important;
+      }
+      paper-tabs {
+        --paper-tabs-selection-bar-color: var(--primary-color);
+      }
+
+      paper-tab[link],
+      paper-tab {
+        --paper-tab-ink: var(--primary-color);
+        padding: 0 24px;
+      }
+
+      paper-tab .tab-content {
+        color: var(--dark-secondary-text-color);
+        text-transform: uppercase;
+      }
+
+      paper-tab.iron-selected .tab-content {
+        color: var(--primary-color);
+      }
+    </style>
+
+    <paper-tabs id="tabs"
+                selected="{{activeTab}}"
+                attr-for-selected="name"
+                noink
+                on-iron-select="_handleTabSelection">
+
+      <template is="dom-repeat" items="[[tabs]]">
+        <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
+          <span class="tab-content">[[item.tabLabel]]</span>
+        </paper-tab>
+      </template>
+
+    </paper-tabs>
+
+  </template>
+
+  <script>
+    'use strict';
+
+    /**
+     * `iron-select` event is sent up to the parent, so it can be handled there
+     */
+
+    Polymer({
+      is: 'etools-tabs',
+
+      properties: {
+        activeTab: {
+          type: String,
+          notify: true
+        },
+        tabs: {
+          type: Array,
+          value: []
+        }
+      },
+
+      observers: ['notifyTabsResize(tabs.*)'],
+
+      _handleTabSelection: function() {
+        this.notifyTabsResize();
+      },
+
+      notifyTabsResize: function() {
+        this.debounce('tabs-resize-debounce' , () => {
+          this.$.tabs.notifyResize();
+        }, 50);
+      }
+
+    });
+  </script>
+</dom-module>

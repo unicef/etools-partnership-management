@@ -9,6 +9,8 @@
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
+<link rel="import" href="../app-elements/page-header/page-content-header.html">
+<link rel="import" href="../app-elements/common-elements/etools-tabs.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
 
 <link rel="import" href="../app-elements/agreements/agreement-data/agreement-item-data.html">
@@ -47,60 +49,45 @@
         pattern="/new-agreement"
         active="{{newAgreementActive}}"></app-route>
 
-    <div class$="page-top-content [[_getTopContentAdditionalClass(agreementPage)]]">
-      <div class="top-content">
-        <div class="top-content-row title-row">
-          <h1 main-title>
+    <page-content-header with-tabs-visible="[[_showPageTabs(agreementPage)]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[agreementListActive]]">
+          <span>Agreements</span>
+        </template>
 
-            <template is="dom-if" if="[[agreementListActive]]">
-              <span>Agreements</span>
-            </template>
+        <template is="dom-if" if="[[newAgreementActive]]">
+          <span>Add Agreement</span>
+        </template>
 
-            <template is="dom-if" if="[[newAgreementActive]]">
-              <span>Add Agreement</span>
-            </template>
-
-            <template is="dom-if" if="[[agreementDetailsActive]]">
-              <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
-            </template>
-
-            </span>
-          </h1>
-          <div class="top-content-actions-wrapper">
-            <div class="top-content-action" hidden$="[[!agreementListActive]]">
-              <a target="_blank" href$="[[csvDownloadUrl]]">
-                <paper-button>
-                  <iron-icon icon="file-download"></iron-icon>
-                  Export
-                </paper-button>
-              </a>
-            </div>
-            <div class="top-content-action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
-              <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
-                <iron-icon icon="add"></iron-icon>
-                Add New Agreement
-              </paper-button>
-            </div>
-          </div>
-        </div>
-        <template is="dom-if" if="[[_showPageTabs(agreementPage)]]">
-          <div class="top-content-row">
-            <paper-tabs
-                selected="details"
-                attr-for-selected="name"
-                fallback-selection="details"
-                noink bottom-item
-                on-iron-select="_handleTabSelectAction">
-
-              <paper-tab name="details" link>
-                <span class="tab-content">Agreement Details</span>
-              </paper-tab>
-
-            </paper-tabs>
-          </div>
+        <template is="dom-if" if="[[agreementDetailsActive]]">
+          <span>[[_getAgreementDetailsTitle(agreement, agreement.id)]]</span>
         </template>
       </div>
-    </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!agreementListActive]]">
+          <a target="_blank" href$="[[csvDownloadUrl]]">
+            <paper-button>
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+          </a>
+        </div>
+        <div class="action" hidden$="[[!_showNewAgreementAddButton(agreementListActive, permissions)]]">
+          <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
+            <iron-icon icon="add"></iron-icon>
+            Add New Agreement
+          </paper-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[_showPageTabs(agreementPage)]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[agreementsTabs]]"
+                     active-tab="details"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
 
     <div id="main">
       <div id="pageContent">
@@ -171,6 +158,14 @@
       ],
 
       properties: {
+        agreementsTabs: {
+          type: Array,
+          value: [{
+              tab: 'details',
+              tabLabel: 'Agreement Details',
+              hidden: false
+            }]
+        },
         agreementPage: {
           type: String,
           notify: true
@@ -356,7 +351,7 @@
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
         this.set('selectedAgreementId', 0);
         this.fire('update-main-path', {path: 'agreements/new-agreement'});
-        this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
+        this._handleAgreementSelectionLoadingMsg();
       },
 
       _observeRouteDataId: function(id) {

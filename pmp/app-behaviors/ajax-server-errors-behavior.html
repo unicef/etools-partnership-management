@@ -27,7 +27,7 @@
 
     handleErrorResponse: function(response, ajaxMethod, redirectOn404) {
       if (redirectOn404 && response.status === 404) {
-        this.fire('not-found-redirect', {});
+        this.fire('404');
         return;
       }
       this.fire('global-loading', {

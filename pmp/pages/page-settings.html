@@ -1,25 +1,27 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../styles/page-layout-styles.html">
-
+<link rel="import" href="../app-elements/page-header/page-content-header.html">
 <link rel="import" href="../app-elements/settings/disaggregation-list.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
 
 <dom-module id="page-settings">
   <template strip-whitespace>
     <style include="page-layout-styles">
     </style>
-    <div class="page-top-content">
-      <div class="top-content">
-        <div class="top-content-row title-row">
-          <h1 main-title> Settings </h1>
-        </div>
+
+    <page-content-header>
+      <div slot="page-title">
+        Settings
       </div>
-    </div>
+    </page-content-header>
+
     <div id="main">
       <div id="pageContent">
         <disaggregation-list></disaggregation-list>
-     </div>
+      </div>
     </div>
+
   </template>
 
   <script>
