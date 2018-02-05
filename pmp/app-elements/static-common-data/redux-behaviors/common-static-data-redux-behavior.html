@@ -1,4 +1,6 @@
+<link rel="import" href="../../../../scripts/redux.html">
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
+
 
 <script>
   'use strict';
@@ -48,10 +50,10 @@
   };
 
   let commonStaticDataStore = Redux.createStore(function(state, action) {
+
     if (!state) {
       return reduxStoreDefaultData;
     }
-
     switch (action.type) {
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
