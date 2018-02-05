@@ -130,7 +130,7 @@
                 <applied-indicator data-ind-index$="[[indicatorIndex]]"
                                    data-result-index$="[[index]]" on-edit-indicator="_editIndicator"
                                    on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"
-                                   edit-mode="[[editMode]]"></applied-indicator>
+                                   edit-mode="[[editMode]]" intervention-status="[[interventionStatus]]"></applied-indicator>
               </template>
             </div>
             <div class="add-btn-row flex-c">
@@ -186,7 +186,8 @@
           thereAreIndicators: {
             type: Boolean,
             value: false
-          }
+          },
+          interventionStatus: String
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters',

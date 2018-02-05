@@ -76,7 +76,7 @@
         <div class="col-2 right-align">
             [[_displayIndicatorValue(indicator.target)]]
         </div>
-        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[showDelete]]"></edit-delete-actions>
+        <edit-delete-actions hidden$="[[!editMode]]" show-delete="[[_showDelete(interventionStatus)]]"></edit-delete-actions>
       </div>
 
       <div slot="row-data-details">
@@ -137,7 +137,8 @@
           },
           editMode: {
             type: Boolean
-          }
+          },
+          interventionStatus: String
         },
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
@@ -148,6 +149,9 @@
         listeners: {
           'edit': '_editIndicator',
           'delete': '_deleteIndicator'
+        },
+        _showDelete: function(interventionStatus) {
+          return (!interventionStatus || interventionStatus === 'draft');
         },
         setIndicatorDetails: function(indicator) {
           this._updateCollapsableIconBg(indicator);
