@@ -175,7 +175,8 @@
     },
 
     checkAndUpdatePlannedBudgetPermissions: function(status) {
-      if (status === 'signed' && this.get('intervention.permissions.edit.planned_budget') && !this.get('intervention.in_amendment')) {
+      if (status === 'signed'
+          && this.get('intervention.permissions.edit.planned_budget') && !this.get('intervention.in_amendment')) {
         // there is a special requirement that in signed status only unicef_cash should be editable
         // but in amendment mode all of planned budget should be editable
         this.set('intervention.permissions.edit.planned_budget', false);
