@@ -1,0 +1,58 @@
+<link rel="import" href="../../../common-elements/etools-tabs.html">
+<script>
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorDialogTabs */
+  EtoolsPmpApp.Behaviors.IndicatorDialogTabs = {
+    properties: {
+      indicatorDataTabs: {
+        type: Array,
+        value: [
+          {
+            tab: 'details',
+            tabLabel: 'Details'
+          },
+          {
+            tab: 'disaggregations',
+            tabLabel: 'Disaggregations',
+            showTabCounter: true,
+            counter: 0
+          }
+        ]
+      },
+      activeTab: {
+        type: String,
+        value: 'details',
+      }
+    },
+
+    observers: [
+      '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
+      '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)'
+    ],
+
+    /**
+     * Update disaggegations tab counter
+     */
+    _updateDisaggregationsNrInTabLabel: function(disaggregationsCount) {
+      return this.set(['indicatorDataTabs', 1, 'counter'], disaggregationsCount);
+    },
+
+    _setDisaggregationsCount1: function(disaggregs, prpDisaggregs) {
+      if (!this.indicator || !disaggregs || !prpDisaggregs) {
+        this._updateDisaggregationsNrInTabLabel(0);
+        return;
+      }
+      this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
+    },
+
+    _setDisaggregationsCount2: function(disaggregsLength, prpDisaggregsLength) {
+      let disaggregationsNr = this.isCluster ? prpDisaggregsLength : disaggregsLength;
+      this._updateDisaggregationsNrInTabLabel(disaggregationsNr);
+    },
+
+    updateActiveTab: function(tab) {
+      this.set('activeTab', tab);
+    }
+
+  };
+</script>

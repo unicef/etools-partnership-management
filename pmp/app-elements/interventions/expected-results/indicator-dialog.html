@@ -16,20 +16,20 @@
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/required-field-styles.html">
-<link rel="import" href="../../../../styles/page-layout-styles.html">
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
 <link rel="import" href="cluster-indicator-disaggregations.html">
 <link rel="import" href="cluster-indicator.html">
 <link rel="import" href="non-cluster-indicator.html">
+<link rel="import" href="behaviors/indicator-dialog-tabs-behavior.html">
 <link rel="import" href="behaviors/save-indicator-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="indicator-dialog">
   <template strip-whitespace>
-    <style include="page-layout-styles grid-layout-styles shared-styles required-field-starred-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       [hidden] {
         display: none !important;
       }
@@ -71,23 +71,12 @@
                    on-confirm-btn-clicked="_validateAndSaveIndicator"
                    ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
                    spinner-text="[[spinnerText]]">
-      <div class="page-top-content in-modal">
-        <div class="top-content-row">
-          <paper-tabs id="indicatorTabs"
-                      selected="{{activeTab}}"
-                      attr-for-selected="name"
-                      on-selected-changed="_centerDialog"
-                      noink bottom-item>
-            <paper-tab name="details" link>
-              <span class="tab-content">DETAILS</span>
-            </paper-tab>
 
-            <paper-tab name="disaggregations" link>
-              <span class="tab-content">[[_getDisaggregationsTabTitle(disaggregationsCount) ]]</span>
-            </paper-tab>
-          </paper-tabs>
-        </div>
-      </div>
+      <etools-tabs id="indicatorTabs"
+                   tabs="[[indicatorDataTabs]]"
+                   active-tab="{{activeTab}}"
+                   border-bottom
+                   on-selected-changed="_centerDialog"></etools-tabs>
 
       <iron-pages id="indicatorPages"
                   selected="{{activeTab}}"
@@ -157,16 +146,13 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+          EtoolsPmpApp.Behaviors.IndicatorDialogTabs,
           EtoolsPmpApp.Behaviors.SaveIndicator
         ],
 
         properties: {
           indicator: {
             type: Object
-          },
-          activeTab: {
-            type: String,
-            value: 'details',
           },
           indicatorModel: {
             type: Object,
@@ -197,10 +183,6 @@
           prpDisaggregations: {
             type: Array,
             value: []
-          },
-          disaggregationsCount: {
-            type: Number,
-            value: 0
           },
           sections: {
             type: Array,
@@ -244,8 +226,6 @@
           'show-toast': '_showToast'
         },
         observers: [
-          '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
-          '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
           'resetValidationsAndStyle(isCluster)'
         ],
 
@@ -253,28 +233,8 @@
           return (!indicator || !indicator.id);
         },
 
-        _setDisaggregationsCount1: function(disaggregs, prpDisaggregs) {
-          if (!this.indicator || !disaggregs || !prpDisaggregs) {
-            this.disaggregationsCount = 0;
-            return;
-          }
-          this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
-
-        },
-        _setDisaggregationsCount2: function(disaggregsLength, prpDisaggregsLength) {
-          if (this.isCluster) {
-            this.disaggregationsCount = prpDisaggregsLength;
-          } else {
-            this.disaggregationsCount = disaggregsLength;
-          }
-        },
-
-        _getDisaggregationsTabTitle: function(disaggregationsCount) {
-          return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
-        },
-
         openIndicatorDialog: function() {
-          this.activeTab = 'details';
+          this.updateActiveTab('details');
           this.disableConfirmBtn = false;
           this.$.indicatorDialog.opened = true;
           let sectionDropdown = this.$$('#sectionDropdw');
