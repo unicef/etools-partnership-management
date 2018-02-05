@@ -188,7 +188,7 @@
             this.baselineIsUnknown = false;
             this.readonly = false;
           } else {
-            this.baselineIsUnknown = indicator.baseline ? false : true;
+            this.baselineIsUnknown = (indicator.baseline || parseInt(indicator.baseline) === 0)  ? false : true;
             this.readonly = true;
           }
         },
