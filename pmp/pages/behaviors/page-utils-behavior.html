@@ -54,24 +54,6 @@
       return page !== 'list';
     },
 
-    // TODO: delete this and use pageImport behavior
-    _importPageElement: function(page, pagePrefix, pageBaseUrl) {
-      let self = this;
-      return new Promise(function(resolve, reject) {
-        let pageName = pagePrefix + page;
-        if (!Polymer.isInstance(self.$$(pageName))) {
-          let resolvedPageUrl = self.resolveUrl(pageBaseUrl + pageName + '.html');
-          self.importHref(resolvedPageUrl, function() {
-            resolve();
-          }, function(err) {
-            reject(err);
-          });
-        } else {
-          resolve();
-        }
-      });
-    },
-
     _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix, tab) {
       let clickedTabName = tab ? tab : e.detail.item.getAttribute('name');
       if (Polymer.isInstance(this.$$(tabPrefix + clickedTabName))) {
