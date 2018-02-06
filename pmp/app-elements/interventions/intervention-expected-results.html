@@ -122,12 +122,10 @@
             type: Object
           },
           indicatorLocationOptions: {
-            type: Array,
-            observer: '_indicatorLocationOptionsUpdate'
+            type: Array
           },
           indicatorSectionOptions: {
-            type: Array,
-            observer: '_indicatorSectionOptionsUpdate'
+            type: Array
           },
           detailsOpened: {
             type: Boolean,
@@ -137,7 +135,9 @@
         },
 
         observers: [
-          '_dataItemsChanged(dataItems.length)'
+          '_dataItemsChanged(dataItems.length)',
+          '_indicatorLocationOptionsUpdate(indicatorLocationOptions, indicatorDialog)',
+          '_indicatorSectionOptionsUpdate(indicatorSectionOptions, indicatorDialog)'
         ],
 
         ready: function() {

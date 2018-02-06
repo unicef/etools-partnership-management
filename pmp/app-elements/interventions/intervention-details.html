@@ -86,10 +86,13 @@
       .see-locations {
         padding-right: 0;
         min-width: 100px;
+        @apply --layout-end;
+        padding-bottom: 12px;
       }
 
       .see-locations iron-icon {
         margin-right: 0;
+        margin-bottom: 2px;
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
@@ -311,7 +314,8 @@
         </etools-multi-selection-menu>
         <paper-button class="secondary-btn see-locations"
                       on-tap="_openLocationsDialog"
-                      title="See all locations">
+                      title="See all locations"
+                      hidden$="[[_isEmpty(intervention.flat_locations.length)]]">
           <iron-icon icon="add"></iron-icon>
           See all
         </paper-button>
