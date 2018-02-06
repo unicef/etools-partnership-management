@@ -42,16 +42,9 @@
         color: var(--dark-icon-color, #6f6f70);
       }
 
-      .horizontal-layout {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-
-        min-height: 56px;
-        border-bottom: 1px solid var(--list-divider-color);
-      }
-
       .header-container {
         height: 56px;
+        padding: 0 24px;
         @apply --layout-horizontal;
         @apply --layout-center;
       }
@@ -76,9 +69,12 @@
         box-sizing: border-box;
       }
 
-      .header-container,
       .lower-result-row {
         padding: 0 24px;
+        @apply --layout-center;
+
+        min-height: 49px; /* 1px for border */
+        border-bottom: 1px solid var(--list-divider-color);
       }
 
       applied-indicator {
@@ -116,7 +112,7 @@
       </div>
 
       <template is="dom-repeat" items="{{dataItems}}">
-        <div class="horizontal-layout lower-result-row">
+        <div class="layout-horizontal lower-result-row">
           <div class$="[[getColumnLength('result', thereAreIndicators)]] result-statement p-relative">
             <edit-delete-actions hidden$="[[!editMode]]" data-args$="[[index]]" on-edit="_editLowerResult"
                                  on-delete="_openDeleteConfirmation"></edit-delete-actions>
