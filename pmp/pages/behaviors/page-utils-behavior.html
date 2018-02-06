@@ -17,6 +17,23 @@
         type: Object,
         value: {}
       },
+      serverErrors: {
+        type: Array,
+        value: []
+      }
+    },
+
+    listeners: {
+      'clear-server-errors': '_clearServerErrors',
+      'set-server-errors': '_setServerErrors'
+    },
+
+    _clearServerErrors: function() {
+      this.set('serverErrors', []);
+    },
+
+    _setServerErrors: function(e) {
+      this.set('serverErrors', e.detail);
     },
 
     _handleQueryParams: function(params) {
@@ -29,10 +46,6 @@
       return activePage === expectedPage;
     },
 
-    _triggerPageNotFound: function() {
-      this.fire('404');
-    },
-
     _removeStrDash: function(str) {
       return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
     },
@@ -41,6 +54,7 @@
       return page !== 'list';
     },
 
+    // TODO: delete this and use pageImport behavior
     _importPageElement: function(page, pagePrefix, pageBaseUrl) {
       let self = this;
       return new Promise(function(resolve, reject) {

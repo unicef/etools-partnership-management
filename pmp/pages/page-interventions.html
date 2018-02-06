@@ -11,6 +11,8 @@
 <link rel="import" href="../app-elements/interventions/behaviors/save-intervention-behavior.html">
 <link rel="import" href="behaviors/intervention-page-tabs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="behaviors/subroute-behavior.html">
+
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 <link rel="import" href="../app-elements/environment-flags/environment-flags-behavior.html">
 <link rel="import" href="../app-elements/page-header/page-content-header.html">
@@ -47,29 +49,28 @@
         route="{{route}}"
         pattern="/list"
         query-params="{{listPageQueryParams}}"
-        active="{{intervListActive}}"></app-route>
+        active="{{listActive}}"></app-route>
 
     <app-route
         route="{{route}}"
         pattern="/:id/:tab"
-        active="{{intervDetailsActive}}"
+        active="{{tabsActive}}"
         data="{{routeData}}"></app-route>
 
-    <page-content-header with-tabs-visible="[[intervDetailsActive]]">
+    <page-content-header with-tabs-visible="[[tabsActive]]">
       <div slot="page-title">
-        <template is="dom-if" if="[[intervListActive]]">
+        <template is="dom-if" if="[[listActive]]">
           PD/SSFAs
         </template>
-        <template is="dom-if" if="[[newInterventionActive]]">
-          <span class="no-capitalization">Add Programme Document or SSFA</span>
-        </template>
-        <template is="dom-if" if="[[intervDetailsActive]]">
-          [[_getInterventionDetailsTitle(intervention)]]
+        <template is="dom-if" if="[[tabsActive]]">
+          <span class$="[[_getNoCapitalizeTitleClass(newInterventionActive)]]">
+            [[_getInterventionDetailsTitle(intervention, newInterventionActive)]]
+          </span>
         </template>
       </div>
 
       <div slot="title-row-actions" class="content-header-actions">
-        <div class="action" hidden$="[[!intervListActive]]">
+        <div class="action" hidden$="[[!listActive]]">
           <a target="_blank" href$="[[csvDownloadUrl]]">
             <paper-button>
               <iron-icon icon="file-download"></iron-icon>
@@ -77,7 +78,7 @@
             </paper-button>
           </a>
         </div>
-        <div class="action" hidden$="[[!_showAddNewIntervBtn(intervListActive, permissions)]]">
+        <div class="action" hidden$="[[!_showAddNewIntervBtn(listActive, permissions)]]">
           <paper-button class="primary-btn with-prefix" on-tap="_goToNewInterventionPage">
             <iron-icon icon="add"></iron-icon>
             Add new PD/SSFA
@@ -85,7 +86,7 @@
         </div>
       </div>
 
-      <template is="dom-if" if="[[_showPageTabs(interventionPage)]]">
+      <template is="dom-if" if="[[_showPageTabs(activePage)]]">
         <etools-tabs slot="tabs"
                      tabs="[[interventionTabs]]"
                      active-tab="{{routeData.tab}}"
@@ -101,27 +102,27 @@
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
         <iron-pages id="interventionsPages"
-                    selected="{{interventionPage}}"
+                    selected="{{activePage}}"
                     attr-for-selected="name"
                     role="main">
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'list')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <interventions-list id="intList"
                                 name="list"
-                                active="[[intervListActive]]"
+                                active="[[listActive]]"
                                 csv-download-url="{{csvDownloadUrl}}"
                                 url-params="[[listQueryParams]]">
             </interventions-list>
           </template>
 
-          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'overview', newInterventionActive)]]">
+          <template is="dom-if" if="[[_visibleTabContent(activePage, 'overview', newInterventionActive)]]">
             <intervention-overview name="overview"
                                    intervention="[[intervention]]"
                                    intervention-agreement="[[agreement]]">
             </intervention-overview>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'details')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
             <intervention-details id="interventionDetails"
                                   name="details"
                                   intervention="{{intervention}}"
@@ -131,7 +132,7 @@
             </intervention-details>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'review-and-sign')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'review-and-sign')]]">
             <intervention-review-and-sign id="interventionReviewAndSign"
                                           name="review-and-sign"
                                           intervention="{{intervention}}"
@@ -139,7 +140,7 @@
             </intervention-review-and-sign>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(interventionPage, 'attachments')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'attachments')]]">
             <intervention-attachments id="intervAttachments"
                                       name="attachments"
                                       active="[[_isAttachementsTabActive(routeData.tab)]]"
@@ -150,15 +151,15 @@
             </intervention-attachments>
           </template>
 
-          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'reports', newInterventionActive)]]" restamp>
+          <template is="dom-if" if="[[_visibleTabContent(activePage, 'reports', newInterventionActive)]]" restamp>
             <intervention-reports id="interventionReports"
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
-                                  active="[[_pageEquals(interventionPage, 'reports')]]"
-                                  url-params="[[_getReportsTabUrlParams(interventionPage)]]"></intervention-reports>
+                                  active="[[_pageEquals(activePage, 'reports')]]"
+                                  url-params="[[_getReportsTabUrlParams(activePage)]]"></intervention-reports>
           </template>
 
-          <template is="dom-if" if="[[_visibleTabContent(interventionPage, 'progress', newInterventionActive)]]" restamp>
+          <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
@@ -178,10 +179,10 @@
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[_showInterventionSidebarStatus(intervListActive, _subPageOrTabAttached, interventionPage)]]">
+      <template is="dom-if" if="[[_showInterventionSidebarStatus(listActive, _subPageOrTabAttached, activePage)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
-                               active="[[!intervListActive]]"
+                               active="[[!listActive]]"
                                active-tab="[[routeData.tab]]"
                                intervention-id$="[[intervention.id]]"
                                new-intervention="[[newInterventionActive]]"
@@ -208,15 +209,12 @@
         EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.ScrollControl,
         EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.Subroute,
         EtoolsPmpApp.Behaviors.InterventionPageTabs,
         EtoolsPmpApp.Behaviors.InterventionPermissions,
         EtoolsPmpApp.Behaviors.SaveIntervention
       ],
       properties: {
-        interventionPage: {
-          type: String,
-          notify: true
-        },
         permissions: {
           type: Object
         },
@@ -278,19 +276,9 @@
             distributions: []
           }
         },
-        serverErrors: {
-          type: Array,
-          value: []
-        },
-        routeData: {
-          type: Object
-        },
-        intervDetailsActive: {
-          type: Boolean
-        },
         newInterventionActive: {
           type: Boolean,
-          computed: '_updateNewIntervFlag(routeData.id, intervListActive)'
+          computed: '_updateNewItemPageFlag(routeData, listActive)'
         },
         editMode: {
           type: Boolean
@@ -313,7 +301,7 @@
         _forceReviewUiValidationOnAttach: Boolean
       },
       observers: [
-        '_pageChanged(intervListActive, intervDetailsActive, routeData)',
+        '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)',
         '_interventionChanged(intervention, permissions)',
         '_amendmentModeChanged(intervention.in_amendment)'
@@ -390,7 +378,7 @@
             //Avoid showing msg again after save
             this.set('errorMsgBox_Title',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
-            this.set('serverErrors', intervention.metadata.error_msg);
+            this.fire('set-server-errors', intervention.metadata.error_msg);
             this._setContentScrollPosition(0);
           }
         }
@@ -411,49 +399,39 @@
         return (['suspended', 'terminated'].indexOf(intervention.status) > -1);
       },
 
-      _setActivePage: function(intervListActive, intervDetailsActive) {
-        let page = 'list';
-        let pagePrefix = 'interventions-';
-        let pageBaseUrl = '../app-elements/interventions/';
-        if (intervListActive === false) {
-          // return intervention page tab name
-          page = this.routeData.tab;
-          if (['reports', 'progress'].indexOf(page) > -1) {
+      _isPrpTab: function(tabName) {
+        return ['reports', 'progress'].indexOf(tabName) > -1;
+      },
 
-            if (!this.showPrpReports()) {
-              // prp pages are disabled
-              this.fire('404');
-              return;
-            }
-
-            pageBaseUrl += page + '/';
-          }
-          pagePrefix = 'intervention-';
-        }
-        if (page) {
-          let self = this;
-          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
-            if (page === 'list') {
-              self.set('serverErrors', []);
-            }
-            self.set('interventionPage', page);
-            if (self._redirectToNewIntervPageInProgress) {
-              self.set('_redirectToNewIntervPageInProgress', false);
-            }
-          })
-          .catch(function(err) {
-            self.logError('Intervention page import error occurred', '[intervention(s) ' + page + ']', err);
-            self.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-            self._triggerPageNotFound();
-          });
+      _canAccessPdTab: function(tabName) {
+        if (this._isPrpTab(tabName)) {
+          return this.showPrpReports();
+        } else {
+          // not prp tab, allow access
+          return true;
         }
       },
 
-      _pageChanged: function(intervListActive, intervDetailsActive) {
-        this.debounce('pageChange', function() {
-          this._setActivePage(intervListActive, intervDetailsActive);
+      _addTabNameToFileImportBasePath: function(pageBaseUrl, tabName) {
+        return this._isPrpTab(tabName) ? (pageBaseUrl + tabName + '/') : pageBaseUrl;
+      },
+      
+      _resetRedirectToNewInterventionFlag: function() {
+        if (this._redirectToNewIntervPageInProgress) {
+          this.set('_redirectToNewIntervPageInProgress', false);
+        }
+      },
+
+      _pageChanged: function(listActive, tabsActive, routeData) {
+        if (!listActive && !tabsActive) {
+          return;
+        }
+        this.debounce('pageChange', () => {
+          this.setActivePage(listActive, routeData.tab, 'intervention', '../app-elements/interventions/',
+              'Interventions', '[intervention(s) ##page##]', 'interv-page', this._canAccessPdTab,
+              this._addTabNameToFileImportBasePath, this._resetRedirectToNewInterventionFlag);
           this._handleAmendmentMode();
-        }.bind(this), 10);
+        }, 10);
       },
 
       _observeRouteDataId: function(id) {
@@ -468,11 +446,11 @@
       },
 
       _handleAmendmentMode: function() {
-        if (this.intervListActive) {
+        if (this.listActive) {
           this.fire('set-amendment-mode', {active: false});
           return;
         }
-        if (this.intervDetailsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
+        if (this.tabsActive && this.intervention && this.selectedInterventionId === this.intervention.id) {
           // handles the case when the user goes from an intervention to the list and back to the same intervention
           this.fire('set-amendment-mode', {active: this.intervention.in_amendment});
         }
@@ -522,7 +500,7 @@
         };
       },
 
-      _goToNewInterventionPage: function(event) {
+      _goToNewInterventionPage: function() {
         // go to new intervention
         if (!this._hasEditPermissions(this.permissions)) {
           return;
@@ -538,8 +516,8 @@
         return JSON.parse(JSON.stringify(this.newInterventionModel));
       },
 
-      _visibleTabContent: function(interventionPage, expectedPage, newInterventionActive) {
-        return this._pageEquals(interventionPage, expectedPage) && !newInterventionActive;
+      _visibleTabContent: function(activePage, expectedPage, newInterventionActive) {
+        return this._pageEquals(activePage, expectedPage) && !newInterventionActive;
       },
 
       /**
@@ -552,8 +530,11 @@
       /**
        * Get intervention details page title: 'partner name: intervention number'
        */
-      _getInterventionDetailsTitle: function(intervention) {
+      _getInterventionDetailsTitle: function(intervention, newInterventionActive) {
         let title = '';
+        if (newInterventionActive) {
+          return 'Add Programme Document or SSFA';
+        }
         if (intervention) {
           if (intervention.partner) {
             title += intervention.partner + ': ';
@@ -565,15 +546,19 @@
         return title;
       },
 
-      _showAddNewIntervBtn: function(intervListActive, permissions) {
-        return (intervListActive && this._hasEditPermissions(permissions));
+      _getNoCapitalizeTitleClass: function(newInterventionActive) {
+        return newInterventionActive ? 'no-capitalization' : '';
+      },
+
+      _showAddNewIntervBtn: function(listActive, permissions) {
+        return (listActive && this._hasEditPermissions(permissions));
       },
 
       _interventionSaveErrors: function(event) {
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
-          this.set('serverErrors', event.detail);
+          this.fire('set-server-errors', event.detail);
           this._setContentScrollPosition(0);
         }
       },
@@ -605,16 +590,16 @@
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
       },
 
-      _showInterventionSidebarStatus: function(intervListActive, _subPageOrTabAttached, interventionPage) {
-        return (['reports', 'progress'].indexOf(interventionPage) > -1)
+      _showInterventionSidebarStatus: function(listActive, _subPageOrTabAttached, activePage) {
+        return (['reports', 'progress'].indexOf(activePage) > -1)
             ? false
-            : this._showSidebarStatus(intervListActive, _subPageOrTabAttached);
+            : this._showSidebarStatus(listActive, _subPageOrTabAttached);
 
       },
 
-      _getReportsTabUrlParams: function(interventionPage) {
+      _getReportsTabUrlParams: function(activePage) {
         let params = null;
-        if (this._pageEquals(interventionPage, 'reports')) {
+        if (this._pageEquals(activePage, 'reports')) {
           params = Object.assign({}, this.route.__queryParams);
         }
         return params;
@@ -625,15 +610,11 @@
        */
       _showInterventionPageLoadingMessage: function() {
         this.fire('global-loading', {
-          message: 'Loading ' + (this.intervListActive ? 'PD/SSFA list' :
+          message: 'Loading ' + (this.listActive ? 'PD/SSFA list' :
               (this._removeStrDash(this.routeData.tab) + ' page')) + ' elements...',
           active: true,
           loadingSource: 'interv-page'
         });
-      },
-
-      _updateNewIntervFlag: function(tab, intervListActive) {
-        return tab === 'new' && !intervListActive;
       },
 
       _handleInterventionSelectionLoadingMsg: function() {

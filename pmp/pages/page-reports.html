@@ -5,6 +5,7 @@
 
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="behaviors/subroute-behavior.html">
 <link rel="import" href="../app-config/app-endpoints-behavior.html">
 
 <link rel="import" href="../app-elements/page-header/page-content-header.html">
@@ -80,22 +81,22 @@
     <div id="main">
       <div id="pageContent">
         <iron-pages id="reportsPages"
-                    selected="{{reportPage}}"
+                    selected="{{activePage}}"
                     attr-for-selected="name"
                     role="main">
 
-          <template is="dom-if" if="[[_pageEquals(reportPage, 'list')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <reports-list id="list"
                           name="list"
                           active="[[listActive]]"
                           url-params="[[listQueryParams]]"></reports-list>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(reportPage, 'summary')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
             <report-summary name="summary" report="[[report]]"></report-summary>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(reportPage, 'progress')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'progress')]]">
             <report-progress id="reportDetails"
                              name="progress"
                              report="[[report]]"></report-progress>
@@ -116,6 +117,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.Subroute,
         EtoolsPmpApp.Behaviors.ReportDetails,
         EtoolsPmpApp.Behaviors.Endpoints
       ],
@@ -136,15 +138,6 @@
             }
           ]
         },
-        tabsActive: {
-          type: Boolean
-        },
-        reportPage: {
-          type: String
-        },
-        routeData: {
-          type: Object
-        },
         reportRatingDialog: {
           type: Object
         },
@@ -154,7 +147,7 @@
       },
 
       observers: [
-        '_pageChanged(listActive, tabsActive)',
+        '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id, listActive, tabsActive)',
         '_reportChanged(report)'
       ],
@@ -182,31 +175,12 @@
         this._createReportStatusUpdateDialogs();
       },
 
-      _setActivePage: function(listActive) {
-        let page = 'list';
-        let pagePrefix = 'reports-';
-        let pageBaseUrl = '../app-elements/reports/';
-        if (!listActive) {
-          page = this.routeData.tab;
-          pagePrefix = 'report-';
-        }
-        if (page) {
-          let self = this;
-          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
-            self.set('reportPage', page);
-          }).catch(function(err) {
-            self.logError('Report page import error occurred', '[report(s) ' + page + ']', err);
-            self.fire('global-loading', {active: false, loadingSource: 'reports-page'});
-            self._triggerPageNotFound();
-          });
-        }
-      },
-
-      _pageChanged: function(listActive, tabsActive) {
+      _pageChanged: function(listActive, tabsActive, routeData) {
         if (!listActive && !tabsActive) {
           return;
         }
-        this._setActivePage(listActive);
+        this.setActivePage(listActive, routeData.tab, 'report',
+            '../app-elements/reports/', 'Report', '[report(s) ##page##]', 'reports-page');
       },
 
       _handleTabSelectAction: function(e) {

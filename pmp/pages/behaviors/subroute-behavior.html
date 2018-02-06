@@ -1,0 +1,74 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="page-import-behavior.html">
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.SubrouteImpl */
+  EtoolsPmpApp.Behaviors.SubrouteImpl = {
+    properties: {
+      listActive: Boolean,
+      tabsActive: Boolean,
+      subPage: String,
+      routeData: Object,
+      activePage: {
+        type: String,
+        notify: true
+      }
+    },
+
+    setActivePage: function(listActive, tab, pagePrefix, pageBaseUrl, importErrMsgPageCategory, errPrefixTmpl,
+                            loadingMsgSource, canAccessTab, appendBasePathAdditionalFolder,
+                            successImportCallback) {
+      let page = listActive ? 'list' : tab;
+
+      // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
+      pagePrefix = (listActive ? (pagePrefix + 's') : pagePrefix) + '-';
+
+      if (listActive) {
+        // clear server errors for the list
+        this.fire('clear-server-errors');
+      } else {
+        if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
+          // the user cannot access this tab (ex: prp tabs on interventions)
+          this.fire('404');
+          return;
+        }
+        if (typeof appendBasePathAdditionalFolder === 'function') {
+          // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
+          pageBaseUrl = appendBasePathAdditionalFolder.bind(this, pageBaseUrl, page)();
+        }
+      }
+
+      if (page && page !== this.activePage) {
+        // import main page element
+        let elementName = pagePrefix + page;
+        this.importPageElement(elementName, pageBaseUrl).then(() => {
+          // set active page
+          this.set('activePage', page);
+          if (typeof successImportCallback === 'function') {
+            successImportCallback.bind(this)();
+          }
+        }).catch((err) => {
+          // log page element import failed error
+          let importErrMsgPrefix = errPrefixTmpl.replace('##page##', page);
+          this.logError(importErrMsgPageCategory + ' page import error occurred', importErrMsgPrefix, err);
+          this.fire('global-loading', {active: false, loadingSource: loadingMsgSource});
+          this.fire('404');
+        });
+      }
+    },
+
+    _updateNewItemPageFlag: function(routeData, listActive) {
+      return routeData && routeData.id === 'new' && !listActive;
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.Subroute */
+  EtoolsPmpApp.Behaviors.Subroute = [
+    EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.PageImportBehavior,
+    EtoolsPmpApp.Behaviors.SubrouteImpl
+  ];
+</script>

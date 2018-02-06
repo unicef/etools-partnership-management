@@ -12,7 +12,7 @@
         event.stopImmediatePropagation();
       }
       this.saved.justSaved = true;
-      this.set('serverErrors', []);
+      this.fire('clear-server-errors');
       this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
       if (!this._hasEditPermissions(this.permissions, this.intervention)) {
         return;
