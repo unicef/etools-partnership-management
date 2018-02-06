@@ -254,7 +254,7 @@
 
         },
         _displayIndicatorValue: function(value) {
-          value = value ? value.toString() : '';
+          value = (value || parseInt(value) === 0) ? value.toString() : '';
           if (value) {
             return value;
           } else {
