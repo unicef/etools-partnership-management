@@ -336,7 +336,8 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
-          this._setContentScrollPosition(0);
+          this.enableContentScrollPositionChanges();
+          this.scrollPageToTop();
         }
       },
 
@@ -373,7 +374,9 @@
         // keep a copy of the agreement before changes are made and use it later to save only the changes
         this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
         this.set('serverErrors', []);
-        this._setContentScrollPosition(0);
+        
+        this.scrollPageToTop(); 
+        this.enableContentScrollPositionChanges();
       },
 
       /**
@@ -392,6 +395,7 @@
           this.fire('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
           return;
         }
+        this.disableContentScrollPositionChanges();
         if (this.newAgreementActive) {
           this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
         } else {

@@ -315,7 +315,8 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.set('serverErrors', event.detail);
-          this._setContentScrollPosition(0);
+          this.enableContentScrollPositionChanges();
+          this.scrollPageToTop();
         }
       },
 
@@ -351,7 +352,8 @@
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
         this.set('serverErrors', []);
-        this._setContentScrollPosition(0);
+        this.scrollPageToTop();
+        this.enableContentScrollPositionChanges();
       },
 
       _reloadPartnersList: function(e) {
@@ -373,6 +375,7 @@
         }
         let partnerDetails = this.$$('#partnerDetails');
         if (partnerDetails && partnerDetails._validatePartner()) {
+          this.disableContentScrollPositionChanges();
           var partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);

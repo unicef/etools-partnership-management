@@ -11,6 +11,7 @@
       if (event) {
         event.stopImmediatePropagation();
       }
+      this.disableContentScrollPositionChanges();
       this.saved.justSaved = true;
       this.set('serverErrors', []);
       this.set('errorMsgBox_Title', 'Errors Saving PD/SSFA');
