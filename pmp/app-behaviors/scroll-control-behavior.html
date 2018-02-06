@@ -13,6 +13,10 @@
           return this._getContentContainer();
         }
       },
+      _positionChangeDisabled: {
+        type: Boolean,
+        value: false
+      }
     },
 
     _getContentContainer: function() {
@@ -32,6 +36,20 @@
 
     _setContentScrollPosition: function(offsetFromTop) {
       this.contentContainer.scrollTop = offsetFromTop;
+    },
+
+    disableContentScrollPositionChanges: function() {
+      this._positionChangeDisabled = true;
+    },
+
+    enableContentScrollPositionChanges: function() {
+      this._positionChangeDisabled = false;
+    },
+
+    scrollPageToTop: function() {
+      if (!this._positionChangeDisabled) {
+        this._setContentScrollPosition(0);
+      }
     }
 
   };
