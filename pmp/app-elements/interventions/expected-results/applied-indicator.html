@@ -23,6 +23,7 @@
         --list-icon-color: white !important;
         --edit-delete-actions: {
           background-color: #dfdfdf !important;
+          margin-right: -8px;
         };
         --list-row-wrapper: {
           padding: 0 24px 0 0 !important;
@@ -89,7 +90,7 @@
             <template is="dom-repeat" items="[[disaggregationNames]]">
                 <div><span class="bolder-txt">[[item.name]]</span>: [[item.groups]]</div>
             </template>
-            <div hidden="[[disaggregationNames.length]]">—</div>
+            <div hidden$="[[disaggregationNames.length]]">—</div>
           </div>
           <div class="col-8 padd-left">
               <div class="header-text">Locations</div>
@@ -162,6 +163,7 @@
           e.stopPropagation();
           this.fire('edit-indicator');
         },
+
         _deleteIndicator: function(e) {
           e.stopPropagation();
           this.fire('delete-indicator');
