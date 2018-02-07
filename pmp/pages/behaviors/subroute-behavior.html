@@ -18,13 +18,39 @@
       }
     },
 
-    setActivePage: function(listActive, tab, pagePrefix, pageBaseUrl, importErrMsgPageCategory, errPrefixTmpl,
-                            loadingMsgSource, canAccessTab, appendBasePathAdditionalFolder,
-                            successImportCallback) {
-      let page = listActive ? 'list' : tab;
-
+    _getFilenamePrefix: function(listActive, fileImportDetails) {
       // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
-      pagePrefix = (listActive ? (pagePrefix + 's') : pagePrefix) + '-';
+      return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix ) + '-';
+    },
+
+    _getFileBaseUrl: function(page, fileImportDetails, appendBasePathAdditionalFolder) {
+      let baseUrl = fileImportDetails.baseUrl;
+      if (typeof appendBasePathAdditionalFolder === 'function') {
+        // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
+        baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
+      }
+      return baseUrl;
+    },
+
+    _handleSuccessfulImport: function(page, successCallback) {
+      // set active page
+      this.set('activePage', page);
+      if (typeof successCallback === 'function') {
+        successCallback.bind(this)();
+      }
+    },
+
+    _handleFailedImport: function(err, page, fileImportDetails) {
+      // log page element import failed error
+      let importErrMsgPrefix = fileImportDetails.errPrefixTmpl.replace('##page##', page);
+      this.logError(fileImportDetails.importErrMsgPageCategory + ' page import error occurred', importErrMsgPrefix, err);
+      this.fire('global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
+      this.fire('404');
+    },
+
+    setActivePage: function(listActive, tab, fileImportDetails, canAccessTab,
+                            appendBasePathAdditionalFolder, successfulImportCallback) {
+      let page = listActive ? 'list' : tab;
 
       if (listActive) {
         // clear server errors for the list
@@ -35,27 +61,17 @@
           this.fire('404');
           return;
         }
-        if (typeof appendBasePathAdditionalFolder === 'function') {
-          // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
-          pageBaseUrl = appendBasePathAdditionalFolder.bind(this, pageBaseUrl, page)();
-        }
       }
 
       if (page && page !== this.activePage) {
         // import main page element
-        let elementName = pagePrefix + page;
-        this.importPageElement(elementName, pageBaseUrl).then(() => {
-          // set active page
-          this.set('activePage', page);
-          if (typeof successImportCallback === 'function') {
-            successImportCallback.bind(this)();
-          }
+        let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+        let baseUrl = this._getFileBaseUrl(page, fileImportDetails, appendBasePathAdditionalFolder);
+        let fileName = importFilenamePrefix + page;
+        this.importPageElement(fileName, baseUrl).then(() => {
+          this._handleSuccessfulImport(page, successfulImportCallback);
         }).catch((err) => {
-          // log page element import failed error
-          let importErrMsgPrefix = errPrefixTmpl.replace('##page##', page);
-          this.logError(importErrMsgPageCategory + ' page import error occurred', importErrMsgPrefix, err);
-          this.fire('global-loading', {active: false, loadingSource: loadingMsgSource});
-          this.fire('404');
+          this._handleFailedImport(err, page, fileImportDetails);
         });
       }
     },

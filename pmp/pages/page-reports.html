@@ -182,8 +182,14 @@
         if (!listActive) {
           this._setContentScrollPosition(0);
         }
-        this.setActivePage(listActive, routeData.tab, 'report',
-            '../app-elements/reports/', 'Report', '[report(s) ##page##]', 'reports-page');
+        let fileImportDetails = {
+          filenamePrefix: 'report',
+          baseUrl: '../app-elements/reports/',
+          importErrMsgPageCategory: 'Report',
+          errPrefixTmpl: '[report(s) ##page##]',
+          loadingMsgSource: 'reports-page'
+        };
+        this.setActivePage(listActive, routeData.tab, 'report', fileImportDetails);
       },
 
       _handleTabSelectAction: function(e) {

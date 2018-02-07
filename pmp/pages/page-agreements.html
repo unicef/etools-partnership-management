@@ -257,8 +257,14 @@
         if (!listActive) {
           this._setContentScrollPosition(0);
         }
-        this.setActivePage(listActive, 'details', 'agreement',
-            '../app-elements/agreements/', 'Agreements', '[agreement(s) ##page##]', 'ag-page');
+        let fileImportDetails = {
+          filenamePrefix: 'agreement',
+          baseUrl: '../app-elements/agreements/',
+          importErrMsgPageCategory: 'Agreements',
+          errPrefixTmpl: '[agreement(s) ##page##]',
+          loadingMsgSource: 'ag-page'
+        };
+        this.setActivePage(listActive, 'details', fileImportDetails);
       },
 
       // compute agreement details page title including partner name and agreement number
