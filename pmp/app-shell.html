@@ -330,18 +330,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _routePageChanged: function(routePage) {
-        this.debounce('routePageChanges', function() {
+        this.debounce('routePageChanges', () => {
           if (!routePage) {
             this._updatePath('partners/list');
             return;
           }
-          this._importMainPage(routePage);
-          this._validatePageChange(routePage).then(function(redirectApproved) {
-            if (redirectApproved) {
+
+          this._canAccessPage(routePage).then((accessGranted) => {
+            if (!accessGranted) {
+              this._pageNotFound();
+            } else {
+              this._importMainPage(routePage);
               this.set('page', routePage);
             }
-          }.bind(this));
-        }.bind(this), 10);
+          });
+        }, 10);
       },
 
       _importMainPage: function(page) {
@@ -381,15 +384,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
-      _validatePageChange: function(page) {
-        let self = this;
-        return self._waitForEnvFlagsToLoad().then(function() {
-          if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
-            self._pageNotFound();
-            return false;
-          }
-          return true;
+      _canAccessPage: function(page) {
+        // TODO: (future task) use defer method from utils behavior
+        // (NOTE: not all utils behavior functionality is needed)
+        let defer = {};
+        defer.promise = new Promise(function(resolve, reject) {
+          defer.resolve = resolve;
+          defer.reject = reject;
         });
+
+        let isPrpPage = this.prpPages.indexOf(page) > -1;
+
+        if (!isPrpPage) {
+          defer.resolve(true);
+        } else {
+          // only prp pages can have access restricted
+          this._waitForEnvFlagsToLoad().then(() => {
+            defer.resolve(this.showPrpReports());
+          });
+        }
+
+        return defer.promise;
       },
 
       _activePageIs: function(activePage, expectedPages) {
