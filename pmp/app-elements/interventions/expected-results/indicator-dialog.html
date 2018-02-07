@@ -24,6 +24,7 @@
 <link rel="import" href="non-cluster-indicator.html">
 <link rel="import" href="behaviors/indicator-dialog-tabs-behavior.html">
 <link rel="import" href="behaviors/save-indicator-behavior.html">
+<link rel="import" href="../../environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -100,7 +101,7 @@
             </div>
           </div>
           <div class="row-h">
-            <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
+            <paper-toggle-button disabled="[[_clusterToggleIsDisabled(indicator)]]"
                                  checked="{{isCluster}}"></paper-toggle-button>
             Cluster Indicator
           </div>
@@ -147,7 +148,8 @@
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorDialogTabs,
-          EtoolsPmpApp.Behaviors.SaveIndicator
+          EtoolsPmpApp.Behaviors.SaveIndicator,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags
         ],
 
         properties: {
@@ -229,8 +231,11 @@
           'resetValidationsAndStyle(isCluster)'
         ],
 
-        _indicatorIsNew: function(indicator) {
-          return (!indicator || !indicator.id);
+        _clusterToggleIsDisabled: function(indicator) {
+          if (indicator && indicator.id) {
+            return true;
+          }
+          return !this.prpServerIsOn();
         },
 
         openIndicatorDialog: function() {

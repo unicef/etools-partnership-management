@@ -123,7 +123,7 @@
           let body = this._getIndicatorModelForSave();
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
           if (body.hasOwnProperty('disaggregation')) {
-            this._prepareDisaggregations(body);
+            body.disaggregation = this._prepareDisaggregations(body);
           }
           if (this.isCluster && !body.id) {
             body.indicator = null;
@@ -132,15 +132,12 @@
       },
       _prepareDisaggregations: function(body) {
         if (!this.disaggregations || !this.disaggregations.length) {
-          return;
+          return [];
         }
-        let i;
-        for (i = 0; i < this.disaggregations.length; i++) {
-          if (this.disaggregations[i].disaggregId === null) {
-            this.disaggregations.splice(i, 1);
-          }
-        }
-        body.disaggregation = this.disaggregations.map(function(item) {
+        this.disaggregations = this.disaggregations.filter(function(d) {
+          return !!d.disaggregId;
+        });
+        return this.disaggregations.map(function(item) {
           return item.disaggregId;
         });
       },
