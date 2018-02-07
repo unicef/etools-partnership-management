@@ -5,10 +5,11 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior */
   EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior = {
     _baselineChanged: function(baseline) {
-      if (!baseline || !this.indicator) {
-        if (this.indicator) {
-          this.indicator.baseline = null; //* Avoid empty string or undefined being sent to backend
-        }
+      if (!this.indicator || baseline === null) {
+        return;
+      }
+      if (baseline === '' || baseline === undefined) {
+        this.set('indicator.baseline', null); //* Avoid empty string or undefined being sent to backend
         return;
       }
       if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
@@ -17,8 +18,11 @@
       }
      },
     _targetChanged: function(target) {
-      if (!target || !this.indicator) {
+      if (!this.indicator || target === null) {
         return;
+      }
+      if (target === '' || target === undefined) {
+        this.set('indicator.target', null);
       }
       if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
         let val = this._getValidPercentageValue(target);
