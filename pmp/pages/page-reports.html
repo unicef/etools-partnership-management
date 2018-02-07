@@ -182,11 +182,11 @@
         let fileImportDetails = {
           filenamePrefix: 'report',
           baseUrl: '../app-elements/reports/',
-          importErrMsgPageCategory: 'Report',
-          errPrefixTmpl: '[report(s) ##page##]',
+          importErrMsg: 'Reports page import error occurred',
+          errMsgPrefixTmpl: '[report(s) ##page##]',
           loadingMsgSource: 'reports-page'
         };
-        this.setActivePage(listActive, routeData.tab, 'report', fileImportDetails);
+        this.setActivePage(listActive, routeData.tab, fileImportDetails);
       },
 
       _handleTabSelectAction: function(e) {

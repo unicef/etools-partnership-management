@@ -332,7 +332,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged: function(routePage) {
         this.debounce('routePageChanges', function() {
           if (!routePage) {
-            // this.fire('update-main-path', {path: 'partners/list'});
             this._updatePath('partners/list');
             return;
           }
@@ -351,20 +350,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         let mainPageName = this._getMainPageName(page);
         let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
-        // check if page has been loaded, only if wasn't use importHref to load it
+        // import main page if needed
         let pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
-          // make the import
-          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
+          // pageEl is null => make the import
+          this.importHref(resolvedPageUrl, this._successfulImportCallback.bind(this, mainPageName),
               this._pageNotFound, false);
         }
       },
 
-      // load all the other main pages after first page is loaded
-      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+      // main page import success callback
+      _successfulImportCallback: function(currentLoadingPage) {
+        // pageEl will be available only after import successfully completes
+        let pageEl = this._getPageElement(currentLoadingPage);
         // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
+        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
       },
 
       _getMainPageName: function(page) {

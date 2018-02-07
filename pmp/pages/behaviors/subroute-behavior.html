@@ -42,8 +42,8 @@
 
     _handleFailedImport: function(err, page, fileImportDetails) {
       // log page element import failed error
-      let importErrMsgPrefix = fileImportDetails.errPrefixTmpl.replace('##page##', page);
-      this.logError(fileImportDetails.importErrMsgPageCategory + ' page import error occurred', importErrMsgPrefix, err);
+      let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
+      this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
       this.fire('global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
       this.fire('404');
     },
