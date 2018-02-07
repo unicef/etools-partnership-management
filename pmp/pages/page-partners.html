@@ -230,8 +230,14 @@
         if (!listActive && !tabsActive) {
           return;
         }
-        this.setActivePage(listActive, routeData.tab, 'partner',
-            '../app-elements/partners/', 'Partners', '[partner(s) ##page##]', 'partners-page');
+        let fileImportDetails = {
+          filenamePrefix: 'partner',
+          baseUrl: '../app-elements/partners/',
+          importErrMsgPageCategory: 'Partners',
+          errPrefixTmpl: '[partner(s) ##page##]',
+          loadingMsgSource: 'partners-page'
+        };
+        this.setActivePage(listActive, routeData.tab, fileImportDetails);
       },
 
       _hasEditPermissions: function(permissions) {

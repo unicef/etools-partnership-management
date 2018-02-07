@@ -427,8 +427,14 @@
           return;
         }
         this.debounce('pageChange', () => {
-          this.setActivePage(listActive, routeData.tab, 'intervention', '../app-elements/interventions/',
-              'Interventions', '[intervention(s) ##page##]', 'interv-page', this._canAccessPdTab,
+          let fileImportDetails = {
+            filenamePrefix: 'intervention',
+            baseUrl: '../app-elements/interventions/',
+            importErrMsgPageCategory: 'Interventions',
+            errPrefixTmpl: '[intervention(s) ##page##]',
+            loadingMsgSource: 'interv-page'
+          };
+          this.setActivePage(listActive, routeData.tab, fileImportDetails, this._canAccessPdTab,
               this._addTabNameToFileImportBasePath, this._resetRedirectToNewInterventionFlag);
           this._handleAmendmentMode();
         }, 10);

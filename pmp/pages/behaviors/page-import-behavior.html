@@ -6,10 +6,10 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.PageImportBehavior */
   EtoolsPmpApp.Behaviors.PageImportBehavior = {
 
-    importPageElement: function(elementName, pageBaseUrl) {
+    importPageElement: function(fileName, baseUrl) {
       return new Promise((resolve, reject) => {
-        if (!Polymer.isInstance(this.$$(elementName))) {
-          let resolvedPageUrl = this.resolveUrl(pageBaseUrl + elementName + '.html');
+        if (!Polymer.isInstance(this.$$(fileName))) {
+          let resolvedPageUrl = this.resolveUrl(baseUrl + fileName + '.html');
           this.importHref(resolvedPageUrl, () => {
             resolve();
           }, (err) => {
