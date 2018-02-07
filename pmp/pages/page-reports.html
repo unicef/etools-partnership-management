@@ -179,6 +179,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
+        if (!listActive) {
+          this._setContentScrollPosition(0);
+        }
         this.setActivePage(listActive, routeData.tab, 'report',
             '../app-elements/reports/', 'Report', '[report(s) ##page##]', 'reports-page');
       },

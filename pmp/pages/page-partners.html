@@ -230,6 +230,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
+        if (!listActive) {
+          this._setContentScrollPosition(0);
+        }
         this.setActivePage(listActive, routeData.tab, 'partner',
             '../app-elements/partners/', 'Partners', '[partner(s) ##page##]', 'partners-page');
       },
@@ -317,7 +320,6 @@
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
         this.fire('clear-server-errors');
-        this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {

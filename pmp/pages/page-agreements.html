@@ -256,6 +256,9 @@
         }
         this.setActivePage(listActive, 'details', 'agreement',
             '../app-elements/agreements/', 'Agreements', '[agreement(s) ##page##]', 'ag-page');
+        if (!listActive) {
+          this._setContentScrollPosition(0);
+        }
       },
 
       // compute agreement details page title including partner name and agreement number
@@ -338,7 +341,6 @@
         // keep a copy of the agreement before changes are made and use it later to save only the changes
         this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
         this.fire('clear-server-errors');
-        this._setContentScrollPosition(0);
       },
 
       /**
