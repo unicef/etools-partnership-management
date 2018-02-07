@@ -254,11 +254,11 @@
         if (!listActive && !tabsActive) {
           return;
         }
-        this.setActivePage(listActive, 'details', 'agreement',
-            '../app-elements/agreements/', 'Agreements', '[agreement(s) ##page##]', 'ag-page');
         if (!listActive) {
           this._setContentScrollPosition(0);
         }
+        this.setActivePage(listActive, 'details', 'agreement',
+            '../app-elements/agreements/', 'Agreements', '[agreement(s) ##page##]', 'ag-page');
       },
 
       // compute agreement details page title including partner name and agreement number
