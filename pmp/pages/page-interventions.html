@@ -111,7 +111,7 @@
                                 name="list"
                                 active="[[listActive]]"
                                 csv-download-url="{{csvDownloadUrl}}"
-                                url-params="[[listQueryParams]]">
+                                url-params="[[preservedListQueryParams]]">
             </interventions-list>
           </template>
 
@@ -415,7 +415,7 @@
       _addTabNameToFileImportBasePath: function(pageBaseUrl, tabName) {
         return this._isPrpTab(tabName) ? (pageBaseUrl + tabName + '/') : pageBaseUrl;
       },
-      
+
       _resetRedirectToNewInterventionFlag: function() {
         if (this._redirectToNewIntervPageInProgress) {
           this.set('_redirectToNewIntervPageInProgress', false);

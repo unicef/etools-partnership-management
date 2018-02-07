@@ -89,7 +89,7 @@
             <reports-list id="list"
                           name="list"
                           active="[[listActive]]"
-                          url-params="[[listQueryParams]]"></reports-list>
+                          url-params="[[preservedListQueryParams]]"></reports-list>
           </template>
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'summary')]]">
