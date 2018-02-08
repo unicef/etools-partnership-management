@@ -330,19 +330,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _routePageChanged: function(routePage) {
-        this.debounce('routePageChanges', function() {
+        this.debounce('routePageChanges', () => {
           if (!routePage) {
-            // this.fire('update-main-path', {path: 'partners/list'});
             this._updatePath('partners/list');
             return;
           }
-          this._importMainPage(routePage);
-          this._validatePageChange(routePage).then(function(redirectApproved) {
-            if (redirectApproved) {
+
+          this._canAccessPage(routePage).then((accessGranted) => {
+            if (!accessGranted) {
+              this._pageNotFound();
+            } else {
+              this._importMainPage(routePage);
               this.set('page', routePage);
             }
-          }.bind(this));
-        }.bind(this), 10);
+          });
+        }, 10);
       },
 
       _importMainPage: function(page) {
@@ -351,20 +353,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         let mainPageName = this._getMainPageName(page);
         let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
-        // check if page has been loaded, only if wasn't use importHref to load it
+        // import main page if needed
         let pageEl = this._getPageElement(mainPageName);
         if (!Polymer.isInstance(pageEl)) {
-          // make the import
-          this.importHref(resolvedPageUrl, this._pageElImportCallback.bind(this, mainPageName, pageEl),
+          // pageEl is null => make the import
+          this.importHref(resolvedPageUrl, this._successfulImportCallback.bind(this, mainPageName),
               this._pageNotFound, false);
         }
       },
 
-      // load all the other main pages after first page is loaded
-      _pageElImportCallback: function(currentLoadingPage, currentLoadingPageEl) {
-        currentLoadingPageEl = currentLoadingPageEl || this._getPageElement(currentLoadingPage);
+      // main page import success callback
+      _successfulImportCallback: function(currentLoadingPage) {
+        // pageEl will be available only after import successfully completes
+        let pageEl = this._getPageElement(currentLoadingPage);
         // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(currentLoadingPageEl, this._redirectToProperListPage.bind(this));
+        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
       },
 
       _getMainPageName: function(page) {
@@ -381,15 +384,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return this.$$('#' + pageId);
       },
 
-      _validatePageChange: function(page) {
-        let self = this;
-        return self._waitForEnvFlagsToLoad().then(function() {
-          if (self.prpPages.indexOf(page) > -1 && !self.showPrpReports()) {
-            self._pageNotFound();
-            return false;
-          }
-          return true;
+      _canAccessPage: function(page) {
+        // TODO: (future task) use defer method from utils behavior
+        // (NOTE: not all utils behavior functionality is needed)
+        let defer = {};
+        defer.promise = new Promise(function(resolve, reject) {
+          defer.resolve = resolve;
+          defer.reject = reject;
         });
+
+        let isPrpPage = this.prpPages.indexOf(page) > -1;
+
+        if (!isPrpPage) {
+          defer.resolve(true);
+        } else {
+          // only prp pages can have access restricted
+          this._waitForEnvFlagsToLoad().then(() => {
+            defer.resolve(this.showPrpReports());
+          });
+        }
+
+        return defer.promise;
       },
 
       _activePageIs: function(activePage, expectedPages) {

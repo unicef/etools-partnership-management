@@ -8,6 +8,7 @@
 <link rel="import" href="../../scripts/lodash/lodash.html">
 
 <link rel="import" href="behaviors/page-utils-behavior.html">
+<link rel="import" href="behaviors/subroute-behavior.html">
 <link rel="import" href="../app-behaviors/scroll-control-behavior.html">
 
 <link rel="import" href="../app-elements/page-header/page-content-header.html">
@@ -71,7 +72,7 @@
         </div>
       </div>
 
-      <template is="dom-if" if="[[_showPageTabs(partnerPage)]]">
+      <template is="dom-if" if="[[_showPageTabs(activePage)]]">
         <etools-tabs slot="tabs"
                      tabs="[[partnerTabs]]"
                      active-tab="{{routeData.tab}}"
@@ -86,11 +87,11 @@
                                    title="Errors Saving Partner"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
         <iron-pages id="partnersPages"
-                    selected="{{partnerPage}}"
+                    selected="{{activePage}}"
                     attr-for-selected="name"
                     role="main">
 
-          <template is="dom-if" if="[[_pageEquals(partnerPage, 'list')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <partners-list id="list"
                            name="list"
                            show-only-government-type="[[showOnlyGovernmentType]]"
@@ -101,11 +102,11 @@
             </partners-list>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(partnerPage, 'overview')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
             <partner-overview name="overview" partner="[[partner]]"></partner-overview>
           </template>
 
-          <template is="dom-if" if="[[_pageEquals(partnerPage, 'details')]]">
+          <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
             <partner-details id="partnerDetails"
                              name="details"
                              partner="[[partner]]"
@@ -147,8 +148,9 @@
 
       behaviors: [
         EtoolsLogsBehavior,
-        EtoolsPmpApp.Behaviors.PageUtils,
         EtoolsPmpApp.Behaviors.ScrollControl,
+        EtoolsPmpApp.Behaviors.PageUtils,
+        EtoolsPmpApp.Behaviors.Subroute
       ],
 
       properties: {
@@ -167,16 +169,6 @@
             }
           ]
         },
-        listActive: Boolean,
-        tabsActive: {
-          type: Boolean
-        },
-        partnerPage: {
-          type: String,
-        },
-        routeData: {
-          type: Object,
-        },
         csvDownloadUrl: {
           type: String
         },
@@ -193,10 +185,6 @@
         showOnlyGovernmentType: {
           type: Boolean,
           value: false
-        },
-        serverErrors: {
-          type: Array,
-          value: []
         },
         currentPage: String,
         originalPartnerData: Object
@@ -238,34 +226,18 @@
         }
       },
 
-      _setActivePage: function(listActive, tab) {
-        let page = 'list';
-        let pagePrefix = 'partners-';
-        let pageBaseUrl = '../app-elements/partners/';
-        if (!listActive) {
-          page = tab;
-          pagePrefix = 'partner-';
-        } else {
-          this.set('serverErrors', []);
-        }
-        if (page && page !== this.partnerPage) {
-          let self = this;
-          self._importPageElement(page, pagePrefix, pageBaseUrl).then(function() {
-            self.set('partnerPage', page);
-          })
-          .catch(function(err) {
-            self.logError('Agreement page import error occurred', '[partner(s) ' + page + ']', err);
-            self.fire('global-loading', {active: false, loadingSource: 'partners-page'});
-            self._triggerPageNotFound();
-          });
-        }
-      },
-
       _pageChanged: function(listActive, tabsActive, routeData) {
         if (!listActive && !tabsActive) {
           return;
         }
-        this._setActivePage(listActive, routeData.tab);
+        let fileImportDetails = {
+          filenamePrefix: 'partner',
+          baseUrl: '../app-elements/partners/',
+          importErrMsg: 'Partners page import error occurred',
+          errMsgPrefixTmpl: '[partner(s) ##page##]',
+          loadingMsgSource: 'partners-page'
+        };
+        this.setActivePage(listActive, routeData.tab, fileImportDetails);
       },
 
       _hasEditPermissions: function(permissions) {
@@ -314,7 +286,7 @@
         event.stopImmediatePropagation();
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
-          this.set('serverErrors', event.detail);
+          this.fire('set-server-errors', event.detail);
           this._setContentScrollPosition(0);
         }
       },
@@ -350,14 +322,14 @@
           // keep a copy of loaded partner to be able to check changed data
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
-        this.set('serverErrors', []);
+        this.fire('clear-server-errors');
         this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {
         e.stopImmediatePropagation();
         try {
-          var partners = this.$$('#list');
+          let partners = this.$$('#list');
           if (partners && !partners.$.list.classList.contains('hidden')) {
             partners._filterPartnersData(true);
           }
@@ -373,7 +345,7 @@
         }
         let partnerDetails = this.$$('#partnerDetails');
         if (partnerDetails && partnerDetails._validatePartner()) {
-          var partnerChanges = this._cleanUpdateData(this.partner);
+          let partnerChanges = this._cleanUpdateData(this.partner);
           partnerChanges.id = this.partner.id;
           this._savePartner(partnerChanges);
         } else {
@@ -385,14 +357,14 @@
       },
 
       _cleanUpdateData: function(partner) {
-        var updateableFields = [
+        let updateableFields = [
           'alternate_name',
           'shared_with',
           'staff_members',
           'assessments',
           'core_values_assessment'
         ];
-        var changes = {};
+        let changes = {};
         updateableFields.forEach(function(fieldName) {
           // TODO: improve this
           if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {

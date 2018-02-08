@@ -17,6 +17,23 @@
         type: Object,
         value: {}
       },
+      serverErrors: {
+        type: Array,
+        value: []
+      }
+    },
+
+    listeners: {
+      'clear-server-errors': '_clearServerErrors',
+      'set-server-errors': '_setServerErrors'
+    },
+
+    _clearServerErrors: function() {
+      this.set('serverErrors', []);
+    },
+
+    _setServerErrors: function(e) {
+      this.set('serverErrors', e.detail);
     },
 
     _handleQueryParams: function(params) {
@@ -29,33 +46,12 @@
       return activePage === expectedPage;
     },
 
-    _triggerPageNotFound: function() {
-      this.fire('404');
-    },
-
     _removeStrDash: function(str) {
       return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
     },
 
     _showPageTabs: function(page) {
       return page !== 'list';
-    },
-
-    _importPageElement: function(page, pagePrefix, pageBaseUrl) {
-      let self = this;
-      return new Promise(function(resolve, reject) {
-        let pageName = pagePrefix + page;
-        if (!Polymer.isInstance(self.$$(pageName))) {
-          let resolvedPageUrl = self.resolveUrl(pageBaseUrl + pageName + '.html');
-          self.importHref(resolvedPageUrl, function() {
-            resolve();
-          }, function(err) {
-            reject(err);
-          });
-        } else {
-          resolve();
-        }
-      });
     },
 
     _showTabChangeLoadingMsg: function(e, loadingSource, tabPrefix, tab) {
