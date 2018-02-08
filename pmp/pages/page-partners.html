@@ -230,6 +230,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
+
+        this.scrollToTopOnCondition(!listActive);
+
         let fileImportDetails = {
           filenamePrefix: 'partner',
           baseUrl: '../app-elements/partners/',
@@ -287,7 +290,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.fire('set-server-errors', event.detail);
-          this._setContentScrollPosition(0);
+          this.scrollToTop();
         }
       },
 
@@ -323,7 +326,6 @@
           this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
         }
         this.fire('clear-server-errors');
-        this._setContentScrollPosition(0);
       },
 
       _reloadPartnersList: function(e) {

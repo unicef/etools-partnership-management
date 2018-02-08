@@ -179,6 +179,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
+
+        this.scrollToTopOnCondition(!listActive);
+
         let fileImportDetails = {
           filenamePrefix: 'report',
           baseUrl: '../app-elements/reports/',

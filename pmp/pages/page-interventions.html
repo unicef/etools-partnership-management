@@ -367,7 +367,6 @@
           this.async(function() {
             // ensure intervention get/save/change status loading msgs close
             this.fire('global-loading', {active: false, loadingSource: 'pd-ssfa-data'});
-            this._setContentScrollPosition(0);
           }.bind(this), 1000);
         }
       },
@@ -379,7 +378,6 @@
             this.set('errorMsgBox_Title',
                 'eTools validation code has been upgraded and this record is now considered invalid due to:');
             this.fire('set-server-errors', intervention.metadata.error_msg);
-            this._setContentScrollPosition(0);
           }
         }
       },
@@ -426,6 +424,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
+
+        this.scrollToTopOnCondition(!listActive);
+
         this.debounce('pageChange', () => {
           let fileImportDetails = {
             filenamePrefix: 'intervention',
@@ -565,7 +566,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.fire('set-server-errors', event.detail);
-          this._setContentScrollPosition(0);
+          this.scrollToTop();
         }
       },
 
