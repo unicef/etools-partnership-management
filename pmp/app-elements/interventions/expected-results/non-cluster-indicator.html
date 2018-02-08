@@ -48,7 +48,7 @@
 
         </div>
       </div>
-      <div class="layout-vertical" hidden$="[[!_showDisplayType(indicator.indicator.unit)]]">
+      <div class="layout-vertical" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
         <label class="paper-label">Display Type </label>
         <div class="radioGroup">
            <paper-radio-group  selected="{{indicator.indicator.display_type}}">
@@ -174,9 +174,7 @@
           '_targetChanged(indicator.target)',
           '_baselineUnknownChanged(baselineIsUnknown)'
         ],
-        _showDisplayType: function(unit) {
-          return (unit === 'percentage') ? true : false;
-        },
+
         _unitIsNumeric: function(unit) {
           return unit === 'number';
         },

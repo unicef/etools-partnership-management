@@ -121,6 +121,12 @@
       },
       _getIndicatorBody: function() {
           let body = this._getIndicatorModelForSave();
+          if (this.indicator.target === '' || this.indicator.target === undefined) {
+            this.indicator.target = null;
+          }
+          if (this.indicator.baseline === '' || this.indicator.baseline === undefined) {
+            this.indicator.baseline = null;
+          }
           Object.assign(body, _.pick(this.indicator, _.keys(body)));
           if (body.hasOwnProperty('disaggregation')) {
             body.disaggregation = this._prepareDisaggregations(body);
