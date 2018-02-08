@@ -156,7 +156,7 @@
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
                                   active="[[_pageEquals(activePage, 'reports')]]"
-                                  url-params="[[_getReportsTabUrlParams(activePage)]]"></intervention-reports>
+                                  reports-prev-params="{{prevParams}}"></intervention-reports>
           </template>
 
           <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
@@ -298,7 +298,8 @@
           }
         },
         _forceDetUiValidationOnAttach: Boolean,
-        _forceReviewUiValidationOnAttach: Boolean
+        _forceReviewUiValidationOnAttach: Boolean,
+        reportsPrevParams: Object
       },
       observers: [
         '_pageChanged(listActive, tabsActive, routeData)',
@@ -427,6 +428,9 @@
 
         this.scrollToTopOnCondition(!listActive);
 
+        if (listActive) {
+          this.reportsPrevParams = {};
+        }
         this.debounce('pageChange', () => {
           let fileImportDetails = {
             filenamePrefix: 'intervention',
@@ -602,14 +606,6 @@
             ? false
             : this._showSidebarStatus(listActive, _subPageOrTabAttached);
 
-      },
-
-      _getReportsTabUrlParams: function(activePage) {
-        let params = null;
-        if (this._pageEquals(activePage, 'reports')) {
-          params = Object.assign({}, this.route.__queryParams);
-        }
-        return params;
       },
 
       /**

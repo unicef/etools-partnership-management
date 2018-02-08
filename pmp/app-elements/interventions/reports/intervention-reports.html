@@ -34,7 +34,7 @@
         properties: {
           interventionId: Number,
           paginator: Object,
-          urlParams: Object,
+          // urlParams: Object,
           prevParams: Object,
           active: Boolean,
           initComplete: Boolean
@@ -59,13 +59,13 @@
           if (!active) {
             return;
           }
-          if (_.isEmpty(urlParams) && !_.isEmpty(this.prevParams)) {
-            // we need to make sure url query params are not lost at tab change
-            urlParams = Object.assign({}, this.prevParams);
-            this.set('prevParams', {});
-          }
-          let page = (urlParams && urlParams.page) ? Number(urlParams.page) : 1;
-          let pageSize = (urlParams && urlParams.page_size) ? Number(urlParams.page_size) : 10;
+          // if (_.isEmpty(urlParams) && !_.isEmpty(this.prevParams)) {
+          //   // we need to make sure url query params are not lost at tab change
+          //   urlParams = Object.assign({}, this.prevParams);
+          //   this.set('prevParams', {});
+          // }
+          let page = (prevParams && prevParams.page) ? Number(prevParams.page) : 1;
+          let pageSize = (prevParams && prevParams.page_size) ? Number(prevParams.page_size) : 10;
           this.set('paginator.page', page);
           this.set('paginator.page_size', pageSize);
 
@@ -88,7 +88,7 @@
               return;
             }
             let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
-            this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
+            this.updateAppState('interventions/' + interventionId + '/reports', qs);
             this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
           }, 20);
         }
