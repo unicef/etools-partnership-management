@@ -9,7 +9,7 @@
 
 <link rel="import" href="../../../app-behaviors/repeatable-data-sets-behavior.html">
 <link rel="import" href="pd-lower-result-name.html">
-<link rel="import" href="applied-indicator.html">
+<link rel="import" href="applied-indicators.html">
 <link rel="import" href="../edit-delete-actions.html">
 
 <dom-module id="result-link-lower-results">
@@ -27,10 +27,6 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         --list-bg-color: #eeeeee;
-        /* TODO: clean this CSS */
-        --list-row-no-collapse: {
-          background-color: var(--list-second-bg-color);
-        };
         --edit-delete-actions: {
           background-color: var(--list-second-bg-color);
         };
@@ -77,10 +73,6 @@
         border-bottom: 1px solid var(--list-divider-color);
       }
 
-      applied-indicator {
-        margin-right: -24px;
-      }
-
       .indicators-container {
         @apply --layout-center;
         @apply --layout-self-stretch;
@@ -90,6 +82,9 @@
         padding-left: 16px;
         @apply --layout-horizontal;
         @apply --layout-center;
+      }
+      .add-btn-row.border-b {
+        height: 49px;
       }
 
 
@@ -120,14 +115,12 @@
           </div>
           <div class="flex-c lborder indicators-container">
             <div hidden="[[!item.applied_indicators.length]]">
-              <template is="dom-repeat"
-                        items="[[item.applied_indicators]]"
-                        as="indicator" index-as="indicatorIndex">
-                <applied-indicator data-ind-index$="[[indicatorIndex]]"
-                                   data-result-index$="[[index]]" on-edit-indicator="_editIndicator"
-                                   on-delete-indicator="_deleteIndicator" indicator="[[indicator]]"
-                                   edit-mode="[[editMode]]"></applied-indicator>
-              </template>
+              <applied-indicators data-items="[[item.applied_indicators]]"
+                                  result-link-index="[[index]]"
+                                  cp-output-id="[[cpOutputId]]"
+                                  intervention-status="[[interventionStatus]]"
+                                  edit-mode="[[editMode]]">
+              </applied-indicators>
             </div>
             <div class="add-btn-row flex-c">
               <paper-icon-button icon="add-box"
@@ -182,7 +175,8 @@
           thereAreIndicators: {
             type: Boolean,
             value: false
-          }
+          },
+          interventionStatus: String
         },
         listeners: {
           'delete-confirm': '_updateInterventionLocAndClusters',
@@ -256,23 +250,6 @@
           };
           this.fire('open-indicator-dialog', resultMap);
         },
-        _editIndicator: function(event) {
-          let indicatorIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-ind-index'), 10);
-          let llResultIndex = parseInt(Polymer.dom(event).localTarget.getAttribute('data-result-index'), 10);
-          let indicator = JSON.parse(JSON.stringify(this.dataItems[llResultIndex].applied_indicators[indicatorIndex]));
-
-          let resultMap = {
-            cpOutputId: this.cpOutputId,
-            llResultIndex: llResultIndex,
-            llResultId: indicator.lower_result,
-            indicatorData: indicator,
-            appliedIndicatorsIndex: indicatorIndex
-          };
-          this.fire('open-indicator-dialog', resultMap);
-        },
-        _deleteIndicator: function() {
-          // TODO: - no backend changes made yet; might be only deactivate action and not delete
-        }
 
       });
     })();
