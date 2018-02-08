@@ -314,7 +314,6 @@
       _goToNewAgreementPage: function() {
         // go to new agreement
         this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
-        this.set('selectedAgreementId', 0);
         this.fire('update-main-path', {path: 'agreements/new/details'});
         this._handleAgreementSelectionLoadingMsg();
       },
