@@ -9,11 +9,19 @@
         type: Boolean,
         value: false
       },
+      /* Gets updated by app-route */
       listPageQueryParams: {
         type: Object,
         observer: '_handleQueryParams'
       },
-      listQueryParams: {
+      /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
+         otherwise preservedListQueryParams holds on to it's previous data.
+         This is to preserve set list page filters like : rows per page , search string, any other filters,
+         while navigating between pages from the same category
+         (ex. go to intervention list, select to filter by intervention status, go to intervention details,
+         click on the Interventions left side menu item => the intervention list is still filtered by intervention status).
+      */
+      preservedListQueryParams: {
         type: Object,
         value: {}
       },
@@ -38,7 +46,7 @@
 
     _handleQueryParams: function(params) {
       if (params !== null && Object.keys(params).length) {
-        this.set('listQueryParams', params);
+        this.set('preservedListQueryParams', params);
       }
     },
 
