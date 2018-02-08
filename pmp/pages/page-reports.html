@@ -179,9 +179,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
-        if (!listActive) {
-          this._setContentScrollPosition(0);
-        }
+
+        this.scrollToTopOnCondition(!listActive);
+
         let fileImportDetails = {
           filenamePrefix: 'report',
           baseUrl: '../app-elements/reports/',

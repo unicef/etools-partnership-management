@@ -424,9 +424,9 @@
         if (!listActive && !tabsActive) {
           return;
         }
-        if (!listActive) {
-          this._setContentScrollPosition(0);
-        }
+
+        this.scrollToTopOnCondition(!listActive);
+
         this.debounce('pageChange', () => {
           let fileImportDetails = {
             filenamePrefix: 'intervention',
@@ -566,7 +566,7 @@
         if ((event.detail instanceof Array && event.detail.length > 0) ||
             (typeof event.detail === 'string' && event.detail !== '')) {
           this.fire('set-server-errors', event.detail);
-          this._setContentScrollPosition(0);
+          this.scrollToTop();
         }
       },
 
