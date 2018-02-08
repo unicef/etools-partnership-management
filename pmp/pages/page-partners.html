@@ -118,7 +118,7 @@
       </div> <!-- page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[_showSidebarStatus(listActive, _subPageOrTabAttached, partner)]]">
+      <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
         <div id="sidebar">
           <partner-status
               on-save-partner="_validateAndTriggerPartnerSave"
@@ -199,7 +199,6 @@
         'partner-save-error': '_partnerSaveError',
         'create-partner': '_createPartner',
         'reload-list': '_reloadPartnersList',
-        'partners-page-attached': '_handlePageTabAttached',
         'trigger-partner-loading-msg': '_handlePartnerSelectionLoadingMsg'
       },
 
