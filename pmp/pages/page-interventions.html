@@ -304,7 +304,7 @@
         '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)',
         '_interventionChanged(intervention, permissions)',
-        '_amendmentModeChanged(intervention.in_amendment)'
+        '_amendmentModeChanged(intervention.in_amendment, tabAttached)'
       ],
 
       listeners: {
@@ -346,6 +346,9 @@
 
       _amendmentModeChanged: function(newValue) {
         if (!this.intervention) {
+          return;
+        }
+        if (!this.tabAttached || this.listActive) {
           return;
         }
         if (typeof newValue === 'undefined') {
