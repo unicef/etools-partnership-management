@@ -101,11 +101,6 @@
                                    title="[[errorMsgBox_Title]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
-        <iron-pages id="interventionsPages"
-                    selected="{{activePage}}"
-                    attr-for-selected="name"
-                    role="main">
-
           <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <interventions-list id="intList"
                                 name="list"
@@ -163,8 +158,6 @@
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
-
-        </iron-pages>
 
         <intervention-item-data id="interventionData"
                                 intervention="{{intervention}}"
