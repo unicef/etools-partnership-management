@@ -10,17 +10,59 @@
     properties: {
       listActive: Boolean,
       tabsActive: Boolean,
-      subPage: String,
       routeData: Object,
       activePage: {
         type: String,
-        notify: true
+        notify: true,
+        observer: '_activePageChanged'
+      },
+      /**
+       * This flag is used to make sure status sidebar doesn't show before tab content is loaded.
+       * The flag is updated:
+       *    - true: when the main tab element fires tab-content-attached event (_requestedTabContentHasBeenAttached)
+       *    - false: - when activePage is changed and it's one of the main tabs &&
+       *             - the previous activePage value is not the list &&
+       *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
+       */
+      tabAttached: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    listeners: {
+      'tab-content-attached': '_requestedTabContentHasBeenAttached',
+    },
+
+    _activePageChanged: function(currentPage, previousPage) {
+      this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
+    },
+
+    /**
+     * Use tabAttached to mark when requested tab has been attached to DOM.
+     * Used to make sure sidebar doesn't show while tab element is still loading
+     */
+    _requestedTabContentHasBeenAttached: function() {
+      this.set('tabAttached', true);
+    },
+
+    /**
+     * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
+     */
+    _resetTabAttachedFlagIfNeeded: function(currentPage, previousPage) {
+      let selectedTab = this.$$('iron-pages [name="' + currentPage + '"]');
+      if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
+        this.set('tabAttached', false);
+      }
+      if (selectedTab) {
+        // tab already loaded, make sure the flag is true when coming from the list
+        this.set('tabAttached', true);
       }
     },
 
     _getFilenamePrefix: function(listActive, fileImportDetails) {
       // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
-      return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix ) + '-';
+      return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix) + '-';
     },
 
     _getFileBaseUrl: function(page, fileImportDetails, appendBasePathAdditionalFolder) {

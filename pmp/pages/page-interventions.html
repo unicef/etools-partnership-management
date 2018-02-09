@@ -172,7 +172,7 @@
       </div> <!-- main page content end -->
 
       <!-- sidebar content start -->
-      <template is="dom-if" if="[[_showInterventionSidebarStatus(listActive, _subPageOrTabAttached, activePage)]]">
+      <template is="dom-if" if="[[_showInterventionSidebarStatus(listActive, tabAttached, activePage)]]">
         <div id="sidebar">
           <intervention-status status="[[intervention.status]]"
                                active="[[!listActive]]"
@@ -298,13 +298,13 @@
         '_pageChanged(listActive, tabsActive, routeData)',
         '_observeRouteDataId(routeData.id)',
         '_interventionChanged(intervention, permissions)',
-        '_amendmentModeChanged(intervention.in_amendment)'
+        '_amendmentModeChanged(intervention.in_amendment, tabAttached)'
       ],
 
       listeners: {
         'intervention-save-error': '_interventionSaveErrors',
         'reload-list': '_reloadInterventionsList',
-        'intervention-page-attached': '_interventionPageAttached',
+        'tab-content-attached': '_interventionPageAttached',
         'trigger-intervention-loading-msg': '_handleInterventionSelectionLoadingMsg',
         'refresh-intervention': '_forceInterventionRefresh'
       },
@@ -340,6 +340,9 @@
 
       _amendmentModeChanged: function(newValue) {
         if (!this.intervention) {
+          return;
+        }
+        if (!this.tabAttached || this.listActive) {
           return;
         }
         if (typeof newValue === 'undefined') {
@@ -418,7 +421,6 @@
         if (!listActive && !tabsActive) {
           return;
         }
-
         this.scrollToTopOnCondition(!listActive);
 
         if (listActive) {
@@ -587,18 +589,16 @@
         this._showTabChangeLoadingMsg(e, 'interv-page', 'intervention-');
       },
 
-      _interventionPageAttached: function(e) {
-        this._handlePageTabAttached(e);
+      _interventionPageAttached: function() {
         // force styles updates according with intervention permissions
         // (event handled is triggered by interventions tab elements)
         this._updateRelatedPermStyles(false, this._forceDetUiValidationOnAttach, this._forceReviewUiValidationOnAttach);
       },
 
-      _showInterventionSidebarStatus: function(listActive, _subPageOrTabAttached, activePage) {
+      _showInterventionSidebarStatus: function(listActive, tabAttached, activePage) {
         return (['reports', 'progress'].indexOf(activePage) > -1)
             ? false
-            : this._showSidebarStatus(listActive, _subPageOrTabAttached);
-
+            : this._showSidebarStatus(listActive, tabAttached);
       },
 
       /**

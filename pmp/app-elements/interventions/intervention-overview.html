@@ -188,7 +188,7 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-          this.fire('intervention-page-attached');
+          this.fire('tab-content-attached');
         },
 
         _parseCpOutputs: function(cpOutputsLength, resultsLength) {

@@ -5,10 +5,6 @@
   EtoolsPmpApp.Behaviors.PageUtils = {
 
     properties: {
-      _subPageOrTabAttached: {
-        type: Boolean,
-        value: false
-      },
       /* Gets updated by app-route */
       listPageQueryParams: {
         type: Object,
@@ -19,7 +15,8 @@
          This is to preserve set list page filters like : rows per page , search string, any other filters,
          while navigating between pages from the same category
          (ex. go to intervention list, select to filter by intervention status, go to intervention details,
-         click on the Interventions left side menu item => the intervention list is still filtered by intervention status).
+         click on the Interventions left side menu item => the intervention list is
+         still filtered by intervention status).
       */
       preservedListQueryParams: {
         type: Object,
@@ -76,17 +73,12 @@
     },
 
     /**
-     * "other" can be any property that must be defined before the method is executed
+     * "other" can be any property that must be defined before the method
+     * is executed (main item displayed on the page, activePage)
      */
-    _showSidebarStatus: function(listPageActive, subPageOrTabAttached, other) {
-      let showStatus = !listPageActive && !!subPageOrTabAttached;
+    _showSidebarStatus: function(listPageActive, tabAttached, other) {
+      let showStatus = !listPageActive && !!tabAttached;
       return !other ? showStatus : (showStatus && other);
-    },
-
-    _handlePageTabAttached: function(e) {
-      e.stopImmediatePropagation();
-      // just a flag to know when to show sidebar status element
-      this.set('_subPageOrTabAttached', true);
     }
 
   };
