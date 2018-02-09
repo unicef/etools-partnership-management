@@ -262,6 +262,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       listeners: {
         'drawer': 'toggleDrawer',
         'update-main-path': '_updateMainPath',
+        'update-route-query-params': '_updateQueryParams',
         'forbidden': '_onForbidden',
         'open-data-refresh-dialog': '_openDataRefreshDialog',
         '404': '_pageNotFound'
@@ -315,7 +316,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         e.stopImmediatePropagation();
       },
-
+      _updateQueryParams: function(e) {
+        this.set('route.__queryParams', e.detail);
+      },
       _updatePath: function(path) {
         this.set('route.__queryParams', null);
         this.set('route.path', this.baseUrl + path);

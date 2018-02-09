@@ -35,7 +35,18 @@
     },
 
     _activePageChanged: function(currentPage, previousPage) {
+      this._clearRouteQueryParamsIfNeeded(previousPage);
       this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
+    },
+    /**
+     *Avoid Reports page query string lingering on other intervention tabs
+     */
+    _clearRouteQueryParamsIfNeeded: function(previousPage) {
+      if (previousPage === 'reports') {
+        //* Info:Clearing the query params in the subroute doesn't work,
+        //  has to be in the parent route
+        this.fire('update-route-query-params', null);
+      }
     },
 
     /**
@@ -50,7 +61,7 @@
      * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
      */
     _resetTabAttachedFlagIfNeeded: function(currentPage, previousPage) {
-      let selectedTab = this.$$('iron-pages [name="' + currentPage + '"]');
+      let selectedTab = this.$$('[name="' + currentPage + '"]');
       if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
         this.set('tabAttached', false);
       }
