@@ -508,8 +508,8 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-          this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+          this.fire('tab-content-attached');
         },
         _updateNoOfPdOutputs: function() {
           if (!this.intervention.result_links) {
