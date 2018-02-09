@@ -324,7 +324,7 @@
     </etools-content-panel>
 
     <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-      <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result ([[noOfResultLinks]])">
+      <etools-content-panel class="content-section" panel-title="PD output or SSFA Expected Result ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
               <div slot="panel-btns" id="edit-btns">
@@ -475,7 +475,7 @@
             type: Array,
             statePath: 'locations'
           },
-          noOfResultLinks: {
+          noOfPdOutputs: {
             type: String,
             value: '0'
           }
@@ -491,8 +491,7 @@
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
           '_contingencyPDChanged(intervention.contingency_pd)',
-          '_updateNoOfResultLinks(intervention.result_links)',
-          '_updateNoOfResultLinks(intervention.result_links.length)'
+          '_updateNoOfPdOutputs(intervention.result_links.*)'
         ],
         ready: function() {
           this.locationsDialog = document.createElement('grouped-locations-dialog');
@@ -512,8 +511,14 @@
           this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
         },
-        _updateNoOfResultLinks: function() {
-            this.noOfResultLinks = !this.intervention.result_links ? 0 : this.intervention.result_links.length;
+        _updateNoOfPdOutputs: function() {
+          if (!this.intervention.result_links) {
+            this.noOfPdOutputs = 0;
+            return;
+          }
+          this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
+            return rl.ll_results.length;
+          }).reduce((a,b) => a + b, 0);
         },
         openCpOutputAndRamIndicatorsDialog: function() {
           let expectedResultsElem = this.$$('#expectedResults');
