@@ -122,7 +122,7 @@
       _getIndicatorBody: function() {
           let body = this._getIndicatorModelForSave();
           if (this.indicator.target === '' || this.indicator.target === undefined) {
-            this.indicator.target = null;
+            this.indicator.target = null; //* Avoid empty string or undefined being sent to backend
           }
           if (this.indicator.baseline === '' || this.indicator.baseline === undefined) {
             this.indicator.baseline = null;
@@ -132,7 +132,9 @@
             body.disaggregation = this._prepareDisaggregations(body);
           }
           if (this.isCluster && !body.id) {
-            body.indicator = null;
+            body.indicator = null; //TODO for when we can create cluster indic->
+                                   //see if indicator prop shouldn't rather be removed
+                                   //from clusterIndicatorCreateModel than from here
           }
           return body;
       },
