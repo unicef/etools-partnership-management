@@ -19,6 +19,8 @@
     start: false,
     end: false,
     sections: false,
+    flat_locations: true,
+    reporting_periods: false,
 
     // details - PD Output or SSFA Expected results
     result_links: false,
@@ -68,7 +70,6 @@
 
     listeners: {
       'signed-doc-change-for-draft': '_signedDocChangedForDraft',
-      'unlock-details-fields': '_unlockDetailsFields',
       'restore-original-permissions': '_restoreInterventionOriginalDataAndPermissions'
     },
 
@@ -85,12 +86,6 @@
         fields.push('start', 'end');
       }
       return fields;
-    },
-
-    _getEditableFieldsForAddAmendmentAction: function() {
-      return ['partner', 'agreement', 'document_type', 'title', 'offices', 'unicef_focal_points',
-        'partner_focal_points', 'country_programme', 'start', 'end', 'sections',
-        'result_links', 'planned_budget', 'planned_budget_unicef_cash', 'planned_visits'];
     },
 
     _getNoEditPermissionsClone: function() {
@@ -179,34 +174,18 @@
       return perm;
     },
 
-    /**
-     * Alter current permission to allow details fields edit
-     */
-    getDetailsEditPermissionsForAmendAction: function(currentPerm) {
-      let perm = JSON.parse(JSON.stringify(currentPerm));
-      let editableFields = this._getEditableFieldsForAddAmendmentAction();
-      editableFields.forEach(function(field) {
-        perm.edit[field] = true;
-        perm.required[field] = true;
-      });
-      return perm;
-    },
-
     checkAndUpdatePlannedBudgetPermissions: function(status) {
-      switch (status) {
-        case 'signed':
-          if (this.get('intervention.permissions.edit.planned_budget')) {
-            // if planned_budget perm is true, user can edit this section,
-            // but in signed status he can only edit unicef_cash
-            this.set('intervention.permissions.edit.planned_budget', false);
-            this.set('intervention.permissions.edit.planned_budget_unicef_cash', true);
-          }
-          break;
-        default:
-          this.set('intervention.permissions.edit.planned_budget_unicef_cash',
-              this.get('intervention.permissions.edit.planned_budget'));
-          break;
+      if (status === 'signed'
+          && this.get('intervention.permissions.edit.planned_budget') && !this.get('intervention.in_amendment')) {
+        // there is a special requirement that in signed status only unicef_cash should be editable
+        // but in amendment mode all of planned budget should be editable
+        this.set('intervention.permissions.edit.planned_budget', false);
+        this.set('intervention.permissions.edit.planned_budget_unicef_cash', true);
+      } else {
+        this.set('intervention.permissions.edit.planned_budget_unicef_cash',
+            this.get('intervention.permissions.edit.planned_budget'));
       }
+
       this._updateRelatedPermStyles(true);
     },
 
@@ -281,12 +260,6 @@
           reviewAndSign.validate();
         }
       }
-    },
-
-    _unlockDetailsFields: function(e) {
-      e.stopImmediatePropagation();
-      this.setInterventionPermissions(false,
-          this.getDetailsEditPermissionsForAmendAction(this.intervention.permissions));
     },
 
     _restoreInterventionOriginalDataAndPermissions: function(e) {

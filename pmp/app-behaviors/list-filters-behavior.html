@@ -158,7 +158,7 @@
         parentField.value = event.detail.prettyDate;
       }
       let selectedDate = new Date(event.detail.jsonDate);
-      this.set(filterPath, moment.utc(selectedDate).format('YYYY-MM-DD'));
+      this.set(filterPath, moment(selectedDate).format('YYYY-MM-DD'));
     },
 
     _validateFilterSelectedValue: function(value) {

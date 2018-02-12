@@ -1,5 +1,4 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -47,64 +46,75 @@
       }
     </style>
 
-    <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
-      <div slot="panel-btns" id="edit-btns">
-        <paper-icon-button icon="add-box"
-                            title="Add Reporting Requirement"
-                            on-tap="openNewRequirementDialog">
-        </paper-icon-button>
-      </div>
-
-      <div class="list-container">
-        <etools-data-table-header id="listHeader"
-                                  no-collapse
-                                  no-title
-                                  hidden$="[[!reportingRequirements.length]]">
-          <etools-data-table-column class="col-4">
-            Reporting Period Start Date
-          </etools-data-table-column>
-          <etools-data-table-column class="col-4">
-            Reporting Period End Date
-          </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-            Report Due Date
-          </etools-data-table-column>
-          <etools-data-table-column class="col-1">
-            <!-- Actions -->
-          </etools-data-table-column>
-        </etools-data-table-header>
-        <template is="dom-repeat" items="[[reportingRequirements]]">
-          <etools-data-table-row no-collapse secondary-bg-on-hover>
-            <div slot="row-data">
-              <span class="col-data col-4">
-                [[item.start_date]]
-              </span>
-              <span class="col-data col-4">
-                [[item.end_date]]
-              </span>
-              <span class="col-data col-3">
-                [[item.due_date]]
-              </span>
-              <span class="col-data col-1 actions-button-container">
-                <paper-icon-button icon="create"
-                                    role="button"
-                                    on-tap="_handleRequirementEdit">
-                </paper-icon-button>
-                <paper-icon-button icon="delete"
-                                    role="button"
-                                    on-tap="_handleRequirementDelete">
-                </paper-icon-button>
-              </span>
-            </div>
-          </etools-data-table-row>
-        </template>
-        <template is="dom-if" if="[[!reportingRequirements.length]]">
-          <div class="row-h">
-            <p>There are no reporting requirements.</p>
+      <etools-content-panel class="content-section" panel-title="Partner Reporting Requirements">
+        <template is="dom-if" if="[[_showAddRequirementButton(editMode, isNewIntervention)]]">
+          <div slot="panel-btns" id="edit-btns">
+            <paper-icon-button icon="add-box"
+                              title="Add Reporting Requirement"
+                              on-tap="openNewRequirementDialog">
+            </paper-icon-button>
           </div>
         </template>
-      </div>
-    </etools-content-panel>
+
+        <template is="dom-if" if="[[!isNewIntervention]]">
+          <div class="list-container">
+            <etools-data-table-header id="listHeader"
+                                      no-collapse
+                                      no-title
+                                      hidden$="[[!reportingRequirements.length]]">
+              <etools-data-table-column class="col-4">
+                Reporting Period Start Date
+              </etools-data-table-column>
+              <etools-data-table-column class="col-4">
+                Reporting Period End Date
+              </etools-data-table-column>
+              <etools-data-table-column class="col-3">
+                Report Due Date
+              </etools-data-table-column>
+              <etools-data-table-column class="col-1">
+                <!-- Actions -->
+              </etools-data-table-column>
+            </etools-data-table-header>
+            <template is="dom-repeat" items="[[reportingRequirements]]">
+              <etools-data-table-row no-collapse secondary-bg-on-hover>
+                <div slot="row-data">
+                  <span class="col-data col-4">
+                    [[item.start_date]]
+                  </span>
+                  <span class="col-data col-4">
+                    [[item.end_date]]
+                  </span>
+                  <span class="col-data col-3">
+                    [[item.due_date]]
+                  </span>
+                  <span class="col-data col-1 actions-button-container">
+                    <paper-icon-button  icon="create"
+                                        role="button"
+                                        hidden$="[[!editMode]]"
+                                        on-tap="_handleRequirementEdit">
+                    </paper-icon-button>
+                    <paper-icon-button  icon="delete"
+                                        role="button"
+                                        hidden$="[[!editMode]]"
+                                        on-tap="_handleRequirementDelete">
+                    </paper-icon-button>
+                  </span>
+                </div>
+              </etools-data-table-row>
+            </template>
+            <template is="dom-if" if="[[!reportingRequirements.length]]">
+              <div class="row-h">
+                <p>There are no reporting requirements.</p>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template is="dom-if" if="[[isNewIntervention]]">
+          <div class="row-h">
+            <p>You must save this PD/SSFA before you can add reporting requirements.</p>
+          </div>
+        </template>
+      </etools-content-panel>
   </template>
 
   <script>
@@ -120,10 +130,13 @@
           EtoolsPmpApp.Behaviors.AjaxErrorsParser
         ],
         properties: {
-          reportingRequirements: Array,
           requirementsDialog: Object,
           deletedItem: Object,
           deleteDialog: Object,
+          reportingRequirements: {
+            type: Array,
+            value: []
+          },
           endpoints: {
             type: Object,
             value: {
@@ -143,6 +156,14 @@
             type: String,
             value: 'reporting-requirements'
           },
+          editMode: {
+            type: Boolean,
+            value: false
+          },
+          isNewIntervention: {
+            type: Boolean,
+            value: false
+          },
         },
 
         ready: function() {
@@ -154,7 +175,9 @@
           this.removeDialog(this.deleteDialog);
           this.removeDialog(this.requirementsDialog);
         },
-
+        _showAddRequirementButton: function(editMode, isNewIntervention) {
+          return editMode && !isNewIntervention;
+        },
         _createRequirementsDialog: function() {
           this.requirementsDialog = document.createElement('reporting-requirements-dialog');
           this.requirementsDialog.setAttribute('id', 'requirementsDialog');
@@ -166,7 +189,7 @@
           this.requirementsDialog.addEventListener('update-reporting-requirement',
               this.updateReportingRequirement.bind(this));
 
-          Polymer.dom(document.querySelector('body')).appendChild(this.requirementsDialog);
+          document.querySelector('body').appendChild(this.requirementsDialog);
         },
 
         _createDeleteConfirmationDialog: function() {

@@ -5,25 +5,27 @@
   /** @polymerBehavior EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior */
   EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior = {
     _baselineChanged: function(baseline) {
-      if (!baseline || !this.indicator) {
-        if (this.indicator) {
-          this.indicator.baseline = null; //* Avoid empty string or undefined being sent to backend
-        }
+      if (!this.indicator || this._isEmptyExcept0(baseline)) {
         return;
       }
+
       if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
         let val = this._getValidPercentageValue(baseline);
         this.set('indicator.baseline', val);
       }
      },
     _targetChanged: function(target) {
-      if (!target || !this.indicator) {
+      if (!this.indicator || this._isEmptyExcept0(target)) {
         return;
       }
+
       if (this.indicator.indicator && this.indicator.indicator.unit === 'percentage') {
         let val = this._getValidPercentageValue(target);
         this.set('indicator.target', val);
       }
+    },
+    _isEmptyExcept0: function(value) {
+      return value === null || value === undefined || value === '';
     },
     _getValidPercentageValue: function(val) {
       val = parseInt(val, 10);

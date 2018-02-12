@@ -115,9 +115,9 @@
           interventionLocations: {
             type: Array,
           },
-          iterventionLocationIds: {
+          interventionLocationIds: {
             type: Array,
-            observer: 'iterventionLocationIdsChanged',
+            observer: 'interventionLocationIdsChanged',
             notify: true
           },
           groupedLocations: {
@@ -145,7 +145,7 @@
             this.adminLevels = aux;
           }
         },
-        iterventionLocationIdsChanged: function(locationIds) {
+        interventionLocationIdsChanged: function(locationIds) {
           if (!locationIds || !locationIds.length || !this.locations) {
             this.interventionLocations = [];
             return;
@@ -191,7 +191,7 @@
             continue;
           }
           // Check if admin level parent Location is already a parent to another intervention location
-          let existingGroup = this._findInGroupedLocations(adminLevelLocation);
+          let existingGroup = this._findInGroupedLocations(groupedLocations, adminLevelLocation);
           if (!existingGroup) {
             groupedLocations.push({
               adminLevelLocation: adminLevelLocation,

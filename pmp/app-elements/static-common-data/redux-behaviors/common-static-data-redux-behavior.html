@@ -1,11 +1,14 @@
+<link rel="import" href="../../../../scripts/redux.html">
 <link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
 
+
 <script>
+  'use strict';
   // shuts up the linting script
   var Redux = Redux || {};
   var PolymerRedux = PolymerRedux || {};
 
-  let initialDropdownPmpData = {
+  let reduxStoreDefaultData = {
     fileTypes: [],
     signedByUnicefUsers: [],
     cpOutputs: [],
@@ -47,10 +50,10 @@
   };
 
   let commonStaticDataStore = Redux.createStore(function(state, action) {
-    if (!state) {
-      return initialDropdownPmpData;
-    }
 
+    if (!state) {
+      return reduxStoreDefaultData;
+    }
     switch (action.type) {
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
@@ -186,18 +189,26 @@
 
       case 'SET_USER_COUNTRY_DATA':
         return Object.assign({}, state, {countryData: action.countryData});
+
       case 'SET_DISAGGREGATIONS_DATA':
         return Object.assign({}, state, {disaggregations: action.disaggregations});
+
       case 'ADD_DISAGGREGATION':
         let disaggregsCopy = state.disaggregations.slice(0);
         disaggregsCopy.push(action.disaggregation);
         return Object.assign({}, state, {disaggregations: disaggregsCopy});
+
       case 'SET_CURRENT_USER':
         return Object.assign({}, state, {currentUser: action.user});
+
       case 'SET_LOCATION_TYPES':
         return Object.assign({}, state, {locationTypes: action.locationTypes});
+
       case 'SET_PRP_COUNTRY_DATA':
         return Object.assign({}, state, {PRPCountryData: action.PRPCountryData});
+
+      case 'SET_ENV_FLAGS':
+        return Object.assign({}, state, {envFlags: action.envFlags});
     }
   });
 

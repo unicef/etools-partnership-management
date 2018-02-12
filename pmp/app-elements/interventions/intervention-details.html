@@ -18,6 +18,7 @@
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
 
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../../app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html">
@@ -27,7 +28,7 @@
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
 <link rel="import" href="behaviors/fr-numbers-consistency-behavior.html">
 
-<link rel="import" href="intervention-form/agreement-selector.html">
+<link rel="import" href="agreement-selector/agreement-selector.html">
 
 <link rel="import" href="intervention-planned-budget.html">
 <link rel="import" href="intervention-expected-results.html">
@@ -82,8 +83,16 @@
         padding-right: 15px;
       }
 
+      .see-locations {
+        padding-right: 0;
+        min-width: 100px;
+        @apply --layout-end;
+        padding-bottom: 12px;
+      }
+
       .see-locations iron-icon {
         margin-right: 0;
+        margin-bottom: 2px;
         --iron-icon-height: 18px;
         --iron-icon-width: 18px;
       }
@@ -263,6 +272,7 @@
                                       error-message="Please select CP Structure">
         </etools-single-selection-menu>
       </div>
+
       <div class="row-h flex-c">
         <etools-multi-selection-menu id="sections"
                                      label="Section(s)"
@@ -277,49 +287,71 @@
                                      error-message="Please select a section">
         </etools-multi-selection-menu>
       </div>
-      <div class="row-h flex-c">
-        <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
-          <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
-          <template is="dom-repeat" items="[[intervention.cluster_names]]">
-            <span class="names-padding">[[item]]</span>
-          </template>
-        </etools-form-element-wrapper>
-      </div>
-      <div class="row-h flex-c">
-        <etools-form-element-wrapper label="Locations PD/SSFA Covers">
-          <span class="placeholder" hidden$="[[!_isEmpty(intervention.location_names.length)]]">&#8212;</span>
-          <div class="layout-horizontal" hidden$="[[_isEmpty(intervention.location_names.length)]]">
-            <template is="dom-repeat" items="[[getFirst3Locations(intervention.location_names)]]">
+
+      <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+        <div class="row-h flex-c">
+          <etools-form-element-wrapper label="Clusters PD/SSFA Contributes To">
+            <span class="placeholder" hidden$="[[!_isEmpty(intervention.cluster_names.length)]]">&#8212;</span>
+            <template is="dom-repeat" items="[[intervention.cluster_names]]">
               <span class="names-padding">[[item]]</span>
             </template>
-            <paper-button class="secondary-btn see-locations"
-                          on-tap="_openLocationsDialog"
-                          title="See all locations">
-              <iron-icon icon="add"></iron-icon>
-              See all
-            </paper-button>
-          </div>
-        </etools-form-element-wrapper>
+          </etools-form-element-wrapper>
+        </div>
+      </template>
+
+      <div class="row-h flex-c">
+        <etools-multi-selection-menu id="locations"
+                                     label="Location(s)"
+                                     placeholder="&#8212;"
+                                     selected-values="{{intervention.flat_locations}}"
+                                     options="[[locations]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     readonly$="[[!intervention.permissions.edit.flat_locations]]"
+                                     required$="[[intervention.permissions.required.flat_locations]]"
+                                     error-message="Please select locations"
+                                     disable-on-focus-handling>
+        </etools-multi-selection-menu>
+        <paper-button class="secondary-btn see-locations"
+                      on-tap="_openLocationsDialog"
+                      title="See all locations"
+                      hidden$="[[_isEmpty(intervention.flat_locations.length)]]">
+          <iron-icon icon="add"></iron-icon>
+          See all
+        </paper-button>
       </div>
+
     </etools-content-panel>
 
-    <etools-content-panel class="content-section" panel-title="PD output or SSFA expected result">
-      <template is="dom-if" if="[[!newIntervention]]">
-        <intervention-expected-results id="expectedResults"
-                                      data-items="{{intervention.result_links}}"
-                                      selected-cp-structure="[[intervention.country_programme]]"
-                                      intervention-id="[[intervention.id]]"
-                                      edit-mode$="[[intervention.permissions.edit.result_links]]"
-                                      on-indicators-changed="_updateInteventionLocAndClusters">
-        </intervention-expected-results>
-      </template>
-      <template is="dom-if" if="[[newIntervention]]">
-        <div class="row-h">
-          <p> You must save this PD/SSFA before you can add expected results. </p>
-        </div>
+    <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
+      <etools-content-panel class="content-section" panel-title="PD output or SSFA Expected Result ([[noOfPdOutputs]])">
+        <template is="dom-if" if="[[!newIntervention]]">
+          <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
+              <div slot="panel-btns" id="edit-btns">
+                  <paper-icon-button icon="add-box"
+                                    title="Add"
+                                    on-tap="openCpOutputAndRamIndicatorsDialog">
+                  </paper-icon-button>
+              </div>
+            </template>
+          <intervention-expected-results id="expectedResults"
+                                         data-items="{{intervention.result_links}}"
+                                         selected-cp-structure="[[intervention.country_programme]]"
+                                         intervention-id="[[intervention.id]]"
+                                         intervention-status="[[intervention.status]]"
+                                         indicator-location-options="[[originalIntervention.flat_locations]]"
+                                         indicator-section-options="[[originalIntervention.sections]]"
+                                         edit-mode$="[[intervention.permissions.edit.result_links]]"
+                                         on-indicators-changed="_updateInteventionLocClustersSections">
+          </intervention-expected-results>
+        </template>
+        <template is="dom-if" if="[[newIntervention]]">
+          <div class="row-h">
+            <p> You must save this PD/SSFA before you can add expected results. </p>
+          </div>
         </template>
       </etools-content-panel>
-
+    </template>
     <intervention-planned-budget id="plannedBudget"
                                  class="content-section"
                                  planned-budget="{{intervention.planned_budget}}"
@@ -338,8 +370,15 @@
       </intervention-planned-visits>
     </etools-content-panel>
 
-    <reporting-requirements intervention-id="[[intervention.id]]" class="content-section">
-    </reporting-requirements>
+    <template is="dom-if"
+              if="[[_showReportingRequirements(environmentFlags.prp_mode_off, intervention.permissions.view.reporting_periods)]]"
+              restamp>
+      <reporting-requirements class="content-section"
+                              is-new-intervention="[[newIntervention]]"
+                              edit-mode="[[intervention.permissions.edit.reporting_periods]]"
+                              intervention-id="[[intervention.id]]">
+      </reporting-requirements>
+    </template>
   </template>
 
   <script>
@@ -353,6 +392,7 @@
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.PartnerStaffMembersData,
           EtoolsPmpApp.Behaviors.Common,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags,
           EtoolsPmpApp.Behaviors.MissingDropdownOptions,
           EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
@@ -434,6 +474,10 @@
           locations: {
             type: Array,
             statePath: 'locations'
+          },
+          noOfPdOutputs: {
+            type: String,
+            value: '0'
           }
         },
 
@@ -446,15 +490,16 @@
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
           '_countryProgrammesChanged(countryProgrammes, intervention, originalIntervention)',
-          '_contingencyPDChanged(intervention.contingency_pd)'
+          '_contingencyPDChanged(intervention.contingency_pd)',
+          '_updateNoOfPdOutputs(intervention.result_links.*)'
         ],
         ready: function() {
           this.locationsDialog = document.createElement('grouped-locations-dialog');
-          Polymer.dom(document.querySelector('body')).appendChild(this.locationsDialog);
+          document.querySelector('body').appendChild(this.locationsDialog);
         },
         detached: function() {
           if (this.locationsDialog) {
-            Polymer.dom(document.querySelector('body')).removeChild(this.locationsDialog);
+            document.querySelector('body').removeChild(this.locationsDialog);
           }
         },
         attached: function() {
@@ -463,27 +508,35 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-          this.fire('intervention-page-attached');
           this.setDropdownMissingOptionsAjaxDetails(this.$.unicefFocalPts, 'unicefUsers', {dropdown: true});
+          this.fire('tab-content-attached');
         },
-        getFirst3Locations: function(locNames) {
-          if (!locNames || !locNames.length) {
-            return '';
+        _updateNoOfPdOutputs: function() {
+          if (!this.intervention.result_links) {
+            this.noOfPdOutputs = 0;
+            return;
           }
-          return locNames.slice(0, Math.min(locNames.length, 3));
+          this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
+            return rl.ll_results.length;
+          }).reduce((a,b) => a + b, 0);
+        },
+        openCpOutputAndRamIndicatorsDialog: function() {
+          let expectedResultsElem = this.$$('#expectedResults');
+          if (!expectedResultsElem) {
+            return;
+          }
+          expectedResultsElem._addNewCpOutputAndRamIndicators();
         },
         _showStartEndDateFields: function(agreement, intervention, contingencyPd) {
           if (!this._showContingencyPd(agreement)) {
             return true;
           }
-          if (contingencyPd && intervention.status !== 'active') {
-            return false;
-          }
-          return true;
+          return !(contingencyPd && intervention.status !== 'active');
+
         },
         _openLocationsDialog: function() {
           this.locationsDialog.adminLevel = null;
-          this.locationsDialog.iterventionLocationIds = this.intervention.locations;
+          this.locationsDialog.interventionLocationIds = this.intervention.flat_locations;
           this.locationsDialog.open();
         },
         _filterCountryProgrammes: function(countryProgrammes) {
@@ -526,7 +579,7 @@
           let currentCP;
           if (cpStructures && cpStructures.length) {
             if (cpStructures.length === 1) {
-              currentCP = cpStructures[0].id;
+              currentCP = cpStructures[0];
             } else {
               currentCP = this._getCurrentCountryProgramme(cpStructures);
             }
@@ -549,20 +602,14 @@
           this.set('intervention.permissions.required.end', isRequired);
         },
         _showContingencyPd: function(agreement) {
-          if (!agreement) {
-            return false;
-          }
-          if ('PCA' === agreement.agreement_type) {
-            return true;
-          }
-          return false;
+          return agreement && 'PCA' === agreement.agreement_type;
         },
         _initDocTypes: function(documentTypes) {
           if (!(documentTypes instanceof Array && documentTypes.length)) {
             return;
           }
-          var pcaTypes = [];
-          var ssfaTypes = [];
+          let pcaTypes = [];
+          let ssfaTypes = [];
           documentTypes.forEach(function(type) {
             if (type.value !== 'SSFA') {
               pcaTypes.push(type);
@@ -578,7 +625,7 @@
         _interventionChanged: function(intervention) {
           if (intervention && typeof intervention === 'object' && Object.keys(intervention).length > 0) {
             if (!intervention.id) {
-              this.set('selectedPartnerId', null);
+              this.set('selectedPartnerId', undefined);
             }
 
             this.set('fieldsResetted', false);
@@ -597,7 +644,7 @@
           this.$.documentType.resetInvalidState();
           this.$.plannedBudget.resetValidations();
 
-          var fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
+          let fields = ['documentType', 'title', 'unicefOffices', 'unicefFocalPts',
             'partnerFocalPts', 'cpStructure', 'intStart', 'intEnd'];
           fields.forEach(function(field) {
             this.fieldValidationReset('#' + field);
@@ -613,9 +660,9 @@
         _setYears: function(interventionStart, interventionEnd) {
           if (typeof interventionStart === 'string' && interventionStart !== ''
               && typeof interventionEnd === 'string' && interventionEnd !== '') {
-            var start = parseInt(interventionStart.substr(0, 4), 10);
-            var end = parseInt(interventionEnd.substr(0, 4), 10);
-            var years = [];
+            let start = parseInt(interventionStart.substr(0, 4), 10);
+            let end = parseInt(interventionEnd.substr(0, 4), 10);
+            let years = [];
             while (start <= end) {
               years.push({
                 value: start,
@@ -689,8 +736,8 @@
 
         _daysUntilExpiry: function(end) {
           if (this.isFutureDate(end)) {
-            var today = new Date().toString();
-            var diff = this.dateDiff(today, end);
+            let today = new Date().toString();
+            let diff = this.dateDiff(today, end);
             if (diff) {
               return diff + ' days until expiry';
             }
@@ -720,77 +767,48 @@
               frsLatestEndDate, 'end date', true));
           this.$.intEnd.updateStyles();
         },
-        _updateInteventionLocAndClusters: function() {
+
+        _updateInteventionLocClustersSections: function() {
           if (!this.intervention) {
             return;
           }
-          let locAndClusters = this._extractLocAndClustersFromIndicators();
-          this.set('intervention.locations', locAndClusters.locationIds);
-          this.set('intervention.location_names', locAndClusters.locationNames);
-          this.set('intervention.cluster_names', locAndClusters.clusterNames);
+          // Override intervention cluster names to cover delete and edit indicators also, beside create
+          this.set('intervention.cluster_names', this._extractClusterNamesFromIndicators());
         },
-        _extractLocAndClustersFromIndicators: function() {
-          let locAndClusters = {
-            locationIds: [],
-            clusterNames: [],
-            locationNames: [],
-          };
 
-          this.intervention.result_links.forEach(function(rl) {
+        _extractClusterNamesFromIndicators: function() {
+          let clusterNames = new Set();
+
+          this.intervention.result_links.forEach((rl) => {
             if (_.isEmpty(rl.ll_results)) {
               return;
             }
-            rl.ll_results.forEach(function(llResult) {
+            rl.ll_results.forEach((llResult) => {
               if (_.isEmpty(llResult.applied_indicators)) {
                 return;
               }
-              llResult.applied_indicators.forEach(function(indicator) {
-                if (!_.isEmpty(indicator.locations)) {
-                  [].push.apply(locAndClusters.locationIds,
-                      this._getUniqueLocIds(indicator.locations, locAndClusters.locationIds));
-                }
-
+              llResult.applied_indicators.forEach((indicator) => {
                 if (indicator.cluster_name) {
-                  [].push.apply(locAndClusters.clusterNames,
-                      this._getUniqueClusterNames(indicator.cluster_name, locAndClusters.clusterNames));
+                  clusterNames.add(indicator.cluster_name);
                 }
-              }, this);
+              });
 
-            }, this);
-          }, this);
+            });
+          });
 
-          if (!_.isEmpty(locAndClusters.locationIds)) {
-            [].push.apply(locAndClusters.locationNames,
-                this._extractLocationNames(locAndClusters.locationIds));
-          }
-          return locAndClusters;
+          return Array.from(clusterNames);
         },
-        _extractLocationNames: function(locationIds) {
-          let selectedLocations = this.locations.filter(function(loc) {
-            return locationIds.indexOf(parseInt(loc.id)) > -1;
-          });
-          let locNames = selectedLocations.map(function(l) {
-            return l.name;
-          });
-          return locNames;
-        },
-        _getUniqueLocIds: function(indicatorLocIds, interventionLocIds) {
-          let uniqueLocIds = indicatorLocIds.filter(function(indicLoc) {
-            return interventionLocIds.indexOf(indicLoc) < 0;
-          });
-          return uniqueLocIds;
-        },
-        _getUniqueClusterNames: function(indicatorClusterName, intervetionClusterNames) {
-          if (intervetionClusterNames.indexOf(indicatorClusterName) > -1) {
-            return [];
-          }
-          return [indicatorClusterName];
-        },
+
         _isEmpty: function(length) {
-          return !!!length;
+          return !length;
+        },
+
+        _showReportingRequirements: function(prpModeOff, permission) {
+          return !prpModeOff && permission;
         }
+
       });
     })();
-  </script>
 
+  </script>
 </dom-module>

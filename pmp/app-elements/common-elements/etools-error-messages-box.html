@@ -8,10 +8,13 @@
 
   <template strip-whitespace>
     <style include="buttons-styles">
+      [hidden] {
+        display: none !important;
+      }
       :host {
-        @apply(--layout-horizontal);
-        @apply(--layout-flex);
-        @apply(--etools-error-messages-box);
+        @apply --layout-horizontal;
+        @apply --layout-flex;
+        @apply --etools-error-messages-box;
       }
       :host([hidden]) {
         display: none;
@@ -39,18 +42,22 @@
       }
       .errors-box-actions {
         margin-top: 20px;
-        @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
       }
       paper-button {
         margin: 0;
+      }
+      .cancel-li-display {
+        display: block;
       }
     </style>
 
     <etools-content-panel class="errors-box" panel-title="[[title]]">
       <ul>
         <template is="dom-repeat" items=[[errors]]>
-          <li>[[item]]</li>
+          <li hidden$="[[_startsWithEmptySpace(item)]]">[[item]]</li>
+          <li hidden$="[[!_startsWithEmptySpace(item)]]" class="cancel-li-display">[[item]]</li>
         </template>
       </ul>
 
@@ -86,7 +93,9 @@
             reflectToAttribute: true
           }
         },
-
+        _startsWithEmptySpace: function(val) {
+          return val.startsWith(' ');
+        },
         _errorsLengthChanged: function(errors) {
           if (!errors || (errors && !errors.length)) {
             return true;

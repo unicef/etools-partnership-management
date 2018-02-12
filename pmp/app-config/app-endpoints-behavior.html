@@ -47,7 +47,7 @@
       if (!prpCountry) {
         let countryNotFoundInPrpWarning = 'Error: ' + this.currentUser.country.name + ' country data was ' +
             'not found in the available PRP countries by business_area_code!';
-        this.fire('toast', {text: countryNotFoundInPrpWarning, showCloseBtn: true});
+        throw new Error(countryNotFoundInPrpWarning);
       }
 
       return prpCountry.id;
@@ -137,9 +137,12 @@
     },
 
     addTokenToRequestOptions: function(endpointName, data) {
-      let options = {
-        endpoint: this.getEndpoint(endpointName, data)
-      };
+      let options = {};
+      try {
+        options.endpoint = this.getEndpoint(endpointName, data);
+      } catch (e) {
+        return Promise.reject(e);
+      }
 
       // create defer object (utils behavior contains to many other unneeded methods to be used)
       let defer = this._getDeferrer();

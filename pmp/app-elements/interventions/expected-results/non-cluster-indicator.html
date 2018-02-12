@@ -14,17 +14,17 @@
 
 <link rel="import" href="behaviors/indicators-common-behavior.html">
 
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
-
 <dom-module id="non-cluster-indicator">
   <template strip-whitespace>
     <style include="grid-layout-styles shared-styles required-field-starred-styles">
+       [hidden] {
+        display: none !important;
+      }
       .radioGroup {
         width: 320px;
       }
       paper-input,
-      paper-textarea,
-      paper-material {
+      paper-textarea {
         width: 100%;
       }
       .unknown {
@@ -34,12 +34,7 @@
       .no-left-padding {
         padding-left: 0px !important;
       }
-      paper-checkbox {
-        --paper-checkbox-ink-size: 0px;
-      }
-      paper-radio-button {
-        --paper-radio-button-ink-size: 0px;
-      }
+
     </style>
 
     <div class="row-h flex-c">
@@ -53,7 +48,7 @@
 
         </div>
       </div>
-      <div class="layout-vertical">
+      <div class="layout-vertical" hidden$="[[_unitIsNumeric(indicator.indicator.unit)]]">
         <label class="paper-label">Display Type </label>
         <div class="radioGroup">
            <paper-radio-group  selected="{{indicator.indicator.display_type}}">
@@ -133,7 +128,7 @@
                                    label="Locations"
                                    placeholder="&#8212;"
                                    selected-values="{{indicator.locations}}"
-                                   options="[[locations]]"
+                                   options="[[locationOptions]]"
                                    option-label="name"
                                    option-value="id"
                                    required
@@ -152,7 +147,6 @@
         is: 'non-cluster-indicator',
 
         behaviors: [
-          EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
           EtoolsPmpApp.Behaviors.IndicatorsCommonBehavior,
           EtoolsLogsBehavior
         ],
@@ -167,9 +161,8 @@
             value: false,
             observer: '_readonlyChanged'
           },
-          locations: {
-            type: Array,
-            statePath: 'locations'
+          locationOptions: {
+            type: Array
           },
           baselineIsUnknown: {
             type: Boolean
@@ -193,7 +186,7 @@
             this.baselineIsUnknown = false;
             this.readonly = false;
           } else {
-            this.baselineIsUnknown = indicator.baseline ? false : true;
+            this.baselineIsUnknown = (indicator.baseline || parseInt(indicator.baseline) === 0)  ? false : true;
             this.readonly = true;
           }
         },
@@ -210,20 +203,17 @@
           return this.validateComponents(elemIds);
         },
         resetValidations: function() {
-          let elemIds = ['titleEl', 'locationsDropdw', this._getIndicatorTargetElId()];
+          let elemIds = ['titleEl', 'locationsDropdw', 'targetElForNumericUnit', 'targetElForNonNumericUnit'];
           let i;
           for (i = 0; i < elemIds.length; i++) {
             let elem = this.$$('#' + elemIds[i]);
             if (elem) {
               elem.invalid = false;
-            } else {
-              this.logWarn('Elem ' + elemIds[i] + ' not found');
             }
           }
         },
 
         _getIndicatorTargetElId: function() {
-          let elId = 'targetElForNumericUnit';
           if (!this.indicator || !this.indicator.indicator) {
             return 'targetElForNumericUnit';
           }
