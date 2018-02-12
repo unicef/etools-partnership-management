@@ -83,6 +83,23 @@
             done();
           });
         });
+
+        test('Future dates test', function(done) {
+          //https://github.com/unicef-polymer/etools-ajax/pull/35/files
+          flush(function() {
+            let partnerSignatureDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Signed by Partner Date"]');
+            partnerSignatureDate.value = '2028-01-01';
+            expect(partnerSignatureDate.errorMessage).to.equal('Date cannot be in the future!')
+            expect(partnerSignatureDate.invalid).to.equal(true);
+
+            let unicefSignatureDate = PmpTestsHelper.shadowDomQuery(intervReviewAndSign, 'etools-date-input[label="Signed by UNICEF Date"]');
+            unicefSignatureDate.value = '2028-01-01';
+            expect(unicefSignatureDate.errorMessage).to.equal('Date cannot be in the future!')
+            expect(unicefSignatureDate.invalid).to.equal(true);
+
+            done();
+          });
+        });
       });
     </script>
   </body>
