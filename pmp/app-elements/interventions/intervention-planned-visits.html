@@ -43,7 +43,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode)]]"
                                  icon="cancel">
               </paper-icon-button>
             </div>
@@ -186,7 +186,7 @@
          * The planned visit row data can be removed only if it doesn't have and id assigned(only if is not saved)
          */
         _canBeRemoved: function(index, editMode) {
-          if (!editMode) {
+          if (!editMode || !this.dataItems || !this.dataItems.length) {
             return false;
           }
           var plannedVisit = this.dataItems[index];
