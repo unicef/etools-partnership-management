@@ -125,9 +125,10 @@
           this._agreementIdChanged(this.agreementId);
         },
         _agreementIdChanged: function(agreementId) {
-          if (!this.agreements) {
+          if (!this.agreements || !this.agreements.length || !agreementId) {
             return;
           }
+
           let agreement = _.find(this.agreements, function(agreement) {
             return agreement.id === agreementId;
           });
@@ -192,11 +193,11 @@
         },
 
         resetValidations: function() {
-          let agEl = this.$.agreements;
+          let agEl = this.$$('#agreements');
           if (agEl) {
             agEl.resetInvalidState();
           }
-          let pEl = this.$.partner;
+          let pEl = this.$$('#partner');
           if (pEl) {
             pEl.resetInvalidState();
           }
@@ -206,14 +207,14 @@
           let valid = true;
           if (!this.agreementId) {
             valid = false;
-            let agEl = this.$.agreements;
+            let agEl = this.$$('#agreements');
             if (agEl) {
               agEl.invalid = true;
             }
           }
           if (!this.partnerId) {
             valid = false;
-            let pEl = this.$.partner;
+            let pEl = this.$$('#partner');
             if (pEl) {
               pEl.invalid = true;
             }

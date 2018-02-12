@@ -24,6 +24,7 @@
       },
       availableCpOutputs: {
         type: Array,
+        value: [],
         computed: '_computeAvailableCpOutputs(cpOutputs, alreadySelectedCpOutputs, selectedCpStructure)'
       },
       alreadySelectedCpOutputs: {
@@ -68,12 +69,12 @@
 
     removeCpOutputRamIndicatorsDialog: function() {
       if (this.cpOutputRamIndicatorsEditElem) {
-        Polymer.dom(document.querySelector('body')).removeChild(this.cpOutputRamIndicatorsEditElem);
+        document.querySelector('body').removeChild(this.cpOutputRamIndicatorsEditElem);
       }
     },
 
     createAddEditCpOutputRamIndicatorsElement: function() {
-      this.cpOutputRamIndicatorsEditElem = Polymer.dom(document.querySelector('body'))
+      this.cpOutputRamIndicatorsEditElem = document.querySelector('body')
           .querySelector('#cpOutputRamIndicatorsEditElem');
       if (!this.cpOutputRamIndicatorsEditElem) {
         this.cpOutputRamIndicatorsEditElem = document.createElement('result-cp-output-and-ram-indicators');
@@ -87,7 +88,7 @@
         this.cpOutputRamIndicatorsEditElem.addEventListener('expected-result-updated',
             this._handleResultUpdated.bind(this));
 
-        Polymer.dom(document.querySelector('body')).appendChild(this.cpOutputRamIndicatorsEditElem);
+        document.querySelector('body').appendChild(this.cpOutputRamIndicatorsEditElem);
       }
     },
 

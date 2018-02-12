@@ -3,81 +3,80 @@
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
   /** @polymerBehavior EtoolsPmpApp.Behaviors.ModifiedInterventionFields */
   EtoolsPmpApp.Behaviors.ModifiedInterventionFields = {
-     _objectFieldIsModified: function(fieldName) {
-        // jscs:disable maximumLineLength
-        var isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
-        // jscs:enable maximumLineLength
-        var dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
-        if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
-          // Covers dropdown arrays which can have same content but with changed order
-          if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
-            isModified = false;
-          }
+    _objectFieldIsModified: function(fieldName) {
+      // jscs:disable maximumLineLength
+      let isModified = JSON.stringify(this.originalIntervention[fieldName]) !== JSON.stringify(this.intervention[fieldName]);
+      // jscs:enable maximumLineLength
+      let dropdownArrayFields = ['partner_focal_points', 'unicef_focal_points', 'offices'];
+      if (isModified && dropdownArrayFields.indexOf(fieldName) > -1) {
+        // Covers dropdown arrays which can have same content but with changed order
+        if (this._arraysAreEqual(this.originalIntervention[fieldName], this.intervention[fieldName])) {
+          isModified = false;
         }
-        return isModified;
-      },
-      _arraysAreEqual: function(array1, array2) {
-        var differencesArray = [];
-        if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
-          return false;
-        }
-        if (array1.length > array2.length) {
-          differencesArray = _.difference(array1, array2);
-        } else {
-          differencesArray = _.difference(array2, array1);
-        }
-        return _.isEmpty(differencesArray);
+      }
+      return isModified;
+    },
+    _arraysAreEqual: function(array1, array2) {
+      let differencesArray = [];
+      if ((!array1 && (array2 && array2.length)) || (!array2 && (array1 && array1.length))) {
+        return false;
+      }
+      if (array1.length > array2.length) {
+        differencesArray = _.difference(array1, array2);
+      } else {
+        differencesArray = _.difference(array2, array1);
+      }
+      return _.isEmpty(differencesArray);
 
-      },
-      _primitiveFieldIsModified: function(fieldName) {
-        return this.originalIntervention[fieldName] !== this.intervention[fieldName];
-      },
+    },
+    _primitiveFieldIsModified: function(fieldName) {
+      return this.originalIntervention[fieldName] !== this.intervention[fieldName];
+    },
 
     _getModifiedReviewAndSign: function() {
-        var updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
-          'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
-          'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
-          'signed_pd_document_file'];
-        var updatableObjectFields = ['amendments'];
+      let updatableFields = ['submission_date', 'submission_date_prc', 'review_date_prc',
+        'prc_review_document', 'prc_review_document_file', 'partner_authorized_officer_signatory',
+        'signed_by_partner_date', 'unicef_signatory', 'signed_by_unicef_date', 'signed_pd_document',
+        'signed_pd_document_file', 'in_amendment'];
 
-        return this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
-      },
-      _getModifiedInterventionDetails: function() {
-        var updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
-          'start', 'end', 'contingency_pd'];
-        var updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
-          'sections', 'planned_budget', 'planned_visits'];
-        var modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
+      return this._buildModifiedInterventionObject(updatableFields, []);
+    },
+    _getModifiedInterventionDetails: function() {
+      let updatableFields = ['agreement', 'document_type', 'title', 'country_programme',
+        'start', 'end', 'contingency_pd'];
+      let updatableObjectFields = ['offices', 'unicef_focal_points', 'partner_focal_points',
+        'sections', 'flat_locations', 'planned_budget', 'planned_visits'];
+      let modifiedDetails = this._buildModifiedInterventionObject(updatableFields, updatableObjectFields);
 
-        return Object.assign({}, modifiedDetails);
-      },
+      return Object.assign({}, modifiedDetails);
+    },
 
-      _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
-        var modifiedObject = {};
+    _buildModifiedInterventionObject: function(updatableFields, updatableObjectFields) {
+      let modifiedObject = {};
 
-        updatableFields.forEach(function(fieldName) {
-          if (this._primitiveFieldIsModified(fieldName)) {
-            modifiedObject[fieldName] = this.intervention[fieldName];
-          }
-        }.bind(this));
-
-        updatableObjectFields.forEach(function(fieldName) {
-          if (this._objectFieldIsModified(fieldName)) {
-            modifiedObject[fieldName] = this.intervention[fieldName];
-          }
-        }.bind(this));
-
-        return modifiedObject;
-      },
-
-      _prepareAttachments: function() {
-        if (_.isEmpty(this.intervention.attachments)) {
-          return [];
+      updatableFields.forEach((fieldName) => {
+        if (this._primitiveFieldIsModified(fieldName)) {
+          modifiedObject[fieldName] = this.intervention[fieldName];
         }
-        var modifAttachments = this.intervention.attachments
+      });
+
+      updatableObjectFields.forEach((fieldName) => {
+        if (this._objectFieldIsModified(fieldName)) {
+          modifiedObject[fieldName] = this.intervention[fieldName];
+        }
+      });
+
+      return modifiedObject;
+    },
+
+    _prepareAttachments: function() {
+      if (_.isEmpty(this.intervention.attachments)) {
+        return [];
+      }
+      let modifAttachments = this.intervention.attachments
           .filter(this._attachmentIsNewOrModified.bind(this))
-          .map(function(attachment) {
-            var _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
+          .map((attachment) => {
+            let _sendAttachmentFile = (attachment.raw instanceof File) ? true : false;
             if (!_sendAttachmentFile && attachment.id) {
               return {
                 id: attachment.id,
@@ -92,22 +91,22 @@
               };
             }
           });
-        return modifAttachments;
-      },
-       _attachmentIsNewOrModified: function(attachment) {
-        if (_.isEmpty(this.originalIntervention.attachments)) {
-          return true;
-        }
-        if (!attachment.id) {
-          return true;
-        }
-        var originalAttachment = this.originalIntervention.attachments.find(function(att) {
-          return att.id === attachment.id;
-        });
-        if (!originalAttachment) {
-          return true;
-        }
-        return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
+      return modifAttachments;
+    },
+    _attachmentIsNewOrModified: function(attachment) {
+      if (_.isEmpty(this.originalIntervention.attachments)) {
+        return true;
       }
-   };
+      if (!attachment.id) {
+        return true;
+      }
+      let originalAttachment = this.originalIntervention.attachments.find((att) => {
+        return att.id === attachment.id;
+      });
+      if (!originalAttachment) {
+        return true;
+      }
+      return (JSON.stringify(originalAttachment) !== JSON.stringify(attachment));
+    }
+  };
 </script>

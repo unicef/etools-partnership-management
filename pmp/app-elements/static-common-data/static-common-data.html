@@ -4,6 +4,7 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-config/app-dexie-db-config.html">
+<link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="behaviors/country-programmes-data.html">
 <link rel="import" href="behaviors/dropdowns-pmp-data.html">
@@ -24,6 +25,7 @@
       behaviors: [
         EtoolsLogsBehavior,
         EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.CountryProgrammesData,
         EtoolsPmpApp.Behaviors.DropdownsPmpData,
@@ -35,28 +37,49 @@
         EtoolsPmpApp.Behaviors.UnicefUsersData,
         EtoolsPmpApp.Behaviors.UserCountryData,
         EtoolsPmpApp.Behaviors.DisaggregationsData,
-        EtoolsPmpApp.Behaviors.PRPCountries
+        EtoolsPmpApp.Behaviors.PRPCountries,
       ],
       properties: {
-        dataEndpointNames: {
+        pmpStaticDataEndpointsNames: {
           type: Array,
           value: ['countryProgrammes', 'dropdownsPmp', 'dropdownsStatic', 'locations', 'offices',
-            'sections', 'sectors', 'unicefUsers', 'userCountryDetails', 'addGetDisaggregations', 'getPRPCountries']
+            'sections', 'sectors', 'unicefUsers', 'userCountryDetails']
+        },
+        pmpDataEndpointNamesForPrpSections: {
+          type: Array,
+          value: ['addGetDisaggregations']
+        },
+        prpStaticDataEndpointsNames: {
+          type: Array,
+          value: ['getPRPCountries']
         }
       },
 
       ready: function() {
-        let currentEndpoint;
-        let self = this;
-        this.dataEndpointNames.forEach(function(endpointName) {
+        // get PMP static data
+        this._getStaticData(this.pmpStaticDataEndpointsNames);
+        this._handlePrpData();
+      },
 
-          // currentEndpoint = self.getEndpoint(endpointName);
+      _handlePrpData: function() {
+        this._waitForEnvFlagsToLoad().then(function() {
+          if (this.showPrpReports()) {
+            this._getStaticData(this.pmpDataEndpointNamesForPrpSections);
+            if (this.prpServerIsOn()) {
+              this._getStaticData(this.prpStaticDataEndpointsNames);
+            }
+          }
+        }.bind(this));
+      },
+
+      _getStaticData: function(endpointsNames) {
+        let self = this;
+        endpointsNames.forEach(function(endpointName) {
           self._makeRequest(endpointName, self._getEndpointSuccessHandler(endpointName), self._errorHandler);
         });
       },
 
       _makeRequest: function(endpointName, successHandler, errorHandler) {
-
         let self = this;
         this.fireRequest(endpointName, {}).then(function(resp) {
           successHandler.bind(self, resp)();

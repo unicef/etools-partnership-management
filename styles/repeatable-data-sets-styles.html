@@ -7,25 +7,25 @@
   <template>
     <style include="action-icons-btns-styles">
       .item-container {
-        background: var(--ecp-content-bg-color, --primary-background-color);
+        background: var(--ecp-content-bg-color, var(--primary-background-color));
       }
       .item-container.no-h-margin {
         padding-right: 0;
         padding-left: 0;
       }
       .item-actions-container {
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
 
       .item-actions-container .actions {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
-        @apply(--layout-wrap);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-wrap;
       }
 
       .item-container .item-content {
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
+        @apply --layout-vertical;
+        @apply --layout-flex;
         margin-left: 10px;
         border-left: 1px solid var(--darker-divider-color);
       }
@@ -35,8 +35,8 @@
       }
 
       #bottom-actions {
-        @apply(--layout-horizontal);
-        @apply(--layout-end-justified);
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
         overflow: visible;
         padding-top: 15px;
         padding-bottom: 25px;
@@ -60,8 +60,8 @@
       }
 
       .item-actions-container:before {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
         position: absolute;
         top: -32px;
         right: -12px;

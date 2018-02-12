@@ -27,7 +27,7 @@
 
         --paper-fab-keyboard-focus-background: var(--success-color);
         --paper-fab: {
-          @apply(--paper-fab-btn-green);
+          @apply --paper-fab-btn-green;
         };
       }
       paper-input {
@@ -43,7 +43,7 @@
               <paper-icon-button class="action delete"
                                  on-tap="_openDeleteConfirmation"
                                  data-args$="[[index]]"
-                                 disabled="[[!_canBeRemoved(index, editMode)]]"
+                                 disabled="[[!_canBeRemoved(index, editMode, item.id)]]"
                                  icon="cancel">
               </paper-icon-button>
             </div>

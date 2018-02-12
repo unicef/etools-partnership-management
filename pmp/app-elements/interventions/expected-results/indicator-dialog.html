@@ -1,12 +1,10 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import"
       href="../../../../bower_components/etools-searchable-multiselection-menu/etools-single-selection-menu.html">
@@ -17,34 +15,37 @@
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../../styles/shared-styles.html">
-<link rel="import" href="../../../../styles/page-layout-styles.html">
+<link rel="import" href="../../../../styles/required-field-styles.html">
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
 <link rel="import" href="indicator-dissaggregations.html">
 <link rel="import" href="cluster-indicator-disaggregations.html">
 <link rel="import" href="cluster-indicator.html">
 <link rel="import" href="non-cluster-indicator.html">
+<link rel="import" href="behaviors/indicator-dialog-tabs-behavior.html">
 <link rel="import" href="behaviors/save-indicator-behavior.html">
+<link rel="import" href="../../environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
 <dom-module id="indicator-dialog">
   <template strip-whitespace>
-    <style include="page-layout-styles grid-layout-styles shared-styles">
+    <style include="grid-layout-styles shared-styles required-field-starred-styles">
       [hidden] {
         display: none !important;
       }
 
-      paper-input,
-      paper-textarea,
-      paper-material {
+      paper-input {
         width: 100%;
+      }
+      :host {
+        --border-color: var(--dark-divider-color);
       }
 
       .indicator-content {
         margin: 16px 24px;
         margin-bottom: 40px;
-        border: solid 1px var(--dark-divider-color);
+        border: solid 1px var(--border-color);
         overflow-x: hidden; /*To avoid horizontal scroll in IE11 */
       }
 
@@ -71,23 +72,12 @@
                    on-confirm-btn-clicked="_validateAndSaveIndicator"
                    ok-btn-text="Save" keep-dialog-open disable-confirm-btn="[[disableConfirmBtn]]"
                    spinner-text="[[spinnerText]]">
-      <div class="page-top-content in-modal">
-        <div class="top-content-row">
-          <paper-tabs id="indicatorTabs"
-                      selected="{{activeTab}}"
-                      attr-for-selected="name"
-                      on-selected-changed="_centerDialog"
-                      noink bottom-item>
-            <paper-tab name="details" link>
-              <span class="tab-content">DETAILS</span>
-            </paper-tab>
 
-            <paper-tab name="disaggregations" link>
-              <span class="tab-content">[[_getDisaggregationsTabTitle(disaggregationsCount) ]]</span>
-            </paper-tab>
-          </paper-tabs>
-        </div>
-      </div>
+      <etools-tabs id="indicatorTabs"
+                   tabs="[[indicatorDataTabs]]"
+                   active-tab="{{activeTab}}"
+                   border-bottom
+                   on-selected-changed="_centerDialog"></etools-tabs>
 
       <iron-pages id="indicatorPages"
                   selected="{{activeTab}}"
@@ -96,29 +86,36 @@
         <div name="details">
           <div class="row-h flex-c">
             <div class="col col-4">
-              <etools-single-selection-menu id$="sectionDropdw"
+              <etools-single-selection-menu id="sectionDropdw"
                                             label="Section"
                                             selected="{{indicator.section}}"
                                             placeholder="&#8212;"
-                                            options="[[sections]]"
+                                            options="[[sectionOptions]]"
                                             option-label="name"
                                             option-value="id"
+                                            required
+                                            auto-validate
+                                            error-message="Please select section(s)"
                                             disable-on-focus-handling>
               </etools-single-selection-menu>
             </div>
           </div>
           <div class="row-h">
-            <paper-toggle-button disabled="[[!_indicatorIsNew(indicator)]]"
+            <paper-toggle-button disabled="[[_clusterToggleIsDisabled(indicator)]]"
                                  checked="{{isCluster}}"></paper-toggle-button>
             Cluster Indicator
           </div>
           <div class="indicator-content">
             <template is="dom-if" if="[[!isCluster]]">
-              <non-cluster-indicator id="nonClusterIndicatorEl" indicator="{{indicator}}"></non-cluster-indicator>
+              <non-cluster-indicator id="nonClusterIndicatorEl"
+                                     indicator="{{indicator}}"
+                                     location-options="[[locationOptions]]"></non-cluster-indicator>
             </template>
             <template is="dom-if" if="[[isCluster]]">
-              <cluster-indicator id="clusterIndicatorEl" indicator="{{indicator}}"
-                                 prp-disaggregations="{{prpDisaggregations}}"></cluster-indicator>
+              <cluster-indicator id="clusterIndicatorEl"
+                                 indicator="{{indicator}}"
+                                 prp-disaggregations="{{prpDisaggregations}}"
+                                 location-options="[[locationOptions]]"></cluster-indicator>
             </template>
           </div>
         </div>
@@ -150,16 +147,14 @@
 
         behaviors: [
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.SaveIndicator
+          EtoolsPmpApp.Behaviors.IndicatorDialogTabs,
+          EtoolsPmpApp.Behaviors.SaveIndicator,
+          EtoolsPmpApp.Behaviors.EnvironmentFlags
         ],
 
         properties: {
           indicator: {
             type: Object
-          },
-          activeTab: {
-            type: String,
-            value: 'details',
           },
           indicatorModel: {
             type: Object,
@@ -191,13 +186,27 @@
             type: Array,
             value: []
           },
-          disaggregationsCount: {
-            type: Number,
-            value: 0
-          },
           sections: {
             type: Array,
             statePath: 'sections'
+          },
+          sectionOptionsIds: {
+            type: Array
+          },
+          sectionOptions: {
+            type: Array,
+            computed: '_computeOptions(sectionOptionsIds, sections)'
+          },
+          locations: {
+            type: Array,
+            statePath: 'locations'
+          },
+          locationOptionsIds: {
+            type: Array
+          },
+          locationOptions: {
+            type: Array,
+            computed: '_computeOptions(locationOptionsIds, locations)'
           },
           isCluster: {
             type: Boolean,
@@ -219,39 +228,22 @@
           'show-toast': '_showToast'
         },
         observers: [
-          '_setDisaggregationsCount1(disaggregations, prpDisaggregations, isCluster)',
-          '_setDisaggregationsCount2(disaggregations.length, prpDisaggregations.length)',
-          'resetValidations(isCluster)'
+          'resetValidationsAndStyle(isCluster)'
         ],
 
-        _indicatorIsNew: function(indicator) {
-          return (!indicator || !indicator.id);
-        },
-
-        _setDisaggregationsCount1: function(disaggregs, prpDisaggregs) {
-          if (!this.indicator || !disaggregs || !prpDisaggregs) {
-            this.disaggregationsCount = 0;
-            return;
+        _clusterToggleIsDisabled: function(indicator) {
+          if (indicator && indicator.id) {
+            return true;
           }
-          this._setDisaggregationsCount2(disaggregs.length, prpDisaggregs.length);
-
-        },
-        _setDisaggregationsCount2: function(disaggregsLength, prpDisaggregsLength) {
-          if (this.isCluster) {
-            this.disaggregationsCount = prpDisaggregsLength;
-          } else {
-            this.disaggregationsCount = disaggregsLength;
-          }
-        },
-
-        _getDisaggregationsTabTitle: function(disaggregationsCount) {
-          return 'DISAGGREGATIONS (' + disaggregationsCount + ')';
+          return !this.prpServerIsOn();
         },
 
         openIndicatorDialog: function() {
-          this.activeTab = 'details';
+          this.updateActiveTab('details');
           this.disableConfirmBtn = false;
           this.$.indicatorDialog.opened = true;
+          let sectionDropdown = this.$$('#sectionDropdw');
+          sectionDropdown.resetInvalidState();
         },
 
         setTitle: function(title) {
@@ -309,16 +301,19 @@
           this.parseRequestErrorsAndShowAsToastMsgs(e.detail.error, this.toastEventSource);
         },
 
-        resetValidations: function() {
+        resetValidationsAndStyle: function() {
           let indicatorEl;
           if (this.isCluster) {
             indicatorEl = this.$$('#clusterIndicatorEl');
+            this.customStyle['--border-color'] = 'var(--ternary-color)';
           } else {
             indicatorEl = this.$$('#nonClusterIndicatorEl');
+            this.customStyle['--border-color'] = 'var(--dark-divider-color)';
           }
           if (indicatorEl) {
-              indicatorEl.resetValidations();
-            }
+            indicatorEl.resetValidations();
+          }
+          this.updateStyles();
         },
         resetFieldValues: function() {
           let resetModel = {
@@ -343,7 +338,7 @@
           this.indicator = JSON.parse(JSON.stringify(resetModel));
           this.disaggregations = [];
           this.prpDisaggregations = [];
-          if (this.isCluster) {
+          if (this.isCluster && this.$$('#clusterIndicatorEl')) {
             this.$$('#clusterIndicatorEl').resetFieldValues();
           }
         },
@@ -351,6 +346,18 @@
         _centerDialog: function() {
           this.$.indicatorDialog.notifyResize();
         },
+
+        _computeOptions(optionsIds, allOptions) {
+          let options = [];
+          if (!_.isEmpty(optionsIds) && !_.isEmpty(allOptions)) {
+            // filter options
+            optionsIds = optionsIds.map((id) => parseInt(id, 10));
+            options = allOptions.filter((opt) => {
+              return optionsIds.indexOf(parseInt(opt.id, 10)) > -1;
+            });
+          }
+          return options;
+        }
 
       });
     })();

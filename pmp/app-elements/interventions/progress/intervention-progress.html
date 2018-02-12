@@ -1,11 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/etools-content-panel/etools-content-panel.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
+<link rel="import" href="../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <link rel="import" href="../../../../scripts/lodash/lodash.html">
 
@@ -29,7 +29,10 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles">
+    <style include="page-common-styles shared-styles data-table-styles grid-layout-styles list-filter-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
       #progress-summary etools-progress-bar {
         margin-top: 16px;
       }
@@ -76,7 +79,7 @@
       }
     </style>
 
-    <paper-material id="progress-summary" class="content-section" elevation="1">
+    <div id="progress-summary" class="content-section" elevation="1">
       <div class="row-h">
         <div class="layout-vertical col-4">
           <etools-form-element-wrapper label="PD Duration">
@@ -104,7 +107,7 @@
           </etools-form-element-wrapper>
         </div>
       </div>
-    </paper-material>
+    </div>
 
     <etools-content-panel class="content-section" panel-title="Results">
       <div class="row-h" hidden$="[[!_emptyList(progress.details.cp_outputs)]]">
@@ -238,7 +241,7 @@
            * triggered by parent element on stamp or by tap event on tabs
            */
           this.fire('global-loading', {active: false, loadingSource: 'interv-page'});
-          this.fire('intervention-page-attached');
+          this.fire('tab-content-attached');
         },
 
         _requestProgressData: function(id, prpCountries, currentUser) {

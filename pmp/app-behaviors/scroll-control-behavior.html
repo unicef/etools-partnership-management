@@ -30,11 +30,17 @@
       return appHeadLayout.$$('#contentContainer');
     },
 
-    _setContentScrollPosition: function(offsetFromTop) {
+    scrollToTop: function() {
       if (!this.contentContainer) {
         return;
       }
-      this.contentContainer.scrollTop = offsetFromTop;
+      this.contentContainer.scrollTop = 0;
+    },
+
+    scrollToTopOnCondition: function(condition) {
+      if (condition) {
+        this.scrollToTop();
+      }
     }
 
   };

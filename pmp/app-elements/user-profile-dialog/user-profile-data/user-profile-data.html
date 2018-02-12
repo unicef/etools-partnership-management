@@ -52,24 +52,21 @@
 
       saveProfile: function(profile) {
         if (_.isEmpty(profile)) {
-          return;
-        }
-        if (!_.isEmpty(profile)) {
-          this.fire('global-loading', {
-            message: 'Saving profile data...',
-            active: true,
-            loadingSource: this.profileSaveLoadingMsgSource
-          });
-          this.set('_saveActionInProgress', true);
-          this._makeProfileRequest({method: 'PATCH', body: profile});
-        } else {
-          // TODO: this ain't right, each profile property value should be checked for changes,
-          // if no changes found, then fire this toast
+          // empty profile means no changes found
           this.fire('toast', {
             text: 'There is nothing to save. No change detected on your profile.',
             showCloseBtn: true
           });
+          return;
         }
+
+        this.fire('global-loading', {
+          message: 'Saving profile data...',
+          active: true,
+          loadingSource: this.profileSaveLoadingMsgSource
+        });
+        this.set('_saveActionInProgress', true);
+        this._makeProfileRequest({method: 'PATCH', body: profile});
       },
 
       _handleResponse: function(response) {
