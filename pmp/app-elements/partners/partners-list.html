@@ -15,7 +15,6 @@
 
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../../app-behaviors/app-navigation-helper-behavior.html">
-<link rel="import" href="../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../app-behaviors/list-filters-behavior.html">
 <link rel="import" href="../../app-behaviors/common-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -71,10 +70,6 @@
 
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <div class="dropdown-with-clear-btn">
-            <paper-icon-button class="clear dark" icon="close"
-                               on-tap="clearDropdown"
-                               disabled$="[[filter.disabled]]"
-                               hidden$="[[filter.disabled]]"></paper-icon-button>
             <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
               <paper-listbox class="dropdown-content"
                           attr-for-selected="name"
@@ -233,7 +228,6 @@
           EtoolsPmpApp.Behaviors.Endpoints,
           EtoolsPmpApp.Behaviors.AppNavigationHelper,
           EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-          EtoolsPmpApp.Behaviors.Dropdown,
           EtoolsPmpApp.Behaviors.ListFilters,
           EtoolsPmpApp.Behaviors.Common,
           EtoolsPmpApp.Behaviors.ListsCommon

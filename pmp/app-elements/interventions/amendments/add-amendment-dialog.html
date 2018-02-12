@@ -8,7 +8,6 @@
 
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-behavior.html">
 <link rel="import" href="../../../app-config/app-endpoints-behavior.html">
-<link rel="import" href="../../../app-behaviors/dropdown-behavior.html">
 <link rel="import" href="../../../app-behaviors/ajax-errors-parser-behavior.html">
 <link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 
@@ -74,8 +73,7 @@
                                     dynamic-align
                                     required
                                     hide-search
-                                    error-message="Type is required"
-                                    on-focused-changed="_onFocusChangedUpdateAutovalidate">
+                                    error-message="Type is required">
         </etools-multi-selection-menu>
       </div>
       <div class="row-h flex-c" hidden$="[[!newAmendment.types.length]]">
@@ -120,7 +118,6 @@
         EtoolsAjaxRequestBehavior,
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.AjaxErrorsParser,
-        EtoolsPmpApp.Behaviors.Dropdown,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore
       ],
 
