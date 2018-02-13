@@ -119,6 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--user="[[user]]"-->
     <!--toast="[[currentToastMessage]]"></etools-piwik-analytics>-->
 
+    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location
         route="{{route}}"
@@ -261,6 +262,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             reflectToAttribute: true
           },
+          user: Object,
           permissions: {
             type: Object,
             value: null
