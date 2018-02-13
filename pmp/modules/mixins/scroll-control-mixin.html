@@ -1,0 +1,48 @@
+<script>
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+   /*
+  * @polymer
+  * @mixinFunction
+  */
+  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends baseClass {
+
+    static get properties() {
+      return {
+        contentContainer: {
+          type: Object,
+          value: function() {
+            return this._getContentContainer();
+          }
+        }
+      };
+    }
+
+    _getContentContainer() {
+      if (window.isIE) {
+        return document.documentElement;
+      }
+      let appShell = document.querySelector('app-shell');
+      if (!appShell) {
+        return null;
+      }
+      let appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
+      if (!appHeadLayout) {
+        return null;
+      }
+      return appHeadLayout.shadowRoot.querySelector('#contentContainer');
+    }
+
+    scrollToTop() {
+      this.contentContainer.scrollTop = 0;
+    }
+
+    scrollToTopOnCondition(condition) {
+      if (condition) {
+        this.scrollToTop();
+      }
+    }
+
+  };
+</script>
