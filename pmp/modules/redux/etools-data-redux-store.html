@@ -1,5 +1,5 @@
-<link rel="import" href="../../scripts/redux.html">
-<link rel="import" href="../../../../bower_components/polymer-redux/polymer-redux.html">
+<link rel="import" href="../scripts/redux.html">
+<link rel="import" href="../../../bower_components/polymer-redux/polymer-redux.html">
 
 <script>
   'use strict';
@@ -48,11 +48,8 @@
     locationTypes: []
   };
 
-  let commonStaticDataStore = Redux.createStore(function(state, action) {
+  const reduxStoreReducer = (state, action) => {
 
-    if (!state) {
-      return reduxStoreDefaultData;
-    }
     switch (action.type) {
       case 'SET_FILE_TYPES':
         // console.log('set fileTypes data...', action.fileTypes);
@@ -209,13 +206,15 @@
       case 'SET_ENV_FLAGS':
         return Object.assign({}, state, {envFlags: action.envFlags});
     }
-  });
+  };
 
-  window.addEventListener('storage', function(ev) {
-    if (ev.key !== 'update-redux' || !ev.newValue) {
+  const dataReduxStore = Redux.createStore(reduxStoreReducer, reduxStoreDefaultData);
+
+  window.addEventListener('storage', function(e) {
+    if (e.key !== 'update-redux' || !e.newValue) {
       return;
     }
-    commonStaticDataStore.dispatch(JSON.parse(ev.newValue));
+    dataReduxStore.dispatch(JSON.parse(e.newValue));
   });
 
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -226,6 +225,6 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = PolymerRedux(commonStaticDataStore) || {};
+  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = PolymerRedux(dataReduxStore) || {};
   // the || {} at the end is there to make the linting script happy
 </script>
