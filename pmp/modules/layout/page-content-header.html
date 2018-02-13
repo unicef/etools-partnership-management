@@ -1,8 +1,8 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="page-content-header">
-  <template strip-whitespace>
+  <template>
     <style>
       *[hidden] {
         display: none !important;
@@ -88,17 +88,26 @@
   <script>
     'use strict';
 
-    Polymer({
-      is: 'page-content-header',
-
-      properties: {
-        withTabsVisible: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true
-        }
+    /**
+     * @polymer
+     * @customElement
+     */
+    class PageContentHeader extends Polymer.Element {
+      static get is() {
+        return 'page-content-header';
       }
+      static get properties() {
+        return {
+          withTabsVisible: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          }
+        };
+      }
+    }
 
-    });
+    window.customElements.define(PageContentHeader.is, PageContentHeader);
+
   </script>
 </dom-module>
