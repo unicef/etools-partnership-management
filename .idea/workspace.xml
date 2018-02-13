@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="52d185e2-83c0-4a4a-ae67-3f38b7261629" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/config/config.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/config/dexie-db-config.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/endpoints/endpoints-mixin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/endpoints/endpoints.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/redux/store/etools-data-redux-store.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/user/user-data.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pmp/modules/user/user-permissions-mixin.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.jscsrc" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.jshintrc" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/agreement-details.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/agreements.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/countries.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/dropdowns-pmp.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/dropdowns-static.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/intervention-detail.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/interventions.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/locations-lite.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/offices.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/partner_details.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/partners.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/sectors.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/users-api-profile.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/users-api.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/etools-tpm" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/clean.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/css.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/etoolsBuild.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/html.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/images.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/javascript.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulp-tasks/project.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/gulpfile.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/images/manifest/icon-512x512.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/ajax-errors-parser-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/ajax-server-errors-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/amendment-mode-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/app-navigation-helper-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/array-helper-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/common-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/date-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/dropdown-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/esmm-missing-options/missing-dropdown-options-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/ie11-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/list-data-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/list-filters-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/lists-common-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/pagination-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/repeatable-data-sets-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/risk-rating-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/scroll-control-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-behaviors/utils-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-config/app-config.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-config/app-dexie-db-config.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-config/app-endpoints-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-config/app-endpoints.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-config/app-user-permissions-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreement-amendments.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreement-data/agreement-item-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreement-data/agreement-list-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreement-details.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreement-status.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/agreements-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/agreements/generate-PCA-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-date-input.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-error-messages-box.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-form-element-wrapper.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-progress-bar.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-single-file.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/common-elements/etools-tabs.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/countries-dropdown/countries-dropdown.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/data-refresh-dialog/data-refresh-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/environment-flags/environment-flags-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/environment-flags/environment-flags.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/etools-status/etools-action-button.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/etools-status/etools-status.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/etools-status/pmp-status-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/agreement-selector/agreement-selector.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/amendments/add-amendment-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/amendments/intervention-amendments.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/behaviors/fr-numbers-consistency-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/behaviors/intervention-permissions-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/behaviors/modified-intervention-fields-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/behaviors/save-intervention-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/edit-delete-actions.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/applied-indicator.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/applied-indicators.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/behaviors/indicator-dialog-tabs-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/behaviors/indicators-common-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/behaviors/lower-results-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/behaviors/results-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/behaviors/save-indicator-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/cluster-indicator-disaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/cluster-indicator.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/indicator-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/indicator-dissaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/non-cluster-indicator.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/pd-lower-result-name.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/result-cp-output-and-ram-indicators.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/expected-results/result-link-lower-results.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/fr-numbers/fund-reservations-display.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/fr-numbers/intervention-fund-reservations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/fr-numbers/update-fr-numbers.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/grouped-locations-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-attachments.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-data/intervention-item-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-data/interventions-list-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-details.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-expected-results.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-overview.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-planned-budget.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-planned-visits.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-review-and-sign.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/intervention-status.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/interventions-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/monitoring-visits-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/progress/intervention-progress.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/reports/intervention-reports.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/reports/reporting-requirements-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/interventions/reports/reporting-requirements.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/notification-toasts/notification-toasts-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/notification-toasts/notification-toasts-style.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/page-footer/page-footer.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/page-header/page-content-header.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/page-header/page-header.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/assessments-items.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/bank-information.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/behaviors/partner-staff-members-data-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/details-item.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/new-partner-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partner-details-dropdown.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partner-details.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partner-item.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partner-overview.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partner-status.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partners-data/partner-item-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partners-data/partners-list-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/partners-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/partners/staff-members.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/behaviors/disaggregation-field.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/behaviors/disaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/behaviors/report-details-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-field.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-switches.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-table-cell.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-table-multi-cell.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-table-row.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/disaggregation-table.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/table-content/one-disaggregation.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/table-content/three-disaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/table-content/two-disaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/disaggregations/table-content/zero-disaggregations.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/indicator-details.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/indicator-report-target.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/report-overall.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/report-rating-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/report-reject-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/report-status.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/elems/reports-display-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/report-progress.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/report-summary.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/reports-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/styles/disaggregation-table-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/styles/shared-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/reports/styles/table-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/settings/add-disaggregation-dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/settings/disaggregation-list.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/country-programmes-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/disaggregations-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/dropdowns-pmp-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/dropdowns-static-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/locations-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/offices-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/prp-countries.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/sections-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/sectors-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/unicef-users-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/behaviors/user-country-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/redux-behaviors/common-static-data-redux-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/static-common-data/static-common-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/user-profile-dialog/user-profile-data/user-profile-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/users-data/user-data.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/validators/etools-iron-validator-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-elements/validators/required-and-not-future-date-validator.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-menu/app-sidebar-menu.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-menu/behaviors/app-menu-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-menu/styles/app-drawer-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/app-menu/styles/nav-menu-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/behaviors/intervention-page-tabs-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/behaviors/page-import-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/behaviors/page-utils-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/behaviors/subroute-behavior.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-agreements.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-interventions.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-not-found.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-partners.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-reports.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pmp/pages/page-settings.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/country-flag-styles.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ad.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ae.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/af.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ag.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ai.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/al.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/am.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ao.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/aq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ar.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/as.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/at.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/au.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/aw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ax.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/az.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ba.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/be.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/br.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/by.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/bz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ca.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ch.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ci.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ck.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/co.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/cz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/de.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/dj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/dk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/dm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/do.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/dz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ec.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ee.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/eg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/eh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/er.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/es.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/et.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/eu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/fr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ga.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gb-eng.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gb-nir.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gb-sct.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gb-wls.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ge.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/gy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/hk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/hm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/hn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/hr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ht.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/hu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/id.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ie.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/il.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/im.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/in.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/io.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/iq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ir.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/is.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/it.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/je.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/jm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/jo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/jp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ke.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ki.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/km.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ky.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/kz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/la.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/li.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ls.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/lv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ly.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ma.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/md.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/me.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ml.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ms.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/my.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/mz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/na.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ne.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ng.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ni.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/no.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/np.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/nz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/om.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pe.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ph.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ps.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/pw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/py.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/qa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/re.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ro.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/rs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ru.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/rw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/se.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/si.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/so.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ss.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/st.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/sz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/td.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/th.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/to.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/tz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ua.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ug.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/um.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/un.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/us.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/uy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/uz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/va.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/vc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ve.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/vg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/vi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/vn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/vu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/wf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ws.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/ye.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/yt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/za.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/zm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/1x1/zw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ad.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ae.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/af.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ag.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ai.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/al.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/am.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ao.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/aq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ar.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/as.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/at.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/au.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/aw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ax.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/az.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ba.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/be.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/br.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/by.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/bz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ca.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ch.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ci.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ck.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/co.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/cz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/de.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/dj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/dk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/dm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/do.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/dz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ec.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ee.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/eg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/eh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/er.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/es.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/et.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/eu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/fr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ga.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gb-eng.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gb-nir.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gb-sct.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gb-wls.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ge.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/gy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/hk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/hm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/hn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/hr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ht.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/hu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/id.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ie.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/il.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/im.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/in.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/io.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/iq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ir.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/is.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/it.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/je.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/jm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/jo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/jp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ke.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ki.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/km.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ky.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/kz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/la.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/li.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ls.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/lv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ly.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ma.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/md.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/me.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ml.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mo.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mp.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mq.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ms.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/my.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/mz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/na.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ne.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ng.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ni.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/no.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/np.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/nz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/om.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pe.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ph.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ps.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/pw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/py.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/qa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/re.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ro.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/rs.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ru.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/rw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sa.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sb.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sd.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/se.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sh.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/si.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/so.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ss.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/st.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sx.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/sz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/td.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/th.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tj.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tk.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tl.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/to.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tr.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tv.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/tz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ua.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ug.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/um.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/un.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/us.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/uy.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/uz.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/va.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/vc.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ve.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/vg.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/vi.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/vn.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/vu.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/wf.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ws.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/ye.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/yt.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/za.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/zm.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/styles/countries-flags/flags/4x3/zw.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/agreements-pages-test.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/partners-page-test.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/scripts/lodash/lodash.html" afterPath="$PROJECT_DIR$/pmp/modules/scripts/lodash.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/scripts/polyfils/es6-polyfils.html" afterPath="$PROJECT_DIR$/pmp/modules/scripts/polyfils/es6-polyfils.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/scripts/redux.html" afterPath="$PROJECT_DIR$/pmp/modules/scripts/redux.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/action-icons-btns-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/action-icons-btns-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/app-mixins.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/app-mixins.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/app-theme.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/app-theme.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/buttons-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/buttons-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/custom-iconsets/pmp-icons.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/custom-iconsets/pmp-icons.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/file-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/file-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/grid-layout-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/grid-layout-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/list-filter-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/list-filter-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/page-common-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/page-common-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/page-layout-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/page-layout-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/partner-status-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/partner-status-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/repeatable-data-sets-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/repeatable-data-sets-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/required-field-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/required-field-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/risk-rating-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/risk-rating-styles.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/styles/shared-styles.html" afterPath="$PROJECT_DIR$/pmp/modules/styles/shared-styles.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bower.json" afterPath="$PROJECT_DIR$/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/express.js" afterPath="$PROJECT_DIR$/express.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manifest.json" afterPath="$PROJECT_DIR$/manifest.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pmp/app-shell.html" afterPath="$PROJECT_DIR$/pmp/app-shell.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/polymer.json" afterPath="$PROJECT_DIR$/polymer.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/service-worker.js" afterPath="$PROJECT_DIR$/service-worker.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sw-precache-config.js" afterPath="$PROJECT_DIR$/sw-precache-config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/index.html" afterPath="$PROJECT_DIR$/test/index.html" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="pmp" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="bower.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bower.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="15" column="52" lean-forward="false" selection-start-line="15" selection-start-column="52" selection-end-line="15" selection-end-column="52" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app-shell.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pmp/app-shell.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="660">
+              <caret line="341" column="0" lean-forward="true" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>this.fire</find>
+      <find>rootPath</find>
+      <find>iron-pages</find>
+      <find>EtoolsPmpApp.Mixins.ToastNotifications</find>
+      <find>ToastNotifications</find>
+      <find>searchTail</find>
+      <find>page</find>
+      <find>[small-menu]</find>
+      <find>Polymer.dom(</find>
+      <find>_toast.$</find>
+      <find>this.listen(</find>
+      <find>details</find>
+      <find>queueToast</find>
+      <find>messageWrapper</find>
+      <find>appHeadLayout</find>
+      <find>console</find>
+      <find>baseUrl</find>
+      <find>EtoolsPmpApp.Config.basePath</find>
+      <find>_getFlagIconClass</find>
+      <find>baseSite</find>
+      <find>EtoolsPmpApp.EndpointConfig</find>
+      <find>main-title</find>
+      <find>second-logo</find>
+      <find>content-align</find>
+      <find>titlebar</find>
+      <find>right-side</find>
+      <find>right</find>
+      <find>refresh</find>
+      <find>etools_logo_icon.png</find>
+      <find>my-icons</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+      <replace>populateReportUnderView</replace>
+      <replace>reduxStoreDefaultData</replace>
+      <replace>_vizibleTabContent</replace>
+      <replace>viewportEdgeMargin</replace>
+      <replace>Sections</replace>
+      <replace>staticDataEndpointsNames</replace>
+      <replace>0</replace>
+      <replace>header-container</replace>
+      <replace>_extractClustersNamesFromIndicators</replace>
+      <replace>sectionOptions</replace>
+      <replace>listActive</replace>
+      <replace>tabsActive</replace>
+      <replace>_isPrpTab</replace>
+      <replace>_canAccessPrpTab</replace>
+      <replace>_canAccessPdTab</replace>
+      <replace>activePage</replace>
+      <replace>fileImportDetails.pagePrefix</replace>
+      <replace>_successfulImportCallback</replace>
+      <replace>_canAccessPage</replace>
+      <replace>_tabAttached</replace>
+      <replace>endpointsDomainConfig</replace>
+      <replace>EtoolsPmpApp.Config.endpointsDomainConfig</replace>
+      <replace>app-logo</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/gulp-tasks</dir>
+      <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/bower_components/web-component-tester</dir>
+      <dir>$PROJECT_DIR$/bower_components/etools-searchable-multiselection-menu</dir>
+      <dir>$PROJECT_DIR$/pmp/app-elements</dir>
+      <dir>$PROJECT_DIR$/styles</dir>
+      <dir>$PROJECT_DIR$/style</dir>
+      <dir>$PROJECT_DIR$/pmp</dir>
+      <dir>$PROJECT_DIR$/</dir>
+      <dir>$PROJECT_DIR$/pmp/</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/pmp/pages/page-interventions.html" />
+        <option value="$PROJECT_DIR$/pmp/pages/page-partners.html" />
+        <option value="$PROJECT_DIR$/pmp/pages/page-agreements.html" />
+        <option value="$PROJECT_DIR$/pmp/pages/page-reports.html" />
+        <option value="$PROJECT_DIR$/pmp/pages/behaviors/subroute-behavior.html" />
+        <option value="$PROJECT_DIR$/pmp/pages/behaviors/page-utils-behavior.html" />
+        <option value="$PROJECT_DIR$/manifest.json" />
+        <option value="$PROJECT_DIR$/express.js" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/sw-precache-config.js" />
+        <option value="$PROJECT_DIR$/scripts/polyfils/es6-polyfils.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/config/globals.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/config/dexie-db-config.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/endpoints/endpoints.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/redux/store/pmp-redux-store.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/redux/store/etools-data-redux-store.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/user/user-data.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/user/user-permissions-mixin.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/menu/mixins/app-menu-behavior.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/custom-iconsets/pmp-icons.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/menu/styles/nav-menu-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/action-icons-btns-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/app-mixins.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/app-theme.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/buttons-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/file-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/grid-layout-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/list-filter-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/page-common-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/page-layout-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/partner-status-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/repeatable-data-sets-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/required-field-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/risk-rating-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/styles/shared-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/toast-notifications/toast-notifications-style.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/menu/styles/app-drawer-styles.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/menu/mixins/app-menu-mixin.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/toast-notifications/toast-notifications-mixin.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/menu/app-sidebar-menu.html" />
+        <option value="$PROJECT_DIR$/bower.json" />
+        <option value="$PROJECT_DIR$/pmp/modules/endpoints/endpoints-mixin.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/config/config.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/layout/page-footer.html" />
+        <option value="$PROJECT_DIR$/pmp/modules/layout/page-header.html" />
+        <option value="$PROJECT_DIR$/test/index.html" />
+        <option value="$PROJECT_DIR$/test/app-shell.html" />
+        <option value="$PROJECT_DIR$/polymer.json" />
+        <option value="$PROJECT_DIR$/pmp/app-shell.html" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <exe-path />
+    <config-path>$PROJECT_DIR$/bower.json</config-path>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <annotation-enable>false</annotation-enable>
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2180" />
+    <option name="y" value="56" />
+    <option name="width" value="1390" />
+    <option name="height" value="1003" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="pmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="pmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="pmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="modules" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="pmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="modules" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="layout" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="pmp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pmp" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="test" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pmp/modules" />
+    <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v9.2.0/bin/node" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
+    <property name="JavaScriptPreferStrict" value="false" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pmp/modules/layout" />
+      <recent name="$PROJECT_DIR$/pmp/modules" />
+      <recent name="$PROJECT_DIR$/pmp/modules/app-modules" />
+      <recent name="$PROJECT_DIR$/scripts" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="52d185e2-83c0-4a4a-ae67-3f38b7261629" name="Default" comment="" />
+      <created>1511529983292</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1511529983292</updated>
+      <workItem from="1511529985864" duration="28000" />
+      <workItem from="1511530029280" duration="41000" />
+      <workItem from="1511530081989" duration="2159000" />
+      <workItem from="1511782697023" duration="615000" />
+      <workItem from="1511783435186" duration="2957000" />
+      <workItem from="1511859726552" duration="8049000" />
+      <workItem from="1511961338211" duration="2721000" />
+      <workItem from="1512461921293" duration="1376000" />
+      <workItem from="1512477586900" duration="15383000" />
+      <workItem from="1512569438209" duration="30483000" />
+      <workItem from="1512980056313" duration="30972000" />
+      <workItem from="1513083729704" duration="45077000" />
+      <workItem from="1513582110360" duration="327000" />
+      <workItem from="1513584077281" duration="1873000" />
+      <workItem from="1513933990758" duration="3284000" />
+      <workItem from="1514964947227" duration="6261000" />
+      <workItem from="1515396963527" duration="2126000" />
+      <workItem from="1515483205945" duration="3743000" />
+      <workItem from="1515576046603" duration="3406000" />
+      <workItem from="1515656918289" duration="6300000" />
+      <workItem from="1516612209449" duration="120000" />
+      <workItem from="1516624461250" duration="6019000" />
+      <workItem from="1516697823612" duration="18213000" />
+      <workItem from="1516867110373" duration="31427000" />
+      <workItem from="1517211756721" duration="53689000" />
+      <workItem from="1517409270372" duration="25167000" />
+      <workItem from="1517558194178" duration="16398000" />
+      <workItem from="1517815825730" duration="17743000" />
+      <workItem from="1517903849544" duration="55192000" />
+      <workItem from="1518161898313" duration="6150000" />
+      <workItem from="1518422261648" duration="38999000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="436298000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1920" y="30" width="1920" height="1050" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32853982" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24946696" sideWeight="0.49557522" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24946696" sideWeight="0.50442475" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-behaviors/etools-page-refresh-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="14" column="36" lean-forward="true" selection-start-line="14" selection-start-column="36" selection-end-line="14" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-behaviors/etools-mixin-factory.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="598">
+          <caret line="23" column="29" lean-forward="false" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-ajax/etools-ajax-request-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="33" column="30" lean-forward="false" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/endpoints/endpoints.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="1" column="50" lean-forward="true" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-behaviors/etools-logs-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="24" column="31" lean-forward="false" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/user/user-permissions-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/config/dexie-db-config.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="67" lean-forward="true" selection-start-line="6" selection-start-column="67" selection-end-line="6" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/user/user-data.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="23" column="62" lean-forward="false" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/custom-iconsets/pmp-icons.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="1" column="50" lean-forward="true" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/menu/styles/nav-menu-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="4" column="33" lean-forward="true" selection-start-line="4" selection-start-column="33" selection-end-line="4" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/countries-flags/country-flag-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/action-icons-btns-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="15" lean-forward="true" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/buttons-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="3" column="42" lean-forward="true" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/app-mixins.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="8" column="21" lean-forward="true" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/file-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="11" lean-forward="true" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/grid-layout-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/list-filter-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="7" column="23" lean-forward="true" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/page-common-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/page-layout-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="2" column="79" lean-forward="false" selection-start-line="2" selection-start-column="79" selection-end-line="2" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/partner-status-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="79" lean-forward="false" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/repeatable-data-sets-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="79" lean-forward="false" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/required-field-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="79" lean-forward="false" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/risk-rating-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="12" lean-forward="true" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/shared-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="10" column="17" lean-forward="true" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/toast-notifications/toast-notifications-style.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="3" column="16" lean-forward="false" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/redux/store/etools-data-redux-store.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5746">
+          <caret line="221" column="64" lean-forward="true" selection-start-line="221" selection-start-column="64" selection-end-line="221" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="1" column="83" lean-forward="true" selection-start-line="1" selection-start-column="83" selection-end-line="1" selection-end-column="83" />
+          <folding>
+            <marker date="1518447367000" expanded="true" signature="168:1189" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="199:565" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="234:561" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="267:302" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="338:373" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="413:448" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="485:520" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="535:555" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="813:1176" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="1231:4650" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="1242:4636" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="1299:4550" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="1390:1785" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="1407:1776" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="1425:1497" ph="{&quot;type&quot;: String...}" />
+            <marker date="1518447367000" expanded="true" signature="1523:1588" ph="{&quot;type&quot;: Boolean...}" />
+            <marker date="1518447367000" expanded="true" signature="1607:1681" ph="{&quot;type&quot;: String...}" />
+            <marker date="1518447367000" expanded="true" signature="1706:1766" ph="{&quot;type&quot;: Number...}" />
+            <marker date="1518447367000" expanded="true" signature="1813:2138" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="1975:2128" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2159:2348" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2187:2340" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2209:2328" ph="[...]" />
+            <marker date="1518447367000" expanded="true" signature="2408:3406" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2472:3398" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2533:2766" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="2556:2745" ph="[...]" />
+            <marker date="1518447367000" expanded="true" signature="2682:2730" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="2849:3090" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="2872:3069" ph="[...]" />
+            <marker date="1518447367000" expanded="true" signature="3006:3054" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="3166:3388" ph="..." />
+            <marker date="1518447367000" expanded="true" signature="3189:3386" ph="[...]" />
+            <marker date="1518447367000" expanded="true" signature="3323:3371" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="3510:4091" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="3823:4083" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="3845:4029" ph="[...]" />
+            <marker date="1518447367000" expanded="true" signature="3972:4016" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="4186:4544" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="4211:4536" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="4331:4493" ph="{...}" />
+            <marker date="1518447367000" expanded="true" signature="4355:4479" ph="[...]" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/app-route/demo/youtube-demo/youtube-search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/app-route/demo/youtube-demo/youtube-lite.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-390">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/app-route/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="127" column="20" lean-forward="false" selection-start-line="127" selection-start-column="10" selection-end-line="127" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-loading/etools-loading-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="50" lean-forward="true" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/menu/styles/app-drawer-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/app-layout/app-layout-behavior/app-layout-behavior.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/app-layout/app-header-layout/app-header-layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="155" column="73" lean-forward="true" selection-start-line="155" selection-start-column="73" selection-end-line="155" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/toast-notifications/toast-notifications-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="6" column="64" lean-forward="true" selection-start-line="6" selection-start-column="64" selection-end-line="6" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/styles/app-theme.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/menu/mixins/app-menu-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-645">
+          <caret line="22" column="20" lean-forward="true" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/etools-app-selector/etools-app-selector.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/config/config.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="25" column="54" lean-forward="false" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/endpoints/endpoints-mixin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="7" column="15" lean-forward="true" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/menu/app-sidebar-menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="139" column="0" lean-forward="true" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/page-footer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="42" column="31" lean-forward="true" selection-start-line="42" selection-start-column="31" selection-end-line="42" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/modules/layout/page-header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="27" column="48" lean-forward="true" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/my-view404.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="473">
+          <caret line="32" column="27" lean-forward="true" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/shared-styles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower_components/paper-styles/demo-pages.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="15" column="52" lean-forward="false" selection-start-line="15" selection-start-column="52" selection-end-line="15" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/app-shell.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/polymer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="18" column="5" lean-forward="true" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="8" column="3" lean-forward="true" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pmp/app-shell.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="341" column="0" lean-forward="true" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

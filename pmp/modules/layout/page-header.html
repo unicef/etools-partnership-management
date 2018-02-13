@@ -1,0 +1,292 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/etools-app-selector/etools-app-selector.html">
+
+<!-- TODO: polymer2 - add countries dropdown functionality, integrate profile dropdown -->
+<!--<link rel="import" href="../countries-dropdown/countries-dropdown.html">-->
+<!--<link rel="import" href="../../../bower_components/etools-profile-dropdown/etools-profile-dropdown.html">-->
+<!--<link rel="import" href="../user-profile-dialog/user-profile-data/user-profile-data.html">-->
+
+<!-- TODO: polymer2 - do we need shared-styles here? If not, remove it. -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<link rel="import" href="../redux/store/etools-data-redux-store.html">
+<link rel="import" href="../config/config.html">
+<link rel="import" href="../config/dexie-db-config.html">
+
+<dom-module id="page-header">
+  <template>
+    <style include="shared-styles">
+      app-toolbar {
+        padding: 0 16px 0 0;
+        background-color: var(--header-bg-color, #233944);
+      }
+
+      .titlebar {
+        color: var(--header-primary-text-color);
+      }
+
+      countries-dropdown {
+        --countries-dropdown-color: var(--header-secondary-text-color);
+      }
+
+      etools-profile-dropdown,
+      #refresh {
+        color: var(--header-secondary-text-color);
+      }
+
+      etools-profile-dropdown {
+        margin-left: 24px;
+      }
+
+      #refresh {
+        margin-left: 16px;
+      }
+
+      #menuButton {
+        display: block;
+      }
+
+      .titlebar {
+        @apply --layout-flex;
+        font-size: 28px;
+        font-weight: 300;
+      }
+
+      .titlebar img {
+        width: 34px;
+        margin: 0 8px 0 24px;
+      }
+
+      .content-align {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+
+      #app-logo {
+        height: 32px;
+        width: auto;
+      }
+
+      @media (min-width: 850px) {
+        #menuButton {
+          display: none;
+        }
+      }
+    </style>
+    <!-- TODO: polymer2 - integrate user-profile-data -->
+    <!--<user-profile-data id="userProfileData" user-profile="{{originalProfile}}"></user-profile-data>-->
+    <app-toolbar sticky class="content-align">
+      <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
+      <div class="titlebar content-align">
+        <etools-app-selector id="selector"></etools-app-selector>
+        <img id="app-logo" src$="[[importPath]]../../../images/etools-logo-color-white.svg">
+      </div>
+      <div class="content-align">
+        <!-- TODO: polymer2 - integrate countries-dropdown -->
+        <!--<countries-dropdown id="countries" countries="[[countries]]"-->
+        <!--current-country="[[user.country]]"></countries-dropdown>-->
+
+        <!-- TODO: polymer2 - integrate etools-profile-dropdown -->
+        <!--<etools-profile-dropdown-->
+        <!--sections="[[allSections]]"-->
+        <!--offices="[[allOffices]]"-->
+        <!--users="[[allUsers]]"-->
+        <!--profile="{{profile}}"-->
+        <!--on-save-profile="_saveProfile"-->
+        <!--on-sign-out="_signOut"></etools-profile-dropdown>-->
+
+        <!-- TODO: polymer2 - integrate data refresh, we should have all the functionality in one place
+        (new folder inside modules folder) -->
+        <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
+
+      </div>
+    </app-toolbar>
+  </template>
+
+  <script>
+
+    /**
+     * TODO: polymer2 - integrate redux store EtoolsPmpApp.Mixins.EtoolsDataReduxStore converted to mixin,
+     * file already imported
+     */
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    class PageHeader extends Polymer.Element {
+
+      static get is() {
+        return 'page-header';
+      }
+
+      static get properties() {
+        return {
+          countries: {
+            type: Array
+          },
+          user: {
+            type: Object,
+          },
+          allOffices: {
+            type: Object,
+            notify: true,
+            computed: '_convertCollection(offices)'
+          },
+          offices: {
+            type: Array,
+            statePath: 'offices',
+          },
+          sections: {
+            type: Array,
+            statePath: 'sections',
+          },
+          users: {
+            type: Array,
+            statePath: 'unicefUsersData'
+          },
+          allSections: {
+            type: Object,
+            notify: true,
+            computed: '_convertCollection(sections)'
+          },
+          allUsers: {
+            type: Object,
+            notify: true,
+            computed: '_convertUsers(users)'
+          },
+          originalProfile: {
+            type: Object,
+            observer: '_handleProfileLoaded'
+          },
+          editableFields: {
+            type: Array,
+            value: [
+              'office',
+              'section',
+              'job_title',
+              'phone_number',
+              'oic',
+              'supervisor'
+            ]
+          },
+
+          userProfileDialog: Object
+        };
+      }
+
+      static get observers() {
+        return ['_updateCountriesList(user.countries_available)'];
+      }
+
+      ready() {
+        super.ready();
+        this._setBgColor();
+      }
+
+      openDrawer() {
+        this.fire('drawer');
+      }
+
+      _setBgColor() {
+        // If not production environment, changing header color to red
+        if (!EtoolsPmpApp.Config.isProductionServer()) {
+          this.updateStyles({'--header-bg-color': 'var(--nonprod-header-color)'});
+        }
+      }
+
+      _handleProfileLoaded(profileData) {
+        this.set('profile', JSON.parse(JSON.stringify(profileData)));
+      }
+
+      // TODO: polymer2 - do we need this? we do not have flags yet for countries
+      _getFlagIconClass(id) {
+        let flagIdMap = {
+          '0': 'us',
+          '234R': 'syxb',
+          '2490': 'lb',
+          '4020': 'su',
+          '4140': 'sy',
+          '2070': 'in'
+        };
+        return 'flag-icon ' + 'flag-icon-' + flagIdMap[id];
+      }
+
+      _updateCountriesList(countries) {
+        if (!countries) {
+          return;
+        }
+
+        let arrayObj = countries.map((arrayItem) => {
+          return {
+            id: arrayItem.id,
+            name: arrayItem.name,
+            imgClass: this._getFlagIconClass(arrayItem.business_area_code)
+          };
+        });
+
+        arrayObj = _.sortBy(arrayObj, (c) => {
+          return c.name;
+        });
+        this.set('countries', arrayObj);
+      }
+
+      _openDataRefreshDialog() {
+        this.dispatchEvent(new CustomEvent('open-data-refresh-dialog', {bubbles: true, composed: true}));
+      }
+
+      _convertCollection(data) {
+        return data.map((item) => {
+          return {label: item.name, value: item.id}
+        });
+      }
+
+      _convertUsers(data) {
+        return data.map((d) => {
+          return {
+            value: parseInt(d.id, 10),
+            label: d.name
+          };
+        });
+      }
+
+      _saveProfile(e) {
+        this.set('profile', e.detail.profile);
+        let modifiedFields = this._getModifiedFields(this.originalProfile, this.profile);
+        this.$.userProfileData.saveProfile(modifiedFields);
+      }
+
+      _signOut() {
+        this._clearDexieDbs();
+        this._clearLocalStorage();
+        window.location.href = window.location.origin + '/saml2/logout';
+      }
+
+      _clearDexieDbs() {
+        EtoolsPmpApp.DexieDb.delete();
+      }
+
+      _clearLocalStorage() {
+        localStorage.clear();
+      }
+
+      _getModifiedFields(originalData, newData) {
+        let modifiedFields = {};
+        this.editableFields.forEach(function(field) {
+          if (originalData[field] !== newData[field]) {
+            modifiedFields[field] = newData[field];
+          }
+        });
+
+        return modifiedFields;
+      }
+    }
+
+    window.customElements.define(PageHeader.is, PageHeader);
+  </script>
+
+</dom-module>

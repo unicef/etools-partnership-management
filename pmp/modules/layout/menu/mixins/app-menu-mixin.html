@@ -1,0 +1,85 @@
+<script>
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /*
+   * App menu functionality mixin
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.AppMenu = Polymer.dedupingMixin((superClass) => class extends superClass {
+
+    static get properties() {
+      return {
+        smallMenu: {
+          type: Boolean,
+          value: false
+        }
+      };
+    }
+
+    ready() {
+      super.ready();
+      this._initMenuListeners();
+      this._initMenuSize();
+    }
+
+    _initMenuListeners() {
+      this.addEventListener('toggle-small-menu', this._toggleSmallMenu);
+      this.addEventListener('resize-main-layout', this._resizeMainLayout);
+    }
+
+    _initMenuSize() {
+      this.set('smallMenu', this._isSmallMenuActive());
+    }
+
+    _isSmallMenuActive() {
+      /**
+       * etoolsPmpSmallMenu localStorage value must be 0 or 1
+       */
+      let menuTypeStoredVal = localStorage.getItem('etoolsAppSmallMenuIsActive');
+      if (!menuTypeStoredVal) {
+        return false;
+      }
+      return !!parseInt(menuTypeStoredVal, 10);
+    }
+
+    _toggleSmallMenu(e) {
+      e.stopImmediatePropagation();
+      this.set('smallMenu', !this.smallMenu);
+      this._smallMenuValueChanged(this.smallMenu);
+    }
+
+    _resizeMainLayout(e) {
+      e.stopImmediatePropagation();
+      this._updateDrawerStyles();
+      this._notifyLayoutResize();
+    }
+
+    _smallMenuValueChanged(newVal) {
+      let localStorageVal = newVal ? 1 : 0;
+      localStorage.setItem('etoolsAppSmallMenuIsActive', localStorageVal);
+    }
+
+    _updateDrawerStyles() {
+      let drawer = this.$.drawer;
+      if (drawer) {
+        drawer.updateStyles();
+      }
+    }
+
+    _notifyLayoutResize() {
+      let layout = this.$.layout;
+      if (layout) {
+        layout.notifyResize();
+      }
+      let headerLayout = this.$.appHeadLayout;
+      if (headerLayout) {
+        headerLayout.notifyResize();
+      }
+    }
+
+  });
+
+</script>

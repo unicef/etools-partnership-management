@@ -1,12 +1,3 @@
-node_modules/
-build/
 bower_components/
-.tmp
-.idea
-*.sublime-project
-*.sublime-workspace.vscode/
-.vscode/settings.json
-*.sublime-workspace.vscode/settings.json
-vscode/*
-package-lock.json
-npm-debug.log
+build/
+node_modules/

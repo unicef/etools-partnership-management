@@ -2,41 +2,28 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
-    "pmp/pages/page-partners.html",
-    "pmp/app-elements/partners/partners-list.html",
-    "pmp/app-elements/partners/partner-overview.html",
-    "pmp/app-elements/partners/partner-details.html",
 
-    "pmp/pages/page-agreements.html",
-    "pmp/app-elements/agreements/agreements-list.html",
-    "pmp/app-elements/agreements/agreement-details.html",
-
-    "pmp/pages/page-interventions.html",
-    "pmp/app-elements/interventions/interventions-list.html",
-    "pmp/app-elements/interventions/intervention-overview.html",
-    "pmp/app-elements/interventions/intervention-details.html",
-    "pmp/app-elements/interventions/intervention-review-and-sign.html",
-    "pmp/app-elements/interventions/intervention-attachments.html",
-    "pmp/app-elements/interventions/reports/intervention-reports.html",
-    "pmp/app-elements/interventions/progress/intervention-progress.html",
-
-    "pmp/pages/page-reports.html",
-    "pmp/app-elements/reports/reports-list.html",
-    "pmp/app-elements/reports/report-summary.html",
-    "pmp/app-elements/reports/report-progress.html",
-
-    "pmp/pages/page-settings.html",
-    "pmp/pages/page-not-found.html"
   ],
-  "sourceGlobs": [
-   "pmp/**/*",
-   "images/**/*",
-   "styles/**/*",
-   "scripts/**/*",
-   "data/**/*",
-   "bower.json"
+  "sources": [
+    "src/**/*",
+    "images/**/*"
   ],
-  "includeDependencies": [
-    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  },
+  "builds": [
+    {
+      "preset": "es5-bundled"
+    },
+    {
+      "preset": "es6-bundled"
+    },
+    {
+      "preset": "es6-unbundled"
+    }
   ]
 }

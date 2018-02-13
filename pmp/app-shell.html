@@ -7,58 +7,55 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/app-route/app-location.html">
-<link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../scripts/polyfils/es6-polyfils.html">
-<link rel="import" href="../bower_components/etools-loading/etools-loading-behavior.html">
-<link rel="import" href="../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="modules/scripts/polyfils/es6-polyfils.html">
 
-<link rel="import" href="app-config/app-dexie-db-config.html">
-<link rel="import" href="app-config/app-config.html">
-<link rel="import" href="app-elements/environment-flags/environment-flags-behavior.html">
+<link rel="import" href="../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
+<!-- TODO: polymer2 - piwiki element - console errors fixes needed -->
+<!--<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">-->
 
-<link rel="import" href="app-behaviors/ie11-behavior.html">
-<link rel="import" href="app-behaviors/amendment-mode-behavior.html">
-<link rel="import" href="app-menu/app-sidebar-menu.html">
-<link rel="import" href="app-menu/behaviors/app-menu-behavior.html">
-<link rel="import" href="app-menu/styles/app-drawer-styles.html">
+<!-- import global config and dexie db config -->
+<link rel="import" href="modules/config/config.html">
+<link rel="import" href="modules/config/dexie-db-config.html">
 
-<link rel="import" href="app-elements/environment-flags/environment-flags.html">
-<link rel="import" href="app-elements/users-data/user-data.html">
-<link rel="import" href="app-elements/page-header/page-header.html">
-<link rel="import" href="app-elements/page-footer/page-footer.html">
-<link rel="import" href="app-elements/data-refresh-dialog/data-refresh-dialog.html">
+<!-- import main menu files -->
+<link rel="import" href="modules/layout/menu/styles/app-drawer-styles.html">
+<link rel="import" href="modules/layout/menu/app-sidebar-menu.html">
+<link rel="import" href="modules/layout/menu/mixins/app-menu-mixin.html">
 
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-behavior.html">
-<link rel="import" href="app-elements/notification-toasts/notification-toasts-style.html">
+<!--import header and footer elements-->
+<link rel="import" href="modules/layout/page-header.html">
+<link rel="import" href="modules/layout/page-footer.html">
 
-<link rel="import" href="app-elements/partners/partners-data/partners-list-data.html">
-<link rel="import" href="app-elements/agreements/agreement-data/agreement-list-data.html">
+<!-- import app shell main styles -->
+<link rel="import" href="modules/styles/shared-styles.html">
+<link rel="import" href="modules/styles/page-layout-styles.html">
+<link rel="import" href="modules/styles/app-theme.html">
+<link rel="import" href="modules/styles/buttons-styles.html">
 
-<link rel="import" href="app-elements/static-common-data/static-common-data.html">
-<link rel="import" href="app-behaviors/scroll-control-behavior.html">
-<link rel="import" href="../styles/shared-styles.html">
-<link rel="import" href="../styles/page-layout-styles.html">
-<link rel="import" href="../styles/app-theme.html">
-<link rel="import" href="../styles/buttons-styles.html">
+<!-- import toast notifications elements -->
+<link rel="import" href="modules/toast-notifications/toast-notifications-mixin.html">
+<link rel="import" href="modules/toast-notifications/toast-notifications-style.html">
+
+<!-- import user data element -->
+<link rel="import" href="modules/user/user-data.html">
 
 <dom-module id="app-shell">
-
-  <template strip-whitespace>
-
-    <style include="page-layout-styles app-drawer-styles shared-styles notification-toasts-style buttons-styles">
-
+  <template>
+    <style include="app-drawer-styles page-layout-styles shared-styles toast-notifications-style buttons-styles">
       :host {
         display: block;
       }
@@ -98,6 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         z-index: 52;
       }
 
+      /* TODO: polymer2 - make amendment mode as a new module with mixin file and style file */
       #page-container.in-amendment {
         border-top: 12px solid var(--amendment-mode-color);
         border-left: 12px solid var(--amendment-mode-color);
@@ -113,28 +111,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <environment-flags></environment-flags>
+    <!-- TODO: polymer2 - integrate env flags -->
+    <!--<environment-flags></environment-flags>-->
 
-    <etools-piwik-analytics page="[[subroute.path]]"
-                            user="[[user]]"
-                            toast="[[currentToastMessage]]"></etools-piwik-analytics>
+    <!-- TODO: polymer2 - integrate piwiki analytics -->
+    <!--<etools-piwik-analytics page="[[subroute.path]]"-->
+    <!--user="[[user]]"-->
+    <!--toast="[[currentToastMessage]]"></etools-piwik-analytics>-->
 
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
 
     <app-route
         route="{{route}}"
-        pattern="[[baseUrl]]:page"
+        pattern="[[rootPath]]:page"
         data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+        tail="{{subroute}}">
+    </app-route>
 
-    <app-drawer-layout id="layout" responsive-width="850px" narrow="{{narrow}}" fullbleed>
-
+    <app-drawer-layout id="layout" responsive-width="850px"
+                       fullbleed narrow="{{narrow}}" small-menu$="[[smallMenu]]">
       <!-- Drawer content -->
-      <app-drawer id="drawer" transition-duration="350" small-menu$="[[smallMenu]]">
+      <app-drawer id="drawer" slot="drawer" transition-duration="350"
+                  swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
-        <app-sidebar-menu base-url="[[baseUrl]]"
+        <app-sidebar-menu base-url="[[rootPath]]"
                           page="[[page]]"
                           small-menu$="[[smallMenu]]"></app-sidebar-menu>
       </app-drawer>
@@ -142,150 +146,153 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
 
-        <app-header fixed shadow>
+        <app-header slot="header" condenses reveals effects="waterfall">
           <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
         </app-header>
 
-        <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
+        <!--<div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
-            <page-partners id="partners" class="main-page"
-                           show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                           current-page="[[_lastActivePartnerPage]]"
-                           route="{{subroute}}"
-                           permissions="[[permissions]]">
-            </page-partners>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>-->
+            <!--<page-partners id="partners" class="main-page"-->
+                           <!--show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"-->
+                           <!--current-page="[[_lastActivePartnerPage]]"-->
+                           <!--route="{{subroute}}"-->
+                           <!--permissions="[[permissions]]">-->
+            <!--</page-partners>-->
+          <!--</template>-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
-            <page-agreements id="agreements" class="main-page"
-                             route="{{subroute}}"
-                             permissions="[[permissions]]">
-            </page-agreements>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>-->
+            <!--<page-agreements id="agreements" class="main-page"-->
+                             <!--route="{{subroute}}"-->
+                             <!--permissions="[[permissions]]">-->
+            <!--</page-agreements>-->
+          <!--</template>-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
-            <page-interventions id="interventions" class="main-page"
-                                route="{{subroute}}"
-                                permissions="[[permissions]]">
-            </page-interventions>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>-->
+            <!--<page-interventions id="interventions" class="main-page"-->
+                                <!--route="{{subroute}}"-->
+                                <!--permissions="[[permissions]]">-->
+            <!--</page-interventions>-->
+          <!--</template>-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
-            <page-reports id="reports" class="main-page"
-                          route="{{subroute}}"
-                          permissions="[[permissions]]">
-            </page-reports>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>-->
+            <!--<page-reports id="reports" class="main-page"-->
+                          <!--route="{{subroute}}"-->
+                          <!--permissions="[[permissions]]">-->
+            <!--</page-reports>-->
+          <!--</template>-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
-            <page-not-found class="main-page"></page-not-found>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>-->
+            <!--<page-not-found class="main-page"></page-not-found>-->
+          <!--</template>-->
 
-          <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
-            <page-settings id="settings" class="main-page"></page-settings>
-          </template>
+          <!--<template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>-->
+            <!--<page-settings id="settings" class="main-page"></page-settings>-->
+          <!--</template>-->
 
-        </div>
+        <!--</div>-->
+
         <page-footer hidden$="[[amendmentModeActive]]"></page-footer>
-        <div id="floating-footer"
-             hidden$="[[!amendmentModeActive]]">
-          <strong> AMENDMENT MODE </strong>
-          | All fields in the details tab are now open for editing.
-          Please save before clicking "I am done".
-          <paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>
-        </div>
+
+        <!-- TODO: polymer2 - in amendment mode integration -->
+        <!--<div id="floating-footer"-->
+             <!--hidden$="[[!amendmentModeActive]]">-->
+          <!--<strong> AMENDMENT MODE </strong>-->
+          <!--| All fields in the details tab are now open for editing.-->
+          <!--Please save before clicking "I am done".-->
+          <!--<paper-button class="primary-btn" on-tap="_closeAmendment">I AM DONE</paper-button>-->
+        <!--</div>-->
 
       </app-header-layout>
     </app-drawer-layout>
-    <data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>
-
-    <!-- get static data -->
-    <partners-list-data></partners-list-data>
-    <agreement-list-data></agreement-list-data>
-    <static-common-data></static-common-data>
-
   </template>
 
   <script>
+    'use strict';
 
-    Polymer({
+    /**
+     * TODO: polymer2 - integrate EnvironmentFlags, IE11, ScrollControll, amendments mode behaviors
+     */
 
-      is: 'app-shell',
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.AppMenu
+     * @appliedMixin EtoolsPmpApp.Mixins.ToastNotifications
+     * @appliedMixin EtoolsMixins.LoadingMixin
+     */
+    const AppShellMixin = EtoolsMixinFactory.combineMixins(
+        [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin], Polymer.Element);
 
-      behaviors: [
-        EtoolsPmpApp.Behaviors.EnvironmentFlags,
-        EtoolsPmpApp.Behaviors.IE11,
-        EtoolsPmpApp.Behaviors.AppMenu,
-        EtoolsPmpApp.Behaviors.NotificationToasts,
-        etoolsBehaviors.LoadingBehavior,
-        EtoolsPmpApp.Behaviors.ScrollControl,
-        EtoolsPmpApp.Behaviors.AmendmentMode
-      ],
+    /**
+     * PMP main element used to configure and display all app modules
+     * @polymer
+     * @customElement
+     * @appliedMixin AppShellMixin
+     */
+    class AppShell extends AppShellMixin {
+      static get is() {
+        return 'app-shell';
+      }
 
-      properties: {
-        page: {
-          type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
-        },
-        route: {
-          type: Object,
-          observer: '_routeChanged'
-        },
-        narrow: {
-          type: Boolean,
-          reflectToAttribute: true
-        },
-        baseUrl: String,
-        permissions: {
-          type: Object,
-          value: null
-        },
-        subroute: {
-          type: Object
-        },
-        routeData: {
-          type: Object
-        },
-        _lastActivePartnerPage: String,
-        prpPages: {
-          type: Array,
-          value: ['reports', 'settings']
-        }
-      },
+      static get properties() {
+        return {
+          /**
+           * `page` property represents the current displayed module of the PMP app.
+           * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
+           * Main modules will have other pages and routing (prefixed by app-shell route).
+           * TODO: rename this property to `pageCategory` or `activeModule`?
+           */
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          route: {
+            type: Object,
+            observer: '_routeChanged'
+          },
+          routeData: Object,
+          subroute: Object,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+          narrow: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+          permissions: {
+            type: Object,
+            value: null
+          },
+          _lastActivePartnerPage: String,
+          prpPages: {
+            type: Array,
+            value: ['reports', 'settings']
+          }
+        };
+      }
 
-      observers: [
-        '_routePageChanged(routeData.page)'
-      ],
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
 
-      listeners: {
-        'drawer': 'toggleDrawer',
-        'update-main-path': '_updateMainPath',
-        'forbidden': '_onForbidden',
-        'open-data-refresh-dialog': '_openDataRefreshDialog',
-        '404': '_pageNotFound'
-      },
+      constructor() {
+        super();
+        // TODO: -polymer2 - integrate IE11 old behavior
+//        this.checkIE11Browser();
+      }
 
-      _onForbidden: function() {
-        window.location.href = EtoolsPmpApp.Config.loginPath;
-      },
-
-      created: function() {
-        this.checkIE11Browser();
-      },
-
-      _routeChanged: function() {
-        this.scrollToTop();
-      },
-
-      ready: function() {
-        window.EtoolsEsmmFitIntoEl = Polymer.dom(document.querySelector('app-shell').root)
-            .querySelector('#appHeadLayout').$$('#contentContainer');
+      ready() {
+        super.ready();
+        this._initListeners();
+        window.EtoolsEsmmFitIntoEl = this.$.appHeadLayout.shadowRoot.querySelector('#contentContainer');
         // for some reason the "$=" will make basePath undefined, we need to use a local property
-        this.baseUrl = EtoolsPmpApp.Config.basePath;
 
-        this.addIE11StyleTweaks();
+        // TODO: -polymer2 - integrate IE11 old behavior
+        // this.addIE11StyleTweaks();
 
         if (this.page !== 'not-found') {
           /*
@@ -293,158 +300,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            * This will be triggered once at page load or, after page load, on menu option tap event.
            * The loading message is disabled by page-* elements ready callback (in both cases)
            */
-          this.fire('global-loading', {
-            active: true,
-            loadingSource: 'main-page'
-          });
-        }
-      },
-
-      _openDataRefreshDialog: function() {
-        this.$.dataRefreshDialog.open();
-      },
-
-      toggleDrawer: function() {
-        this.$.drawer.toggle();
-      },
-
-      _updateMainPath: function(e) {
-        if (e.detail.path !== this.route.path.replace(this.baseUrl, '')) {
-          // set route.path only if received path is different
-          this._updatePath(e.detail.path);
-        }
-        e.stopImmediatePropagation();
-      },
-
-      _updatePath: function(path) {
-        this.set('route.__queryParams', null);
-        this.set('route.path', this.baseUrl + path);
-      },
-
-      _pageChanged: function(page) {
-        // set last partners active page... needed to make a difference between partners and government-partners
-        this._updateLastPartnersActivePage(page);
-        // clear loading messages queue
-        this.fire('clear-loading-messages', {});
-        this._setAmendMode(false);
-      },
-
-      _routePageChanged: function(routePage) {
-        this.debounce('routePageChanges', () => {
-          if (!routePage) {
-            this._updatePath('partners/list');
-            return;
-          }
-
-          this._canAccessPage(routePage).then((accessGranted) => {
-            if (!accessGranted) {
-              this._pageNotFound();
-            } else {
-              this._importMainPage(routePage);
-              this.set('page', routePage);
-            }
-          });
-        }, 10);
-      },
-
-      _importMainPage: function(page) {
-        if (!page) {
-          return;
-        }
-        let mainPageName = this._getMainPageName(page);
-        let resolvedPageUrl = this.resolveUrl('pages/page-' + mainPageName + '.html');
-        // import main page if needed
-        let pageEl = this._getPageElement(mainPageName);
-        if (!Polymer.isInstance(pageEl)) {
-          // pageEl is null => make the import
-          this.importHref(resolvedPageUrl, this._successfulImportCallback.bind(this, mainPageName),
-              this._pageNotFound, false);
-        }
-      },
-
-      // main page import success callback
-      _successfulImportCallback: function(currentLoadingPage) {
-        // pageEl will be available only after import successfully completes
-        let pageEl = this._getPageElement(currentLoadingPage);
-        // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
-      },
-
-      _getMainPageName: function(page) {
-        return page === 'government-partners' ? 'partners' : page;
-      },
-
-      _pageNotFound: function() {
-        this._updatePath('not-found');
-        // the _pageChanged method will trigger and clear loading messages so no need to do that here
-        this.fire('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
-      },
-
-      _getPageElement: function(pageId) {
-        return this.$$('#' + pageId);
-      },
-
-      _canAccessPage: function(page) {
-        // TODO: (future task) use defer method from utils behavior
-        // (NOTE: not all utils behavior functionality is needed)
-        let defer = {};
-        defer.promise = new Promise(function(resolve, reject) {
-          defer.resolve = resolve;
-          defer.reject = reject;
-        });
-
-        let isPrpPage = this.prpPages.indexOf(page) > -1;
-
-        if (!isPrpPage) {
-          defer.resolve(true);
-        } else {
-          // only prp pages can have access restricted
-          this._waitForEnvFlagsToLoad().then(() => {
-            defer.resolve(this.showPrpReports());
-          });
-        }
-
-        return defer.promise;
-      },
-
-      _activePageIs: function(activePage, expectedPages) {
-        let pagesToMatch = expectedPages.split('|');
-        return pagesToMatch.indexOf(activePage) > -1;
-      },
-      _redirectToProperListPage: function() {
-        if (this.route.path.indexOf('not-found') > -1) {
-          return;
-        }
-        if (this.route.path === this.baseUrl || this.route.path === '/') {
-          // setting the default path when user enters the app
-          // redirect from /pmp/ to /pmp/partners/list
-          this.set('route.path', this.baseUrl + 'partners/list');
-          return;
-        }
-        // redirect from /pmp/<page> to /pmp/<page>/list
-        let currentPath = this.route.path;
-        if (currentPath.indexOf('settings') > -1) {
-          return;
-        }
-        if (currentPath.substr(-1) === '/') {
-          currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
-        }
-        if (currentPath === this.baseUrl + this.routeData.page) {
-          this.set('route.path', this.baseUrl + this.routeData.page + '/list');
-        }
-      },
-
-      _showOnlyGovernmentPartners: function(page) {
-        return page === 'government-partners';
-      },
-
-      _updateLastPartnersActivePage: function(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
+          this.dispatchEvent(new CustomEvent('global-loading', {
+            detail: {
+              active: true,
+              loadingSource: 'main-page'
+            }, bubbles: true, composed: true
+          }));
         }
       }
 
-    });
+      _initListeners() {
+        /**
+         * TODO: polymer2 - make sure called methods exist
+         */
+//        this.addEventListener('drawer', this.toggleDrawer);
+//        this.addEventListener('update-main-path', this._updateMainPath);
+//        this.addEventListener('forbidden', this._onForbidden);
+//        this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
+//        this.addEventListener('404', this._pageNotFound);
+      }
 
+      _onForbidden() {
+        window.location.href = EtoolsPmpApp.Config.loginPath;
+      }
+
+      _routeChanged() {
+        // TODO: polymer2 - this observer should be moved in scroll mixin :)
+//        this.scrollToTop();
+      }
+
+      _routePageChanged(page) {
+        // If no page was found in the route data, page will be an empty string.
+        // Default to 'view1' in that case.
+        this.page = page || 'view1';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+//        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+//        Polymer.importHref(
+//            resolvedPageUrl,
+//            null,
+//            this._showPage404.bind(this),
+//            true);
+      }
+
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+
+    window.customElements.define(AppShell.is, AppShell);
   </script>
 </dom-module>
