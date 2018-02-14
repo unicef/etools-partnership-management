@@ -229,6 +229,6 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = PolymerRedux(dataReduxStore) || {};
+  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = Polymer.dedupingMixin(PolymerRedux(dataReduxStore)) || {};
   // the || {} at the end is there to make the linting script happy
 </script>

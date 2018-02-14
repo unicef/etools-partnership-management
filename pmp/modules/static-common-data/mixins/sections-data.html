@@ -1,0 +1,38 @@
+<link rel="import" href="../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../scripts/lodash.html">
+
+<script>
+  (function() {
+    'use strict';
+
+    window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+    window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+    /*
+    * @polymer
+    * @mixinFunction
+    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    */
+    EtoolsPmpApp.Mixins.SectionsDataImpl = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+
+      static get actions() {
+        return {
+          setSectionsData: function(sectionsData) {
+            return {
+              type: 'SET_SECTIONS',
+              sections: sectionsData
+            };
+          }
+        };
+      }
+
+      _handleSectionsResponse(response) {
+        if (!_.isEmpty(response)) {
+          // set offices values
+          this.dispatch('setSectionsData', response);
+        }
+      }
+
+    };
+
+  })();
+</script>
