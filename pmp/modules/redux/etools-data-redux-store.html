@@ -1,5 +1,6 @@
 <link rel="import" href="../scripts/redux.html">
 <link rel="import" href="../../../bower_components/polymer-redux/polymer-redux.html">
+<link rel="import" href="../../../bower_components/polymer/lib/utils/mixin.html">
 
 <script>
   'use strict';
@@ -225,6 +226,6 @@
    * @polymer
    * @mixinFunction
    */
-  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = PolymerRedux(dataReduxStore) || {};
+  EtoolsPmpApp.Mixins.EtoolsDataReduxStore = Polymer.dedupingMixin(PolymerRedux(dataReduxStore)) || {};
   // the || {} at the end is there to make the linting script happy
 </script>
