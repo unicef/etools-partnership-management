@@ -50,7 +50,7 @@
                      selectable="a"
                      role="navigation">
 
-        <a class="nav-menu-item" menu-name="partners" href$="[[baseUrl]]partners/list" on-tap="_firePageChangeLoading">
+        <a class="nav-menu-item" menu-name="partners" href$="[[rootPath]]partners/list" on-tap="_firePageChangeLoading">
           <iron-icon id="partners-icon" icon="social:people"></iron-icon>
           <paper-tooltip for="partners-icon" position="right">
             Partners
@@ -58,7 +58,7 @@
           <div class="name">Partners</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="agreements" href$="[[baseUrl]]agreements/list" on-tap="_firePageChangeLoading">
+        <a class="nav-menu-item" menu-name="agreements" href$="[[rootPath]]agreements/list" on-tap="_firePageChangeLoading">
           <iron-icon id="agreements-icon" icon="av:playlist-add-check"></iron-icon>
           <paper-tooltip for="agreements-icon" position="right">
             Agreements
@@ -66,7 +66,7 @@
           <div class="name">Agreements</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="interventions" href$="[[baseUrl]]interventions/list" on-tap="_firePageChangeLoading">
+        <a class="nav-menu-item" menu-name="interventions" href$="[[rootPath]]interventions/list" on-tap="_firePageChangeLoading">
           <iron-icon id="pd-ssfa-icon" icon="description"></iron-icon>
           <paper-tooltip for="pd-ssfa-icon" position="right">
             PD/SSFA
@@ -74,7 +74,7 @@
           <div class="name">PD/SSFA</div>
         </a>
 
-        <a class="nav-menu-item" menu-name="government-partners" href$="[[baseUrl]]government-partners/list" on-tap="_firePageChangeLoading">
+        <a class="nav-menu-item" menu-name="government-partners" href$="[[rootPath]]government-partners/list" on-tap="_firePageChangeLoading">
           <iron-icon id="gov-icon" icon="account-balance"></iron-icon>
           <paper-tooltip for="gov-icon" position="right">
             Government
@@ -83,7 +83,7 @@
         </a>
 
         <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-          <a class="nav-menu-item" menu-name="reports" href$="[[baseUrl]]reports/list" on-tap="_firePageChangeLoading">
+          <a class="nav-menu-item" menu-name="reports" href$="[[rootPath]]reports/list" on-tap="_firePageChangeLoading">
             <iron-icon id="reports-icon" icon="assignment"></iron-icon>
             <paper-tooltip for="reports-icon" position="right">
               Reports
@@ -93,7 +93,7 @@
         </template>
 
         <template is="dom-if" if="[[!environmentFlags.prp_mode_off]]" restamp>
-          <a class="nav-menu-item" menu-name="settings" href$="[[baseUrl]]settings" on-tap="_firePageChangeLoading">
+          <a class="nav-menu-item" menu-name="settings" href$="[[rootPath]]settings" on-tap="_firePageChangeLoading">
             <iron-icon id="settings-icon" icon="settings"></iron-icon>
             <paper-tooltip for="settings-icon" position="right">
               Settings
@@ -141,8 +141,6 @@
   <script>
     'use strict';
 
-    // TODO: polymer2 - Integrate EtoolsPmpApp.Mixins.EnvironmentFlags
-
     /**
      * PMP main menu
      * @polymer
@@ -158,7 +156,7 @@
       static get properties() {
         return {
           page: String,
-          baseUrl: String,
+          rootPath: String,
           smallMenu: {
             type: Boolean,
             value: false,

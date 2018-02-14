@@ -1,3 +1,4 @@
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-mixin.html">
 <script>
 
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -5,18 +6,21 @@
    /*
   * @polymer
   * @mixinFunction
+  * @appliedMixin EtoolsMixins.LoadingMixin
   */
-  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends EtoolsMixins.LoadingMixin(baseClass) {
 
     static get properties() {
       return {
         contentContainer: {
-          type: Object,
-          value: function() {
-            return this._getContentContainer();
-          }
+          type: Object
         }
       };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      this.set('contentContainer', this._getContentContainer());
     }
 
     _getContentContainer() {
@@ -35,6 +39,10 @@
     }
 
     scrollToTop() {
+      if (!this.contentContainer) {
+        this.logWarn('Cannot scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
+        return;
+      }
       this.contentContainer.scrollTop = 0;
     }
 

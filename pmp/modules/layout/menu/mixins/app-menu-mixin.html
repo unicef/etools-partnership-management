@@ -28,6 +28,7 @@
     _initMenuListeners() {
       this.addEventListener('toggle-small-menu', this._toggleSmallMenu);
       this.addEventListener('resize-main-layout', this._resizeMainLayout);
+      this.addEventListener('drawer', this._toggleDrawer);
     }
 
     _initMenuSize() {
@@ -78,6 +79,10 @@
       if (headerLayout) {
         headerLayout.notifyResize();
       }
+    }
+
+    _toggleDrawer() {
+      this.$.drawer.toggle();
     }
 
   });

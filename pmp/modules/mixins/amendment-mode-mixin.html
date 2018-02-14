@@ -24,7 +24,6 @@
     }
 
     _updateAmendmentMode(event) {
-      console.log('set-amendment-mode event listener was attached'); // TODO: polymer2 - remove
       let detail = event.detail || {};
       this._setAmendMode(detail.active);
     }
@@ -38,7 +37,7 @@
     }
 
     _closeAmendment() {
-      let intervElem = this.$$('#interventions');
+      let intervElem = this.shadowRoot.querySelector('#interventions');
       if (intervElem) {
         intervElem._showFinalizeAmendmentDialog();
       }
