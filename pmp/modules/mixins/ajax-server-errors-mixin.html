@@ -71,7 +71,7 @@
         if (typeof errors === 'string') {
           errors = [errors];
         }
-        this.dispatchEvent(new CustomEvent(this.errorEventName), {detail: errors, bubbles: true, composed: true});
+        this.dispatchEvent(new CustomEvent(this.errorEventName, {detail: errors, bubbles: true, composed: true}));
       }
     }
 

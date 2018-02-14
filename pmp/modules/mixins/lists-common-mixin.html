@@ -131,8 +131,9 @@
     listAttachedCallback(active, loadingMsg, loadingSource) {
       this.set('stampListData', true);
       if (active) {
-        this.dispatchEvent(new CustomEvent('global-loading'), {detail:{message: loadingMsg, active: true, loadingSource: loadingSource},
-         bubbles: true, composed: true});
+        this.dispatchEvent(new CustomEvent('global-loading',
+         {detail:{message: loadingMsg, active: true, loadingSource: loadingSource},
+         bubbles: true, composed: true}));
       } else {
         this.set('showQueryLoading', true);
       }

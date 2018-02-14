@@ -85,7 +85,7 @@
         if (!this.dataLoadedEventName) {
           console.warn('Please specify data loaded event name(dataLoadedEventName property)');
         } else {
-          this.dispatchEvent(new CustomEvent(this.dataLoadedEventName), {bubbles: true, composed: true });
+          this.dispatchEvent(new CustomEvent(this.dataLoadedEventName, {bubbles: true, composed: true }));
         }
       }
     }
