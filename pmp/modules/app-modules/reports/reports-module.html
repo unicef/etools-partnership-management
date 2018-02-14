@@ -1,0 +1,47 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="reports-module">
+  <template>
+    <style>
+      :host {
+        /* host CSS */
+      }
+    </style>
+
+    <!-- Polymer 2 element template -->
+    Polymer 2 is awesome!<br>
+    Reports pages will be displayed soon
+
+  </template>
+  <script>
+    class ReportsModule extends Polymer.Element {
+
+      static get is() {
+        return 'reports-module';
+      }
+
+      static get properties() {
+        return {};
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+      }
+
+    }
+
+    window.customElements.define(ReportsModule.is, ReportsModule);
+  </script>
+</dom-module>
