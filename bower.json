@@ -22,19 +22,35 @@
     "paper-icon-button": "PolymerElements/paper-icon-button#^2.0.0",
     "paper-button": "PolymerElements/paper-button#^2.0.0",
     "iron-icons": "PolymerElements/iron-icons#^2.0.1",
+    "iron-overlay-behavior": "^2.3.2",
     "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.1",
     "paper-ripple": "PolymerElements/paper-ripple#^2.0.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
+    "paper-dropdown-menu": "^1.4.1",
     "etools-behaviors": "28ab227",
     "etools-loading": "6bdf1e7",
     "etools-ajax": "da2e8aa",
     "etools-piwik-analytics": "ab010e4",
-    "etools-app-selector": "98b8807"
+    "etools-app-selector": "98b8807",
+    "etools-profile-dropdown": "82bd3a1"
   },
   "resolutions": {
     "polymer": "^2.0.0",
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.5",
+    "iron-iconset-svg": "^2.1.1",
+    "webcomponentsjs": "^1.0.0",
+    "iron-flex-layout": "^2.0.2",
+    "iron-selector": "^2.0.1",
+    "paper-ripple": "^2.0.1",
+    "paper-styles": "^2.0.0",
+    "etools-behaviors": "28ab227",
+    "etools-loading": "6bdf1e7",
+    "neon-animation": "^2.0.0",
+    "iron-overlay-behavior": "1 - 2",
+    "paper-input": "^2.0.5",
+    "iron-dropdown": "^2.1.0",
+    "iron-icon": "^2.0.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
