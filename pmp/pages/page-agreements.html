@@ -110,7 +110,7 @@
         </iron-pages>
       </div> <!-- page content end -->
 
-      <template is="dom-if" if="[[_showSidebarStatus(listActive, _subPageOrTabAttached, agreement)]]">
+      <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, agreement)]]">
         <!-- sidebar content start -->
         <div id="sidebar">
           <agreement-status status$="[[agreement.status]]"
