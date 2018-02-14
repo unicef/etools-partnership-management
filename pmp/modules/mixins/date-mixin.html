@@ -45,7 +45,7 @@
      * Make sure you also have the data-selector attribute set on the input field.
      */
     openDatePicker(event) {
-      let id = Polymer.dom(event).localTarget.getAttribute('data-selector');
+      let id = event.target.getAttribute('data-selector');
       if (id) {
         let datePicker = this.shadowRoot.querySelector('#' + id);
         if (datePicker) {
