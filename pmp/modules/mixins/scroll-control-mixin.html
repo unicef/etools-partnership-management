@@ -41,6 +41,7 @@
     scrollToTop() {
       if (!this.contentContainer) {
         this.logWarn('Cannot scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
+        return;
       }
       this.contentContainer.scrollTop = 0;
     }
