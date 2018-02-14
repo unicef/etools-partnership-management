@@ -1,7 +1,7 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 
 <!-- <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html"> -->
 <!-- <link rel="import" href="../../app-config/app-endpoints-behavior.html"> -->
@@ -137,7 +137,7 @@
       }
       
       _triggerCountryChangeRequest(countryId) {
-        this.fire('global-loading', {
+        this.dispatchEvent('global-loading', {
           message: 'Please wait while country is changing...',
           active: true,
           loadingSource: 'country-change'
@@ -155,7 +155,7 @@
       } 
 
       _handleResponse() {
-        this.fire('update-main-path', {path: ''});
+        this.dispatchEvent('update-main-path', {path: ''});
         // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
         // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred
         // by the refresh method
@@ -172,8 +172,8 @@
         this.logError('Country change failed!', 'countries-dropdown', error);
         // TODO: this should be a larger alert.
         this.$.countriesListbox.selected = this.currentCountry;
-        this.fire('toast', {text: 'Something went wrong changing your workspace. Please try again'});
-        this.fire('global-loading', {active: false, loadingSource: 'country-change'});
+        this.dispatchEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
+        this.dispatchEvent('global-loading', {active: false, loadingSource: 'country-change'});
       }
 
     }

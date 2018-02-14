@@ -27,13 +27,15 @@
     "paper-ripple": "PolymerElements/paper-ripple#^2.0.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
-    "paper-dropdown-menu": "^1.4.1",
+    "paper-dropdown-menu": "^2.0.2",
     "etools-behaviors": "28ab227",
     "etools-loading": "6bdf1e7",
     "etools-ajax": "da2e8aa",
     "etools-piwik-analytics": "ab010e4",
     "etools-app-selector": "98b8807",
-    "etools-profile-dropdown": "82bd3a1"
+    "etools-profile-dropdown": "82bd3a1",
+    "paper-listbox": "^2.0.0",
+    "paper-item": "^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0",
