@@ -65,7 +65,7 @@
       if (!useValidate) {
         useValidate = false;
       }
-      let field = this.$$(selector);
+      let field = this.shadowRoot.querySelector(selector);
       if (field) {
         if (useValidate) {
           field.validate();
