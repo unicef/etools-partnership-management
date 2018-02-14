@@ -205,6 +205,10 @@
 
       case 'SET_ENV_FLAGS':
         return Object.assign({}, state, {envFlags: action.envFlags});
+
+      default:
+        // no change
+        return reduxStoreDefaultData;
     }
   };
 

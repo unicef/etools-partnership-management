@@ -13,7 +13,7 @@
 <link rel="import" href="../../styles/custom-iconsets/pmp-icons.html">
 
 
-<!--<link rel="import" href="../app-elements/environment-flags/environment-flags-behavior.html">-->
+<link rel="import" href="../../environment-flags/environment-flags-mixin.html">
 
 <dom-module id="app-sidebar-menu">
   <template>
@@ -147,8 +147,9 @@
      * PMP main menu
      * @polymer
      * @customElement
+     * @appliedMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      */
-    class AppSidebarMenu extends Polymer.Element {
+    class AppSidebarMenu extends EtoolsPmpApp.Mixins.EnvironmentFlags(Polymer.Element) {
 
       static get is() {
         return 'app-sidebar-menu';
@@ -163,11 +164,6 @@
             value: false,
             reflectToAttribute: true,
             observer: '_menuSizeChange'
-          },
-          // TODO: polymer2 - remove this property after EnvironmentFlags is integrated
-          environmentFlags: {
-            type: Object,
-            value: {}
           }
         };
       }
