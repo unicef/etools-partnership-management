@@ -34,14 +34,13 @@
         properties: {
           interventionId: Number,
           paginator: Object,
-          urlParams: Object,
           prevParams: Object,
           active: Boolean,
           initComplete: Boolean
         },
 
         observers: [
-          '_init(active, urlParams)',
+          '_init(active)',
           '_updateURL(paginator.page, paginator.page_size, interventionId, initComplete)'
         ],
 
@@ -54,18 +53,14 @@
           this.fire('tab-content-attached');
         },
 
-        _init: function(active, urlParams) {
+        _init: function(active) {
           this.set('initComplete', false);
           if (!active) {
             return;
           }
-          if (_.isEmpty(urlParams) && !_.isEmpty(this.prevParams)) {
-            // we need to make sure url query params are not lost at tab change
-            urlParams = Object.assign({}, this.prevParams);
-            this.set('prevParams', {});
-          }
-          let page = (urlParams && urlParams.page) ? Number(urlParams.page) : 1;
-          let pageSize = (urlParams && urlParams.page_size) ? Number(urlParams.page_size) : 10;
+
+          let page = (this.prevParams && this.prevParams.page) ? Number(this.prevParams.page) : 1;
+          let pageSize = (this.prevParams && this.prevParams.page_size) ? Number(this.prevParams.page_size) : 10;
           this.set('paginator.page', page);
           this.set('paginator.page_size', pageSize);
 
@@ -88,7 +83,7 @@
               return;
             }
             let qs = 'page=' + page + '&' + 'page_size=' + pageSize;
-            this.updateAppState('interventions/' + interventionId + '/reports', qs, true);
+            this.updateAppState('interventions/' + interventionId + '/reports', qs);
             this.set('prevParams', Object.assign({}, {page: page, page_size: pageSize}));
           }, 20);
         }

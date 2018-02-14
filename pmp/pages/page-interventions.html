@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
 <link rel="import" href="../../bower_components/etools-behaviors/etools-logs-behavior.html">
@@ -101,11 +100,6 @@
                                    title="[[errorMsgBox_Title]]"
                                    errors="{{serverErrors}}"></etools-error-messages-box>
 
-        <iron-pages id="interventionsPages"
-                    selected="{{activePage}}"
-                    attr-for-selected="name"
-                    role="main">
-
           <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <interventions-list id="intList"
                                 name="list"
@@ -156,15 +150,13 @@
                                   name="reports"
                                   intervention-id="[[intervention.id]]"
                                   active="[[_pageEquals(activePage, 'reports')]]"
-                                  url-params="[[_getReportsTabUrlParams(activePage)]]"></intervention-reports>
+                                  prev-params="{{reportsPrevParams}}"></intervention-reports>
           </template>
 
           <template is="dom-if" if="[[_visibleTabContent(activePage, 'progress', newInterventionActive)]]" restamp>
             <intervention-progress name="progress"
                                    intervention-id="[[intervention.id]]"></intervention-progress>
           </template>
-
-        </iron-pages>
 
         <intervention-item-data id="interventionData"
                                 intervention="{{intervention}}"
@@ -298,7 +290,8 @@
           }
         },
         _forceDetUiValidationOnAttach: Boolean,
-        _forceReviewUiValidationOnAttach: Boolean
+        _forceReviewUiValidationOnAttach: Boolean,
+        reportsPrevParams: Object
       },
       observers: [
         '_pageChanged(listActive, tabsActive, routeData)',
@@ -429,6 +422,9 @@
         }
         this.scrollToTopOnCondition(!listActive);
 
+        if (listActive) {
+          this.reportsPrevParams = {};
+        }
         this.debounce('pageChange', () => {
           let fileImportDetails = {
             filenamePrefix: 'intervention',
@@ -602,14 +598,6 @@
         return (['reports', 'progress'].indexOf(activePage) > -1)
             ? false
             : this._showSidebarStatus(listActive, tabAttached);
-      },
-
-      _getReportsTabUrlParams: function(activePage) {
-        let params = null;
-        if (this._pageEquals(activePage, 'reports')) {
-          params = Object.assign({}, this.route.__queryParams);
-        }
-        return params;
       },
 
       /**
