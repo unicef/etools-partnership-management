@@ -113,18 +113,21 @@
     _handleDeleteResponse() {
       this._deleteElement();
       this.elToDeleteIndex = -1;
-      this.fire('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      let eventPayload = {text: errorMessage, showCloseBtn: true};
+      this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
     }
     _handleDeleteError(responseErr) {
-      this.fire('global-loading', {active: false, loadingSource: this.deleteLoadingSource});
+      let eventPayload = {active: false, loadingSource: this.deleteLoadingSource};
+      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+
       let msg = this.deleteActionDefaultErrMsg;
       if (responseErr instanceof Array && responseErr.length > 0) {
         msg = responseErr.join('\n');
       } else if (typeof responseErr === 'string') {
         msg = responseErr;
       }
-
-      this.fire('toast', {text: msg, showCloseBtn: true});
+      let toastEventPayload = {text: msg, showCloseBtn: true};
+      this.dispatchEvent(new CustomEvent('toast', {detail: toastEventPayload, bubbles: true, composed: true}));
     }
     _onDeleteConfirmation(event) {
       this.deleteDialog.opened = false;
@@ -138,11 +141,13 @@
             this.logError('You must define _deleteEpName property to be able to remove existing records');
             return;
           }
-          this.fire('global-loading', {
+
+          let eventPayload = {
             message: this.deleteActionLoadingMsg,
             active: true,
             loadingSource: this.deleteLoadingSource
-          });
+          };
+          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
 
           let self = this;
           let deleteEndpoint = this.getEndpoint(this._deleteEpName, {id: id});
@@ -173,7 +178,9 @@
       let index = this.elToDeleteIndex;
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
-        this.fire('delete-confirm', {index: this.elToDeleteIndex});
+
+        let eventPayload =  {index: this.elToDeleteIndex};
+        this.dispatchEvent(new CustomEvent('delete-confirm', {detail: eventPayload, bubbles: true, composed: true}));
       }
     }
 

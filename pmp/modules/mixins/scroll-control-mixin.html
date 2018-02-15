@@ -6,9 +6,9 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsMixins.LoadingMixin
+  * @appliedMixin EtoolsLogsMixin
   */
-  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends EtoolsMixins.LoadingMixin(baseClass) {
+  EtoolsPmpApp.Mixins.ScrollControl = (baseClass) => class extends EtoolsLogsMixin(baseClass) {
 
     static get properties() {
       return {
