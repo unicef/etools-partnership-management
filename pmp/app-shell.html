@@ -62,6 +62,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/amendment-mode-mixin.html">
 
+<!-- import static data element -->
+<link rel="import" href="modules/static-common-data/static-common-data.html">
+
 <!-- lazy imports -->
 <link rel="lazy-import" href="modules/app-modules/404/not-found.html">
 <link rel="lazy-import" href="modules/app-modules/partners/partners-module.html">
@@ -144,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-route
         route="{{route}}"
-        pattern="[[rootPath]]:page"
+        pattern="[[rootPath]]:module"
         data="{{routeData}}"
         tail="{{subroute}}">
     </app-route>
@@ -156,7 +159,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   swipe-open="[[narrow]]" small-menu$="[[smallMenu]]">
         <!-- App main menu(left sidebar) -->
         <app-sidebar-menu root-path="[[rootPath]]"
-                          page="[[page]]"
+                          module="[[module]]"
                           small-menu$="[[smallMenu]]"></app-sidebar-menu>
       </app-drawer>
 
@@ -169,41 +172,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
 
-          <template is="dom-if" if="[[_activePageIs(page, 'partners|government-partners')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'partners|government-partners')]]" restamp>
             <partners-module id="partners" class="main-page"
-                      show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnerPage)]]"
-                      current-page="[[_lastActivePartnerPage]]"
+                      show-only-government-type="[[_showOnlyGovernmentPartners(_lastActivePartnersModule)]]"
+                      current-page="[[_lastActivePartnersModule]]"
                       route="{{subroute}}"
                       permissions="[[permissions]]">
             </partners-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'agreements')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'agreements')]]" restamp>
             <agreements-module id="agreements" class="main-page"
                         route="{{subroute}}"
                         permissions="[[permissions]]">
             </agreements-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'interventions')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'interventions')]]" restamp>
             <interventions-module id="interventions" class="main-page"
                            route="{{subroute}}"
                            permissions="[[permissions]]">
             </interventions-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'reports')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'reports')]]" restamp>
             <reports-module id="reports" class="main-page"
                      route="{{subroute}}"
                      permissions="[[permissions]]">
             </reports-module>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'not-found')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'not-found')]]" restamp>
             <not-found class="main-page"></not-found>
           </template>
 
-          <template is="dom-if" if="[[_activePageIs(page, 'settings')]]" restamp>
+          <template is="dom-if" if="[[_activeModuleIs(module, 'settings')]]" restamp>
             <settings-module id="settings" class="main-page"></settings-module>
           </template>
 
@@ -223,9 +226,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-drawer-layout>
 
     <!-- TODO: polymer2 - uncomment this after data refresh dialog is element is ready -->
-    <!--<data-refresh-dialog id="dataRefreshDialog" page="{{page}}"></data-refresh-dialog>-->
+    <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
 
     <!-- TODO: polymer2 - static data load here -->
+    <static-common-data></static-common-data>
 
   </template>
 
@@ -265,15 +269,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get properties() {
         return {
           /**
-           * `page` property represents the current displayed module of the PMP app.
+           * `module` property represents the current displayed module of the PMP app.
            * It can only have there values: partners, agreements, interventions, reports, settings and not-found.
            * Main modules will have other pages and routing (prefixed by app-shell route).
-           * TODO: rename this property to `pageCategory` or `activeModule`?
            */
-          page: {
+          module: {
             type: String,
             reflectToAttribute: true,
-            observer: '_pageChanged',
+            observer: '_moduleChanged',
           },
           route: Object,
           routeData: Object,
@@ -290,22 +293,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Object,
             value: null
           },
-          _lastActivePartnerPage: String,
-          prpPages: {
+          _lastActivePartnersModule: String,
+          _prpModules: {
             type: Array,
             value: ['reports', 'settings']
           },
-          _appModulePageUrlTmpl: {
+          _appModuleMainElUrlTmpl: {
             type: String,
-            value: 'modules/app-modules/##module##/##page##-module.html'
+            value: 'modules/app-modules/##module##/##main-el-name##-module.html'
           }
         };
       }
 
       static get observers() {
         return [
-          '_routePageChanged(routeData.page)',
-          '_scrollToTopOnPageChange(page)'
+          '_routePageChanged(routeData.module)',
+          '_scrollToTopOnPageChange(module)'
         ];
       }
 
@@ -323,11 +326,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // TODO: -polymer2 - integrate IE11 old behavior
         // this.addIE11StyleTweaks();
 
-        if (this.page !== 'not-found') {
+        if (this.module !== 'not-found') {
           /*
            * Activate the global loading with default message.
            * This will be triggered once at page load or, after page load, on menu option tap event.
-           * The loading message is disabled by page-* elements ready callback (in both cases)
+           * The loading message is disabled by *-module.html elements ready callback (in both cases)
            */
           this.dispatchEvent(new CustomEvent('global-loading', {
             detail: {
@@ -349,9 +352,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.addEventListener('open-data-refresh-dialog', this._openDataRefreshDialog);
       }
 
-      _scrollToTopOnPageChange(page) {
+      _scrollToTopOnPageChange(module) {
         // TODO: polymer2 - check if this observer is correct. Do we realy need it?
-        if (!page) {
+        if (!module) {
           return;
         }
         this.scrollToTop();
@@ -380,7 +383,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageNotFound() {
         this._updatePath('not-found');
-        // the _pageChanged method will trigger and clear loading messages so no need to do that here
+        // the _moduleChanged method will trigger and clear loading messages so no need to do that here
         let eventPayload = {text: 'Oops you hit a 404!', showCloseBtn: true};
         this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
       }
@@ -389,7 +392,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.dataRefreshDialog.open();
       }
 
-      _canAccessPage(page) {
+      _canAccessPage(module) {
         // TODO: (future task) use defer method from utils mixin
         // (NOTE: not all utils behavior functionality is needed)
         let defer = {};
@@ -398,12 +401,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           defer.reject = reject;
         });
 
-        let isPrpPage = this.prpPages.indexOf(page) > -1;
+        let isPrpModule = this._prpModules.indexOf(module) > -1;
 
-        if (!isPrpPage) {
+        if (!isPrpModule) {
           defer.resolve(true);
         } else {
-          // only prp pages can have access restricted
+          // only prp modules can have access restricted
           this._waitForEnvFlagsToLoad().then(() => {
             defer.resolve(this.showPrpReports());
           });
@@ -413,11 +416,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /**
-       * Set main page using route page param
+       * Set active module using route module param
        * @param routePage
        */
       _routePageChanged(routePage) {
-        // If no page was found in the route data, page will be an empty string.
+        // If no routePage was found in the route data, routePage will be an empty string.
         // Default to 'partners/list' in that case.
         if (!routePage) {
           this._updatePath('partners/list');
@@ -428,84 +431,83 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (!accessGranted) {
             this._pageNotFound();
           } else {
-            this.set('page', routePage);
+            this.set('module', routePage);
           }
         });
 
-        // Close a non-persistent drawer when the page & route are changed.
+        // Close a non-persistent drawer when the module & route are changed.
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       }
 
-      _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
-        this._importAppModuleMainPage(page);
+      _moduleChanged(module) {
+        // Load module import on demand. Show 404 page if fails
+        this._importAppModuleMainEl(module);
         // set last partners active page... needed to make a difference between partners and government-partners
-        this._updateLastPartnersModuleActivePage(page);
+        this._updateLastPartnersModuleActivePage(module);
         // clear loading messages queue
         this.dispatchEvent(new CustomEvent('clear-loading-messages', {bubbles: true, composed: true}));
         this._setAmendMode(false);
       }
 
-      _getModuleMainPageUrl(page) {
-        let url = this._appModulePageUrlTmpl.replace('##module##', page);
-        if (page === 'not-found') {
+      _getModuleMainElUrl(elementName) {
+        let url = this._appModuleMainElUrlTmpl.replace('##module##', elementName);
+        if (elementName === 'not-found') {
           url = url.replace('-module.', '.');
         }
-        // console.log(page, url);
-        return url.replace('##page##', page);
+        return url.replace('##main-el-name##', elementName);
       }
 
       /**
        * Import app module main element.
        * This element will have it's own routing based on app-shell subroute
-       * @param page
+       * @param module
        * @private
        */
-      _importAppModuleMainPage(page) {
-        if (!page) {
+      _importAppModuleMainEl(module) {
+        if (!module) {
           return;
         }
         // resolve element import url
-        let appModuleMainPageName = this._getAppModulePageName(page);
-        let resolvedPageUrl = this.resolveUrl(this._getModuleMainPageUrl(appModuleMainPageName));
+        let appModuleMainElId = this._getAppModuleMainElId(module);
+        let resolvedPageUrl = this.resolveUrl(this._getModuleMainElUrl(appModuleMainElId));
 
-        // import main page if needed
-        let pageEl = this._getPageElement(appModuleMainPageName);
-        let isPolymerElement = pageEl instanceof Polymer.Element;
+        // import main module element if needed
+        let moduleMainEl = this._getModuleMainElement(appModuleMainElId);
+        let isPolymerElement = moduleMainEl instanceof Polymer.Element;
         if (!isPolymerElement) {
-          // pageEl is null => make the import
+          // moduleMainEl is null => make the import
           Polymer.importHref(
               resolvedPageUrl,
-              this._successfulImportCallback.bind(this, appModuleMainPageName),
+              this._successfulImportCallback.bind(this, appModuleMainElId),
               this._pageNotFound.bind(this),
               true);
         }
       }
 
-      _getAppModulePageName(page) {
-        return page === 'government-partners' ? 'partners' : page;
+      _getAppModuleMainElId(module) {
+        return module === 'government-partners' ? 'partners' : module;
       }
 
-      _getPageElement(pageId) {
-        return this.shadowRoot.querySelector('#' + pageId);
+      _getModuleMainElement(moduleId) {
+        return this.shadowRoot.querySelector('#' + moduleId);
       }
 
       /**
-       * Module main page import success callback
+       * Module main element import success callback
        * @param currentLoadingPage
        */
-      _successfulImportCallback(currentLoadingPage) {
-        // pageEl will be available only after import successfully completes
-        let pageEl = this._getPageElement(currentLoadingPage);
+      _successfulImportCallback(moduleId) {
+        // moduleMainEl will be available only after import successfully completes
+        let moduleMainEl = this._getModuleMainElement(moduleId);
         // make sure to redirect to list page if necessary
-        Polymer.RenderStatus.afterNextRender(pageEl, this._redirectToProperListPage.bind(this));
+        Polymer.RenderStatus.afterNextRender(moduleMainEl, this._redirectToProperListPage.bind(this));
       }
 
-      _activePageIs(activePage, expectedPages) {
-        let pagesToMatch = expectedPages.split('|');
-        return pagesToMatch.indexOf(activePage) > -1;
+      _activeModuleIs(activeModule, expectedModule) {
+        let pagesToMatch = expectedModule.split('|');
+        return pagesToMatch.indexOf(activeModule) > -1;
       }
 
       _redirectToProperListPage() {
@@ -518,7 +520,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('route.path', this.rootPath + 'partners/list');
           return;
         }
-        // redirect from /pmp/<page> to /pmp/<page>/list
+        // redirect from /pmp/<module> to /pmp/<module>/list
         let currentPath = this.route.path;
         if (currentPath.indexOf('settings') > -1) {
           return;
@@ -526,18 +528,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (currentPath.substr(-1) === '/') {
           currentPath = currentPath.slice(0, currentPath.lastIndexOf('/'));
         }
-        if (currentPath === this.rootPath + this.routeData.page) {
-          this.set('route.path', this.rootPath + this.routeData.page + '/list');
+        if (currentPath === this.rootPath + this.routeData.module) {
+          this.set('route.path', this.rootPath + this.routeData.module + '/list');
         }
       }
 
-      _showOnlyGovernmentPartners(page) {
-        return page === 'government-partners';
+      _showOnlyGovernmentPartners(module) {
+        return module === 'government-partners';
       }
 
-      _updateLastPartnersModuleActivePage(page) {
-        if (page && ['partners', 'government-partners'].indexOf(page) > -1) {
-          this.set('_lastActivePartnerPage', page);
+      _updateLastPartnersModuleActivePage(module) {
+        if (module && ['partners', 'government-partners'].indexOf(module) > -1) {
+          this.set('_lastActivePartnersModule', module);
         }
       }
 

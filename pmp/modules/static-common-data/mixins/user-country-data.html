@@ -6,32 +6,33 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    */
-    EtoolsPmpApp.Mixins.UserCountryData = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.UserCountryData =
+        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
-      static get actions() {
-        return {
-          setUserCountryData: function(countryData) {
+          static get actions() {
             return {
-              type: 'SET_USER_COUNTRY_DATA',
-              countryData: countryData
+              setUserCountryData: function(countryData) {
+                return {
+                  type: 'SET_USER_COUNTRY_DATA',
+                  countryData: countryData
+                };
+              }
             };
           }
+
+          _handleUserCountryDataResponse(response) {
+            if (!_.isEmpty(response)) {
+              // set user country data
+              this.dispatch('setUserCountryData', response[0]);
+            }
+          }
+
         };
-      }
-
-      _handleUserCountryDataResponse(response) {
-        if (!_.isEmpty(response)) {
-          // set user country data
-          this.dispatch('setUserCountryData', response[0]);
-        }
-      }
-
-    };
 
   })();
 </script>

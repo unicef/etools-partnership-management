@@ -45,7 +45,7 @@
     </div>
 
     <div class="nav-menu">
-      <iron-selector selected="[[page]]"
+      <iron-selector selected="[[module]]"
                      attr-for-selected="menu-name"
                      selectable="a"
                      role="navigation">
@@ -155,7 +155,7 @@
 
       static get properties() {
         return {
-          page: String,
+          module: String,
           rootPath: String,
           smallMenu: {
             type: Boolean,
@@ -174,16 +174,16 @@
 
       _firePageChangeLoading(e) {
         let menuOptionEl = e.currentTarget;
-        let partnersPages = ['partners', 'government-partners'];
-        let newPageName = menuOptionEl.getAttribute('menu-name');
+        let partnersModules = ['partners', 'government-partners'];
+        let newModuleName = menuOptionEl.getAttribute('menu-name');
 
-        if (partnersPages.indexOf(newPageName) > -1 && partnersPages.indexOf(this.page) > -1) {
+        if (partnersModules.indexOf(newModuleName) > -1 && partnersModules.indexOf(this.module) > -1) {
           return;
         }
 
-        if (newPageName !== this.page) {
+        if (newModuleName !== this.module) {
           let eventPayload = {
-            message: 'Loading ' + newPageName + ' pages elements...',
+            message: 'Loading ' + newModuleName + ' pages elements...',
             active: true,
             loadingSource: 'main-page'
           };

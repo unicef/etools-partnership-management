@@ -6,32 +6,33 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    */
-    EtoolsPmpApp.Mixins.PRPCountriesImpl = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.PRPCountries =
+        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
-      static get actions() {
-        return {
-          setPRPCountries: function(countryData) {
+          static get actions() {
             return {
-              type: 'SET_PRP_COUNTRY_DATA',
-              PRPCountryData: countryData
+              setPRPCountries: function(countryData) {
+                return {
+                  type: 'SET_PRP_COUNTRY_DATA',
+                  PRPCountryData: countryData
+                };
+              }
             };
           }
+
+          _handlePRPCountryDataResponse(response) {
+            if (!_.isEmpty(response)) {
+              // set user country data
+              this.dispatch('setPRPCountries', response);
+            }
+          }
+
         };
-      }
-
-      _handlePRPCountryDataResponse(response) {
-        if (!_.isEmpty(response)) {
-          // set user country data
-          this.dispatch('setPRPCountries', response);
-        }
-      }
-
-    };
 
   })();
 </script>
