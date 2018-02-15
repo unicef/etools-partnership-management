@@ -140,7 +140,7 @@
         if (!source) {
           source = this;
         }
-        source.dispatchEvent(new CustomEvent('404'), {bubbles: true, composed: true });
+        source.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
         return;
       }
 

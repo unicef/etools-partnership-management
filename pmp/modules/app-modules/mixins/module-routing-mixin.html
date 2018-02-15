@@ -1,0 +1,172 @@
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+
+<script>
+  'use strict';
+
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * Module page routing functionality
+   * @polymer
+   * @mixinFunction
+   * @appliedMixin EtoolsLogsMixin
+   */
+  EtoolsPmpApp.Mixins.ModuleRouting = Polymer.dedupingMixin(
+      (superClass) => class extends EtoolsLogsMixin(superClass) {
+        static get properties() {
+          return {
+            listActive: Boolean,
+            tabsActive: Boolean,
+            route: Object,
+            routeData: Object,
+            activePage: {
+              type: String,
+              notify: true,
+              observer: '_activePageChanged'
+            },
+            /**
+             * This flag is used to make sure status sidebar doesn't show before tab content is loaded.
+             * The flag is updated:
+             *    - true: when the main tab element fires tab-content-attached event (_requestedTabContentHasBeenAttached)
+             *    - false: - when activePage is changed and it's one of the main tabs &&
+             *             - the previous activePage value is not the list &&
+             *             - tab content element was not loaded before (_resetTabAttachedFlagIfNeeded)
+             */
+            tabAttached: {
+              type: Boolean,
+              value: false
+            }
+          };
+        }
+
+        ready() {
+          super.ready();
+          this.addEventListener('tab-content-attached', this._requestedTabContentHasBeenAttached.bind(this));
+        }
+
+        _activePageChanged(currentPage, previousPage) {
+          if (currentPage === undefined) {
+            return;
+          }
+          this._clearRouteQueryParamsIfNeeded(previousPage);
+          this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
+        }
+
+        /**
+         *Avoid Reports page query string lingering on other intervention tabs
+         */
+        _clearRouteQueryParamsIfNeeded(previousPage) {
+          if (previousPage === 'reports') {
+            //* Info:Clearing the query params in the subroute doesn't work,
+            //  has to be in the parent route
+            this.dispatchEvent(new CustomEvent('update-route-query-params',
+                {detail: null, bubbles: true, composed: true}));
+          }
+        }
+
+        /**
+         * Use tabAttached to mark when requested tab has been attached to DOM.
+         * Used to make sure sidebar doesn't show while tab element is still loading
+         */
+        _requestedTabContentHasBeenAttached() {
+          this.set('tabAttached', true);
+        }
+
+        /**
+         * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
+         */
+        _resetTabAttachedFlagIfNeeded(currentPage, previousPage) {
+          let selectedTab = this.shadowRoot.querySelector('[name="' + currentPage + '"]');
+          if (this.listActive || (!selectedTab && previousPage && previousPage === 'list')) {
+            this.set('tabAttached', false);
+          }
+          if (selectedTab) {
+            // tab already loaded, make sure the flag is true when coming from the list
+            this.set('tabAttached', true);
+          }
+        }
+
+        _getFilenamePrefix(listActive, fileImportDetails) {
+          // set page element prefix... filename prefix ex: partners- or partner- , agreements- or agreement-
+          return (listActive ? (fileImportDetails.filenamePrefix + 's') : fileImportDetails.filenamePrefix) + '-';
+        }
+
+        _getFileBaseUrl(page, fileImportDetails, appendBasePathAdditionalFolder) {
+          let baseUrl = fileImportDetails.baseUrl;
+          if (typeof appendBasePathAdditionalFolder === 'function') {
+            // the file might be in a folder named as current tab name (ex: intervention reports and progress tabs)
+            baseUrl = appendBasePathAdditionalFolder.bind(this, baseUrl, page)();
+          }
+          return baseUrl;
+        }
+
+        _handleSuccessfulImport(page, successCallback) {
+          // set active page
+          this.set('activePage', page);
+          if (typeof successCallback === 'function') {
+            successCallback.bind(this)();
+          }
+        }
+
+        _handleFailedImport(err, page, fileImportDetails) {
+          // log page element import failed error
+          let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
+          this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
+
+          let eventPayload = {active: false, loadingSource: fileImportDetails.loadingMsgSource};
+          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+          this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+        }
+
+        setActivePage(listActive, tab, fileImportDetails, canAccessTab,
+                      appendBasePathAdditionalFolder, successfulImportCallback) {
+          let page = listActive ? 'list' : tab;
+
+          if (listActive) {
+            // clear server errors for the list
+            this.dispatchEvent(new CustomEvent('clear-server-errors', {bubbles: true, composed: true}));
+          } else {
+            if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
+              // the user cannot access this tab (ex: prp tabs on interventions)
+              this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+              return;
+            }
+          }
+
+          if (page && page !== this.activePage) {
+            // import main page element
+            let importFilenamePrefix = this._getFilenamePrefix(listActive, fileImportDetails);
+            let baseUrl = this._getFileBaseUrl(page, fileImportDetails, appendBasePathAdditionalFolder);
+            let fileName = importFilenamePrefix + page;
+            this.importPageElement(fileName, baseUrl).then(() => {
+              this._handleSuccessfulImport(page, successfulImportCallback);
+            }).catch((err) => {
+              this._handleFailedImport(err, page, fileImportDetails);
+            });
+          }
+        }
+
+        _updateNewItemPageFlag(routeData, listActive) {
+          return routeData && routeData.id === 'new' && !listActive;
+        }
+
+        importPageElement(fileName, baseUrl) {
+          return new Promise((resolve, reject) => {
+            let customElement = this.shadowRoot.querySelector(fileName);
+            if (customElement instanceof Polymer.Element === false) {
+              let resolvedPageUrl = this.resolveUrl(baseUrl + fileName + '.html');
+              Polymer.importHref(resolvedPageUrl, () => {
+                resolve();
+              }, (err) => {
+                reject(err);
+              });
+            } else {
+              resolve();
+            }
+          });
+        }
+
+      });
+
+</script>

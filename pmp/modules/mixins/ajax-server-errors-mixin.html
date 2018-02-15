@@ -7,7 +7,7 @@
   * @polymer
   * @mixinFunction
   */
-  EtoolsPmpApp.Mixins.AjaxServerErrorsImpl  = (baseClass) => class extends EtoolsPmpApp.Mixins.AjaxErrorsParser(baseClass) {
+  EtoolsPmpApp.Mixins.AjaxServerErrors  = (baseClass) => class extends EtoolsPmpApp.Mixins.AjaxErrorsParser(baseClass) {
 
     static get properties() {
       return {
@@ -33,13 +33,16 @@
 
     handleErrorResponse(response, ajaxMethod, redirectOn404) {
       if (redirectOn404 && response.status === 404) {
-        this.fire('404');
+        this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
         return;
       }
-      this.fire('global-loading', {
+
+      let eventPayload = {
         active: false,
         loadingSource: !!this.ajaxLoadingMsgSource ? this.ajaxLoadingMsgSource : null
-      });
+      };
+      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+
       let errors = this.tryGetResponseError(response);
 
       let errorMessage = this.globalMessage;
@@ -56,7 +59,8 @@
         if (this.serverErrors.length > 1) {
           errorMessage = this.serverErrors.join('\n');
         }
-        this.fire('toast', {text: errorMessage, showCloseBtn: true});
+        let eventPayload = {text: errorMessage, showCloseBtn: true};
+        this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
       } else {
         if (this.serverErrors.length === 0) {
           this._fireAjaxErrorEvent(errorMessage);
@@ -71,7 +75,7 @@
         if (typeof errors === 'string') {
           errors = [errors];
         }
-        this.dispatchEvent(new CustomEvent(this.errorEventName), {detail: errors, bubbles: true, composed: true});
+        this.dispatchEvent(new CustomEvent(this.errorEventName, {detail: errors, bubbles: true, composed: true}));
       }
     }
 

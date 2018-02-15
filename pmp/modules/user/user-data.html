@@ -1,3 +1,4 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 <link rel="import" href="../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
@@ -6,31 +7,33 @@
 <link rel="import" href="../redux/etools-data-redux-store.html">
 <link rel="import" href="user-permissions-mixin.html">
 
-<script>
-  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
-  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Mixins || {};
+<dom-module id="user-data">
+  <script>
+    'use strict';
 
-  /**
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPageRefreshMixin
-    * @appliedMixin EtoolsAjaxRequestMixin
-    * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    * @appliedMixin EtoolsPmpApp.Mixins.UserPermissions
-    */
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsAjaxRequestMixin
+     * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliedMixin EtoolsPmpApp.Mixins.UserPermissions
+     * @appliedMixin EtoolsPageRefreshMixin
+     */
+    const UserDataMixin = EtoolsMixinFactory.combineMixins(
+        [EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+          EtoolsPmpApp.Mixins.UserPermissions, EtoolsPageRefreshMixin],
+        Polymer.Element);
 
-  EtoolsPmpApp.Mixins.UserData = (baseClass) =>
-    class extends EtoolsPageRefreshMixin(
-        EtoolsAjaxRequestMixin(
-          EtoolsPmpApp.Mixins.Endpoints(
-            EtoolsPmpApp.Mixins.EtoolsDataReduxStore(
-              EtoolsPmpApp.Mixins.UserPermissions(baseClass)
-            )
-          )
-        )
-      ) {
-    // TODO: find a way to clean up the above syntax
+    /**
+     * @polymer
+     * @customElement
+     */
+    class UserData extends UserDataMixin {
+
+      static get is() {
+        return 'user-data';
+      }
 
       static get properties() {
         return {
@@ -54,6 +57,7 @@
           }
         };
       }
+
       static get actions() {
         return {
           setCurrentUser: function(user) {
@@ -64,8 +68,10 @@
           }
         }
       }
+
       connectedCallback() {
         super.connectedCallback();
+
         this.sendRequest({
           endpoint: this.getEndpoint(this.endpointName)
         }).then((res) => {
@@ -81,32 +87,39 @@
           }
         });
       }
+
       checkDexieCountryIsUserCountry(user) {
         let country = {
           id: user.country.id,
           name: user.country.name
         };
+
         EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.where('cacheKey').equals('currentCountry').toArray()
             .then((response) => {
               if (response.length > 0) {
                 if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
+
                   let eventPayload = {
                     message: 'Please wait while data is refreshed...',
                     active: true,
                     loadingSource: 'country-update'
                   };
+
                   this.dispatchEvent(new CustomEvent('global-loading', {
                     detail: eventPayload,
                     bubbles: true,
                     composed: true
                   }));
+
                   this.refresh();
                 }
+
               } else {
                 this.addCountryInIndexedDb(country);
               }
             });
       }
+
       addCountryInIndexedDb(country) {
         let dataToCache = {
           cacheKey: 'currentCountry',
@@ -114,22 +127,28 @@
         };
         EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
       }
+
       _findGroup(groupName) {
         return _.find(this.userGroups, function(grp) {
           return grp.name === groupName;
         });
       }
+
       _resetUserAndPermissions() {
         this._setUser(null);
         this._setPermissions(null);
       }
+
       _setUserData(data) {
         let _user = data;
         let _permissions = {};
+
         this._setUser(_user);
         let permissionsList = this.getAllPermissions();
+
         if (!_.isEmpty(data)) {
           this._setUserGroups(_user.groups);
+
           permissionsList.defaultPermissions.forEach(function(perm) {
             _permissions[perm] = true;
           });
@@ -161,5 +180,9 @@
         }
         this._setPermissions(_permissions);
       }
+
     }
-</script>
+
+    window.customElements.define(UserData.is, UserData);
+  </script>
+</dom-module>

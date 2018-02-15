@@ -5,33 +5,34 @@
     'use strict';
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
-    window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    */
-    EtoolsPmpApp.Behaviors.LocationsData = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+    window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.LocationsData =
+        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
-      static get actions() {
-        return {
-          setLocations: function(locationsData) {
+          static get actions() {
             return {
-              type: 'SET_LOCATIONS',
-              locations: locationsData
+              setLocations: function(locationsData) {
+                return {
+                  type: 'SET_LOCATIONS',
+                  locations: locationsData
+                };
+              }
             };
           }
+
+          _handleLocationsResponse(response) {
+            if (!_.isEmpty(response)) {
+              // set locations values
+              this.dispatch('setLocations', response);
+            }
+          }
+
         };
-      }
-
-      _handleLocationsResponse(response) {
-        if (!_.isEmpty(response)) {
-          // set locations values
-          this.dispatch('setLocations', response);
-        }
-      }
-
-    };
 
   })();
 </script>

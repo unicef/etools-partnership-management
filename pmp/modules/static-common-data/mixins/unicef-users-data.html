@@ -6,32 +6,33 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    */
-    EtoolsPmpApp.Mixins.UnicefUsersDataImpl = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.UnicefUsersData =
+        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
-      static get actions() {
-        return {
-          setUsersData: function(usersData) {
+          static get actions() {
             return {
-              type: 'SET_UNICEF_USERS_DATA',
-              unicefUsersData: usersData
+              setUsersData: function(usersData) {
+                return {
+                  type: 'SET_UNICEF_USERS_DATA',
+                  unicefUsersData: usersData
+                };
+              }
             };
           }
+
+          _handleUnicefUsersResponse(response) {
+            if (!_.isEmpty(response)) {
+              // set setUsersData values
+              this.dispatch('setUsersData', response);
+            }
+          }
+
         };
-      }
-
-      _handleUnicefUsersResponse(response) {
-        if (!_.isEmpty(response)) {
-          // set setUsersData values
-          this.dispatch('setUsersData', response);
-        }
-      }
-
-    };
 
   })();
 </script>

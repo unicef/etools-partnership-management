@@ -6,31 +6,32 @@
 
     window.EtoolsPmpApp = window.EtoolsPmpApp || {};
     window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-    /*
-    * @polymer
-    * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    */
-    EtoolsPmpApp.Mixins.CountryProgrammesData = (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     */
+    EtoolsPmpApp.Mixins.CountryProgrammesData =
+        (baseClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(baseClass) {
 
-      static get actions() {
-        return {
-          setCountryProgrammesData: function(cpData) {
+          static get actions() {
             return {
-              type: 'SET_CP_DATA',
-              countryProgrammes: cpData
+              setCountryProgrammesData: function(cpData) {
+                return {
+                  type: 'SET_CP_DATA',
+                  countryProgrammes: cpData
+                };
+              }
             };
           }
+
+          _handleCountryProgrammesResponse(response) {
+            if (!_.isEmpty(response)) {
+              // set setUsersData values
+              this.dispatch('setCountryProgrammesData', response);
+            }
+          }
+
         };
-      }
-
-      _handleCountryProgrammesResponse(response) {
-        if (!_.isEmpty(response)) {
-          // set setUsersData values
-          this.dispatch('setCountryProgrammesData', response);
-        }
-      }
-
-    };
   })();
 </script>
