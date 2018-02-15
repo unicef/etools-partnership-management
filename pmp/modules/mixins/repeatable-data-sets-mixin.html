@@ -113,8 +113,8 @@
     _handleDeleteResponse() {
       this._deleteElement();
       this.elToDeleteIndex = -1;
-      let eventPayload = {text: errorMessage, showCloseBtn: true};
-      this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
+      let eventPayload = {active: false, loadingSource: this.deleteLoadingSource};
+      this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
     }
     _handleDeleteError(responseErr) {
       let eventPayload = {active: false, loadingSource: this.deleteLoadingSource};
@@ -179,7 +179,7 @@
       if (index !== null && typeof index !== 'undefined' && index !== -1) {
         this.splice('dataItems', index, 1);
 
-        let eventPayload =  {index: this.elToDeleteIndex};
+        let eventPayload = {index: this.elToDeleteIndex};
         this.dispatchEvent(new CustomEvent('delete-confirm', {detail: eventPayload, bubbles: true, composed: true}));
       }
     }
