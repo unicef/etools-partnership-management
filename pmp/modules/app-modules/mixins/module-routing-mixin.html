@@ -52,6 +52,7 @@
           this._clearRouteQueryParamsIfNeeded(previousPage);
           this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
         }
+
         /**
          *Avoid Reports page query string lingering on other intervention tabs
          */
@@ -119,7 +120,7 @@
         }
 
         setActivePage(listActive, tab, fileImportDetails, canAccessTab,
-                                appendBasePathAdditionalFolder, successfulImportCallback) {
+                      appendBasePathAdditionalFolder, successfulImportCallback) {
           let page = listActive ? 'list' : tab;
 
           if (listActive) {
@@ -168,18 +169,4 @@
 
       });
 
-
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.SubrouteImpl */
-  EtoolsPmpApp.Behaviors.SubrouteImpl = {
-
-
-
-  };
-
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.Subroute */
-  EtoolsPmpApp.Behaviors.Subroute = [
-    EtoolsLogsBehavior,
-    EtoolsPmpApp.Behaviors.PageImportBehavior,
-    EtoolsPmpApp.Behaviors.SubrouteImpl
-  ];
 </script>
