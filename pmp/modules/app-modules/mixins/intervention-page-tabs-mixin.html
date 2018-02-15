@@ -2,7 +2,7 @@
 <script>
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
-  
+
   /**
    * Interventions details tabs functionality
    * @polymer
@@ -80,25 +80,5 @@
         }
 
       });
-  
-  
-  
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.InterventionPageTabsImpl */
-  EtoolsPmpApp.Behaviors.InterventionPageTabsImpl = {
-    properties: {
 
-
-    },
-
-    observers: ['_computeInterventionTabs(newInterventionActive, environmentFlags)'],
-
-
-
-  };
-
-  /** @polymerBehavior EtoolsPmpApp.Behaviors.InterventionPageTabs */
-  EtoolsPmpApp.Behaviors.InterventionPageTabs = [
-    EtoolsPmpApp.Behaviors.EnvironmentFlags,
-    EtoolsPmpApp.Behaviors.InterventionPageTabsImpl
-  ];
 </script>
