@@ -83,7 +83,7 @@
           this._resetUserAndPermissions();
           this.logError('Error occurred on logged user data request', 'user request', error);
           if (error.status === 403) {
-            this.fire('forbidden');
+            this.dispatchEvent(new CustomEvent('forbidden', {bubbles: true, composed: true}));
           }
         });
       }
@@ -99,11 +99,17 @@
               if (response.length > 0) {
                 if (parseInt(response[0].data.id) !== parseInt(user.country.id)) {
 
-                  this.fire('global-loading', {
+                  let eventPayload = {
                     message: 'Please wait while data is refreshed...',
                     active: true,
                     loadingSource: 'country-update'
-                  });
+                  };
+
+                  this.dispatchEvent(new CustomEvent('global-loading', {
+                    detail: eventPayload,
+                    bubbles: true,
+                    composed: true
+                  }));
 
                   this.refresh();
                 }

@@ -1,0 +1,96 @@
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /**
+   * Module main elements common functionality
+   * @polymer
+   * @mixinFunction
+   */
+  EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality = Polymer.dedupingMixin(
+      (superClass) => class extends superClass {
+        static get properties() {
+          return {
+            /* Gets updated by app-route */
+            listPageQueryParams: {
+              type: Object,
+              observer: '_handleQueryParams'
+            },
+            /* Gets updated when listPageQueryParams changes, only if listPageQueryParams is not empty,
+               otherwise preservedListQueryParams holds on to it's previous data.
+               This is to preserve set list page filters like : rows per page , search string, any other filters,
+               while navigating between pages from the same category
+               (ex. go to intervention list, select to filter by intervention status, go to intervention details,
+               click on the Interventions left side menu item => the intervention list is
+               still filtered by intervention status).
+            */
+            preservedListQueryParams: {
+              type: Object,
+              value: {}
+            },
+            serverErrors: {
+              type: Array,
+              value: []
+            }
+          };
+        }
+
+        ready() {
+          super.ready();
+          this.addEventListener('clear-server-errors', this._clearServerErrors.bind(this));
+          this.addEventListener('set-server-errors', this._setServerErrors.bind(this));
+        }
+
+        _clearServerErrors() {
+          this.set('serverErrors', []);
+        }
+
+        _setServerErrors(e) {
+          this.set('serverErrors', e.detail);
+        }
+
+        _handleQueryParams(params) {
+          if (params !== null && Object.keys(params).length) {
+            this.set('preservedListQueryParams', params);
+          }
+        }
+
+        _pageEquals(activePage, expectedPage) {
+          return activePage === expectedPage;
+        }
+
+        _removeStrDash(str) {
+          return str ? str.replace(new RegExp('-', 'g'), ' ') : '';
+        }
+
+        _showPageTabs(page) {
+          return page !== 'list';
+        }
+
+        _showTabChangeLoadingMsg(e, loadingSource, tabPrefix, tab) {
+          let clickedTabName = tab ? tab : e.detail.item.getAttribute('name');
+          let tabEl = this.shadowRoot.querySelector(tabPrefix + clickedTabName);
+          if (tabEl instanceof Polymer.Element) {
+            // tab element already loaded, no need for loading messages
+            return;
+          }
+          let eventPayload = {
+            message: 'Loading ' + this._removeStrDash(clickedTabName) + ' page elements...',
+            active: true,
+            loadingSource: loadingSource
+          };
+          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+        }
+
+        /**
+         * "other" can be any property that must be defined before the method
+         * is executed (main item displayed on the page, activePage)
+         */
+        _showSidebarStatus(listPageActive, tabAttached, other) {
+          let showStatus = !listPageActive && !!tabAttached;
+          return !other ? showStatus : (showStatus && other);
+        }
+
+      });
+
+</script>
