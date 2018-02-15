@@ -7,7 +7,7 @@
 <!-- TODO: polymer2 - add countries dropdown functionality, integrate profile dropdown -->
 <link rel="import" href="components/countries-dropdown.html">
 <link rel="import" href="../../../bower_components/etools-profile-dropdown/etools-profile-dropdown.html">
-<!-- <link rel="import" href="../user-profile-dialog/user-profile-data/user-profile-data.html"> -->
+<link rel="import" href="../user/profile-operations-mixin.html">
 
 <!-- TODO: polymer2 - do we need shared-styles here? If not, remove it. -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -15,7 +15,6 @@
 <link rel="import" href="../redux/etools-data-redux-store.html">
 <link rel="import" href="../config/config.html">
 <link rel="import" href="../config/dexie-db-config.html">
-
 <dom-module id="page-header">
   <template>
     <style include="shared-styles">
@@ -109,16 +108,21 @@
   <script>
 
     /**
-     * TODO: polymer2 - integrate redux store EtoolsPmpApp.Mixins.EtoolsDataReduxStore converted to mixin,
-     * file already imported
-     */
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    */
+
+    const PageHeaderMixin = EtoolsMixinFactory.combineMixins(
+        [EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.ProfileOperations],
+        Polymer.Element);
 
     /**
      * @polymer
      * @customElement
-     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliedMixin PageHeaderMixin
      */
-    class PageHeader extends Polymer.Element {
+    class PageHeader extends PageHeaderMixin {
 
       static get is() {
         return 'page-header';
@@ -161,7 +165,8 @@
           },
           originalProfile: {
             type: Object,
-            observer: '_handleProfileLoaded'
+            observer: '_handleProfileLoaded',
+            statePath: 'currentUser'
           },
           editableFields: {
             type: Array,
@@ -189,7 +194,7 @@
       }
 
       openDrawer() {
-        this.fire('drawer');
+        this.dispatchEvent(new CustomEvent('drawer'));
       }
 
       _setBgColor() {
@@ -255,9 +260,8 @@
       }
 
       _saveProfile(e) {
-        this.set('profile', e.detail.profile);
         let modifiedFields = this._getModifiedFields(this.originalProfile, this.profile);
-        this.$.userProfileData.saveProfile(modifiedFields);
+        this.saveProfile(modifiedFields);
       }
 
       _signOut() {

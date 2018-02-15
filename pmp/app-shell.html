@@ -50,8 +50,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/toast-notifications/toast-notifications-mixin.html">
 <link rel="import" href="modules/toast-notifications/toast-notifications-style.html">
 
-<!-- import user data element -->
-<link rel="import" href="modules/user/user-data.html">
+<!-- import user data mixin -->
+<link rel="import" href="modules/user/user-data-mixin.html">
 
 <!-- import environment flags -->
 <link rel="import" href="modules/environment-flags/environment-flags-mixin.html">
@@ -121,8 +121,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--<etools-piwik-analytics page="[[subroute.path]]"-->
     <!--user="[[user]]"-->
     <!--toast="[[currentToastMessage]]"></etools-piwik-analytics>-->
-
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
     <app-location
         route="{{route}}"
@@ -224,11 +222,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliedMixin EtoolsPmpApp.Mixins.AppMenu
      * @appliedMixin EtoolsPmpApp.Mixins.ToastNotifications
      * @appliedMixin EtoolsMixins.LoadingMixin
+     * @appliedMixin EtoolsPmpApp.Mixins.UserData
      * @appliedMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      */
     const AppShellMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
-        EtoolsPmpApp.Mixins.EnvironmentFlags], Polymer.Element);
+        EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.UserData], Polymer.Element);
 
     /**
      * PMP main element used to configure and display all app modules
