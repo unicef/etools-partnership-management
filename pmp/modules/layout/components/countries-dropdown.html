@@ -1,11 +1,11 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-page-refresh-mixin.html">
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-
-<!-- <link rel="import" href="../../../bower_components/etools-ajax/etools-ajax-request-behavior.html"> -->
-<!-- <link rel="import" href="../../app-config/app-endpoints-behavior.html"> -->
-
+<link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
+<link rel="import" href="../../endpoints/endpoints-mixin.html">
 <dom-module id="countries-dropdown">
   <template strip-whitespace>
     <style>
@@ -74,7 +74,7 @@
       <!-- <iron-icon class$="[[country.imgClass]]" prefix></iron-icon> -->
 
       <paper-dropdown-menu id="menu" label="Country" noink no-label-float>
-        <paper-listbox class="dropdown-content"
+        <paper-listbox slot="dropdown-content"
                        id="countriesListbox"
                        attr-for-selected="countryId"
                        selected="[[currentCountry.id]]"
@@ -92,21 +92,27 @@
   </template>
 
   <script>
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliedMixin EtoolsLogsMixin
+     * @appliedMixin EtoolsAjaxRequestMixin
+     * @appliedMixin EtoolsPageRefreshMixin
+     * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
+    */
 
-      //   behaviors: [
-      //     EtoolsLogsBehavior,
-      //     EtoolsAjaxRequestBehavior,
-      //     EtoolsPmpApp.Behaviors.Endpoints,
-      //     etoolsBehaviors.EtoolsRefreshBehavior
-      //   ],
+    const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins(
+        [EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
+        EtoolsPmpApp.Mixins.Endpoints], Polymer.Element);
+
 
     /**
+    *
     * @polymer
     * @customElement
-    * @appliedMixin EtoolsLogsMixin
-    * @appliedMixin EtoolsPageRefreshMixin
+    * @appliedMixin CountriesDropdownMixin
     */
-    class CountriesDropdown extends Polymer.Element {
+    class CountriesDropdown extends CountriesDropdownMixin {
 
       static get is() {
           return 'countries-dropdown';
@@ -135,14 +141,15 @@
           this._triggerCountryChangeRequest(selectedCountryId);
         }
       }
-      
+
       _triggerCountryChangeRequest(countryId) {
-        this.dispatchEvent('global-loading', {
+        this.dispatchEvent(new CustomEvent('global-loading', {
           message: 'Please wait while country is changing...',
           active: true,
           loadingSource: 'country-change'
-        });
+        }));
         let self = this;
+
         this.sendRequest({
           endpoint: this.getEndpoint('changeCountry'),
           method: 'POST',
@@ -152,10 +159,10 @@
         }).catch(function(error) {
           self._handleError(error);
         });
-      } 
+      }
 
       _handleResponse() {
-        this.dispatchEvent('update-main-path', {path: ''});
+        this.dispatchEvent(new CustomEvent('update-main-path', {path: ''}));
         // TODO: refresh method will be removed once etools-ajax v2 is used and the app uses only one dexie db
         // TODO for TODO - refresh method is used elsewhere also and the code relies on the redirect trigerred
         // by the refresh method
@@ -172,8 +179,8 @@
         this.logError('Country change failed!', 'countries-dropdown', error);
         // TODO: this should be a larger alert.
         this.$.countriesListbox.selected = this.currentCountry;
-        this.dispatchEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
-        this.dispatchEvent('global-loading', {active: false, loadingSource: 'country-change'});
+        this.dispatchEvent(new CustomEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'}));
+        this.dispatchEvent(new CustomEvent('global-loading', {active: false, loadingSource: 'country-change'}));
       }
 
     }

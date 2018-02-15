@@ -40,19 +40,8 @@
   "resolutions": {
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
-    "iron-iconset-svg": "^2.1.1",
-    "webcomponentsjs": "^1.0.0",
-    "iron-flex-layout": "^2.0.2",
-    "iron-selector": "^2.0.1",
-    "paper-ripple": "^2.0.1",
-    "paper-styles": "^2.0.0",
     "etools-behaviors": "28ab227",
-    "etools-loading": "6bdf1e7",
-    "neon-animation": "^2.0.0",
-    "iron-overlay-behavior": "1 - 2",
-    "paper-input": "^2.0.5",
-    "iron-dropdown": "^2.1.0",
-    "iron-icon": "^2.0.1"
+    "etools-loading": "6bdf1e7"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
