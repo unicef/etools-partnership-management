@@ -1,0 +1,68 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="etools-iron-validator-mixin.html">
+
+<dom-module id="required-and-not-future-date-validator">
+  <script>
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsIronValidator
+     */
+    class RequiredAndNotFutureDateValidator extends EtoolsPmpApp.Mixins.EtoolsIronValidator(Polymer.Element) {
+
+      static get is() {
+        return 'required-and-not-future-date-validator';
+      }
+
+      static get properties() {
+        return {
+          errorMessage: {
+            type: String,
+            notify: true
+          },
+          required: {
+            type: Boolean,
+            value: true
+          },
+          requiredErrorMessage: {
+            type: String,
+            value: 'This field is required!'
+          },
+          noFutureDateErrorMessage: {
+            type: String,
+            value: 'Date cannot be in the future!'
+          }
+        };
+      }
+
+      validate(dateValueStr) {
+        if (!dateValueStr && this.required) {
+          this._setRequiredErrorMessage();
+          return false;
+        }
+
+        let d = Date.parse(dateValueStr);
+        if (isNaN(d) && this.required) {
+          // invalid date string
+          this._setRequiredErrorMessage();
+          return false;
+        }
+        // date ca not be in the future
+        this._setNoFutureDateErrorMessageErrorMessage();
+        return (!this.required && !dateValueStr) || d <= Date.now();
+      }
+
+      _setRequiredErrorMessage() {
+        this.set('errorMessage', this.requiredErrorMessage);
+      }
+
+      _setNoFutureDateErrorMessageErrorMessage() {
+        this.set('errorMessage', this.noFutureDateErrorMessage);
+      }
+
+    }
+
+    window.customElements.define(RequiredAndNotFutureDateValidator.is, RequiredAndNotFutureDateValidator);
+  </script>
+</dom-module>

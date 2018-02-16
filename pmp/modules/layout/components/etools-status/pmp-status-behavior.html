@@ -1,0 +1,212 @@
+<link rel="import" href="../../../bower_components/etools-dialog/dynamic-dialog-behavior.html">
+<link rel="import" href="../../../bower_components/etools-behaviors/etools-logs-behavior.html">
+<link rel="import" href="../../app-behaviors/scroll-control-behavior.html">
+<script>
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl = { // eslint-disable-line no-undef
+    properties: {
+      status: {
+        type: String,
+        value: ''
+      },
+      newStatus: {
+        type: String,
+        value: ''
+      },
+      warningMessage: {
+        type: String,
+        value: ''
+      },
+      editMode: {
+        type: Boolean,
+        value: true
+      },
+      active: {
+        type: Boolean
+      },
+      minimumDistanceFromWindowTop: {
+        type: Number,
+        value: 76
+      },
+      sectionName: String, // PD/SSFA, Partners, Agreements
+      possibleStatuses: Array,
+      possibleActions: Array,
+      warningDialog: Object,
+      statusChangeWarningDialogContent: Object,
+    },
+
+    observers: [
+        '_handleStatusChange(status)',
+        '_activeFlagChanged(active)'
+    ],
+
+    detached: function() {
+      if (this.warningDialog) {
+        this.removeDialog(this.warningDialog);
+      }
+      this._resetScrollHandler();
+      this._resetResizeHandler();
+    },
+
+    _activeFlagChanged: function(active) {
+      if (active) {
+        this.debounce('etools-status-active-changed', this._forceScollPositionRecalculation.bind(this), 20);
+      }
+    },
+
+    _handleStickyScroll: function() {
+      if (!this.contentContainer) {
+        return;
+      }
+
+      this._setScrollHandler();
+      this._setResizeHandler();
+    },
+
+    _setResizeHandler: function() {
+      window.onresize = function() {
+        Polymer.updateStyles();
+        this._resetScrollHandler();
+        this._setScrollHandler();
+      }.bind(this);
+    },
+
+    _resetResizeHandler: function() {
+      window.onresize = null;
+    },
+
+    _forceScollPositionRecalculation: function() {
+      if (this._isStatusHorizontal()) {
+        // if the status is horizontal, no need to make it sticky
+        this._setNotStickyStyles();
+        return;
+      }
+      this._scrollChangedHandler();
+    },
+
+    _setScrollHandler: function() {
+      if (this._isStatusHorizontal()) {
+        // if the status is horizontal, no need to make it sticky
+        this._setNotStickyStyles();
+        return;
+      }
+
+      this.contentContainer.onscroll = this._scrollChangedHandler.bind(this);
+    },
+
+    _isStatusHorizontal: function() {
+      // the styling to make it horizontal at this resolution is in page-layout-styles
+      // HD res: 1360/1366 x 768
+      return window.innerWidth < 1360;
+    },
+
+    _setNotStickyStyles: function() {
+      this.customStyle['--status-top'] = 'auto';
+      this.updateStyles();
+    },
+
+    _resetScrollHandler: function() {
+      if (this.contentContainer) {
+          this.contentContainer.onscroll = null;
+        }
+    },
+    _scrollChangedHandler: function() {
+      let containerDistanceFromViewportTop = this.getBoundingClientRect().top;
+
+      if (containerDistanceFromViewportTop < this.minimumDistanceFromWindowTop) {
+        // if the status element is about to go under the title bar, start moving in down
+        let newOffset = ((containerDistanceFromViewportTop - this.minimumDistanceFromWindowTop) * -1);
+        this.customStyle['--status-top'] = newOffset  + 'px';
+      } else {
+        this.customStyle['--status-top'] = 'auto';
+      }
+      this.updateStyles();
+    },
+
+    _createStatusChangeWarningDialog: function() {
+      this.statusChangeWarningDialogContent = document.createElement('p');
+      this.statusChangeWarningDialogContent.setAttribute('id', 'statusChangeWarningContent');
+      this.warningDialog = this.createDialog(this.sectionName + ' status change', 'md', 'Yes', 'No',
+          this._statusChangeConfirmationCallback.bind(this), this.statusChangeWarningDialogContent);
+    },
+
+    _showStatusChangeConfirmationDialog: function() {
+      if (this.warningDialog) {
+        if (this.statusChangeWarningDialogContent) {
+          this.statusChangeWarningDialogContent.innerHTML = this.warningMessage;
+          this.warningDialog.opened = true;
+        } else {
+          this.logWarn('#statusChangeWarningContent element not found!', 'pmp ' + this.sectionName + ' status change');
+        }
+      } else {
+        this.logWarn('warningDialog not created!', 'pmp ' + this.sectionName + ' status change');
+      }
+    },
+
+    _setAllActionsToHidden: function() {
+      var possibleActions = this.possibleActions;
+      possibleActions.forEach(function(elem, index) {
+        this.set(['possibleActions', index, 'hidden'], true);
+      }.bind(this));
+    },
+
+    _setAllStatusesToHidden: function() {
+      var possibleStatuses = this.possibleStatuses;
+      possibleStatuses.forEach(function(elem, index) {
+        this.set(['possibleStatuses', index, 'hidden'], true);
+        this.set(['possibleStatuses', index, 'completed'], false);
+      }.bind(this));
+    },
+
+    _updateStatus: function(newStatus) {
+      if (!this._statusChangeIsValid(newStatus)) {
+        return;
+      }
+
+      this.set('newStatus', newStatus);
+      this._computeWarningMessage(newStatus);
+      this._showStatusChangeConfirmationDialog();
+    },
+
+    _handleStatusChange: function(status) {
+      this.debounce('reset-status-actions', function() {
+        this._computeAvailableStatuses(status);
+        this._computeAvailableActions(status);
+      }.bind(this), 50);
+    },
+
+    _statusChangeConfirmationCallback: function(event) {
+      // children should overwrite this
+    },
+
+    _statusChangeIsValid: function(newStatus) {
+      // children should overwrite this
+      return false;
+    },
+
+    _computeAvailableActions: function(status) {
+      // children should overwrite this
+    },
+    _computeAvailableStatuses: function(status) {
+      // children should overwrite this
+    },
+    _computeWarningMessage: function(newStatus) {
+      // children might want to overwrite this
+      this.set('warningMessage', this._getDefaultWarningMessage());
+    },
+    _getDefaultWarningMessage: function() {
+      return 'You are changing the status from <strong>\''
+            + this.status + '\'</strong> to <strong>\'' + this.newStatus + '\'</strong>. Do you want to continue?';
+    }
+  };
+
+  /** @polymerBehavior EtoolsPmpApp.Behaviors.EtoolsStatusCommon */
+  EtoolsPmpApp.Behaviors.EtoolsStatusCommon = [
+    EtoolsLogsBehavior,
+    EtoolsPmpApp.Behaviors.ScrollControl,
+    etoolsBehaviors.DynamicDialogBehavior,
+    EtoolsPmpApp.Behaviors.EtoolsStatusCommonImpl
+  ];
+</script>
