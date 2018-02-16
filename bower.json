@@ -35,7 +35,9 @@
     "etools-app-selector": "98b8807",
     "etools-profile-dropdown": "82bd3a1",
     "paper-listbox": "^2.0.0",
-    "paper-item": "^2.0.0"
+    "paper-item": "^2.0.0",
+    "paper-checkbox": "^2.0.2",
+    "iron-label": "^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0",

@@ -36,6 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/layout/menu/styles/app-drawer-styles.html">
 <link rel="import" href="modules/layout/menu/app-sidebar-menu.html">
 <link rel="import" href="modules/layout/menu/mixins/app-menu-mixin.html">
+<link rel="import" href="modules/layout/components/data-refresh-dialog.html">
 
 <!--import header and footer elements-->
 <link rel="import" href="modules/layout/page-header.html">
@@ -165,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
 
         <app-header slot="header" condenses reveals effects="waterfall">
-          <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
+          <page-header id="pageheader" title="eTools"></page-header>
         </app-header>
 
         <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
@@ -224,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-drawer-layout>
 
     <!-- TODO: polymer2 - uncomment this after data refresh dialog is element is ready -->
-    <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
+    <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
     <!-- TODO: polymer2 - static data load here -->
     <static-common-data></static-common-data>

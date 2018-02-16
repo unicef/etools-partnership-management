@@ -75,8 +75,6 @@
         }
       }
     </style>
-    <!-- TODO: polymer2 - integrate user-profile-data -->
-    <!--<user-profile-data id="userProfileData" user-profile="{{originalProfile}}"></user-profile-data>-->
     <app-toolbar sticky class="content-align">
       <paper-icon-button id="menuButton" class="light" icon="menu" on-tap="openDrawer"></paper-icon-button>
       <div class="titlebar content-align">
@@ -86,7 +84,7 @@
       <div class="content-align">
         <!-- TODO: polymer2 - integrate countries-dropdown -->
         <countries-dropdown id="countries" countries="[[countries]]"
-            current-country="[[user.country]]"></countries-dropdown>
+            current-country="[[profile.country]]"></countries-dropdown>
 
         <!-- TODO: polymer2 - integrate etools-profile-dropdown -->
         <etools-profile-dropdown
@@ -99,20 +97,18 @@
 
         <!-- TODO: polymer2 - integrate data refresh, we should have all the functionality in one place
         (new folder inside modules folder) -->
-        <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
+        <paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>
 
       </div>
     </app-toolbar>
   </template>
 
   <script>
-
     /**
      * @polymer
      * @mixinFunction
      * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     */
-
     const PageHeaderMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.ProfileOperations],
         Polymer.Element);
@@ -132,9 +128,6 @@
         return {
           countries: {
             type: Array
-          },
-          user: {
-            type: Object,
           },
           allOffices: {
             type: Object,
@@ -185,7 +178,7 @@
       }
 
       static get observers() {
-        return ['_updateCountriesList(user.countries_available)'];
+        return ['_updateCountriesList(profile.countries_available)'];
       }
 
       ready() {
