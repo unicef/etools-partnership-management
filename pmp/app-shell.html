@@ -26,7 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/etools-behaviors/etools-logs-mixin.html">
 <link rel="import" href="../bower_components/etools-loading/etools-loading-mixin.html">
 <!-- TODO: polymer2 - piwiki element - console errors fixes needed -->
-<!--<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">-->
+<link rel="import" href="../bower_components/etools-piwik-analytics/etools-piwik-analytics.html">
 
 <!-- import global config and dexie db config -->
 <link rel="import" href="modules/config/config.html">
@@ -133,10 +133,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <environment-flags></environment-flags>
 
-    <!-- TODO: polymer2 - integrate piwiki analytics -->
-    <!--<etools-piwik-analytics page="[[subroute.path]]"-->
-    <!--user="[[user]]"-->
-    <!--toast="[[currentToastMessage]]"></etools-piwik-analytics>-->
+    <etools-piwik-analytics
+        page="[[subroute.prefix]]"
+        user="[[user]]"
+        toast="[[currentToastMessage]]">
+    </etools-piwik-analytics>
 
     <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
 
