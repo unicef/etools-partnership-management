@@ -1,10 +1,14 @@
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../bower_components/polymer/lib/utils/debounce.html">
+<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="etools-action-button">
 
@@ -12,6 +16,7 @@
     :host {
       display: block;
     }
+
     paper-button {
       @apply --layout-horizontal;
       padding: 0;
@@ -20,21 +25,26 @@
       background-color: var(--etools-action-button-main-color, #0099FF);
       color: var(--etools-action-button-text-color, #fff);
     }
+
     paper-button.grey {
-      background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0,0,0,.54));
+      background-color: var(--etools-action-button-dropdown-higlight-bg, rgba(0, 0, 0, .54));
     }
+
     paper-menu-button {
       padding: 0 4px;
     }
+
     paper-icon-button {
       border-left: 2px solid var(--etools-action-button-divider-color, rgba(255, 255, 255, 0.12));
     }
+
     .main-btn-part {
       @apply --layout-flex;
       text-align: center;
       font-weight: 500;
       line-height: 34px;
     }
+
     .list-wrapper {
       position: relative;
       outline: none;
@@ -44,9 +54,11 @@
       background: var(--etools-action-button-text-color, #fff);
       font-size: 0;
     }
+
     .list-wrapper::after {
       display: none;
     }
+
     .list-wrapper paper-item {
       padding: 0 16px;
       cursor: pointer;
@@ -68,7 +80,7 @@
     <template is="dom-if" if="[[primaryAction]]">
       <paper-button raised>
 
-        <div on-tap="_handlePrimaryClick" class="main-btn-part"> [[primaryAction.label]] </div>
+        <div on-tap="_handlePrimaryClick" class="main-btn-part"> [[primaryAction.label]]</div>
 
         <template is="dom-if" if="[[secondaryActions.length]]">
           <paper-menu-button horizontal-align="right">
@@ -77,7 +89,7 @@
             <paper-listbox class="dropdown-content">
               <div class="list-wrapper">
                 <template is="dom-repeat" items="[[secondaryActions]]" as="item">
-                  <paper-item on-tap="_handleSecondaryClick"> [[item.label]] </paper-item>
+                  <paper-item on-tap="_handleSecondaryClick"> [[item.label]]</paper-item>
                 </template>
               </div>
             </paper-listbox>
@@ -89,28 +101,50 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'etools-action-button',
-      properties: {
-        actions: {
-          type: Array,
-          value: [],
-        },
-        primaryAction: {
-          type: Object
-        },
-        secondaryActions: {
-          type: Array,
-          value: []
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     */
+    class EtoolsActionButton extends Polymer.Element {
+
+      static get is() {
+        return 'etools-action-button';
+      }
+
+      static get properties() {
+        return {
+          actions: {
+            type: Array,
+            value: []
+          },
+          primaryAction: {
+            type: Object
+          },
+          secondaryActions: {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      static get observers() {
+        return ['_actionsChanged(actions, actions.*)'];
+      }
+
+      _actionsChanged(actions, actionsData) {
+        if (actions === undefined && actionsData === undefined) {
+          return;
         }
-      },
-      observers: ['_actionsChanged(actions, actions.*)'],
-      _actionsChanged: function() {
-        this.debounce('etools-button-actions-changed-handler', function() {
-          this._handleActionsChanged();
-        }.bind(this), 10);
-      },
-      _handleActionsChanged: function() {
+        this._actionsChangedDebouncer = Polymer.Debouncer.debounce(this._actionsChangedDebouncer,
+            Polymer.Async.timeOut.after(10),
+            () => {
+              this._handleActionsChanged();
+            });
+      }
+
+      _handleActionsChanged() {
         let actions = this.actions;
         if (!actions.length) {
           return;
@@ -119,11 +153,11 @@
         this.set('primaryAction', null);
         this.set('secondaryActions', []);
 
-        var primaryAction = actions.find(function(elem) {
+        let primaryAction = actions.find((elem) => {
           return elem.primary && !elem.hidden;
         });
 
-        var secondaryActions = actions.filter(function(elem) {
+        let secondaryActions = actions.filter((elem) => {
           return !elem.primary && !elem.hidden;
         });
 
@@ -133,15 +167,19 @@
 
         this.set('primaryAction', primaryAction);
         this.set('secondaryActions', secondaryActions);
-      },
-      _handleSecondaryClick: function(event) {
-        var action = event.model.item;
-        this.fire(action.event);
-      },
-      _handlePrimaryClick: function() {
-        this.fire(this.primaryAction.event);
       }
-    });
-  </script>
 
+      _handleSecondaryClick(event) {
+        let action = event.model.item;
+        this.dispatchEvent(new CustomEvent(action.event, {bubbles: true, composed: true}));
+      }
+
+      _handlePrimaryClick() {
+        this.dispatchEvent(new CustomEvent(this.primaryAction.event, {bubbles: true, composed: true}));
+      }
+
+    }
+
+    window.customElements.define(EtoolsActionButton.is, EtoolsActionButton);
+  </script>
 </dom-module>
