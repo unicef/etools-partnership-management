@@ -42,11 +42,11 @@
     "etools-ajax": "0f69dc8",
     "etools-piwik-analytics": "ab010e4",
     "etools-app-selector": "c1a82bd",
-    "etools-profile-dropdown": "f05881a",
+    "etools-profile-dropdown": "1c6ab0e",
     "etools-file": "f98a943",
     "etools-content-panel": "9b86ea3",
     "etools-datepicker": "49455be",
-    "etools-dialog": "54d2088"
+    "etools-dialog": "430a4f9"
   },
   "resolutions": {
     "polymer": "^2.0.0",
