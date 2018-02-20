@@ -1,0 +1,51 @@
+<link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="partners-list">
+  <template>
+    <style>
+      :host {
+        /* host CSS */
+      }
+    </style>
+
+    Partners lists will go here...
+
+  </template>
+  <script>
+    'use strict';
+
+    /**
+     * @polymer
+     * @customElement
+     */
+    class PartnersList extends Polymer.Element {
+
+      static get is() {
+        return 'partners-list';
+      }
+
+      static get properties() {
+        return {};
+      }
+
+      constructor() {
+        super();
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+      }
+
+    }
+
+    window.customElements.define(PartnersList.is, PartnersList);
+  </script>
+</dom-module>

@@ -2,7 +2,7 @@
   "entrypoint": "index.html",
   "shell": "pmp/app-shell.html",
   "fragments": [
-
+    "pmp/modules/app-modules/partners/partners-module.html"
   ],
   "sources": [
     "src/**/*",
