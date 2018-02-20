@@ -11,7 +11,7 @@
   ],
   "rules": {
     "brace-style": "off",
-    "new-cap": ["error", { "capIsNewExceptions": ["Polymer"] }],
+    "new-cap": ["error", { "capIsNewExceptions": ["Polymer"], "capIsNewExceptionPattern": "^Etools.." }],
     "no-var": "off",
     "require-jsdoc": "off",
     "comma-dangle": ["error", "never"],
@@ -19,9 +19,14 @@
     "camelcase": ["error", {"properties": "never"}]
   },
   "globals": {
+    "moment": true,
     "Polymer": true,
     "Dexie": true,
+    "EtoolsMixinFactory": true,
     "EtoolsPmpApp": true,
-    "EtoolsRequestCacheDb": true
+    "EtoolsRequestCacheDb": true,
+    "EtoolsAjaxRequestMixin": true,
+    "EtoolsMixins": true,
+    "EtoolsLogsMixin": true
   }
 }

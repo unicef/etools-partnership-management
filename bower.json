@@ -14,6 +14,7 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
+    "iron-meta": "PolymerElements/iron-meta#^2.0.5",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.2",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^2.1.1",
     "iron-media-query": "PolymerElements/iron-media-query#^2.0.0",
@@ -28,22 +29,29 @@
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
     "paper-dropdown-menu": "^2.0.2",
+    "paper-progress": "PolymerElements/paper-progress#^2.0.1",
+    "paper-input": "PolymerElements/paper-input#^2.1.1",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "paper-menu-button": "PolymerElements/paper-menu-button#^2.1.0",
+    "paper-item": "PolymerElements/paper-item#^2.1.0",
+    "paper-listbox": "^2.0.0",
+    "paper-checkbox": "^2.0.2",
+    "iron-label": "^2.0.0",
     "etools-behaviors": "89f132c",
     "etools-loading": "6bdf1e7",
     "etools-ajax": "0f69dc8",
     "etools-piwik-analytics": "ab010e4",
     "etools-app-selector": "c1a82bd",
     "etools-profile-dropdown": "f05881a",
-    "paper-listbox": "^2.0.0",
-    "paper-item": "^2.0.0",
-    "paper-checkbox": "^2.0.2",
-    "iron-label": "^2.0.0"
+    "etools-file": "f98a943",
+    "etools-content-panel": "9b86ea3",
+    "etools-datepicker": "49455be",
+    "etools-dialog": "54d2088"
   },
   "resolutions": {
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
-    "etools-behaviors": "28ab227",
-    "etools-loading": "6bdf1e7"
+    "moment-element": "^3.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
