@@ -10,7 +10,7 @@
    * Module page routing functionality
    * @polymer
    * @mixinFunction
-   * @appliedMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsLogsMixin
    */
   EtoolsPmpApp.Mixins.ModuleRouting = Polymer.dedupingMixin(
       (superClass) => class extends EtoolsLogsMixin(superClass) {
@@ -53,7 +53,7 @@
           this._resetTabAttachedFlagIfNeeded(currentPage, previousPage);
         }
 
-        /**
+        /*
          *Avoid Reports page query string lingering on other intervention tabs
          */
         _clearRouteQueryParamsIfNeeded(previousPage) {
@@ -73,7 +73,7 @@
           this.set('tabAttached', true);
         }
 
-        /**
+        /*
          * Reset tabAttached flag if the tab element hasn't been loaded before, you're navigating to it from the list
          */
         _resetTabAttachedFlagIfNeeded(currentPage, previousPage) {

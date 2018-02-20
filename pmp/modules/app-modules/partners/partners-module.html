@@ -152,10 +152,10 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliedMixin EtoolsLogsMixin
-     * @appliedMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliedMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
-     * @appliedMixin EtoolsPmpApp.Mixins.ModuleRouting
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
      */
     const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
         [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
@@ -164,7 +164,7 @@
     /**
      * @polymer
      * @customElement
-     * @appliedMixin PartnersModuleRequiredMixins
+     * @appliesMixin PartnersModuleRequiredMixins
      */
     class PartnersModule extends PartnersModuleRequiredMixins {
 
