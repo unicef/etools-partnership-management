@@ -11,10 +11,10 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsLogsMixin
-  * @appliedMixin etoolsMixins.DynamicDialogBehavior
-  * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-  * @appliedMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsLogsMixin
+  * @appliesMixin etoolsMixins.DynamicDialogBehavior
+  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsAjaxRequestMixin
   */
   EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends
     EtoolsLogsMixin(etoolsMixins.DynamicDialogBehavior(EtoolsPmpApp.Mixins.Endpoints(EtoolsAjaxRequestMixin(baseClass)))) {

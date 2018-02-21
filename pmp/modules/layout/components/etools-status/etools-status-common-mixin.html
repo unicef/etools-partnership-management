@@ -11,15 +11,15 @@
    * Common functionality for etools status element
    * @polymer
    * @mixinFunction
-   * @appliedMixin DynamicDialogMixin
-   * @appliedMixin EtoolsLogsMixin
-   * @appliedMixin EtoolsPmpApp.Mixins.ScrollControl
+   * @appliesMixin DynamicDialogMixin
+   * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
    */
   EtoolsPmpApp.Mixins.EtoolsStatusCommon = Polymer.dedupingMixin(
       (superClass) => class extends EtoolsPmpApp.Mixins.ScrollControl(
           EtoolsMixins.DynamicDialogMixin(EtoolsLogsMixin(superClass))) {
 
-        static getproperties() {
+        static get properties() {
           return {
             status: {
               type: String,

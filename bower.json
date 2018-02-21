@@ -33,15 +33,15 @@
     "paper-menu-button": "PolymerElements/paper-menu-button#^2.1.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.1.0",
-    "etools-behaviors": "a0c6852",
+    "etools-behaviors": "5a1b488",
     "etools-loading": "6bdf1e7",
-    "etools-ajax": "4d65ae9",
+    "etools-ajax": "6e15107",
     "etools-piwik-analytics": "ab010e4",
     "etools-app-selector": "98b8807",
     "etools-file": "f98a943",
-    "etools-content-panel": "9b86ea3",
+    "etools-content-panel": "918bd21",
     "etools-datepicker": "49455be",
-    "etools-dialog": "54d2088"
+    "etools-dialog": "c943e5f"
   },
   "resolutions": {
     "polymer": "^2.0.0",
