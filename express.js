@@ -20,6 +20,7 @@ var chooseBuild = function (request, response, next) {
   } else {
     serveFromDir = basedir + 'es5-bundled/';
   }
+  console.log('dir', serveFromDir);
   next();
 }
 
@@ -40,6 +41,7 @@ app.use(function(req, res) {
   if (req.originalUrl.startsWith('/pmp/pmp/')) {
     res.status(404).send('Not found');
   } else {
+    console.log('build', serveFromDir);
     // handles requests that look like /pmp/interventions/details
     res.sendFile(serveFromDir + 'index.html');
   }
