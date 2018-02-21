@@ -5,6 +5,7 @@
 <link rel="import" href="../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../app-config/app-endpoints-behavior.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
+<link rel="import" href="../environment-flags/environment-flags-behavior.html">
 
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 
@@ -70,14 +71,14 @@
       behaviors: [
         EtoolsPmpApp.Behaviors.Endpoints,
         EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-        EtoolsAjaxRequestBehavior
+        EtoolsAjaxRequestBehavior,
+        EtoolsPmpApp.Behaviors.EnvironmentFlags
       ],
 
       properties: {
         disaggregations: {
           type: Array,
           statePath: 'disaggregations',
-          observer: '_disagregationsChanged'
         },
         dataItems: {
           type: Array
@@ -95,7 +96,8 @@
         }
       },
       observers: [
-        'paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)'
+        'paginationChanged(pagination.pageNumber, pagination.pageSize, disaggregations)',
+        '_disagregationsChanged(disaggregations, environmentFlags)'
       ],
 
       ready: function() {
@@ -107,7 +109,7 @@
       _emptyList: function() {
         return !this.disaggregations || !this.disaggregations.length;
       },
-      _disagregationsChanged: function(disaggregs) {
+      _disagregationsChanged: function(disaggregs, envFlags) {
         if (!disaggregs || !disaggregs.length) {
           this.dataItems = [];
           return;
@@ -121,7 +123,7 @@
       _pageNumberChanged: function(ev) {
         this.set('pagination.pageNumber', parseInt(ev.detail.value));
       },
-      paginationChanged: function(pageNumber, pageSize) {
+      paginationChanged: function(pageNumber, pageSize, disaggregations) {
         pageNumber = parseInt(pageNumber);
         pageSize = parseInt(pageSize);
         let startingIndex = (pageNumber - 1) * pageSize;
