@@ -140,69 +140,66 @@
       }
 
       _allSelectedChanged() {
-        // this.debounce('_selectedRefreshCheckbox', function() {
-          if (!this.allSelected) {
-            return;
-          }
+        if (!this.allSelected) {
+          return;
+        }
 
-          this.set('interventionsSelected', true);
-          this.set('partnersSelected', true);
-          this.set('agreementsSelected', true);
-          this.set('anySelected', true);
-        // }.bind(this), 150);
+        this.set('interventionsSelected', true);
+        this.set('partnersSelected', true);
+        this.set('agreementsSelected', true);
+        this.set('anySelected', true);
       }
 
       _singleSectionChanged() {
-        // this.debounce('_selectedRefreshCheckbox', function() {
-          var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
+        var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
 
-          var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
+        var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
-          this.set('allSelected', allSelected);
-          this.set('anySelected', anySelected);
-        // }.bind(this), 150);
+        this.set('allSelected', allSelected);
+        this.set('anySelected', anySelected);
       }
 
      _handleDialogClosed(closingReason) {
-        if (closingReason.detail.confirmed) {
-          this.dispatchEvent(new CustomEvent('global-loading', {message: 'Refreshing data...', active: true}));
-
-          // clear all data
-          if (this.allSelected) {
-            this.dispatchEvent(new CustomEvent('update-main-path', {path: ''}));
-            this.refresh();
-            return;
-          }
-
-          // clear only data sets
-          var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
-          var restampLandingPage = this.page === afterDataRefreshLandingPage ||
-              (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
-
-          var self = this;
-          EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
-              function() {
-            if (self.partnersSelected) {
-              EtoolsPmpApp.DexieDb.partners.clear();
-              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
-            }
-            if (self.agreementsSelected) {
-              EtoolsPmpApp.DexieDb.agreements.clear();
-              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
-            }
-            if (self.interventionsSelected) {
-              EtoolsPmpApp.DexieDb.interventions.clear();
-              EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
-            }
-          }).then(function(result) {
-            // transaction succeeded
-            self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
-          }).catch(function(error) {
-            // transaction failed
-            self.logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
-            self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
-          });
+        if (!closingReason.detail.confirmed) {
+          return;
         }
+        this.dispatchEvent(new CustomEvent('global-loading', {message: 'Refreshing data...', active: true}));
+
+        // clear all data
+        if (this.allSelected) {
+          this.dispatchEvent(new CustomEvent('update-main-path', {path: ''}));
+          this.refresh();
+          return;
+        }
+
+        // clear only data sets
+        var afterDataRefreshLandingPage = this._getAfterRefreshLandingPage();
+        var restampLandingPage = this.page === afterDataRefreshLandingPage ||
+            (this.page === 'government-partners' && afterDataRefreshLandingPage === 'partners');
+
+        var self = this;
+        EtoolsPmpApp.DexieDb.transaction('rw', 'listsExpireMapTable', 'partners', 'agreements', 'interventions',
+            function() {
+          if (self.partnersSelected) {
+            EtoolsPmpApp.DexieDb.partners.clear();
+            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('partners');
+          }
+          if (self.agreementsSelected) {
+            EtoolsPmpApp.DexieDb.agreements.clear();
+            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('agreements');
+          }
+          if (self.interventionsSelected) {
+            EtoolsPmpApp.DexieDb.interventions.clear();
+            EtoolsPmpApp.DexieDb.listsExpireMapTable.delete('interventions');
+          }
+        }).then(function(result) {
+          // transaction succeeded
+          self._handleSuccess(afterDataRefreshLandingPage, restampLandingPage);
+        }).catch(function(error) {
+          // transaction failed
+          self.logWarn('Dexie data clearing failed.', 'data-refresh-dialog', error);
+          self._handleFailure(afterDataRefreshLandingPage, restampLandingPage);
+        });
       }
 
       _handleFailure(afterDataRefreshLandingPage, restampLandingPage) {

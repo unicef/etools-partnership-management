@@ -12,7 +12,6 @@
     * @appliedMixin EtoolsPmpApp.Mixins.UserData
     * @appliedMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
     */
-
   EtoolsPmpApp.Mixins.ProfileOperations = (baseClass) =>
     class extends EtoolsPmpApp.Mixins.UserData(
         EtoolsPmpApp.Mixins.AjaxErrorsParser(baseClass)
@@ -74,7 +73,6 @@
         this.set('_saveActionInProgress', false);
       }
     }
-
   }
 </script>
 

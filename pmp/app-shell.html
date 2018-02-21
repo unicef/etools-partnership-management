@@ -224,7 +224,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-header-layout>
     </app-drawer-layout>
 
-    <!-- TODO: polymer2 - uncomment this after data refresh dialog is element is ready -->
     <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
     <!-- TODO: polymer2 - static data load here -->
@@ -248,6 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
+     * @appliesMixin EtoolsPmpApp.Mixins.UserData
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
