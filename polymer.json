@@ -11,14 +11,16 @@
   "sources": [
     "pmp/**/*",
     "images/**/*",
-    "bower.json"
+    "bower.json",
+    "bower_components/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js"
   ],
   "lint": {
-    "rules": ["polymer-2"]
+    "rules": ["polymer-2"],
+    "ignoreWarnings": []
   },
   "builds": [
     {
