@@ -7,9 +7,9 @@
    /*
   * @polymer
   * @mixinFunction
-  * @appliedMixin EtoolsAjaxRequestMixin
-  * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-  * @appliedMixin EtoolsPmpApp.Mixins.AjaxServerErrors
+  * @appliesMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsPmpApp.Mixins.AjaxServerErrors
   */
   EtoolsPmpApp.Mixins.ListData = (baseClass) => class extends EtoolsAjaxRequestMixin(EtoolsPmpApp.Mixins.Endpoints(EtoolsPmpApp.Mixins.AjaxServerErrors(baseClass))) {
 

@@ -1,43 +1,494 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../scripts/lodash.html">
+
+<link rel="import" href="../../mixins/scroll-control-mixin.html">
+<link rel="import" href="../mixins/module-common-mixin.html">
+<link rel="import" href="../mixins/module-routing-mixin.html">
+
+<link rel="import" href="../../layout/page-content-header/page-content-header.html">
+<link rel="import" href="../../layout/page-content-header/page-content-header-slotted-styles.html">
+<link rel="import" href="../../layout/components/etools-tabs.html">
+<link rel="import" href="../../layout/components/etools-error-messages-box.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+<link rel="import" href="data/partner-item-data.html">
+<link rel="import" href="components/new-partner/new-partner-dialog.html">
+<link rel="import" href="components/partner-status/partner-status.html">
+
+<!-- lazy import partner module pages -->
+<link rel="lazy-import" href="pages/list/partners-list.html">
+<link rel="lazy-import" href="pages/overview/partner-overview.html">
+<link rel="lazy-import" href="pages/details/partner-details.html">
 
 <dom-module id="partners-module">
   <template>
-    <style>
+
+    <style include="page-layout-styles shared-styles buttons-styles page-content-header-slotted-styles">
       :host {
-        /* host CSS */
+        display: block;
       }
     </style>
 
-    <!-- Polymer 2 element template -->
-    Polymer 2 is awesome!<br>
-    Partners pages will be displayed soon
+    <app-route
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:id/:tab"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <page-content-header with-tabs-visible="[[tabsActive]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[listActive]]">
+          <span hidden$="[[showOnlyGovernmentType]]">Partners</span>
+          <span hidden$="[[!showOnlyGovernmentType]]">Government Partners</span>
+        </template>
+        <template is="dom-if" if="[[tabsActive]]">
+          <span>[[partner.name]]</span>
+        </template>
+      </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!listActive]]">
+          <a target="_blank" href$="[[csvDownloadUrl]]">
+            <paper-button>
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+          </a>
+        </div>
+        <div class="action" hidden$="[[!_showNewPartnerBtn(listActive, permissions)]]">
+          <paper-button class="primary-btn with-prefix" on-tap="_openNewPartnerDialog">
+            <iron-icon icon="add"></iron-icon>
+            Add New Partner
+          </paper-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+        <etools-tabs slot="tabs"
+                     tabs="[[partnerTabs]]"
+                     active-tab="{{routeData.tab}}"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+      </template>
+    </page-content-header>
+
+    <div id="main">
+      <div id="pageContent">
+
+        <etools-error-messages-box id="errorsBox"
+                                   title="Errors Saving Partner"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
+        <iron-pages id="partnersPages"
+                    selected="{{activePage}}"
+                    attr-for-selected="name"
+                    role="main">
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+            <partners-list id="list"
+                           name="list"
+                           show-only-government-type="[[showOnlyGovernmentType]]"
+                           current-page="[[currentPage]]"
+                           active="[[listActive]]"
+                           csv-download-url="{{csvDownloadUrl}}"
+                           url-params="[[preservedListQueryParams]]">
+            </partners-list>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'overview')]]">
+            <partner-overview name="overview" partner="[[partner]]"></partner-overview>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
+            <partner-details id="partnerDetails"
+                             name="details"
+                             partner="[[partner]]"
+                             edit-mode="[[_hasEditPermissions(permissions)]]"></partner-details>
+          </template>
+
+        </iron-pages>
+
+      </div> <!-- page content end -->
+
+      <!-- sidebar content start -->
+      <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, partner)]]">
+        <div id="sidebar">
+          <partner-status
+              on-save-partner="_validateAndTriggerPartnerSave"
+              on-delete-partner="_deletePartner"
+              active="[[!listActive]]"
+              partner="[[partner]]"
+              edit-mode$="[[_hasEditPermissions(permissions)]]">
+          </partner-status>
+        </div> <!-- sidebar content end -->
+      </template>
+
+    </div> <!-- main container end -->
+
+    <partner-item-data id="partnerData"
+                       partner-id="[[selectedPartnerId]]"
+                       partner="{{partner}}"
+                       error-event-name="partner-save-error">
+    </partner-item-data>
 
   </template>
   <script>
-    class PartnersModule extends Polymer.Element {
+    'use strict';
+
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
+     */
+    const PartnersModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
+        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+          EtoolsPmpApp.Mixins.ModuleRouting], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin PartnersModuleRequiredMixins
+     */
+    class PartnersModule extends PartnersModuleRequiredMixins {
 
       static get is() {
         return 'partners-module';
       }
 
       static get properties() {
-        return {};
+        return {
+          partnerTabs: {
+            type: Array,
+            value: [
+              {
+                tab: 'overview',
+                tabLabel: 'Overview',
+                hidden: false
+              },
+              {
+                tab: 'details',
+                tabLabel: 'Partner Details',
+                hidden: false
+              }
+            ]
+          },
+          csvDownloadUrl: {
+            type: String
+          },
+          selectedPartnerId: {
+            type: Number
+          },
+          partner: {
+            type: Object,
+            observer: '_partnerChanged'
+          },
+          permissions: {
+            type: Object
+          },
+          showOnlyGovernmentType: {
+            type: Boolean,
+            value: false
+          },
+          currentPage: String,
+          originalPartnerData: Object
+        };
       }
 
-      constructor() {
-        super();
+      static get observers() {
+        return [
+          '_pageChanged(listActive, tabsActive, routeData)',
+          '_observeRouteDataId(routeData.id)'
+        ];
       }
 
       ready() {
         super.ready();
+        this._initListeners();
+        this._createNewPartnerDialog();
       }
 
       connectedCallback() {
         super.connectedCallback();
+        // deactivate main page loading msg triggered in app-shell
+        let eventPayload = {active: false, loadingSource: 'main-page'};
+        this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+        /**
+         * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+         */
+        this._showPartnersPageLoadingMessage();
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
+        this._removeNewPartnerDialogFromDom();
+      }
+
+      _initListeners() {
+        this.addEventListener('partner-save-error', this._partnerSaveError);
+        this.addEventListener('create-partner', this._createPartner);
+        this.addEventListener('reload-list', this._reloadPartnersList);
+        this.addEventListener('trigger-partner-loading-msg', this._handlePartnerSelectionLoadingMsg);
+      }
+
+      _createNewPartnerDialog() {
+        this.newPartnerDialog = document.createElement('new-partner-dialog');
+        this.newPartnerDialog.setAttribute('id', 'newPartnerDialog');
+        document.querySelector('body').appendChild(this.newPartnerDialog);
+
+        this.newPartnerDialog.addEventListener('create-partner', (event) => {
+          this.dispatchEvent(new CustomEvent('create-partner', {detail: event.detail, bubbles: true, composed: true}));
+        }, false);
+      }
+
+      _removeNewPartnerDialogFromDom() {
+        if (this.newPartnerDialog) {
+          document.querySelector('body').removeChild(this.newPartnerDialog);
+        }
+      }
+
+      _pageChanged(listActive, tabsActive, routeData) {
+        if (!listActive && !tabsActive) {
+          return;
+        }
+
+        this.scrollToTopOnCondition(!listActive);
+
+        let fileImportDetails = {
+          filenamePrefix: 'partner',
+          importErrMsg: 'Partners page import error occurred',
+          errMsgPrefixTmpl: '[partner(s) ##page##]',
+          loadingMsgSource: 'partners-page'
+        };
+        this.setActivePage(listActive, routeData.tab, fileImportDetails);
+      }
+
+      _hasEditPermissions(permissions) {
+        return permissions && permissions.editPartnerDetails === true;
+      }
+
+      _savePartner(newPartnerData) {
+        let partnerData = this.shadowRoot.querySelector('#partnerData');
+        if (partnerData) {
+          partnerData.savePartner(newPartnerData);
+        }
+      }
+
+      _deletePartner(event) {
+        event.stopImmediatePropagation();
+        let eventPayload = {
+          active: true,
+          message: 'Deleting partner...',
+          loadingSource: 'partner-data'
+        };
+        this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
+
+        let partnerData = this.shadowRoot.querySelector('#partnerData');
+        if (partnerData) {
+          partnerData.deletePartner(this.partner,
+              this._handlePartnerDeleted.bind(this), this._handlePartnerNotDeleted);
+        }
+      }
+
+      _handlePartnerDeleted() {
+        this.dispatchEvent(new CustomEvent('global-loading', {
+          detail: {active: false, loadingSource: 'partner-data'},
+          bubbles: true,
+          composed: true
+        }));
+        this.dispatchEvent(new CustomEvent('toast', {
+          detail: {text: 'Partner successfully deleted', showCloseBtn: true},
+          bubbles: true,
+          composed: true
+        }));
+        this.dispatchEvent(new CustomEvent('update-main-path', {
+          detail: {path: 'partners/list'},
+          bubbles: true,
+          composed: true
+        }));
+      }
+
+      _handlePartnerNotDeleted() {
+        this.dispatchEvent(new CustomEvent('global-loading', {
+          detail: {active: false, loadingSource: 'partner-data'},
+          bubbles: true,
+          composed: true
+        }));
+      }
+
+      _observeRouteDataId(id) {
+        if (id === undefined) {
+          return;
+        }
+        if (this.route && this.route.prefix.indexOf('partners') > -1) {
+          this.set('selectedPartnerId', id);
+        }
+      }
+
+      _partnerSaveError(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.dispatchEvent(new CustomEvent('set-server-errors', {
+            detail: event.detail,
+            bubbles: true,
+            composed: true
+          }));
+          this.scrollToTop();
+        }
+      }
+
+      _showNewPartnerBtn(listActive, permissions) {
+        return listActive && this._hasEditPermissions(permissions);
+      }
+
+      _openNewPartnerDialog() {
+        this.newPartnerDialog.openNewPartnerDialog();
+      }
+
+      _createPartner(event) {
+        let partnerData = this.shadowRoot.querySelector('#partnerData');
+        if (partnerData) {
+          partnerData.createPartner(event.detail, this._newPartnerCreated,
+              this._handleCreatePartnerError);
+        }
+      }
+
+      _newPartnerCreated(partner) {
+        this.dispatchEvent(new CustomEvent('update-main-path', {
+          detail: {path: 'partners/' + partner.id + '/details'},
+          bubbles: true,
+          composed: true
+        }));
+      }
+
+      _handleCreatePartnerError(errorDetails) {
+        this.dispatchEvent(new CustomEvent('toast', {
+          detail: {text: errorDetails, showCloseBtn: true},
+          bubbles: true,
+          composed: true
+        }));
+      }
+
+      _partnerChanged(partner) {
+        if (!_.isEmpty(partner)) {
+          // dismiss partner details pages loading
+          this.dispatchEvent(new CustomEvent('global-loading', {
+            detail: {active: false, loadingSource: 'partner-data'},
+            bubbles: true,
+            composed: true
+          }));
+          // keep a copy of loaded partner to be able to check changed data
+          this.set('originalPartnerData', JSON.parse(JSON.stringify(partner)));
+        }
+        this.dispatchEvent(new CustomEvent('clear-server-errors', {
+          bubbles: true,
+          composed: true
+        }));
+      }
+
+      _reloadPartnersList(e) {
+        e.stopImmediatePropagation();
+        try {
+          let partners = this.shadowRoot.querySelector('#list');
+          if (partners && !partners.$.list.classList.contains('hidden')) {
+            partners._filterPartnersData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[partners-page]', err);
+        }
+      }
+
+      _validateAndTriggerPartnerSave(event) {
+        event.stopImmediatePropagation();
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        let partnerDetails = this.shadowRoot.querySelector('#partnerDetails');
+        if (partnerDetails && partnerDetails._validatePartner()) {
+          let partnerChanges = this._cleanUpdateData(this.partner);
+          partnerChanges.id = this.partner.id;
+          this._savePartner(partnerChanges);
+        } else {
+          this.dispatchEvent(new CustomEvent('toast', {
+            detail: {
+              text: 'Please check assessments and partner contacts for ' +
+              'invalid fields or empty data rows!', showCloseBtn: true
+            },
+            bubbles: true,
+            composed: true
+          }));
+        }
+      }
+
+      _cleanUpdateData(partner) {
+        let updateableFields = [
+          'alternate_name',
+          'shared_with',
+          'staff_members',
+          'assessments',
+          'core_values_assessment'
+        ];
+        let changes = {};
+        updateableFields.forEach(function(fieldName) {
+          // TODO: improve this
+          if (['shared_with', 'assessments', 'staff_members'].indexOf(fieldName) > -1) {
+            if (JSON.stringify(partner[fieldName]) !== JSON.stringify(this.originalPartnerData[fieldName])) {
+              changes[fieldName] = partner[fieldName];
+            }
+          } else if (fieldName === 'core_values_assessment') {
+            if ((partner.hasOwnProperty('core_values_assessment')) &&
+                (partner.core_values_assessment instanceof File)) {
+              changes.core_values_assessment = partner.core_values_assessment;
+            }
+          } else {
+            if (partner[fieldName] !== this.originalPartnerData[fieldName]) {
+              changes[fieldName] = partner[fieldName];
+            }
+          }
+        }.bind(this));
+        return changes;
+      }
+
+      _handleTabSelectAction(e) {
+        this._showTabChangeLoadingMsg(e, 'partners-page', 'partner-');
+      }
+
+      _handlePartnerSelectionLoadingMsg() {
+        this._showTabChangeLoadingMsg(null, 'partners-page', 'partner-', 'details');
+      }
+
+      /**
+       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showPartnersPageLoadingMessage() {
+        let appSection = this.listActive ? 'partners list' : (this._removeStrDash(this.routeData.tab) + ' page');
+        this.dispatchEvent(new CustomEvent('global-loading', {
+          detail: {
+            message: 'Loading ' + appSection + ' elements...',
+            active: true,
+            loadingSource: 'partners-page'
+          },
+          bubbles: true,
+          composed: true
+        }));
       }
 
     }
