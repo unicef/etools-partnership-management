@@ -242,13 +242,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     /**
      * @polymer
      * @mixinFunction
-     * @appliedMixin EtoolsPmpApp.Mixins.AppMenu
-     * @appliedMixin EtoolsPmpApp.Mixins.ToastNotifications
-     * @appliedMixin EtoolsMixins.LoadingMixin
-     * @appliedMixin EtoolsPmpApp.Mixins.UserData
-     * @appliedMixin EtoolsPmpApp.Mixins.EnvironmentFlags
-     * @appliedMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliedMixin EtoolsPmpApp.Mixins.AmendmentMode
+     * @appliesMixin EtoolsPmpApp.Mixins.AppMenu
+     * @appliesMixin EtoolsPmpApp.Mixins.ToastNotifications
+     * @appliesMixin EtoolsMixins.LoadingMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
@@ -259,7 +258,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * PMP main element used to configure and display all app modules
      * @polymer
      * @customElement
-     * @appliedMixin AppShellRequiredMixins
+     * @appliesMixin AppShellRequiredMixins
      */
     class AppShell extends AppShellRequiredMixins {
       static get is() {

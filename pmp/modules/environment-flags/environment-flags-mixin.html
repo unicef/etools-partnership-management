@@ -7,7 +7,7 @@
    * Environment flags functionality; used to show/hide specific app sections.
    * @polymer
    * @mixinFunction
-   * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+   * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
    */
   EtoolsPmpApp.Mixins.EnvironmentFlags = Polymer.dedupingMixin(
       (superClass) => class extends EtoolsPmpApp.Mixins.EtoolsDataReduxStore(superClass) {
@@ -49,7 +49,7 @@
         _waitForEnvFlagsToLoad(page) {
           return this._checkFlagsReady().then((flagsLoaded) => {
             return flagsLoaded || this._checkFlagsReady();
-          }).then(function(flagsLoaded) {
+          }).then((flagsLoaded) => {
             return flagsLoaded || this._checkFlagsReady();
           });
         }
