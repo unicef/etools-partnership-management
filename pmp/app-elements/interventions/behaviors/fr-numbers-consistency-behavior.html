@@ -1,17 +1,35 @@
+<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <script>
+  'use strict';
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
+
   /** @polymerBehavior EtoolsPmpApp.Behaviors.FrNumbersConsistency */
-  EtoolsPmpApp.Behaviors.FrNumbersConsistency = {
+  EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl = {
     properties: {
+      currencies: {
+        type: Array,
+        statePath: 'currencies'
+      },
       _frsConsistencyWarnings: {
         type: Object,
         value: {
+          currenciesDoNotMatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be compared. ' +
+            'To be able to compare the amounts, you can cancel and enter the budget in the same currency as the FR. ',
           amount: 'Total FR amount is not the same as planned UNICEF $ contribution.',
           dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.'
         }
       }
     },
+
+    /*
+     * frs currencies and planned budget currency check
+     */
+    _frsAndPlannedBudgetCurrenciesMatch: function(frs, plannedBudgetCurrency) {
+      let differentFrCurrencies = frs.filter((fr) => fr.currency !== plannedBudgetCurrency);
+      return differentFrCurrencies.length === 0;
+    },
+
     /**
      * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
      */
@@ -19,26 +37,37 @@
       if (intervention.status === 'closed') {
         return false;
       }
+
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
-        warnFrsFields.push('FR start date');
-        warnIntervFields.push('start date');
+        warnFrsFields.push('FR Start Date');
+        warnIntervFields.push('Start Date');
       }
       if (this.checkFrsAndIntervDateConsistency(intervention.end, frsDetails.latest_end_date)) {
-        warnFrsFields.push('FR end date');
-        warnIntervFields.push('end date');
+        warnFrsFields.push('FR End Date');
+        warnIntervFields.push('End Date');
       }
-      if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
-              frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
-        warnFrsFields.push('Total FR amount');
-        warnIntervFields.push('UNICEF $ contribution');
+
+      let computedWarning = '';
+      // check frs currencies and planned budget currency match
+      if (this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, intervention.planned_budget.currency)) {
+        // currencies are the same => check amounts consistency
+        if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
+                frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
+          warnFrsFields.push('Total FR amount');
+          warnIntervFields.push('UNICEF contribution');
+        }
+      } else {
+        // currencies of the frs and planned budget do NOT match
+        computedWarning = this._frsConsistencyWarnings.currenciesDoNotMatch;
       }
+
       if (warnFrsFields.length > 0) {
-        return warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
+        computedWarning += warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
             ' not the same as PD/SSFA ' + warnIntervFields.join(', ') + '.';
       }
-      return false;
+      return computedWarning !== '' ? computedWarning : false;
     },
 
     checkFrsAndUnicefCashAmountsConsistency: function(unicefCash, frsTotalAmt, intervention,
@@ -78,10 +107,7 @@
         // No Fr added or interv dates not set yet
         return true;
       }
-      if (intervDateStr !== frsDateStr) {
-        return false;
-      }
-      return true;
+      return intervDateStr === frsDateStr;
     },
     _buildFrsWarningMsg: function(msgTemplate, searchStr, replacementStr) {
       return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
@@ -116,4 +142,10 @@
     }
 
   };
+
+  /** @polymerBehavior */
+  EtoolsPmpApp.Behaviors.FrNumbersConsistency = [
+    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
+    EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl
+  ];
 </script>

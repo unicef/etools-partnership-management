@@ -397,9 +397,9 @@
           e.stopImmediatePropagation();
           try {
             this.set('intervention.frs_details', e.detail.frsDetails);
-            this.set('intervention.frs', e.detail.frsDetails.frs.map(function(fr) {
-              return fr.id;
-            }));
+            let frIds = e.detail.frsDetails.frs.map((fr) => fr.id);
+            console.log(frIds);
+            this.set('intervention.frs', frIds);
           } catch (err) {
             this.logError('[_handleFrsUpdate] An error occurred during FR Numbers update', null, err);
           }

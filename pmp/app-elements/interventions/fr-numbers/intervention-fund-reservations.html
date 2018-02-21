@@ -287,9 +287,12 @@
 
         },
 
-        _frsDetailsSuccessHandler: function(response) {
-          let frsDetails = response;
+        /*
+         * Frs details received, check frs consistency
+         */
+        _frsDetailsSuccessHandler: function(frsDetails) {
           let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
+          console.log(warning);
           this.set('_frsConsistencyWarning', warning);
           if (warning) {
             this._frsUpdateWarningMessage(warning);

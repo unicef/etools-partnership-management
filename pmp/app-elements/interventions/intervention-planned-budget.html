@@ -119,19 +119,22 @@
         <etools-data-table-row no-collapse>
           <div slot="row-data">
             <span class="col-data col-3 currency">
-              <etools-form-element-wrapper no-label-float>
-                <span class="totalLabelUsd">Total PD Budget</span><span>USD</span>
-              </etools-form-element-wrapper>
+              <span class="totalLabel">Total PD Budget</span>
+              <etools-single-selection-menu id="currencyDd"
+                                            placeholder="&#8212;"
+                                            options="[[currencies]]"
+                                            selected="{{plannedBudget.currency}}"
+                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                            no-label-float>
+              </etools-single-selection-menu>
             </span>
 
             <span class="col-data col-3 right-align">
-              <etools-currency-amount-input id="csoContUsd"
-                                            value="{{plannedBudget.partner_contribution}}"
+              <etools-currency-amount-input id="csoCont"
+                                            value="{{plannedBudget.partner_contribution_local}}"
                                             type="number"
                                             placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="CSO Cont. (USD) required"
                                             no-label-float>
               </etools-currency-amount-input>
             </span>
@@ -149,7 +152,7 @@
                     class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                     <etools-form-element-wrapper no-label-float
                                                  id="unicef-cash">
-                      [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
+                      [[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]
                     </etools-form-element-wrapper>
                   </template>
                   <template is="dom-if"
@@ -157,11 +160,12 @@
                     <!-- editable unicef cash -->
                     <!-- TODO: this will be needed in the future, after frs validation will be re-designed
                     class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
-                    <etools-currency-amount-input id="unicefCashUsd"
-                                                  value="{{plannedBudget.unicef_cash}}" type="number"
+                    <etools-currency-amount-input id="unicefCash"
+                                                  value="{{plannedBudget.unicef_cash_local}}"
                                                   placeholder="&#8212;"
-                                                  required$="[[required]]" auto-validate
-                                                  error-message="UNICEF Cash (USD) required"
+                                                  required$="[[required]]"
+                                                  auto-validate
+                                                  error-message="UNICEF Cash required"
                                                   no-label-float>
                     </etools-currency-amount-input>
                   </template>
@@ -171,59 +175,10 @@
             </span>
 
             <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="inKindAmountUsd"
-                                            value="{{plannedBudget.in_kind_amount}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Supply (USD) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-form-element-wrapper no-label-float>
-                [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash,
-                plannedBudget.in_kind_amount)]]
-              </etools-form-element-wrapper>
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3 currency">
-              <span class="totalLabel">Total PD Budget</span>
-              <etools-single-selection-menu id="currencyDd" placeholder="&#8212;"
-                                            options="[[currencies]]"
-                                            selected="{{plannedBudget.currency}}"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-single-selection-menu>
-            </span>
-
-            <span class="col-data col-3 right-align">
-              <etools-currency-amount-input id="csoContLocal"
-                                            value="{{plannedBudget.partner_contribution_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="unicefCashLocal"
-                                            value="{{plannedBudget.unicef_cash_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="inKindAmountLocal"
+              <etools-currency-amount-input id="inKindAmount"
                                             value="{{plannedBudget.in_kind_amount_local}}"
-                                            type="number" placeholder="&#8212;"
+                                            type="number"
+                                            placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
                                             no-label-float>
               </etools-currency-amount-input>
@@ -376,9 +331,9 @@
         validate: function() {
           var valid = true;
           var elementsSelectorsToValidate = [
-            '#csoContUsd',
-            '#unicefCashUsd',
-            '#inKindAmountUsd'
+            '#csoCont',
+            '#unicefCash',
+            '#inKindAmount'
           ];
           elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
@@ -392,9 +347,9 @@
         // reset validation errors
         resetValidations: function() {
           var elementsSelectorsToValidate = [
-            '#csoContUsd',
-            '#unicefCashUsd',
-            '#inKindAmountUsd'
+            '#csoCont',
+            '#unicefCash',
+            '#inKindAmount'
           ];
           elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
@@ -411,7 +366,7 @@
         },
 
         _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, iterventionStatus) {
-          let unicefCashField = this.$$('#unicefCashUsd');
+          let unicefCashField = this.$$('#unicefCash');
           if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed') {
             this.set('_frsConsistencyWarning', '');
             if (unicefCashField) {
