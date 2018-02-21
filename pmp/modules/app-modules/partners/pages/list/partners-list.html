@@ -38,6 +38,17 @@
 
       connectedCallback() {
         super.connectedCallback();
+        /**
+         * Disable loading message for main list elements load,
+         * triggered by parent element on stamp
+         */
+        this.dispatchEvent(new CustomEvent('global-loading', {
+          detail: {active: false, loadingSource: 'partners-page'},
+          bubbles: true,
+          composed: true
+        }));
+        // TODO: polymer 2 - add missing method(used next line)
+        // this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
       }
 
       disconnectedCallback() {
