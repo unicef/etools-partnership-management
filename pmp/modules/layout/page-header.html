@@ -98,8 +98,8 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-     * @appliedMixin EtoolsPmpApp.Mixins.ProfileOperations
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.ProfileOperations
     */
     const PageHeaderMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.ProfileOperations],
@@ -108,7 +108,7 @@
     /**
      * @polymer
      * @customElement
-     * @appliedMixin PageHeaderMixin
+     * @appliesMixin PageHeaderMixin
      */
     class PageHeader extends PageHeaderMixin {
 
@@ -179,7 +179,7 @@
       }
 
       openDrawer() {
-        this.dispatchEvent(new CustomEvent('drawer'));
+        this.fireEvent('drawer');
       }
 
       _setBgColor() {
@@ -258,6 +258,16 @@
         });
 
         return modifiedFields;
+      }
+
+      fireEvent(eventName, eventDetail) {
+        this.dispatchEvent(new CustomEvent(eventName,  {
+          detail: {
+            eventDetail
+          },
+          bubbles: true,
+          composed: true
+        }));
       }
     }
 

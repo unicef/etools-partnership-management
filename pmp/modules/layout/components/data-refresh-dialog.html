@@ -81,8 +81,8 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliedMixin EtoolsLogsMixin
-     * @appliedMixin EtoolsPageRefreshMixin
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPageRefreshMixin
     */
     const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsLogsMixin, EtoolsPageRefreshMixin],
@@ -90,7 +90,7 @@
     /**
      * @polymer
      * @customElement
-     * @appliedMixin PageHeaderMixin
+     * @appliesMixin PageHeaderMixin
      */
     class DataRefreshDialog extends DataRefreshDialogMixin {
       static get is() {
@@ -163,11 +163,10 @@
         if (!closingReason.detail.confirmed) {
           return;
         }
-        this.dispatchEvent(new CustomEvent('global-loading', {message: 'Refreshing data...', active: true}));
+        this.fireEvent('global-loading', {message: 'Refreshing data...', active: true});
 
-        // clear all data
         if (this.allSelected) {
-          this.dispatchEvent(new CustomEvent('update-main-path', {path: ''}));
+          this.fireEvent('update-main-path', {path: ''});
           this.refresh();
           return;
         }
@@ -204,7 +203,7 @@
 
       _handleFailure(afterDataRefreshLandingPage, restampLandingPage) {
         this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-        this.dispatchEvent(new CustomEvent('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true}));
+        this.fireEvent('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
       }
 
       _triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage) {
@@ -212,13 +211,13 @@
         if (restampLandingPage) {
           this.set('page', null);
           setTimeout(function() {
-            this.dispatchEvent(new CustomEvent('global-loading', {active: false}));
+            this.fireEvent('global-loading', {active: false});
             this.set('page', afterDataRefreshLandingPage);
-            this.dispatchEvent(new CustomEvent('update-main-path', {path: routePath}));
+            this.fireEvent('update-main-path', {path: routePath});
           }.bind(this), 10);
         } else {
-          this.dispatchEvent(new CustomEvent('global-loading', {active: false}));
-          this.dispatchEvent(new CustomEvent('update-main-path', {path: routePath}));
+          this.fireEvent('global-loading', {active: false});
+          this.fireEvent('update-main-path', {path: routePath});
         }
         this._resetRefreshSelection();
       }
@@ -244,12 +243,12 @@
 
       _handleSuccess(afterDataRefreshLandingPage, restampLandingPage) {
         this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-        this.dispatchEvent(new CustomEvent('toast', {text: 'Data successfully refreshed', showCloseBtn: true}));
+        this.fireEvent('toast', {text: 'Data successfully refreshed', showCloseBtn: true});
       }
 
       _handleFailure(afterDataRefreshLandingPage, restampLandingPage) {
         this._triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage);
-        this.dispatchEvent(new CustomEvent('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true}));
+        this.fireEvent('toast', {text: 'There was an error while refreshing the data', showCloseBtn: true});
       }
 
       _triggerMainRoutePathUpdate(afterDataRefreshLandingPage, restampLandingPage) {
@@ -257,13 +256,13 @@
         if (restampLandingPage) {
           this.set('page', null);
           setTimeout(function() {
-            this.dispatchEvent(new CustomEvent('global-loading', {active: false}));
+            this.fireEvent('global-loading', {active: false});
             this.set('page', afterDataRefreshLandingPage);
-            this.dispatchEvent(new CustomEvent('update-main-path', {path: routePath}));
+            this.fireEvent('update-main-path', {path: routePath});
           }.bind(this), 10);
         } else {
-          this.dispatchEvent(new CustomEvent('global-loading', {active: false}));
-          this.dispatchEvent(new CustomEvent('update-main-path', {path: routePath}));
+          this.fireEvent('global-loading', {active: false});
+          this.fireEvent('update-main-path', {path: routePath});
         }
         this._resetRefreshSelection();
       }
@@ -284,6 +283,16 @@
         this.set('partnersSelected', false);
         this.set('agreementsSelected', false);
         this.set('interventionsSelected', false);
+      }
+
+      fireEvent(eventName, eventDetail) {
+        this.dispatchEvent(new CustomEvent(eventName,  {
+          detail: {
+            eventDetail
+          },
+          bubbles: true,
+          composed: true
+        }));
       }
     }
 

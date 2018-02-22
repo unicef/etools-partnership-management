@@ -9,8 +9,8 @@
    /**
     * @polymer
     * @mixinFunction
-    * @appliedMixin EtoolsPmpApp.Mixins.UserData
-    * @appliedMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
+    * @appliesMixin EtoolsPmpApp.Mixins.UserData
+    * @appliesMixin EtoolsPmpApp.Mixins.AjaxErrorsParser
     */
   EtoolsPmpApp.Mixins.ProfileOperations = (baseClass) =>
     class extends EtoolsPmpApp.Mixins.UserData(
@@ -46,18 +46,18 @@
     saveProfile(profile) {
       if (_.isEmpty(profile)) {
         // empty profile means no changes found
-        this.dispatchEvent(new CustomEvent('toast', {
+        this.fireEvent('toast', {
           text: 'There is nothing to save. No change detected on your profile.',
           showCloseBtn: true
-        }));
+        });
         return;
       }
 
-      this.dispatchEvent(new CustomEvent('global-loading', {
+      this.fireEvent('global-loading', {
         message: 'Saving profile data...',
         active: true,
         loadingSource: this.profileSaveLoadingMsgSource
-      }));
+      });
       this.set('_saveActionInProgress', true);
       this._dispatchSaveProfileRequest(profile);
     }
@@ -69,9 +69,22 @@
 
     _hideProfileSaveLoadingMsg() {
       if (this._saveActionInProgress) {
-        this.dispatchEvent(new CustomEvent('global-loading', {active: false, loadingSource: this.profileSaveLoadingMsgSource}));
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: this.profileSaveLoadingMsgSource
+        });
         this.set('_saveActionInProgress', false);
       }
+    }
+
+    fireEvent(eventName, eventDetail) {
+      this.dispatchEvent(new CustomEvent(eventName,  {
+        detail: {
+          eventDetail
+        },
+        bubbles: true,
+        composed: true
+      }));
     }
   }
 </script>

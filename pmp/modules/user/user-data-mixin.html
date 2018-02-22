@@ -13,11 +13,11 @@
   /**
     * @polymer
     * @mixinFunction
-    * @appliedMixin EtoolsPageRefreshMixin
-    * @appliedMixin EtoolsAjaxRequestMixin
-    * @appliedMixin EtoolsPmpApp.Mixins.Endpoints
-    * @appliedMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
-    * @appliedMixin EtoolsPmpApp.Mixins.UserPermissions
+    * @appliesMixin EtoolsPageRefreshMixin
+    * @appliesMixin EtoolsAjaxRequestMixin
+    * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
     */
 
   EtoolsPmpApp.Mixins.UserData = (baseClass) =>
@@ -77,7 +77,7 @@
         this._resetUserAndPermissions();
         this.logError('Error occurred on logged user data request', 'user request', error);
         if (error.status === 403) {
-          this.dispatchEvent(new CustomEvent('forbidden', {bubbles: true, composed: true}));
+          this.fireEvent('forbidden', {bubbles: true, composed: true});
         }
       });
     }
@@ -95,11 +95,11 @@
                   active: true,
                   loadingSource: 'country-update'
                 };
-                this.dispatchEvent(new CustomEvent('global-loading', {
+                this.fireEvent('global-loading', {
                   detail: eventPayload,
                   bubbles: true,
                   composed: true
-                }));
+                });
                 this.refresh();
               }
             } else {
@@ -160,6 +160,16 @@
         // });
       }
       this._setPermissions(_permissions);
+    }
+
+    fireEvent(eventName, eventDetail) {
+      this.dispatchEvent(new CustomEvent(eventName,  {
+        detail: {
+          eventDetail
+        },
+        bubbles: true,
+        composed: true
+      }));
     }
   }
 </script>
