@@ -98,8 +98,8 @@
     /**
      * @polymer
      * @mixinFunction
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.ProfileOperations
+     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     */
     const PageHeaderMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.ProfileOperations],
@@ -258,14 +258,6 @@
         });
 
         return modifiedFields;
-      }
-
-      fireEvent(eventName, eventDetail) {
-        this.dispatchEvent(new CustomEvent(eventName,  {
-          detail: eventDetail,
-          bubbles: true,
-          composed: true
-        }));
       }
     }
 

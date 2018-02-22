@@ -75,6 +75,14 @@
       }
       return field;
     }
+
+    fireEvent(eventName, eventDetail) {
+      this.dispatchEvent(new CustomEvent(eventName,  {
+        detail: eventDetail,
+        bubbles: true,
+        composed: true
+      }));
+    }
   };
 
 </script>

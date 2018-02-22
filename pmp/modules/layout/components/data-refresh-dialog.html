@@ -5,7 +5,7 @@
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
 
-<!-- <link rel="import" href="../../app-config/app-dexie-db-config.html"> -->
+<link rel="import" href="../../mixins/common-mixin.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/grid-layout-styles.html">
 
@@ -83,9 +83,10 @@
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPageRefreshMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
     */
     const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPageRefreshMixin],
+        [EtoolsLogsMixin, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.Common],
         Polymer.Element);
     /**
      * @polymer
@@ -243,14 +244,6 @@
         this.set('partnersSelected', false);
         this.set('agreementsSelected', false);
         this.set('interventionsSelected', false);
-      }
-
-      fireEvent(eventName, eventDetail) {
-        this.dispatchEvent(new CustomEvent(eventName,  {
-          detail: eventDetail,
-          bubbles: true,
-          composed: true
-        }));
       }
     }
 

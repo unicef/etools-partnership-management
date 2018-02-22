@@ -8,6 +8,7 @@
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../mixins/common-mixin.html">
 <dom-module id="countries-dropdown">
   <template strip-whitespace>
     <style>
@@ -98,11 +99,12 @@
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPageRefreshMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
     */
     const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
-        EtoolsPmpApp.Mixins.Endpoints], Polymer.Element);
+        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.Common], Polymer.Element);
 
     /**
     *
@@ -176,14 +178,6 @@
         this.$.countriesListbox.selected = this.currentCountry;
         this.fireEvent('toast', {text: 'Something went wrong changing your workspace. Please try again'});
         this.fireEvent('global-loading', {active: false, loadingSource: 'country-change'});
-      }
-
-      fireEvent(eventName, eventDetail) {
-        this.dispatchEvent(new CustomEvent(eventName,  {
-          detail: eventDetail,
-          bubbles: true,
-          composed: true
-        }));
       }
     }
 
