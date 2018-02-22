@@ -78,6 +78,7 @@
   </template>
 
   <script>
+    'use strict';
     /**
      * @polymer
      * @mixinFunction
@@ -153,7 +154,6 @@
 
       _singleSectionChanged() {
         var allSelected = this.interventionsSelected && this.partnersSelected && this.agreementsSelected;
-
         var anySelected = this.interventionsSelected || this.partnersSelected || this.agreementsSelected;
 
         this.set('allSelected', allSelected);
