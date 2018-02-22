@@ -205,7 +205,7 @@
         fieldsToRestore = fieldsToRestore.concat(['start', 'end']);
       }
 
-      let unicefCashCopy = this.get('intervention.planned_budget.unicef_cash');
+      let unicefCashCopy = this.get('intervention.planned_budget.unicef_cash_local');
 
       fieldsToRestore.forEach(function(field) {
         let dataPath = 'intervention.' + field;
@@ -213,7 +213,7 @@
         this.set(dataPath, JSON.parse(JSON.stringify(this.get(originalDataPath))));
         if (field === 'planned_budget' && status === 'signed') {
           // if planned_budget we need to make sure in signed status unicef_cash remains the same
-          this.set('intervention.planned_budget.unicef_cash', unicefCashCopy);
+          this.set('intervention.planned_budget.unicef_cash_local', unicefCashCopy);
         }
       }.bind(this));
       this.fire('toast', {text: 'There are no new/unsaved amendments.\n' +

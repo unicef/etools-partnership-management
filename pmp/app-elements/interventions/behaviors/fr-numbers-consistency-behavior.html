@@ -1,23 +1,32 @@
-<link rel="import" href="../../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <script>
   'use strict';
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.FrNumbersConsistency */
-  EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl = {
+  EtoolsPmpApp.Behaviors.FrNumbersConsistency = {
     properties: {
-      currencies: {
-        type: Array,
-        statePath: 'currencies'
-      },
       _frsConsistencyWarnings: {
         type: Object,
         value: {
           currenciesDoNotMatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be compared. ' +
             'To be able to compare the amounts, you can cancel and enter the budget in the same currency as the FR. ',
-          amount: 'Total FR amount is not the same as planned UNICEF $ contribution.',
-          dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.'
+          amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
+          dateTmpl: '<<field_name>> is not the same as PD/SSFA <<field_name>>.',
+          warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
+        }
+      },
+      _frValidationFieldsToCheckNames: {
+        type: Object,
+        value: {
+          start_date: 'Start Date',
+          end_date: 'End Date',
+          pd_start: 'Start Date',
+          pd_end: 'End Date',
+          pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
+          fr_earliest_date: 'FR Start Date',
+          fr_latest_date: 'FR End Date',
+          fr_total_amount: 'Total FR amount'
         }
       }
     },
@@ -41,12 +50,12 @@
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
-        warnFrsFields.push('FR Start Date');
-        warnIntervFields.push('Start Date');
+        warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_earliest_date);
+        warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_start);
       }
       if (this.checkFrsAndIntervDateConsistency(intervention.end, frsDetails.latest_end_date)) {
-        warnFrsFields.push('FR End Date');
-        warnIntervFields.push('End Date');
+        warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_latest_date);
+        warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_end);
       }
 
       let computedWarning = '';
@@ -55,8 +64,8 @@
         // currencies are the same => check amounts consistency
         if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
                 frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
-          warnFrsFields.push('Total FR amount');
-          warnIntervFields.push('UNICEF contribution');
+          warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_total_amount);
+          warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_unicef_cash_contribution);
         }
       } else {
         // currencies of the frs and planned budget do NOT match
@@ -64,9 +73,13 @@
       }
 
       if (warnFrsFields.length > 0) {
-        computedWarning += warnFrsFields.join(', ') + ' ' + (warnFrsFields.length > 1 ? 'are' : 'is') +
-            ' not the same as PD/SSFA ' + warnIntervFields.join(', ') + '.';
+        computedWarning += this._frsConsistencyWarnings.warningTmpl;
+        computedWarning = this._buildFrsWarningMsg(computedWarning, '<<frs_fields>>', warnFrsFields.join(', '));
+        computedWarning = this._buildFrsWarningMsg(computedWarning, '<<verb>>',
+            warnFrsFields.length > 1 ? 'are' : 'is');
+        computedWarning = this._buildFrsWarningMsg(computedWarning, '<<pd_fields>>', warnIntervFields.join(', '));
       }
+      console.log(computedWarning);
       return computedWarning !== '' ? computedWarning : false;
     },
 
@@ -117,18 +130,14 @@
     },
     getFrsStartDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', 'start date');
+          '<<field_name>>', this._frValidationFieldsToCheckNames.start_date);
     },
     getFrsEndDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', 'end date');
+          '<<field_name>>', this._frValidationFieldsToCheckNames.end_date);
     },
     frsConsistencyWarningIsActive: function(warnMsg) {
       return !!warnMsg;
-    },
-
-    getFrsInconsistentFieldClass: function(warn) {
-      return !!warn ? 'frs-inconsistent' : '';
     },
 
     emptyFrsList: function(intervention, interventionIsFromWhere) {
@@ -142,10 +151,4 @@
     }
 
   };
-
-  /** @polymerBehavior */
-  EtoolsPmpApp.Behaviors.FrNumbersConsistency = [
-    EtoolsPmpApp.Behaviors.EtoolsDataReduxStore,
-    EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl
-  ];
 </script>

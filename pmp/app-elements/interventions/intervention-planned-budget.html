@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="fr-numbers/styles/fr-warnings-styles.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
@@ -21,7 +22,7 @@
 
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
-    <style include="shared-styles data-table-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles fr-warnings-styles">
       [hidden] {
         display: none !important;
       }
@@ -55,24 +56,6 @@
 
       #currencyDd {
         width: 130px;
-      }
-
-      #unicef-cash.frs-inconsistent {
-        --paper-input-container-input: {
-          color: var(--error-color);
-        }
-      }
-
-      etools-currency-amount-input.frs-inconsistent {
-        --etools-currency-container-input: {
-          color: var(--error-color);
-        }
-      }
-
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
-          @apply --pmp-form-field-frs-inconsistency-icon;
-        };
       }
 
       .totalLabel {
@@ -140,16 +123,13 @@
             </span>
 
             <span class="col-data col-2 right-align">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
+              <etools-info-tooltip class="fr-nr-warn"
+                                   icon="report"
+                                   icon-first
+                                   hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
                 <div slot="field">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
-                    <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                     <etools-form-element-wrapper no-label-float
                                                  id="unicef-cash">
                       [[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]
@@ -158,8 +138,6 @@
                   <template is="dom-if"
                             if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- editable unicef cash -->
-                    <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                     <etools-currency-amount-input id="unicefCash"
                                                   value="{{plannedBudget.unicef_cash_local}}"
                                                   placeholder="&#8212;"
@@ -170,7 +148,7 @@
                     </etools-currency-amount-input>
                   </template>
                 </div>
-                <!--<span slot="message">[[_frsConsistencyWarning]]</span>-->
+                <span slot="message">[[_frsConsistencyWarning]]</span>
               </etools-info-tooltip>
             </span>
 
@@ -256,7 +234,7 @@
 
         observers: [
           '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, ' +
-            'plannedBudget.unicef_cash, intervention.status)',
+            'plannedBudget.unicef_cash_local, intervention.status)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 

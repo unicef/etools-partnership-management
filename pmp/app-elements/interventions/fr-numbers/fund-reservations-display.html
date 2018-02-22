@@ -17,9 +17,11 @@
           margin-right: 0;
         };
       }
+
       [hidden] {
         display: none !important;
       }
+
       #totalsRow {
         --list-row-no-collapse: {
           background-color: var(--light-theme-background-color);
@@ -28,16 +30,16 @@
     </style>
 
     <template is="dom-if" if="[[!frsDetails.frs.length]]">
-        <div class="row-h">
-          <p>There are no fund reservations added for this intervention.</p>
-        </div>
+      <div class="row-h">
+        <p>There are no fund reservations added for this intervention.</p>
+      </div>
     </template>
 
     <div class="list-container" hidden$="[[_noFrs(frsDetails)]]">
       <etools-data-table-header id="listHeader"
-              no-collapse
-              no-title
-              hidden$="[[!reportingRequirements.length]]">
+                                no-collapse
+                                no-title
+                                hidden$="[[!reportingRequirements.length]]">
         <etools-data-table-column class="col-3">
           FR#
         </etools-data-table-column>
@@ -72,18 +74,18 @@
           <span class="col-data col-3"></span>
           <span class="col-data col-3 right-align"><strong>TOTAL</strong></span>
           <span class="col-data col-2 right-align">
-            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]" -->
-            <etools-info-tooltip icon="report"
-                              hide-tooltip
-                              important-warning
-                              icon-first right-aligned>
+            <etools-info-tooltip class="fr-nr-warn"
+                                 icon="report"
+                                 hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
+                                 icon-first right-aligned>
               <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
-              <!--<span slot="message">[[_frsTotalAmountWarning]]</span>-->
+              <span slot="message">[[_frsTotalAmountWarning]]</span>
             </etools-info-tooltip>
           </span>
-          <span class="col-data col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
-          <span class="col-data col-2 right-align"> [[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</span>
+          <span
+              class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
+          <span
+              class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</span>
         </div>
       </etools-data-table-row>
     </div>
@@ -122,7 +124,7 @@
             this.set('_frsTotalAmountWarning', '');
             return;
           }
-          let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash,
+          let warn = this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
               frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
           this.set('_frsTotalAmountWarning', warn);
         }

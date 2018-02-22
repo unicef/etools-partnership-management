@@ -63,18 +63,6 @@
         font-size: 16px;
       }
 
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
-          @apply --pmp-form-field-frs-inconsistency-icon;
-        };
-      }
-
-      etools-date-input.frs-inconsistent {
-        --paper-input-container-input: {
-          color: var(--error-color);
-        }
-      }
-
       div[no-left-padding] {
         padding-left: 0px !important;
       }
@@ -207,13 +195,10 @@
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
              class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
-          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]" -->
-          <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip
-                               important-warning>
-            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]" -->
+          <etools-info-tooltip class="fr-nr-warn"
+                               icon="report"
+                               icon-first
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
             <etools-date-input slot="field"
                                id="intStart"
                                label="Start date"
@@ -224,18 +209,15 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <!--<span slot="message">[[_frsStartConsistencyWarning]]</span>-->
+            <span slot="message">[[_frsStartConsistencyWarning]]</span>
           </etools-info-tooltip>
 
         </div>
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
-          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]" -->
-          <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip
-                               important-warning>
-            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]" -->
+          <etools-info-tooltip class="fr-nr-warn"
+                               icon="report"
+                               icon-first
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
             <etools-date-input slot="field"
                                id="intEnd"
                                label="End date"
@@ -246,7 +228,7 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <!--<span slot="message">[[_frsEndConsistencyWarning]]</span>-->
+            <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
         <div class="col col-3"

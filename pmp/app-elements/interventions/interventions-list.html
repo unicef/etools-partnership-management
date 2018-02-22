@@ -197,23 +197,21 @@
                 [[getDisplayValue(intervention.title)]]
             </span>
             <span class="col-data flex-c">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
+              <etools-info-tooltip class="fr-nr-warn"
+                                   icon="report"
+                                   icon-first
+                                   hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
-                <!--<span slot="message">[[getFrsStartDateValidationMsg()]]</span>-->
+                <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]" -->
-               <etools-info-tooltip icon="report" icon-first
-                                    hide-tooltip
-                                    important-warning>
+               <etools-info-tooltip class="fr-nr-warn"
+                                    icon="report"
+                                    icon-first
+                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]">
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
-                 <!--<span slot="message">[[getFrsEndDateValidationMsg()]]</span>-->
+                 <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
           </div>
@@ -229,15 +227,12 @@
             </div>
             <div class="row-details-content col-2">
               <span class="rdc-title">UNICEF Cash Contribution</span>
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
+              <etools-info-tooltip class="fr-nr-warn"
+                                   icon="report"
+                                   icon-first
+                                   hide-tooltip$="[[validateFrsVsUnicefCashAmounts(intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
                 <span slot="field">$ [[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
-                <!--<span slot="message">-->
-                  <!--[[getFrsTotalAmountInconsistencyMsg()]]-->
-                <!--</span>-->
+                <span slot="message">[[getFrsTotalAmountInconsistencyMsg()]]</span>
               </etools-info-tooltip>
 
             </div>
