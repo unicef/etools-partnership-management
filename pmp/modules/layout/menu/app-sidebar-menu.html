@@ -141,14 +141,24 @@
 
   <script>
     'use strict';
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     */
+    const AppSidebarMenuMixins = EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.EventHelper,
+        EtoolsPmpApp.Mixins.EnvironmentFlags
+      ], Polymer.Element);
 
     /**
      * PMP main menu
      * @polymer
      * @customElement
-     * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
+     * @appliesMixin AppSidebarMenuMixins
      */
-    class AppSidebarMenu extends EtoolsPmpApp.Mixins.EnvironmentFlags(Polymer.Element) {
+    class AppSidebarMenu extends AppSidebarMenuMixins {
 
       static get is() {
         return 'app-sidebar-menu';
