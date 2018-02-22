@@ -1,10 +1,46 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
+<link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="../../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
+<link rel="import" href="../../../../mixins/list-filters-mixin.html">
+<link rel="import" href="../../../../mixins/common-mixin.html">
+<link rel="import" href="../../../../redux/etools-data-redux-store.html">
+<link rel="import" href="../../../../mixins/lists-common-mixin.html">
+
+<link rel="import" href="../../../../styles/shared-styles.html">
+<link rel="import" href="../../../../styles/list-filter-styles.html">
+<link rel="import" href="../../../../styles/partner-status-styles.html">
+<link rel="import" href="../../../../styles/app-mixins.html">
+
+<link rel="import" href="../../data/partners-list-data.html">
 
 <dom-module id="partners-list">
   <template>
-    <style>
-      :host {
-        /* host CSS */
+      <style
+        include="shared-styles data-table-styles iron-flex iron-flex-factors partner-status-styles list-filter-styles paper-material-styles">
+      div[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+      .sm-status-wrapper {
+        padding-left: 10px;
+      }
+      .vendor-nr {
+        @apply --text-btn-style;
+        text-transform: none;
       }
     </style>
 

@@ -41,7 +41,8 @@
     "etools-file": "f98a943",
     "etools-content-panel": "918bd21",
     "etools-datepicker": "49455be",
-    "etools-dialog": "c943e5f"
+    "etools-dialog": "c943e5f",
+    "etools-data-table": "6a1455b1"
   },
   "resolutions": {
     "polymer": "^2.0.0",
