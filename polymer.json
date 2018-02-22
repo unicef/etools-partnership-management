@@ -14,8 +14,7 @@
   "sources": [
     "pmp/**/*",
     "images/**/*",
-    "bower.json",
-    "bower_components/**/*"
+    "bower.json"
   ],
   "extraDependencies": [
     "manifest.json",
