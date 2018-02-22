@@ -262,9 +262,7 @@
 
       fireEvent(eventName, eventDetail) {
         this.dispatchEvent(new CustomEvent(eventName,  {
-          detail: {
-            eventDetail
-          },
+          detail: eventDetail,
           bubbles: true,
           composed: true
         }));
