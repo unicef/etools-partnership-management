@@ -62,6 +62,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- other required mixins -->
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/amendment-mode-mixin.html">
+<link rel="import" href="modules/mixins/event-helper-mixin.html">
 
 <!-- import static data element -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -248,11 +249,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
      * @appliesMixin EtoolsPmpApp.Mixins.UserData
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
           EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.ScrollControl,
-          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData], Polymer.Element);
+          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData, EtoolsPmpApp.Mixins.EventHelper],
+        Polymer.Element);
 
     /**
      * PMP main element used to configure and display all app modules
@@ -331,12 +334,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            * This will be triggered once at page load or, after page load, on menu option tap event.
            * The loading message is disabled by *-module.html elements ready callback (in both cases)
            */
-          this.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {
-              active: true,
-              loadingSource: 'main-page'
-            }, bubbles: true, composed: true
-          }));
+          this.fireEvent('global-loading', {
+            active: true,
+            loadingSource: 'main-page'
+          });
         }
       }
 
@@ -383,8 +384,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageNotFound() {
         this._updatePath('not-found');
         // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-        let eventPayload = {text: 'Oops you hit a 404!', showCloseBtn: true};
-        this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
+        this.fireEvent('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       }
 
       _openDataRefreshDialog() {
@@ -446,7 +446,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // set last partners active page... needed to make a difference between partners and government-partners
         this._updateLastPartnersModuleActivePage(module);
         // clear loading messages queue
-        this.dispatchEvent(new CustomEvent('clear-loading-messages', {bubbles: true, composed: true}));
+        this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
         this._setAmendMode(false);
       }
 
