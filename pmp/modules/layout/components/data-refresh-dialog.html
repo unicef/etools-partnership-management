@@ -5,7 +5,7 @@
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
 
-<link rel="import" href="../../mixins/common-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/grid-layout-styles.html">
 
@@ -83,10 +83,10 @@
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsPageRefreshMixin
-     * @appliesMixin EtoolsPmpApp.Mixins.Common
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const DataRefreshDialogMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.Common],
+        [EtoolsLogsMixin, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.EventHelper],
         Polymer.Element);
     /**
      * @polymer

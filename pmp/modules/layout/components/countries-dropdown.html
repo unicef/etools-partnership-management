@@ -8,7 +8,7 @@
 <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
 <link rel="import" href="../../endpoints/endpoints-mixin.html">
-<link rel="import" href="../../mixins/common-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 <dom-module id="countries-dropdown">
   <template strip-whitespace>
     <style>
@@ -99,12 +99,12 @@
      * @appliesMixin EtoolsLogsMixin
      * @appliesMixin EtoolsAjaxRequestMixin
      * @appliesMixin EtoolsPageRefreshMixin
-     * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins(
         [EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
-        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.Common], Polymer.Element);
+        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element);
 
     /**
     *
