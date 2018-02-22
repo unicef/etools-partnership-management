@@ -90,8 +90,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       * to indicate the path from which you'll be serving, including leading
       * and trailing slashes (e.g., `/my-app/`).
       */
-      const BASE_URL = '/pmp/';
-      window.Polymer = {rootPath: BASE_URL};
+      let BASE_URL = document.querySelector('base').href;
+      window.Polymer = {rootPath: '/pmp/'};
 
       // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {

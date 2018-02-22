@@ -19,8 +19,8 @@
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   },
   "dependencies": {
-    "browser-capabilities": "^0.2.2",
     "express": "^4.16.2",
+    "prpl-server": "^1.0.0",
     "redux": "^3.7.2"
   }
 }
