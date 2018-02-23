@@ -30,6 +30,7 @@
     "paper-progress": "PolymerElements/paper-progress#^2.0.1",
     "paper-input": "PolymerElements/paper-input#^2.1.1",
     "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
     "paper-menu-button": "PolymerElements/paper-menu-button#^2.1.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.1.0",

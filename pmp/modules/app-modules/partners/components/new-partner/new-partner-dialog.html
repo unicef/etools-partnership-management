@@ -1,17 +1,34 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../../../bower_components/etools-dialog/etools-dialog.html">
 
 <dom-module id="new-partner-dialog">
   <template>
     <style>
-      :host {
-        /* host CSS */
-      }
+     #vendorNo {
+      margin-bottom: 30px;
+    }
     </style>
 
-    <!-- Polymer 2 element template -->
+    <etools-dialog id="newPartnerDialog" size="md" ok-btn-text="Save" disable-confirm-btn="[[vendorNumberIsEmpty]]"
+       dialog-title="New Partner" on-close="_handleDialogClosed">
+
+    <paper-input id="vendorNo" label="Vendor #" value="{{vendor_number}}"
+      placeholder="&#8212;" autofocus
+      required auto-validate error-message="Vendor# is required"
+      allowed-pattern="[0-9]"
+      char-counter
+      maxlength="11"></paper-input>
+
+    </etools-dialog>
 
   </template>
   <script>
+    'use strict';
+    /**
+     * @polymer
+     * @customElement
+     */
     class NewPartnerDialog extends Polymer.Element {
 
       static get is() {
@@ -19,25 +36,36 @@
       }
 
       static get properties() {
-        return {};
+        return {
+          vendor_number: {
+          type: String
+          },
+          vendorNumberIsEmpty: {
+            type: Boolean,
+            computed: '_vendorNumberIsEmpty(vendor_number)'
+          }
+        };
       }
 
-      constructor() {
-        super();
+      openNewPartnerDialog() {
+        this.$.vendorNo.invalid = false;
+        this.$.newPartnerDialog.opened = true;
+      }
+      _vendorNumberIsEmpty() {
+        return !!!this.vendor_number;
       }
 
-      ready() {
-        super.ready();
+      _handleDialogClosed(closingReason) {
+        if (closingReason.detail.confirmed) {
+          if (!this.vendor_number) {
+            return;
+          }
+          this.dispatchEvent(new CustomEvent('create-partner',
+          {detail: {vendor: this.vendor_number}, composed: true, bubbles: true}));
+        } else {
+          this.vendor_number = '';
+        }
       }
-
-      connectedCallback() {
-        super.connectedCallback();
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-      }
-
     }
 
     window.customElements.define(NewPartnerDialog.is, NewPartnerDialog);
