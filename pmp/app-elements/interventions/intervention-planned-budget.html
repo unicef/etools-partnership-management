@@ -124,8 +124,9 @@
 
             <span class="col-data col-2 right-align">
               <etools-info-tooltip class="fr-nr-warn"
-                                   icon="report"
+                                   custom-icon
                                    icon-first
+                                   form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
                                    hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
                 <div slot="field">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
@@ -148,6 +149,7 @@
                     </etools-currency-amount-input>
                   </template>
                 </div>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[_frsConsistencyWarning]]</span>
               </etools-info-tooltip>
             </span>
@@ -234,7 +236,7 @@
 
         observers: [
           '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, ' +
-            'plannedBudget.unicef_cash_local, intervention.status)',
+            'plannedBudget.unicef_cash_local, plannedBudget.currency, intervention.frs_details, intervention.status)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
@@ -343,21 +345,17 @@
           }
         },
 
-        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, iterventionStatus) {
-          let unicefCashField = this.$$('#unicefCash');
-          if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed') {
+        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, plannedBudgetCurrency,
+                                             frsDetails, iterventionStatus) {
+          if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed' ||
+              !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)) {
             this.set('_frsConsistencyWarning', '');
-            if (unicefCashField) {
-              unicefCashField.updateStyles();
-            }
             return;
           }
+
           this.set('_frsConsistencyWarning',
               this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
                   'interventionDetails', true));
-          if (unicefCashField) {
-            unicefCashField.updateStyles();
-          }
         }
 
       });

@@ -27,6 +27,10 @@
           background-color: var(--light-theme-background-color);
         }
       }
+
+      .col-data.unicef-cash {
+        background-color: var(--light-info-color);
+      }
     </style>
 
     <template is="dom-if" if="[[!frsDetails.frs.length]]">
@@ -40,11 +44,14 @@
                                 no-collapse
                                 no-title
                                 hidden$="[[!reportingRequirements.length]]">
-        <etools-data-table-column class="col-3">
+        <etools-data-table-column class="col-2">
           FR#
         </etools-data-table-column>
-        <etools-data-table-column class="col-3 right-align">
+        <etools-data-table-column class="col-2 right-align">
           FR Posting Date
+        </etools-data-table-column>
+        <etools-data-table-column class="col-2 right-align">
+          FR Currency
         </etools-data-table-column>
         <etools-data-table-column class="col-2 right-align">
           FR Amount $
@@ -60,8 +67,12 @@
       <template is="dom-repeat" items="[[frsDetails.frs]]" as="fr">
         <etools-data-table-row no-collapse>
           <div slot="row-data">
-            <span class="col-data col-3">[[fr.fr_number]]</span>
-            <span class="col-data col-3 right-align">[[prettyDate(fr.start_date)]]</span>
+            <span class="col-data col-2">[[fr.fr_number]]</span>
+            <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
+            <span class="col-data col-2 right-align">
+              <!-- TODO: add tooltip for different currencies -->
+              [[fr.currency]]
+            </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.outstanding_amt, '0.00')]]</span>
@@ -71,8 +82,8 @@
 
       <etools-data-table-row no-collapse id="totalsRow">
         <div slot="row-data">
-          <span class="col-data col-3"></span>
-          <span class="col-data col-3 right-align"><strong>TOTAL</strong></span>
+          <span class="col-data col-2"></span>
+          <span class="col-data col-2 right-align"><strong>TOTAL of FRs</strong></span>
           <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn"
                                  icon="report"
@@ -86,6 +97,18 @@
               class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
           <span
               class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</span>
+        </div>
+      </etools-data-table-row>
+
+      <etools-data-table-row no-collapse id="plannedUnicefCash">
+        <div slot="row-data">
+          <span class="col-data col-2"></span>
+          <span class="col-data col-2 right-align unicef-cash"><strong>PLANNED UNICEF CASH</strong></span>
+          <span class="col-data col-2 right-align unicef-cash">[[intervention.planned_budget.currency]]</span>
+          <span class="col-data col-2 right-align unicef-cash">
+            [[displayCurrencyAmount(intervention.planned_budget.unicef_cash_local, 0.00)]]
+          </span>
+          <span class="col-data col-4"></span>
         </div>
       </etools-data-table-row>
     </div>
