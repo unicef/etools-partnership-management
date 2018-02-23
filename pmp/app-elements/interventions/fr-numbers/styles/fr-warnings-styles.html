@@ -1,7 +1,9 @@
 <link rel="import" href="../../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../../../../../styles/app-mixins.html">
+<link rel="import" href="../../../../../styles/custom-iconsets/pmp-icons.html">
 
 <dom-module id="fr-warnings-styles">
   <template>
@@ -9,8 +11,14 @@
       etools-info-tooltip.fr-nr-warn {
 
       }
+
+      etools-info-tooltip.fr-nr-warn iron-icon {
+        color: var(--error-color);
+      }
+
       etools-info-tooltip.frs-inline-list {
         --etools-tooltip-trigger-icon: {
+          color: var(--error-color);
           margin-left: 24px !important;
         };
       }

@@ -17,12 +17,13 @@
 <link rel="import" href="../../../styles/shared-styles.html">
 <link rel="import" href="../../../styles/risk-rating-styles.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="../interventions/fr-numbers/styles/fr-warnings-styles.html">
 
 <dom-module id="partner-overview">
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles">
+    <style include="page-common-styles grid-layout-styles shared-styles risk-rating-styles data-table-styles fr-warnings-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -220,18 +221,20 @@
               </div>
               <div class="col col-3 center-align timeline-col">
                 <etools-info-tooltip class="fr-nr-warn"
-                                     icon="report"
+                                     custom-icon
                                      icon-first
                                      hide-tooltip$="[[validateFrsVsInterventionDates(partnership.start, partnership.frs_earliest_start_date)]]">
                   <span slot="field">[[getDateDisplayValue(partnership.start)]]</span>
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                 </etools-info-tooltip>
                 <span class="date-delimiter"> - </span>
                 <etools-info-tooltip class="fr-nr-warn"
-                                     icon="report"
+                                     custom-icon
                                      icon-first
                                      hide-tooltip$="[[validateFrsVsInterventionDates(partnership.end, partnership.frs_latest_end_date)]]">
                   <span slot="field">[[getDateDisplayValue(partnership.end)]]</span>
+                  <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
                 </etools-info-tooltip>
               </div>

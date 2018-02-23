@@ -28,6 +28,7 @@
 <link rel="import" href="../../../styles/grid-layout-styles.html">
 <link rel="import" href="../../../styles/list-filter-styles.html">
 <link rel="import" href="../../../styles/app-mixins.html">
+<link rel="import" href="fr-numbers/styles/fr-warnings-styles.html">
 
 <link rel="import" href="intervention-data/interventions-list-data.html">
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
@@ -36,7 +37,8 @@
 
   <template strip-whitespace>
 
-    <style include="shared-styles data-table-styles grid-layout-styles list-filter-styles paper-material-styles">
+    <style
+        include="shared-styles data-table-styles grid-layout-styles list-filter-styles paper-material-styles fr-warnings-styles">
       :host {
         @apply --layout-flex;
         width: 100%;
@@ -198,19 +200,21 @@
             </span>
             <span class="col-data flex-c">
               <etools-info-tooltip class="fr-nr-warn"
-                                   icon="report"
+                                   custom-icon
                                    icon-first
                                    hide-tooltip$="[[_hideFrsWarningTooltip(intervention.start, intervention.frs_earliest_start_date, intervention.status)]]">
                 <span slot="field">[[getDateDisplayValue(intervention.start)]]</span>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>
             <span class="col-data flex-c">
                <etools-info-tooltip class="fr-nr-warn"
-                                    icon="report"
+                                    custom-icon
                                     icon-first
                                     hide-tooltip$="[[_hideFrsWarningTooltip(intervention.end, intervention.frs_latest_end_date, intervention.status)]]">
                  <span slot="field">[[getDateDisplayValue(intervention.end)]]</span>
+                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                  <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
               </etools-info-tooltip>
             </span>

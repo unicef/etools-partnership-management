@@ -10,19 +10,17 @@
         type: Object,
         value: {
           currenciesDoNotMatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be compared. ' +
-            'To be able to compare the amounts, you can cancel and enter the budget in the same currency as the FR. ',
+          'To be able to compare the amounts, you can cancel and enter the budget in the same currency as the FR. ',
           amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
-          dateTmpl: '<<field_name>> is not the same as PD/SSFA <<field_name>>.',
+          dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
           warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
         }
       },
-      _frValidationFieldsToCheckNames: {
+      frValidationFieldsToCheckNames: {
         type: Object,
         value: {
           start_date: 'Start Date',
           end_date: 'End Date',
-          pd_start: 'Start Date',
-          pd_end: 'End Date',
           pd_unicef_cash_contribution: 'UNICEF Cash Contribution',
           fr_earliest_date: 'FR Start Date',
           fr_latest_date: 'FR End Date',
@@ -50,12 +48,12 @@
       let warnFrsFields = []; // FR fields
       let warnIntervFields = []; // PD/SSFA fields
       if (this.checkFrsAndIntervDateConsistency(intervention.start, frsDetails.earliest_start_date)) {
-        warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_earliest_date);
-        warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_start);
+        warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_earliest_date);
+        warnIntervFields.push(this.frValidationFieldsToCheckNames.start_date);
       }
       if (this.checkFrsAndIntervDateConsistency(intervention.end, frsDetails.latest_end_date)) {
-        warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_latest_date);
-        warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_end);
+        warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_latest_date);
+        warnIntervFields.push(this.frValidationFieldsToCheckNames.end_date);
       }
 
       let computedWarning = '';
@@ -64,8 +62,8 @@
         // currencies are the same => check amounts consistency
         if (this.checkFrsAndUnicefCashAmountsConsistency(intervention.planned_budget.unicef_cash_local,
                 frsDetails.total_frs_amt, intervention, 'interventionDetails', false, skipEmptyListCheck)) {
-          warnFrsFields.push(this._frValidationFieldsToCheckNames.fr_total_amount);
-          warnIntervFields.push(this._frValidationFieldsToCheckNames.pd_unicef_cash_contribution);
+          warnFrsFields.push(this.frValidationFieldsToCheckNames.fr_total_amount);
+          warnIntervFields.push(this.frValidationFieldsToCheckNames.pd_unicef_cash_contribution);
         }
       } else {
         // currencies of the frs and planned budget do NOT match
@@ -97,7 +95,7 @@
     validateFrsVsUnicefCashAmounts: function(unicefCash, frsTotalAmt, intervention,
                                              interventionIsFromWhere, skipEmptyListCheck) {
       if (intervention.status === 'closed'
-        || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
+          || (!skipEmptyListCheck && this.emptyFrsList(intervention, interventionIsFromWhere))) {
         return true;
       }
       let totalUnicefContribution = parseFloat(unicefCash);
@@ -130,11 +128,11 @@
     },
     getFrsStartDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this._frValidationFieldsToCheckNames.start_date);
+          '<<field_name>>', this.frValidationFieldsToCheckNames.start_date);
     },
     getFrsEndDateValidationMsg: function() {
       return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
-          '<<field_name>>', this._frValidationFieldsToCheckNames.end_date);
+          '<<field_name>>', this.frValidationFieldsToCheckNames.end_date);
     },
     frsConsistencyWarningIsActive: function(warnMsg) {
       return !!warnMsg;
