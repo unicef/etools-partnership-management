@@ -380,44 +380,47 @@
         }
         // init list filter options
         // this.debounce('init-ag-filters', function() {
-          this.initListFiltersData([
-            {
-              filterName: 'Agreement Type',
-              type: 'dropdown',
-              selectionOptions: agreementTypes,
-              alreadySelected: null,
-              path: 'agreementType'
-            },
-            {
-              filterName: 'Agreement Status',
-              type: 'dropdown',
-              selectionOptions: agreementStatuses,
-              alreadySelected: null,
-              path: 'agreementStatus'
-            },
-            {
-              filterName: 'Partner',
-              type: 'esmm', // etools-multi-selection-menu
-              multiple: true,
-              selectionOptions: partnersDropdownData,
-              alreadySelected: [],
-              path: 'selectedPartners'
-            },
-            {
-              filterName: 'Starts After',
-              type: 'datepicker', // etools-datepicker
-              dateSelected: '',
-              path: 'startDate'
-            },
-            {
-              filterName: 'Ends Before',
-              type: 'datepicker', // etools-datepicker
-              dateSelected: '',
-              path: 'endDate'
-            }
-          ]);
-          this._updateSelectedFiltersValues();
-        // }, 100);
+        this.initAgFiltersDebouncer = Polymer.Debouncer.debounce(this.initAgFiltersDebouncer,
+          Polymer.Async.timeOut.after(100),
+          () => {
+            this.initListFiltersData([
+              {
+                filterName: 'Agreement Type',
+                type: 'dropdown',
+                selectionOptions: agreementTypes,
+                alreadySelected: null,
+                path: 'agreementType'
+              },
+              {
+                filterName: 'Agreement Status',
+                type: 'dropdown',
+                selectionOptions: agreementStatuses,
+                alreadySelected: null,
+                path: 'agreementStatus'
+              },
+              {
+                filterName: 'Partner',
+                type: 'esmm', // etools-multi-selection-menu
+                multiple: true,
+                selectionOptions: partnersDropdownData,
+                alreadySelected: [],
+                path: 'selectedPartners'
+              },
+              {
+                filterName: 'Starts After',
+                type: 'datepicker', // etools-datepicker
+                dateSelected: '',
+                path: 'startDate'
+              },
+              {
+                filterName: 'Ends Before',
+                type: 'datepicker', // etools-datepicker
+                dateSelected: '',
+                path: 'endDate'
+              }
+            ]);
+            this._updateSelectedFiltersValues();
+          });
       }
 
        connectedCallback() {
@@ -455,33 +458,33 @@
       }
 
       _updateSelectedFiltersValues() {
-        // this.debounce('updateShownFilters', function() {
-
-          var filtersValues = [
-            {
-              filterName: 'Agreement Type',
-              selectedValue: this.agreementType
-            },
-            {
-              filterName: 'Agreement Status',
-              selectedValue: this.agreementStatus
-            },
-            {
-              filterName: 'Partner',
-              selectedValue: _.map(this.selectedPartners, 'value')
-            },
-            {
-              filterName: 'Starts After',
-              selectedValue: this.startDate
-            },
-            {
-              filterName: 'Ends Before',
-              selectedValue: this.endDate
-            },
-          ];
-          this.updateShownFilters(filtersValues);
-
-        // }.bind(this), 500);
+        this.updateShownFilterDebouncer = Polymer.Debouncer.debounce(this.updateShownFilterDebouncer,
+          Polymer.Async.timeOut.after(500),
+          () => {
+            var filtersValues = [
+              {
+                filterName: 'Agreement Type',
+                selectedValue: this.agreementType
+              },
+              {
+                filterName: 'Agreement Status',
+                selectedValue: this.agreementStatus
+              },
+              {
+                filterName: 'Partner',
+                selectedValue: _.map(this.selectedPartners, 'value')
+              },
+              {
+                filterName: 'Starts After',
+                selectedValue: this.startDate
+              },
+              {
+                filterName: 'Ends Before',
+                selectedValue: this.endDate
+              },
+            ];
+            this.updateShownFilters(filtersValues);
+          });
       }
 
       // Updates URL state with new query string, and launches query
@@ -518,25 +521,27 @@
       _filterAgreementsData(forceNoLoading) {
         // Query is debounced with a debounce time
         // set depending on what action the user takes
-        // this.debounce('query', function() {
-          var agreements = this.$.agreements;
-          if (!agreements) {
-            return;
-          }
-          agreements.query(
-              this.sortOrder.field,
-              this.sortOrder.direction,
-              this.q.toLowerCase(),
-              this.agreementType,
-              this.agreementStatus,
-              _.map(this.selectedPartners, 'label'),
-              this.startDate,
-              this.endDate,
-              this.pageNumber,
-              this.pageSize,
-              forceNoLoading ? false : this.showQueryLoading
-          );
-        // }, this.debounceTime);
+        this.queryDebouncer = Polymer.Debouncer.debounce(this.queryDebouncer,
+          Polymer.Async.timeOut.after(this.debounceTime),
+          () => {
+            var agreements = this.$.agreements;
+            if (!agreements) {
+              return;
+            }
+            agreements.query(
+                this.sortOrder.field,
+                this.sortOrder.direction,
+                this.q.toLowerCase(),
+                this.agreementType,
+                this.agreementStatus,
+                _.map(this.selectedPartners, 'label'),
+                this.startDate,
+                this.endDate,
+                this.pageNumber,
+                this.pageSize,
+                forceNoLoading ? false : this.showQueryLoading
+            );
+          });
       }
 
       // Outputs the query string for the list
