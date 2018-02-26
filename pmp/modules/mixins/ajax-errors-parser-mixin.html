@@ -1,3 +1,4 @@
+<link rel="import" href="event-helper-mixin.html">
 <script>
   /* @namespace EtoolsPmpApp */
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
@@ -5,8 +6,9 @@
   /*
   * @polymer
   * @mixinFunction
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
   */
-  EtoolsPmpApp.Mixins.AjaxErrorsParser = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.AjaxErrorsParser = (baseClass) => class extends EtoolsPmpApp.Mixins.EventHelper(baseClass) {
     static get properties() {
       return {
         globalMessage: {
@@ -140,7 +142,7 @@
         if (!source) {
           source = this;
         }
-        source.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+        source.fireEvent('404');
         return;
       }
 
@@ -155,7 +157,7 @@
         if (!source) {
           source = this;
         }
-        source.dispatchEvent(new CustomEvent('toast', {detail: {text: errorsString, showCloseBtn: true}, bubbles: true, composed: true}));
+        source.fireEvent('toast', {text: errorsString, showCloseBtn: true});
       }
     }
 
