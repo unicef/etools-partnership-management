@@ -186,7 +186,7 @@
           if (!this.editMode) {
             return;
           }
-          this.fire('delete-partner', {
+          this.fireEvent('delete-partner', {
             id: this.partner.id,
           });
         }

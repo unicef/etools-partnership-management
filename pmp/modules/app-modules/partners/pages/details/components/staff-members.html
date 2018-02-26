@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-fab/paper-fab.html">
@@ -230,7 +231,7 @@
         if (this.editMode) {
           var lastStaffMemberAdded = this.dataItems[this.dataItems.length - 1];
           if (this._emptyStaffMemberData(lastStaffMemberAdded)) {
-            this.fire('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
+            this.fireEvent('toast', {text: 'Last staff member fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
           }
