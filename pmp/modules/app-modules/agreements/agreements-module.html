@@ -1,20 +1,159 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+
+<link rel="import" href="../../scripts/lodash.html">
+
+<link rel="import" href="../../mixins/scroll-control-mixin.html">
+<link rel="import" href="../mixins/module-common-mixin.html">
+<link rel="import" href="../mixins/module-routing-mixin.html">
+
+<link rel="import" href="../../layout/page-content-header/page-content-header.html">
+<link rel="import" href="../../layout/page-content-header/page-content-header-slotted-styles.html">
+<link rel="import" href="../../layout/components/etools-tabs.html">
+<link rel="import" href="../../layout/components/etools-error-messages-box.html">
+
+<link rel="import" href="../../styles/page-layout-styles.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../styles/buttons-styles.html">
+
+<!-- TODO: Check for unused imports -->
 
 <dom-module id="agreements-module">
   <template>
-    <style>
+    <style include="page-layout-styles shared-styles buttons-styles page-content-header-slotted-styles">
       :host {
-        /* host CSS */
+        display: block;
       }
     </style>
 
-    <!-- Polymer 2 element template -->
-    Polymer 2 is awesome!<br>
-    Agreements pages will be displayed soon
+    <app-route
+        route="{{route}}"
+        pattern="/list"
+        query-params="{{listPageQueryParams}}"
+        active="{{listActive}}"></app-route>
+
+    <app-route
+        route="{{route}}"
+        pattern="/:id/details"
+        active="{{tabsActive}}"
+        data="{{routeData}}"></app-route>
+
+    <page-content-header with-tabs-visible="[[_showPageTabs(activePage)]]">
+      <div slot="page-title">
+        <template is="dom-if" if="[[listActive]]">
+          <span>Agreements</span>
+        </template>
+        <template is="dom-if" if="[[tabsActive]]">
+          <!-- <span>[[_getAgreementDetailsTitle(agreement, newAgreementActive)]]</span> -->
+        </template>
+      </div>
+
+      <div slot="title-row-actions" class="content-header-actions">
+        <div class="action" hidden$="[[!listActive]]">
+          <a target="_blank" href$="[[csvDownloadUrl]]">
+            <paper-button>
+              <iron-icon icon="file-download"></iron-icon>
+              Export
+            </paper-button>
+          </a>
+        </div>
+        <div class="action" hidden$="[[!_showNewAgreementAddButton(listActive, permissions)]]">
+          <paper-button class="primary-btn with-prefix" on-tap="_goToNewAgreementPage">
+            <iron-icon icon="add"></iron-icon>
+            Add New Agreement
+          </paper-button>
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[_showPageTabs(activePage)]]">
+        <!-- <etools-tabs slot="tabs"
+                     tabs="[[agreementsTabs]]"
+                     active-tab="details"
+                     on-iron-select="_handleTabSelectAction"></etools-tabs> -->
+      </template>
+    </page-content-header>
+
+    <div id="main">
+      <div id="pageContent">
+        <!-- <etools-error-messages-box id="errorsBox"
+                                   title="Errors Saving Agreement"
+                                   errors="{{serverErrors}}"></etools-error-messages-box> -->
+        <!-- <iron-pages id="agreementsPages"
+                    selected="{{activePage}}"
+                    attr-for-selected="name"
+                    role="main"> -->
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
+            <agreements-list id="list"
+                             name="list"
+                             active="[[listActive]]"
+                             csv-download-url="{{csvDownloadUrl}}"
+                             url-params="[[preservedListQueryParams]]">
+            </agreements-list>
+          </template>
+
+          <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
+            <!-- <agreement-details
+                id="agreementDetails"
+                name="details"
+                agreement="[[agreement]]"
+                authorized-officers="{{authorizedOfficers}}"
+                edit-mode="[[_hasEditPermissions(permissions)]]"
+                is-new-agreement="[[newAgreementActive]]">
+            </agreement-details> -->
+          </template>
+        </iron-pages>
+      </div> <!-- page content end -->
+
+      <template is="dom-if" if="[[_showSidebarStatus(listActive, tabAttached, agreement)]]">
+        <!-- sidebar content start -->
+        <div id="sidebar">
+          <!-- <agreement-status status$="[[agreement.status]]"
+                            active="[[!listActive]]"
+                            new-agreement$="[[newAgreementActive]]"
+                            agreement-id$="[[agreement.id]]"
+                            agreement-type="[[agreement.agreement_type]]"
+                            on-save-agreement="_validateAndTriggerAgreementSave"
+                            edit-mode="[[_hasEditPermissions(permissions)]]"
+                            on-update-agreement-status="_updateAgreementStatus">
+          </agreement-status> -->
+        </div><!-- sidebar content end -->
+      </template>
+
+    </div> <!-- main page content end -->
+<!--
+    <agreement-item-data id="agreementData"
+                         agreement="{{agreement}}"
+                         agreement-id="[[selectedAgreementId]]"
+                         error-event-name="agreement-save-error"></agreement-item-data> -->
 
   </template>
   <script>
-    class AgreementsModule extends Polymer.Element {
+    'use strict';
+    /**
+     * @polymer
+     * @mixinFunction
+     * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
+     */
+    const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
+        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
+          EtoolsPmpApp.Mixins.ModuleRouting], Polymer.Element);
+
+    /**
+     * @polymer
+     * @customElement
+     * @appliesMixin AgreementsModuleRequiredMixins
+     */
+    class AgreementsModule extends AgreementsModuleRequiredMixins {
 
       static get is() {
         return 'agreements-module';
@@ -26,6 +165,13 @@
 
       constructor() {
         super();
+      }
+
+      static get observers() {
+        return [
+          '_pageChanged(listActive, tabsActive, routeData)',
+          '_observeRouteDataId(routeData.id)'
+        ];
       }
 
       ready() {
@@ -40,6 +186,35 @@
         super.disconnectedCallback();
       }
 
+      _showNewAgreementAddButton() {
+        // TODO:  update this
+        return true;
+      }
+
+      _pageChanged(listActive, tabsActive, routeData) {
+        if (!listActive && !tabsActive) {
+          return;
+        }
+
+        this.scrollToTopOnCondition(!listActive);
+
+        let fileImportDetails = {
+          filenamePrefix: 'agreement',
+          importErrMsg: 'Agreements page import error occurred',
+          errMsgPrefixTmpl: '[agreement(s) ##page##]',
+          loadingMsgSource: 'agreements-page'
+        };
+        this.setActivePage(listActive, routeData.tab, fileImportDetails);
+      }
+
+      _observeRouteDataId(id) {
+        if (id === undefined) {
+          return;
+        }
+        if (this.route && this.route.prefix.indexOf('agreements') > -1) {
+          this.set('selectedAgreementId', id);
+        }
+      }
     }
 
     window.customElements.define(AgreementsModule.is, AgreementsModule);
