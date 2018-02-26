@@ -36,6 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/layout/menu/styles/app-drawer-styles.html">
 <link rel="import" href="modules/layout/menu/app-sidebar-menu.html">
 <link rel="import" href="modules/layout/menu/mixins/app-menu-mixin.html">
+<link rel="import" href="modules/layout/components/data-refresh-dialog.html">
 
 <!--import header and footer elements-->
 <link rel="import" href="modules/layout/page-header.html">
@@ -51,8 +52,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="modules/toast-notifications/toast-notifications-mixin.html">
 <link rel="import" href="modules/toast-notifications/toast-notifications-style.html">
 
-<!-- import user data element -->
-<link rel="import" href="modules/user/user-data.html">
+<!-- import user data mixin -->
+<link rel="import" href="modules/user/user-data-mixin.html">
 
 <!-- import environment flags -->
 <link rel="import" href="modules/environment-flags/environment-flags-mixin.html">
@@ -61,6 +62,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- other required mixins -->
 <link rel="import" href="modules/mixins/scroll-control-mixin.html">
 <link rel="import" href="modules/mixins/amendment-mode-mixin.html">
+<link rel="import" href="modules/mixins/event-helper-mixin.html">
 
 <!-- import static data element -->
 <link rel="import" href="modules/static-common-data/static-common-data.html">
@@ -138,8 +140,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--user="[[user]]"-->
     <!--toast="[[currentToastMessage]]"></etools-piwik-analytics>-->
 
-    <user-data user="{{user}}" permissions="{{permissions}}"></user-data>
-
     <app-location
         route="{{route}}"
         url-space-regex="^[[rootPath]]">
@@ -167,7 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-header-layout id="appHeadLayout" fullbleed has-scrolling-region>
 
         <app-header slot="header" condenses reveals effects="waterfall">
-          <page-header id="pageheader" title="eTools" user="[[user]]"></page-header>
+          <page-header id="pageheader" title="eTools"></page-header>
         </app-header>
 
         <div id="page-container" class$="[[_getPageContainerClass(amendmentModeActive)]]">
@@ -225,8 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-header-layout>
     </app-drawer-layout>
 
-    <!-- TODO: polymer2 - uncomment this after data refresh dialog is element is ready -->
-    <!--<data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>-->
+    <data-refresh-dialog id="dataRefreshDialog" page="{{module}}"></data-refresh-dialog>
 
     <!-- TODO: polymer2 - static data load here -->
     <static-common-data></static-common-data>
@@ -249,11 +248,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @appliesMixin EtoolsPmpApp.Mixins.EnvironmentFlags
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
      * @appliesMixin EtoolsPmpApp.Mixins.AmendmentMode
+     * @appliesMixin EtoolsPmpApp.Mixins.UserData
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const AppShellRequiredMixins = EtoolsMixinFactory.combineMixins(
         [EtoolsPmpApp.Mixins.AppMenu, EtoolsPmpApp.Mixins.ToastNotifications, EtoolsMixins.LoadingMixin,
           EtoolsPmpApp.Mixins.EnvironmentFlags, EtoolsPmpApp.Mixins.ScrollControl,
-          EtoolsPmpApp.Mixins.AmendmentMode], Polymer.Element);
+          EtoolsPmpApp.Mixins.AmendmentMode, EtoolsPmpApp.Mixins.UserData, EtoolsPmpApp.Mixins.EventHelper],
+        Polymer.Element);
 
     /**
      * PMP main element used to configure and display all app modules
@@ -332,12 +334,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            * This will be triggered once at page load or, after page load, on menu option tap event.
            * The loading message is disabled by *-module.html elements ready callback (in both cases)
            */
-          this.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {
-              active: true,
-              loadingSource: 'main-page'
-            }, bubbles: true, composed: true
-          }));
+          this.fireEvent('global-loading', {
+            active: true,
+            loadingSource: 'main-page'
+          });
         }
       }
 
@@ -384,8 +384,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageNotFound() {
         this._updatePath('not-found');
         // the _moduleChanged method will trigger and clear loading messages so no need to do that here
-        let eventPayload = {text: 'Oops you hit a 404!', showCloseBtn: true};
-        this.dispatchEvent(new CustomEvent('toast', {detail: eventPayload, bubbles: true, composed: true}));
+        this.fireEvent('toast', {text: 'Oops you hit a 404!', showCloseBtn: true});
       }
 
       _openDataRefreshDialog() {
@@ -447,7 +446,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // set last partners active page... needed to make a difference between partners and government-partners
         this._updateLastPartnersModuleActivePage(module);
         // clear loading messages queue
-        this.dispatchEvent(new CustomEvent('clear-loading-messages', {bubbles: true, composed: true}));
+        this.fireEvent('clear-loading-messages', {bubbles: true, composed: true});
         this._setAmendMode(false);
       }
 

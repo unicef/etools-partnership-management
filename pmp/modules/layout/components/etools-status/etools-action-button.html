@@ -9,6 +9,7 @@
 <link rel="import" href="../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../../modules/mixins/event-helper-mixin.html">
 
 <dom-module id="etools-action-button">
   <template>
@@ -104,8 +105,9 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class EtoolsActionButton extends Polymer.Element {
+    class EtoolsActionButton extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'etools-action-button';
@@ -169,13 +171,12 @@
 
       _handleSecondaryClick(event) {
         let action = event.model.item;
-        this.dispatchEvent(new CustomEvent(action.event, {bubbles: true, composed: true}));
+        this.fireEvent(action.event);
       }
 
       _handlePrimaryClick() {
-        this.dispatchEvent(new CustomEvent(this.primaryAction.event, {bubbles: true, composed: true}));
+        this.fireEvent(this.primaryAction.event);
       }
-
     }
 
     window.customElements.define(EtoolsActionButton.is, EtoolsActionButton);

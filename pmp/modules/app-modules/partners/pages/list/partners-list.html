@@ -22,6 +22,7 @@
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/lists-common-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../styles/shared-styles.html">
 <link rel="import" href="../../../../styles/list-filter-styles.html">
@@ -233,13 +234,15 @@
       EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
       EtoolsPmpApp.Mixins.ListFilters,
       EtoolsPmpApp.Mixins.Common,
-      EtoolsPmpApp.Mixins.ListsCommon
+      EtoolsPmpApp.Mixins.ListsCommon,
+      EtoolsPmpApp.Mixins.EventHelper
      ], Polymer.Element);
 
 
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     class PartnersList extends PartnersListRequiredMixins {
       static get is() {
@@ -321,11 +324,10 @@
          * Disable loading message for main list elements load,
          * triggered by parent element on stamp
          */
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {active: false, loadingSource: 'partners-page'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: 'partners-page'
+        });
          this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
       }
 
