@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-label/iron-label.html">
 <link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <link rel="import" href="../../../../bower_components/etools-info-tooltip/etools-info-tooltip.html">
 <link rel="import" href="../../../../bower_components/etools-data-table/etools-data-table.html">
@@ -7,11 +8,12 @@
 <link rel="import" href="../behaviors/fr-numbers-consistency-behavior.html">
 
 <link rel="import" href="../../../../styles/grid-layout-styles.html">
+<link rel="import" href="styles/fr-warnings-styles.html">
 
 <dom-module id="fund-reservations-display">
   <template strip-whitespace>
 
-    <style include="data-table-styles grid-layout-styles">
+    <style include="data-table-styles grid-layout-styles fr-warnings-styles">
       :host {
         --list-column-label: {
           margin-right: 0;
@@ -28,8 +30,20 @@
         }
       }
 
-      .col-data.unicef-cash {
+      #plannedUnicefCash .unicef-cash-col {
         background-color: var(--light-info-color);
+        margin-top: -12px;
+        margin-bottom: -12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        line-height: 16px;
+        @apply --layout-vertical;
+        @apply --layout-end;
+      }
+      .unicef-cash-col iron-label {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+        font-weight: bold;
       }
     </style>
 
@@ -54,13 +68,13 @@
           FR Currency
         </etools-data-table-column>
         <etools-data-table-column class="col-2 right-align">
-          FR Amount $
+          FR Amount
         </etools-data-table-column>
         <etools-data-table-column class="col-2 right-align">
-          Actual $
+          Actual Disburs.
         </etools-data-table-column>
         <etools-data-table-column class="col-2 right-align">
-          Outstanding DCT $
+          Outstanding DCT
         </etools-data-table-column>
       </etools-data-table-header>
 
@@ -70,8 +84,16 @@
             <span class="col-data col-2">[[fr.fr_number]]</span>
             <span class="col-data col-2 right-align">[[prettyDate(fr.start_date)]]</span>
             <span class="col-data col-2 right-align">
-              <!-- TODO: add tooltip for different currencies -->
-              [[fr.currency]]
+              <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                                   icon-first
+                                   custom-icon
+                                   hide-tooltip="[[hideFrCurrencyTooltip(fr.currency, intervention.planned_budget.currency)]]">
+                <span slot="field">[[fr.currency]]</span>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">
+                  <span>[[getFrCurrencyTooltipMsg()]]</span>
+                </span>
+              </etools-info-tooltip>
             </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.intervention_amt, '0.00')]] </span>
             <span class="col-data col-2 right-align">[[displayCurrencyAmount(fr.actual_amt, '0.00')]]</span>
@@ -85,28 +107,48 @@
           <span class="col-data col-2"></span>
           <span class="col-data col-2 right-align"><strong>TOTAL of FRs</strong></span>
           <span class="col-data col-2 right-align">
+            <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                 icon-first
+                 custom-icon
+                 hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
+              <span slot="field">[[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]</span>
+              <iron-icon icon="[[getFrsCurrencyTooltipIcon(frsDetails.currencies_match)]]"
+                         slot="custom-icon"></iron-icon>
+              <span slot="message">[[getFrsCurrencyTooltipMsg(frsDetails.currencies_match)]]</span>
+            </etools-info-tooltip>
+          </span>
+          <span class="col-data col-2 right-align">
             <etools-info-tooltip class="fr-nr-warn"
-                                 icon="report"
-                                 hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsTotalAmountWarning)]]"
-                                 icon-first right-aligned>
-              <span slot="field">[[displayCurrencyAmount(frsDetails.total_intervention_amt, '0.00')]]</span>
+                 custom-icon
+                 icon-first
+                 hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
+              <span slot="field">[[getFrsTotal(frsDetails.currencies_match, frsDetails.total_intervention_amt)]]</span>
+              <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
               <span slot="message">[[_frsTotalAmountWarning]]</span>
             </etools-info-tooltip>
           </span>
-          <span
-              class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_actual_amt, '0.00')]]</span>
-          <span
-              class="col-data col-2 right-align">[[displayCurrencyAmount(frsDetails.total_outstanding_amt, '0.00')]]</span>
+          <span class="col-data col-2 right-align">
+            [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_actual_amt)]]
+          </span>
+          <span class="col-data col-2 right-align">
+            [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_outstanding_amt)]]
+          </span>
         </div>
       </etools-data-table-row>
 
       <etools-data-table-row no-collapse id="plannedUnicefCash">
         <div slot="row-data">
           <span class="col-data col-2"></span>
-          <span class="col-data col-2 right-align unicef-cash"><strong>PLANNED UNICEF CASH</strong></span>
-          <span class="col-data col-2 right-align unicef-cash">[[intervention.planned_budget.currency]]</span>
-          <span class="col-data col-2 right-align unicef-cash">
-            [[displayCurrencyAmount(intervention.planned_budget.unicef_cash_local, 0.00)]]
+          <span class="col-data col-2 right-align unicef-cash-col">
+            <strong>PLANNED</strong><strong>UNICEF CASH</strong>
+          </span>
+          <span class="col-data col-2 right-align unicef-cash-col">
+            <iron-label for="pd-currency">PD Currency</iron-label>
+            <span id="pd-currency">[[intervention.planned_budget.currency]]</span>
+          </span>
+          <span class="col-data col-2 right-align unicef-cash-col">
+            <iron-label for="unicef-cash">UNICEF Cash</iron-label>
+            <span id="unicef-cash">[[displayCurrencyAmount(intervention.planned_budget.unicef_cash_local, 0.00)]]</span>
           </span>
           <span class="col-data col-4"></span>
         </div>
@@ -125,6 +167,7 @@
           EtoolsPmpApp.Behaviors.Date,
           EtoolsPmpApp.Behaviors.FrNumbersConsistency
         ],
+
         properties: {
           intervention: {
             type: Object,
@@ -136,12 +179,15 @@
           },
           _frsTotalAmountWarning: String
         },
+
         observers: [
           '_checkFrsAmountConsistency(intervention, frsDetails, intervention.status)'
         ],
+
         _noFrs: function(frsDetails) {
           return (!frsDetails || !frsDetails.frs || !frsDetails.frs.length);
         },
+
         _checkFrsAmountConsistency: function(intervention, frsDetails) {
           if (this._noFrs(frsDetails) || !intervention || intervention.status === 'closed') {
             this.set('_frsTotalAmountWarning', '');
@@ -151,6 +197,7 @@
               frsDetails.total_frs_amt, intervention, 'interventionDetails', true);
           this.set('_frsTotalAmountWarning', warn);
         }
+
       });
 
     })();

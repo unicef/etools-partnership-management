@@ -1,16 +1,22 @@
+<link rel="import" href="../../../../bower_components/etools-currency-amount-input/etools-currency-behavior.html">
 <script>
   'use strict';
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Behaviors = window.EtoolsPmpApp.Behaviors || {};
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.FrNumbersConsistency */
-  EtoolsPmpApp.Behaviors.FrNumbersConsistency = {
+  EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl = {
     properties: {
-      _frsConsistencyWarnings: {
+      frsConsistencyWarnings: {
         type: Object,
         value: {
-          currenciesDoNotMatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be compared. ' +
-          'To be able to compare the amounts, you can cancel and enter the budget in the same currency as the FR. ',
+          tooManyFrsCurencies: 'More than 1 FR currency is available. FR amount \n' +
+            'and Actual Disbursement can not be displayed',
+          currencyMismatch: 'FR currency does not match PD/SSFA currency.',
+          cannotCalcDisbursement: 'Disbursement to Date % can not calculate.',
+          mainWarnCurrenciesMismatch: 'The currency of the PD/SSFA and the FR are not the same and cannot be ' +
+          'compared.\nTo be able to compare the amounts, you can cancel and enter the budget in the same currency ' +
+          'as the FR.\n',
           amount: 'Total FR amount is not the same as planned UNICEF Cash Contribution.',
           dateTmpl: 'FR <<field_name>> is not the same as PD/SSFA <<field_name>>.',
           warningTmpl: 'The <<frs_fields>> <<verb>> not the same as PD/SSFA <<pd_fields>>.'
@@ -36,6 +42,16 @@
       let differentFrCurrencies = frs.filter((fr) => fr.currency !== plannedBudgetCurrency);
       return differentFrCurrencies.length === 0;
     },
+
+    /**
+     * Check for currency mismatch in frs list
+     */
+    _frsCurrenciesMatch(frs) {
+      let firstFrCurrency = frs[0].currency;
+      let diff = frs.filter((fr) => fr.currency !== firstFrCurrency);
+      return diff.length === 0;
+    },
+
 
     /**
      * Check FR numbers total amount against planned budget unicef total contribution and start/end dates
@@ -67,11 +83,11 @@
         }
       } else {
         // currencies of the frs and planned budget do NOT match
-        computedWarning = this._frsConsistencyWarnings.currenciesDoNotMatch;
+        computedWarning = this.frsConsistencyWarnings.mainWarnCurrenciesMismatch;
       }
 
       if (warnFrsFields.length > 0) {
-        computedWarning += this._frsConsistencyWarnings.warningTmpl;
+        computedWarning += this.frsConsistencyWarnings.warningTmpl;
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<frs_fields>>', warnFrsFields.join(', '));
         computedWarning = this._buildFrsWarningMsg(computedWarning, '<<verb>>',
             warnFrsFields.length > 1 ? 'are' : 'is');
@@ -108,7 +124,7 @@
     checkFrsAndIntervDateConsistency: function(intervDateStr, frsDateStr, fieldName, returnMsg) {
       if (!this.validateFrsVsInterventionDates(intervDateStr, frsDateStr)) {
         return returnMsg
-            ? this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
+            ? this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl, '<<field_name>>', fieldName)
             : true;
       }
       return false;
@@ -124,14 +140,14 @@
       return msgTemplate.replace(new RegExp(searchStr, 'g'), replacementStr);
     },
     getFrsTotalAmountInconsistencyMsg: function() {
-      return this._frsConsistencyWarnings.amount;
+      return this.frsConsistencyWarnings.amount;
     },
     getFrsStartDateValidationMsg: function() {
-      return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
+      return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
           '<<field_name>>', this.frValidationFieldsToCheckNames.start_date);
     },
     getFrsEndDateValidationMsg: function() {
-      return this._buildFrsWarningMsg(this._frsConsistencyWarnings.dateTmpl,
+      return this._buildFrsWarningMsg(this.frsConsistencyWarnings.dateTmpl,
           '<<field_name>>', this.frValidationFieldsToCheckNames.end_date);
     },
     frsConsistencyWarningIsActive: function(warnMsg) {
@@ -146,7 +162,51 @@
       } else if (interventionIsFromWhere === 'interventionsList') {
         return !intervention.frs_earliest_start_date || !intervention.frs_latest_end_date;
       }
+    },
+
+    getFrsCurrency: function(currencyMatch, frs) {
+      return currencyMatch ? frs[0].currency : 'N/A';
+    },
+
+    getFrsTotal: function(currencyMatch, totalAmt) {
+      return currencyMatch ? this.displayCurrencyAmount(totalAmt, '0.00') : 'N/A';
+    },
+
+    allCurrenciesMatch: function(currencyMatch, frs, plannedBudgetCurrency) {
+      return currencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
+    },
+
+    hideFrCurrencyTooltip: function(frCurrency, plannedBudgetCurrency) {
+      return frCurrency === plannedBudgetCurrency;
+    },
+
+    hideFrsAmountTooltip: function(currencyMatch, frs, plannedBudgetCurrency, frsTotalAmountWarning) {
+      let allCurrenciesMatch = this.allCurrenciesMatch(currencyMatch, frs, plannedBudgetCurrency);
+      return !allCurrenciesMatch || !frsTotalAmountWarning;
+    },
+
+    getFrsCurrencyTooltipIcon: function(currencyMatch) {
+      if (!currencyMatch) {
+        return 'pmp-custom-icons:1+';
+      }
+      return 'pmp-custom-icons:not-equal';
+    },
+
+    getFrsCurrencyTooltipMsg: function(currencyMatch) {
+      return !currencyMatch
+          ? this.frsConsistencyWarnings.tooManyFrsCurencies
+          : this.frsConsistencyWarnings.currencyMismatch;
+    },
+
+    getFrCurrencyTooltipMsg: function() {
+      return this.frsConsistencyWarnings.currencyMismatch + '\n' + this.frsConsistencyWarnings.cannotCalcDisbursement;
     }
 
   };
+
+  /** @polymerBehavior */
+  EtoolsPmpApp.Behaviors.FrNumbersConsistency = [
+    etoolsBehaviors.EtoolsCurrencyBehavior,
+    EtoolsPmpApp.Behaviors.FrNumbersConsistencyImpl
+  ];
 </script>

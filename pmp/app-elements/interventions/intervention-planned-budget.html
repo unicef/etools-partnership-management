@@ -102,14 +102,21 @@
         <etools-data-table-row no-collapse>
           <div slot="row-data">
             <span class="col-data col-3 currency">
-              <span class="totalLabel">Total PD Budget</span>
-              <etools-single-selection-menu id="currencyDd"
-                                            placeholder="&#8212;"
-                                            options="[[currencies]]"
-                                            selected="{{plannedBudget.currency}}"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-single-selection-menu>
+              <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                   icon-first
+                   custom-icon
+                   hide-tooltip="[[allCurrenciesMatch(intervention.frs_details.currencies_match, intervention.frs_details.frs, plannedBudget.currency)]]">
+                <etools-single-selection-menu id="currencyDd"
+                                              slot="field"
+                                              placeholder="&#8212;"
+                                              options="[[currencies]]"
+                                              selected="{{plannedBudget.currency}}"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              no-label-float>
+                </etools-single-selection-menu>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">[[frsConsistencyWarnings.currencyMismatch]]</span>
+              </etools-info-tooltip>
             </span>
 
             <span class="col-data col-3 right-align">
@@ -347,6 +354,8 @@
 
         _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, plannedBudgetCurrency,
                                              frsDetails, iterventionStatus) {
+          // no frs added || status is closed ||
+          // the currency of planned budget is defferent that frs currency => no warning
           if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed' ||
               !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)) {
             this.set('_frsConsistencyWarning', '');

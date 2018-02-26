@@ -66,7 +66,7 @@
               <span class="fr-number">[[item.fr_number]]</span>
             </template>
           </div>
-          <span slot="message">[[_frsConsistencyWarning]]</span>
+          <span slot="message"><span>[[_frsConsistencyWarning]]</span></span>
         </etools-info-tooltip>
       </div>
       <div class="warning" hidden$="[[noFrsWarning(intervention.frs_details)]]">
@@ -176,7 +176,7 @@
           }
         },
 
-        _openFrsUpdateDialog: function(frNumbersList) {
+        _openFrsUpdateDialog: function(frNumbersList, enableConfirmBtn) {
           if (!this.editMode) {
             return;
           }
@@ -190,7 +190,8 @@
                 });
             this.updateFrNumbersEl.set('dataItems', frs);
             // deactivate save button until any valid change is made
-            this.updateFrNumbersEl.set('disableConfirmBtn', true);
+            enableConfirmBtn = enableConfirmBtn || true;
+            this.updateFrNumbersEl.set('disableConfirmBtn', enableConfirmBtn);
 
             this.updateFrNumbersEl.set('interventionStatus', this.intervention.status);
             // open dialog
@@ -285,6 +286,8 @@
          * Frs details received, check frs consistency
          */
         _frsDetailsSuccessHandler: function(frsDetails) {
+          // check added frs currencies mismatch
+          frsDetails.currencies_match = this._frsCurrenciesMatch(frsDetails.frs);
           let warning = this.checkFrsConsistency(frsDetails, this.intervention, true);
           console.log(warning);
           this.set('_frsConsistencyWarning', warning);
@@ -310,7 +313,7 @@
             return {fr_number: fr};
           });
           // open FR Numbers modal with the same state as before details request
-          this._openFrsUpdateDialog(frs);
+          this._openFrsUpdateDialog(frs, false);
           this.set('_lastFrsDetailsRequested', []);
           // show the invalid frs warning
           this.fire('toast', {
