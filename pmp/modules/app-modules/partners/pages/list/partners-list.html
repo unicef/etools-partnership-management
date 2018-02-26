@@ -72,7 +72,7 @@
         <template is="dom-repeat" items="[[selectedFilters]]" as="filter">
           <div class="dropdown-with-clear-btn">
             <paper-dropdown-menu label$="[[filter.filterName]]" noink disabled$="[[filter.disabled]]">
-              <paper-listbox class="dropdown-content"
+              <paper-listbox slot="dropdown-content"
                           attr-for-selected="name"
                           on-iron-select="filterValueChanged"
                           on-iron-deselect="filterValueChanged"
@@ -100,11 +100,11 @@
 
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu">
-            <paper-button class="button dropdown-trigger">
+            <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
               add filter
             </paper-button>
-            <paper-listbox class="dropdown-content">
+            <paper-listbox slot="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>

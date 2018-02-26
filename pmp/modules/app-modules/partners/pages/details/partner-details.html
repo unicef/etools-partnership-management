@@ -89,14 +89,14 @@
                       readonly></paper-input>
         </div>
         <div class="col col-4">
-          <etools-multi-selection-menu label="Shared Partner"
+          <etools-dropdown-multi label="Shared Partner"
                                       options="[[sharedPartenerValues]]"
                                       selected-values="{{partner.shared_with}}"
                                       dynamic-align
                                       readonly$="[[!editMode]]"
                                       multi
                                       avoid-header-overlapping-dropdown>
-          </etools-multi-selection-menu>
+          </etools-dropdown-multi>
         </div>
       </div>
 

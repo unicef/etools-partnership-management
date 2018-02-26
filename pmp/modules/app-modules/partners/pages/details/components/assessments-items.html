@@ -148,13 +148,13 @@
                                       readonly></paper-input>
                       </template>
                       <template is="dom-if" if="[[editMode]]">
-                        <etools-single-selection-menu id$="assessmentType_[[index]]"
+                        <etools-dropdown id$="assessmentType_[[index]]"
                                                       label="Assessment Type"
                                                       options="[[assessmentTypesOptions]]"
                                                       selected="{{item.type}}"
                                                       dynamic-align
                                                       error-message="Assessment Type is required">
-                        </etools-single-selection-menu>
+                        </etools-dropdown>
                       </template>
                     </div>
                     <div class="col col-4">

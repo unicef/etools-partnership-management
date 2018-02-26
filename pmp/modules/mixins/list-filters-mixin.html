@@ -141,14 +141,14 @@
     /**
      * Check filter type. Filter type can be:
      *  - 'dropdown'(dropdown created using polymer catalog elements)
-     *  - 'esmm' (etools-multi-selection-menu)
+     *  - 'esmm' (etools-dropdown-multi)
      *  - 'datepicker' (etools-datepicker)
      */
     filterTypeIs(expentedType, checkedTypeValue) {
       return expentedType === checkedTypeValue;
     }
 
-    // 'esmm' (etools-multi-selection-menu) filter value changed
+    // 'esmm' (etools-dropdown-multi) filter value changed
     esmmValueChanged(event) {
       let filterPath = event.target.getAttribute('data-filter-path');
       let filterVal = event.detail.selectedItems;
