@@ -344,7 +344,7 @@
           return;
         }
         if (event.detail.value === true) {
-          var index = parseInt(event.localTarget.getAttribute('data-args'));
+          var index = parseInt(event.target.getAttribute('data-args'));
           for (var i = 0; i < this.dataItems.length; i++) {
             if (i !== index) {
               this.set('dataItems.' + i + '.current', false);
