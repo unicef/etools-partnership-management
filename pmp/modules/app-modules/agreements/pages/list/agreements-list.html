@@ -30,6 +30,7 @@
 <link rel="import" href="../../../../styles/partner-status-styles.html">
 <link rel="import" href="../../../../styles/app-mixins.html">
 
+<link rel="import" href="../../data/agreements-list-data.html">
 <dom-module id="agreements-list">
 
   <template strip-whitespace>
@@ -53,13 +54,13 @@
     </style>
 
     <!-- <template is="dom-if" if="[[stampListData]]"> -->
-      <!-- <agreement-list-data id="agreements"
+      <agreement-list-data id="agreements"
                            filtered-agreements="{{filteredAgreements}}"
                            total-results="{{totalResults}}"
                            list-data-path="filteredAgreements"
                            on-agreements-loaded="_requiredDataHasBeenLoaded"
                            fire-data-loaded>
-      </agreement-list-data> -->
+      </agreement-list-data>
     <!-- </template> -->
 
     <div id="listControls" elevation="1">
@@ -360,7 +361,6 @@
       }
 
       static get listeners() {
-        console.log('attached');
         return {
           'sort-changed': '_sortOrderChanged',
         };
@@ -426,11 +426,6 @@
           */
         this.fireEvent('global-loading', {active: false, loadingSource: 'ag-page'});
         this.listAttachedCallback(this.active, 'Loading agreements list data...', 'ag-list');
-
-
-        //TODO: remove this after list-data has been implemented
-        this.set('requiredDataLoaded', true);
-        this._init(true);
       }
 
       // Input: URL query params
