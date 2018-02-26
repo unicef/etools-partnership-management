@@ -12,12 +12,12 @@
   * @polymer
   * @mixinFunction
   * @appliesMixin EtoolsLogsMixin
-  * @appliesMixin etoolsMixins.DynamicDialogBehavior
+  * @appliesMixin EtoolsMixins.DynamicDialogMixin
   * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
   * @appliesMixin EtoolsAjaxRequestMixin
   */
   EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends
-    EtoolsLogsMixin(etoolsMixins.DynamicDialogBehavior(EtoolsPmpApp.Mixins.Endpoints(EtoolsAjaxRequestMixin(baseClass)))) {
+    EtoolsLogsMixin(EtoolsMixins.DynamicDialogMixin(EtoolsPmpApp.Mixins.Endpoints(EtoolsAjaxRequestMixin(baseClass)))) {
     // make sure you add DynamicDialogBehavior too in your element //TODO: polymer2 - is comment still valid?
     static get properties() {
       return {
