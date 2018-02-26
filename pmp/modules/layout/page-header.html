@@ -4,9 +4,10 @@
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/etools-app-selector/etools-app-selector.html">
 
-<link rel="import" href="components/countries-dropdown.html">
 <link rel="import" href="../../../bower_components/etools-profile-dropdown/etools-profile-dropdown.html">
+<link rel="import" href="components/countries-dropdown.html">
 <link rel="import" href="../user/profile-operations-mixin.html">
+<link rel="import" href="../../modules/mixins/event-helper-mixin.html">
 
 <link rel="import" href="../redux/etools-data-redux-store.html">
 <link rel="import" href="../config/config.html">
@@ -99,12 +100,15 @@
     /**
      * @polymer
      * @mixinFunction
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      * @appliesMixin EtoolsPmpApp.Mixins.ProfileOperations
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
     */
-    const PageHeaderMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsPmpApp.Mixins.EtoolsDataReduxStore, EtoolsPmpApp.Mixins.ProfileOperations],
-        Polymer.Element);
+    const PageHeaderMixin = EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+        EtoolsPmpApp.Mixins.ProfileOperations,
+        EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
 
     /**
      * @polymer
@@ -213,7 +217,7 @@
       }
 
       _openDataRefreshDialog() {
-        this.dispatchEvent(new CustomEvent('open-data-refresh-dialog', {bubbles: true, composed: true}));
+        this.fireEvent('open-data-refresh-dialog');
       }
 
       _convertCollection(data) {

@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../mixins/event-helper-mixin.html">
 
 <script>
   'use strict';
@@ -11,9 +12,10 @@
    * @polymer
    * @mixinFunction
    * @appliesMixin EtoolsLogsMixin
+   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
    */
   EtoolsPmpApp.Mixins.ModuleRouting = Polymer.dedupingMixin(
-      (superClass) => class extends EtoolsLogsMixin(superClass) {
+      (superClass) => class extends EtoolsLogsMixin(EtoolsPmpApp.Mixins.EventHelper(superClass)) {
         static get properties() {
           return {
             listActive: Boolean,
@@ -60,8 +62,7 @@
           if (previousPage === 'reports') {
             //* Info:Clearing the query params in the subroute doesn't work,
             //  has to be in the parent route
-            this.dispatchEvent(new CustomEvent('update-route-query-params',
-                {detail: null, bubbles: true, composed: true}));
+            this.fireEvent('update-route-query-params');
           }
         }
 
@@ -122,9 +123,8 @@
           let importErrMsgPrefix = fileImportDetails.errMsgPrefixTmpl.replace('##page##', page);
           this.logError(fileImportDetails.importErrMsg, importErrMsgPrefix, err);
 
-          let eventPayload = {active: false, loadingSource: fileImportDetails.loadingMsgSource};
-          this.dispatchEvent(new CustomEvent('global-loading', {detail: eventPayload, bubbles: true, composed: true}));
-          this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+          this.fireEvent('global-loading', {active: false, loadingSource: fileImportDetails.loadingMsgSource});
+          this.fireEvent('404');
         }
 
         setActivePage(listActive, tab, fileImportDetails, canAccessTab,
@@ -133,11 +133,11 @@
 
           if (listActive) {
             // clear server errors for the list
-            this.dispatchEvent(new CustomEvent('clear-server-errors', {bubbles: true, composed: true}));
+            this.fireEvent('clear-server-errors');
           } else {
             if (typeof canAccessTab === 'function' && !canAccessTab.bind(this, page)()) {
               // the user cannot access this tab (ex: prp tabs on interventions)
-              this.dispatchEvent(new CustomEvent('404', {bubbles: true, composed: true}));
+              this.fireEvent('404');
               return;
             }
           }

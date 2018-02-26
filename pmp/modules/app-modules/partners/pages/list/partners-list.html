@@ -1,4 +1,5 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <dom-module id="partners-list">
   <template>
@@ -17,8 +18,9 @@
     /**
      * @polymer
      * @customElement
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
-    class PartnersList extends Polymer.Element {
+    class PartnersList extends EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'partners-list';
@@ -42,11 +44,10 @@
          * Disable loading message for main list elements load,
          * triggered by parent element on stamp
          */
-        this.dispatchEvent(new CustomEvent('global-loading', {
-          detail: {active: false, loadingSource: 'partners-page'},
-          bubbles: true,
-          composed: true
-        }));
+        this.fireEvent('global-loading', {
+          active: false,
+          loadingSource: 'partners-page'
+        });
         // TODO: polymer 2 - add missing method(used next line)
         // this.listAttachedCallback(this.active, 'Loading partners list data...', 'partners-list');
       }
