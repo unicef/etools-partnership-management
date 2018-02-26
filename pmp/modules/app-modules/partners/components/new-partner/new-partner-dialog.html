@@ -2,6 +2,8 @@
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../../../bower_components/etools-dialog/etools-dialog.html">
 
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
+
 <dom-module id="new-partner-dialog">
   <template>
     <style>
@@ -29,7 +31,7 @@
      * @polymer
      * @customElement
      */
-    class NewPartnerDialog extends Polymer.Element {
+    class NewPartnerDialog extends  EtoolsPmpApp.Mixins.EventHelper(Polymer.Element) {
 
       static get is() {
         return 'new-partner-dialog';
@@ -60,8 +62,7 @@
           if (!this.vendor_number) {
             return;
           }
-          this.dispatchEvent(new CustomEvent('create-partner',
-          {detail: {vendor: this.vendor_number}, composed: true, bubbles: true}));
+          this.fireEvent('create-partner', {vendor: this.vendor_number});
         } else {
           this.vendor_number = '';
         }

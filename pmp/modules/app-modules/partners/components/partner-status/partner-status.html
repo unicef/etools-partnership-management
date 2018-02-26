@@ -77,9 +77,9 @@
                   label: 'Not Synced',
                   icon: 'info',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
+                  this._getComputedStyleValue('--primary-background-color'),
                   iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--status-not-synced-color'),
+                  this._getComputedStyleValue('--status-not-synced-color'),
                   hidden: true,
                   completed: false
                 },
@@ -87,8 +87,8 @@
                   label: 'Synced from VISION',
                   icon: 'autorenew',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-synced-color'),
+                  this._getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this._getComputedStyleValue('--status-synced-color'),
                   hidden: true,
                   completed: false
                 },
@@ -96,17 +96,17 @@
                   label: 'Blocked in VISION',
                   icon: 'block',
                   iconStyles: 'width: 19px; height: 19px; color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
-                  iconContainerStyles: 'background-color: ' + this.getComputedStyleValue('--status-blocked-color'),
+                  this._getComputedStyleValue('--primary-background-color'),
+                  iconContainerStyles: 'background-color: ' + this._getComputedStyleValue('--status-blocked-color'),
                   hidden: true,
                   completed: false
                 },
                 {
                   label: 'Marked For Deletion in VISION',
                   icon: 'delete-forever',
-                  iconStyles: 'color: ' + this.getComputedStyleValue('--error-color'),
+                  iconStyles: 'color: ' + this._getComputedStyleValue('--error-color'),
                   iconContainerStyles: 'background-color: ' +
-                  this.getComputedStyleValue('--primary-background-color'),
+                  this._getComputedStyleValue('--primary-background-color'),
                   hidden: true,
                   completed: false
                 }
@@ -138,6 +138,13 @@
           '_partnerStatusChanged(partner.vision_synced, partner.deleted_flag, partner.blocked)',
           '_computeAvailableActions(partner.hidden, editMode)'
         ];
+      }
+      _getComputedStyleValue(cssVar) {
+        if (window.ShadyCSS) {
+          return ShadyCSS.getComputedStyleValue(this, cssVar);
+        } else {
+          return getComputedStyle(this).getPropertyValue(cssVar);
+        }
       }
 
       ready() {

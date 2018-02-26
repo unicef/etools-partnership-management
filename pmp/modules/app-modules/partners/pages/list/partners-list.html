@@ -562,8 +562,7 @@
         }
 
         _triggerPartnerLoadingMsg() {
-          this.dispatchEvent(new CustomEvent('trigger-partner-loading-msg',
-           { composed: true, bubbles: true}));
+          this.fireEvent('trigger-partner-loading-msg');
         }
     }
 

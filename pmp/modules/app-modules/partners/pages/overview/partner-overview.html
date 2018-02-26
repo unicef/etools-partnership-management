@@ -9,6 +9,7 @@
 
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/risk-rating-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <!-- <link rel="import" href="../validators/fr-numbers-consistency-behavior.html"> -->
 
@@ -253,11 +254,13 @@
     * @appliesMixin EtoolsPmpApp.Mixins.Common
     * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
     * @appliesMixin EtoolsCurrencyMixin
+    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
     const PartnerOverviewRequiredMixins = EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Behaviors.Common,
         EtoolsPmpApp.Behaviors.RiskRating,
-        EtoolsCurrencyMixin
+        EtoolsCurrencyMixin,
+        EtoolsPmpApp.Mixins.EventHelper
         ], Polymer.Element);
     /**
      * @polymer

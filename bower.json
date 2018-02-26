@@ -18,7 +18,7 @@
     "etools-data-table": "6a1455b1",
     "etools-datepicker": "8d2f0c294d80bbea",
     "etools-dialog": "c943e5f",
-    "etools-dropdown": "02c57a634",
+    "etools-dropdown": "fa5fd1d473",
     "etools-file": "f98a943",
     "etools-loading": "6bdf1e7",
     "etools-piwik-analytics": "ab010e4",
@@ -57,7 +57,8 @@
   "resolutions": {
     "polymer": "^2.0.0",
     "lodash": "^4.17.5",
-    "moment-element": "^3.0.0"
+    "moment-element": "^3.0.0",
+    "etools-dropdown": "fa5fd1d473"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"

@@ -15,6 +15,7 @@
 <link rel="import" href="../../../../redux/etools-data-redux-store.html">
 <link rel="import" href="../../../../mixins/common-mixin.html">
 <link rel="import" href="../../../../mixins/risk-rating-mixin.html">
+<link rel="import" href="../../../../mixins/event-helper-mixin.html">
 
 <link rel="import" href="../../../../styles/app-mixins.html">
 <link rel="import" href="../../../../styles/page-common-styles.html">
@@ -199,11 +200,13 @@
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.RiskRating
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnerDetailsRequiredMixins = EtoolsMixinFactory.combineMixins([
         EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
         EtoolsPmpApp.Mixins.Common,
         EtoolsPmpApp.Mixins.RiskRating,
+        EtoolsPmpApp.Mixins.EventHelper
       ], Polymer.Element);
 
     /**
@@ -261,9 +264,8 @@
           * Disable loading message for details tab elements load,
           * triggered by parent element on stamp or by tap event on tabs
           */
-        this.dispatchEvent(new CustomEvent('global-loading', {detail: {active: false, loadingSource: 'partners-page'},
-          composed: true, bubbles: true}));
-        this.dispatchEvent(new CustomEvent('tab-content-attached'));
+        this.fireEvent('global-loading', {active: false, loadingSource: 'partners-page'});
+        this.fireEvent('tab-content-attached');
       }
 
       _hideDeleteBtn() {

@@ -10,9 +10,9 @@
 <link rel="import" href="../../../../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../../../../../bower_components/etools-file/etools-file.html">
-
 <link rel="import" href="../../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 <link rel="import" href="../../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../../../layout/components/etools-date-input.html">
 <link rel="import" href="../../../../../layout/components/etools-single-file.html">
@@ -218,15 +218,25 @@
 
   <script>
     /**
+    * @polymer
+    * @mixinFunction
+    * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
+    * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+    * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+    */
+    const AssessmentsItemsRequiredMixins = EtoolsMixinFactory.combineMixins([
+        EtoolsPmpApp.Mixins.RepeatableDataSets,
+        EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+        EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
+    /**
      *
      * @customElement
      * @polymer
      * @extends {Polymer.Element}
-     * @appliesMixin EtoolsPmpApp.Mixins.RepeatableDataSets
-     * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin AssessmentsItemsRequiredMixins
      */
-    class AssessmentsItems extends EtoolsPmpApp.Mixins.RepeatableDataSets(
-          (EtoolsPmpApp.Mixins.EtoolsDataReduxStore(Polymer.Element))) {
+    class AssessmentsItems extends AssessmentsItemsRequiredMixins {
 
       static get is() {
         return 'assessments-items';
@@ -380,8 +390,7 @@
         if (this.editMode) {
           var lastAssessmentAdded = this._getLastDataItem();
           if (this._emptyAssessment(lastAssessmentAdded)) {
-            this.dispatchEvent(new CustomEvent('toast',{detail: {text: 'Last assessment fields are empty!', showCloseBtn: true},
-            composed: true, bubbles: true}));
+            this.fireEvent('toast', {text: 'Last assessment fields are empty!', showCloseBtn: true});
           } else {
             this._addElement();
           }

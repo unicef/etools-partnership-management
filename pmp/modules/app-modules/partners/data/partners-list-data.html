@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
 
 <link rel="import" href="../../../mixins/list-data-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
 <link rel="import" href="../../../config/dexie-db-config.html">
 <link rel="import" href="../../../redux/etools-data-redux-store.html">
 
@@ -13,10 +14,12 @@
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.ListData
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+     * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
      */
     const PartnersListDataRequiredMixins = EtoolsMixinFactory.combineMixins([
       EtoolsPmpApp.Mixins.ListData,
-      EtoolsPmpApp.Mixins.EtoolsDataReduxStore
+      EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+      EtoolsPmpApp.Mixins.EventHelper
     ], Polymer.Element);
 
     /**
@@ -131,13 +134,11 @@
         let self = this;
 
         if (showQueryLoading) {
-          this.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {
+          this.fireEvent('global-loading', {
               message: 'Loading partners list data...',
               active: true,
               loadingSource: 'partners-list'
-            },  bubbles: true, composed: true
-          }));
+          });
         }
 
         let partnersDexieTable = EtoolsPmpApp.DexieDb.partners;
@@ -197,22 +198,16 @@
 
         }).then(function(result) {
           self._setFilteredPartners(result);
-          self.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {
+          self.fireEvent('global-loading', {
               active: false,
               loadingSource: 'partners-list'
-            },
-            bubbles: true, composed: true
-          }));
+            });
         }).catch(function(error) {
           console.error('Error querying partners: ' + error);
-          self.dispatchEvent(new CustomEvent('global-loading', {
-            detail: {
+          self.fireEvent('global-loading',  {
               active: false,
               loadingSource: 'partners-list'
-            },
-            bubbles: true, composed: true
-          }));
+            });
         });
       }
     }
