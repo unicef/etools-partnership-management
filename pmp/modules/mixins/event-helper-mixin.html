@@ -6,7 +6,7 @@
   * @polymer
   * @mixinFunction
   */
-  EtoolsPmpApp.Mixins.EventHelper = (baseClass) => class extends baseClass {
+  EtoolsPmpApp.Mixins.EventHelper = Polymer.dedupingMixin((baseClass) => class extends baseClass {
 
     fireEvent(eventName, eventDetail) {
       this.dispatchEvent(new CustomEvent(eventName,  {
@@ -15,6 +15,6 @@
         composed: true
       }));
     }
-  };
+  });
 
 </script>
