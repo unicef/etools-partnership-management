@@ -13,14 +13,14 @@
   * @polymer
   * @mixinFunction
   * @appliesMixin EtoolsLogsMixin
-  * @appliesMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsMixins.DynamicDialogMixin
   * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsAjaxRequestMixin
   * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
-  * @appliesMixin etoolsMixins.DynamicDialogBehavior
   */
   EtoolsPmpApp.Mixins.RepeatableDataSets = (baseClass) => class extends
     EtoolsLogsMixin(
-      etoolsMixins.DynamicDialogBehavior(
+      EtoolsMixins.DynamicDialogMixin(
         EtoolsPmpApp.Mixins.Endpoints(
           EtoolsAjaxRequestMixin(
             EtoolsPmpApp.Mixins.EventHelper(baseClass)
