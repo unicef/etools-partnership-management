@@ -16,6 +16,7 @@
 <link rel="import" href="../../../../../../bower_components/etools-data-table/etools-data-table.html">
 <link rel="import" href="../../../../../../bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="../../../../../../bower_components/etools-behaviors/etools-mixin-factory.html">
+<link rel="import" href="../../../../../../bower_components/etools-datepicker/etools-datepicker-button.html">
 
 <link rel="import" href="../../../../endpoints/endpoints-mixin.html">
 <link rel="import" href="../../../../mixins/app-navigation-helper-mixin.html">
@@ -81,7 +82,7 @@
           <template is="dom-if" if="[[filterTypeIs('dropdown', filter.type)]]">
             <div class="dropdown-with-clear-btn">
               <paper-dropdown-menu label$="[[filter.filterName]]" noink>
-                <paper-listbox class="dropdown-content"
+                <paper-listbox slot="dropdown-content"
                             attr-for-selected="name"
                             on-iron-select="filterValueChanged"
                             on-iron-deselect="filterValueChanged"
@@ -122,10 +123,12 @@
 
           <template is="dom-if" if="[[filterTypeIs('datepicker', filter.type)]]">
             <div class="filter">
+              <!-- TODO: Why not etools-date-input?  -->
+              <!-- TODO: Event handler used to be on-down, find the correct replacement -->
               <paper-input id$="datepicker_parent_[[filter.path]]"
                            label="[[filter.filterName]]"
                            value="[[prettyDate(filter.dateSelected)]]"
-                           on-down="openDatePicker"
+                           on-tap="openDatePicker"
                            data-selector$="datepicker_[[filter.path]]">
                 <etools-datepicker-button prefix
                                           id$="datepicker_[[filter.path]]"
@@ -154,11 +157,11 @@
 
         <div class="filter-bar-action-wrapper menu-btn-wrapper">
           <paper-menu-button id="filterMenu">
-            <paper-button class="button dropdown-trigger">
+            <paper-button class="button" slot="dropdown-trigger">
               <iron-icon icon="filter-list"></iron-icon>
               Add filter
             </paper-button>
-            <paper-listbox class="dropdown-content">
+            <paper-listbox slot="dropdown-content">
               <template is="dom-repeat" items="[[availableListFilterOptions]]">
                 <paper-item on-tap="selectFilter">[[item.filterName]]</paper-item>
               </template>
@@ -323,11 +326,6 @@
             type: Array
           },
 
-          availableListFilterOptions: {
-            type: Array,
-            value: []
-          },
-
           urlParams: {
             type: Object
           },
@@ -377,6 +375,9 @@
       }
 
       _initListFilters(agreementTypes, agreementStatuses, partnersDropdownData) {
+        if (!agreementTypes || !agreementStatuses || !partnersDropdownData) {
+          return;
+        }
         // init list filter options
         // this.debounce('init-ag-filters', function() {
           this.initListFiltersData([
