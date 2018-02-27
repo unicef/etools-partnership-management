@@ -94,42 +94,12 @@
         color: var(--paper-green-500);
       }
 
-      .signed {
-        text-transform: uppercase;
-        /* color: var(--paper-red-500); TBD*/
-      }
-
-      .suspended {
-        text-transform: uppercase;
-        color: var(--paper-orange-500);
-      }
-
-      .draft {
-        text-transform: uppercase;
-        color: var(--paper-yellow-700);
-      }
-
-      .active {
-        text-transform: uppercase;
-        color: var(--paper-green-500);
-      }
-
-      .closed {
-        text-transform: uppercase;
-        color: var(--paper-blue-500);
-      }
-
-      .terminated {
-        text-transform: uppercase;
-        color: var(--paper-purple-500);
+      .partnership-status {
+        text-transform: capitalize;
       }
 
       .block {
         display: block;
-      }
-
-      small {
-        color: var(--dark-secondary-text-color);
       }
 
       .word-break {
@@ -142,14 +112,11 @@
       }
 
       .timeline-col {
-        @apply --layout-start-justified;
-      }
-
-      .timeline-col .date-delimiter {
-        margin: 0 8px;
+        @apply --layout-vertical;
+        @apply --layout-start;
       }
     </style>
-    <etools-content-panel class="content-section" panel-title="HACT Assurance & Partnerships">
+    <etools-content-panel class="content-section" panel-title="Partner Overview">
       <div class="hact-heading">
         <div class="row-h">
           <div class="col col-6"><strong> TOTAL CASH TRANSFERS </strong></div>
@@ -160,7 +127,7 @@
         <div class="row-h">
           <div class="col col-2"> Risk Rating</div>
           <div class="col col-2"> Current CP Cycle</div>
-          <div class="col col-2"> Cash Transfers (1 Oct - 30 Sep)</div>
+          <div class="col col-2"> Current Year (Jan - Dec)</div>
           <div class="col col-2"> Planned / M.R. / Done</div>
           <div class="col col-2"> Done / M.R.</div>
           <div class="col col-2"> Done / M.R.</div>
@@ -198,11 +165,11 @@
       <template is="dom-if" if="[[partner.interventions.length]]">
         <div class="hact-heading">
           <div class="row-h">
-            <div class="col col-3 word-break left-align"> Partnership</div>
-            <div class="col col-2 right-align"> Total Planned Budget</div>
-            <div class="col col-2 right-align"> Actual</div>
-            <div class="col col-2"> Status</div>
-            <div class="col col-3 left-align"> Timeline</div>
+            <div class="col col-3 word-break left-align">Partnership</div>
+            <div class="col col-2 left-align">Start Date - End Date</div>
+            <div class="col col-2 right-align">UNICEF Cash</div>
+            <div class="col col-2 right-align">Actual Disbursement</div>
+            <div class="col col-3">Status</div>
           </div>
         </div>
         <div class="hact-body">
@@ -212,14 +179,9 @@
                 <a href="interventions/[[partnership.id]]/details"><strong>[[partnership.number]]</strong></a><br>
                 <span>
                 [[partnership.title]]
-              </span>
+                </span>
               </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.total_budget, '0', 0)]]
-              </div>
-              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
-              <div class="col col-2 center-align overflow-hidden"><strong class$="[[partnership.status]]">[[partnership.status]]</strong>
-              </div>
-              <div class="col col-3 center-align timeline-col">
+              <div class="col col-2 center-align timeline-col">
                 <etools-info-tooltip class="fr-nr-warn"
                                      custom-icon
                                      icon-first
@@ -228,7 +190,6 @@
                   <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                   <span slot="message">[[getFrsStartDateValidationMsg()]]</span>
                 </etools-info-tooltip>
-                <span class="date-delimiter"> - </span>
                 <etools-info-tooltip class="fr-nr-warn"
                                      custom-icon
                                      icon-first
@@ -238,6 +199,12 @@
                   <span slot="message">[[getFrsEndDateValidationMsg()]]</span>
                 </etools-info-tooltip>
               </div>
+              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</div>
+              <div class="col col-2 right-align"> $[[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]</div>
+              <div class="col col-3 center-align overflow-hidden">
+                <span class="partnership-status">[[partnership.status]]</span>
+              </div>
+
             </div>
           </template>
         </div>
