@@ -1,0 +1,88 @@
+<link rel="import" href="../../../../../bower_components/etools-ajax/etools-ajax-request-mixin.html">
+<link rel="import" href="../../../../../bower_components/etools-behaviors/etools-logs-mixin.html">
+<link rel="import" href="../../../endpoints/endpoints-mixin.html">
+<link rel="import" href="../../../mixins/event-helper-mixin.html">
+
+
+<script>
+    'use strict';
+/*
+EtoolsLogsBehavior,
+EtoolsAjaxRequestBehavior,
+EtoolsPmpApp.Behaviors.Endpoints,
+*/
+  window.EtoolsPmpApp = window.EtoolsPmpApp || {};
+  window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
+
+  /*
+  * @polymer
+  * @mixinFunction
+  * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
+  * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
+  * @appliesMixin EtoolsAjaxRequestMixin
+  * @appliesMixin EtoolsLogsMixin
+  */
+  EtoolsPmpApp.Mixins.StaffMembersData = (baseClass) => class extends
+    EtoolsPmpApp.Mixins.EventHelper(
+        EtoolsPmpApp.Mixins.Endpoints(
+          EtoolsAjaxRequestMixin(
+            EtoolsLogsMixin(baseClass)
+          )
+        )
+    ) {
+    static get properties() {
+      return {
+        staffMembers: {
+          type: Array,
+          value: []
+        },
+        staffLoadingMsgSource: {
+          type: String,
+          value: 'staff-m'
+        }
+      };
+    }
+
+    /**
+      * This method will be used in the main element as observer for agreement.partner
+      * or in other partner id changed observer
+      */
+    getPartnerStaffMembers(newId) {
+      if (newId > 0) {
+        this.fireEvent('global-loading', {
+          message: 'Loading partner staff members data...',
+          active: true,
+          loadingSource: this.staffLoadingMsgSource
+        });
+        let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
+        let self = this;
+        this.sendRequest({
+          endpoint: endpoint
+        }).then(function(response) {
+          self._handleStaffMembersResponse(response);
+        }).catch(function(error) {
+          self.logError('Getting staff members failed for partner: ' + newId, 'staff-members-data-behavior', error);
+          self.fireEvent('toast', {text: 'Can not get selected partner staff members data!', showCloseBtn: true});
+        });
+      }
+    }
+
+    _handleStaffMembersResponse(res) {
+      if (res instanceof Array && res.length) {
+        let preparedStaffMembers = res.map(function(staffMember) {
+          return {
+            id: staffMember.id,
+            name: staffMember.first_name + ' ' + staffMember.last_name,
+            active: staffMember.active
+          };
+        }).filter(function(staffMember) {
+          return staffMember.active;
+        });
+        this.set('staffMembers', preparedStaffMembers);
+      }
+      this.fireEvent('global-loading', {active: false, loadingSource: this.staffLoadingMsgSource});
+    }
+
+  }
+
+</script>

@@ -72,22 +72,22 @@
       </div>
 
       <template is="dom-if" if="[[_showPageTabs(activePage)]]">
-        <!-- <etools-tabs slot="tabs"
+        <etools-tabs slot="tabs"
                      tabs="[[agreementsTabs]]"
                      active-tab="details"
-                     on-iron-select="_handleTabSelectAction"></etools-tabs> -->
+                     on-iron-select="_handleTabSelectAction"></etools-tabs>
       </template>
     </page-content-header>
 
     <div id="main">
       <div id="pageContent">
-        <!-- <etools-error-messages-box id="errorsBox"
+        <etools-error-messages-box id="errorsBox"
                                    title="Errors Saving Agreement"
-                                   errors="{{serverErrors}}"></etools-error-messages-box> -->
-        <!-- <iron-pages id="agreementsPages"
+                                   errors="{{serverErrors}}"></etools-error-messages-box>
+        <iron-pages id="agreementsPages"
                     selected="{{activePage}}"
                     attr-for-selected="name"
-                    role="main"> -->
+                    role="main">
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'list')]]">
             <agreements-list id="list"
@@ -99,14 +99,14 @@
           </template>
 
           <template is="dom-if" if="[[_pageEquals(activePage, 'details')]]">
-            <!-- <agreement-details
+            <agreement-details
                 id="agreementDetails"
                 name="details"
                 agreement="[[agreement]]"
                 authorized-officers="{{authorizedOfficers}}"
                 edit-mode="[[_hasEditPermissions(permissions)]]"
                 is-new-agreement="[[newAgreementActive]]">
-            </agreement-details> -->
+            </agreement-details>
           </template>
         </iron-pages>
       </div> <!-- page content end -->

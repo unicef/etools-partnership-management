@@ -379,7 +379,6 @@
           return;
         }
         // init list filter options
-        // this.debounce('init-ag-filters', function() {
         this.initAgFiltersDebouncer = Polymer.Debouncer.debounce(this.initAgFiltersDebouncer,
           Polymer.Async.timeOut.after(100),
           () => {
