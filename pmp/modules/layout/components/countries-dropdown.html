@@ -102,9 +102,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.Endpoints
      * @appliesMixin EtoolsPmpApp.Mixins.EventHelper
     */
-    const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
-        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper], Polymer.Element);
+    const CountriesDropdownMixin = EtoolsMixinFactory.combineMixins([
+        EtoolsLogsMixin, EtoolsAjaxRequestMixin, EtoolsPageRefreshMixin,
+        EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
 
     /**
     *

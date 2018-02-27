@@ -22,10 +22,10 @@
      * @appliesMixin EtoolsPmpApp.Mixins.UserPermissions
      * @appliesMixin EtoolsPmpApp.Mixins.EtoolsDataReduxStore
      */
-    const UserDataMixin = EtoolsMixinFactory.combineMixins(
-        [EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
-          EtoolsPmpApp.Mixins.UserPermissions, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.EventHelper],
-        Polymer.Element);
+    const UserDataMixin = EtoolsMixinFactory.combineMixins([
+        EtoolsAjaxRequestMixin, EtoolsPmpApp.Mixins.Endpoints, EtoolsPmpApp.Mixins.EtoolsDataReduxStore,
+        EtoolsPmpApp.Mixins.UserPermissions, EtoolsPageRefreshMixin, EtoolsPmpApp.Mixins.EventHelper
+      ], Polymer.Element);
 
     /**
      * @polymer
