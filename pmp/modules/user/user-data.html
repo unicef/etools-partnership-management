@@ -55,7 +55,7 @@
           permissions: {
             type: Object,
             readOnly: true,
-            notify: true,
+            notify: true
           }
         };
       }
@@ -68,7 +68,7 @@
               user: user
             };
           }
-        }
+        };
       }
 
       connectedCallback() {
@@ -118,7 +118,7 @@
       addCountryInIndexedDb(country) {
         let dataToCache = {
           cacheKey: 'currentCountry',
-          data: country,
+          data: country
         };
         EtoolsPmpApp.DexieDb.ajaxDefaultDataTable.add(dataToCache);
       }

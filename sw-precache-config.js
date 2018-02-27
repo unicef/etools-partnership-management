@@ -15,7 +15,7 @@ module.exports = {
     'bower_components/webcomponentsjs/webcomponents-loader.js',
     'images/*',
     'manifest.json',
-    'index.html',
+    'index.html'
   ],
   runtimeCaching: [
     {
@@ -23,9 +23,9 @@ module.exports = {
       handler: 'fastest',
       options: {
         cache: {
-          name: 'pmp-webcomponentsjs-polyfills-cache',
-        },
-      },
-    },
-  ],
+          name: 'pmp-webcomponentsjs-polyfills-cache'
+        }
+      }
+    }
+  ]
 };

@@ -28,7 +28,7 @@
           value: {
             endpoint: null,
             csrf: true
-          },
+          }
         },
         data: {
           type: Array,
@@ -55,8 +55,8 @@
       ];
     }
 
-    disconnectedCallback () {
-      super.disconnectedCallback ();
+    disconnectedCallback() {
+      super.disconnectedCallback();
       this._removeAutomaticDataRefreshLoop();
     }
 

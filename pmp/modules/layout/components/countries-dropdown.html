@@ -133,7 +133,7 @@
 
       _countrySelected(e) {
         if (e.detail.item.countryId !== this.currentCountry.id) {
-          //send post request to change_coutry endpoint
+          // send post request to change_coutry endpoint
           let selectedCountryId = e.detail.item.countryId;
           this._triggerCountryChangeRequest(selectedCountryId);
         }

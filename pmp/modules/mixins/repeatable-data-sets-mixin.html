@@ -68,13 +68,13 @@
       };
     }
 
-    connectedCallback () {
+    connectedCallback() {
       super.connectedCallback();
       // create delete confirmation dialog
       this._createDeleteConfirmationDialog();
     }
 
-    disconnectedCallback () {
+    disconnectedCallback() {
       super.disconnectedCallback();
       // remove delete confirmation dialog when the element is detached
       this.removeDialog(this.deleteDialog);
@@ -92,8 +92,8 @@
         let newObj = {};
         if (this.dataItems.length > 0 && typeof this.dataItems[0] === 'object') {
           Object.keys(this.dataItems[0]).forEach(function(property) {
-            newObj[property] = ''; //(this.model[0][property]) ? this.model[0][property] :
-          }.bind(this));
+            newObj[property] = ''; // (this.model[0][property]) ? this.model[0][property] :
+          });
         }
 
         return newObj;
