@@ -562,6 +562,9 @@
       }
 
       _partnerChanged(currentPartnerId) {
+        if (typeof currentPartnerId === 'undefined') {
+          return;
+        }
         this.set('staffMembers', []);
         if (this.agreement && currentPartnerId !== this.oldSelectedPartnerId) {
           // partner not set or changed, reset related fields
@@ -577,6 +580,9 @@
         * Validate agreements fields on change
         */
       _agreementFieldChanged(agreementProperty) {
+        if (typeof agreementProperty === 'undefined') {
+          return;
+        }
         // check edit permissions and continue only if true; no validations in view mode
         if (this.agreement && !this._allowEdit(this.agreement.status)) {
           return;
@@ -670,6 +676,9 @@
         * If the result is just one option then set it as selected by default, make dropdown readonly
         */
       _countryProgrammesChanged(cp, agreement) {
+        if (typeof cp === 'undefined' || typeof agreement === 'undefined') {
+          return;
+        }
         let cpStructure = [];
         let isEditableField = agreement.permissions.edit.country_programme;
         if (agreement && !isEditableField) {
