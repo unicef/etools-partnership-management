@@ -42,9 +42,7 @@
       return self._checkFlagsReady().then(function(flagsLoaded) {
         return flagsLoaded || self._checkFlagsReady();
       }).then(function(flagsLoaded) {
-        let a = self._checkFlagsReady();
-        console.log('flagsLoaded-', flagsLoaded, 'checkFlagsReady-', a);
-        return flagsLoaded || a;
+        return flagsLoaded || self._checkFlagsReady();;
       });
     },
 
