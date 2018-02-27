@@ -87,7 +87,7 @@
               <etools-info-tooltip class="fr-nr-warn currency-mismatch"
                                    icon-first
                                    custom-icon
-                                   hide-tooltip="[[hideFrCurrencyTooltip(fr.currency, intervention.planned_budget.currency)]]">
+                                   hide-tooltip="[[hideFrCurrencyTooltip(frsDetails.currencies_match, fr.currency, intervention.planned_budget.currency)]]">
                 <span slot="field">[[fr.currency]]</span>
                 <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
                 <span slot="message">

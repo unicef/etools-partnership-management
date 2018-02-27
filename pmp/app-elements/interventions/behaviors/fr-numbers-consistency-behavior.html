@@ -176,8 +176,8 @@
       return currencyMatch && this._frsAndPlannedBudgetCurrenciesMatch(frs, plannedBudgetCurrency);
     },
 
-    hideFrCurrencyTooltip: function(frCurrency, plannedBudgetCurrency) {
-      return frCurrency === plannedBudgetCurrency;
+    hideFrCurrencyTooltip: function(currencyMatch, frCurrency, plannedBudgetCurrency) {
+      return !currencyMatch ? frCurrency === plannedBudgetCurrency : true;
     },
 
     hideFrsAmountTooltip: function(currencyMatch, frs, plannedBudgetCurrency, frsTotalAmountWarning) {
