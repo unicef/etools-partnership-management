@@ -113,6 +113,7 @@
         _handleSuccessfulImport(page, successCallback) {
           // set active page
           this.set('activePage', page);
+          console.log('and the callback is ',successCallback);
           if (typeof successCallback === 'function') {
             successCallback.bind(this)();
           }

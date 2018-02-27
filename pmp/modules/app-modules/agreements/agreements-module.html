@@ -10,7 +10,9 @@
 <link rel="import" href="../../scripts/lodash.html">
 
 <link rel="import" href="../../mixins/scroll-control-mixin.html">
+<link rel="import" href="../../mixins/common-mixin.html">
 <link rel="import" href="../mixins/module-common-mixin.html">
+
 <link rel="import" href="../mixins/module-routing-mixin.html">
 
 <link rel="import" href="../../layout/page-content-header/page-content-header.html">
@@ -22,6 +24,9 @@
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../styles/buttons-styles.html">
 
+<link rel="import" href="data/agreement-item-data.html">
+<link rel="lazy-import" href="pages/list/agreements-list.html">
+<link rel="lazy-import" href="pages/details/agreement-details.html">
 <!-- TODO: Check for unused imports -->
 
 <dom-module id="agreements-module">
@@ -75,7 +80,8 @@
         <etools-tabs slot="tabs"
                      tabs="[[agreementsTabs]]"
                      active-tab="details"
-                     on-iron-select="_handleTabSelectAction"></etools-tabs>
+                     on-iron-select="_handleTabSelectAction">
+        </etools-tabs>
       </template>
     </page-content-header>
 
@@ -127,11 +133,12 @@
       </template>
 
     </div> <!-- main page content end -->
-<!--
+
     <agreement-item-data id="agreementData"
                          agreement="{{agreement}}"
                          agreement-id="[[selectedAgreementId]]"
-                         error-event-name="agreement-save-error"></agreement-item-data> -->
+                         error-event-name="agreement-save-error">
+    </agreement-item-data>
 
   </template>
   <script>
@@ -140,13 +147,18 @@
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsLogsMixin
+     * @appliesMixin EtoolsPmpApp.Mixins.Common
      * @appliesMixin EtoolsPmpApp.Mixins.ScrollControl
-     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      * @appliesMixin EtoolsPmpApp.Mixins.ModuleRouting
+     * @appliesMixin EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
      */
-    const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins(
-        [EtoolsLogsMixin, EtoolsPmpApp.Mixins.ScrollControl, EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality,
-          EtoolsPmpApp.Mixins.ModuleRouting], Polymer.Element);
+    const AgreementsModuleRequiredMixins = EtoolsMixinFactory.combineMixins([
+        EtoolsLogsMixin,
+        EtoolsPmpApp.Mixins.Common,
+        EtoolsPmpApp.Mixins.ScrollControl,
+        EtoolsPmpApp.Mixins.ModuleRouting,
+        EtoolsPmpApp.Mixins.ModuleMainElCommonFunctionality
+      ], Polymer.Element);
 
     /**
      * @polymer
@@ -160,11 +172,87 @@
       }
 
       static get properties() {
-        return {};
+        return {
+          agreementsTabs: {
+            type: Array,
+            value: [{
+                tab: 'details',
+                tabLabel: 'Agreement Details',
+                hidden: false
+              }]
+          },
+          permissions: {
+            type: Object
+          },
+          selectedAgreementId: {
+            type: Number
+          },
+          newAgreementModel: {
+            type: Object,
+            value: {
+              id: undefined,
+              authorized_officers: [],
+              amendments: [],
+              agreement_type: null,
+              agreement_number: undefined,
+              attached_agreement: undefined,
+              start: undefined,
+              end: undefined,
+              signed_by_unicef_date: null,
+              signed_by_partner_date: null,
+              status: undefined,
+              partner: null,
+              country_programme: undefined,
+              signed_by: null,
+              partner_manager: null,
+              permissions: {
+                edit: {
+                  agreement_type: true,
+                  amendments: false,
+                  attached_agreement: true,
+                  authorized_officers: true,
+                  country_programme: true,
+                  end: true,
+                  partner: true,
+                  partner_manager: true,
+                  signed_by: true,
+                  signed_by_id: true,
+                  signed_by_partner_date: true,
+                  signed_by_unicef_date: true,
+                  start: true,
+                },
+                required: {
+                  agreement_type: true,
+                  partner: true,
+                  country_programme: true,
+                  partner_manager: false,
+                  signed_by: false,
+                  signed_by_partner_date: false,
+                  signed_by_unicef_date: false,
+                }
+              }
+            }
+          },
+          csvDownloadUrl: {
+            type: String
+          },
+          newAgreementActive: {
+            type: Boolean,
+            computed: '_updateNewItemPageFlag(routeData, listActive)'
+          },
+          agreement: {
+            type: Object,
+            observer: '_agreementChanged'
+          }
+        };
       }
 
-      constructor() {
-        super();
+      static get listeners() {
+        return {
+          'agreement-save-error': '_agreementSaveErrors',
+          'reload-list': '_reloadAgreementsList',
+          'trigger-agreement-loading-msg': '_handleAgreementSelectionLoadingMsg'
+        };
       }
 
       static get observers() {
@@ -176,22 +264,29 @@
 
       ready() {
         super.ready();
+        if (this.newAgreementActive) {
+          // Useful when refreshing the page
+          this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        }
       }
 
       connectedCallback() {
         super.connectedCallback();
+        // deactivate main page loading msg triggered in app-shell
+        this.fireEvent('global-loading', {active: false, loadingSource: 'main-page'});
+        // fire agreement page loading message
+        this._showAgreementsPageLoadingMessage();
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
       }
 
-      _showNewAgreementAddButton() {
-        // TODO:  update this
-        return true;
+      _showNewAgreementAddButton(listActive, permissions) {
+        return listActive && permissions && permissions.partnershipManager;
       }
 
-      _pageChanged(listActive, tabsActive, routeData) {
+      _pageChanged(listActive, tabsActive, newAgreementActive) {
         if (!listActive && !tabsActive) {
           return;
         }
@@ -202,18 +297,245 @@
           filenamePrefix: 'agreement',
           importErrMsg: 'Agreements page import error occurred',
           errMsgPrefixTmpl: '[agreement(s) ##page##]',
-          loadingMsgSource: 'agreements-page'
+          loadingMsgSource: 'ag-page'
         };
-        this.setActivePage(listActive, routeData.tab, fileImportDetails);
+        this.setActivePage(listActive, 'details', fileImportDetails);
+      }
+
+      // compute agreement details page title including partner name and agreement number
+      _getAgreementDetailsTitle(agreement, newAgreement) {
+        if (newAgreement) {
+          return 'Add Agreement';
+        }
+        return agreement.id ? (agreement.partner_name + ': ' + agreement.agreement_number) : '';
+      }
+
+      _hasEditPermissions(permissions) {
+        if (permissions && permissions.editAgreementDetails === true) {
+          return true;
+        }
+        return false;
+      }
+
+      _saveAgreement(agreementData) {
+        // var agreementData = event.detail;
+        if (!agreementData.id) {
+          agreementData.status = 'draft';
+        }
+        this.$.agreementData.saveAgreement(agreementData, this._newAgreementSaved);
+      }
+
+      _updateAgreementStatus(event) {
+        event.stopImmediatePropagation();
+        this.$.agreementData.updateAgreementStatus(event.detail);
+      }
+
+      /**
+       * Go to details page once the new agreement has been saved
+       */
+      _newAgreementSaved(agreement) {
+        this.fireEvent('update-main-path', {path: 'agreements/' + agreement.id + '/details'});
+      }
+      _agreementSaveErrors(event) {
+        event.stopImmediatePropagation();
+        if ((event.detail instanceof Array && event.detail.length > 0) ||
+            (typeof event.detail === 'string' && event.detail !== '')) {
+          this.fireEvent('set-server-errors', event.detail);
+          this.scrollToTop();
+        }
+      }
+
+      /**
+       * Go to new agreement page, it's just tha same details page with an empty agreement
+       * The new agreement model is defined in this element
+       */
+      _goToNewAgreementPage() {
+        // go to new agreement
+        this.set('agreement', JSON.parse(JSON.stringify(this.newAgreementModel)));
+        this.fireEvent('update-main-path', {path: 'agreements/new/details'});
+        this._handleAgreementSelectionLoadingMsg();
       }
 
       _observeRouteDataId(id) {
-        if (id === undefined) {
+        id = Number(id);
+        if (isNaN(id)) {
           return;
         }
-        if (this.route && this.route.prefix.indexOf('agreements') > -1) {
-          this.set('selectedAgreementId', id);
+        this.set('selectedAgreementId', id);
+      }
+
+      // TODO: this method could be common in all page categories, refactor!
+      _reloadAgreementsList(e) {
+        e.stopImmediatePropagation();
+        try {
+          let agreementsList = this.$.list;
+          if (agreementsList && !agreementsList.classList.contains('hidden')) {
+            agreementsList._filterAgreementsData(true);
+          }
+        } catch (err) {
+          this.logWarn('List refresh error occurred', '[agreements-page]', err);
         }
+      }
+
+      _agreementChanged(agreement) {
+        // keep a copy of the agreement before changes are made and use it later to save only the changes
+        this.set('originalAgreementData', JSON.parse(JSON.stringify(agreement)));
+        this.fireEvent('clear-server-errors');
+      }
+
+      /**
+       * Save agreement if all fields are validated
+       */
+      _validateAndTriggerAgreementSave(event) {
+        event.stopImmediatePropagation();
+        if (!this._hasEditPermissions(this.permissions)) {
+          return;
+        }
+        let agreementDetailsEl = this.$.agreementDetails;
+        if (!agreementDetailsEl) {
+          return;
+        }
+        if (!agreementDetailsEl._validateAgreement()) {
+          this.fireEvent('toast', {text: 'Please review invalid fields data!', showCloseBtn: true});
+          return;
+        }
+        if (this.newAgreementActive) {
+          this._saveAgreement(this._prepareNewAgreementDataForSave(this.agreement));
+        } else {
+          // check/get only changed content to be used as a body to the save request
+          let changedAgreementProperties = this._getCurrentChanges();
+          // we also need the id
+          changedAgreementProperties.id = this.agreement.id;
+          // fire update agreement
+          this._saveAgreement(changedAgreementProperties);
+        }
+      }
+
+      _prepareNewAgreementDataForSave(agreement) {
+        let self = this;
+        // we do not need all the agreement object data for the first save
+        let newAgreement = {
+          id: null,
+          status: '',
+          agreement_type: agreement.agreement_type,
+          partner: agreement.partner,
+          authorized_officers: this.authorizedOfficers
+        };
+        if (agreement.agreement_type === 'SSFA') {
+          return newAgreement;
+        }
+
+        newAgreement = Object.assign(newAgreement, {
+          signed_by_unicef_date: agreement.signed_by_unicef_date,
+          signed_by_partner_date: agreement.signed_by_partner_date,
+          signed_by: agreement.signed_by,
+          partner_manager: agreement.partner_manager,
+          attached_agreement: agreement.attached_agreement,
+        });
+        if (agreement.agreement_type === 'MOU') {
+          newAgreement.start = agreement.start;
+          newAgreement.end = agreement.end;
+          delete newAgreement.authorized_officers;
+        }
+        if (agreement.agreement_type === 'PCA') {
+          newAgreement.country_programme = agreement.country_programme;
+        }
+        return newAgreement;
+      }
+
+      /**
+       * Get agreement changed properties
+       */
+      _getCurrentChanges() {
+        let changes = {};
+        if (!this.agreement || this.agreement.id !== this.originalAgreementData.id) {
+          // prevent the possibility of checking 2 different agreements
+          return {};
+        }
+
+        if (this._primitiveFieldIsModified('partner')) {
+          changes.partner = this.agreement.partner;
+        }
+        if (this.agreement.agreement_type !== 'MOU') {
+          if (this._authorizedOfficersChanged()) {
+            changes.authorized_officers = this.authorizedOfficers;
+          }
+        }
+        if (this.agreement.agreement_type !== 'SSFA') {
+          if ((this.agreement.hasOwnProperty('attached_agreement')) &&
+              (this.agreement.attached_agreement instanceof File)) {
+            changes.attached_agreement = this.agreement.attached_agreement;
+          }
+
+          let signedByFields = ['partner_manager', 'signed_by', 'signed_by_partner_date', 'signed_by_unicef_date'];
+          signedByFields.forEach(function(fieldName) {
+            if (this._primitiveFieldIsModified(fieldName)) {
+              changes[fieldName] = this.agreement[fieldName];
+            }
+          }.bind(this));
+        }
+
+        if (this.agreement.agreement_type === 'MOU') {
+          ['start', 'end'].forEach(function(fieldName) {
+            if (this._primitiveFieldIsModified(fieldName)) {
+              changes[fieldName] = this.agreement[fieldName];
+            }
+          }.bind(this));
+        }
+
+        if (this.agreement.agreement_type === 'PCA') {
+          if (this._primitiveFieldIsModified('country_programme')) {
+            changes.country_programme = this.agreement.country_programme;
+          }
+          if (this._objectFieldIsModified('amendments')) {
+            changes.amendments = this.agreement.amendments;
+          }
+        }
+        return changes;
+      }
+
+      _primitiveFieldIsModified(fieldName) {
+        return this.originalAgreementData[fieldName] !== this.agreement[fieldName];
+      }
+
+      _authorizedOfficersChanged() {
+        let initialAuthOfficers = this._getInitialAuthorizedOfficersIds();
+        return JSON.stringify(initialAuthOfficers) !== JSON.stringify(this.authorizedOfficers);
+      }
+
+      _objectFieldIsModified(fieldName) {
+        // jscs:disable maximumLineLength
+        return JSON.stringify(this.originalAgreementData[fieldName]) !== JSON.stringify(this.agreement[fieldName]);
+        // jscs:enable maximumLineLength
+      }
+
+      _getInitialAuthorizedOfficersIds() {
+        if (!this.originalAgreementData.authorized_officers) {
+          return null;
+        }
+        return this.originalAgreementData.authorized_officers.map(function(off) {
+          return off.id.toString();
+        });
+      }
+
+      _handleTabSelectAction(e) {
+        this._showTabChangeLoadingMsg(e, 'ag-page', 'agreement-');
+      }
+
+      _handleAgreementSelectionLoadingMsg() {
+        this._showTabChangeLoadingMsg(null, 'ag-page', 'agreement-', 'details');
+      }
+
+      /**
+       * Loading msg used on stamping tabs elements (disabled in each tab main element attached callback)
+       */
+      _showAgreementsPageLoadingMessage() {
+        let appSection = this.listActive ? 'agreements list' : 'agreement details page';
+        this.fireEvent('global-loading', {
+          message: 'Loading ' + appSection + ' elements...',
+          active: true,
+          loadingSource: 'ag-page'
+        });
       }
     }
 

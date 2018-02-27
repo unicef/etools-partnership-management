@@ -1,4 +1,6 @@
 <link rel="import" href="../../../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../../../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input.html">
@@ -6,6 +8,7 @@
 <link rel="import" href="../../../../../../bower_components/paper-input/paper-input-container.html">
 <link rel="import" href="../../../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown-multi.html">
+<link rel="import" href="../../../../../../bower_components/etools-dropdown/etools-dropdown.html">
 
 <link rel="import" href="../../../../layout/components/etools-form-element-wrapper.html">
 <link rel="import" href="../../../../layout/components/etools-single-file.html">
@@ -69,7 +72,7 @@
         <div class="row-h flex-c b-border row-second-bg">
           <div class="col col-6">
             <!-- Agreement Type -->
-            <etools-single-selection-menu
+            <etools-dropdown
                 id="agreementType"
                 label="Agreement Type"
                 placeholder="&#8212;"
@@ -81,7 +84,7 @@
                 auto-validate
                 error-message="Please select agreement type"
                 required>
-            </etools-single-selection-menu>
+            </etools-dropdown>
           </div>
           <div class="col col-3">
             <!-- Reference Number -->
@@ -104,7 +107,7 @@
         <div class="row-h flex-c">
           <div class="col col-6">
             <!-- Partner name -->
-            <etools-single-selection-menu
+            <etools-dropdown
                 id="partner"
                 label="Partner Name"
                 placeholder="&#8212;"
@@ -116,14 +119,13 @@
                 error-message="Please select a partner"
                 required
                 avoid-header-overlapping-dropdown>
-            </etools-single-selection-menu>
+            </etools-dropdown>
             <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner]]" hidden$="[[agreement.permissions.edit.partner]]">
                 <span>[[agreement.partner_name]]</span>
             </etools-form-element-wrapper>
           </div>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'MOU')]]" restamp>
             <div class="col col-3">
-              <!-- Start date -->
               <etools-date-input id="startDateField"
                                  label="Start date"
                                  value="{{agreement.start}}"
@@ -133,7 +135,6 @@
               </etools-date-input>
             </div>
             <div class="col col-3">
-              <!-- End date -->
               <etools-date-input id="endDateField"
                                  label="End date"
                                  value="{{agreement.end}}"
@@ -145,7 +146,7 @@
           </template>
           <template is="dom-if" if="[[_typeMatches(agreement.agreement_type, 'PCA')]]" restamp>
             <div class="col col-6">
-              <etools-single-selection-menu
+              <etools-dropdown
                   id="cpStructure"
                   label="CP Structure"
                   placeholder="&#8212;"
@@ -157,7 +158,7 @@
                   readonly$="[[!agreement.permissions.edit.country_programme]]"
                   error-message="Please select CP Structure"
                   required$="[[agreement.permissions.required.country_programme]]">
-              </etools-single-selection-menu>
+              </etools-dropdown>
             </div>
           </template>
         </div>
@@ -166,7 +167,7 @@
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By Partner -->
-              <etools-single-selection-menu
+              <etools-dropdown
                   id="signedByPartner"
                   label="Signed By Partner"
                   placeholder="&#8212;"
@@ -180,7 +181,7 @@
                   hidden$="[[!agreement.permissions.edit.partner_manager]]"
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.partner_manager, agreement.signed_by_partner_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
-              </etools-single-selection-menu>
+              </etools-dropdown>
               <etools-form-element-wrapper label="Partner Name" required$="[[agreement.permissions.required.partner_manager]]" hidden$="[[agreement.permissions.edit.partner_manager]]">
                 <span>[[_getReadonlySignedByPartner(staffMembers, agreement.partner_manager)]]</span>
               </etools-form-element-wrapper>
@@ -201,7 +202,7 @@
           <div class="row-h flex-c">
             <div class="col col-6">
               <!-- Signed By UNICEF -->
-              <etools-single-selection-menu
+              <etools-dropdown
                   id="signedByUnicef"
                   label="Signed By UNICEF"
                   placeholder="&#8212;"
@@ -215,7 +216,7 @@
                   auto-validate
                   required$="[[_isSignedByFieldRequired(agreement.permissions.required.signed_by, agreement.signed_by_unicef_date, agreement)]]"
                   avoid-header-overlapping-dropdown>
-              </etools-single-selection-menu>
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
@@ -233,7 +234,7 @@
         </div>
         <div class="row-h flex-c" hidden$="[[_typeMatches(agreement.agreement_type, 'MOU')]]">
           <!-- Partner Authorized Officers (partner staff members) -->
-          <etools-multi-selection-menu id="officers"
+          <etools-dropdown-multi id="officers"
                                        label="Authorized Officers"
                                        placeholder="&#8212;"
                                        options="[[_getAvailableAuthOfficers(staffMembers, agreement.authorized_officers)]]"
@@ -244,7 +245,7 @@
                                        error-message="Please enter Partner Authorized Officer(s)"
                                        required$="[[agreement.permissions.required.authorized_officers]]"
                                        auto-validate$="[[enableEditForAuthorizedOfficers]]">
-          </etools-multi-selection-menu>
+          </etools-dropdown-multi>
           <etools-form-element-wrapper label="Authorized Officers" required$="[[agreement.permissions.required.authorized_officers]]"
            hidden$="[[_allowAuthorizedOfficersEditing(agreement.status, editMode, enableEditForAuthorizedOfficers)]]">
                 <span>[[_getReadonlyAuthorizedOfficers(agreement)]]</span>
@@ -281,9 +282,8 @@
         </div>
       </etools-content-panel>
 
-      <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
-        <!-- Amendments -->
-        <!-- <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
+      <!-- <template is="dom-if" if="[[_showAmendments(agreement.agreement_type, agreement.status)]]">
+        <etools-content-panel class="content-section" panel-title="Amendments ([[agreement.amendments.length]])">
           <agreement-amendments id="agreementAmendments"
                                 data-items="{{agreement.amendments}}"
                                 agreement-type="[[agreement.agreement_type]]"
@@ -291,15 +291,15 @@
                                 on-unlock-authorized-officers="_unlockAuthorizedOfficers"
                                 on-lock-authorized-officers="_lockAuthorizedOfficersAndRestoreSelection">
           </agreement-amendments>
-        </etools-content-panel> -->
-      </template>
+        </etools-content-panel>
+      </template> -->
 
   </template>
 
   <script>
     'use strict';
 
- /**
+    /**
      * @polymer
      * @mixinFunction
      * @appliesMixin EtoolsPmpApp.Mixins.MissingDropdownOptions
@@ -350,10 +350,6 @@
           agreementTypes: {
             type: Array,
             statePath: 'agreementTypes'
-          },
-          staffMembers: {
-            type: Array,
-            value: []
           },
           authorizedOfficers: {
             type: Array,

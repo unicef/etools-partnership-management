@@ -6,11 +6,7 @@
 
 <script>
     'use strict';
-/*
-EtoolsLogsBehavior,
-EtoolsAjaxRequestBehavior,
-EtoolsPmpApp.Behaviors.Endpoints,
-*/
+
   window.EtoolsPmpApp = window.EtoolsPmpApp || {};
   window.EtoolsPmpApp.Mixins = window.EtoolsPmpApp.Mixins || {};
 
@@ -56,6 +52,7 @@ EtoolsPmpApp.Behaviors.Endpoints,
         });
         let endpoint = this.getEndpoint('partnerStaffMembers', {id: newId});
         let self = this;
+
         this.sendRequest({
           endpoint: endpoint
         }).then(function(response) {

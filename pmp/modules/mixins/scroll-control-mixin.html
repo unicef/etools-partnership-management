@@ -20,36 +20,37 @@
 
     connectedCallback() {
       super.connectedCallback();
-      this.set('contentContainer', this._getContentContainer());
+      // this.set('contentContainer', this._getContentContainer());
     }
 
     _getContentContainer() {
-      if (window.isIE) {
-        return document.documentElement;
-      }
-      let appShell = document.querySelector('app-shell');
-      if (!appShell) {
-        return null;
-      }
-      let appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
-      if (!appHeadLayout) {
-        return null;
-      }
-      return appHeadLayout.shadowRoot.querySelector('#contentContainer');
+      return null;
+      // if (window.isIE) {
+      //   return document.documentElement;
+      // }
+      // let appShell = document.querySelector('app-shell');
+      // if (!appShell) {
+      //   return null;
+      // }
+      // let appHeadLayout = appShell.shadowRoot.querySelector('#appHeadLayout');
+      // if (!appHeadLayout) {
+      //   return null;
+      // }
+      // return appHeadLayout.shadowRoot.querySelector('#contentContainer');
     }
 
     scrollToTop() {
-      if (!this.contentContainer) {
-        this.logWarn('Cannot scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
-        return;
-      }
-      this.contentContainer.scrollTop = 0;
+      // if (!this.contentContainer) {
+      //   this.logWarn('Cannot scroll! `contentContainer` object is null or undefined', 'scroll-control-mixin');
+      //   return;
+      // }
+      // this.contentContainer.scrollTop = 0;
     }
 
     scrollToTopOnCondition(condition) {
-      if (condition) {
-        this.scrollToTop();
-      }
+      // if (condition) {
+      //   this.scrollToTop();
+      // }
     }
 
   };
