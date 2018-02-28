@@ -193,6 +193,10 @@
       return 'pmp-custom-icons:not-equal';
     },
 
+    getFrsTotalNotAvailableClass: function(frsCurrencyMatch) {
+      return frsCurrencyMatch ? '' : 'fr-val-not-available';
+    },
+
     getFrsCurrencyTooltipMsg: function(frsCurrencyMatch) {
       let tooManyCurrenciesMsg = this.frsConsistencyWarnings.tooManyFrsCurencies + '\n' +
           this.frsConsistencyWarnings.amountAndDisbursementNotDisplayed;

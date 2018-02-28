@@ -52,10 +52,6 @@
         @apply --text-btn-style;
         text-transform: none;
       }
-
-      .list-currency {
-        margin-right: 4px;
-      }
     </style>
 
     <template is="dom-if" if="[[stampListData]]">
@@ -242,7 +238,7 @@
                   custom-icon
                   hide-tooltip="[[hideIntListUnicefCashAmountTooltip(intervention.all_currencies_are_consistent, intervention.unicef_cash, intervention.frs_total_frs_amt, intervention, 'interventionsList')]]">
                 <span slot="field">
-                  <span class="list-currency">[[intervention.budget_currency]]</span>
+                  <span class="amount-currency">[[intervention.budget_currency]]</span>
                   <span>[[displayCurrencyAmount(intervention.unicef_cash, '0.00')]]</span>
                 </span>
                 <iron-icon icon="[[getFrsCurrencyTooltipIcon(intervention.fr_currencies_are_consistent)]]" slot="custom-icon"></iron-icon>
@@ -254,7 +250,7 @@
             <div class="row-details-content col-2">
               <span class="rdc-title">Total Budget</span>
               <span>
-                <span class="list-currency">[[intervention.budget_currency]]</span>
+                <span class="amount-currency">[[intervention.budget_currency]]</span>
                 <span>[[displayCurrencyAmount(intervention.total_budget, '0.00')]]</span>
               </span>
             </div>

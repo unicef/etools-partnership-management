@@ -111,7 +111,9 @@
                  icon-first
                  custom-icon
                  hide-tooltip="[[allCurrenciesMatch(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency)]]">
-              <span slot="field">[[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]</span>
+              <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
+                [[getFrsCurrency(frsDetails.currencies_match, frsDetails.frs)]]
+              </span>
               <iron-icon icon="[[getFrsCurrencyTooltipIcon(frsDetails.currencies_match)]]"
                          slot="custom-icon"></iron-icon>
               <span slot="message">[[getFrsCurrencyTooltipMsg(frsDetails.currencies_match)]]</span>
@@ -122,15 +124,17 @@
                  custom-icon
                  icon-first
                  hide-tooltip$="[[hideFrsAmountTooltip(frsDetails.currencies_match, frsDetails.frs, intervention.planned_budget.currency, _frsTotalAmountWarning)]]">
-              <span slot="field">[[getFrsTotal(frsDetails.currencies_match, frsDetails.total_intervention_amt)]]</span>
+              <span slot="field" class$="[[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
+                [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_intervention_amt)]]
+              </span>
               <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
               <span slot="message">[[_frsTotalAmountWarning]]</span>
             </etools-info-tooltip>
           </span>
-          <span class="col-data col-2 right-align">
+          <span class$="col-data col-2 right-align [[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
             [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_actual_amt)]]
           </span>
-          <span class="col-data col-2 right-align">
+          <span class$="col-data col-2 right-align [[getFrsTotalNotAvailableClass(frsDetails.currencies_match)]]">
             [[getFrsTotal(frsDetails.currencies_match, frsDetails.total_outstanding_amt)]]
           </span>
         </div>

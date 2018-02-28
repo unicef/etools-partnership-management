@@ -201,7 +201,7 @@
                 </etools-info-tooltip>
               </div>
               <div class="col col-2 right-align">
-                <span class="list-currency">[[partnership.budget_currency]]</span>
+                <span class="amount-currency">[[partnership.budget_currency]]</span>
                 <span>[[displayCurrencyAmount(partnership.unicef_cash, '0', 0)]]</span>
               </div>
               <div class="col col-2 right-align">
@@ -209,19 +209,20 @@
                     class$="fr-nr-warn [[getCurrencyMismatchClass(partnership.all_currencies_are_consistent)]]"
                     icon-first
                     custom-icon
-                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_frs_amt, partnership, 'interventionsList')]]">
-                  <span slot="field">
-                    <span class="list-currency">[[partnership.fr_currency]]</span>
-                    <span>[[displayCurrencyAmount(partnership.frs_total_frs_amt, '0.00')]]</span>
+                    hide-tooltip="[[hideIntListUnicefCashAmountTooltip(partnership.all_currencies_are_consistent, partnership.unicef_cash, partnership.frs_total_intervention_amt, partnership, 'interventionsList')]]">
+                  <span slot="field" class$="[[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                    <span class="amount-currency">[[partnership.fr_currency]]</span>
+                    <span>[[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.frs_total_intervention_amt)]]</span>
                   </span>
-                  <iron-icon icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent)]]" slot="custom-icon"></iron-icon>
+                  <iron-icon icon="[[getFrsCurrencyTooltipIcon(partnership.fr_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]"
+                             slot="custom-icon"></iron-icon>
                   <span slot="message">
                     <span>[[getIntListUnicefCashAmountTooltipMsg(partnership.all_currencies_are_consistent, partnership.fr_currencies_are_consistent)]]</span>
                   </span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-2 right-align">
-                [[partnership.fr_currency]] [[displayCurrencyAmount(partnership.actual_amount, '0', 0)]]
+              <div class$="col col-2 right-align [[getFrsTotalNotAvailableClass(partnership.fr_currencies_are_consistent)]]">
+                [[partnership.fr_currency]] [[getFrsTotal(partnership.fr_currencies_are_consistent, partnership.actual_amount)]]
               </div>
               <div class="col center-align overflow-hidden">
                 <span class="partnership-status">[[partnership.status]]</span>
