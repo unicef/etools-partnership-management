@@ -338,7 +338,7 @@
           this._updateSections(dexieObject, responseDetail);
           this._updatePlannedBudgetInfo(dexieObject, responseDetail);
           this._updateOffices(dexieObject, responseDetail);
-          this._updateFrInfo(dexieObject, responseDetail.frs_details);
+          this._updateFrInfo(dexieObject, responseDetail.frs_details, responseDetail.planned_budget.currency);
 
           responseDetail.result_links.forEach(function(elem) {
             dexieObject.cp_outputs.push(elem.cp_output);
@@ -354,20 +354,31 @@
         },
 
         _updatePlannedBudgetInfo: function(dexieObject, intervention) {
-          dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash) +
-              parseFloat(intervention.planned_budget.in_kind_amount);
-          dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution);
+          dexieObject.unicef_budget = parseFloat(intervention.planned_budget.unicef_cash_local) +
+              parseFloat(intervention.planned_budget.in_kind_amount_local);
+          dexieObject.cso_contribution = parseFloat(intervention.planned_budget.partner_contribution_local);
           dexieObject.total_budget = parseFloat(intervention.planned_budget.total);
-          dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash);
+          dexieObject.unicef_cash = parseFloat(intervention.planned_budget.unicef_cash_local);
+          dexieObject.budget_currency = intervention.planned_budget.currency;
         },
 
-        _updateFrInfo: function(dexieObject, intervFrDetails) {
+        _updateFrInfo: function(dexieObject, intervFrDetails, plannedBudgetCurrency) {
           if (this._noFrOnIntervention(intervFrDetails)) {
+            dexieObject.fr_currency = null;
+            dexieObject.fr_currencies_are_consistent = null;
+            dexieObject.all_currencies_are_consistent = null;
             return;
           }
           dexieObject.frs_total_frs_amt = intervFrDetails.total_frs_amt;
           dexieObject.frs_latest_end_date = intervFrDetails.latest_end_date;
           dexieObject.frs_earliest_start_date = intervFrDetails.earliest_start_date;
+          dexieObject.fr_currency = intervFrDetails.currencies_match
+              ? intervFrDetails.frs[0].currency
+              : null;
+          dexieObject.fr_currencies_are_consistent = intervFrDetails.currencies_match;
+          dexieObject.all_currencies_are_consistent = intervFrDetails.currencies_match
+              ? intervFrDetails.frs[0].currency === plannedBudgetCurrency
+              : false;
         },
 
         _noFrOnIntervention: function(intervFrDetails) {

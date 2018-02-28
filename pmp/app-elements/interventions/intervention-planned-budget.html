@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/shared-styles.html">
+<link rel="import" href="fr-numbers/styles/fr-warnings-styles.html">
 
 <link rel="import" href="../static-common-data/redux-behaviors/common-static-data-redux-behavior.html">
 <link rel="import" href="../common-elements/etools-form-element-wrapper.html">
@@ -21,7 +22,7 @@
 
 <dom-module id="intervention-planned-budget">
   <template strip-whitespace>
-    <style include="shared-styles data-table-styles grid-layout-styles">
+    <style include="shared-styles data-table-styles grid-layout-styles fr-warnings-styles">
       [hidden] {
         display: none !important;
       }
@@ -55,24 +56,6 @@
 
       #currencyDd {
         width: 130px;
-      }
-
-      #unicef-cash.frs-inconsistent {
-        --paper-input-container-input: {
-          color: var(--error-color);
-        }
-      }
-
-      etools-currency-amount-input.frs-inconsistent {
-        --etools-currency-container-input: {
-          color: var(--error-color);
-        }
-      }
-
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
-          @apply --pmp-form-field-frs-inconsistency-icon;
-        };
       }
 
       .totalLabel {
@@ -119,111 +102,70 @@
         <etools-data-table-row no-collapse>
           <div slot="row-data">
             <span class="col-data col-3 currency">
-              <etools-form-element-wrapper no-label-float>
-                <span class="totalLabelUsd">Total PD Budget</span><span>USD</span>
-              </etools-form-element-wrapper>
+              <etools-info-tooltip class="fr-nr-warn currency-mismatch"
+                   icon-first
+                   custom-icon
+                   hide-tooltip="[[allCurrenciesMatch(intervention.frs_details.currencies_match, intervention.frs_details.frs, plannedBudget.currency)]]">
+                <etools-single-selection-menu id="currencyDd"
+                                              slot="field"
+                                              placeholder="&#8212;"
+                                              options="[[currencies]]"
+                                              selected="{{plannedBudget.currency}}"
+                                              readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
+                                              no-label-float>
+                </etools-single-selection-menu>
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">[[frsConsistencyWarnings.currencyMismatch]]</span>
+              </etools-info-tooltip>
             </span>
 
             <span class="col-data col-3 right-align">
-              <etools-currency-amount-input id="csoContUsd"
-                                            value="{{plannedBudget.partner_contribution}}"
+              <etools-currency-amount-input id="csoCont"
+                                            value="{{plannedBudget.partner_contribution_local}}"
                                             type="number"
                                             placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="CSO Cont. (USD) required"
                                             no-label-float>
               </etools-currency-amount-input>
             </span>
 
             <span class="col-data col-2 right-align">
-              <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]" -->
-              <etools-info-tooltip icon="report" icon-first
-                                   hide-tooltip
-                                   important-warning>
+              <etools-info-tooltip class="fr-nr-warn"
+                                   custom-icon
+                                   icon-first
+                                   form-field-align="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]"
+                                   hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsConsistencyWarning)]]">
                 <div slot="field">
                   <template is="dom-if" if="[[_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- readonly unicef cash -->
-                    <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
                     <etools-form-element-wrapper no-label-float
                                                  id="unicef-cash">
-                      [[displayCurrencyAmount(plannedBudget.unicef_cash, '0.00')]]
+                      [[displayCurrencyAmount(plannedBudget.unicef_cash_local, '0.00')]]
                     </etools-form-element-wrapper>
                   </template>
                   <template is="dom-if"
                             if="[[!_isReadonly(unicefCashEditMode, editablePlannedBudget, interventionId)]]">
                     <!-- editable unicef cash -->
-                    <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-                    class$="[[getFrsInconsistentFieldClass(_frsConsistencyWarning)]]" -->
-                    <etools-currency-amount-input id="unicefCashUsd"
-                                                  value="{{plannedBudget.unicef_cash}}" type="number"
+                    <etools-currency-amount-input id="unicefCash"
+                                                  value="{{plannedBudget.unicef_cash_local}}"
                                                   placeholder="&#8212;"
-                                                  required$="[[required]]" auto-validate
-                                                  error-message="UNICEF Cash (USD) required"
+                                                  required$="[[required]]"
+                                                  auto-validate
+                                                  error-message="UNICEF Cash required"
                                                   no-label-float>
                     </etools-currency-amount-input>
                   </template>
                 </div>
-                <!--<span slot="message">[[_frsConsistencyWarning]]</span>-->
+                <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+                <span slot="message">[[_frsConsistencyWarning]]</span>
               </etools-info-tooltip>
             </span>
 
             <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="inKindAmountUsd"
-                                            value="{{plannedBudget.in_kind_amount}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            required$="[[required]]" auto-validate
-                                            error-message="UNICEF Supply (USD) required"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-form-element-wrapper no-label-float>
-                [[_getPlannedBudgetTotalFormatted(plannedBudget.partner_contribution, plannedBudget.unicef_cash,
-                plannedBudget.in_kind_amount)]]
-              </etools-form-element-wrapper>
-            </span>
-          </div>
-        </etools-data-table-row>
-
-        <etools-data-table-row no-collapse>
-          <div slot="row-data">
-            <span class="col-data col-3 currency">
-              <span class="totalLabel">Total PD Budget</span>
-              <etools-single-selection-menu id="currencyDd" placeholder="&#8212;"
-                                            options="[[currencies]]"
-                                            selected="{{plannedBudget.currency}}"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-single-selection-menu>
-            </span>
-
-            <span class="col-data col-3 right-align">
-              <etools-currency-amount-input id="csoContLocal"
-                                            value="{{plannedBudget.partner_contribution_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="unicefCashLocal"
-                                            value="{{plannedBudget.unicef_cash_local}}"
-                                            type="number" placeholder="&#8212;"
-                                            readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
-                                            no-label-float>
-              </etools-currency-amount-input>
-            </span>
-
-            <span class="col-data col-2 right-align">
-              <etools-currency-amount-input id="inKindAmountLocal"
+              <etools-currency-amount-input id="inKindAmount"
                                             value="{{plannedBudget.in_kind_amount_local}}"
-                                            type="number" placeholder="&#8212;"
+                                            type="number"
+                                            placeholder="&#8212;"
                                             readonly$="[[_isReadonly(editMode, editablePlannedBudget, interventionId)]]"
                                             no-label-float>
               </etools-currency-amount-input>
@@ -301,7 +243,7 @@
 
         observers: [
           '_checkFrsAmountConsistency(intervention.frs_details.total_frs_amt, ' +
-            'plannedBudget.unicef_cash, intervention.status)',
+            'plannedBudget.unicef_cash_local, plannedBudget.currency, intervention.frs_details, intervention.status)',
           '_initLocalCurrency(plannedBudget, countryData)'
         ],
 
@@ -376,9 +318,9 @@
         validate: function() {
           var valid = true;
           var elementsSelectorsToValidate = [
-            '#csoContUsd',
-            '#unicefCashUsd',
-            '#inKindAmountUsd'
+            '#csoCont',
+            '#unicefCash',
+            '#inKindAmount'
           ];
           elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
@@ -392,9 +334,9 @@
         // reset validation errors
         resetValidations: function() {
           var elementsSelectorsToValidate = [
-            '#csoContUsd',
-            '#unicefCashUsd',
-            '#inKindAmountUsd'
+            '#csoCont',
+            '#unicefCash',
+            '#inKindAmount'
           ];
           elementsSelectorsToValidate.forEach(function(selector) {
             var el = this.$$(selector);
@@ -410,21 +352,19 @@
           }
         },
 
-        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, iterventionStatus) {
-          let unicefCashField = this.$$('#unicefCashUsd');
-          if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed') {
+        _checkFrsAmountConsistency: function(frsTotalAmt, unicefCash, plannedBudgetCurrency,
+                                             frsDetails, iterventionStatus) {
+          // no frs added || status is closed ||
+          // the currency of planned budget is defferent that frs currency => no warning
+          if (this.emptyFrsList(this.intervention, 'interventionDetails') || iterventionStatus === 'closed' ||
+              !this._frsAndPlannedBudgetCurrenciesMatch(frsDetails.frs, plannedBudgetCurrency)) {
             this.set('_frsConsistencyWarning', '');
-            if (unicefCashField) {
-              unicefCashField.updateStyles();
-            }
             return;
           }
+
           this.set('_frsConsistencyWarning',
               this.checkFrsAndUnicefCashAmountsConsistency(unicefCash, frsTotalAmt, this.intervention,
                   'interventionDetails', true));
-          if (unicefCashField) {
-            unicefCashField.updateStyles();
-          }
         }
 
       });

@@ -17,6 +17,7 @@
 <link rel="import" href="../../../styles/app-mixins.html">
 <link rel="import" href="../../../styles/required-field-styles.html">
 <link rel="import" href="../../../styles/buttons-styles.html">
+<link rel="import" href="fr-numbers/styles/fr-warnings-styles.html">
 
 <link rel="import" href="../../app-elements/environment-flags/environment-flags-behavior.html">
 <link rel="import" href="../../app-elements/partners/behaviors/partner-staff-members-data-behavior.html">
@@ -40,7 +41,8 @@
 
   <template strip-whitespace>
 
-    <style include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles">
+    <style
+        include="page-common-styles grid-layout-styles shared-styles required-field-starred-styles buttons-styles fr-warnings-styles">
       :host {
         @apply --layout-vertical;
         width: 100%;
@@ -61,18 +63,6 @@
 
       paper-toggle-button {
         font-size: 16px;
-      }
-
-      etools-info-tooltip {
-        --etools-tooltip-trigger-icon: {
-          @apply --pmp-form-field-frs-inconsistency-icon;
-        };
-      }
-
-      etools-date-input.frs-inconsistent {
-        --paper-input-container-input: {
-          color: var(--error-color);
-        }
       }
 
       div[no-left-padding] {
@@ -207,13 +197,11 @@
         <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
              class="col col-3" no-left-padding$="[[!_showContingencyPd(agreement)]]">
           <!-- Start date -->
-          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]" -->
-          <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip
-                               important-warning>
-            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              class$="[[getFrsInconsistentFieldClass(_frsStartConsistencyWarning)]]" -->
+          <etools-info-tooltip class="fr-nr-warn"
+                               icon-first
+                               custom-icon
+                               form-field-align
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsStartConsistencyWarning)]]">
             <etools-date-input slot="field"
                                id="intStart"
                                label="Start date"
@@ -224,18 +212,18 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <!--<span slot="message">[[_frsStartConsistencyWarning]]</span>-->
+            <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+            <span slot="message">[[_frsStartConsistencyWarning]]</span>
           </etools-info-tooltip>
 
         </div>
-        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]" class="col col-3">
-          <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]" -->
-          <etools-info-tooltip icon="report" icon-first
-                               hide-tooltip
-                               important-warning>
-            <!-- TODO: this will be needed in the future, after frs validation will be re-designed
-              class$="[[getFrsInconsistentFieldClass(_frsEndConsistencyWarning)]]" -->
+        <div hidden$="[[!_showStartEndDateFields(agreement, intervention, intervention.contingency_pd)]]"
+             class="col col-3">
+          <etools-info-tooltip class="fr-nr-warn"
+                               custom-icon
+                               icon-first
+                               form-field-align
+                               hide-tooltip$="[[!frsConsistencyWarningIsActive(_frsEndConsistencyWarning)]]">
             <etools-date-input slot="field"
                                id="intEnd"
                                label="End date"
@@ -246,7 +234,8 @@
                                auto-validate
                                no-init show-clear-btn>
             </etools-date-input>
-            <!--<span slot="message">[[_frsEndConsistencyWarning]]</span>-->
+            <iron-icon icon="pmp-custom-icons:not-equal" slot="custom-icon"></iron-icon>
+            <span slot="message">[[_frsEndConsistencyWarning]]</span>
           </etools-info-tooltip>
         </div>
         <div class="col col-3"
@@ -327,13 +316,13 @@
       <etools-content-panel class="content-section" panel-title="PD output or SSFA Expected Result ([[noOfPdOutputs]])">
         <template is="dom-if" if="[[!newIntervention]]">
           <template is="dom-if" if="[[intervention.permissions.edit.result_links]]">
-              <div slot="panel-btns" id="edit-btns">
-                  <paper-icon-button icon="add-box"
-                                    title="Add"
-                                    on-tap="openCpOutputAndRamIndicatorsDialog">
-                  </paper-icon-button>
-              </div>
-            </template>
+            <div slot="panel-btns" id="edit-btns">
+              <paper-icon-button icon="add-box"
+                                 title="Add"
+                                 on-tap="openCpOutputAndRamIndicatorsDialog">
+              </paper-icon-button>
+            </div>
+          </template>
           <intervention-expected-results id="expectedResults"
                                          data-items="{{intervention.result_links}}"
                                          selected-cp-structure="[[intervention.country_programme]]"
@@ -485,7 +474,7 @@
           '_newInterventionFlagChanged(newIntervention)',
           '_setYears(intervention.start, intervention.end)',
           '_checkFrsStartConsistency(intervention.frs_details.earliest_start_date, ' +
-            'intervention.start, intervention.status)',
+          'intervention.start, intervention.status)',
           '_checkFrsEndConsistency(intervention.frs_details.latest_end_date, intervention.end, intervention.status)',
           /*Making sure country_programme is set to default after originalIntervention is set,
            otherwise on save, country_programme is not seen as modified*/
@@ -518,7 +507,7 @@
           }
           this.noOfPdOutputs = this.intervention.result_links.map((rl) => {
             return rl.ll_results.length;
-          }).reduce((a,b) => a + b, 0);
+          }).reduce((a, b) => a + b, 0);
         },
         openCpOutputAndRamIndicatorsDialog: function() {
           let expectedResultsElem = this.$$('#expectedResults');
@@ -752,7 +741,7 @@
             return;
           }
           this.set('_frsStartConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionStart,
-              frsEarliestStartDate, 'start date', true));
+              frsEarliestStartDate, this.frsValidationFields.start_date, true));
           this.$.intStart.updateStyles();
         },
 
@@ -764,7 +753,7 @@
             return;
           }
           this.set('_frsEndConsistencyWarning', this.checkFrsAndIntervDateConsistency(interventionEnd,
-              frsLatestEndDate, 'end date', true));
+              frsLatestEndDate, this.frsValidationFields.end_date, true));
           this.$.intEnd.updateStyles();
         },
 
