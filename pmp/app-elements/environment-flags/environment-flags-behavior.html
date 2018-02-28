@@ -23,33 +23,17 @@
       return this.environmentFlags && this.environmentFlags.prp_server_on;
     },
 
-    _checkFlagsReady: function() {
-      let self = this;
-      return new Promise(function(resolve, reject) {
-        if (self.envFlagsLoaded()) {
-          resolve(true);
-        } else {
-          // flags not loaded yet, wait a bit and check again
-          window.setTimeout(function() {
-            resolve(self.envFlagsLoaded());
-          }, 300);
-        }
-      });
-    },
-
     _waitForEnvFlagsToLoad: function(page) {
-      let self = this;
-      return self._checkFlagsReady().then(function(flagsLoaded) {
-        return flagsLoaded || self._checkFlagsReady();
-      }).then(function(flagsLoaded) {
-        return flagsLoaded || self._checkFlagsReady();
-      }).then(function(flagsLoaded) {
-        return flagsLoaded || self._checkFlagsReady();
-      }).then(function(flagsLoaded) {
-        return flagsLoaded || self._checkFlagsReady();
+      return new Promise((resolve, reject) => {
+        let envFlagsCheck = setInterval(() => {
+          if (this.envFlagsLoaded()) {
+            console.log('interval cleared');
+            clearInterval(envFlagsCheck);
+            resolve(true);
+          }
+        }, 50);
       });
-    },
-
+    }
   };
 
   /** @polymerBehavior EtoolsPmpApp.Behaviors.EnvironmentFlags */
