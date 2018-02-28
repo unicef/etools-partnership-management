@@ -7,8 +7,17 @@
   <script>
     Polymer({
       is: 'environment-flags',
+      properties: {
+        envFlagsDefaultValue: {
+          type: Object,
+          value: {
+            prp_mode_off: true,
+            prp_server_on: false
+          }
+        }
+      },
       actions: {
-        setEnvFlags: function(envFlags) {
+        processAndSetEnvFlags: function(envFlags) {
           let flags = envFlags.active_flags;
           let flagObject = {
             prp_mode_off: false
@@ -18,10 +27,15 @@
             let flag = flags[key];
             flagObject[flag] = true;
           }
-
           return {
             type: 'SET_ENV_FLAGS',
             envFlags: flagObject
+          };
+        },
+        setEnvFlags: function(flagsObj) {
+          return {
+            type: 'SET_ENV_FLAGS',
+            envFlags: flagsObj
           };
         }
       },
@@ -39,10 +53,13 @@
 
         this.sendRequest(requestConfig).then(function(response) {
           if (response) {
-            self.dispatch('setEnvFlags', response);
+            self.dispatch('processAndSetEnvFlags', response);
+          } else {
+            self.dispatch('setEnvFlags', self.envFlagsDefaultValue);
           }
         }).catch(function(error) {
           self.logError('Env flags request failed', null, error);
+          self.dispatch('setEnvFlags', self.envFlagsDefaultValue);
         });
       },
     });
