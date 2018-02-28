@@ -168,12 +168,13 @@
         },
 
         _frsUpdateWarningMessage: function(warning) {
-          if (this.frsConfirmationsDialog && this._frsConfirmationsDialogMessage) {
-            if (this._frsConfirmationsDialogMessage) {
-              this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
-            } else {
-              this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
-            }
+          if (!this.frsConfirmationsDialog) {
+            return;
+          }
+          if (this._frsConfirmationsDialogMessage) {
+            this._frsConfirmationsDialogMessage.innerHTML = warning + '<br><br>Do you want to continue?';
+          } else {
+            this.logWarn('frsConfirmationsDialogMessage element not found', 'Fund Reservations');
           }
         },
 
