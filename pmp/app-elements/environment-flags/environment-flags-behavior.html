@@ -32,7 +32,7 @@
           // flags not loaded yet, wait a bit and check again
           window.setTimeout(function() {
             resolve(self.envFlagsLoaded());
-          }, 200);
+          }, 300);
         }
       });
     },
@@ -40,6 +40,10 @@
     _waitForEnvFlagsToLoad: function(page) {
       let self = this;
       return self._checkFlagsReady().then(function(flagsLoaded) {
+        return flagsLoaded || self._checkFlagsReady();
+      }).then(function(flagsLoaded) {
+        return flagsLoaded || self._checkFlagsReady();
+      }).then(function(flagsLoaded) {
         return flagsLoaded || self._checkFlagsReady();
       }).then(function(flagsLoaded) {
         return flagsLoaded || self._checkFlagsReady();
